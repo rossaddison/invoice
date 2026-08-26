@@ -3,3132 +3,2296 @@
 declare(strict_types=1);
 
 return [
-'account.information' => 'Информация об учетной записи',
-'active' => 'Активный',
-'add' => 'Добавлять',
-'add.invoice' => 'Добавить счет-фактуру',
-'add.client' => 'Добавить клиента',
-'add.family' => 'Добавить семью',
-'add.files' => 'Добавить файлы...',
-'add.invoice.tax' => 'Добавить счет-фактуру налога',
-'add.new.row' => 'Добавить новую строку',
-'add.note' => 'Добавить примечание',
-'add.notes' => 'Добавить заметки',
-'add.payment.provider' => 'Добавить поставщика платежных услуг',
-'add.product' => 'Добавить продукт',
-'add.quote' => 'Добавить цитату',
-'add.quote.tax' => 'Добавить налог на цитату',
-'add.task' => 'Добавить задачу',
-'add.unit' => 'Добавить единицу',
-'address' => 'Адрес',
-'administrator' => 'Администратор',
-'after.amount' => 'После суммы',
-'after.amount.space' => 'После суммы с неразрывным пробелом',
-'aging' => 'Старение счета-фактуры',
-'aging.1.15' => '1 - 15 дней',
-'aging.16.30' => '16 - 30 дней',
-'aging.above.30' => 'Более 30 дней',
-'alert.no.client.assigned' => 'Для этого проекта не назначен '
-	. 'ни один клиент.',
-'alert.no.tasks.found' => 'Задания для этого проекта не '
-	. 'найдены.',
-'alert.task.delete' => 'Внимание! Вы хотите удалить задачу,'
-	. 'которая использовалась для создания счета.',
-'all' => 'Все',
-'allowance.or.charge' => 'Пособие или сбор',
-'allowance.or.charge.add' => 'Уровень документа (т.'
-	. 'е.'
-	. 'НЕ уровень строки счета-фактуры) Добавление '
-	. 'скидки или сбора',
-'allowance.or.charge.allowance' => 'Разрешение',
-'allowance.or.charge.allowance.vat' =>
-	'НДС на пособие',
-'allowance.or.charge.amount' => 'Сумма налогового вычета (множительный коэффициент,'
-	. 'числовой как процент, умноженный на '
-	. 'базовую сумму)',
-'allowance.or.charge.base.amount' =>
-	'Базовая сумма',
-'allowance.or.charge.charge' => 'Заряжать',
-'allowance.or.charge.charge.vat' =>
-	'НДС на расходы',
-'allowance.or.charge.edit.allowance' =>
-	'Уровень документа (т.'
-	. 'е.'
-	. 'НЕ уровень строки счета-фактуры) Редактирование '
-	. 'поправки',
-'allowance.or.charge.edit.charge' =>
-	'Уровень документа (т.'
-	. 'е.'
-	. 'НЕ уровень строки счета) Редактирование '
-	. 'платежа',
-'allowance.or.charge.index' => 'Индекс скидок или расходов по '
-	. 'отношению к позиции',
-'allowance.or.charge.inv' => 'Счет-фактура или сбор',
-'allowance.or.charge.item' => 'Скидка или сбор по статье '
-	. 'счета-фактуры',
-'allowance.or.charge.item.add' =>
-	'Надбавка/сбор Добавить',
-'allowance.or.charge.multiplier.factor.numeric' =>
-	'Множитель Численный',
-'allowance.or.charge.reason' => 'Причина',
-'allowance.or.charge.reason.code' =>
-	'Код причины',
-'already.paid' => 'Этот счет уже оплачен.',
-'amount' => 'Сумма позиции счета',
-'amount.add' => 'Счет-фактура Позиция Сумма Добавить',
-'amount.due' => 'Сумма к оплате',
-'amount.no' => 'Сумма счета отсутствует',
-'amount.settings' => 'Настройки количества',
-'amounts' => 'Суммы счетов-фактур',
-'any.family' => 'Любая семья',
-'apply.after.item.tax' => 'Подать заявку после уплаты налога '
-	. 'на товар',
-'apply.before.item.tax' => 'Подать заявку до уплаты налога '
-	. 'на товар',
-'approve' => 'Утвердить',
-'approve.this.quote' => 'Одобрить эту цитату',
-'approved' => 'Одобренный',
-'archive' => 'Архивируйте PDF-файл в разделе Загрузки/Архив',
-'assign.client' => 'Назначить клиента',
-'assign.client.on.signup' => 'Назначьте клиента пользователю при регистрации.',
-'assign.client.on.signup.default.age.minimum.eighteen' =>
-	'При регистрации назначайте пользователю клиента,'
-	. 'которому по умолчанию установлен минимальный '
-	. 'возраст восемнадцать лет.',
-'assign.client.on.signup.done' =>
-	'Клиент назначается пользователю при регистрации.',
-'assigned.clients' => 'Назначенные клиенты',
-'attachment.list' => 'Список вложений',
-'attachments' => 'Вложения',
-'automatic.email.on.recur' => 'Автоматическая отправка повторяющихся счетов по '
-	. 'электронной почте',
-'back' => 'Назад',
-'balance' => 'Баланс',
-'balance.does.not.equal.zero' =>
-	'Баланс не равен нулю.'
-	. 'Статус оплачен =&gt; Баланс должен '
-	. 'быть равен нулю.',
-'base.invoice' => 'Базовый счет-фактура',
-'bcc' => 'ВСС',
-'bcc.mails.to.admin' => 'Отправлять все исходящие письма как '
-	. 'скрытую копию на учетную запись '
-	. 'администратора',
-'bcc.mails.to.admin.hint' =>
-	'Учетная запись администратора — это '
-	. 'учетная запись, созданная при установке '
-	. 'InvoicePlane.',
-'before.amount' => 'До суммы',
-'bill.to' => 'Законопроект о',
-'birthdate' => 'Дата рождения',
-'body' => 'Тело',
-'boolean' => 'Булев',
-'bootstrap5' => 'Бутстрап 5',
-'bootstrap5.alert.close.button.font.size' =>
-	'Размер шрифта кнопки закрытия оповещения',
-'bootstrap5.alert.message.font' => 'Шрифт предупреждающего сообщения',
-'bootstrap5.alert.message.font.size' =>
-	'Размер шрифта предупреждающего сообщения',
-'bootstrap5.layout.invoice.navbar.font' =>
-	'Макет шрифта панели навигации счета-фактуры',
-'bootstrap5.layout.invoice.navbar.font.size' =>
-	'Размер шрифта панели навигации счета-фактуры '
-	. 'макета',
-'bootstrap5.offcanvas.enable' => 'Включить Offcanvas',
-'bootstrap5.offcanvas.placement' => 'Размещение вне холста, например, сверху,'
-	. 'снизу, начало, т.'
-	. 'е.'
-	. 'слева, конец, т.'
-	. 'е.'
-	. 'справа',
-'breadcrumb.product.index' => 'Индекс продукта',
-'breadcrumb.product.property.index' => 'Индекс свойств продукта',
-'calculate.discounts' => 'Рассчитать скидки',
-'calendar.day.1' => '1 день',
-'calendar.day.15' => '15 дней',
-'calendar.day.2' => '2 дня',
-'calendar.day.3' => '3 дня',
-'calendar.day.30' => '30 дней',
-'calendar.day.4' => '4 дня',
-'calendar.day.5' => '5 дней',
-'calendar.day.6' => '6 дней',
-'calendar.month.1' => '1 месяц',
-'calendar.month.10' => '10 месяцев',
-'calendar.month.11' => '11 месяцев',
-'calendar.month.2' => '2 месяца',
-'calendar.month.3' => '3 месяца',
-'calendar.month.4' => '4 месяца',
-'calendar.month.5' => '5 месяцев',
-'calendar.month.6' => '6 месяцев',
-'calendar.month.7' => '7 месяцев',
-'calendar.month.8' => '8 месяцев',
-'calendar.month.9' => '9 месяцев',
-'calendar.week.1' => '1 неделя',
-'calendar.week.2' => '2 недели',
-'calendar.week.3' => '3 недели',
-'calendar.week.4' => '4 недели',
-'calendar.year.1' => '1 год',
-'calendar.year.2' => '2 года',
-'calendar.year.3' => '3 года',
-'calendar.year.4' => '4 года',
-'calendar.year.5' => '5 лет',
-'can.be.changed' => 'Можно изменить',
-'cancel' => 'Отмена',
-'canceled' => 'Отменено',
-'case.date' => 'Дата дела',
-'case.number' => 'Номер дела',
-'cash.discount' => 'Скидка при оплате наличными',
-'category.primary' => 'Категория Первичная',
-'category.secondary' => 'Категория Вторичная',
-'caution.delete.invoices' => 'Только тестирование:'
-	. 'удаление всех счетов-фактур и связанных '
-	. 'с ними записей.'
-	. '(См.'
-	. 'функцию inv/flush)',
-'caution.deleted.invoices' => 'Только тестирование:'
-	. 'все счета-фактуры и связанные с '
-	. 'ними поля были удалены.',
-'cc' => 'СС',
-'change.client' => 'Изменить клиента',
-'change.password' => 'Изменить пароль',
-'checking.for.news' => 'Проверка новостей...',
-'checking.for.updates' => 'Проверка обновлений...',
-'city' => 'Город',
-'claim' => 'Начал судебный иск',
-'cldr' => 'в',
-'client' => 'Клиент',
-'client.access' => 'Доступ клиента',
-'client.add' => 'Добавить клиента',
-'client.age' => 'Возраст',
-'client.age.hint' => 'Это поле обязательно для заполнения,'
-	. 'и клиент должен быть не '
-	. 'моложе 16 лет.',
-'client.already.exists' => 'Клиент уже существует!',
-'client.birthdate.hint' => 'Если дата рождения неизвестна, введите '
-	. '01/01/1901',
-'client.building.number' => 'Номер здания клиента',
-'client.contract.period.end' => 'Конец периода',
-'client.contract.period.start' => 'Начало периода',
-'client.contract.reference' => 'Ссылка на контракт',
-'client.custom' => 'Индивидуальный заказ клиента',
-'client.custom.add' => 'Клиент Пользовательский Добавить',
-'client.delete.history.exits.no' =>
-	'Невозможно удалить.'
-	. 'История клиента существует.',
-'client.detail.changes' => 'Если эта информация изменится, пожалуйста,'
-	. 'отправьте нам электронное письмо.',
-'client.error.summary' => 'Сводка ошибок',
-'client.form' => 'Форма клиента',
-'client.frequency' => 'Частота клиента',
-'client.group' => 'Группа клиентов',
-'client.has.not.assigned' => 'Эти клиенты не были назначены '
-	. 'на учетную запись пользователя.'
-	. 'Один или несколько клиентов на '
-	. 'учетную запись пользователя.',
-'client.has.not.user.account' =>
-	'У этого клиента нет учетной '
-	. 'записи пользователя или он в '
-	. 'настоящее время не назначен пользователю.'
-	. '1.'
-	. 'Убедитесь, что клиент зарегистрирован, т.'
-	. 'е.'
-	. 'имеет учетную запись пользователя, или '
-	. 'назначьте этого клиента зарегистрированному в '
-	. 'настоящее время пользователю.'
-	. '2.'
-	. 'Настройки .'
-	. 'Учетная запись пользователя для выставления '
-	. 'счетов .'
-	. 'Добавить учетную запись пользователя 3.'
-	. 'Назначьте этого клиента учетной записи '
-	. 'пользователя 4.'
-	. 'В текущем состоянии для этого '
-	. 'клиента невозможно будет создавать счета '
-	. 'и предложения.',
-'client.has.user.account' => 'Учетная запись пользователя',
-'client.import.list.blank' => 'Список импорта клиентов пуст',
-'client.name' => 'Имя клиента',
-'client.not.allocated.to.user' =>
-	'Клиент не назначен пользователю',
-'client.note' => 'Примечание для клиента',
-'client.note.add' => 'Примечание клиента Добавить',
-'client.note.date' => 'Клиент Дата',
-'client.note.view' => 'Просмотр примечаний клиента',
-'client.notes' => 'Заметки клиента',
-'client.number' => 'Номер клиента',
-'client.peppol' => 'Подробности о клиенте Peppol',
-'client.peppol.accounting.cost' => 'Код стоимости учета клиента для '
-	. 'бухгалтерского учета',
-'client.peppol.add' => 'Добавьте данные Peppol для электронного '
-	. 'выставления счетов',
-'client.peppol.buyer.reference.default' =>
-	'Референс покупателя:'
-	. 'Если клиент не указал контактное '
-	. 'лицо по заказу на покупку,'
-	. 'то это референс покупателя или '
-	. 'лицо, оформившее заказ, по умолчанию.',
-'client.peppol.buyer.reference.example' =>
-	'например, имя лица, обычно делающего '
-	. 'заказ, номер служащего лица, обычно '
-	. 'делающего заказ, или код, идентифицирующий '
-	. 'это лицо или отдел/группу',
-'client.peppol.clientpeppols.form' =>
-    'Форма клиента/заказчика бухгалтерского учета',
-'client.peppol.edit' => 'Редактировать данные Peppol для электронного '
-	. 'выставления счетов',
-'client.peppol.endpointid' => 'Идентификатор конечной точки:'
-	. 'адрес электронной почты',
-'client.peppol.endpointid.schemeid' =>
-    'Идентификатор конечной точки — идентификатор '
-	. 'схемы на основе EAS (схема '
-	. 'электронной адресации), 4-значный код, например '
-	. '0192',
-'client.peppol.financial.institution.branchid' =>
-	'Идентификатор филиала финансового учреждения',
-'client.peppol.identificationid' => 'Идентификационный номер',
-'client.peppol.identificationid.schemeid' =>
-    'Идентификационный идентификатор - schemeID',
-'client.peppol.legal.entity.company.legal.form' =>
-	'Юридическое лицо Правовая форма компании '
-	. '- Дополнительная юридическая информация, имеющая '
-	. 'отношение к продавцу, например, Акционерный '
-	. 'капитал',
-'client.peppol.legal.entity.companyid' =>
-	'Юридическое лицо Идентификатор компании',
-'client.peppol.legal.entity.companyid.schemeid' =>
-	'Идентификатор компании юридического лица - '
-	. 'schemeID',
-'client.peppol.legal.entity.registration.name' =>
-	'Регистрационное наименование юридического лица',
-'client.peppol.not.found' => 'Клиент или заказчик не указал '
-	. 'свои данные Peppol.',
-'client.peppol.not.found.accounting.cost' =>
-	'Не найдено:'
-	. 'стоимость учета или текстовое значение,'
-	. 'указывающее, где следует зарегистрировать соответствующие '
-	. 'данные в финансовых счетах Покупателя.',
-'client.peppol.not.found.delivery.location' =>
-	'Место доставки Название страны не '
-	. 'найдено',
-'client.peppol.not.found.id' =>
-	'Клиент не указал идентификатор своей '
-	. 'учетной записи в разделе «Данные '
-	. 'клиента Peppol» на сайте.',
-'client.peppol.not.found.id.supplier.assigned' =>
-	'Клиент Peppol Поставщик Назначенный Идентификатор '
-	. 'Счета Не Найден',
-'client.peppol.not.found.invoice' =>
-	'Связанный счет-фактура не найден',
-'client.peppol.not.found.purchase.order' =>
-	'Заказ на продажу не имеет '
-	. 'связанного с ним номера заказа '
-	. 'на покупку.',
-'client.peppol.not.found.purchase.order.item.number' =>
-	'С элементом строки заказа на '
-	. 'продажу не связан соответствующий идентификационный '
-	. 'номер элемента строки заказа на '
-	. 'покупку (идентификация элемента покупателя).'
-	. 'Администратор:'
-	. 'отредактируйте номер элемента заказа на '
-	. 'продажу в счете-фактуре.',
-'client.peppol.not.found.purchase.order.line.number' =>
-	'Номер строки заказа на продажу '
-	. 'не имеет соответствующего номера строки '
-	. 'заказа на покупку (OrderLineReference LineID),'
-	. 'связанного с ним.'
-	. 'Администратор:'
-	. 'Измените номер строки заказа на '
-	. 'продажу в счете-фактуре.',
-'client.peppol.not.found.sales.order' =>
-	'Заказ на продажу не существует',
-'client.peppol.payee.financial.account.name' =>
-	'Название финансового счета получателя платежа',
-'client.peppol.payee.financial.accountid' =>
-	'Идентификатор финансового счета получателя платежа',
-'client.peppol.record.updated.successfully' =>
-	'Запись Peppol успешно обновлена',
-'client.peppol.supplier.assigned.account.id' =>
-	'Идентификатор учетной записи, назначенный поставщиком',
-'client.peppol.taxschemecompanyid' => 'Налоговая схема Идентификатор компании',
-'client.peppol.taxschemeid' => 'Идентификатор налоговой схемы',
-'client.postaladdress' => 'Почтовый адрес',
-'client.postaladdress.add' => 'Добавить почтовый адрес клиента',
-'client.postaladdress.additional.street.name' =>
-	'Дополнительное название улицы',
-'client.postaladdress.available' => 'Доступные почтовые адреса',
-'client.postaladdress.building.number' => 'Номер здания',
-'client.postaladdress.city.name' => 'Название города',
-'client.postaladdress.country' => 'Страна',
-'client.postaladdress.countrysubentity' => 'Страна Субъект',
-'client.postaladdress.none' => 'У Клиента нет почтового адреса',
-'client.postaladdress.postalzone' => 'Почтовая зона',
-'client.postaladdress.street.name' => 'Название улицы',
-'client.purchase.order.number' => 'Номер заказа клиента на покупку',
-'client.streets' => 'Улицы',
-'client.surname' => 'Фамилия клиента',
-'client.surname.optional' => 'Фамилия клиента (необязательно)',
-'client.title' =>
-    'Обращение к клиенту (господин/госпожа/госпожа/доктор/профессор)',
-'client.title.doctor' => 'Доктор',
-'client.title.miss' => 'Скучать',
-'client.title.mr' => 'Мистер',
-'client.title.mrs' => 'Миссис',
-'client.title.professor' => 'Профессор',
-'client.view' => 'Клиентский взгляд',
-'clients' => 'Клиенты',
-'close' => 'Закрывать',
-'closed' => 'Закрыто',
-'column' => 'Столбец',
-'common.date.created' => 'Дата создания',
-'common.date.modified' => 'Дата изменения',
-'common.name' => 'Имя',
-'company' => 'Компания',
-'company.deleted' => 'Компания была удалена',
-'company.not.deleted' => 'Компания не была удалена, поскольку '
-	. 'к ней прикреплен профиль компании.',
-'company.private' => 'Компания Частная',
-'company.private.logo' => 'Логотип компании',
-'company.private.logo.height' => 'Высота логотипа',
-'company.private.logo.margin' => 'Поле логотипа',
-'company.private.logo.width' => 'Ширина логотипа',
-'company.private.logo.will.be.removed.from.uploads.and.public.folder' =>
-	'Логотип будет удален из загрузок '
-	. 'и публичной папки.',
-'company.public' => 'Компания Публичная',
-'complete' => 'Полный',
-'confirm' => 'Подтверждать',
-'confirm.deletion' => 'Подтвердите удаление',
-'contact.information' => 'Контактная информация',
-'continue' => 'Продолжать',
-'continue.with.developer.sandbox.hmrc' =>
-	'Продолжить с Developer Gov Sandbox '
-	. 'UK',
-'continue.with.facebook' => 'Продолжить с Facebook',
-'continue.with.github' => 'Продолжить с Github',
-'continue.with.google' => 'Продолжить с Google',
-'continue.with.govuk' => 'Продолжить с Gov Uk',
-'continue.with.linkedin' => 'Продолжить с LinkedIn',
-'continue.with.microsoftonline' => 'Продолжить с MicrosoftOnline',
-'continue.with.vkontakte' => 'Продолжить с ВКонтакте',
-'continue.with.x' => 'Продолжить с X',
-'continue.with.yandex' => 'Продолжить с Яндексом',
-'contract' => 'Договор',
-'contract.add' => 'Добавить контракт',
-'contract.contracts' => 'Контракты',
-'contract.create' => 'Создайте свои контракты через.'
-	. 'Счет-фактура.'
-	. 'Просмотр.'
-	. 'Параметры.'
-	. 'Изменить.'
-	. 'Контракт будет создан для клиента,'
-	. 'которому выставляется счет-фактура.'
-	. 'Свяжите этот контракт с будущими '
-	. 'счетами-фактурами.',
-'contract.index.button.list' => 'Счета-фактуры',
-'contract.name' => 'Имя',
-'contract.none' => 'Напоминание:'
-	. 'для этого счета-фактуры не настроен '
-	. 'контракт.',
-'contract.period.end' => 'Конец периода',
-'contract.period.start' => 'Начало периода',
-'contract.reference' => 'Ссылка',
-'contracts' => 'Контракты',
-'copy.invoice' => 'Копия счета-фактуры',
-'copy.quote' => 'Копировать цитату',
-'count' => 'Количество счетов-фактур',
-'country' => 'Страна',
-'create' => 'Создавать',
-'create.credit.invoice' => 'Создать счет-фактуру по кредиту',
-'create.credit.invoice.alert' => 'Создание кредитного счета сделает текущий '
-	. 'счет <em>доступным только для чтения,</em> '
-	. 'что означает, что вы больше '
-	. 'не сможете редактировать счет.'
-	. 'Кредитный счет будет содержать текущее '
-	. 'состояние со всеми позициями, но '
-	. 'с отрицательными суммами и остатками.',
-'create.invoice' => 'Создать счет-фактуру',
-'create.product' => 'Создать продукт',
-'create.project' => 'Создать проект',
-'create.quote' => 'Создать цитату',
-'create.recurring' => 'Создать повторяющийся',
-'create.task' => 'Создать задачу',
-'created' => 'Созданный',
-'creation.unsuccessful' => 'Создание счета-фактуры не удалось',
-'credit.invoice' => 'Кредитный счет-фактура',
-'credit.invoice.date' => 'Дата кредитного счета',
-'credit.invoice.details' => 'Реквизиты кредитного счета',
-'credit.invoice.for.invoice' => 'Кредитная нота',
-'credit.note.creation.successful' => 'Создание кредитной ноты успешно',
-'credit.note.creation.unsuccessful' => 'Создание кредитной ноты или кредитного '
-	. 'меморандума для отмены счета-фактуры не '
-	. 'удалось',
-'creditcard.cvv' => 'CVV-код/CSC-код',
-'creditcard.details' => 'Данные кредитной карты',
-'creditcard.expiry.month' => 'Месяц истечения срока',
-'creditcard.expiry.year' => 'Год истечения срока',
-'creditcard.number' => 'Номер кредитной карты',
-'cron.key' => 'CRON-ключ',
-'curl.store.cove.api.get.legal.entity.id.successful' =>
-	'Получите юридическое лицо, успешное',
-'curl.store.cove.api.setup.legal.entity.successful' =>
-	'Вызов API настройки Store Cove '
-	. '— юридическое лицо успешно выполнено',
-'curl.store.cove.api.setup.successful' =>
-	'Успешный вызов API настройки Store '
-	. 'Cove',
-'currency' => 'Валюта',
-'currency.code' => 'Код валюты',
-'currency.symbol' => 'Символ валюты',
-'currency.symbol.placement' => 'Размещение символа валюты',
-'current.day' => 'Текущий день',
-'current.month' => 'Текущий месяц',
-'current.version' => 'Текущая версия',
-'current.year' => 'Текущий год',
-'current.yy' => 'Текущий год (формат 2-х цифр)',
-'custom' => 'Счет-фактура Индивидуальный заказ',
-'custom.field' => 'Пользовательское поле',
-'custom.field.add' => 'Добавить пользовательское поле',
-'custom.field.form' => 'Форма пользовательского поля',
-'custom.field.location' => 'Положение документа',
-'custom.field.number' => 'Число',
-'custom.field.required' => 'Необходимый',
-'custom.fields' => 'Пользовательские поля',
-'custom.invoice.add' => 'Добавить индивидуальный счет-фактуру',
-'custom.title' => 'Пользовательский заголовок',
-'custom.value' => 'Пользовательское значение',
-'custom.value.delete' => 'Сначала удалить пользовательское значение',
-'custom.value.new' => 'Индивидуальная стоимость Новый',
-'custom.values' => 'Пользовательские значения',
-'custom.values.edit' => 'Изменить пользовательское значение',
-'custom.values.new' => 'Новое пользовательское значение',
-'dashboard' => 'Панель инструментов',
-'database' => 'База данных',
-'database.properly.configured' => 'База данных настроена правильно',
-'date' => 'Дата счета-фактуры',
-'date.actual.delivery' => 'Дата фактической поставки',
-'date.applied' => 'Дата применения',
-'date.created' => 'Дата создания',
-'date.format' => 'Формат даты',
-'date.issued' => 'Дата выпуска/создания',
-'date.supplied' => 'Дата поставки',
-'dates' => 'Даты выставления счетов',
-'datetime.immutable.date.created' => 'Создавать',
-'datetime.immutable.date.created.mySql.format.year.month.filter' =>
-	'Имм',
-'datetime.immutable.date.modified' => 'Против',
-'datetime.immutable.time.created' => 'Время',
-'days' => 'Дни',
-'debug' => 'Режим отладки включен',
-'decimal.point' => 'Десятичная точка',
-'default' => 'По умолчанию',
-'default.country' => 'Страна по умолчанию',
-'default.email.template' => 'Шаблон электронной почты по умолчанию',
-'default.hourly.rate' => 'Почасовая ставка по умолчанию',
-'default.invoice.group' => 'Группа счетов-фактур по умолчанию',
-'default.invoice.tax.rate' => 'Ставка налога по счету по '
-	. 'умолчанию',
-'default.invoice.tax.rate.placement' =>
-	'Размещение налоговой ставки по умолчанию '
-	. 'в счете-фактуре',
-'default.item.tax.rate' => 'Ставка налога на товар по '
-	. 'умолчанию',
-'default.list.limit' => 'Количество элементов в списках',
-'default.notes' => 'Заметки по умолчанию',
-'default.payment.method' => 'Метод оплаты по умолчанию',
-'default.pdf.template' => 'Шаблон PDF по умолчанию',
-'default.public.template' => 'Публичный шаблон по умолчанию',
-'default.quote.group' => 'Группа цитат по умолчанию',
-'default.terms' => 'Условия по умолчанию',
-'delete' => 'Удалить',
-'delete.attachment.warning' => 'Вы уверены, что хотите удалить '
-	. 'это вложение?',
-'delete.client' => 'Удалить клиента',
-'delete.client.warning' => 'Если вы удалите этого клиента,'
-	. 'вы также удалите все счета,'
-	. 'предложения и платежи, связанные с '
-	. 'этим клиентом.'
-	. 'Вы уверены, что хотите навсегда '
-	. 'удалить этого клиента?',
-'delete.invoice' => 'Удалить счет-фактуру',
-'delete.invoice.warning' => 'Если вы удалите этот счет,'
-	. 'вы не сможете восстановить его '
-	. 'позже.'
-	. 'Вы уверены, что хотите навсегда '
-	. 'удалить этот счет?',
-'delete.quote' => 'Удалить цитату',
-'delete.quote.warning' => 'Если вы удалите эту цитату,'
-	. 'вы не сможете восстановить ее '
-	. 'позже.'
-	. 'Вы уверены, что хотите навсегда '
-	. 'удалить эту цитату?',
-'delete.record.warning' => 'Вы уверены, что хотите удалить '
-	. 'эту запись?',
-'delete.sent' => 'Невозможно удалить - счет отправлен',
-'delete.tax.warning' => 'Вы уверены, что хотите удалить '
-	. 'этот налог?',
-'delete.user.client.warning' => 'Вы уверены, что хотите отменить '
-	. 'назначение этого клиента данному пользователю?',
-'deleted' => 'Удалено',
-'deletion.forbidden' => 'Удаление счетов запрещено.'
-	. 'Обратитесь к администратору или ознакомьтесь '
-	. 'с документацией.',
-'delivery' => 'Подробности доставки:'
-	. 'Счет/Даты начала/окончания периода доставки',
-'delivery.actual.delivery.date' => 'Фактическая дата поставки',
-'delivery.add' => 'Добавить доставку',
-'delivery.date.created' => 'Дата создания',
-'delivery.date.modified' => 'Дата доставки изменена',
-'delivery.end.date' => 'Конечная дата доставки/периода выставления счета',
-'delivery.location' => 'Место доставки',
-'delivery.location.add' => 'Место доставки Добавить',
-'delivery.location.add.in.invoice' =>
-	'Добавьте место доставки в разделе '
-	. '«Счет-фактура»… Просмотр… Параметры… Редактировать',
-'delivery.location.building.number' => 'Номер здания',
-'delivery.location.client' => 'Места доставки Клиента',
-'delivery.location.delete' => 'Место доставки Удалить',
-'delivery.location.edit' => 'Место доставки Изменить',
-'delivery.location.electronic.address.scheme' =>
-	'Схема электронного адреса (список кодов) '
-	. 'По умолчанию:'
-	. '0088 Европейская нумерация товаров (EAN) '
-	. 'Код местоположения, также известный как '
-	. '(GLN) Глобальные номера местоположений',
-'delivery.location.global.location.number' =>
-	'Глобальный номер местоположения (13 цифр)',
-'delivery.location.id.not.found' =>
-	'Место доставки Глобальный номер местоположения '
-	. 'ID не найден',
-'delivery.location.index.button.list' =>
-	'Счета-фактуры',
-'delivery.location.none' => 'К данному счету не привязано '
-	. 'ни одно место доставки.',
-'delivery.location.peppol.output' => 'Нет места доставки, связанного с '
-	. 'этим счетом.'
-	. 'Поэтому нет вывода Peppol',
-'delivery.location.plural' => 'Места доставки',
-'delivery.location.view' => 'Место доставки Посмотреть',
-'delivery.party' => 'Сторона доставки',
-'delivery.party.add' => 'Доставка Стороны Добавить',
-'delivery.party.edit' => 'Сторона доставки Редактировать',
-'delivery.party.name' => ' Название стороны доставки',
-'delivery.party.view' => 'Просмотр партии доставки',
-'delivery.start.date' => 'Дата начала поставки/периода выставления счета',
-'description' => 'Описание',
-'description.document' => 'Описание документа',
-'details' => 'Подробности',
-'development.progress' => 'Прогресс развития',
-'development.schema' => 'Схема',
-'disable.flash.messages' => 'Отключить мгновенные сообщения о счетах-фактурах',
-'disable.quickactions' => 'Отключить быстрые действия',
-'disable.sidebar' => 'Отключить боковую панель',
-'discount' => 'Скидка',
-'discount.amount' => 'Сумма скидки',
-'discount.percent' => 'Процент скидки',
-'discount.percentage' => 'Процент скидки',
-'document.description' => 'Описание документа Peppol',
-'documentation' => 'Документация',
-'download' => 'Скачать',
-'download.pdf' => 'Скачать PDF-файл',
-'draft' => 'Черновик',
-'draft.guest' => 'Клиенты не могут просматривать черновики '
-	. 'счетов.',
-'draft.number.off' => 'Новые черновики счетов-фактур не будут '
-	. 'иметь номера счета-фактуры.'
-	. 'Отметьте как отправленные, чтобы получить '
-	. 'номер счета-фактуры',
-'draft.number.on' => 'Новые проекты счетов-фактур будут иметь '
-	. 'номер счета-фактуры.',
-'drop.files.here' => 'Перетащите файлы сюда!',
-'due.date' => 'Две даты',
-'early.settlement.cash.discount' => 'Скидка за раннюю оплату наличными',
-'edit' => 'Редактировать',
-'elements' => 'Элементы',
-'email' => 'Электронная почта',
-'email.address' => 'Адрес электронной почты',
-'email.date' => 'Дата отправки по электронной почте',
-'email.default' => 'По умолчанию',
-'email.default.none.set' => 'Значение по умолчанию не установлено.',
-'email.exception' => 'Исключение для электронной почты.',
-'email.from.dropdown' => 'Из раскрывающегося списка адресов электронной '
-	. 'почты, которые будут включены в '
-	. 'форму MailerQuote и форму MailerInv',
-'email.include' => 'Включать',
-'email.invoice' => 'Счет по электронной почте',
-'email.link.click.confirm' => 'Пожалуйста, подтвердите свой адрес электронной '
-	. 'почты, нажав на эту ссылку',
-'email.log' => 'Журнал счетов-фактур, отправленных по электронной '
-	. 'почте',
-'email.logs' => 'Журналы счетов-фактур, отправленных по электронной '
-	. 'почте',
-'email.logs.with.filter' => 'По электронной почте',
-'email.not.configured' => 'Прежде чем отправлять электронную почту,'
-	. 'вам необходимо настроить параметры электронной '
-	. 'почты в разделе «Параметры системы».',
-'email.not.sent.successfully' => 'Письмо НЕ было успешно отправлено',
-'email.pdf.attachment' => 'Прикрепить предложение/счет к электронному письму?',
-'email.quote' => 'Отправить цитату по электронной почте',
-'email.send.method' => 'Метод отправки электронной почты',
-'email.send.method.phpmail' => 'PHP-почта',
-'email.send.method.sendmail' => 'Отправить почту',
-'email.send.method.smtp' => 'SMTP',
-'email.settings' => 'Настройки электронной почты',
-'email.source.email.template' => 'Получено из настроек .'
-	. 'Шаблон электронного письма',
-'email.source.user.account' => 'Получено из настроек .'
-	. 'Счет-фактура Учетная запись пользователя',
-'email.successfully.sent' => 'Письмо успешно отправлено',
-'email.template' => 'Шаблон электронного письма',
-'email.template.add' => 'Шаблон электронной почты Добавить',
-'email.template.already.exists' => 'Шаблон электронного письма уже существует!',
-'email.template.form' => 'Шаблон формы электронного письма',
-'email.template.from.email.leave.blank' =>
-	'Если вы оставите это поле '
-	. 'пустым, адрес электронной почты учетной '
-	. 'записи пользователя будет вставлен как '
-	. 'редактируемое значение в форму почтовой '
-	. 'рассылки.'
-	. 'Например, адрес электронной почты сервера '
-	. 'бухгалтера.'
-	. 'Предпочтительно использовать здесь адрес электронной '
-	. 'почты, связанный с сервером.',
-'email.template.from.source' => 'Источник электронной почты',
-'email.template.from.source.admin.email' =>
-	'Адрес электронной почты администратора (config/common/params)',
-'email.template.from.source.froms.email' =>
-	'Из таблицы по умолчанию (настройки.'
-	. 'из раскрывающегося списка адресов электронной '
-	. 'почты)',
-'email.template.from.source.sender.email' =>
-	'Адрес электронной почты отправителя (config/common/params)',
-'email.template.not.configured' => 'Шаблоны электронной почты не настроены.'
-	. 'Настройки.'
-	. 'Счета-фактуры.'
-	. 'Шаблоны счетов-фактур.'
-	. 'Шаблон электронной почты по умолчанию',
-'email.template.overdue' => 'Шаблон просроченного электронного письма',
-'email.template.paid' => 'Шаблон платного письма',
-'email.template.successfully.added' =>
-    'Шаблон электронной почты успешно добавлен',
-'email.template.successfully.deleted' =>
-    'Шаблон электронного письма успешно удален',
-'email.template.successfully.edited' =>
-    'Шаблон электронного письма успешно отредактирован',
-'email.template.tags' => 'Теги шаблонов электронных писем',
-'email.template.tags.instructions' => 'Теги шаблона можно использовать для '
-	. 'добавления динамической информации, например имени '
-	. 'клиента или номера счета, в '
-	. 'шаблон электронного письма.'
-	. 'Щелкните текстовое поле Body, а '
-	. 'затем выберите тег из раскрывающегося '
-	. 'списка.'
-	. 'Он будет автоматически вставлен в '
-	. 'текстовое поле.',
-'email.template.type' => 'Тип шаблона электронной почты',
-'email.templates' => 'Шаблоны электронных писем',
-'email.to.address.missing' => 'Вам необходимо указать адрес электронной '
-	. 'почты, на который будет отправлено '
-	. 'письмо.',
-'email.warning.draft' => 'Черновики счетов-фактур сначала необходимо пометить '
-	. 'как отправленные, чтобы они появились '
-	. 'у клиента, а затем их '
-	. 'можно будет отправить по электронной '
-	. 'почте.',
-'enable.debug.mode' => 'Включить режим отладки',
-'enable.online.payments' => 'Включить онлайн-платежи',
-'enable.permissive.search.clients' => 'Включить разрешительный поиск',
-'enable.projects' => 'Включить модуль «Проекты»',
-'enable.vat' => 'Включить НДС',
-'enable.vat.message' => 'Отображение сообщения с напоминанием об '
-	. 'уплате НДС над кнопкой «Параметры» '
-	. 'в представлениях',
-'enable.vat.warning.line.1' =>
-	'1.'
-	. 'При включенном НДС только отдельные '
-	. 'позиции в счете-фактуре облагаются НДС,'
-	. 'т.'
-	. 'е.'
-	. 'налоги по смете/счету-фактуре не будут '
-	. 'отображаться в счете-фактуре и будут '
-	. 'уменьшены до 0.',
-'enable.vat.warning.line.2' =>
-	'2.'
-	. 'При включенном НДС никакие непозиционные '
-	. 'налоги, упомянутые выше, не составляют '
-	. 'общую сумму налога.',
-'enable.vat.warning.line.3' =>
-	'3.'
-	. 'Создавайте счета-фактуры/квитанции по НДС в '
-	. 'отдельной базе данных.',
-'enable.vat.warning.line.4' =>
-	'4.'
-	. 'Все новые позиции счетов-фактур по '
-	. 'НДС помечаются флагом belongs_to_vat_invoice.',
-'enabled' => 'Включено',
-'end' => 'Конец',
-'end.date' => 'Дата окончания',
-'enforcement' => 'Сотрудник правоохранительных органов, присутствовавший на '
-	. 'адресе',
-'enter' => 'Входить',
-'enter.payment' => 'Введите платеж',
-'error.duplicate.file' => 'Ошибка:'
-	. 'повторяющееся имя файла, пожалуйста, измените '
-	. 'его!',
-'errors' => 'Ошибки',
-'every' => 'Каждый',
-'example' => 'Пример',
-'expired' => 'Истекший',
-'expires' => 'Истекает',
-'extra.information' => 'Дополнительная информация',
-'failure' => 'Отказ',
-'false' => 'ЛОЖЬ',
-'families' => 'Семьи',
-'family' => 'Семья',
-'family.add' => 'Семья Добавить',
-'family.already.exists' => 'Семья уже существует!',
-'family.history' => 'История семьи существует.'
-	. 'Невозможно удалить',
-'family.name' => 'Фамилия',
-'family.search' => 'Семейный поиск',
-'faq' => 'Часто задаваемые вопросы',
-'faq.ai.callback.session' => 'Copilot:'
-	. 'Как мне включить https:'
-	. '//github.'
-	. 'com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.'
-	. 'php для улучшения управления состоянием '
-	. 'в функции `callbackGithub`?',
-'faq.business.rules' => 'Что такое бизнес-правила Peppol?',
-'faq.gov.developer.sandbox.hmrc' =>
-	'Как подключить этот репозиторий к '
-	. 'HMRC Developer Sandbox?',
-'faq.lamp.alpine' => 'Как настроить этот репозиторий на '
-	. 'Linux Alpine, Apache2, mySql/mariadb и '
-	. 'php?',
-'faq.oauth2' => 'Как настроить поставщика удостоверений OAuth2,'
-	. 'например, для регистрации и входа '
-	. 'в систему через Facebook',
-'faq.payment.provider' => 'Как настроить поставщика услуг онлайн-платежей?',
-'faq.php.info.all' => 'Все',
-'faq.php.info.configuration' => 'Конфигурация',
-'faq.php.info.credits' => 'Кредиты',
-'faq.php.info.details' => 'Подробности информации о PHP',
-'faq.php.info.environment' => 'Среда',
-'faq.php.info.general' => 'Общий',
-'faq.php.info.licence' => 'Лицензия',
-'faq.php.info.modules' => 'Модули',
-'faq.php.info.variables' => 'Переменные',
-'faq.shared.hosting' => 'Как разместить yii3i на общем '
-	. 'хостинге?',
-'faq.taxpoint' => 'Как определить налоговую точку?',
-'faq.yii.requirement.checker' => 'Проверка требований приложения Yii',
-'fax' => 'Факс',
-'fax.abbr' => 'Ф',
-'fax.number' => 'Номер факса',
-'field' => 'Поле',
-'filter.clients' => 'Фильтровать клиентов',
-'filter.invoices' => 'Фильтр счетов-фактур',
-'filter.payments' => 'Фильтр платежей',
-'filter.quotes' => 'Фильтровать цитаты',
-'first' => 'Первый',
-'first.day.of.week' => 'Первый день недели',
-'first.reset' => 'Сначала удалите тестовые котировки и '
-	. 'счета-фактуры, которые вы создали для '
-	. 'тестирования.'
-	. 'Затем можно удалить тестовые данные.',
-'flash.messages.appear.here' => 'Здесь появляются мгновенные сообщения.',
-'footer' => 'Нижний колонтитул',
-'forgot.your.password' => 'Я забыл свой пароль',
-'form.error' => 'Ошибки формы',
-'from.date' => 'От даты',
-'from.default.in.dropdown' => 'Адрес электронной почты по умолчанию '
-	. 'в раскрывающемся списке',
-'from.email' => 'Из электронной почты',
-'from.email.address' => 'Из адресов электронной почты:'
-	. 'выберите адрес по умолчанию',
-'from.include.in.dropdown' => 'Включить этот адрес электронной почты '
-	. 'в раскрывающийся список',
-'from.name' => 'От имени',
-'front.page' => 'Первая страница',
-'gateway.online.payment' => 'Онлайн-платеж',
-'gender' => 'Пол',
-'gender.female' => 'Женский',
-'gender.male' => 'Мужской',
-'gender.other' => 'Другой',
-'general' => 'Общий',
-'general.no' => 'Нет',
-'general.settings' => 'Общие настройки',
-'general.yes' => 'Да',
-'generate' => 'Генерировать',
-'generate.copy' => 'Создать копию',
-'generate.invoice.number.for.draft' =>
-	'Сгенерировать номер счета-фактуры для черновиков '
-	. 'счетов-фактур',
-'generate.quote.number.for.draft' =>
-	'Сгенерировать номер предложения для черновиков '
-	. 'предложений',
-'generator' => 'Генератор',
-'generator.add' => 'Генератор Добавить',
-'generator.camelcase.capital.name' => 'Название Camelcase с заглавными буквами '
-	. 'используется в названиях контроллеров и '
-	. 'репозиториев, например TaxRate.'
-	. 'Используйте «Product», если используете приведенный '
-	. 'выше пример «product»',
-'generator.camelcase.capital.name.product' =>
-	'Продукт',
-'generator.controller.and.repository' => 'Контроллер и репозиторий',
-'generator.controller.layout.directory' => 'Каталог макета контроллера, например, dirname(dirname(__DIR__)),'
-	. 'который появляется сразу после конструкции '
-	. 'контроллера.'
-	. 'Файл контроллера находится в (__DIR__) '
-	. 'и на два каталога ниже '
-	. 'каталога \'src\', который будет использоваться '
-	. 'как \'база\' для добавления пути '
-	. 'к каталогу макета.',
-'generator.controller.layout.directory.dot.path' =>
-	'Путь к каталогу макета контроллера '
-	. 'с точкой, например, «/views/layout/invoice.'
-	. 'php», который появляется сразу после '
-	. 'конструкции контроллера (исключая апострофы) и '
-	. 'добавляется к указанному выше местоположению '
-	. 'каталога src.',
-'generator.controller.layout.directory.dot.path.placeholder' =>
-	'Путь к каталогу макета контроллера',
-'generator.controller.layout.directory.placeholder' =>
-	'Каталог макета контроллера, например, dirname(dirname(__DIR__))',
-'generator.controller.path.layout' => 'Путь к файлу макета',
-'generator.created.at.include' => 'Включить поле created_at в Entity',
-'generator.deleted.at.include' => 'Включить поле removed_at в Entity',
-'generator.external.entity' => 'Внешняя сущность, используемая в этой '
-	. 'сущности.'
-	. 'Сущность настройки — это простая '
-	. 'индексированная база данных пары ключ '
-	. '=&gt; значение идентификатора.',
-'generator.external.entity.default' => 'Внешняя сущность, например.'
-	. 'MyEntity, исключая путь.'
-	. 'Путь, построенный в генераторе.'
-	. 'По умолчанию:'
-	. 'Настройка',
-'generator.external.entity.placeholder' => 'Внешняя сущность, например.'
-	. 'MyEntity, исключая путь.'
-	. 'Путь, созданный в генераторе.'
-	. 'По умолчанию:'
-	. 'Настройка.'
-	. 'Дополнительный репозиторий, например.'
-	. 'Настройка репозитория в дополнение к '
-	. 'основному репозиторию.',
-'generator.file.type.not.found' =>
-	'Тип файла не найден.',
-'generator.flash.include' => 'Включить Flash-сообщение в функцию «Добавить/Изменить/Просмотреть/Удалить» '
-	. 'в контроллере',
-'generator.generate' => 'Генерировать',
-'generator.generated' => ' сгенерировано в ',
-'generator.google.translate.any' => 'Перевести English\\any_lang.'
-	. 'php',
-'generator.google.translate.app' => 'Перевести English\\app_lang.'
-	. 'php',
-'generator.google.translate.common' => 'Перевести English\\common_lang.'
-	. 'php',
-'generator.google.translate.diff' => 'Перевести English\\diff_lang.'
-	. 'php',
-'generator.google.translate.gateway' => 'Перевести English\\gateway_lang.'
-	. 'php',
-'generator.google.translate.ip' => 'Перевести English\\ip_lang.'
-	. 'php',
-'generator.google.translate.latest.a' =>
-	'Перевести English\\a_latest_lang.'
-	. 'php',
-'generator.google.translate.latest.b' =>
-	'Перевести английский\\b_latest_lang.'
-	. 'php',
-'generator.headerline.include' => 'Включите заголовок, если требуется Ajax',
-'generator.history' => 'Эта запись имеет существующие Generator '
-	. 'Relations, поэтому ее нельзя удалить.'
-	. 'Сначала удалите эти связи.',
-'generator.modified.at.include' => 'Включить поле modified_at в сущность',
-'generator.namespace' => 'Пространство имен',
-'generator.namespace.before.entity' => 'Пространство имен перед путем к '
-	. 'сущности, например, App\\Invoice (НЕ App\\Invoice\\Entity)',
-'generator.relation.form' => 'Форма отношения генератора',
-'generator.relation.form.camelcase.name' =>
-	'Имя в стиле CamelCase, исключая '
-	. 'идентификатор (например, tax_rate_id «внешний ключ/связь» '
-	. 'в таблице Product упрощено до '
-	. 'TaxRate И является именем сущности)',
-'generator.relation.form.entity.generator' =>
-	'Генератор сущностей',
-'generator.relation.form.lowercase.name' =>
-	'Имя в нижнем регистре, исключая '
-	. 'идентификатор (например, tax_rate_id «внешний ключ/связь» '
-	. 'в таблице Product упрощено до '
-	. 'tax.'
-	. 'rate)',
-'generator.relation.form.view.field.name' =>
-	'Просмотреть имя поля',
-'generator.relations' => 'Генератор отношений',
-'generator.relations.add' => 'Генераторы Отношение Добавить',
-'generator.route.prefix' => 'Префикс маршрута, например счет-фактура в '
-	. '«счет-фактура/продукт», который будет отображаться после '
-	. 'конструкции контроллера.',
-'generator.route.suffix' => 'Суффикс маршрута, например, product в '
-	. '«invoice/product», который будет отображаться после '
-	. 'конструкции контроллера.',
-'generator.small.plural.name' => 'Имя во множественном числе, используемое '
-	. 'в Controller для функции index '
-	. 'controller для перечисления всех генераторов '
-	. 'сущностей.'
-	. 'Обычно указанное выше значение с '
-	. 's на конце.',
-'generator.small.plural.name.placeholder' =>
-	'Имя во множественном числе',
-'generator.small.plural.name.products' =>
-	'продукты',
-'generator.small.singular.name' => 'Небольшое единственное имя, используемое в '
-	. 'контроллере для редактирования и просмотра '
-	. 'функций контроллера.'
-	. 'Обычно совпадает с суффиксом маршрута.'
-	. 'Например, продукт',
-'generator.small.singular.name.placeholder' =>
-	'Маленькое единственное имя',
-'generator.small.singular.name.product' =>
-	'продукт',
-'generator.table' => 'Стол',
-'generator.table.used.to.generate.entity.controller.repository' =>
-	'Таблица, используемая для генерации сущности,'
-	. 'контроллера, добавления, редактирования, удаления, представления,'
-	. 'репозитория, службы, картографа',
-'generator.updated.at.include' => 'Включить поле updated.'
-	. 'at в Entity',
-'generators' => 'Генераторы',
-'generators.relation' => 'Генераторы Отношение',
-'gln' => 'ГЛН',
-'gov.developer.sandbox' => 'Песочница для разработчиков',
-'gov.developer.sandbox.uk' => 'Hmrc',
-'gridview.api' => 'API',
-'gridview.create.at' => 'Создано в',
-'gridview.login' => 'Авторизоваться',
-'gridview.profile' => 'Профиль',
-'gridview.title' => 'Список пользователей',
-'group' => 'Группа',
-'group.add' => 'Группа Добавить',
-'group.document.number' => 'Номер документа не создан.'
-	. 'Проверьте группы.',
-'group.form' => 'Групповая форма',
-'group.history' => 'История группы существует.'
-	. 'Невозможно удалить',
-'groups' => 'Группы',
-'guest.account.denied' => 'Эта учетная запись не настроена.'
-	. 'Обратитесь к системному администратору.',
-'guest.read.only' => 'Гость (Только чтение)',
-'guest.url' => 'Гостевой URL-адрес',
-'hide.or.unhide.columns' => 'Скрыть или показать столбцы',
-'hint.greater.than.zero.please' =>
-	'Больше 0,00, пожалуйста!',
-'hint.this.field.is.not.required' =>
-	'Это поле не обязательно',
-'hint.this.field.is.required' =>
-	'Это поле обязательно к заполнению',
-'home' => 'Дом',
-'home.caption.slide1' => 'Зарегистрируйтесь и войдите как администратор.'
-	. 'Нет интернета.'
-	. 'игнорируйте ошибку подключения электронной почты.',
-'home.caption.slide2' => 'Как администратор, зарегистрируйте пользователя.'
-	. 'Учетная запись электронной почты является '
-	. 'законной, а подключение к интернету '
-	. '.'
-	. 'проверьте.'
-	. 'Пользователь получит учетную запись клиента.',
-'home.caption.slide3' => 'Учетная запись электронной почты не '
-	. 'является легитимной, и нет подключения '
-	. 'к Интернету.'
-	. 'войдите в систему администратора и '
-	. 'сделайте учетную запись пользователя Invoice '
-	. 'User Account активной в разделе '
-	. '«Настройки».'
-	. 'Создайте учетную запись клиента.'
-	. 'Назначьте ее пользователю',
-'home.caption.slides.location.debug.mode' =>
-	'Это расположение контента:'
-	. '/resources/views/site/index.'
-	. 'php внутри .'
-	. '/resources/views/layout/.'
-	. '.'
-	. 'и расположение слайда перевода .'
-	. '/resources/messages/app.'
-	. 'php',
-'hostname' => 'Имя хоста',
-'id' => 'ИДЕНТИФИКАТОР',
-'identifier.format' => 'Форматирование идентификатора',
-'identifier.format.template.tags' => 'Шаблоны тегов для идентификатора',
-'identifier.format.template.tags.instructions' =>
-	'Теги шаблона можно использовать для '
-	. 'добавления динамической информации, например имени '
-	. 'клиента или номера счета, в '
-	. 'шаблон электронного письма.'
-	. 'Щелкните поле <b>форматирования идентификатора</b> ,'
-	. 'а затем выберите тег из '
-	. 'раскрывающегося списка.'
-	. 'Он будет автоматически вставлен в '
-	. 'текстовое поле.',
-'identity.provider.authentication.successful' => 'Вы успешно прошли аутентификацию через '
-	. 'выбранного вами поставщика удостоверений, зарегистрировались '
-	. 'и получили клиентскую учетную запись.'
-	. 'Нажмите здесь в течение следующего '
-	. 'часа, чтобы активировать свою учетную '
-	. 'запись.'
-	. 'У вас есть час на '
-	. 'первый вход.',
-'image.overdue' => 'Расположение изображения:'
-	. '/invoice/public/img/overdue.'
-	. 'png',
-'image.paid' => 'Расположение изображения:'
-	. '/invoice/public/img/paid.'
-	. 'png',
-'import' => 'Импорт',
-'import.data' => 'Импорт данных',
-'import.from.csv' => 'Импорт из CSV',
-'in.progress' => 'В ходе выполнения',
-'inactive' => 'Неактивный',
-'index.checkbox.add.some.items.to.enable' =>
-	'В счете нет позиций.'
-	. 'Добавьте позиции, чтобы включить флажок',
-'index.footer.showing' => 'Показано %s из %s',
-'index.showing' => 'Показано %s из %s',
-'info.task.readonly' => 'Эту задачу больше нельзя изменить,'
-	. 'поскольку за нее уже выставлен '
-	. 'счет.',
-'install.test.data' => 'Тестовые данные теперь можно установить',
-'install.test.data.exists.already' =>
-	'Данные для тестирования счетов-фактур уже '
-	. 'существуют',
-'install.test.data.goto.tab.index' =>
-	'Перейти к настройкам .'
-	. 'Общие .'
-	. 'Установить тестовые данные',
-'interface' => 'Интерфейс',
-'invalid.amount' => 'Неверная сумма',
-'invalid.subscriber.number' => 'Неверный номер абонента',
-'invoice' => 'Счет',
-'invoiced' => 'Выставлен счет',
-'invoiceplane' => 'Счет-фактураСамолет',
-'invoiceplane.clients' => 'Клиенты вставлены',
-'invoiceplane.database.name' => 'Имя базы данных',
-'invoiceplane.database.password' => 'Пароль',
-'invoiceplane.database.username' => 'Имя пользователя',
-'invoiceplane.families' => 'Семьи вставлены',
-'invoiceplane.import' => 'Тестовое соединение',
-'invoiceplane.import.complete.connection.closed' =>
-	'Импорт завершён! Соединение закрыто!',
-'invoiceplane.import.connected' => 'У вас есть связь!',
-'invoiceplane.import.proceed' => 'Продолжить процесс импорта',
-'invoiceplane.import.proceed.alert' => 'Вы уверены, что хотите продолжить?',
-'invoiceplane.imported' => 'Таблицы были импортированы.',
-'invoiceplane.news' => 'Новости InvoicePlane',
-'invoiceplane.no.connection' => 'Нет связи',
-'invoiceplane.no.username.or.password' =>
-	'Пожалуйста, сохраните имя базы данных,'
-	. 'имя пользователя и пароль для '
-	. 'InvoicePlane.',
-'invoiceplane.products' => 'Вставленные продукты',
-'invoiceplane.tables' => 'Импортируйте таблицы InvoicePlane Client, Product,'
-	. 'Unit, Family, TaxRate в пустые '
-	. 'таблицы.'
-	. 'В этих таблицах не должно '
-	. 'быть существующих данных до импорта '
-	. 'и не должно быть существующих '
-	. 'документов, например, счетов-фактур.',
-'invoiceplane.tables.not.empty' =>
-    'Таблицы «Клиент», «Продукт», «Подразделение», «Семья» '
-	. 'и «Тарифная ставка» должны быть '
-	. 'пустыми перед импортом.',
-'invoiceplane.taxrates' => 'Налоговые ставки включены с обязательной '
-	. 'нулевой налоговой ставкой и стандартной '
-	. 'налоговой ставкой.',
-'invoiceplane.units' => 'Вставленные единицы',
-'invoiceplane.yes.connection' => 'Да, у вас есть подключение '
-	. 'к базе данных Invoiceplane!',
-'invoices' => 'Счета-фактуры',
-'invoices.due.after' => 'Счета, подлежащие оплате после (дней)',
-'is.not.writable' => 'недоступен для записи',
-'is.writable' => 'доступен для записи',
-'item' => 'Пункт счета-фактуры',
-'item.add' => 'Добавить элемент счета',
-'item.allowance' => 'Пункт Пособие',
-'item.charge' => 'Товарная плата',
-'item.date' => 'Дата товара',
-'item.discount' => 'Скидка на товар',
-'item.lookup' => 'Поиск элемента счета-фактуры',
-'item.lookup.form' => 'Форма поиска товара',
-'item.lookups' => 'Поиск предметов',
-'item.name' => 'Название товара',
-'item.tax' => 'Налог на товар',
-'item.tax.excluded' => 'Промежуточный итог x Процент налога '
-	. '(налог на товар исключен)',
-'item.tax.included' => '(Промежуточный итог + Налог на '
-	. 'товар) x Процент налога',
-'item.tax.rate' => 'Ставка налога на товар',
-'items' => 'Элементы счета-фактуры',
-'judgement' => 'Получено решение',
-'label' => 'Этикетка',
-'label.switch.off' => 'Счет-фактура НДС',
-'label.switch.on' => 'Счет-фактура без НДС',
-'language' => 'Язык',
-'last' => 'Последний',
-'last.month' => 'Прошлый месяц',
-'last.quarter' => 'Последняя четверть',
-'last.year' => 'В прошлом году',
-'layout.add' => 'Добавлять',
-'layout.add.post' => 'Добавить пост',
-'layout.add.random-content' => 'Добавить случайный контент',
-'layout.add.tag' => 'Добавить тег',
-'layout.archive' => 'Архив',
-'layout.archive.for-year' => 'Архив за {год}',
-'layout.blog' => 'Блог',
-'layout.change-language' => 'Изменить язык',
-'layout.console' => 'Консоль',
-'layout.content' => 'Содержание',
-'layout.create.new-user' => 'Создать нового пользователя',
-'layout.db.schema' => 'Схема БД',
-'layout.go.home' => 'Вернуться домой',
-'layout.login' => 'Авторизоваться',
-'layout.migrations' => 'Миграции',
-'layout.no-records' => 'Нет записей',
-'layout.not-found' => 'Не найдено',
-'layout.page.not-authorised' => 'Не авторизовано:'
-	. 'данные аутентификации неверны.',
-'layout.page.not-found' => 'Страница {url} не найдена.',
-'layout.page.user-cancelled-oauth2' =>
-    'Пользователь отменил вход в систему/регистрацию '
-	. 'через поставщика удостоверений, например Facebook',
-'layout.pagination-summary' => 'Показано {pageSize} из {total} сообщений',
-'layout.password' => 'Пароль',
-'layout.password-verify' => 'Подтвердите свой пароль',
-'layout.password-verify.new' => 'Подтвердите ваш новый пароль',
-'layout.password.new' => 'Новый пароль',
-'layout.password.otp' => 'Пароль OTP',
-'layout.rbac.assign-role' => 'Назначить роль RBAC пользователю',
-'layout.remember' => 'Запомнить меня',
-'layout.reset' => 'Перезагрузить',
-'layout.show-more' => 'показать больше',
-'layout.submit' => 'Представлять на рассмотрение',
-'layout.title' => 'Заголовок',
-'layout.total.posts' => 'Всего {count} сообщений',
-'left.pad' => 'Левая панель',
-'letter' => '7-дневное письмо перед действием отправлено',
-'loading.error' => 'Похоже, приложение зависло из-за ошибки.',
-'loading.error.help' => 'Получить помощь',
-'login' => 'Авторизоваться',
-'login.logo' => 'Логин Логотип',
-'loginalert.credentials.incorrect' => 'Неверный адрес электронной почты или '
-	. 'пароль.',
-'loginalert.no.password' => 'Введите пароль.',
-'loginalert.user.inactive' => 'Этот пользователь отмечен как неактивный.'
-	. 'Обратитесь к системному администратору.',
-'loginalert.user.not.found' => 'С этим адресом электронной почты '
-	. 'не зарегистрирована учетная запись.',
-'loginalert.wrong.auth.code' => 'Сброс пароля отклонен.'
-	. 'Вы предоставили недействительный токен аутентификации.',
-'logo' => 'Логотип счета-фактуры',
-'logout' => 'Выйти',
-'loss' => 'Списано',
-'mark.invoices.sent.copy' => 'Отметить счета-фактуры как отправленные при '
-	. 'копировании счета-фактуры',
-'mark.invoices.sent.pdf' => 'Отметить счета-фактуры как отправленные при '
-	. 'создании PDF-файла',
-'mark.quotes.sent.pdf' => 'Отметить цитаты как отправленные при '
-	. 'создании PDF-файла',
-'mark.sent.copy.on' => 'Отметить счета-фактуры как отправленные при '
-	. 'копировании счета-фактуры включено.'
-	. 'Он должен быть включен только '
-	. 'во время разработки',
-'mark.sent.off' => 'Отметить счета-фактуры как отправленные при '
-	. 'копировании счетов-фактур .'
-	. 'в настоящее время ОТКЛЮЧЕНО.'
-	. 'Устанавливается на ВКЛЮЧЕНО только во '
-	. 'время разработки.'
-	. 'Нажмите здесь, чтобы включить его',
-'mark.sent.on' => 'Отметить счета-фактуры как отправленные при '
-	. 'копировании счетов-фактур .'
-	. 'в настоящее время ВКЛ.'
-	. 'Всегда держите его ВЫКЛ во '
-	. 'время производства.'
-	. 'Нажмите здесь, чтобы выключить его',
-'max' => 'Макс',
-'max.quantity' => 'Максимальное количество',
-'menu' => 'Меню',
-'menu.about' => 'О',
-'menu.accreditations' => 'Аккредитации',
-'menu.blog' => 'Блог',
-'menu.comments-feed' => 'Комментарии Лента',
-'menu.contact.details' => 'Контактная информация',
-'menu.contact.soon' => 'Спасибо, что обратились к нам.'
-	. 'Мы свяжемся с вами как '
-	. 'можно скорее.',
-'menu.contact.us' => 'Связаться с нами',
-'menu.gallery' => 'Галерея',
-'menu.language' => 'Язык',
-'menu.login' => 'Авторизоваться',
-'menu.logout' => 'Выйти ({login})',
-'menu.pricing' => 'Ценообразование',
-'menu.privacy.policy' => 'политика конфиденциальности',
-'menu.signup' => 'Зарегистрироваться',
-'menu.swagger' => 'Развязность',
-'menu.team' => 'Команда',
-'menu.terms.of.service' => 'Условия обслуживания',
-'menu.testimonial' => 'Отзыв',
-'menu.users' => 'Пользователи',
-'merchant' => 'Торговец',
-'merchant.add' => 'Добавить торговца',
-'merchant.driver' => 'Водитель',
-'merchant.reference' => 'Ссылка',
-'merchant.response' => 'Ответ',
-'min.quantity' => 'Минимальное количество',
-'mobile' => 'Мобильный',
-'mobile.number' => 'Номер мобильного телефона',
-'monday' => 'Понедельник',
-'monospaced.font.for.amounts' => 'Используйте моноширинный шрифт для сумм.',
-'month' => 'Месяц',
-'month.prefix' => 'Префикс месяца',
-'mpdf' => 'Mpdf',
-'mpdf.allow.charset.conversion' => 'Разрешить преобразование набора символов',
-'mpdf.auto.arabic' => 'Авто арабский',
-'mpdf.auto.language.to.font' =>
-	'Автоматический выбор языка для шрифта',
-'mpdf.auto.script.to.lang' =>
-	'Автоматический скрипт на языке',
-'mpdf.auto.vietnamese' => 'вьетнамский автомобиль',
-'mpdf.cjk' => 'Китайский, японский, корейский шрифт',
-'mpdf.ltr' => 'Слева направо',
-'mpdf.show.image.errors' => 'Показать ошибки изображения',
-'mtd' => 'Цифровые налоги',
-'mtd.fph' => 'Заголовки предотвращения мошенничества',
-'mtd.fph.all.valid' => 'Все заголовки предотвращения мошенничества действительны',
-'mtd.fph.generate' => 'Генерировать',
-'mtd.fph.no.provided' => 'Заголовки для предотвращения мошенничества не '
-	. 'предусмотрены',
-'mtd.fph.record.alert' => 'Вы уверены, что хотите записать '
-	. 'новые данные заголовка предотвращения мошенничества?'
-	. 'Предыдущие данные будут перезаписаны при '
-	. 'сохранении!',
-'mtd.fph.screen.timestamp' => 'Временная метка',
-'mtd.fph.some.advisories' => 'По крайней мере один заголовок '
-	. 'потенциально недействителен',
-'mtd.fph.some.invalid' => 'По крайней мере один заголовок '
-	. 'недействителен',
-'mtd.gov.client.browser.do.not.track' =>
-	'Значение, указывающее, включена ли опция '
-	. '«Не отслеживать» в браузере.',
-'mtd.gov.client.browser.do.not.track.eg' =>
-	'например ложно',
-'mtd.gov.client.browser.js.user.agent' =>
-	'Gov-Клиент-Браузер-JS-Пользователь-Агент',
-'mtd.gov.client.browser.js.user.agent.eg' =>
-	'например, Mozilla/5.'
-	. '0 (iPad; U; CPU OS '
-	. '3 2.'
-	. '1, например Mac OS X;'
-	. 'en-us) (KHTML, например Gecko) Mobile/7B405',
-'mtd.gov.client.browser.plugins' =>
-	'Список подключаемых модулей браузера на '
-	. 'исходном устройстве',
-'mtd.gov.client.browser.plugins.eg' =>
-	'например Shockwave%20F1ash Chromium%20PDF%20Viewer',
-'mtd.gov.client.connection.method' =>
-	'Метод подключения Gov-Client',
-'mtd.gov.client.device.id' =>
-	'Идентификатор устройства',
-'mtd.gov.client.device.id.eg' =>
-	'например beec798b-b366-47fa-b1f8-92cede14a1ce',
-'mtd.gov.client.local.ips' =>
-	'Локальные IP-адреса',
-'mtd.gov.client.multi.factor' =>
-	'Многофакторный',
-'mtd.gov.client.multi.factor.eg' =>
-	'например, тип=OTP;статус=успех,тип=SMS;статус=неудача,тип=биометрический,тип=SMS; временная метка=2023-04-01T12:'
-	. '34:'
-	. '56Z; уникальная-ссылка=abc123xyz',
-'mtd.gov.client.multi.factor.otp' =>
-	'Одноразовый пароль (OTP):',
-'mtd.gov.client.public.ip' =>
-	'Публичный IP-адрес',
-'mtd.gov.client.public.port' =>
-	'Публичный порт (не http 80 '
-	. 'и не https 443, например '
-	. '57961)',
-'mtd.gov.client.screens' => 'Gov-Client-Экраны',
-'mtd.gov.client.screens.colour.depth' =>
-	'Глубина цвета',
-'mtd.gov.client.screens.height' =>
-	'Высота экрана',
-'mtd.gov.client.screens.pixels' =>
-	'пиксели',
-'mtd.gov.client.screens.scaling.factor' =>
-	'Коэффициент масштабирования',
-'mtd.gov.client.screens.scaling.factor.bits' =>
-	'биты',
-'mtd.gov.client.screens.width' =>
-	'Ширина экрана',
-'mtd.gov.client.timezone' => 'Часовой пояс',
-'mtd.gov.client.user.ids' =>
-	'Идентификаторы пользователей',
-'mtd.gov.client.user.ids.uuid' =>
-	'uuid',
-'mtd.gov.client.window.size' =>
-	'Размер окна',
-'mtd.gov.client.window.size.pixels' =>
-	'пиксели',
-'mtd.gov.vendor.forwarded' => 'Список, в котором подробно описываются '
-	. 'переходы в Интернете между службами,'
-	. 'которые завершают протокол Transport Layer '
-	. 'Security (TLS)',
-'mtd.gov.vendor.license.ids' =>
-	'Структура данных «ключ-значение» хэшированных лицензионных '
-	. 'ключей, которые связаны с программным '
-	. 'обеспечением поставщика, инициировавшего запрос API '
-	. 'на исходном устройстве.',
-'mtd.gov.vendor.public.ip' =>
-	'Публичный IP-адрес серверов, на которые '
-	. 'исходное устройство отправляло свои запросы.',
-'mtd.gov.vendor.version' => 'Структура данных «ключ-значение» версий программного '
-	. 'обеспечения, участвующих в обработке запроса.',
-'multiple.choice' => 'Множественный выбор',
-'name' => 'Имя',
-'new' => 'Новый',
-'new.password' => 'Новый пароль',
-'new.product' => 'Новый продукт',
-'new.task' => 'Новое задание',
-'next' => 'Следующий',
-'next.date' => 'Следующая дата',
-'next.id' => 'Следующий идентификатор',
-'no' => 'Нет',
-'no.attachments' => 'Нет вложений',
-'no.client' => 'Нет клиента',
-'no.file.uploaded' => 'Файл не загружен',
-'no.overdue.invoices' => 'Нет просроченных счетов',
-'no.quotes.requiring.approval' => 'Нет никаких предложений, требующих утверждения.',
-'no.records' => 'Нет записей',
-'no.updates.available' => 'Нет доступных обновлений.',
-'none' => 'Никто',
-'not.available' => 'Нет в наличии',
-'not.found' => 'Счет не найден',
-'not.set' => 'Пока не установлено',
-'not.started' => 'Не начато',
-'note' => 'Примечание',
-'notes' => 'Примечания',
-'number' => '#',
-'number.format' => 'Формат числа',
-'number.format.compact.comma' => '1000000,00 (Компактный формат с десятичной '
-	. 'запятой)',
-'number.format.compact.point' => '1000000.'
-	. '00 (компактный формат с десятичной '
-	. 'точкой)',
-'number.format.european' => '1.'
-	. '000.'
-	. '000,00 (европейский формат)',
-'number.format.iso.80k.1' =>
-	'1 000 000,00 (ИСО 80000-1)',
-'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 '
-	. 'с десятичной запятой)',
-'number.format.iso80k1.point' => '1 000 000,00 (ISO 80000-1 '
-	. 'с десятичной точкой)',
-'number.format.us.uk' => '1,000,000.'
-	. '00 (формат США/Великобритания)',
-'number.missing.therefore.use.invoice.id' =>
-	'номер-счета-отсутствует-следовательно-идентификатор-счета-',
-'number.no' => 'Нет номера счета',
-'oauth2' => 'OAuth 2.'
-	. '0',
-'oauth2.google.people.api.v1.client.id' =>
-	'Идентификатор клиента',
-'oauth2.google.people.api.v1.client.secret' =>
-	'Секрет клиента',
-'online.log' => 'Онлайн-журнал',
-'online.payment' => 'Онлайн-платеж',
-'online.payment.3dauth.redirect' => 'Подождите, пока мы перенаправим вас '
-	. 'на сайт эмитента вашей карты '
-	. 'для аутентификации.',
-'online.payment.accessKey' => 'Ключ доступа',
-'online.payment.accessToken' => 'Токен доступа',
-'online.payment.accountId' => 'Идентификатор учетной записи',
-'online.payment.accountNumber' => 'Номер счета',
-'online.payment.apiKey' => 'API-ключ',
-'online.payment.apiLoginId' => 'Идентификатор входа в API',
-'online.payment.appId' => 'Идентификатор приложения',
-'online.payment.appSecret' => 'Секрет приложения',
-'online.payment.callbackPassword' => 'Пароль обратного вызова',
-'online.payment.card.invalid' => 'Эта кредитная карта недействительна.'
-	. 'Проверьте предоставленную информацию.',
-'online.payment.clientId' => 'Идентификатор клиента',
-'online.payment.clientSecret' => 'Секрет клиента',
-'online.payment.creditcard.hint' => 'Если вы хотите оплатить кредитной '
-	. 'картой, введите информацию ниже.'
-	. '<br/> Данные кредитной карты не '
-	. 'хранятся на наших серверах и '
-	. 'будут переданы в платежный онлайн-шлюз '
-	. 'с использованием защищенного соединения.',
-'online.payment.developerMode' => 'Режим разработчика',
-'online.payment.for' => 'Онлайн-оплата за',
-'online.payment.for.invoice' => 'Онлайн-оплата счета',
-'online.payment.installationId' => 'Идентификатор установки',
-'online.payment.merchantAccessCode' => 'Код доступа торговца',
-'online.payment.merchantId' => 'Идентификатор продавца',
-'online.payment.merchantKey' => 'Торговый ключ',
-'online.payment.method' => 'Способ оплаты онлайн',
-'online.payment.partner' => 'Партнер',
-'online.payment.partnerID' => 'Партнерский идентификатор',
-'online.payment.password' => 'Пароль',
-'online.payment.payment.cancelled' => 'Платеж отменен.',
-'online.payment.payment.failed' => 'Платеж не прошёл.'
-	. 'Попробуйте ещё раз.',
-'online.payment.payment.redirect' => 'Пожалуйста, подождите, пока мы перенаправим '
-	. 'вас на страницу оплаты.',
-'online.payment.payment.successful' => 'Оплата счета %s прошла успешно!',
-'online.payment.pdtKey' => 'Ключ Pdt',
-'online.payment.privateKey' => 'Закрытый ключ',
-'online.payment.profileID' => 'Идентификатор профиля',
-'online.payment.profileId' => 'Идентификатор профиля',
-'online.payment.publicKey' => 'Открытый ключ',
-'online.payment.publicKeyId' => 'Идентификатор открытого ключа',
-'online.payment.publishableKey' => 'Публикуемый ключ',
-'online.payment.pxPostPassword' => 'Px Post Пароль',
-'online.payment.pxPostUsername' => 'Имя пользователя Px Post',
-'online.payment.referrerId' => 'Идентификатор реферера',
-'online.payment.region' => 'Область',
-'online.payment.returnUrl' => 'Возврат URL-адреса',
-'online.payment.sandbox' => 'Песочница',
-'online.payment.sandboxId' => 'Идентификатор песочницы',
-'online.payment.secret' => 'Секрет',
-'online.payment.secretKey' => 'Секретный ключ',
-'online.payment.secretWord' => 'Секретное Слово',
-'online.payment.secureHash' => 'Безопасный хэш',
-'online.payment.sharedSecret' => 'Общий секрет',
-'online.payment.signature' => 'Подпись',
-'online.payment.siteCode' => 'Код сайта',
-'online.payment.siteId' => 'Идентификатор сайта',
-'online.payment.storeId' => 'Идентификатор магазина',
-'online.payment.storePassword' => 'Сохранить пароль',
-'online.payment.subAccountId' => 'Идентификатор дополнительной учетной записи',
-'online.payment.testMode' => 'Тестовый режим',
-'online.payment.testOrLiveApiKey' => 'Тестовый или Live API-ключ, т.'
-	. 'е.'
-	. 'начинается с test_ или live_',
-'online.payment.transactionKey' => 'Ключ транзакции',
-'online.payment.transactionPassword' => 'Пароль транзакции',
-'online.payment.username' => 'Имя пользователя',
-'online.payment.vendor' => 'Продавец',
-'online.payment.version' => 'Версия Omnipay (отмечено) / Соответствует '
-	. 'PCI (данные кредитных карт не '
-	. 'хранятся в этой базе данных) '
-	. '(отмечено)',
-'online.payment.webhookId' => 'Идентификатор веб-перехватчика',
-'online.payment.websiteKey' => 'Ключ веб-сайта',
-'online.payments' => 'Онлайн-платежи',
-'open' => 'Открыть',
-'open.invoices' => 'Открытые счета-фактуры',
-'open.quotes' => 'Открытые котировки',
-'open.reports.in.new.tab' =>
-	'Открыть отчеты в новой вкладке '
-	. 'браузера',
-'optional' => 'Необязательный',
-'options' => 'Параметры',
-'order' => 'Заказ',
-'orm' => 'Орм',
-'other.settings' => 'Другие настройки',
-'overdue' => 'Просроченный',
-'overdue.invoices' => 'Просроченные счета-фактуры',
-'overview' => 'Обзор счетов-фактур',
-'overview.period' => 'Период обзора счетов-фактур',
-'page' => 'Страница',
-'paid' => 'Оплаченный',
-'password' => 'Пароль',
-'password.change' => 'Изменить пароль',
-'password.changed' => 'Пароль успешно изменен',
-'password.reset' => 'Сбросить пароль',
-'password.reset.email' => 'Вы запросили новый пароль для '
-	. 'вашей установки.'
-	. 'Пожалуйста, нажмите на ссылку в '
-	. 'вашем почтовом ящике, чтобы сбросить '
-	. 'пароль.',
-'password.reset.failed' => 'Произошла ошибка при попытке отправить '
-	. 'письмо для сброса пароля.'
-	. 'Пожалуйста, просмотрите журналы приложения или '
-	. 'свяжитесь с системным администратором.',
-'password.reset.info' => 'Вы получите электронное письмо со '
-	. 'ссылкой для сброса пароля.',
-'password.reset.request.token' => 'Запросить токен сброса пароля',
-'past.month' => 'Прошлый месяц',
-'past.quarter' => 'Прошлый квартал',
-'past.year' => 'Прошлый год',
-'pay.now' => 'Оплатить сейчас',
-'payment' => 'Оплата',
-'payment.add' => 'Оплата Добавить',
-'payment.cannot.delete' => 'Невозможно удалить платеж',
-'payment.cannot.exceed.balance' => 'Сумма платежа не может превышать '
-	. 'остаток по счету.',
-'payment.custom' => 'Оплата таможенная',
-'payment.custom.add' => 'Оплата Пользовательский Добавить',
-'payment.date' => 'Дата платежа',
-'payment.deleted' => 'Платеж удален',
-'payment.description' => 'Оплата счета %s',
-'payment.form' => 'Форма оплаты',
-'payment.gateway.default.locale' => 'Язык по умолчанию, например en.'
-	. 'GB',
-'payment.gateway.mollie.api.key.has.been.setup' =>
-	'Тестовый ключ платежного шлюза Mollie '
-	. 'или ключ Live API настроен.',
-'payment.gateway.mollie.api.key.needs.to.be.setup' =>
-	'Необходимо настроить тестовый ключ платежного '
-	. 'шлюза Mollie или ключ Live '
-	. 'API.',
-'payment.gateway.mollie.api.payment.id' =>
-	'Идентификатор платежа Mollie:',
-'payment.gateway.no' => 'В разделе «Настройки» не настроены '
-	. 'платежные шлюзы.'
-	. 'Просмотр.'
-	. 'Онлайн-платежи',
-'payment.history' => 'История платежей',
-'payment.information.braintree.braintree.no.omnipay.version' =>
-	'В настоящее время нет версии '
-	. 'Braintree Omnipay, совместимой с версией '
-	. 'Braintree 6.'
-	. '9.'
-	. '1.'
-	. 'Снимите флажок Omnipay Version, чтобы '
-	. 'использовать версию, совместимую с PCI,'
-	. 'в разделе Settings View.',
-'payment.information.invoice.number.not.provided' =>
-	'Номер счета не был предоставлен',
-'payment.information.no.information.provided' =>
-	'Информация не предоставлена',
-'payment.information.none' => 'Никто',
-'payment.information.omnipay.driver.being.used' =>
-	'Используется драйвер {{$d}} от Omnipay.',
-'payment.information.payment.method.required' =>
-	'Для этого счета-фактуры необходимо указать '
-	. 'способ оплаты.',
-'payment.information.stripe.api.key' =>
-	'Необходимо настроить секретный ключ/ключ API '
-	. 'платежного шлюза Stripe.',
-'payment.logs' => 'Журналы платежей',
-'payment.method' => 'Способ оплаты',
-'payment.method.add' => 'Способ оплаты Добавить',
-'payment.method.already.exists' => 'Способ оплаты уже существует!',
-'payment.method.form' => 'Форма способа оплаты',
-'payment.method.history' => 'Невозможно удалить.'
-	. 'История способа оплаты существует.',
-'payment.methods' => 'Способы оплаты',
-'payment.no.invoice.sent' => 'Счета-фактуры нами не отправлялись и '
-	. 'клиентом не просматривались.',
-'payment.provider' => 'Провайдер платежных услуг',
-'payment.term' => 'Условия оплаты',
-'payment.term.0.days' => 'Пожалуйста, используйте один из предложенных '
-	. 'способов оплаты.',
-'payment.term.add.additional.terms.at.setting.repository' =>
-	'Добавьте дополнительные условия в функцию '
-	. 'getPaymentTerms репозитория настроек.',
-'payment.term.eom.120.days' =>
-	'EOM(120):'
-	. 'Пожалуйста, оплатите в течение 120 '
-	. 'дней в конце месяца с '
-	. 'даты выдачи.',
-'payment.term.eom.15.days' =>
-	'EOM(15):'
-	. 'Пожалуйста, оплатите в течение 15 '
-	. 'дней с конца месяца с '
-	. 'даты выпуска.',
-'payment.term.eom.30.days' =>
-	'EOM(30):'
-	. 'Пожалуйста, оплатите в течение 30 '
-	. 'дней с конца месяца с '
-	. 'даты выдачи.',
-'payment.term.eom.60.days' =>
-	'EOM(60):'
-	. 'Пожалуйста, оплатите в течение 60 '
-	. 'дней с конца месяца с '
-	. 'даты выдачи.',
-'payment.term.eom.90.days' =>
-	'EOM(90):'
-	. 'Пожалуйста, оплатите в течение 90 '
-	. 'дней с конца месяца с '
-	. 'даты выдачи.',
-'payment.term.general' => 'Оплата должна быть произведена в '
-	. 'течение 30 дней',
-'payment.term.mfi.15' => 'MFI(15):'
-	. 'Пожалуйста, оплатите 15-го числа месяца,'
-	. 'следующего за датой выпуска.',
-'payment.term.net.120.days' =>
-	'Нетто (120):'
-	. 'Пожалуйста, оплатите в течение 120 '
-	. 'дней с даты выпуска.',
-'payment.term.net.15.days' =>
-	'Нетто(15):'
-	. 'Пожалуйста, оплатите в течение 15 '
-	. 'дней с даты выпуска.',
-'payment.term.net.30.days' =>
-	'Нетто(30):'
-	. 'Пожалуйста, оплатите в течение 30 '
-	. 'дней с даты выпуска',
-'payment.term.net.60.days' =>
-	'Нетто(60):'
-	. 'Пожалуйста, оплатите в течение 60 '
-	. 'дней с даты выпуска',
-'payment.term.net.90.days' =>
-	'Нетто (90):'
-	. 'Пожалуйста, оплатите в течение 90 '
-	. 'дней с даты выпуска.',
-'payment.term.pia' => 'Требуется предоплата (PIA)',
-'payment.term.polite' => 'Мы ценим ваш бизнес.'
-	. 'Пожалуйста, отправьте платеж в течение '
-	. '30 дней с момента получения '
-	. 'этого счета.',
-'payment.terms.default' => 'Оплатить в течение 14 дней',
-'paymentpeppol' => 'Платежи, сделанные через Peppol',
-'paymentpeppol.reference.plural' => 'Ссылки на платежи с использованием '
-	. 'Peppol',
-'payments' => 'Платежи',
-'paymentterm' => 'Срок оплаты',
-'pdf' => 'PDF',
-'pdf.archived.no' => 'PDF НЕ архивирован в Загрузки/Архив/Счет',
-'pdf.archived.yes' => 'PDF Архивировано в Загрузки/Архив/Счет',
-'pdf.include.zugferd' => 'Включить ZUGFeRD',
-'pdf.include.zugferd.help' => 'Включение этой опции будет включать '
-	. 'ZUGFeRD XML в PDF-файлы счетов-фактур,'
-	. 'что является стандартом XML для '
-	. 'счетов-фактур.'
-	. '<a href="https:'
-	. '//www.'
-	. 'ferd-net.'
-	. 'de/">Дополнительная информация</a>',
-'pdf.invoice.footer' => 'Нижний колонтитул PDF-файла',
-'pdf.invoice.footer.hint' => 'Здесь вы можете ввести любой '
-	. 'HTML-код, который будет отображаться в '
-	. 'нижней части ваших счетов в '
-	. 'формате PDF.',
-'pdf.modal' => 'Модальный PDF',
-'pdf.quote.footer' => 'Цитата нижний колонтитул',
-'pdf.quote.footer.hint' => 'Здесь вы можете ввести любой '
-	. 'HTML-код, который будет отображаться в '
-	. 'нижней части ваших цитат в '
-	. 'формате PDF.',
-'pdf.settings' => 'Настройки PDF-файла',
-'pdf.template' => 'PDF-шаблон',
-'pdf.template.overdue' => 'Просроченный шаблон PDF',
-'pdf.template.paid' => 'Платный шаблон PDF',
-'pdf.watermark' => 'Включить водяные знаки PDF',
-'peppol' => 'Счет-фактура Peppol Universal Business Language '
-	. '(UBL) 2.'
-	. '1 — проверено Ecosio',
-'peppol.abbreviation' => 'Пеппол',
-'peppol.allowance.or.charge.inherit' =>
-	'Расходы на списание средств по '
-	. 'счетам и расходы на списание '
-	. 'средств по статьям счетов наследуются '
-	. 'от заполненного документа Peppol Уровень '
-	. 'списания средств',
-'peppol.client.check' => 'Данные Peppol, касающиеся этого клиента,'
-	. 'недостаточны.'
-	. 'По крайней мере, один отсутствует.'
-	. 'См.'
-	. 'Просмотр .'
-	. 'Клиент .'
-	. 'Параметры .'
-	. 'Редактировать данные Peppol для электронного '
-	. 'выставления счетов',
-'peppol.client.defaults' => 'Заполните форму клиента Peppol настройками '
-	. 'OpenPeppol по умолчанию для тестирования.',
-'peppol.currency.code.from' => 'Из валюты, т.'
-	. 'е.'
-	. 'валюты налога страны происхождения (для '
-	. 'изменения см.'
-	. 'config/common/params.'
-	. 'php TaxCurrencyCode)',
-'peppol.currency.code.to' => 'В валюту, т.'
-	. 'е.'
-	. 'в валюту документа:'
-	. 'см.'
-	. 'функцию get.'
-	. 'setting(\'currency.'
-	. 'code.'
-	. 'to\')',
-'peppol.currency.from.to' => 'Один из From Currency сегодня '
-	. 'конвертируется в этот из To '
-	. 'Currency',
-'peppol.currency.to.from' => 'Один из To Currency сегодня '
-	. 'конвертируется в этот из From '
-	. 'Currency',
-'peppol.document.reference.null' => 'inv-number-null-inv-id',
-'peppol.ecosio.validator' => 'Валидатор Ecosio для счетов-фактур OpenPeppol '
-	. 'UBL (3.'
-	. '15.'
-	. '0) (он же BIS Billing '
-	. '3.'
-	. '0.'
-	. '14)',
-'peppol.electronic.invoicing' => 'Электронное выставление счетов Peppol',
-'peppol.enable' => 'Включите Peppol с помощью универсального '
-	. 'делового языка (UBL) 2.'
-	. '1',
-'peppol.include.delivery.period' => 'Включить периоды доставки',
-'peppol.invoice.note.not.found' =>
-	'Счет-фактура не найден',
-'peppol.label.switch.off' => 'Peppol по умолчанию включен',
-'peppol.label.switch.on' => 'Peppol Defaults отключены',
-'peppol.mandatory' => ' (Обязательный)',
-'peppol.optional' => ' (Необязательный)',
-'peppol.stand.in.code' => 'Код описания - указывает, какая '
-	. 'основа будет использоваться для будущей '
-	. 'даты налоговой точки, когда товары '
-	. 'будут поставлены/оплачены.'
-	. 'Если налоговая точка может быть '
-	. 'определена, код описания взаимно исключается '
-	. 'в периоде выставления счета.',
-'peppol.store.cove.1.1.1' =>
-	'Зарегистрируйтесь для доступа к API '
-	. 'на сайте Store Cove',
-'peppol.store.cove.1.1.2' =>
-	'Создайте свой ключ API на '
-	. 'сайте Store Cove и сохраните '
-	. 'в разделе «Настройки.'
-	. 'Просмотр.'
-	. 'Онлайн-платежи.'
-	. 'Store Cove.'
-	. 'Ключ API»',
-'peppol.store.cove.1.1.3' =>
-	'Сделайте свой первый вызов API,'
-	. 'чтобы получить ответ JSON.',
-'peppol.store.cove.1.1.4' =>
-	'Отправьте свой первый тестовый счет-фактуру '
-	. 'Json, который вы получили, нажав '
-	. 'на зеленую кнопку World=&gt;DE',
-'peppol.stream.toggle' => 'Peppol - Кнопка переключения «Трансляция» '
-	. 'или «Сохранить в файл»',
-'peppol.tax.category.not.found' =>
-	'Отсутствует код налоговой категории Peppol '
-	. '(https:'
-	. '//docs.'
-	. 'peppol.'
-	. 'eu/poacc/billing/3.'
-	. '0/codelist/UNCL5305/).',
-'peppol.tax.category.percent.not.found' =>
-	'Отсутствует процент по налоговой категории '
-	. 'Peppol (https:'
-	. '//docs.'
-	. 'peppol.'
-	. 'eu/poacc/billing/3.'
-	. '0/codelist/UNCL5305/).',
-'peppol.tax.rate.code' => 'Налоговый кодекс Peppol',
-'peppol.trying.to.send.non.pdf.file' =>
-	'В настоящее время со счетами '
-	. 'Peppol отправляются только файлы в '
-	. 'формате PDF.',
-'peppol.unit' => 'Классификация единиц с использованием Peppol',
-'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' =>
-	'Источник:'
-	. 'src/Invoice/Ubl/Invoice:'
-	. 'Отсутствует описание документа - Ecosio:'
-	. 'Документ НЕ ДОЛЖЕН содержать пустые '
-	. 'элементы.'
-	. 'Решение:'
-	. 'В представлении счета-фактуры:'
-	. 'Параметры .'
-	. 'Изменить .'
-	. 'Описание документа',
-'peppol.validator.Invoice.cac.Note' =>
-	'Источник:'
-	. 'src/Invoice/Ubl/Invoice:'
-	. 'Отсутствует примечание к счету-фактуре - '
-	. 'Ecosio:'
-	. 'Документ НЕ ДОЛЖЕН содержать пустые '
-	. 'элементы.',
-'peppol.validator.Invoice.cac.Party.cbc.EndPointID' =>
-	'src/Invoice/Ubl/Party:'
-	. 'Отсутствует адрес электронной почты - '
-	. 'Ecosio:'
-	. 'Электронный адрес ДОЛЖЕН быть указан.'
-	. 'Решение:'
-	. 'Клиент .'
-	. 'Просмотр .'
-	. 'Параметры .'
-	. 'Редактировать данные Peppol для электронного '
-	. 'выставления счетов .'
-	. 'EndPointID',
-'peppol.version' => 'Версия Пеппола',
-'peppol.xml.stream' => 'Потоковое воспроизведение, т.'
-	. 'е.'
-	. 'отображение на экране браузера, а '
-	. 'не в папке загрузок.',
-'per.item' => 'за единицу товара',
-'per.page.total' => 'на страницу.'
-	. 'Всего',
-'performance' => 'Производительность',
-'performance.label.switch.off' => 'Более быстрый режим чтения и '
-	. 'записи - см.'
-	. 'config/common/params.'
-	. 'php, найдите «режим»',
-'performance.label.switch.on' => 'Более медленный режим «Только запись» '
-	. '— см.'
-	. 'поиск «mode» в config/common/params.'
-	. 'php',
-'period' => 'Период',
-'permission' => 'У вас нет необходимого разрешения.',
-'personal.information' => 'Персональная информация',
-'phone' => 'Телефон',
-'phone.abbr' => 'П',
-'phone.number' => 'Номер телефона',
-'php.timezone.fail' => 'Кажется, часовой пояс не настроен.'
-	. 'Проверьте date.'
-	. 'timezone в вашей конфигурации php.'
-	. 'В противном случае будет выбран '
-	. '<strong>%s</strong> .',
-'php.timezone.success' => 'Настроен действительный часовой пояс.',
-'php.version.fail' => 'Установлена ​​версия PHP %s, но '
-	. 'для InvoicePlane требуется версия PHP '
-	. '%s или выше',
-'php.version.success' => 'PHP, по-видимому, соответствует требованиям установки',
-'platform' => 'Платформа',
-'platform.PhpMyAdmin' => 'Версия PhpMyAdmin',
-'platform.PhpSupport' => 'Поддержка PHP',
-'platform.PhpVersion' => 'PHP-версия',
-'platform.csrf' => 'Защита от межсайтовой подделки',
-'platform.editor' => 'Редактор',
-'platform.mySqlVersion' => 'Версия mySql',
-'platform.netbeans.UTF-8' => 'Кодировка Netbeans UTF-8',
-'platform.server' => 'Сервер',
-'platform.sqlPath' => 'Путь SQL',
-'platform.update' => 'Файлы и дополнения WampServer',
-'platform.windowsVersion' => 'Windows 11 Домашняя версия',
-'platform.xdebug' => 'Расширение Xdebug',
-'please.enable.js' => 'Пожалуйста, включите Javascript для использования '
-	. 'InvoicePlane',
-'po.group' => 'Группа заказов на закупку',
-'port' => 'Порт',
-'position' => 'Позиция',
-'possible.file.upload.attack' => 'Возможная атака на загрузку файлов: ',
-'pre.password' => 'Стандартный пароль PDF-файла счета-фактуры (необязательно)',
-'prefix' => 'Префикс',
-'prev' => 'Предыдущая',
-'preview' => 'Предварительный просмотр',
-'price' => 'Цена',
-'product' => 'Продукт',
-'product.add' => 'Добавить продукт',
-'product.additional.item.property.name' =>
-	'Peppol Дополнительное свойство Название элемента,'
-	. 'например, Цвет',
-'product.additional.item.property.value' =>
-	'Peppol Дополнительное свойство Значение элемента,'
-	. 'например, Черный',
-'product.country.of.origin.code' =>
-	'Код страны происхождения Peppol с '
-	. 'использованием кодов стран ISO-3166-1:'
-	. 'Alpha2',
-'product.custom.fields' => 'Пользовательские поля продукта (например, Peppol:'
-	. 'AdditionalItemProperty поле с множественным выбором '
-	. 'цвета, значение черное)',
-'product.description' => 'Описание продукта',
-'product.edit' => 'Изменить продукт',
-'product.error.summary' => 'Сводка ошибок продукта',
-'product.families' => 'Семейства продуктов',
-'product.form.tab.category' => 'Категория',
-'product.form.tab.not.required' =>
-	'Необязательные поля',
-'product.form.tab.required' => 'Обязательные поля',
-'product.found' => 'Продукт найден',
-'product.history' => 'Невозможно удалить.'
-	. 'Этот продукт есть в счете '
-	. 'или предложении.',
-'product.icc.id' => 'Код классификации предметов Peppol, например,'
-	. '9873242',
-'product.icc.listid' => 'Код классификации предметов Peppol, идентификатор '
-	. 'списка - например, SRV',
-'product.icc.listversionid' => 'Идентификатор версии списка кодов классификации '
-	. 'предметов Peppol (необязательно) — например,'
-	. 'если ItemClassification предоставляется датскими поставщиками,'
-	. 'следует использовать версию UNSPSC 19.'
-	. '0501.',
-'product.id' => 'Идентификатор продукта',
-'product.image' => 'Изображение',
-'product.item.classification.code.scheme.id.not.found' =>
-	'Код классификации товара Идентификатор схемы '
-	. 'не найден',
-'product.name' => 'Название продукта',
-'product.not.found' => 'Продукт не найден',
-'product.peppol.unit' => 'Блок с Peppol',
-'product.price' => 'Цена',
-'product.price.base.quantity' => 'Кол-во в продукте',
-'product.property' => ' Свойство продукта',
-'product.property.add' => ' Добавить свойство продукта',
-'product.property.edit' => 'Изменить свойство продукта',
-'product.property.index' => 'Индекс свойств продукта',
-'product.property.name' => 'Имя',
-'product.property.table' => 'Таблица свойств продукта',
-'product.property.value' => 'Ценить',
-'product.record.successfully.added' => 'Запись о продукте успешно добавлена',
-'product.sii.id' => 'Идентификатор стандартной идентификации товара Peppol,'
-	. 'связанный с указанной выше схемой,'
-	. 'например, 14-значный идентификатор с добавлением '
-	. 'нуля в базе данных глобальных '
-	. 'номеров товаров (отображается под штрих-кодом)',
-'product.sii.schemeid' => 'Peppol Standard Item Identification schemeid '
-	. '— например, 0160',
-'product.sku' => 'Артикул',
-'product.tariff' => 'Тариф',
-'product.unit' => 'Единица продукта',
-'product.unit.code.not.found' =>
-	'Продукт не имеет связанного с '
-	. 'ним кода блока.'
-	. 'Продукт .'
-	. 'Редактировать .'
-	. 'Блок с Peppol.',
-'product.units' => 'Единицы продукта',
-'product.view.tab.details' => 'Подробная информация о продукте',
-'product.view.tab.gallery' => 'Галерея продуктов',
-'product.view.tab.images' => 'Изображения продукта',
-'product.view.tab.properties' => 'Свойства продукта',
-'productimage.add' => 'Добавить изображение продукта',
-'productimage.deleted.from' => 'Изображение успешно удалено из следующего '
-	. 'каталога:',
-'productimage.form' => 'Форма изображения продукта',
-'productimage.gallery' => 'Изображения, относящиеся к: ',
-'productimage.index' => 'Индекс изображений продукта',
-'productimage.list' => 'Список изображений, связанных с этим '
-	. 'продуктом',
-'productimage.no.file.uploaded' => 'Изображение не загружено.'
-	. 'Возможно, дубликат.',
-'productimage.plural' => 'Изображения продукта',
-'productimage.possible.file.upload.attack' =>
-	'Возможная атака на загрузку файлов:',
-'productimage.upload' => 'Загрузить изображение продукта',
-'productimage.uploaded.to' => 'Изображение загружено в следующий каталог: ',
-'productimage.view' => 'В разделе «Просмотр продукта» можно '
-	. 'добавить несколько изображений, относящихся к '
-	. 'продукту.',
-'products' => 'Продукция',
-'products.form' => 'Форма продукта',
-'profile.deleted' => 'Профиль был удален',
-'profile.history' => 'Невозможно удалить профиль.'
-	. 'История существует',
-'profile.new' => 'Создайте профиль с новым адресом '
-	. 'электронной почты или номером мобильного '
-	. 'телефона, сделайте его активным и '
-	. 'выберите данные компании, с которой '
-	. 'вы хотите его связать.'
-	. 'Эта информация автоматически появится в '
-	. 'документации, например, в расценках и '
-	. 'счетах-фактурах.',
-'profile.not.deleted' => 'Профиль не был удален',
-'profile.plural' => 'Профили',
-'profile.property.label.company' => 'Компания',
-'profile.property.label.current' => 'Текущий',
-'profile.property.label.description' => 'Описание',
-'profile.property.label.email' => 'Электронная почта',
-'profile.property.label.mobile' => 'Мобильный',
-'profile.singular' => 'Профиль',
-'project' => 'Проект',
-'project.add' => 'Проект Добавить',
-'project.name' => 'Название проекта',
-'projects' => 'Проекты',
-'projects.form' => 'Проекты',
-'properties' => 'Характеристики',
-'provider.name' => 'Имя поставщика',
-'provider.response' => 'Ответ поставщика',
-'purchase.price' => 'Цена покупки',
-'Q1' => 'Q1',
-'Q2' => 'Q2',
-'Q3' => 'Q3',
-'Q4' => 'Q4',
-'qr.absolute.url' => 'Абсолютный URL, используемый для построения '
-	. 'QR-кода выше',
-'qr.code' => 'QR-код',
-'qr.code.1' => 'QR-код 1',
-'qr.code.details' => 'Подробности QR-кода',
-'qr.code.level.1' => 'Уровень кодирования — базовый.',
-'qr.code.level.2' => 'Уровень кодирования:'
-	. 'средний.',
-'qr.code.level.3' => 'Уровень кодирования — продвинутый.',
-'qr.code.settings' => 'Настройки QR-кода',
-'qr.code.settings.bic' => 'БИК',
-'qr.code.settings.effect' => 'Какое влияние оказывают указанные выше '
-	. 'настройки на этот QR-код?',
-'qr.code.settings.effect.explanation' =>
-	'В реальном коде.'
-	. 'нет.'
-	. 'Все значения по умолчанию используются,'
-	. 'поскольку используется очень простой реальный '
-	. 'код выше.',
-'qr.code.settings.enable' => 'Включить QR-код',
-'qr.code.settings.enable.hint' =>
-	'Включение этой опции будет включать '
-	. 'QR-код для счетов-фактур в формате '
-	. 'PDF.'
-	. 'Вам необходимо заполнить данные получателя,'
-	. 'IBAN и BIC ниже для '
-	. 'корректной работы.'
-	. 'В противном случае QR-код не '
-	. 'будет отображаться.',
-'qr.code.settings.iban' => 'IBAN',
-'qr.code.settings.recipient' => 'Получатель',
-'qr.code.settings.remittance.text' =>
-	'Текст перевода',
-'qr.code.settings.remittance.text.tags' =>
-	'Текстовые теги денежных переводов',
-'qr.code.source' => 'Источник QR-кода',
-'qr.code.source.path' => 'ресурсы\\представления\\счет-фактура\\настройки\\логотип.'
-	. 'и.'
-	. 'адрес.'
-	. 'компании.'
-	. 'php',
-'qr.code.type' => 'Тип QR-кода',
-'qr.code.type.absolute.url' =>
-	'Абсолютный (весь) URL-адрес на основе',
-'qr.code.widget.used' => 'Виджет использован',
-'qr.ecc.level' => 'Уровень Ecc QR-кода (по умолчанию:'
-	. 'L)',
-'qr.height.and.width' => 'Высота и ширина QR-кода (по '
-	. 'умолчанию:'
-	. '60)',
-'qr.meaning' => 'Значение',
-'qr.meaning.benefit' => 'Сканируйте и вернитесь к просмотру '
-	. '(без ввода URL), где счет '
-	. 'можно распечатать в формате PDF.'
-	. 'Применимо ко всем пользователям с '
-	. 'активной учетной записью клиента.',
-'qr.output.type' => 'Тип выходного QR-кода (например, .'
-	. 'svg, .'
-	. 'png) (по умолчанию:'
-	. 'png)',
-'qr.version' => 'Номер версии QR-кода (самая ранняя '
-	. '0, самая поздняя 40) (по '
-	. 'умолчанию:'
-	. '40)',
-'qty' => 'Кол-во',
-'quantity' => 'Количество',
-'quarter' => 'Четверть',
-'quick.actions' => 'Быстрые действия',
-'quote' => 'Цитировать',
-'quote.add' => 'Цитата Добавить',
-'quote.amount' => 'Сумма предложения',
-'quote.amount.add' => 'Цитата Сумма Добавить',
-'quote.amounts' => 'Цитировать Суммы',
-'quote.approve' => 'Утвердить',
-'quote.approved' => 'Эта цитата была одобрена',
-'quote.copied.to.invoice' => 'Цитата скопирована в НОВЫЙ счет-фактуру',
-'quote.copied.to.quote' => 'Цитата скопирована в НОВУЮ цитату!',
-'quote.copied.to.so' => 'Цитата скопирована в заказ на '
-	. 'продажу',
-'quote.custom' => 'Цитата на заказ',
-'quote.custom.add' => 'Цитата Пользовательский Добавить',
-'quote.date' => 'Дата цитаты',
-'quote.dates' => 'Даты цитаты',
-'quote.delete.not' => 'Счет не был удален.',
-'quote.delivery.location.index.button.list' =>
-	'Кавычки',
-'quote.delivery.location.none' => 'К данному предложению не привязано '
-	. 'ни одно место доставки.',
-'quote.disable.flash.messages' => 'Отключить цитирование флэш-сообщений',
-'quote.email.templates.not.configured' =>
-	'Шаблоны писем не настроены.'
-	. 'Настройки.'
-	. 'Цитаты.'
-	. 'Шаблоны цитат.'
-	. 'Шаблон письма по умолчанию',
-'quote.group' => 'Группа цитат',
-'quote.id' => 'Цитата ID ',
-'quote.item' => 'Цитата товара',
-'quote.item.add' => 'Цитата Добавить элемент',
-'quote.item.amount' => 'Цена товара Сумма',
-'quote.item.amount.add' => 'Цитата Пункт Сумма Добавить',
-'quote.item.cannot.delete' => 'Невозможно удалить цитату',
-'quote.label.switch.off' => 'Расчет НДС',
-'quote.label.switch.on' => 'Цитата без НДС',
-'quote.not.copied.to.invoice' =>
-	'Счет НЕ создан из сметы!'
-	. 'Дублировать счет.'
-	. 'Скопируйте смету в другую смету,'
-	. 'а затем скопируйте в счет.'
-	. 'Каждая смета должна иметь соответствующий '
-	. 'счет.',
-'quote.number' => 'Номер предложения',
-'quote.number.status' => 'Статус номера цитаты',
-'quote.overview' => 'Обзор цитаты',
-'quote.overview.period' => 'Период обзора цитаты',
-'quote.password' => 'Укажите пароль PDF (необязательно)',
-'quote.pre.password' => 'Укажите стандартный пароль PDF (необязательно)',
-'quote.reject' => 'Отклонять',
-'quote.rejected' => 'Эта цитата была отклонена',
-'quote.sales.order.created.from.quote' =>
-	'Заказ на продажу создан на '
-	. 'основе коммерческого предложения, и вы '
-	. 'ввели номер своего заказа на '
-	. 'покупку!',
-'quote.sales.order.not.created.from.quote' =>
-	'Заказ на продажу не создан '
-	. 'из предложения! Дублировать заказ на '
-	. 'продажу.'
-	. 'Скопируйте предложение в другое предложение,'
-	. 'а затем скопируйте в заказ '
-	. 'на продажу.'
-	. 'Каждое предложение должно иметь соответствующий '
-	. 'заказ на продажу.',
-'quote.status.email.body' => 'Клиент %1$s имеет %2$s цитату '
-	. '%3$sСсылка на цитату:'
-	. '%4$s',
-'quote.status.email.subject' => 'Клиент %1$s %2$s цитата %3$s',
-'quote.tax' => 'Налоговая цитата',
-'quote.tax.rate' => 'Рассчитать налоговую ставку',
-'quote.tax.rate.add' => 'Цитата Ставка налога Добавить',
-'quote.tax.rate.cannot.delete' =>
-	'Невозможно удалить расчетную налоговую ставку',
-'quote.tax.rate.incomplete.fields' =>
-	'Незаполненные поля:'
-	. 'необходимо включить налоговую ставку.'
-	. 'Совет:'
-	. 'включите нулевую налоговую ставку.',
-'quote.tax.rate.saved' => 'Цитата Ставка налога сохранена',
-'quote.template' => 'Шаблон цитаты',
-'quote.templates' => 'Шаблоны цитат',
-'quote.to.invoice' => 'Цитата для выставления счета',
-'quote.to.so' => 'Цитата для заказа на продажу',
-'quote.to.so.password' => 'Пароль заказа на продажу',
-'quote.vat.quote' => 'Расчет НДС',
-'quote.with.purchase.order.line.number' =>
-	'Номер строки заказа на закупку '
-	. '(требование Peppol) — должен совпадать '
-	. 'с номером строки заказа на '
-	. 'продажу',
-'quote.with.purchase.order.number' =>
-	'Номер заказа на покупку — '
-	. 'должен совпадать с номером заказа '
-	. 'на продажу.',
-'quote.with.purchase.order.person' =>
-	'Лицо/отдел, размещающий заказ',
-'quotes' => 'Кавычки',
-'quotes.expire.after' => 'Срок действия котировок истекает через '
-	. '(дней)',
-'quotes.requiring.approval' => 'Котировки, требующие утверждения',
-'read.only' => 'Только для чтения',
-'read.this.please' => 'Пожалуйста, прочтите это!',
-'reason' => 'Причина',
-'reason.accident' => 'Несчастный случай',
-'reason.birthdefect' => 'Врожденный дефект',
-'reason.disease' => 'Болезнь',
-'reason.maternity' => 'Материнство',
-'reason.prevention' => 'Профилактика',
-'reason.unknown' => 'Неизвестный',
-'recent.clients' => 'Недавние клиенты',
-'recent.invoices' => 'Последние счета-фактуры',
-'recent.payments' => 'Последние платежи',
-'recent.quotes' => 'Последние цитаты',
-'record.successfully.created' => 'Запись успешно создана',
-'record.successfully.deleted' => 'Запись успешно удалена',
-'record.successfully.updated' => 'Запись успешно обновлена',
-'records.no' => 'Нет записей',
-'recurring' => 'Повторяющийся',
-'recurring.add' => 'Повторяющийся Добавить',
-'recurring.deleted' => 'Удалено',
-'recurring.frequency' => 'Частота',
-'recurring.invoices' => 'Повторяющиеся счета-фактуры',
-'recurring.no.invoices.selected' => 'Вы не выбрали ни одного '
-	. 'счета.',
-'recurring.original.invoice.date' => 'Дата первоначального счета: ',
-'recurring.status.sent.only' => 'Повторяющимися могут быть только счета-фактуры '
-	. 'со статусом «отправлено».',
-'recurring.tooltip.next' => 'Следующая дата устанавливается с помощью '
-	. 'индекса.',
-'reject' => 'Отклонять',
-'reject.this.quote' => 'Отклонить эту цитату',
-'rejected' => 'Отклоненный',
-'reminder' => 'Напоминание отправлено',
-'remove' => 'Удалять',
-'remove.logo' => 'Удалить логотип',
-'report' => 'Отчет',
-'report.options' => 'Параметры отчета',
-'report.sales.by.product' => 'Продажи по продуктам',
-'report.sales.by.product.info' =>
-	'В этом отчете указана общая '
-	. 'сумма продаж продукта вместе с '
-	. 'налогом на товар.'
-	. 'Он не включает дополнительный налог '
-	. 'на счет, связанный с этими '
-	. 'продуктами.',
-'report.sales.by.task' => 'Продажи по задачам',
-'report.sales.by.task.info' =>
-	'В этом отчете указана общая '
-	. 'сумма продаж по задаче вместе '
-	. 'с налогом на товар.'
-	. 'Он не включает дополнительный налог '
-	. 'на счет, связанный с этими '
-	. 'задачами.',
-'report.test.fraud.prevention.headers.api' =>
-	'Тестирование API заголовков предотвращения мошенничества',
-'reports' => 'Отчеты',
-'reset' => 'Перезагрузить',
-'reset.password' => 'Сбросить пароль',
-'rules.peppol.en16931.001' => 'Необходимо указать Business Process или '
-	. 'Profile ID.'
-	. 'Обратитесь к config/common/params.'
-	. 'php для поиска ProfileID',
-'run.report' => 'Выполнить отчет',
-'sales' => 'Продажи',
-'sales.by.client' => 'Продажи через клиента',
-'sales.by.date' => 'Продажи по дате',
-'sales.with.tax' => 'Продажи с налогом',
-'salesorder' => 'Заказ на продажу',
-'salesorder.agree.to.terms' => 'Пожалуйста, согласитесь с Условиями, которые '
-	. 'будут вам отправлены.',
-'salesorder.assembled.packaged.prepared' => 'Собрано/Упаковано/Подготовлено',
-'salesorder.cancelled' => 'Заказ на продажу отменен',
-'salesorder.client.confirmed.terms' => 'Подтвержденные клиентом условия',
-'salesorder.clients.purchase.order.number' =>
-	'Номер заказа клиента',
-'salesorder.clients.purchase.order.person' =>
-	'Лицо, обрабатывающее заказ клиента на '
-	. 'покупку',
-'salesorder.copied.to.invoice' => 'Заказ на продажу скопирован в '
-	. 'счет-фактуру',
-'salesorder.copied.to.invoice.not' =>
-	'Счет-фактура НЕ создан из Заказа '
-	. 'на продажу! Дублируйте счет-фактуру.'
-	. 'Скопируйте свой Заказ на продажу '
-	. 'в другой Заказ на продажу,'
-	. 'а затем скопируйте в счет-фактуру.'
-	. 'Каждый Заказ на продажу должен '
-	. 'иметь соответствующий счет-фактуру',
-'salesorder.date.created' => 'Дата создания заказа на продажу',
-'salesorder.default.group' => 'Группа по умолчанию для заказов '
-	. 'на продажу',
-'salesorder.goods.services.confirmed' => 'Клиент подтвердил доставку',
-'salesorder.goods.services.delivered' => 'Товары/Услуги доставлены',
-'salesorder.invoice' => 'Счет',
-'salesorder.invoice.generate' => 'Сгенерировать счет-фактуру',
-'salesorder.invoice.generated' => 'Счет-фактура сгенерирован',
-'salesorder.invoice.number' => 'Номер счета-фактуры',
-'salesorder.number' => 'Номер заказа на продажу',
-'salesorder.number.status' => 'Номер заказа на продажу.'
-	. 'Статус',
-'salesorder.password' => 'Пароль заказа на продажу',
-'salesorder.payment.terms' => 'Условия оплаты заказа на продажу,'
-	. 'например:'
-	. 'Пожалуйста, оплатите в течение 30 '
-	. 'дней',
-'salesorder.recent' => 'Последние заказы на продажу',
-'salesorder.reject' => 'Отклонение заказа на продажу',
-'salesorder.rejected' => 'Заказ на продажу отклонен',
-'salesorder.sent.to.customer' => 'Требуется соглашение об условиях',
-'salesorder.to.invoice' => 'От заказа на продажу до '
-	. 'выставления счета',
-'salesorder.vat.salesorder' => 'Заказ на продажу с НДС',
-'salesorders' => 'Заказы на продажу',
-'save' => 'Сохранять',
-'save.item.as.lookup' => 'Сохранить элемент как поиск',
-'search.family' => 'Поиск семьи',
-'search.product' => 'Поиск продукта',
-'security.disable.read.only.empty' =>
-	'Параметр «Отключить только для чтения» '
-	. 'в настоящее время не имеет '
-	. 'значения 0 или 1.'
-	. 'Законно установите его на 0 '
-	. 'по умолчанию, чтобы была доступна '
-	. 'функция «только для чтения» для '
-	. 'предотвращения удаления счетов-фактур.',
-'security.disable.read.only.info' =>
-	'Предупреждение:'
-	. 'включена функция «Только для чтения» '
-	. 'для защиты счетов и предотвращения '
-	. 'удаления.'
-	. 'Отключите «disable.'
-	. 'read.'
-	. 'only», чтобы разрешить сброс отправленных '
-	. 'счетов до черновиков',
-'security.disable.read.only.success' =>
-	'Успех:'
-	. 'функциональность «Только чтение» для защиты '
-	. 'счетов-фактур и предотвращения удаления была '
-	. 'снова включена.',
-'security.disable.read.only.true.draft.check.and.mark' =>
-	'Предупреждение:'
-	. 'Вы редактируете черновик, для которого '
-	. 'отключен параметр «Только чтение»',
-'security.disable.read.only.true.sent.check.and.mark' =>
-	'Предупреждение:'
-	. 'Вы редактируете отправленный счет-фактуру, для '
-	. 'которого отключен параметр «Только чтение»',
-'security.disable.read.only.warning' =>
-	'Предупреждение:'
-	. 'функция «Только чтение» для защиты '
-	. 'счетов-фактур и предотвращения удаления отключена.',
-'select.family' => 'Выбрать семью',
-'select.payment.method' => 'Выберите способ оплаты',
-'select.project' => 'Выбрать проект',
-'select.unit' => 'Выберите единицу',
-'send' => 'Отправлять',
-'send.email' => 'Отправить электронное письмо',
-'sent' => 'Отправил',
-'set.new.password' => 'Установить новый пароль',
-'set.to.read.only' => 'Установить для счета-фактуры статус «только '
-	. 'чтение»',
-'setting' => 'Параметр',
-'setting.add' => 'Установка Добавить',
-'setting.as.a.result.of ' =>
-	'в результате',
-'setting.assets.cleared.at' => 'Активы очищены в ',
-'setting.assets.were.not.cleared.at' =>
-	'Активы не были очищены в',
-'setting.company' => 'Публичные данные компании',
-'setting.company.private' => 'Конфиденциальные данные компании',
-'setting.company.profile' => 'Изменение профиля, например, мобильного телефона '
-	. 'и адреса электронной почты',
-'setting.duplicate.key' => 'Не удалось завершить сохранение.'
-	. 'У вас есть дубликат со '
-	. 'следующим ключом:',
-'setting.error.on.the.public.assets.folder' =>
-	'ошибка в папке публичных ресурсов.',
-'setting.form' => 'Установка формы',
-'setting.key' => 'Установка ключа',
-'setting.section' => 'Раздел',
-'setting.subsection' => 'Подраздел',
-'setting.translator.key' => 'Переводчик Ключ',
-'setting.value' => 'Значение параметра',
-'setting.you.have.cleared.the.cache' =>
-	'Вы очистили кэш.',
-'setting.you.have.not.cleared.the.cache.due.to.a' =>
-	'Вы не очистили кэш',
-'settings' => 'Настройки',
-'settings.successfully.saved' => 'Настройки успешно сохранены',
-'setup.choose.language' => 'Выберите язык',
-'setup.choose.language.message' => 'Выберите язык для продолжения установки.',
-'setup.complete' => 'Установка завершена',
-'setup.complete.message' => 'InvoicePlane успешно установлен.'
-	. 'Теперь вы можете войти.',
-'setup.complete.secure.setup' => 'Если вы хотите обезопасить свою '
-	. 'установку, вы можете отключить настройку '
-	. 'на данный момент.'
-	. 'Для этого замените строку <code>DISABLE_SETUP=false</code> '
-	. 'на <code>DISABLE_SETUP=true</code> в вашем файле '
-	. '<code>ipconfig.'
-	. 'php</code> .',
-'setup.complete.support.note' => 'Если у вас возникли какие-либо '
-	. 'проблемы или вам нужна помощь,'
-	. 'посетите <a href="https:'
-	. '//wiki.'
-	. 'invoiceplane.'
-	. 'com">официальную вики</a> или <a href="https:'
-	. '//community.'
-	. 'invoiceplane.'
-	. 'com/">форум сообщества</a> .',
-'setup.create.user' => 'Создать учетную запись пользователя',
-'setup.create.user.message' => 'Это информация, которая вам понадобится '
-	. 'для входа в InvoicePlane.',
-'setup.database.configured.message' => 'База данных успешно настроена.',
-'setup.database.details' => 'Подробности базы данных',
-'setup.database.message' => 'Для подключения к вашей базе '
-	. 'данных предоставьте следующую информацию.',
-'setup.db.cannot.connect' => 'Невозможно подключиться к серверу базы '
-	. 'данных с предоставленной информацией о '
-	. 'базе данных.'
-	. 'Проверьте учетные данные и повторите '
-	. 'попытку.',
-'setup.db.database.info' => 'Имя базы данных, которую вы '
-	. 'создали для InvoicePlane.',
-'setup.db.hostname.info' => 'Имя хоста вашей базы данных.',
-'setup.db.password.info' => 'Пароль, связанный с базой данных.',
-'setup.db.port.info' => 'Порт, на котором прослушивается ваше '
-	. 'имя хоста.'
-	. 'По умолчанию 3306.',
-'setup.db.username.info' => 'Имя пользователя, связанное с базой '
-	. 'данных.',
-'setup.install.tables' => 'Установить таблицы',
-'setup.other.contact' => 'Другие контакты',
-'setup.prerequisites' => 'Предпосылки',
-'setup.prerequisites.message' => 'Добро пожаловать в InvoicePlane! Любая '
-	. 'проблема, перечисленная ниже, должна быть '
-	. 'решена, прежде чем установка может '
-	. 'быть продолжена.',
-'setup.tables.errors' => 'Перед продолжением установки необходимо устранить '
-	. 'указанные ниже ошибки.',
-'setup.tables.success' => 'Таблицы базы данных успешно установлены.',
-'setup.upgrade.message' => 'Перед продолжением установки необходимо устранить '
-	. 'указанные ниже ошибки.',
-'setup.upgrade.success' => 'Таблицы базы данных были успешно '
-	. 'обновлены.',
-'setup.upgrade.tables' => 'Таблицы обновления',
-'setup.user.address.info' => 'Введенная ниже адресная информация будет '
-	. 'отображаться в ваших счетах.',
-'setup.user.contact.info' => 'Эта контактная информация также может '
-	. 'отображаться в ваших счетах.',
-'setup.user.email.info' => 'Ваш адрес электронной почты будет '
-	. 'использоваться для входа в InvoicePlane.',
-'setup.user.name.info' => 'Либо название вашей компании, либо '
-	. 'ваше имя и фамилия.',
-'setup.user.password.info' => 'Не забудьте использовать надежный пароль.'
-	. 'Рекомендуется сочетание заглавных и строчных '
-	. 'букв, цифр и символов.'
-	. 'Минимальная длина:'
-	. '8 символов',
-'setup.user.password.verify.info' =>
-	'Подтвердите свой пароль, указав тот '
-	. 'же пароль еще раз.',
-'setup.v120.alert' => '<strong>Внимание!</strong><br> Очень важно, чтобы вы '
-	. 'прочитали <a href="https:'
-	. '//go.'
-	. 'invoiceplane.'
-	. 'com/v120update" target="_blank">это уведомление об обновлении,</a> '
-	. 'в котором описаны некоторые существенные '
-	. 'изменения в приложении InvoicePlane.',
-'setup.v147.alert' => '<strong>Внимание!</strong><br> Откройте файл <code>application/config/config.'
-	. 'php</code> и измените строку <code>$config[\'sess_use_database\'] '
-	. '= false;</code> на <code>$config[\'sess_use_database\'] = '
-	. 'true;</code><br> Более подробную информацию можно '
-	. 'найти <a href="https:'
-	. '//go.'
-	. 'invoiceplane.'
-	. 'com/v147update" target="_blank">здесь.'
-	. '</a>',
-'showing.of' => 'Показано %s из %s ',
-'signup' => 'Зарегистрироваться',
-'single.choice' => 'Одиночный выбор',
-'site.soletrader.about.choose' => 'Вот несколько веских причин выбрать '
-	. 'нас:',
-'site.soletrader.about.competitive.rates' =>
-	'Конкурентоспособные цены',
-'site.soletrader.about.contemporary' => 'Современные навыки',
-'site.soletrader.about.dissatisfaction' => 'В случае неудовлетворенности качеством обслуживания '
-	. 'мы переделаем работу бесплатно.',
-'site.soletrader.about.finished' => 'Завершенные проекты',
-'site.soletrader.about.happy' => 'Довольные клиенты',
-'site.soletrader.about.quality' => 'Без ущерба качеству',
-'site.soletrader.about.return' => 'Постоянные клиенты',
-'site.soletrader.about.simply' => 'Просто снимите трубку, и мы '
-	. 'переделаем работу.',
-'site.soletrader.about.solved' => 'Решенные проблемы',
-'site.soletrader.about.trained' => 'Наша команда хорошо обучена и '
-	. 'опытна.',
-'site.soletrader.about.we' => 'Мы усердно применяем свои навыки '
-	. 'в меру своих возможностей.',
-'site.soletrader.about.willing' => 'Готовность к ответной поддержке',
-'site.soletrader.contact.address' => 'Адрес',
-'site.soletrader.contact.email' => 'Электронная почта',
-'site.soletrader.contact.lookout' => 'Мы всегда ищем новых клиентов.'
-	. 'Если вы заинтересованы в сотрудничестве '
-	. 'с нами, свяжитесь с нами '
-	. 'одним из следующих способов.',
-'site.soletrader.contact.phone' => 'Телефон',
-'site.soletrader.contact.touch' => 'Свяжитесь с нами',
-'site.soletrader.pricing.basic' => 'базовый',
-'site.soletrader.pricing.choosePlan' => 'Выбрать план',
-'site.soletrader.pricing.currencyPerMonth' => 'помесячно',
-'site.soletrader.pricing.explore' => 'Ознакомьтесь с нашими гибкими ценами,'
-	. 'чтобы найти идеальный вариант для '
-	. 'ведения вашего бизнеса.',
-'site.soletrader.pricing.plans' => 'Больше планов',
-'site.soletrader.pricing.pricing' => ' Наши цены',
-'site.soletrader.pricing.pro' => 'Профессиональный',
-'site.soletrader.pricing.proPrice' => 'цена pro',
-'site.soletrader.pricing.special' => 'особенный',
-'site.soletrader.pricing.starter' => 'Стартер',
-'site.soletrader.pricing.visits' => 'визиты',
-'site.soletrader.team.assistant' => 'Помощник',
-'site.soletrader.team.coordinator' => 'Координатор',
-'site.soletrader.team.we' => 'Мы — группа заботливых, опытных '
-	. 'и трудолюбивых людей.',
-'site.soletrader.testimonial.we' => 'Вот отзывы',
-'site.soletrader.testimonial.worker1' => 'Это мой отзыв',
-'site.soletrader.testimonial.worker2' => 'Это мой отзыв',
-'site.soletrader.testimonial.worker3' => 'Это мой отзыв',
-'site.todays.date' => 'Сегодняшняя дата',
-'six.months' => 'Шесть месяцев',
-'smtp.mail.from' => 'Адрес отправителя SMTP для системных '
-	. 'писем',
-'smtp.password' => 'Пароль SMTP',
-'smtp.port' => 'SMTP-порт',
-'smtp.requires.authentication' => 'Требуется аутентификация',
-'smtp.security' => 'Безопасность',
-'smtp.server.address' => 'Адрес SMTP-сервера',
-'smtp.ssl' => 'SSL',
-'smtp.tls' => 'ТЛС',
-'smtp.username' => 'Имя пользователя SMTP',
-'smtp.verify.certs' => 'Проверка сертификатов SMTP',
-'sql.file' => 'SQL-файл',
-'start' => 'Начинать',
-'start.date' => 'Дата начала',
-'state' => 'Состояние',
-'status' => 'Статус',
-'stop' => 'Останавливаться',
-'stop.logging.in' => 'Остановить вход в систему',
-'stop.signing.up' => 'Остановить подписку',
-'storecove' => 'Storecove',
-'storecove.advisory.to.developer.field.easily.missed' =>
-	'Поле, которое легко пропустить клиенту',
-'storecove.create.a.sender.legal.entity.country' =>
-	'1.'
-	. '1.'
-	. '4.'
-	. 'Создать отправителя - Юридическое лицо '
-	. 'Страна',
-'storecove.invoice.json.encoded' => 'StoreCove Json-кодированный счет-фактура',
-'storecove.legal' => 'Юридический',
-'storecove.legal.entity.id.for.json' =>
-	'1.'
-	. '1.'
-	. '4.'
-	. 'Создайте отправителя — сохраните идентификатор '
-	. 'юридического лица Cove, вставленный в '
-	. 'invoice.'
-	. 'json',
-'storecove.legal.entity.identifier.id.not.found' =>
-	'Параметры конфигурации Учет Поставщик Сторона '
-	. 'Юридическое лицо Идентификатор компании не '
-	. 'найден.',
-'storecove.no.contract.exists' => 'Контракт не существует',
-'storecove.not.available' => 'Нет в наличии',
-'storecove.purchase.order.item.id.null' =>
-	'po-item-id-null',
-'storecove.receiver.identifier' => 'Идентификатор получателя — см.'
-	. 'StoreCove 6.'
-	. '3',
-'storecove.region.country.legal.tax' =>
-	'Регион ---------- Страна --------- Юридический '
-	. '--------- Налог',
-'storecove.salesorder.number.not.exist' =>
-	'Номер заказа на продажу не '
-	. 'существует',
-'storecove.sender.identifier' => '6.'
-	. '2 Идентификатор отправителя',
-'storecove.sender.identifier.basis' => '6.'
-	. '2 Идентификатор отправителя:'
-	. 'юридический или налоговый',
-'storecove.supplier.contact.email.not.found' =>
-	'Контактный адрес электронной почты поставщика '
-	. 'не найден.'
-	. 'См.'
-	. 'массив параметров конфигурации.',
-'storecove.supplier.contact.firstname.not.found' =>
-	'Контакт поставщика FirstName не найден.'
-	. 'См.'
-	. 'массив параметров конфигурации.',
-'storecove.supplier.contact.lastname.not.found' =>
-	'Контакт поставщика LastName не найден.'
-	. 'См.'
-	. 'массив параметров конфигурации.',
-'storecove.supplier.contact.name.not.found' =>
-	'Имя контакта поставщика не найдено.'
-	. 'См.'
-	. 'массив параметров конфигурации.',
-'storecove.supplier.contact.telephone.not.found' =>
-	'Контактный телефон поставщика не найден.'
-	. 'См.'
-	. 'массив параметров конфигурации.',
-'storecove.tax' => 'Налог',
-'storecove.tax.rate.code' => 'Код налоговой ставки Storecove',
-'storecove.tax.scheme.identifier.id.not.found' =>
-	'Параметры конфигурации Учетная схема налогообложения '
-	. 'поставщика Идентификатор компании не найден.',
-'stream' => 'Потоковое PDF в браузере / '
-	. 'Модальное',
-'street.address' => 'Адрес улицы',
-'street.address.2' => 'Почтовый адрес (продолжение)',
-'subject' => 'Предмет',
-'submenu' => 'Подменю',
-'submit' => 'Представлять на рассмотрение',
-'subtotal' => 'Промежуточный итог',
-'success' => 'Успех',
-'successful' => 'Успешный',
-'sunday' => 'Воскресенье',
-'system.settings' => 'Системные настройки',
-'table' => 'Стол',
-'task' => 'Задача',
-'task.add' => 'Задача Добавить',
-'task.description' => 'Описание задачи',
-'task.finish.date' => 'Дата окончания',
-'task.name' => 'Имя задачи',
-'task.price' => 'Цена задания',
-'tasks' => 'Задачи',
-'tasks.form' => 'Форма задания',
-'tax' => 'Налог',
-'tax.code' => 'Налоговый кодекс',
-'tax.code.short' => 'Налоговый кодекс',
-'tax.information' => 'Информация о налогах',
-'tax.point' => 'Дата Налоговый пункт',
-'tax.rate' => 'Ставка налога',
-'tax.rate.add' => 'Налоговая ставка Добавить',
-'tax.rate.code' => 'Код налоговой ставки по счету-фактуре',
-'tax.rate.decimal.places' => 'Налоговая ставка, десятичные знаки',
-'tax.rate.edit' => 'Изменить налоговую ставку',
-'tax.rate.form' => 'Форма налоговой ставки',
-'tax.rate.history.exists' => 'Невозможно удалить.'
-	. 'История уже существует',
-'tax.rate.name' => 'Название налоговой ставки, например, Стандартная',
-'tax.rate.percent' => 'Процент налоговой ставки',
-'tax.rate.placement' => 'Размещение налоговой ставки',
-'tax.rates' => 'Налоговые ставки',
-'taxes' => 'Налоги',
-'telegram' => 'Телеграмма',
-'telegram.bot.api.chat.id' =>
-	'Telegram:'
-	. 'Не-бот:'
-	. 'Личный аккаунт:'
-	. 'Hello World:'
-	. 'Тестовое сообщение:'
-	. 'Получатель сообщения:'
-	. '<b>Идентификатор чата</b>',
-'telegram.bot.api.chat.id.not.set' =>
-	'Идентификатор чата владельца личной учетной '
-	. 'записи Telegram, не являющегося ботом,'
-	. 'который отправил боту первое сообщение '
-	. 'и должен получить тестовое сообщение '
-	. '«Привет!» «Мир», не был настроен.',
-'telegram.bot.api.current.status' =>
-	'<b>Текущее использование:'
-	. '</b> веб-хук не нужен, поскольку '
-	. 'у клиентов нет идентификаторов чата '
-	. 'и они не отправляют сообщения '
-	. 'боту.',
-'telegram.bot.api.enable' => 'Включить Телеграм',
-'telegram.bot.api.enabled.not' =>
-	'Телеграм не включен',
-'telegram.bot.api.future.use' =>
-	'<b>Будущее использование:'
-	. '</b> Клиентам с идентификаторами чата '
-	. 'отправляется счет-фактура в Telegram, и '
-	. 'они подтверждают получение, отправляя подтверждение '
-	. 'обратно на веб-хук.',
-'telegram.bot.api.general.purpose' =>
-	'<b>Зарегистрированный бот, идентифицированный по токену,'
-	. 'отправляет уведомления об оплате клиентов '
-	. 'на указанный ниже зарегистрированный идентификатор '
-	. 'чата (обычно это личный аккаунт '
-	. 'администратора в Telegram, не являющийся '
-	. 'ботом).'
-	. '</b>',
-'telegram.bot.api.get.updates.failed' =>
-	'Ваши обновления Telegram не удались.',
-'telegram.bot.api.get.updates.success' =>
-	'Ваши обновления Telegram успешно выполнены '
-	. 'с помощью метода API getUpdates.',
-'telegram.bot.api.hello.world.test.message' =>
-	'Привет, мир от Telegram Bot '
-	. 'Api.'
-	. 'Спасибо разработчикам yiisoft!',
-'telegram.bot.api.hello.world.test.message.sent' =>
-	'Сообщение Hello World отправлено.',
-'telegram.bot.api.hello.world.test.message.sent.not' =>
-	'Сообщение Hello World НЕ отправлено.',
-'telegram.bot.api.hello.world.test.message.use' =>
-	'Отправьте простое тестовое сообщение «Hello '
-	. 'World from Telegram Bot Api» '
-	. 'на внешний идентификатор чата',
-'telegram.bot.api.payment.notification.success' =>
-	'Уведомление о платеже через Telegram '
-	. 'успешно',
-'telegram.bot.api.payment.notifications' =>
-	'Уведомления о платежах Telegram',
-'telegram.bot.api.token' => 'Токен API бота Telegram',
-'telegram.bot.api.token.not.set' =>
-	'Токен API Telegram Bot не '
-	. 'установлен',
-'telegram.bot.api.webhook.delete' =>
-	'Удалить вебхук',
-'telegram.bot.api.webhook.deleted' =>
-	'Webhook только что был отключен,'
-	. 'поэтому можно использовать ручной метод '
-	. 'API getUpdates.',
-'telegram.bot.api.webhook.secret.token' =>
-	'Секретный токен Webhook для дополнительной '
-	. 'безопасности (используется как параметр в '
-	. 'функции setWebhook, а не как '
-	. 'queryParameter)',
-'telegram.bot.api.webhook.setup' =>
-	'Вебхук настроен.',
-'telegram.bot.api.webhook.setup.already' =>
-	'Вебхук уже настроен.',
-'telegram.bot.api.webhook.url.this.site' =>
-	'URL-адрес Telegram Webhook этого сайта '
-	. 'используется в функции TelegramHelper setWebhook.',
-'template' => 'Шаблон счета-фактуры',
-'templates' => 'Шаблоны счетов-фактур',
-'term' => 'Условия и положения',
-'term.1' => 'Я не читал положения и '
-	. 'условия.',
-'term.2' => 'Я прочитал(а) и согласен(сна) с '
-	. 'условиями.',
-'term.add.additional.terms.at.setting.repository' =>
-	'Добавьте дополнительные условия в функцию '
-	. 'getPaymentTerms репозитория настроек.',
-'terms' => 'Условия',
-'test.data.install' => 'Установить тестовые данные',
-'test.data.use' => 'Использовать тестовые данные',
-'test.remove' => 'Удалить тестовые данные',
-'test.remove.tooltip' => 'Вид.'
-	. 'Настройки.'
-	. 'Общие.'
-	. 'Установить тестовые данные.'
-	. 'Нет и Вид.'
-	. 'Настройки.'
-	. 'Общие.'
-	. 'Использовать тестовые данные.'
-	. 'Нет',
-'test.reset' => 'Сбросить тестовые данные',
-'test.reset.setting' => 'Настройки Переустановить',
-'test.reset.setting.tooltip' => 'Это приведет к удалению всех '
-	. 'текущих настроек и переустановке настроек '
-	. 'по умолчанию в InvoiceController/install.'
-	. 'default.'
-	. 'settings.'
-	. 'on.'
-	. 'first.'
-	. 'run.',
-'test.reset.tooltip' => 'Вид.'
-	. 'Настройки.'
-	. 'Общие.'
-	. 'Установить тестовые данные.'
-	. 'Да и Вид.'
-	. 'Настройки.'
-	. 'Общие.'
-	. 'Использовать тестовые данные.'
-	. 'Да',
-'text' => 'Текст',
-'theme' => 'Тема',
-'this.month' => 'В этом месяце',
-'this.quarter' => 'В этом квартале',
-'this.year' => 'В этом году',
-'thousands.separator' => 'Разделитель тысяч',
-'time.created' => 'Время создания',
-'time.zone' => 'Часовой пояс',
-'title' => 'Заголовок',
-'to.date' => 'На сегодняшний день',
-'to.email' => 'На электронную почту',
-'total' => 'Общий',
-'total.balance' => 'Общий баланс',
-'total.billed' => 'Всего выставлено счетов',
-'total.paid' => 'Всего оплачено',
-'transaction.reference' => 'Ссылка на транзакцию',
-'transaction.successful' => 'Транзакция прошла успешно',
-'treatment' => 'Уход',
-'treatment.end' => 'Окончание лечения',
-'treatment.start' => 'Начало лечения',
-'true' => 'Истинный',
-'try.again' => 'Попробуйте еще раз',
-'two.factor.authentication' => 'Двухфакторная аутентификация',
-'two.factor.authentication.attempt.failure' =>
-	'Ошибка попытки двухфакторной аутентификации',
-'two.factor.authentication.attempt.failure.must.setup' =>
-	'Неудачная попытка двухфакторной аутентификации:'
-	. 'необходимо настроить новый QR-код с '
-	. 'секретом (+) и выбрать перезапись '
-	. 'предыдущей записи при появлении соответствующего '
-	. 'запроса.',
-'two.factor.authentication.attempt.success' =>
-	'Успешная попытка двухфакторной аутентификации',
-'two.factor.authentication.disabled' => 'Двухфакторная аутентификация теперь отключена в '
-	. 'целях дополнительной безопасности.',
-'two.factor.authentication.enable' => 'Включить двухфакторную аутентификацию',
-'two.factor.authentication.enabled.with.disabling' =>
-	'Двухфакторная аутентификация в настоящее время '
-	. 'включена для дополнительной безопасности и '
-	. 'отключается после успешной аутентификации для '
-	. 'дополнительного уровня безопасности до следующего '
-	. 'входа в систему.'
-	. 'Обязательное сканирование QR-кода после каждого '
-	. 'входа в систему для нового '
-	. 'секрета.',
-'two.factor.authentication.enabled.without.disabling' =>
-	'Двухфакторная аутентификация в настоящее время '
-	. 'включена для дополнительной безопасности и '
-	. 'не отключается после успешной аутентификации.'
-	. 'QR-код больше не будет виден '
-	. 'для сканирования после входа в '
-	. 'систему и настройки двухфакторной аутентификации.',
-'two.factor.authentication.error' => 'Ошибка двухфакторной аутентификации',
-'two.factor.authentication.form.verify.login' =>
-	'Подтвердите вход',
-'two.factor.authentication.invalid.code.format' =>
-	'Неверный формат кода.'
-	. 'Введите 6-значный код из вашего '
-	. 'приложения.',
-'two.factor.authentication.missing.code.or.secret' =>
-	'Отсутствует код аутентификации или секрет '
-	. '2FA.',
-'two.factor.authentication.new.six.digit.code' =>
-	'Введите новый 6-значный код аутентификации '
-	. '(отличный от кода настройки) из '
-	. 'вашего приложения.',
-'two.factor.authentication.no.secret.generated' =>
-	'Секрет не сгенерирован.'
-	. 'Пожалуйста, перезапустите установку.',
-'two.factor.authentication.qr.code.enter.manually' =>
-	'Или введите этот код в '
-	. 'приложение Android вручную:',
-'two.factor.authentication.scan' => 'Отсканируйте этот QR-код с помощью '
-	. 'приложения Aegis:',
-'two.factor.authentication.setup' => 'Настройте двухфакторную аутентификацию',
-'type' => 'Тип',
-'unit' => 'Единица',
-'unit.add' => 'Добавить единицу',
-'unit.already.exists' => 'Подразделение уже существует!',
-'unit.description.not.provided' => 'Описание не предоставлено',
-'unit.edit' => 'Редактировать блок',
-'unit.history' => 'Невозможно удалить.'
-	. 'История существует.',
-'unit.name' => 'Название блока',
-'unit.name.plrl' => 'Название подразделения (множественное число)',
-'unit.peppol' => 'Пеппол',
-'unit.peppol.add' => 'Единица Peppol Добавить',
-'unit.peppol.code' => 'Код Peppol блока',
-'unit.peppol.edit' => 'Юнит Пеппол Редактировать',
-'unit.peppol.index' => 'Индекс Peppol единицы',
-'units' => 'Единицы',
-'unknown' => 'Неизвестный',
-'unpaid' => 'Неоплаченный',
-'updatecheck' => 'Обновлениепроверить',
-'updatecheck.failed' => 'Updatecheck не удалось! Проверьте сетевое '
-	. 'подключение.',
-'updates' => 'Обновления',
-'updates.available' => 'Доступны обновления!',
-'upload.date' => 'Дата загрузки',
-'upload.description' => 'Описание',
-'upload.filename.description' => 'Имя файла Описание',
-'upload.filename.new' => 'Новое имя файла',
-'upload.filename.original' => 'Исходное имя файла',
-'upload.index' => 'Загрузить индекс',
-'upload.plural' => 'Загрузки',
-'upload.url.key' => 'URL-адрес ключа',
-'use.system.language' => 'Использовать системный язык',
-'user' => 'Пользователь',
-'user.account' => 'Счет пользователя для выставления счета',
-'user.account.clients' => 'Клиенты с учетными записями пользователей',
-'user.accounts' => 'Счета пользователей счетов',
-'user.all.clients' => 'Добавить всех клиентов',
-'user.all.clients.text' => '* Если эта опция отмечена,'
-	. 'пользователь сможет видеть всех клиентов,'
-	. 'включая тех, которые будут добавлены '
-	. 'позже.',
-'user.api.list' => 'Пользователи с предварительным счетом - '
-	. 'зарегистрированные пользователи',
-'user.client.active.no' => 'У вас нет клиентов с '
-	. 'активными учетными записями пользователей.'
-	. 'Администраторы назначают клиентов зарегистрированным учетным '
-	. 'записям пользователей.',
-'user.client.count' => '#',
-'user.client.no.account' => 'У этого клиента нет связанной '
-	. 'с ним учетной записи пользователя,'
-	. 'поэтому этот документ не может '
-	. 'быть создан.',
-'user.clients.assigned.not' => 'У этого пользователя нет назначенных '
-	. 'ему клиентов.',
-'user.form' => 'Форма пользователя',
-'user.iban' => 'IBAN',
-'user.inv.active.not' => 'Учетная запись пользователя не активна',
-'user.inv.list.limit' => 'Количество записей, перечисленных на странице '
-	. '(Примечание:'
-	. 'переопределяет значение по умолчанию)',
-'user.inv.more.than.one.assigned' =>
-	'Создание счета не удалось:'
-	. 'проверьте настройки .'
-	. 'Учетная запись пользователя.'
-	. 'Для этого клиента назначено более '
-	. 'одного пользователя.',
-'user.inv.refer.to' => 'Значение по умолчанию — 10 '
-	. 'записей на страницу — можно '
-	. 'изменить, нажав здесь.',
-'user.inv.role.accountant' => 'Бухгалтер',
-'user.inv.role.accountant.assigned' =>
-	'Назначенная роль бухгалтера',
-'user.inv.role.accountant.default' =>
-	'Бухгалтер клиента по умолчанию может '
-	. 'просматривать счета-фактуры, оплачивать счета-фактуры, просматривать '
-	. 'оплаты счетов-фактур и редактировать оплаты '
-	. 'счетов-фактур.',
-'user.inv.role.administrator' => 'Администратор',
-'user.inv.role.administrator.already.assigned' =>
-	'Роль администратора уже назначена.',
-'user.inv.role.administrator.assigned' =>
-	'Роль администратора уже назначена.',
-'user.inv.role.all.new' =>
-	'Все новые пользователи по умолчанию '
-	. 'принимают на себя роль наблюдателя,'
-	. 'т.'
-	. 'е.'
-	. 'могут просматривать документацию, но не '
-	. 'могут редактировать отправленную им документацию,'
-	. 'т.'
-	. 'е.'
-	. 'наблюдать или просматривать документацию.',
-'user.inv.role.observer' => 'Наблюдатель',
-'user.inv.role.observer.assigned' =>
-	'Назначена роль наблюдателя',
-'user.inv.role.observer.assigned.already' =>
-	'Роль наблюдателя уже назначена.',
-'user.inv.role.revoke.all' =>
-	'Отменить все роли',
-'user.inv.role.warning.revoke.all' =>
-	'Вы уверены, что хотите отозвать '
-	. 'все роли?',
-'user.inv.role.warning.role' =>
-	'Вы уверены, что хотите принять '
-	. 'эту роль?',
-'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' =>
-	'Невозможно назначить администраторский тип раскрывающегося '
-	. 'списка не администратору',
-'user.inv.type.cannot.allocate.guest.type.to.administrator' =>
-	'Невозможно назначить гостевой тип раскрывающегося '
-	. 'списка администратору',
-'user.signup.please' => 'Пожалуйста, зарегистрируйтесь!',
-'user.subscriber.number' => 'Номер абонента',
-'user.type' => 'Тип пользователя',
-'username' => 'Имя пользователя',
-'users' => 'Пользователи',
-'utility.assets.clear' => 'Очистить кэш активов',
-'validator.fail' => 'Невозможно обработать поле %s:'
-	. '%s',
-'validator.invalid.login.password' => 'Неверный логин или пароль',
-'validator.password.change' => 'Ваш пароль был изменен',
-'validator.password.not.match' => 'Пароли не совпадают',
-'validator.password.not.match.new' =>
-	'Ваши новые пароли не совпадают',
-'validator.password.reset' => 'Ваш пароль был сброшен',
-'validator.user.exist' => 'Пользователь с таким логином уже '
-	. 'существует',
-'validator.user.exist.not' => 'Пользователь с таким логином не '
-	. 'существует',
-'value' => 'Ценить',
-'values' => 'Ценности',
-'values.with.taxes' => 'Стоимость с налогами',
-'vat' => 'НДС',
-'vat.abbreviation' => 'НДС',
-'vat.break.down' => 'Резюме по НДС',
-'vat.id' => 'ИНН',
-'vat.id.short' => 'НДС',
-'vat.invoice' => 'СЧЕТ-ФАКТУРА НДС',
-'vat.rate' => 'Ставка НДС',
-'vat.reg.no' => 'VAT Reg No',
-'vat.registered' => 'Зарегистрирован плательщиком НДС',
-'vendor.nikic.fast-route' => 'Создание более быстрых маршрутов',
-'verify.password' => 'Подтвердите пароль',
-'version.history' => 'История версий',
-'view' => 'Вид',
-'view.all' => 'Просмотреть все',
-'view.client' => 'Просмотреть клиента',
-'view.clients' => 'Посмотреть клиентов',
-'view.contact.form.body' => 'Тело',
-'view.contact.form.email' => 'Электронная почта',
-'view.contact.form.name' => 'Имя',
-'view.contact.form.subject' => 'Предмет',
-'view.invoices' => 'Просмотр счетов',
-'view.payment.logs' => 'Просмотр журналов онлайн-платежей',
-'view.payments' => 'Просмотр платежей',
-'view.product.families' => 'Просмотреть семейства продуктов',
-'view.product.units' => 'Просмотр единиц продукции',
-'view.products' => 'Просмотреть продукты',
-'view.projects' => 'Посмотреть проекты',
-'view.quotes' => 'Посмотреть цитаты',
-'view.recurring.invoices' => 'Просмотр повторяющихся счетов',
-'view.tasks' => 'Просмотреть задачи',
-'viewed' => 'Просмотрено',
-'warning' => 'Предупреждение',
-'web' => 'Веб',
-'web.address' => 'Веб-адрес',
-'welcome' => 'Добро пожаловать',
-'wrong.passwordreset.token' => 'Не найден пользователь для предоставленного '
-	. 'токена сброса.'
-	. 'Если вы считаете, что это '
-	. 'ошибка, обратитесь к администратору.',
-'year' => 'Год',
-'year.prefix' => 'Префикс года',
-'years' => 'Годы',
-'yes' => 'Да',
-'zip' => 'Почтовый индекс',
-'zip.code' => 'Почтовый индекс',
-    
-'allowance.or.charge.allowance.tax' =>
-	'Налог на пособие',
-'allowance.or.charge.charge.tax' =>
-	'Налог на сбор',
-'allowance.or.charge.inv.add' =>
-	'Добавить скидку или сбор по '
-	. 'счету',
-'allowance.or.charge.level' => 'Уровень (⬅ ️Общий, Позиция ➡)',
-'allowance.or.charge.shipping.handling.packaging' =>
-	'Доставка/Обработка/Упаковка',
-'allowance.or.charge.shipping.handling.packaging.vat' =>
-	'НДС на доставку/обработку/упаковку',
-'allowance.or.charge.shipping.handling.packaging.tax' =>
-	'Налог на доставку/обработку/упаковку',
-'amount.payment' => 'Сумма платежа, подлежащая оплате в '
-	. 'полном объеме',
-'calendar' => 'Календарь',
-'continue.with.developersandboxhmrc' => 'Продолжить работу с Developer Gov '
-	. 'Sandbox UK',
-'continue.with.oidc' => 'Продолжить с Open Id Connect',
-'continue.with.openbanking' => 'Продолжить с Open Banking',
-'converted.to.invoice' => 'Преобразовано в счет-фактуру',
-'converted.to.so' => 'Преобразовано в заказ на продажу',
-'custom.field.edit' => 'Редактирование пользовательского поля',
-'delete.quote.single' => 'Эту цитату можно удалить, поскольку '
-	. 'с ней не связан ни '
-	. 'заказ на продажу, ни счет-фактура.',
-'delete.quote.derived' => 'С данным предложением связан либо '
-	. 'заказ на продажу, либо счет-фактура,'
-	. 'и поэтому его нельзя удалить.',
-'extended' => 'Расширенный',
-'extended.language' => 'Расширенный язык',
-'file' => 'Файл',
-'grand.fathered' => 'Дедушка',
-'layout.password.otp.6' => 'Пароль OTP (6 цифр)',
-'layout.password.otp.6.8' =>
-	'Пароль OTP (6 цифр) / '
-	. 'Резервные коды восстановления (8 цифр)',
-'oauth2.account.locked' => 'Аккаунт заблокирован',
-'oauth2.backup.recovery.codes' => 'Резервные коды восстановления.'
-	. 'Храните в надежном месте.',
-'oauth2.backup.recovery.codes.regenerate' =>
-	'Регенерация резервных кодов восстановления',
-'oauth2.consent.required' => 'Требуется согласие',
-'oauth2.default' => 'Используется конфигурация oauth2.'
-	. '0 по умолчанию',
-'oauth2.invalid.request' => 'Неверный запрос',
-'oauth2.invalid.client' => 'Недействительный клиент',
-'oauth2.invalid.grant' => 'Недействительный грант',
-'oauth2.login.required' => 'Требуется вход в систему',
-'oauth2.missing.authentication.code.or.state.parameter' =>
-	'Отсутствует код аутентификации или параметр '
-	. 'состояния.',
-'oauth2.missing.state.parameter.possible.csrf.attack' =>
-	'Отсутствует параметр состояния.'
-	. 'Возможная атака CSRF.',
-'oauth2.server.error' => 'Ошибка сервера',
-'oauth2.temporarily.unavailable' => 'Временно недоступно',
-'oauth2.test.user.creation.not.allowed.prod.env' =>
-	'Создание тестового пользователя в производственной '
-	. 'среде запрещено.',
-'oauth2.unauthorized.client' => 'Неавторизованный клиент',
-'oauth2.unsupported.response.type' => 'Неподдерживаемый тип ответа',
-'oauth2.unsupported.grant.type' => 'Неподдерживаемый тип гранта',
-'online.payment.apiToken' => 'API-токен',
-'online.payment.thirdPartyProvider' => 'Сторонний поставщик, например Wonderful',
-'open.banking.pay.with' => 'Оплата через Open Banking: ',
-'open.banking.not.configured' => 'Open Banking не настроен.'
-	. 'Обратитесь в службу поддержки.',
-'radiolist.choice' => 'Выбор списка радиостанций',
-'region' => 'Область',
-'script' => 'Сценарий',
-'tax.rate.active.not' => 'Внимание:'
-	. 'ни одна налоговая ставка не '
-	. 'активирована.'
-	. 'Активируйте хотя бы одну налоговую '
-	. 'ставку.'
-	. 'Настройки .'
-	. 'Налоговая ставка',
-'textarea' => 'Текстовая область',
-'two.factor.authentication.invalid.backup.recovery.code' =>
-	'Неверный 8-значный код восстановления резервной '
-	. 'копии',
-'two.factor.authentication.invalid.totp.code' =>
-	'Неверный 6-значный одноразовый код аутентификации',
-'two.factor.authentication.rate.limit.reached' =>
-	'Достигнут лимит скорости.'
-	. 'Подождите 10 секунд.',
-'url' => 'URL-адрес',
-'variant' => 'Вариант',
-'approval.required' => 'Требуется одобрение',
-'quote.approval.required' => 'Требуется утверждение сметы',
-'quote.must.be.approved.first' =>
-	'Перед конвертацией необходимо утвердить смету.',    
+    'PEPPOL.COMMON.R040' => 'GLN должен иметь действительный формат в соответствии с правилами GS1.',
+    'PEPPOL.COMMON.R041' => 'Регистрационный номер норвежской организации ДОЛЖЕН быть указан в правильном формате.',
+    'PEPPOL.COMMON.R042' => 'Датский номер CVR ДОЛЖЕН быть указан в правильном формате.',
+    'PEPPOL.COMMON.R043' => 'Бельгийский регистрационный номер предприятия ДОЛЖЕН быть указан в правильном формате.',
+    'PEPPOL.COMMON.R044' => 'Код IPA (уникальный код организационной единицы) должен быть указан в правильном формате.',
+    'PEPPOL.COMMON.R045' => 'Налоговый код (Codice Fiscale) должен быть указан в правильном формате.',
+    'PEPPOL.COMMON.R046' => 'Налоговый код (Codice Fiscale) для национальной схемы ДОЛЖЕН быть указан в правильном формате.',
+    'PEPPOL.COMMON.R047' => 'Итальянский НДС-код (Partita Iva) должен быть указан в правильном формате.',
+    'PEPPOL.COMMON.R049' => 'Регистрационный номер шведской организации ДОЛЖЕН быть указан в правильном формате.',
+    'PEPPOL.COMMON.R050' => 'Номер австралийского бизнес-номера (ABN) ДОЛЖЕН быть указан в правильном формате.',
+    'PEPPOL.COMMON.R052' => 'Регистрационный номер Датской торговой палаты ДОЛЖЕН быть указан в правильном формате.',
+    'PEPPOL.COMMON.R053' => 'Датский номер ERSTORG ДОЛЖЕН быть указан в правильном формате.',
+    'PEPPOL.EN16931.R001' => 'Необходимо предоставить описание бизнес-процесса.',
+    'PEPPOL.EN16931.R002' => 'Допускается максимум одна нота, если только обе стороны не являются DE.',
+    'PEPPOL.EN16931.R003' => 'Требуется номер покупателя или номер заказа.',
+    'PEPPOL.EN16931.R004.INVALID' => 'Недопустимый формат идентификатора спецификации.',
+    'PEPPOL.EN16931.R004.REQUIRED' => 'Требуется идентификатор спецификации.',
+    'PEPPOL.EN16931.R005' => 'Валюта уплаты налога должна отличаться от валюты документа.',
+    'PEPPOL.EN16931.R007' => 'Бизнес-процесс ДОЛЖЕН быть в указанном формате. ',
+    'PEPPOL.EN16931.R008' => 'Пустой элемент: ',
+    'PEPPOL.EN16931.R010' => 'Требуется электронный адрес покупателя.',
+    'PEPPOL.EN16931.R020' => 'Требуется электронный адрес продавца.',
+    'PEPPOL.EN16931.R040' => 'Сумма должна равняться базовому значению * проценту/100',
+    'PEPPOL.EN16931.R041' => 'Базовая сумма, необходимая при указании процента.',
+    'PEPPOL.EN16931.R042' => 'Требуется указание процента при предоставлении базовой суммы.',
+    'PEPPOL.EN16931.R043' => 'Значение параметра ChargeIndicator должно быть либо &#39;true&#39;, либо &#39;false&#39;.',
+    'PEPPOL.EN16931.R044' => 'Плата за поддержание ценового уровня не допускается.',
+    'PEPPOL.EN16931.R046' => 'Ошибка в расчете чистой цены товара',
+    'PEPPOL.EN16931.R051' => 'Все суммы должны быть указаны в валюте документа.',
+    'PEPPOL.EN16931.R053' => 'Требуется одна итоговая сумма налога с указанием промежуточных итогов.',
+    'PEPPOL.EN16931.R054' => 'Неверная сумма налога без учета промежуточных итогов',
+    'PEPPOL.EN16931.R055' => 'Суммы налогов должны иметь одинаковый знак.',
+    'PEPPOL.EN16931.R061' => 'Для осуществления прямого дебетования требуется номер поручения.',
+    'PEPPOL.EN16931.R080' => 'Допускается максимум одна ссылка на проект.',
+    'Q1' => 'Q1',
+    'Q2' => 'Q2',
+    'Q3' => 'Q3',
+    'Q4' => 'Q4',
+    'account.information' => 'Информация об учетной записи',
+    'active' => 'Активный',
+    'active.not' => 'Неактивный',
+    'add' => 'Добавлять',
+    'add.client' => 'Добавить клиента',
+    'add.family' => 'Добавить семью',
+    'add.files' => 'Добавить файлы...',
+    'add.invoice' => 'Добавить счет-фактуру',
+    'add.invoice.tax' => 'Добавить счет-фактуру налога',
+    'add.new.row' => 'Добавить новую строку',
+    'add.note' => 'Добавить примечание',
+    'add.notes' => 'Добавить заметки',
+    'add.payment.provider' => 'Добавить поставщика платежных услуг',
+    'add.product' => 'Добавить продукт',
+    'add.quote' => 'Добавить цитату',
+    'add.quote.tax' => 'Добавить налог на цитату',
+    'add.task' => 'Добавить задачу',
+    'add.unit' => 'Добавить единицу',
+    'address' => 'Адрес',
+    'administrator' => 'Администратор',
+    'after.amount' => 'После суммы',
+    'after.amount.space' => 'После суммы с неразрывным пробелом',
+    'aging' => 'Старение счета-фактуры',
+    'aging.1.15' => '1 - 15 дней',
+    'aging.16.30' => '16 - 30 дней',
+    'aging.above.30' => 'Более 30 дней',
+    'alert.no.client.assigned' => 'Для этого проекта не назначен ни один клиент.',
+    'alert.no.tasks.found' => 'Задания для этого проекта не найдены.',
+    'alert.task.delete' => 'Внимание! Вы хотите удалить задачу,которая использовалась для создания счета.',
+    'all' => 'Все',
+    'allowance.or.charge' => 'Пособие или сбор',
+    'allowance.or.charge.add' => 'Уровень документа (т.е.НЕ уровень строки счета-фактуры) Добавление скидки или сбора',
+    'allowance.or.charge.allowance' => 'Разрешение',
+    'allowance.or.charge.allowance.tax' => 'Налог на пособие',
+    'allowance.or.charge.allowance.vat' => 'НДС на пособие',
+    'allowance.or.charge.amount' => 'Сумма налогового вычета (множительный коэффициент,числовой как процент, умноженный на базовую сумму)',
+    'allowance.or.charge.amount.fixed.must.be.positive' => 'Фиксированная сумма должна быть больше 0.',
+    'allowance.or.charge.base.amount' => 'Базовая сумма',
+    'allowance.or.charge.base.amount.required.when.mfn.set' => 'При установке множителя базовая сумма должна быть больше 0.',
+    'allowance.or.charge.charge' => 'Заряжать',
+    'allowance.or.charge.charge.tax' => 'Налог на сбор',
+    'allowance.or.charge.charge.vat' => 'НДС на расходы',
+    'allowance.or.charge.edit.allowance' => 'Уровень документа (т.е.НЕ уровень строки счета-фактуры) Редактирование поправки',
+    'allowance.or.charge.edit.charge' => 'Уровень документа (т.е.НЕ уровень строки счета) Редактирование платежа',
+    'allowance.or.charge.index' => 'Индекс скидок или расходов по отношению к позиции',
+    'allowance.or.charge.inv' => 'Счет-фактура или сбор',
+    'allowance.or.charge.inv.add' => 'Добавить скидку или сбор по счету',
+    'allowance.or.charge.item' => 'Скидка или сбор по статье счета-фактуры',
+    'allowance.or.charge.item.add' => 'Надбавка/сбор Добавить',
+    'allowance.or.charge.item.invoice' => 'Скидка или начисление по позиции счета-фактуры',
+    'allowance.or.charge.item.quote' => 'Укажите стоимость или сумму, указанную в смете.',
+    'allowance.or.charge.level' => 'Уровень (⬅ ️Общий, Позиция ➡)',
+    'allowance.or.charge.multiplier.factor.numeric' => 'Множитель Численный',
+    'allowance.or.charge.quote' => 'Предложенная цена или стоимость',
+    'allowance.or.charge.quote.add' => 'Добавить смету или плату',
+    'allowance.or.charge.reason' => 'Причина',
+    'allowance.or.charge.reason.code' => 'Код причины',
+    'allowance.or.charge.shipping.handling.packaging' => 'Доставка/Обработка/Упаковка',
+    'allowance.or.charge.shipping.handling.packaging.tax' => 'Налог на доставку/обработку/упаковку',
+    'allowance.or.charge.shipping.handling.packaging.vat' => 'НДС на доставку/обработку/упаковку',
+    'already.paid' => 'Этот счет уже оплачен.',
+    'amount' => 'Сумма позиции счета',
+    'amount.add' => 'Счет-фактура Позиция Сумма Добавить',
+    'amount.due' => 'Сумма к оплате',
+    'amount.inv.item' => 'Счет-фактура Сумма',
+    'amount.no' => 'Сумма счета отсутствует',
+    'amount.payment' => 'Сумма платежа, подлежащая оплате в полном объеме',
+    'amount.quote.item' => 'Сумма за единицу товара',
+    'amount.settings' => 'Настройки количества',
+    'amounts' => 'Суммы счетов-фактур',
+    'any.family' => 'Любая семья',
+    'api.error.forbidden' => 'У вас нет разрешения на доступ к этому ресурсу.',
+    'api.error.not_found' => 'Запрошенный ресурс не найден.',
+    'api.error.unauthorized' => 'Для доступа к этому ресурсу требуется аутентификация.',
+    'api.error.validation_failed' => 'Проверка не пройдена. Пожалуйста, проверьте введенные данные.',
+    'api.success.created' => 'Ресурс успешно создан.',
+    'api.success.deleted' => '{ресурс} успешно удален',
+    'api.success.updated' => '{ресурс} успешно обновлен',
+    'app.cdn.not.node.module' => 'Используйте AppCdnAsset (а не AppNodeModulesAsset).',
+    'apply.after.item.tax' => 'Подать заявку после уплаты налога на товар',
+    'apply.before.item.tax' => 'Подать заявку до уплаты налога на товар',
+    'approval.required' => 'Требуется одобрение',
+    'approve' => 'Утвердить',
+    'approve.this.quote' => 'Одобрить эту цитату',
+    'approved' => 'Одобренный',
+    'archive' => 'Архивируйте PDF-файл в разделе Загрузки/Архив',
+    'assign.client' => 'Назначить клиента',
+    'assign.client.on.signup' => 'Назначьте клиента пользователю при регистрации.',
+    'assign.client.on.signup.default.age.minimum.eighteen' => 'При регистрации назначайте пользователю клиента,которому по умолчанию установлен минимальный возраст восемнадцать лет.',
+    'assign.client.on.signup.done' => 'Клиент назначается пользователю при регистрации.',
+    'assigned.clients' => 'Назначенные клиенты',
+    'attachment.list' => 'Список вложений',
+    'attachments' => 'Вложения',
+    'autofit.columns' => 'Автоматическая подгонка ширины столбцов под содержимое',
+    'automatic.email.on.recur' => 'Автоматическая отправка повторяющихся счетов по электронной почте',
+    'back' => 'Назад',
+    'backup' => 'Резервная копия',
+    'backup.database' => 'Резервное копирование базы данных',
+    'backup.database.description' => 'Загрузите сжатую копию всей базы данных — всех таблиц, структур и данных — в виде единого файла .sql.gz. Сохраните его в безопасном месте за пределами этого сервера.',
+    'backup.database.download' => 'Скачать резервную копию базы данных',
+    'backup.download.failed' => 'Резервное копирование базы данных не удалось.',
+    'bacs.account.number' => 'Номер счета',
+    'bacs.bank.details' => 'Банковские реквизиты',
+    'bacs.copy' => 'Скопировать в буфер обмена',
+    'bacs.mobile.tip' => 'На мобильном устройстве нажмите на значки копирования рядом с каждым полем, чтобы вставить данные непосредственно в банковское приложение.',
+    'bacs.no.outstanding.invoices' => 'На данный момент неоплаченных счетов нет.',
+    'bacs.no.outstanding.invoices.hint' => 'Ваш баланс чист — сейчас ничего платить не нужно.',
+    'bacs.not.yet.configured' => 'Банковские реквизиты для перевода пока недоступны.',
+    'bacs.not.yet.configured.hint' => 'Для получения информации о способах оплаты, пожалуйста, свяжитесь с нами напрямую.',
+    'bacs.outstanding.invoices' => 'Неоплаченные счета',
+    'bacs.pay.by.bank.transfer' => 'Оплата банковским переводом',
+    'bacs.payee' => 'Получатель платежа',
+    'bacs.payment.instructions' => 'При осуществлении банковского перевода используйте указанный выше сортировочный код, номер счета и ссылку. Ссылка поможет нам сопоставить ваш платеж с вашим счетом.',
+    'bacs.quick.pay' => 'Оплата банковским переводом (BACS / Faster Payments)',
+    'bacs.reference' => 'Ваша ссылка',
+    'bacs.scan.qr.hint' => 'В банковском приложении имя получателя, сортировочный код, номер счета и сумма будут предварительно заполнены — вводить ничего не нужно.',
+    'bacs.scan.to.pay' => 'Отсканируйте для получения платежных данных.',
+    'bacs.sort.code' => 'Сортировочный код',
+    'balance' => 'Баланс',
+    'balance.does.not.equal.zero' => 'Баланс не равен нулю.Статус оплачен =&gt; Баланс должен быть равен нулю.',
+    'bank.ref' => 'Банковская ссылка',
+    'base.invoice' => 'Базовый счет-фактура',
+    'bcc' => 'ВСС',
+    'bcc.mails.to.admin' => 'Отправлять все исходящие письма как скрытую копию на учетную запись администратора',
+    'bcc.mails.to.admin.hint' => 'Учетная запись администратора — это учетная запись, созданная при установке InvoicePlane.',
+    'before.amount' => 'До суммы',
+    'bill.to' => 'Законопроект о',
+    'birthdate' => 'Дата рождения',
+    'body' => 'Тело',
+    'boolean' => 'Булев',
+    'bootstrap5' => 'Бутстрап 5',
+    'bootstrap5.alert.close.button.font.size' => 'Размер шрифта кнопки закрытия оповещения',
+    'bootstrap5.alert.message.font' => 'Шрифт предупреждающего сообщения',
+    'bootstrap5.alert.message.font.size' => 'Размер шрифта предупреждающего сообщения',
+    'bootstrap5.cdn.not.node.module' => 'CDN Bootstrap5 (не модуль Node)',
+    'bootstrap5.form.font.size' => 'Размер шрифта формы (пиксели)',
+    'bootstrap5.form.input.height' => 'Высота поля ввода формы (пиксели)',
+    'bootstrap5.layout.guest.navbar.font' => 'Макет Гостевая панель навигации Шрифт',
+    'bootstrap5.layout.guest.navbar.font.size' => 'Макет Гостевая панель навигации Размер шрифта',
+    'bootstrap5.layout.invoice.navbar.font' => 'Макет шрифта панели навигации счета-фактуры',
+    'bootstrap5.layout.invoice.navbar.font.size' => 'Размер шрифта панели навигации счета-фактуры макета',
+    'bootstrap5.layout.main.navbar.font' => 'Расположение шрифтов в главной панели навигации',
+    'bootstrap5.layout.main.navbar.font.size' => 'Макет Главная панель навигации Размер шрифта',
+    'bootstrap5.offcanvas.enable' => 'Включить Offcanvas',
+    'bootstrap5.offcanvas.placement' => 'Размещение вне холста, например, сверху,снизу, начало, т.е.слева, конец, т.е.справа',
+    'bootstrap5.sidebar.background' => 'Цвет фона боковой панели',
+    'bootstrap5.sidebar.guest.background' => 'Цвет фона боковой панели для гостей',
+    'breadcrumb.product.index' => 'Индекс продукта',
+    'breadcrumb.product.property.index' => 'Индекс свойств продукта',
+    'business.error.client.credit_limit' => 'Клиент {client_name} превысил кредитный лимит в размере {limit}.',
+    'business.error.insufficient_stock' => 'Недостаточно товара на складе {product_name}. В наличии: {available}, Требуется: {required}',
+    'business.error.invoice.already_paid' => 'Счет № {номер_счета} уже отмечен как оплаченный.',
+    'business.error.payment.gateway_failed' => 'Обработка платежа не удалась: {error_message}',
+    'calculate.discounts' => 'Рассчитать скидки',
+    'calendar' => 'Календарь',
+    'calendar.day.1' => '1 день',
+    'calendar.day.15' => '15 дней',
+    'calendar.day.2' => '2 дня',
+    'calendar.day.3' => '3 дня',
+    'calendar.day.30' => '30 дней',
+    'calendar.day.4' => '4 дня',
+    'calendar.day.5' => '5 дней',
+    'calendar.day.6' => '6 дней',
+    'calendar.month.1' => '1 месяц',
+    'calendar.month.10' => '10 месяцев',
+    'calendar.month.11' => '11 месяцев',
+    'calendar.month.2' => '2 месяца',
+    'calendar.month.3' => '3 месяца',
+    'calendar.month.4' => '4 месяца',
+    'calendar.month.5' => '5 месяцев',
+    'calendar.month.6' => '6 месяцев',
+    'calendar.month.7' => '7 месяцев',
+    'calendar.month.8' => '8 месяцев',
+    'calendar.month.9' => '9 месяцев',
+    'calendar.week.1' => '1 неделя',
+    'calendar.week.2' => '2 недели',
+    'calendar.week.3' => '3 недели',
+    'calendar.week.4' => '4 недели',
+    'calendar.year.1' => '1 год',
+    'calendar.year.2' => '2 года',
+    'calendar.year.3' => '3 года',
+    'calendar.year.4' => '4 года',
+    'calendar.year.5' => '5 лет',
+    'can.be.changed' => 'Можно изменить',
+    'cancel' => 'Отмена',
+    'canceled' => 'Отменено',
+    'cannot.delete' => 'Удалить невозможно. Сначала удалите связанные записи.',
+    'capture.gps.on.send' => 'Запись местоположения по GPS при отправке.',
+    'capture.gps.on.send.description' => 'Эта функция зарезервирована для будущего рабочего процесса со статусами сотрудников/менеджеров (статусы &quot;начато&quot;/&quot;завершено&quot; между &quot;черновиком&quot; и &quot;отправлено&quot;, с ролью &quot;сотрудника&quot;, ограниченной только назначенными ему заданиями) — она еще не реализована, поэтому включение этой функции в настоящее время не дает никакого эффекта.',
+    'cart.insufficient.stock' => 'В наличии оказалось достаточно товара только для того, чтобы добавить часть вашего запроса — в вашей корзине обновлено максимальное количество товара, доступное на данный момент.',
+    'case.date' => 'Дата дела',
+    'case.number' => 'Номер дела',
+    'cash.discount' => 'Скидка при оплате наличными',
+    'category.primary' => 'Категория Первичная',
+    'category.secondary' => 'Категория Вторичная',
+    'caution.delete.invoices' => 'Только тестирование:удаление всех счетов-фактур и связанных с ними записей.(См.функцию inv/flush)',
+    'caution.deleted.invoices' => 'Только тестирование:все счета-фактуры и связанные с ними поля были удалены.',
+    'cc' => 'СС',
+    'change.client' => 'Изменить клиента',
+    'change.password' => 'Изменить пароль',
+    'checking.for.news' => 'Проверка новостей...',
+    'checking.for.updates' => 'Проверка обновлений...',
+    'checkout' => 'Проверить',
+    'checkout.failed' => 'Извините, нам не удалось оформить ваш заказ. Пожалуйста, попробуйте еще раз.',
+    'city' => 'Город',
+    'claim' => 'Начал судебный иск',
+    'cldr' => 'в',
+    'client' => 'Клиент',
+    'client.access' => 'Доступ клиента',
+    'client.add' => 'Добавить клиента',
+    'client.age' => 'Возраст',
+    'client.age.hint' => 'Это поле обязательно для заполнения,и клиент должен быть не моложе 16 лет.',
+    'client.already.exists' => 'Клиент уже существует!',
+    'client.birthdate.hint' => 'Если дата рождения неизвестна, введите 01/01/1901',
+    'client.building.number' => 'Номер здания клиента',
+    'client.contract.period.end' => 'Конец периода',
+    'client.contract.period.start' => 'Начало периода',
+    'client.contract.reference' => 'Ссылка на контракт',
+    'client.custom' => 'Индивидуальный заказ клиента',
+    'client.custom.add' => 'Клиент Пользовательский Добавить',
+    'client.deactivate.warning' => 'Внимание: Счета-фактуры и соответствующая документация не будут доступны для просмотра, если клиент неактивен.',
+    'client.delete.history.exits.no' => 'Невозможно удалить.История клиента существует.',
+    'client.detail.changes' => 'Если эта информация изменится, пожалуйста,отправьте нам электронное письмо.',
+    'client.error.summary' => 'Сводка ошибок',
+    'client.form' => 'Форма клиента',
+    'client.frequency' => 'Частота клиента',
+    'client.group' => 'Группа клиентов',
+    'client.has.not.assigned' => 'Эти клиенты не были назначены на учетную запись пользователя.Один или несколько клиентов на учетную запись пользователя.',
+    'client.has.not.user.account' => 'У этого клиента нет учетной записи пользователя или он в настоящее время не назначен пользователю.1.Убедитесь, что клиент зарегистрирован, т.е.имеет учетную запись пользователя, или назначьте этого клиента зарегистрированному в настоящее время пользователю.2.Настройки .Учетная запись пользователя для выставления счетов .Добавить учетную запись пользователя 3.Назначьте этого клиента учетной записи пользователя 4.В текущем состоянии для этого клиента невозможно будет создавать счета и предложения.',
+    'client.has.user.account' => 'Учетная запись пользователя',
+    'client.import.list.blank' => 'Список импорта клиентов пуст',
+    'client.name' => 'Имя клиента',
+    'client.not.allocated.to.user' => 'Клиент не назначен пользователю',
+    'client.not.found' => 'Клиент не найден',
+    'client.note' => 'Примечание для клиента',
+    'client.note.add' => 'Примечание клиента Добавить',
+    'client.note.date' => 'Клиент Дата',
+    'client.note.view' => 'Просмотр примечаний клиента',
+    'client.notes' => 'Заметки клиента',
+    'client.number' => 'Номер клиента',
+    'client.peppol' => 'Подробности о клиенте Peppol',
+    'client.peppol.accounting.cost' => 'Код стоимости учета клиента для бухгалтерского учета',
+    'client.peppol.add' => 'Добавьте данные Peppol для электронного выставления счетов',
+    'client.peppol.buyer.reference.default' => 'Референс покупателя:Если клиент не указал контактное лицо по заказу на покупку,то это референс покупателя или лицо, оформившее заказ, по умолчанию.',
+    'client.peppol.buyer.reference.example' => 'например, имя лица, обычно делающего заказ, номер служащего лица, обычно делающего заказ, или код, идентифицирующий это лицо или отдел/группу',
+    'client.peppol.clientpeppols.form' => 'Форма клиента/заказчика бухгалтерского учета',
+    'client.peppol.edit' => 'Редактировать данные Peppol для электронного выставления счетов',
+    'client.peppol.endpointid' => 'Идентификатор конечной точки:адрес электронной почты',
+    'client.peppol.endpointid.schemeid' => 'Идентификатор конечной точки — идентификатор схемы на основе EAS (схема электронной адресации), 4-значный код, например 0192',
+    'client.peppol.financial.institution.branchid' => 'Идентификатор филиала финансового учреждения',
+    'client.peppol.identificationid' => 'Идентификационный номер',
+    'client.peppol.identificationid.schemeid' => 'Идентификационный идентификатор - schemeID',
+    'client.peppol.legal.entity.company.legal.form' => 'Юридическое лицо Правовая форма компании - Дополнительная юридическая информация, имеющая отношение к продавцу, например, Акционерный капитал',
+    'client.peppol.legal.entity.companyid' => 'Юридическое лицо Идентификатор компании',
+    'client.peppol.legal.entity.companyid.schemeid' => 'Идентификатор компании юридического лица - schemeID',
+    'client.peppol.legal.entity.registration.name' => 'Регистрационное наименование юридического лица',
+    'client.peppol.not.found' => 'Клиент или заказчик не указал свои данные Peppol.',
+    'client.peppol.not.found.accounting.cost' => 'Не найдено:стоимость учета или текстовое значение,указывающее, где следует зарегистрировать соответствующие данные в финансовых счетах Покупателя.',
+    'client.peppol.not.found.delivery.location' => 'Место доставки Название страны не найдено',
+    'client.peppol.not.found.id' => 'Клиент не указал идентификатор своей учетной записи в разделе «Данные клиента Peppol» на сайте.',
+    'client.peppol.not.found.id.supplier.assigned' => 'Клиент Peppol Поставщик Назначенный Идентификатор Счета Не Найден',
+    'client.peppol.not.found.invoice' => 'Связанный счет-фактура не найден',
+    'client.peppol.not.found.purchase.order' => 'Заказ на продажу не имеет связанного с ним номера заказа на покупку.',
+    'client.peppol.not.found.purchase.order.item.number' => 'С элементом строки заказа на продажу не связан соответствующий идентификационный номер элемента строки заказа на покупку (идентификация элемента покупателя).Администратор:отредактируйте номер элемента заказа на продажу в счете-фактуре.',
+    'client.peppol.not.found.purchase.order.line.number' => 'Номер строки заказа на продажу не имеет соответствующего номера строки заказа на покупку (OrderLineReference LineID),связанного с ним.Администратор:Измените номер строки заказа на продажу в счете-фактуре.',
+    'client.peppol.not.found.sales.order' => 'Заказ на продажу не существует',
+    'client.peppol.payee.financial.account.name' => 'Название финансового счета получателя платежа',
+    'client.peppol.payee.financial.accountid' => 'Идентификатор финансового счета получателя платежа',
+    'client.peppol.po.item.id' => 'Идентификатор товара Peppol PO',
+    'client.peppol.po.line.id' => 'Идентификатор линии Peppol PO',
+    'client.peppol.record.updated.successfully' => 'Запись Peppol успешно обновлена',
+    'client.peppol.supplier.assigned.account.id' => 'Идентификатор учетной записи, назначенный поставщиком',
+    'client.peppol.taxschemecompanyid' => 'Налоговая схема Идентификатор компании',
+    'client.peppol.taxschemeid' => 'Идентификатор налоговой схемы',
+    'client.po.number' => 'Номер заказа покупателя',
+    'client.po.person' => 'Контактная информация для оформления заказа на покупку',
+    'client.postaladdress' => 'Почтовый адрес',
+    'client.postaladdress.add' => 'Добавить почтовый адрес клиента',
+    'client.postaladdress.additional.street.name' => 'Дополнительное название улицы',
+    'client.postaladdress.available' => 'Доступные почтовые адреса',
+    'client.postaladdress.building.number' => 'Номер здания',
+    'client.postaladdress.city.name' => 'Название города',
+    'client.postaladdress.country' => 'Страна',
+    'client.postaladdress.countrysubentity' => 'Страна Субъект',
+    'client.postaladdress.none' => 'У Клиента нет почтового адреса',
+    'client.postaladdress.postalzone' => 'Почтовая зона',
+    'client.postaladdress.street.name' => 'Название улицы',
+    'client.purchase.order.number' => 'Номер заказа клиента на покупку',
+    'client.streets' => 'Улицы',
+    'client.surname' => 'Фамилия клиента',
+    'client.surname.optional' => 'Фамилия клиента (необязательно)',
+    'client.telegram.chat.id' => 'ID чата в Telegram',
+    'client.title' => 'Обращение к клиенту (господин/госпожа/госпожа/доктор/профессор)',
+    'client.title.doctor' => 'Доктор',
+    'client.title.miss' => 'Скучать',
+    'client.title.mr' => 'Мистер',
+    'client.title.mrs' => 'Миссис',
+    'client.title.professor' => 'Профессор',
+    'client.view' => 'Клиентский взгляд',
+    'clients' => 'Клиенты',
+    'close' => 'Закрывать',
+    'closed' => 'Закрыто',
+    'column' => 'Столбец',
+    'common.date.created' => 'Дата создания',
+    'common.date.modified' => 'Дата изменения',
+    'common.name' => 'Имя',
+    'company' => 'Компания',
+    'company.deleted' => 'Компания была удалена',
+    'company.not.deleted' => 'Компания не была удалена, поскольку к ней прикреплен профиль компании.',
+    'company.private' => 'Компания Частная',
+    'company.private.logo' => 'Логотип компании',
+    'company.private.logo.height' => 'Высота логотипа',
+    'company.private.logo.margin' => 'Поле логотипа',
+    'company.private.logo.width' => 'Ширина логотипа',
+    'company.private.logo.will.be.removed.from.uploads.and.public.folder' => 'Логотип будет удален из загрузок и публичной папки.',
+    'company.public' => 'Компания Публичная',
+    'company.seo' => 'Описание поисковой оптимизации (SEO)',
+    'complete' => 'Полный',
+    'confirm' => 'Подтверждать',
+    'confirm.deletion' => 'Подтвердите удаление',
+    'consent.periodic.invoice' => 'Выставление счетов за ежемесячную/еженедельную подписку через Telegram ',
+    'consent.telegram.chat.id' => 'Идентификатор чата в Telegram (необходим для уведомлений о платежах — напишите @userinfobot в Telegram, чтобы узнать свой)',
+    'consent.telegram.outstanding' => 'Я согласен получать уведомления через Telegram о поступлении платежей.',
+    'contact.information' => 'Контактная информация',
+    'continue' => 'Продолжать',
+    'continue.with.developer.sandbox.hmrc' => 'Продолжить с Developer Gov Sandbox UK',
+    'continue.with.developersandboxhmrc' => 'Продолжить работу с Developer Gov Sandbox UK',
+    'continue.with.facebook' => 'Продолжить с Facebook',
+    'continue.with.github' => 'Продолжить с Github',
+    'continue.with.google' => 'Продолжить с Google',
+    'continue.with.govuk' => 'Продолжить с Gov Uk',
+    'continue.with.linkedin' => 'Продолжить с LinkedIn',
+    'continue.with.microsoftonline' => 'Продолжить с MicrosoftOnline',
+    'continue.with.oidc' => 'Продолжить с Open Id Connect',
+    'continue.with.openbanking' => 'Продолжить с Open Banking',
+    'continue.with.vkontakte' => 'Продолжить с ВКонтакте',
+    'continue.with.x' => 'Продолжить с X',
+    'continue.with.yandex' => 'Продолжить с Яндексом',
+    'contract' => 'Договор',
+    'contract.add' => 'Добавить контракт',
+    'contract.contracts' => 'Контракты',
+    'contract.create' => 'Создайте свои контракты через.Счет-фактура.Просмотр.Параметры.Изменить.Контракт будет создан для клиента,которому выставляется счет-фактура.Свяжите этот контракт с будущими счетами-фактурами.',
+    'contract.index.button.list' => 'Счета-фактуры',
+    'contract.name' => 'Имя',
+    'contract.none' => 'Напоминание:для этого счета-фактуры не настроен контракт.',
+    'contract.period.end' => 'Конец периода',
+    'contract.period.start' => 'Начало периода',
+    'contract.reference' => 'Ссылка',
+    'contracts' => 'Контракты',
+    'converted.to.invoice' => 'Преобразовано в счет-фактуру',
+    'converted.to.so' => 'Преобразовано в заказ на продажу',
+    'copied' => 'Скопировано!',
+    'copy' => 'Копия',
+    'copy.all.to.date' => 'Скопировать все данные на текущую дату',
+    'copy.all.to.date.new.date' => 'Новая дата',
+    'copy.all.to.date.warning' => 'Это позволит скопировать все счета-фактуры, отображаемые в данный момент вашими фильтрами выше, на указанную ниже дату, при этом каждый счет останется привязанным к своему клиенту.',
+    'copy.invoice' => 'Копия счета-фактуры',
+    'copy.quote' => 'Копировать цитату',
+    'count' => 'Количество счетов-фактур',
+    'country' => 'Страна',
+    'create' => 'Создавать',
+    'create.credit.invoice' => 'Создать счет-фактуру по кредиту',
+    'create.credit.invoice.alert' => 'Создание кредитного счета сделает текущий счет <em>доступным только для чтения,</em> что означает, что вы больше не сможете редактировать счет.Кредитный счет будет содержать текущее состояние со всеми позициями, но с отрицательными суммами и остатками.',
+    'create.invoice' => 'Создать счет-фактуру',
+    'create.new.client' => 'Создать нового клиента',
+    'create.product' => 'Создать продукт',
+    'create.project' => 'Создать проект',
+    'create.quote' => 'Создать цитату',
+    'create.recurring' => 'Создать повторяющийся',
+    'create.task' => 'Создать задачу',
+    'created' => 'Созданный',
+    'creation.unsuccessful' => 'Создание счета-фактуры не удалось',
+    'credit.invoice' => 'Кредитный счет-фактура',
+    'credit.invoice.date' => 'Дата кредитного счета',
+    'credit.invoice.details' => 'Реквизиты кредитного счета',
+    'credit.invoice.for.invoice' => 'Кредитная нота',
+    'credit.note.creation.successful' => 'Создание кредитной ноты успешно',
+    'credit.note.creation.unsuccessful' => 'Создание кредитной ноты или кредитного меморандума для отмены счета-фактуры не удалось',
+    'creditcard.cvv' => 'CVV-код/CSC-код',
+    'creditcard.details' => 'Данные кредитной карты',
+    'creditcard.expiry.month' => 'Месяц истечения срока',
+    'creditcard.expiry.year' => 'Год истечения срока',
+    'creditcard.number' => 'Номер кредитной карты',
+    'cron.key' => 'CRON-ключ',
+    'curl.store.cove.api.get.legal.entity.id.successful' => 'Получите юридическое лицо, успешное',
+    'curl.store.cove.api.setup.legal.entity.successful' => 'Вызов API настройки Store Cove — юридическое лицо успешно выполнено',
+    'curl.store.cove.api.setup.successful' => 'Успешный вызов API настройки Store Cove',
+    'currency' => 'Валюта',
+    'currency.and.number.settings' => 'Настройки валюты и чисел',
+    'currency.code' => 'Код валюты',
+    'currency.name.EUR' => 'Евро',
+    'currency.name.GBP' => 'Британские фунты',
+    'currency.name.USD' => 'Доллары США',
+    'currency.symbol' => 'Символ валюты',
+    'currency.symbol.EUR' => '€',
+    'currency.symbol.GBP' => '£',
+    'currency.symbol.USD' => '$',
+    'currency.symbol.placement' => 'Размещение символа валюты',
+    'current.day' => 'Текущий день',
+    'current.month' => 'Текущий месяц',
+    'current.version' => 'Текущая версия',
+    'current.year' => 'Текущий год',
+    'current.yy' => 'Текущий год (формат 2-х цифр)',
+    'custom' => 'Счет-фактура Индивидуальный заказ',
+    'custom.field' => 'Пользовательское поле',
+    'custom.field.add' => 'Добавить пользовательское поле',
+    'custom.field.edit' => 'Редактирование пользовательского поля',
+    'custom.field.form' => 'Форма пользовательского поля',
+    'custom.field.location' => 'Положение документа',
+    'custom.field.number' => 'Число',
+    'custom.field.required' => 'Необходимый',
+    'custom.fields' => 'Пользовательские поля',
+    'custom.invoice.add' => 'Добавить индивидуальный счет-фактуру',
+    'custom.title' => 'Пользовательский заголовок',
+    'custom.value' => 'Пользовательское значение',
+    'custom.value.delete' => 'Сначала удалить пользовательское значение',
+    'custom.value.new' => 'Индивидуальная стоимость Новый',
+    'custom.values' => 'Пользовательские значения',
+    'custom.values.edit' => 'Изменить пользовательское значение',
+    'custom.values.new' => 'Новое пользовательское значение',
+    'dashboard' => 'Панель инструментов',
+    'dashboard.outstanding_invoices' => 'Неоплаченные счета',
+    'dashboard.overdue_amount' => 'Просроченная сумма',
+    'dashboard.overview.title' => 'Финансовый обзор',
+    'dashboard.recent_payments' => 'Недавние платежи',
+    'dashboard.total_revenue' => 'Общая выручка за этот месяц',
+    'database' => 'База данных',
+    'database.properly.configured' => 'База данных настроена правильно',
+    'date' => 'Дата счета-фактуры',
+    'date.actual.delivery' => 'Дата фактической поставки',
+    'date.applied' => 'Дата применения',
+    'date.created' => 'Дата создания',
+    'date.format' => 'Формат даты',
+    'date.issued' => 'Дата выпуска/создания',
+    'date.supplied' => 'Дата поставки',
+    'dates' => 'Даты выставления счетов',
+    'datetime.immutable.date.created' => 'Создавать',
+    'datetime.immutable.date.created.mySql.format.year.month.filter' => 'Имм',
+    'datetime.immutable.date.modified' => 'Против',
+    'datetime.immutable.time.created' => 'Время',
+    'days' => 'Дни',
+    'debug' => 'Режим отладки включен',
+    'decimal.point' => 'Десятичная точка',
+    'default' => 'По умолчанию',
+    'default.country' => 'Страна по умолчанию',
+    'default.email.template' => 'Шаблон электронной почты по умолчанию',
+    'default.hourly.rate' => 'Почасовая ставка по умолчанию',
+    'default.invoice.group' => 'Группа счетов-фактур по умолчанию',
+    'default.invoice.tax.rate' => 'Ставка налога по счету по умолчанию',
+    'default.invoice.tax.rate.placement' => 'Размещение налоговой ставки по умолчанию в счете-фактуре',
+    'default.item.tax.rate' => 'Ставка налога на товар по умолчанию',
+    'default.list.limit' => 'Количество элементов в списках',
+    'default.list.limit.hint' => 'Задает количество строк, отображаемых на страницах списков. Сохраняется немедленно — эффект виден при переходе к списку.',
+    'default.notes' => 'Заметки по умолчанию',
+    'default.payment.method' => 'Метод оплаты по умолчанию',
+    'default.pdf.template' => 'Шаблон PDF по умолчанию',
+    'default.public.template' => 'Публичный шаблон по умолчанию',
+    'default.quote.group' => 'Группа цитат по умолчанию',
+    'default.terms' => 'Условия по умолчанию',
+    'delete' => 'Удалить',
+    'delete.attachment.warning' => 'Вы уверены, что хотите удалить это вложение?',
+    'delete.client' => 'Удалить клиента',
+    'delete.client.warning' => 'Если вы удалите этого клиента,вы также удалите все счета,предложения и платежи, связанные с этим клиентом.Вы уверены, что хотите навсегда удалить этого клиента?',
+    'delete.invoice' => 'Удалить счет-фактуру',
+    'delete.invoice.action' => 'Удаление счета-фактуры',
+    'delete.invoice.archive' => 'Архивный счет-фактура',
+    'delete.invoice.date.soft.deleted' => 'Удалено без сохранения данных (подробности можно восстановить)',
+    'delete.invoice.restore' => 'Восстановить',
+    'delete.invoice.restore.warning' => 'Вы уверены, что хотите восстановить этот счет?',
+    'delete.invoice.restored' => 'Счет-фактура успешно восстановлен.',
+    'delete.invoice.trash' => 'Корзина счетов',
+    'delete.invoice.trash.empty' => 'Архивированных счетов нет.',
+    'delete.invoice.warning' => 'Если вы удалите этот счет,вы не сможете восстановить его позже.Вы уверены, что хотите навсегда удалить этот счет?',
+    'delete.quote' => 'Удалить цитату',
+    'delete.quote.derived' => 'С данным предложением связан либо заказ на продажу, либо счет-фактура,и поэтому его нельзя удалить.',
+    'delete.quote.single' => 'Эту цитату можно удалить, поскольку с ней не связан ни заказ на продажу, ни счет-фактура.',
+    'delete.quote.warning' => 'Если вы удалите эту цитату,вы не сможете восстановить ее позже.Вы уверены, что хотите навсегда удалить эту цитату?',
+    'delete.record.warning' => 'Вы уверены, что хотите удалить эту запись?',
+    'delete.sent' => 'Невозможно удалить - счет отправлен',
+    'delete.tax.warning' => 'Вы уверены, что хотите удалить этот налог?',
+    'delete.user.client.warning' => 'Вы уверены, что хотите отменить назначение этого клиента данному пользователю?',
+    'deleted' => 'Удалено',
+    'deletion.forbidden' => 'Удаление счетов запрещено.Обратитесь к администратору или ознакомьтесь с документацией.',
+    'delivery' => 'Подробности доставки:Счет/Даты начала/окончания периода доставки',
+    'delivery.actual.delivery.date' => 'Фактическая дата поставки',
+    'delivery.add' => 'Добавить доставку',
+    'delivery.date.created' => 'Дата создания',
+    'delivery.date.modified' => 'Дата доставки изменена',
+    'delivery.end.date' => 'Конечная дата доставки/периода выставления счета',
+    'delivery.location' => 'Место доставки',
+    'delivery.location.add' => 'Место доставки Добавить',
+    'delivery.location.add.in.invoice' => 'Добавьте место доставки в разделе «Счет-фактура»… Просмотр… Параметры… Редактировать',
+    'delivery.location.building.number' => 'Номер здания',
+    'delivery.location.client' => 'Места доставки Клиента',
+    'delivery.location.delete' => 'Место доставки Удалить',
+    'delivery.location.edit' => 'Место доставки Изменить',
+    'delivery.location.electronic.address.scheme' => 'Схема электронного адреса (список кодов) По умолчанию:0088 Европейская нумерация товаров (EAN) Код местоположения, также известный как (GLN) Глобальные номера местоположений',
+    'delivery.location.global.location.number' => 'Глобальный номер местоположения (13 цифр)',
+    'delivery.location.id.not.found' => 'Место доставки Глобальный номер местоположения ID не найден',
+    'delivery.location.index.button.list' => 'Счета-фактуры',
+    'delivery.location.none' => 'К данному счету не привязано ни одно место доставки.',
+    'delivery.location.peppol.output' => 'Нет места доставки, связанного с этим счетом.Поэтому нет вывода Peppol',
+    'delivery.location.plural' => 'Места доставки',
+    'delivery.location.view' => 'Место доставки Посмотреть',
+    'delivery.party' => 'Сторона доставки',
+    'delivery.party.add' => 'Доставка Стороны Добавить',
+    'delivery.party.edit' => 'Сторона доставки Редактировать',
+    'delivery.party.name' => ' Название стороны доставки',
+    'delivery.party.view' => 'Просмотр партии доставки',
+    'delivery.start.date' => 'Дата начала поставки/периода выставления счета',
+    'demographics' => 'Демографические данные',
+    'description' => 'Описание',
+    'description.document' => 'Описание документа',
+    'details' => 'Подробности',
+    'development.progress' => 'Прогресс развития',
+    'development.schema' => 'Схема',
+    'disable.flash.messages' => 'Отключить мгновенные сообщения о счетах-фактурах',
+    'disable.quickactions' => 'Отключить быстрые действия',
+    'disable.sidebar' => 'Отключить боковую панель',
+    'discount' => 'Скидка',
+    'discount.amount' => 'Сумма скидки',
+    'discount.percent' => 'Процент скидки',
+    'discount.percentage' => 'Процент скидки',
+    'do.not.send' => 'Не отправлять',
+    'do.not.send.blocksBulkSent' => 'Счет(ы) не помечены как отправленные — установлен флаг «Не отправлять».',
+    'do.not.send.blocksEmail' => 'Данный счет-фактура помечен как «Не отправлять» и не может быть отправлен клиенту по электронной почте.',
+    'do.not.send.flashCleared' => 'Флаг &quot;Не отправлять&quot; снят.',
+    'do.not.send.flashSet' => 'Установлен флаг «Не отправлять» — этот счет нельзя пометить как отправленный, пока он не будет обналичен.',
+    'do.not.send.not.set' => 'Не задано',
+    'do.not.send.reason.customer_dispute' => 'спор с клиентом',
+    'do.not.send.reason.damage_occurred' => 'Произошли повреждения',
+    'do.not.send.reason.job_incomplete' => 'Работа не завершена',
+    'do.not.send.reason.other' => 'Другой',
+    'do.not.send.reason.property_inaccessible' => 'Объект недвижимости недоступен',
+    'do.not.send.reason.safety_concern' => 'Вопрос безопасности',
+    'document.description' => 'Описание документа Peppol',
+    'documentation' => 'Документация',
+    'download' => 'Скачать',
+    'download.pdf' => 'Скачать PDF-файл',
+    'download.template' => 'Скачать шаблон',
+    'draft' => 'Черновик',
+    'draft.guest' => 'Клиенты не могут просматривать черновики счетов.',
+    'draft.number.off' => 'Новые черновики счетов-фактур не будут иметь номера счета-фактуры.Отметьте как отправленные, чтобы получить номер счета-фактуры',
+    'draft.number.on' => 'Новые проекты счетов-фактур будут иметь номер счета-фактуры.',
+    'drop.files.here' => 'Перетащите файлы сюда!',
+    'due.date' => 'Две даты',
+    'dwelling' => 'Жилище',
+    'dwelling.add' => 'Добавить жильё',
+    'dwelling.edit' => 'Редактировать жилище',
+    'dwelling.family' => 'Улица',
+    'dwelling.flat.unit' => 'Квартира / Блок',
+    'dwelling.house.number' => 'Номер дома',
+    'dwelling.house.number.suffix' => 'Суффикс номера дома',
+    'dwelling.latitude' => 'Широта',
+    'dwelling.longitude' => 'Долгота',
+    'dwelling.plural' => 'Жилища',
+    'dwelling.postcode' => 'Почтовый индекс',
+    'dwelling.source' => 'Источник',
+    'dwelling.view' => 'Вид на жилище',
+    'early.settlement.cash.discount' => 'Скидка за раннюю оплату наличными',
+    'edit' => 'Редактировать',
+    'elements' => 'Элементы',
+    'email' => 'Электронная почта',
+    'email.address' => 'Адрес электронной почты',
+    'email.client' => 'Почтовый клиент',
+    'email.date' => 'Дата отправки по электронной почте',
+    'email.default' => 'По умолчанию',
+    'email.default.none.set' => 'Значение по умолчанию не установлено.',
+    'email.exception' => 'Исключение для электронной почты.',
+    'email.from.dropdown' => 'Из раскрывающегося списка адресов электронной почты, которые будут включены в форму MailerQuote и форму MailerInv',
+    'email.include' => 'Включать',
+    'email.invoice' => 'Счет по электронной почте',
+    'email.invoice.created.body' => '
+        <h2>Уважаемый {имя_клиента},</h2><p> Мы создали для вас новый счет-фактуру:</p><ul><li> <strong>Номер счета:</strong> #{invoice_number}</li><li> <strong>Дата:</strong> {дата_счета}</li><li> <strong>Срок сдачи:</strong> {due_date}</li><li> <strong>Сумма:</strong> {сумма}</li></ul><p> <a href="{view_link}">Просмотреть счет</a> | <a href="{payment_link}">Оплатить сейчас</a></p><p> Условия оплаты: {payment_terms}</p><p> С наилучшими пожеланиями,<br> {Название компании}</p>
+    ',
+    'email.invoice.created.subject' => 'Новый счет № {номер_счета} от {название_компании}',
+    'email.invoice.overdue.subject' => 'ПРОСРОЧЕННЫЙ СЧЕТ: Счет № {номер_счета} - Требуется немедленное внимание.',
+    'email.invoice.reminder.subject' => 'Напоминание об оплате - Счет № {номер_счета}',
+    'email.link.click.confirm' => 'Пожалуйста, подтвердите свой адрес электронной почты, нажав на эту ссылку',
+    'email.log' => 'Журнал счетов-фактур, отправленных по электронной почте',
+    'email.logs' => 'Журналы счетов-фактур, отправленных по электронной почте',
+    'email.logs.table' => 'Таблица журналов электронной почты, относящихся к данному счету-фактуре.',
+    'email.logs.with.filter' => 'По электронной почте',
+    'email.not.configured' => 'Прежде чем отправлять электронную почту,вам необходимо настроить параметры электронной почты в разделе «Параметры системы».',
+    'email.not.sent.successfully' => 'Письмо НЕ было успешно отправлено',
+    'email.pdf.attachment' => 'Прикрепить предложение/счет к электронному письму?',
+    'email.placeholder' => 'name@example.com',
+    'email.quote' => 'Отправить цитату по электронной почте',
+    'email.send.method' => 'Метод отправки электронной почты',
+    'email.send.method.phpmail' => 'PHP-почта',
+    'email.send.method.sendmail' => 'Отправить почту',
+    'email.send.method.smtp' => 'SMTP',
+    'email.settings' => 'Настройки электронной почты',
+    'email.source.email.template' => 'Получено из настроек .Шаблон электронного письма',
+    'email.source.user.account' => 'Получено из настроек .Счет-фактура Учетная запись пользователя',
+    'email.successfully.sent' => 'Письмо успешно отправлено',
+    'email.template' => 'Шаблон электронного письма',
+    'email.template.add' => 'Шаблон электронной почты Добавить',
+    'email.template.already.exists' => 'Шаблон электронного письма уже существует!',
+    'email.template.form' => 'Шаблон формы электронного письма',
+    'email.template.from.email.leave.blank' => 'Если вы оставите это поле пустым, адрес электронной почты учетной записи пользователя будет вставлен как редактируемое значение в форму почтовой рассылки.Например, адрес электронной почты сервера бухгалтера.Предпочтительно использовать здесь адрес электронной почты, связанный с сервером.',
+    'email.template.from.source' => 'Источник электронной почты',
+    'email.template.from.source.admin.email' => 'Адрес электронной почты администратора (config/common/params)',
+    'email.template.from.source.froms.email' => 'Из таблицы по умолчанию (настройки.из раскрывающегося списка адресов электронной почты)',
+    'email.template.from.source.sender.email' => 'Адрес электронной почты отправителя (config/common/params)',
+    'email.template.not.configured' => 'Шаблоны электронной почты не настроены.Настройки.Счета-фактуры.Шаблоны счетов-фактур.Шаблон электронной почты по умолчанию',
+    'email.template.overdue' => 'Шаблон просроченного электронного письма',
+    'email.template.paid' => 'Шаблон платного письма',
+    'email.template.successfully.added' => 'Шаблон электронной почты успешно добавлен',
+    'email.template.successfully.deleted' => 'Шаблон электронного письма успешно удален',
+    'email.template.successfully.edited' => 'Шаблон электронного письма успешно отредактирован',
+    'email.template.tags' => 'Теги шаблонов электронных писем',
+    'email.template.tags.instructions' => 'Теги шаблона можно использовать для добавления динамической информации, например имени клиента или номера счета, в шаблон электронного письма.Щелкните текстовое поле Body, а затем выберите тег из раскрывающегося списка.Он будет автоматически вставлен в текстовое поле.',
+    'email.template.type' => 'Тип шаблона электронной почты',
+    'email.templates' => 'Шаблоны электронных писем',
+    'email.to.address.missing' => 'Вам необходимо указать адрес электронной почты, на который будет отправлено письмо.',
+    'email.warning.draft' => 'Черновики счетов-фактур сначала необходимо пометить как отправленные, чтобы они появились у клиента, а затем их можно будет отправить по электронной почте.',
+    'enable.debug.mode' => 'Включить режим отладки',
+    'enable.online.payments' => 'Включить онлайн-платежи',
+    'enable.permissive.search.clients' => 'Включить разрешительный поиск',
+    'enable.projects' => 'Включить модуль «Проекты»',
+    'enable.vat' => 'Включить НДС',
+    'enable.vat.message' => 'Отображение сообщения с напоминанием об уплате НДС над кнопкой «Параметры» в представлениях',
+    'enable.vat.warning.line.1' => '1.При включенном НДС только отдельные позиции в счете-фактуре облагаются НДС,т.е.налоги по смете/счету-фактуре не будут отображаться в счете-фактуре и будут уменьшены до 0.',
+    'enable.vat.warning.line.2' => '2.При включенном НДС никакие непозиционные налоги, упомянутые выше, не составляют общую сумму налога.',
+    'enable.vat.warning.line.3' => '3.Создавайте счета-фактуры/квитанции по НДС в отдельной базе данных.',
+    'enable.vat.warning.line.4' => '4.Все новые позиции счетов-фактур по НДС помечаются флагом belongs_to_vat_invoice.',
+    'enabled' => 'Включено',
+    'end' => 'Конец',
+    'end.date' => 'Дата окончания',
+    'enforcement' => 'Сотрудник правоохранительных органов, присутствовавший на адресе',
+    'enter' => 'Входить',
+    'enter.payment' => 'Введите платеж',
+    'error.duplicate.file' => 'Ошибка:повторяющееся имя файла, пожалуйста, измените его!',
+    'error.summary' => 'Сводка ошибок',
+    'errors' => 'Ошибки',
+    'every' => 'Каждый',
+    'example' => 'Пример',
+    'expired' => 'Истекший',
+    'expires' => 'Истекает',
+    'extended' => 'Расширенный',
+    'extended.language' => 'Расширенный язык',
+    'extra.information' => 'Дополнительная информация',
+    'failure' => 'Отказ',
+    'false' => 'ЛОЖЬ',
+    'families' => 'Семьи',
+    'family' => 'Семья',
+    'family.add' => 'Семья Добавить',
+    'family.already.exists' => 'Семья уже существует!',
+    'family.comma.list' => 'Список номеров товаров, например, 1, 2, 5, 7, для генератора товаров.',
+    'family.history' => 'История семьи существует.Невозможно удалить',
+    'family.name' => 'Фамилия',
+    'family.product.prefix' => 'Список номеров товаров. Префикс, например, Дом.',
+    'family.product.prefix.required.when.commalist.filled' => 'Префикс продукта необходим, если предоставлен список, состоящий из запятых.',
+    'family.search' => 'Семейный поиск',
+    'faq' => 'Часто задаваемые вопросы',
+    'faq.ai.callback.session' => 'Copilot:Как мне включить https://github.com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.php для улучшения управления состоянием в функции `callbackGithub`?',
+    'faq.answer' => 'Отвечать',
+    'faq.business.rules' => 'Что такое бизнес-правила Peppol?',
+    'faq.gov.developer.sandbox.hmrc' => 'Как подключить этот репозиторий к HMRC Developer Sandbox?',
+    'faq.homecare.auto.invoice' => 'Что такое автоматическое выставление счетов за услуги по уборке на дому?',
+    'faq.lamp.alpine' => 'Как настроить этот репозиторий на Linux Alpine, Apache2, mySql/mariadb и php?',
+    'faq.oauth2' => 'Как настроить поставщика удостоверений OAuth2,например, для регистрации и входа в систему через Facebook',
+    'faq.payment.provider' => 'Как настроить поставщика услуг онлайн-платежей?',
+    'faq.php.info.all' => 'Все',
+    'faq.php.info.configuration' => 'Конфигурация',
+    'faq.php.info.credits' => 'Кредиты',
+    'faq.php.info.details' => 'Подробности информации о PHP',
+    'faq.php.info.environment' => 'Среда',
+    'faq.php.info.general' => 'Общий',
+    'faq.php.info.licence' => 'Лицензия',
+    'faq.php.info.modules' => 'Модули',
+    'faq.php.info.variables' => 'Переменные',
+    'faq.question' => 'Вопрос',
+    'faq.shared.hosting' => 'Как разместить yii3i на общем хостинге?',
+    'faq.sort.order' => 'Порядок сортировки',
+    'faq.taxpoint' => 'Как определить налоговую точку?',
+    'faq.wsl.to.alpine' => 'Как обновить сайт, размещенный на Alpine, используя WSL (подсистему Windows для Linux) в Windows 11?',
+    'faq.yii.requirement.checker' => 'Проверка требований приложения Yii',
+    'fax' => 'Факс',
+    'fax.abbr' => 'Ф',
+    'fax.number' => 'Номер факса',
+    'field' => 'Поле',
+    'file' => 'Файл',
+    'filter.clients' => 'Фильтровать клиентов',
+    'filter.invoices' => 'Фильтр счетов-фактур',
+    'filter.payments' => 'Фильтр платежей',
+    'filter.quotes' => 'Фильтровать цитаты',
+    'first' => 'Первый',
+    'first.day.of.week' => 'Первый день недели',
+    'first.reset' => 'Сначала удалите тестовые котировки и счета-фактуры, которые вы создали для тестирования.Затем можно удалить тестовые данные.',
+    'flash.messages.appear.here' => 'Здесь появляются мгновенные сообщения.',
+    'footer' => 'Нижний колонтитул',
+    'forgot.your.password' => 'Я забыл свой пароль',
+    'form.error' => 'Ошибки формы',
+    'from.date' => 'От даты',
+    'from.default.in.dropdown' => 'Адрес электронной почты по умолчанию в раскрывающемся списке',
+    'from.email' => 'Из электронной почты',
+    'from.email.address' => 'Из адресов электронной почты:выберите адрес по умолчанию',
+    'from.include.in.dropdown' => 'Включить этот адрес электронной почты в раскрывающийся список',
+    'from.name' => 'От имени',
+    'front.page' => 'Первая страница',
+    'gateway.online.payment' => 'Онлайн-платеж',
+    'gateway.status.page.summary' => 'Страница %d из %d',
+    'gender' => 'Пол',
+    'gender.female' => 'Женский',
+    'gender.male' => 'Мужской',
+    'gender.other' => 'Другой',
+    'general' => 'Общий',
+    'general.no' => 'Нет',
+    'general.settings' => 'Общие настройки',
+    'general.yes' => 'Да',
+    'generate' => 'Генерировать',
+    'generate.copy' => 'Создать копию',
+    'generate.invoice.number.for.draft' => 'Сгенерировать номер счета-фактуры для черновиков счетов-фактур',
+    'generate.quote.number.for.draft' => 'Сгенерировать номер предложения для черновиков предложений',
+    'generator' => 'Генератор',
+    'generator.add' => 'Генератор Добавить',
+    'generator.camelcase.capital.name' => 'Название Camelcase с заглавными буквами используется в названиях контроллеров и репозиториев, например TaxRate.Используйте «Product», если используете приведенный выше пример «product»',
+    'generator.camelcase.capital.name.product' => 'Продукт',
+    'generator.controller.and.repository' => 'Контроллер и репозиторий',
+    'generator.controller.layout.directory' => 'Каталог макета контроллера, например, dirname(dirname(__DIR__)),который появляется сразу после конструкции контроллера.Файл контроллера находится в (__DIR__) и на два каталога ниже каталога \'src\', который будет использоваться как \'база\' для добавления пути к каталогу макета.',
+    'generator.controller.layout.directory.dot.path' => 'Путь к каталогу макета контроллера с точкой, например, «/views/layout/invoice.php», который появляется сразу после конструкции контроллера (исключая апострофы) и добавляется к указанному выше местоположению каталога src.',
+    'generator.controller.layout.directory.dot.path.placeholder' => 'Путь к каталогу макета контроллера',
+    'generator.controller.layout.directory.placeholder' => 'Каталог макета контроллера, например, dirname(dirname(__DIR__))',
+    'generator.controller.path.layout' => 'Путь к файлу макета',
+    'generator.created.at.include' => 'Включить поле created_at в Entity',
+    'generator.deleted.at.include' => 'Включить поле removed_at в Entity',
+    'generator.external.entity' => 'Внешняя сущность, используемая в этой сущности.Сущность настройки — это простая индексированная база данных пары ключ =&gt; значение идентификатора.',
+    'generator.external.entity.default' => 'Внешняя сущность, например.MyEntity, исключая путь.Путь, построенный в генераторе.По умолчанию:Настройка',
+    'generator.external.entity.placeholder' => 'Внешняя сущность, например.MyEntity, исключая путь.Путь, созданный в генераторе.По умолчанию:Настройка.Дополнительный репозиторий, например.Настройка репозитория в дополнение к основному репозиторию.',
+    'generator.file.type.not.found' => 'Тип файла не найден.',
+    'generator.flash.include' => 'Включить Flash-сообщение в функцию «Добавить/Изменить/Просмотреть/Удалить» в контроллере',
+    'generator.generate' => 'Генерировать',
+    'generator.generated' => ' сгенерировано в ',
+    'generator.google.translate.all.locales' => 'Google Translate Все языковые версии (различные)',
+    'generator.google.translate.any' => 'Перевести English\\any_lang.php',
+    'generator.google.translate.app' => 'Перевести English\\app_lang.php',
+    'generator.google.translate.common' => 'Перевести English\\common_lang.php',
+    'generator.google.translate.diff' => 'Перевести English\\diff_lang.php',
+    'generator.google.translate.gateway' => 'Перевести English\\gateway_lang.php',
+    'generator.google.translate.info' => 'Перевод документации (invoice.php)',
+    'generator.google.translate.ip' => 'Перевести English\\ip_lang.php',
+    'generator.google.translate.latest.a' => 'Перевести English\\a_latest_lang.php',
+    'generator.google.translate.latest.b' => 'Перевести английский\\b_latest_lang.php',
+    'generator.headerline.include' => 'Включите заголовок, если требуется Ajax',
+    'generator.history' => 'Эта запись имеет существующие Generator Relations, поэтому ее нельзя удалить.Сначала удалите эти связи.',
+    'generator.modified.at.include' => 'Включить поле modified_at в сущность',
+    'generator.namespace' => 'Пространство имен',
+    'generator.namespace.before.entity' => 'Пространство имен перед путем к сущности, например, App\\Invoice (НЕ App\\Invoice\\Entity)',
+    'generator.relation.form' => 'Форма отношения генератора',
+    'generator.relation.form.camelcase.name' => 'Имя в стиле CamelCase, исключая идентификатор (например, tax_rate_id «внешний ключ/связь» в таблице Product упрощено до TaxRate И является именем сущности)',
+    'generator.relation.form.entity.generator' => 'Генератор сущностей',
+    'generator.relation.form.lowercase.name' => 'Имя в нижнем регистре, исключая идентификатор (например, tax_rate_id «внешний ключ/связь» в таблице Product упрощено до tax.rate)',
+    'generator.relation.form.view.field.name' => 'Просмотреть имя поля',
+    'generator.relations' => 'Генератор отношений',
+    'generator.relations.add' => 'Генераторы Отношение Добавить',
+    'generator.route.prefix' => 'Префикс маршрута, например счет-фактура в «счет-фактура/продукт», который будет отображаться после конструкции контроллера.',
+    'generator.route.suffix' => 'Суффикс маршрута, например, product в «invoice/product», который будет отображаться после конструкции контроллера.',
+    'generator.small.plural.name' => 'Имя во множественном числе, используемое в Controller для функции index controller для перечисления всех генераторов сущностей.Обычно указанное выше значение с s на конце.',
+    'generator.small.plural.name.placeholder' => 'Имя во множественном числе',
+    'generator.small.plural.name.products' => 'продукты',
+    'generator.small.singular.name' => 'Небольшое единственное имя, используемое в контроллере для редактирования и просмотра функций контроллера.Обычно совпадает с суффиксом маршрута.Например, продукт',
+    'generator.small.singular.name.placeholder' => 'Маленькое единственное имя',
+    'generator.small.singular.name.product' => 'продукт',
+    'generator.table' => 'Стол',
+    'generator.table.used.to.generate.entity.controller.repository' => 'Таблица, используемая для генерации сущности,контроллера, добавления, редактирования, удаления, представления,репозитория, службы, картографа',
+    'generator.updated.at.include' => 'Включить поле updated.at в Entity',
+    'generators' => 'Генераторы',
+    'generators.relation' => 'Генераторы Отношение',
+    'gln' => 'ГЛН',
+    'gocardless.direct.debit.collection.scheduled.for' => 'Списание средств с вашего счета посредством прямого дебетования запланировано на %s.',
+    'gov.developer.sandbox' => 'Песочница для разработчиков',
+    'gov.developer.sandbox.uk' => 'Hmrc',
+    'grand.fathered' => 'Дедушка',
+    'gridview.api' => 'API',
+    'gridview.create.at' => 'Создано в',
+    'gridview.login' => 'Авторизоваться',
+    'gridview.profile' => 'Профиль',
+    'gridview.title' => 'Список пользователей',
+    'group' => 'Группа',
+    'group.add' => 'Группа Добавить',
+    'group.by' => 'Сгруппировать по',
+    'group.document.number' => 'Номер документа не создан.Проверьте группы.',
+    'group.form' => 'Групповая форма',
+    'group.history' => 'История группы существует.Невозможно удалить',
+    'grouping' => 'Группировка',
+    'grouping.none' => 'Нет группировки',
+    'groups' => 'Группы',
+    'guest.account.denied' => 'Эта учетная запись не настроена.Обратитесь к системному администратору.',
+    'guest.read.only' => 'Гость (Только чтение)',
+    'guest.url' => 'Гостевой URL-адрес',
+    'hide.or.unhide.columns' => 'Скрыть или показать столбцы',
+    'hint.greater.than.zero.please' => 'Больше 0,00, пожалуйста!',
+    'hint.this.field.is.not.required' => 'Это поле не обязательно',
+    'hint.this.field.is.required' => 'Это поле обязательно к заполнению',
+    'home' => 'Дом',
+    'home.caption.slide1' => 'Зарегистрируйтесь и войдите как администратор.Нет интернета.игнорируйте ошибку подключения электронной почты.',
+    'home.caption.slide2' => 'Как администратор, зарегистрируйте пользователя.Учетная запись электронной почты является законной, а подключение к интернету .проверьте.Пользователь получит учетную запись клиента.',
+    'home.caption.slide3' => 'Учетная запись электронной почты не является легитимной, и нет подключения к Интернету.войдите в систему администратора и сделайте учетную запись пользователя Invoice User Account активной в разделе «Настройки».Создайте учетную запись клиента.Назначьте ее пользователю',
+    'home.caption.slides.location.debug.mode' => 'Это расположение контента:/resources/views/site/index.php внутри ./resources/views/layout/..и расположение слайда перевода ./resources/messages/app.php',
+    'homecare' => 'Уход на дому',
+    'homecare.auto.invoice.enabled' => 'Включить автоматическое выставление счетов за услуги на дому с помощью QR-кода',
+    'homecare.column.client.active' => 'Активный клиент',
+    'homecare.column.delivery.add' => 'Добавить доставку',
+    'homecare.column.pdf.email' => 'Действия с PDF-файлами / электронной почтой',
+    'homecare.column.quick.pay' => 'Быстрая оплата',
+    'homecare.column.workflow.type' => 'Тип рабочего процесса',
+    'homecare.column.year.month' => 'Год-Месяц',
+    'homecare.current.run' => 'Текущий запуск',
+    'homecare.current.run.category.secondary' => 'Текущий запуск — Область',
+    'homecare.current.run.last.run.date' => 'Текущий забег — Дата последнего забега',
+    'homecare.hidden.columns' => 'Столбцы индекса/индекса — Режим домашнего ухода',
+    'homecare.hidden.columns.description' => 'Скройте эти столбцы в таблице inv/index, пока включена функция автоматического выставления счетов по QR-коду для служб домашнего ухода, чтобы менеджеры видели более короткую и удобную таблицу на телефоне. Столбцы «Работник», «Сумма» и «Не отправлять» всегда остаются видимыми. Общая таблица остается неизменной, пока функция автоматического выставления счетов по QR-коду для служб домашнего ухода отключена.',
+    'homecare.hidden.columns.guest' => 'Столбцы inv/guest — Режим домашнего ухода',
+    'homecare.hidden.columns.guest.description' => 'Скройте эти столбцы в таблице счетов для гостей (счет/гость), пока включена функция автоматического выставления счетов по QR-коду Home Care. Номер, загрузка PDF-файлов и статус всегда остаются видимыми. Общая таблица счетов для гостей остается неизменной, пока функция автоматического выставления счетов по QR-коду Home Care отключена.',
+    'homecare.mobile.rotate.tip.body' => 'Если в портретном режиме окна просмотра/индекса кажется слишком тесным, попробуйте альбомный. Проведите пальцем вниз от верхнего правого угла, чтобы открыть «Быстрые настройки», затем проведите пальцем вниз еще раз, чтобы развернуть их — значок блокировки поворота находится в развернутой панели.',
+    'homecare.mobile.rotate.tip.title' => 'Совет для Android:',
+    'homecare.offline.download.button' => '📥 Скачать для просмотра в автономном режиме',
+    'homecare.offline.download.failed' => 'Не удалось загрузить счета-фактуры для использования в автономном режиме — пожалуйста, попробуйте еще раз, подключившись к сети.',
+    'homecare.offline.download.success' => 'Загружено %s счетов-фактур для использования в автономном режиме.',
+    'homecare.offline.downloaded.at' => 'Загружено',
+    'homecare.offline.empty' => 'Счета пока не загружены. Подключитесь к интернету и сначала выберите «Загрузить для автономного режима» в списке счетов.',
+    'homecare.offline.install.button' => '📲 Установите приложение',
+    'homecare.offline.install.generic.message' => 'Установите это приложение для доступа в автономном режиме, который сохранится на срок более нескольких дней.',
+    'homecare.offline.install.ios.message' => 'Для обеспечения доступа в автономном режиме на срок более нескольких дней без посещения, нажмите «Поделиться», затем «Добавить на главный экран».',
+    'homecare.offline.title' => 'Мои счета-фактуры, выставленные вне сети',
+    'homecare.offline.view.button' => '📱 Просмотреть офлайн-версию',
+    'homecare.scan.contact.us' => 'Мы не смогли обработать этот скан. Пожалуйста, свяжитесь с нами напрямую.',
+    'homecare.scan.not.eligible' => 'В настоящий момент новый счет не требуется. Если вы считаете, что это ошибка, пожалуйста, свяжитесь с нами.',
+    'homecare.scan.thanks' => 'Спасибо — ваш счет сформирован и готов к просмотру в вашем личном кабинете.',
+    'homecare.scan.title' => 'Уход на дому',
+    'homecare.signup.category.new.area' => 'Мой район не указан в списке — это новый район.',
+    'homecare.signup.confirmed.expired' => 'Срок действия этой ссылки для подтверждения истек или она уже использована. Пожалуйста, зарегистрируйтесь снова.',
+    'homecare.signup.confirmed.paid' => 'Спасибо — ваш аккаунт создан, и первый счет отмечен как оплаченный. Ваш QR-код готов ниже: приклейте его на видное место и сканируйте при каждом последующем посещении, чтобы автоматически запрашивать следующий счет.',
+    'homecare.signup.confirmed.setup.incomplete' => 'Нам не удалось завершить настройку вашей учетной записи. Пожалуйста, свяжитесь с нами напрямую.',
+    'homecare.signup.confirmed.unpaid' => 'Спасибо — ваш аккаунт создан, и первый счет отправлен. Ваш QR-код готов к печати, но автоматическое сканирование для создания счета начнет работать только после того, как счет будет отмечен как оплаченный.',
+    'homecare.signup.payment.have.paid.cash' => 'Я уже заплатил наличными.',
+    'homecare.signup.payment.will.pay.today' => 'Я заплачу сегодня.',
+    'homecare.signup.street.name' => 'Название улицы',
+    'homecare.signup.title' => 'Регистрация на услуги по уходу на дому',
+    'homecare.visit.log.description' => 'Результаты сканирования каждого QR-кода для домашней уборки доступны только для персонала — страница с результатами сканирования, предназначенная для клиентов, намеренно носит общий характер и никогда не отображает такой уровень детализации.',
+    'homecare.visit.log.invoice' => 'Счет',
+    'homecare.visit.log.outcome' => 'Исход',
+    'homecare.visit.log.reason' => 'Причина (только для персонала)',
+    'homecare.visit.log.sent.status' => 'Статус отправки',
+    'homecare.visit.log.sent.status.tooltip' => 'Автоматические счета HomeCare всегда создаются со статусом «Отправлено», независимо от настройки «Помечать счет как отправленный при копировании счета» — эта настройка применяется только к другим инструментам копирования счетов. Нажмите/щелкните, чтобы открыть его.',
+    'homecare.visit.log.title' => 'Журнал сканирования QR-кодов HomeCare',
+    'homecare.visit.log.visited.at' => 'Посетили',
+    'hostname' => 'Имя хоста',
+    'id' => 'ИДЕНТИФИКАТОР',
+    'identifier.format' => 'Форматирование идентификатора',
+    'identifier.format.template.tags' => 'Шаблоны тегов для идентификатора',
+    'identifier.format.template.tags.instructions' => 'Теги шаблона можно использовать для добавления динамической информации, например имени клиента или номера счета, в шаблон электронного письма.Щелкните поле <b>форматирования идентификатора</b> ,а затем выберите тег из раскрывающегося списка.Он будет автоматически вставлен в текстовое поле.',
+    'identity.provider.authentication.successful' => 'Вы успешно прошли аутентификацию через выбранного вами поставщика удостоверений, зарегистрировались и получили клиентскую учетную запись.Нажмите здесь в течение следующего часа, чтобы активировать свою учетную запись.У вас есть час на первый вход.',
+    'image.overdue' => 'Расположение изображения:/invoice/public/img/overdue.png',
+    'image.paid' => 'Расположение изображения:/invoice/public/img/paid.png',
+    'import' => 'Импорт',
+    'import.data' => 'Импорт данных',
+    'import.from.csv' => 'Импорт из CSV',
+    'import.spreadsheet' => 'Импорт электронной таблицы',
+    'in.progress' => 'В ходе выполнения',
+    'inactive' => 'Неактивный',
+    'index.checkbox.add.some.items.to.enable' => 'В счете нет позиций.Добавьте позиции, чтобы включить флажок',
+    'index.footer.showing' => 'Показано %s из %s',
+    'index.showing' => 'Показано %s из %s',
+    'info.task.readonly' => 'Эту задачу больше нельзя изменить,поскольку за нее уже выставлен счет.',
+    'install.pdf.viewer.extension' => 'Установите расширение для просмотра PDF-файлов.',
+    'install.test.data' => 'Тестовые данные теперь можно установить',
+    'install.test.data.exists.already' => 'Данные для тестирования счетов-фактур уже существуют',
+    'install.test.data.goto.tab.index' => 'Перейти к настройкам .Общие .Установить тестовые данные',
+    'interface' => 'Интерфейс',
+    'inv.cdn.not.node.module' => 'Используйте InvoiceCdnAsset (а не InvoiceNodeModulesAsset).',
+    'invalid.amount' => 'Неверная сумма',
+    'invalid.subscriber.number' => 'Неверный номер абонента',
+    'invoice' => 'Счет',
+    'invoice.created.from.quote' => 'Счет-фактура, созданный на основе коммерческого предложения.',
+    'invoice.needs.to.be.sent' => 'Чтобы увидеть, как кнопки оплаты меняют свой статус на «отправлено».',
+    'invoice.origin' => 'Источник',
+    'invoice.to.html' => 'Преобразование счета в HTML',
+    'invoice.trash' => 'Корзина счетов',
+    'invoice.validation.errors' => 'Ошибки проверки счетов-фактур',
+    'invoiced' => 'Выставлен счет',
+    'invoiceplane' => 'Счет-фактураСамолет',
+    'invoiceplane.clients' => 'Клиенты вставлены',
+    'invoiceplane.database.name' => 'Имя базы данных',
+    'invoiceplane.database.password' => 'Пароль',
+    'invoiceplane.database.username' => 'Имя пользователя',
+    'invoiceplane.families' => 'Семьи вставлены',
+    'invoiceplane.import' => 'Тестовое соединение',
+    'invoiceplane.import.complete.connection.closed' => 'Импорт завершён! Соединение закрыто!',
+    'invoiceplane.import.connected' => 'У вас есть связь!',
+    'invoiceplane.import.proceed' => 'Продолжить процесс импорта',
+    'invoiceplane.import.proceed.alert' => 'Вы уверены, что хотите продолжить?',
+    'invoiceplane.imported' => 'Таблицы были импортированы.',
+    'invoiceplane.news' => 'Новости InvoicePlane',
+    'invoiceplane.no.connection' => 'Нет связи',
+    'invoiceplane.no.username.or.password' => 'Пожалуйста, сохраните имя базы данных,имя пользователя и пароль для InvoicePlane.',
+    'invoiceplane.products' => 'Вставленные продукты',
+    'invoiceplane.tables' => 'Импортируйте таблицы InvoicePlane Client, Product,Unit, Family, TaxRate в пустые таблицы.В этих таблицах не должно быть существующих данных до импорта и не должно быть существующих документов, например, счетов-фактур.',
+    'invoiceplane.tables.not.empty' => 'Таблицы «Клиент», «Продукт», «Подразделение», «Семья» и «Тарифная ставка» должны быть пустыми перед импортом.',
+    'invoiceplane.taxrates' => 'Налоговые ставки включены с обязательной нулевой налоговой ставкой и стандартной налоговой ставкой.',
+    'invoiceplane.units' => 'Вставленные единицы',
+    'invoiceplane.yes.connection' => 'Да, у вас есть подключение к базе данных Invoiceplane!',
+    'invoices' => 'Счета-фактуры',
+    'invoices.due.after' => 'Счета, подлежащие оплате после (дней)',
+    'is.not.writable' => 'недоступен для записи',
+    'is.writable' => 'доступен для записи',
+    'item' => 'Пункт счета-фактуры',
+    'item.add' => 'Добавить элемент счета',
+    'item.allowance' => 'Пункт Пособие',
+    'item.charge' => 'Товарная плата',
+    'item.date' => 'Дата товара',
+    'item.discount' => 'Скидка на товар',
+    'item.lookup' => 'Поиск элемента счета-фактуры',
+    'item.lookup.form' => 'Форма поиска товара',
+    'item.lookups' => 'Поиск предметов',
+    'item.name' => 'Название товара',
+    'item.tax' => 'Налог на товар',
+    'item.tax.excluded' => 'Промежуточный итог x Процент налога (налог на товар исключен)',
+    'item.tax.included' => '(Промежуточный итог + Налог на товар) x Процент налога',
+    'item.tax.rate' => 'Ставка налога на товар',
+    'items' => 'Элементы счета-фактуры',
+    'judgement' => 'Получено решение',
+    'label' => 'Этикетка',
+    'label.switch.off' => 'Счет-фактура НДС',
+    'label.switch.on' => 'Счет-фактура без НДС',
+    'language' => 'Язык',
+    'last' => 'Последний',
+    'last.month' => 'Прошлый месяц',
+    'last.quarter' => 'Последняя четверть',
+    'last.year' => 'В прошлом году',
+    'layout.add' => 'Добавлять',
+    'layout.add.post' => 'Добавить пост',
+    'layout.add.random-content' => 'Добавить случайный контент',
+    'layout.add.tag' => 'Добавить тег',
+    'layout.archive' => 'Архив',
+    'layout.archive.for-year' => 'Архив за {год}',
+    'layout.blog' => 'Блог',
+    'layout.change-language' => 'Изменить язык',
+    'layout.console' => 'Консоль',
+    'layout.content' => 'Содержание',
+    'layout.create.new-user' => 'Создать нового пользователя',
+    'layout.db.schema' => 'Схема БД',
+    'layout.go.home' => 'Вернуться домой',
+    'layout.login' => 'Авторизоваться',
+    'layout.migrations' => 'Миграции',
+    'layout.no-records' => 'Нет записей',
+    'layout.not-found' => 'Не найдено',
+    'layout.page.not-authorised' => 'Не авторизовано:данные аутентификации неверны.',
+    'layout.page.not-found' => 'Страница {url} не найдена.',
+    'layout.page.user-cancelled-oauth2' => 'Пользователь отменил вход в систему/регистрацию через поставщика удостоверений, например Facebook',
+    'layout.pagination-summary' => 'Показано {pageSize} из {total} сообщений',
+    'layout.password' => 'Пароль',
+    'layout.password-verify' => 'Подтвердите свой пароль',
+    'layout.password-verify.new' => 'Подтвердите ваш новый пароль',
+    'layout.password.new' => 'Новый пароль',
+    'layout.password.otp' => 'Пароль OTP',
+    'layout.password.otp.6' => 'Пароль OTP (6 цифр)',
+    'layout.password.otp.6.8' => 'Пароль OTP (6 цифр) / Резервные коды восстановления (8 цифр)',
+    'layout.password.otp.6.first' => 'Введите 6-значный код из вашего приложения-аутентификатора.',
+    'layout.password.otp.recovery.8' => 'Введите резервный код восстановления (8 символов).',
+    'layout.password.otp.use.6.digit.code' => 'Используйте вместо этого свой 6-значный код.',
+    'layout.password.otp.use.recovery.code' => 'Вместо этого используйте код восстановления.',
+    'layout.password.otp.verify.6' => 'Введите второй, отличающийся от сгенерированного Aegis одноразовый пароль (6 цифр).',
+    'layout.rbac.assign-role' => 'Назначить роль RBAC пользователю',
+    'layout.remember' => 'Запомнить меня',
+    'layout.reset' => 'Перезагрузить',
+    'layout.show-more' => 'показать больше',
+    'layout.submit' => 'Представлять на рассмотрение',
+    'layout.title' => 'Заголовок',
+    'layout.total.posts' => 'Всего {count} сообщений',
+    'left.pad' => 'Левая панель',
+    'letter' => '7-дневное письмо перед действием отправлено',
+    'loading.error' => 'Похоже, приложение зависло из-за ошибки.',
+    'loading.error.help' => 'Получить помощь',
+    'location' => 'Расположение',
+    'location.accuracy' => 'Точность',
+    'location.latitude' => 'Широта',
+    'location.longitude' => 'Долгота',
+    'location.test.button' => 'Проверить мое местоположение',
+    'location.tester' => 'Проверьте местоположение вашего устройства.',
+    'location.tester.description' => 'Использует разрешение вашего браузера на определение местоположения для отображения текущих GPS-координат этого устройства. Ничего не сохраняется — это делается только для подтверждения работоспособности геолокации на данном устройстве, прежде чем полагаться на нее в других местах. Требуется HTTPS и подтверждение разрешения на определение местоположения.',
+    'login' => 'Авторизоваться',
+    'login.logo' => 'Логин Логотип',
+    'loginalert.credentials.incorrect' => 'Неверный адрес электронной почты или пароль.',
+    'loginalert.no.password' => 'Введите пароль.',
+    'loginalert.user.emailnotverified' => 'Доступ запрещен: перейдите по ссылке для подтверждения, отправленной на ваш адрес электронной почты.',
+    'loginalert.user.inactive' => 'Этот пользователь отмечен как неактивный.Обратитесь к системному администратору.',
+    'loginalert.user.not.found' => 'С этим адресом электронной почты не зарегистрирована учетная запись.',
+    'loginalert.wrong.auth.code' => 'Сброс пароля отклонен.Вы предоставили недействительный токен аутентификации.',
+    'logo' => 'Логотип счета-фактуры',
+    'logout' => 'Выйти',
+    'loss' => 'Списано',
+    'mark.invoices.sent.copy' => 'Отметить счета-фактуры как отправленные при копировании счета-фактуры',
+    'mark.invoices.sent.pdf' => 'Отметить счета-фактуры как отправленные при создании PDF-файла',
+    'mark.quotes.sent.pdf' => 'Отметить цитаты как отправленные при создании PDF-файла',
+    'mark.sent.copy.on' => 'Отметить счета-фактуры как отправленные при копировании счета-фактуры включено.Он должен быть включен только во время разработки',
+    'mark.sent.off' => 'Отметить счета-фактуры как отправленные при копировании счетов-фактур .в настоящее время ОТКЛЮЧЕНО.Устанавливается на ВКЛЮЧЕНО только во время разработки.Нажмите здесь, чтобы включить его',
+    'mark.sent.on' => 'Отметить счета-фактуры как отправленные при копировании счетов-фактур .в настоящее время ВКЛ.Всегда держите его ВЫКЛ во время производства.Нажмите здесь, чтобы выключить его',
+    'max' => 'Макс',
+    'max.quantity' => 'Максимальное количество',
+    'menu' => 'Меню',
+    'menu.about' => 'О',
+    'menu.accreditations' => 'Аккредитации',
+    'menu.blog' => 'Блог',
+    'menu.comments-feed' => 'Комментарии Лента',
+    'menu.contact.details' => 'Контактная информация',
+    'menu.contact.interest' => 'Форма запроса коммерческого предложения / контактная форма',
+    'menu.contact.soon' => 'Спасибо, что обратились к нам.Мы свяжемся с вами как можно скорее.',
+    'menu.contact.us' => 'Связаться с нами',
+    'menu.gallery' => 'Галерея',
+    'menu.gateway.status' => 'Статус платежного шлюза',
+    'menu.language' => 'Язык',
+    'menu.login' => 'Авторизоваться',
+    'menu.logout' => 'Выйти ({login})',
+    'menu.pricing' => 'Ценообразование',
+    'menu.privacy.policy' => 'политика конфиденциальности',
+    'menu.signup' => 'Зарегистрироваться',
+    'menu.swagger' => 'Развязность',
+    'menu.team' => 'Команда',
+    'menu.terms.of.service' => 'Условия обслуживания',
+    'menu.testimonial' => 'Отзыв',
+    'menu.users' => 'Пользователи',
+    'menu.webshop' => 'Интернет-магазин',
+    'merchant' => 'Торговец',
+    'merchant.add' => 'Добавить торговца',
+    'merchant.driver' => 'Водитель',
+    'merchant.reference' => 'Ссылка',
+    'merchant.response' => 'Ответ',
+    'min.quantity' => 'Минимальное количество',
+    'mobile' => 'Мобильный',
+    'mobile.hint' => 'например, +447700900000',
+    'mobile.number' => 'Номер мобильного телефона',
+    'mobile.placeholder' => '+447700900000',
+    'monday' => 'Понедельник',
+    'monitoring.health.cache' => 'Система кэширования',
+    'monitoring.health.database' => 'Подключение к базе данных',
+    'monitoring.health.storage' => 'Хранилище файлов',
+    'monitoring.metrics.errors' => 'Показатель ошибок',
+    'monitoring.metrics.requests' => 'Общее количество запросов',
+    'monitoring.metrics.response_time' => 'Среднее время ответа',
+    'monospaced.font.for.amounts' => 'Используйте моноширинный шрифт для сумм.',
+    'month' => 'Месяц',
+    'month.prefix' => 'Префикс месяца',
+    'mpdf' => 'Mpdf',
+    'mpdf.allow.charset.conversion' => 'Разрешить преобразование набора символов',
+    'mpdf.auto.arabic' => 'Авто арабский',
+    'mpdf.auto.language.to.font' => 'Автоматический выбор языка для шрифта',
+    'mpdf.auto.script.to.lang' => 'Автоматический скрипт на языке',
+    'mpdf.auto.vietnamese' => 'вьетнамский автомобиль',
+    'mpdf.cjk' => 'Китайский, японский, корейский шрифт',
+    'mpdf.ltr' => 'Слева направо',
+    'mpdf.show.image.errors' => 'Показать ошибки изображения',
+    'mtd' => 'Цифровые налоги',
+    'mtd.fph' => 'Заголовки предотвращения мошенничества',
+    'mtd.fph.all.valid' => 'Все заголовки предотвращения мошенничества действительны',
+    'mtd.fph.generate' => 'Генерировать',
+    'mtd.fph.no.provided' => 'Заголовки для предотвращения мошенничества не предусмотрены',
+    'mtd.fph.record.alert' => 'Вы уверены, что хотите записать новые данные заголовка предотвращения мошенничества?Предыдущие данные будут перезаписаны при сохранении!',
+    'mtd.fph.screen.timestamp' => 'Временная метка',
+    'mtd.fph.some.advisories' => 'По крайней мере один заголовок потенциально недействителен',
+    'mtd.fph.some.invalid' => 'По крайней мере один заголовок недействителен',
+    'mtd.gov.client.browser.do.not.track' => 'Значение, указывающее, включена ли опция «Не отслеживать» в браузере.',
+    'mtd.gov.client.browser.do.not.track.eg' => 'например ложно',
+    'mtd.gov.client.browser.js.user.agent' => 'Gov-Клиент-Браузер-JS-Пользователь-Агент',
+    'mtd.gov.client.browser.js.user.agent.eg' => 'например, Mozilla/5.0 (iPad; U; CPU OS 3 2.1, например Mac OS X;en-us) (KHTML, например Gecko) Mobile/7B405',
+    'mtd.gov.client.browser.plugins' => 'Список подключаемых модулей браузера на исходном устройстве',
+    'mtd.gov.client.browser.plugins.eg' => 'например Shockwave%20F1ash Chromium%20PDF%20Viewer',
+    'mtd.gov.client.connection.method' => 'Метод подключения Gov-Client',
+    'mtd.gov.client.device.id' => 'Идентификатор устройства',
+    'mtd.gov.client.device.id.eg' => 'например beec798b-b366-47fa-b1f8-92cede14a1ce',
+    'mtd.gov.client.local.ips' => 'Локальные IP-адреса',
+    'mtd.gov.client.multi.factor' => 'Многофакторный',
+    'mtd.gov.client.multi.factor.eg' => 'например, тип=OTP;статус=успех,тип=SMS;статус=неудача,тип=биометрический,тип=SMS; временная метка=2023-04-01T12:34:56Z; уникальная-ссылка=abc123xyz',
+    'mtd.gov.client.multi.factor.otp' => 'Одноразовый пароль (OTP):',
+    'mtd.gov.client.public.ip' => 'Публичный IP-адрес',
+    'mtd.gov.client.public.port' => 'Публичный порт (не http 80 и не https 443, например 57961)',
+    'mtd.gov.client.screens' => 'Gov-Client-Экраны',
+    'mtd.gov.client.screens.colour.depth' => 'Глубина цвета',
+    'mtd.gov.client.screens.height' => 'Высота экрана',
+    'mtd.gov.client.screens.pixels' => 'пиксели',
+    'mtd.gov.client.screens.scaling.factor' => 'Коэффициент масштабирования',
+    'mtd.gov.client.screens.scaling.factor.bits' => 'биты',
+    'mtd.gov.client.screens.width' => 'Ширина экрана',
+    'mtd.gov.client.timezone' => 'Часовой пояс',
+    'mtd.gov.client.user.ids' => 'Идентификаторы пользователей',
+    'mtd.gov.client.user.ids.uuid' => 'uuid',
+    'mtd.gov.client.window.size' => 'Размер окна',
+    'mtd.gov.client.window.size.pixels' => 'пиксели',
+    'mtd.gov.vendor.forwarded' => 'Список, в котором подробно описываются переходы в Интернете между службами,которые завершают протокол Transport Layer Security (TLS)',
+    'mtd.gov.vendor.license.ids' => 'Структура данных «ключ-значение» хэшированных лицензионных ключей, которые связаны с программным обеспечением поставщика, инициировавшего запрос API на исходном устройстве.',
+    'mtd.gov.vendor.public.ip' => 'Публичный IP-адрес серверов, на которые исходное устройство отправляло свои запросы.',
+    'mtd.gov.vendor.version' => 'Структура данных «ключ-значение» версий программного обеспечения, участвующих в обработке запроса.',
+    'mtd.hmrc' => 'HMRC внедряет цифровые системы налогообложения',
+    'mtd.vat.obligations' => 'Обязательства по НДС',
+    'mtd.vat.obligations.missing.vrn.or.token' => 'Номер регистрации плательщика НДС или токен доступа HMRC не установлены.',
+    'mtd.vat.registration.number' => 'Регистрационный номер плательщика НДС (VRN)',
+    'mtd.vat.registration.number.hint' => '9-значный номер в вашем свидетельстве о регистрации плательщика НДС.',
+    'mtd.vat.return.submit' => 'Подать декларацию по НДС',
+    'multiple.choice' => 'Множественный выбор',
+    'name' => 'Имя',
+    'new' => 'Новый',
+    'new.password' => 'Новый пароль',
+    'new.product' => 'Новый продукт',
+    'new.task' => 'Новое задание',
+    'next' => 'Следующий',
+    'next.date' => 'Следующая дата',
+    'next.id' => 'Следующий идентификатор',
+    'no' => 'Нет',
+    'no.attachments' => 'Нет вложений',
+    'no.client' => 'Нет клиента',
+    'no.file.uploaded' => 'Файл не загружен',
+    'no.overdue.invoices' => 'Нет просроченных счетов',
+    'no.quotes.requiring.approval' => 'Нет никаких предложений, требующих утверждения.',
+    'no.records' => 'Нет записей',
+    'no.updates.available' => 'Нет доступных обновлений.',
+    'none' => 'Никто',
+    'not.available' => 'Нет в наличии',
+    'not.found' => 'Счет не найден',
+    'not.set' => 'Пока не установлено',
+    'not.started' => 'Не начато',
+    'note' => 'Примечание',
+    'notes' => 'Примечания',
+    'number' => '#',
+    'number.format' => 'Формат числа',
+    'number.format.compact.comma' => '1000000,00 (Компактный формат с десятичной запятой)',
+    'number.format.compact.point' => '1000000.00 (компактный формат с десятичной точкой)',
+    'number.format.european' => '1.000.000,00 (европейский формат)',
+    'number.format.iso.80k.1' => '1 000 000,00 (ИСО 80000-1)',
+    'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 с десятичной запятой)',
+    'number.format.iso80k1.point' => '1 000 000,00 (ISO 80000-1 с десятичной точкой)',
+    'number.format.us.uk' => '1,000,000.00 (формат США/Великобритания)',
+    'number.missing.therefore.use.invoice.id' => 'номер-счета-отсутствует-следовательно-идентификатор-счета-',
+    'number.no' => 'Нет номера счета',
+    'oauth2' => 'OAuth 2.0',
+    'oauth2.account.locked' => 'Аккаунт заблокирован',
+    'oauth2.backup.recovery.codes' => 'Резервные коды восстановления.Храните в надежном месте.',
+    'oauth2.backup.recovery.codes.regenerate' => 'Регенерация резервных кодов восстановления',
+    'oauth2.consent.required' => 'Требуется согласие',
+    'oauth2.default' => 'Используется конфигурация oauth2.0 по умолчанию',
+    'oauth2.google.people.api.v1.client.id' => 'Идентификатор клиента',
+    'oauth2.google.people.api.v1.client.secret' => 'Секрет клиента',
+    'oauth2.invalid.client' => 'Недействительный клиент',
+    'oauth2.invalid.grant' => 'Недействительный грант',
+    'oauth2.invalid.request' => 'Неверный запрос',
+    'oauth2.login.required' => 'Требуется вход в систему',
+    'oauth2.missing.authentication.code.or.state.parameter' => 'Отсутствует код аутентификации или параметр состояния.',
+    'oauth2.missing.state.parameter.possible.csrf.attack' => 'Отсутствует параметр состояния.Возможная атака CSRF.',
+    'oauth2.server.error' => 'Ошибка сервера',
+    'oauth2.temporarily.unavailable' => 'Временно недоступно',
+    'oauth2.test.user.creation.not.allowed.prod.env' => 'Создание тестового пользователя в производственной среде запрещено.',
+    'oauth2.unauthorized.client' => 'Неавторизованный клиент',
+    'oauth2.unsupported.grant.type' => 'Неподдерживаемый тип гранта',
+    'oauth2.unsupported.response.type' => 'Неподдерживаемый тип ответа',
+    'online.log' => 'Онлайн-журнал',
+    'online.payment' => 'Онлайн-платеж',
+    'online.payment.3dauth.redirect' => 'Подождите, пока мы перенаправим вас на сайт эмитента вашей карты для аутентификации.',
+    'online.payment.accessKey' => 'Ключ доступа',
+    'online.payment.accessToken' => 'Токен доступа',
+    'online.payment.accountId' => 'Идентификатор учетной записи',
+    'online.payment.accountNumber' => 'Номер счета',
+    'online.payment.adyen.hmac.kcv.hint' => 'Adyen отображает значение нового ключа HMAC только один раз — его копирование не равнозначно сохранению собственной страницы конфигурации веб-перехватчика. Перед тем как полагаться на это значение, проверьте и сравните показанный здесь ключ KCV с ключом KCV в личном кабинете Adyen для данного веб-перехватчика.',
+    'online.payment.adyen.hmac.kcv.not.configured' => 'Ключ HMAC веб-перехватчика Adyen не настроен или не является допустимым шестнадцатеричным значением.',
+    'online.payment.adyen.hmac.kcv.result' => 'KCV этого ключа — %s. Сравните его с KCV, отображаемым в личном кабинете Adyen для этого веб-хука. Если они не совпадают, ключ, вероятно, был скопирован, но не сохранен на стороне Adyen — сгенерируйте его заново и обязательно нажмите «Сохранить» на этот раз.',
+    'online.payment.adyen.hmac.kcv.verify' => 'Проверьте ключ HMAC (покажите KCV).',
+    'online.payment.apiKey' => 'API-ключ',
+    'online.payment.apiLoginId' => 'Идентификатор входа в API',
+    'online.payment.apiToken' => 'API-токен',
+    'online.payment.appId' => 'Идентификатор приложения',
+    'online.payment.appSecret' => 'Секрет приложения',
+    'online.payment.callbackPassword' => 'Пароль обратного вызова',
+    'online.payment.card.invalid' => 'Эта кредитная карта недействительна.Проверьте предоставленную информацию.',
+    'online.payment.checkout_com.environmentSubdomain' => 'Поддомен окружающей среды',
+    'online.payment.checkout_com.processingChannelId' => 'Идентификатор канала обработки',
+    'online.payment.checkout_com.publicKey' => 'Открытый ключ API',
+    'online.payment.checkout_com.secretKey' => 'Секретный ключ API',
+    'online.payment.checkout_com.webhookSecret' => 'Ключ подписи веб-перехватчика',
+    'online.payment.clientId' => 'Идентификатор клиента',
+    'online.payment.clientKey' => 'Ключ клиента',
+    'online.payment.clientSecret' => 'Секрет клиента',
+    'online.payment.creditcard.hint' => 'Если вы хотите оплатить кредитной картой, введите информацию ниже.<br/> Данные кредитной карты не хранятся на наших серверах и будут переданы в платежный онлайн-шлюз с использованием защищенного соединения.',
+    'online.payment.developerMode' => 'Режим разработчика',
+    'online.payment.find.here' => 'Найти здесь →',
+    'online.payment.for' => 'Онлайн-оплата за',
+    'online.payment.for.invoice' => 'Онлайн-оплата счета',
+    'online.payment.get.credentials' => 'Получить учетные данные →',
+    'online.payment.installationId' => 'Идентификатор установки',
+    'online.payment.keyId' => 'Идентификатор ключа',
+    'online.payment.keySecret' => 'Секретный ключ',
+    'online.payment.locationId' => 'Идентификатор местоположения',
+    'online.payment.login' => 'Вход для продавцов',
+    'online.payment.merchantAccessCode' => 'Код доступа торговца',
+    'online.payment.merchantAccount' => 'Торговый счет',
+    'online.payment.merchantId' => 'Идентификатор продавца',
+    'online.payment.merchantKey' => 'Торговый ключ',
+    'online.payment.method' => 'Способ оплаты онлайн',
+    'online.payment.partner' => 'Партнер',
+    'online.payment.partnerID' => 'Партнерский идентификатор',
+    'online.payment.password' => 'Пароль',
+    'online.payment.password1' => 'Пароль #1',
+    'online.payment.password2' => 'Пароль №2',
+    'online.payment.password3' => 'Пароль №3 (API для возврата средств, необязательно)',
+    'online.payment.payment.cancelled' => 'Платеж отменен.',
+    'online.payment.payment.failed' => 'Платеж не прошёл.Попробуйте ещё раз.',
+    'online.payment.payment.processing' => 'Оплата по счету %s все еще обрабатывается. Пожалуйста, зайдите позже для подтверждения.',
+    'online.payment.payment.redirect' => 'Пожалуйста, подождите, пока мы перенаправим вас на страницу оплаты.',
+    'online.payment.payment.successful' => 'Оплата счета %s прошла успешно!',
+    'online.payment.pdtKey' => 'Ключ Pdt',
+    'online.payment.privateKey' => 'Закрытый ключ',
+    'online.payment.profileID' => 'Идентификатор профиля',
+    'online.payment.profileId' => 'Идентификатор профиля',
+    'online.payment.publicKey' => 'Открытый ключ',
+    'online.payment.publicKeyId' => 'Идентификатор открытого ключа',
+    'online.payment.publishableKey' => 'Публикуемый ключ',
+    'online.payment.pxPostPassword' => 'Px Post Пароль',
+    'online.payment.pxPostUsername' => 'Имя пользователя Px Post',
+    'online.payment.referrerId' => 'Идентификатор реферера',
+    'online.payment.region' => 'Область',
+    'online.payment.returnUrl' => 'Возврат URL-адреса',
+    'online.payment.sandbox' => 'Песочница',
+    'online.payment.sandboxId' => 'Идентификатор песочницы',
+    'online.payment.secret' => 'Секрет',
+    'online.payment.secretKey' => 'Секретный ключ',
+    'online.payment.secretWord' => 'Секретное Слово',
+    'online.payment.secureHash' => 'Безопасный хэш',
+    'online.payment.sharedSecret' => 'Общий секрет',
+    'online.payment.shopId' => 'Идентификатор магазина',
+    'online.payment.signature' => 'Подпись',
+    'online.payment.signingKid' => 'Идентификатор ключа подписи (ребенок)',
+    'online.payment.siteCode' => 'Код сайта',
+    'online.payment.siteId' => 'Идентификатор сайта',
+    'online.payment.storeId' => 'Идентификатор магазина',
+    'online.payment.storePassword' => 'Сохранить пароль',
+    'online.payment.subAccountId' => 'Идентификатор дополнительной учетной записи',
+    'online.payment.testMode' => 'Тестовый режим',
+    'online.payment.testOrLiveApiKey' => 'Тестовый или Live API-ключ, т.е.начинается с test_ или live_',
+    'online.payment.thirdPartyProvider' => 'Сторонний поставщик, например Wonderful',
+    'online.payment.transactionKey' => 'Ключ транзакции',
+    'online.payment.transactionPassword' => 'Пароль транзакции',
+    'online.payment.username' => 'Имя пользователя',
+    'online.payment.vendor' => 'Продавец',
+    'online.payment.version' => 'Версия Omnipay (отмечено) / Соответствует PCI (данные кредитных карт не хранятся в этой базе данных) (отмечено)',
+    'online.payment.webhookHmacKey' => 'Ключ HMAC для веб-перехватчика',
+    'online.payment.webhookId' => 'Идентификатор веб-перехватчика',
+    'online.payment.webhookSecret' => 'Секрет веб-перехватчика',
+    'online.payment.websiteKey' => 'Ключ веб-сайта',
+    'online.payments' => 'Онлайн-платежи',
+    'open' => 'Открыть',
+    'open.banking.not.configured' => 'Open Banking не настроен.Обратитесь в службу поддержки.',
+    'open.banking.pay.with' => 'Оплата через Open Banking: ',
+    'open.invoices' => 'Открытые счета-фактуры',
+    'open.quotes' => 'Открытые котировки',
+    'open.reports.in.new.tab' => 'Открыть отчеты в новой вкладке браузера',
+    'optional' => 'Необязательный',
+    'options' => 'Параметры',
+    'order' => 'Заказ',
+    'orm' => 'Орм',
+    'other.settings' => 'Другие настройки',
+    'overdue' => 'Просроченный',
+    'overdue.invoices' => 'Просроченные счета-фактуры',
+    'overview' => 'Обзор счетов-фактур',
+    'overview.period' => 'Период обзора счетов-фактур',
+    'page' => 'Страница',
+    'paid' => 'Оплаченный',
+    'password' => 'Пароль',
+    'password.change' => 'Изменить пароль',
+    'password.changed' => 'Пароль успешно изменен',
+    'password.reset' => 'Сбросить пароль',
+    'password.reset.email' => 'Вы запросили новый пароль для вашей установки.Пожалуйста, нажмите на ссылку в вашем почтовом ящике, чтобы сбросить пароль.',
+    'password.reset.failed' => 'Произошла ошибка при попытке отправить письмо для сброса пароля.Пожалуйста, просмотрите журналы приложения или свяжитесь с системным администратором.',
+    'password.reset.info' => 'Вы получите электронное письмо со ссылкой для сброса пароля.',
+    'password.reset.request.token' => 'Запросить токен сброса пароля',
+    'past.month' => 'Прошлый месяц',
+    'past.quarter' => 'Прошлый квартал',
+    'past.year' => 'Прошлый год',
+    'pay.now' => 'Оплатить сейчас',
+    'payment' => 'Оплата',
+    'payment.add' => 'Оплата Добавить',
+    'payment.cannot.delete' => 'Невозможно удалить платеж',
+    'payment.cannot.exceed.balance' => 'Сумма платежа не может превышать остаток по счету.',
+    'payment.custom' => 'Оплата таможенная',
+    'payment.custom.add' => 'Оплата Пользовательский Добавить',
+    'payment.date' => 'Дата платежа',
+    'payment.deleted' => 'Платеж удален',
+    'payment.description' => 'Оплата счета %s',
+    'payment.form' => 'Форма оплаты',
+    'payment.gateway.default.locale' => 'Язык по умолчанию, например en.GB',
+    'payment.gateway.mollie.api.key.has.been.setup' => 'Тестовый ключ платежного шлюза Mollie или ключ Live API настроен.',
+    'payment.gateway.mollie.api.key.needs.to.be.setup' => 'Необходимо настроить тестовый ключ платежного шлюза Mollie или ключ Live API.',
+    'payment.gateway.mollie.api.payment.id' => 'Идентификатор платежа Mollie:',
+    'payment.gateway.no' => 'В разделе «Настройки» не настроены платежные шлюзы.Просмотр.Онлайн-платежи',
+    'payment.history' => 'История платежей',
+    'payment.information.braintree.braintree.no.omnipay.version' => 'В настоящее время нет версии Braintree Omnipay, совместимой с версией Braintree 6.9.1.Снимите флажок Omnipay Version, чтобы использовать версию, совместимую с PCI,в разделе Settings View.',
+    'payment.information.invoice.number.not.provided' => 'Номер счета не был предоставлен',
+    'payment.information.no.information.provided' => 'Информация не предоставлена',
+    'payment.information.none' => 'Никто',
+    'payment.information.omnipay.driver.being.used' => 'Используется драйвер {{$d}} от Omnipay.',
+    'payment.information.payment.method.required' => 'Для этого счета-фактуры необходимо указать способ оплаты.',
+    'payment.information.stripe.api.key' => 'Необходимо настроить секретный ключ/ключ API платежного шлюза Stripe.',
+    'payment.logs' => 'Журналы платежей',
+    'payment.method' => 'Способ оплаты',
+    'payment.method.add' => 'Способ оплаты Добавить',
+    'payment.method.already.exists' => 'Способ оплаты уже существует!',
+    'payment.method.form' => 'Форма способа оплаты',
+    'payment.method.history' => 'Невозможно удалить.История способа оплаты существует.',
+    'payment.methods' => 'Способы оплаты',
+    'payment.no.invoice.sent' => 'Счета-фактуры нами не отправлялись и клиентом не просматривались.',
+    'payment.option' => 'Как бы вы предпочли оплатить?',
+    'payment.provider' => 'Провайдер платежных услуг',
+    'payment.term' => 'Условия оплаты',
+    'payment.term.0.days' => 'Пожалуйста, используйте один из предложенных способов оплаты.',
+    'payment.term.add.additional.terms.at.setting.repository' => 'Добавьте дополнительные условия в функцию getPaymentTerms репозитория настроек.',
+    'payment.term.eom.120.days' => 'EOM(120):Пожалуйста, оплатите в течение 120 дней в конце месяца с даты выдачи.',
+    'payment.term.eom.15.days' => 'EOM(15):Пожалуйста, оплатите в течение 15 дней с конца месяца с даты выпуска.',
+    'payment.term.eom.30.days' => 'EOM(30):Пожалуйста, оплатите в течение 30 дней с конца месяца с даты выдачи.',
+    'payment.term.eom.60.days' => 'EOM(60):Пожалуйста, оплатите в течение 60 дней с конца месяца с даты выдачи.',
+    'payment.term.eom.90.days' => 'EOM(90):Пожалуйста, оплатите в течение 90 дней с конца месяца с даты выдачи.',
+    'payment.term.general' => 'Оплата должна быть произведена в течение 30 дней',
+    'payment.term.mfi.15' => 'MFI(15):Пожалуйста, оплатите 15-го числа месяца,следующего за датой выпуска.',
+    'payment.term.net.120.days' => 'Нетто (120):Пожалуйста, оплатите в течение 120 дней с даты выпуска.',
+    'payment.term.net.15.days' => 'Нетто(15):Пожалуйста, оплатите в течение 15 дней с даты выпуска.',
+    'payment.term.net.30.days' => 'Нетто(30):Пожалуйста, оплатите в течение 30 дней с даты выпуска',
+    'payment.term.net.60.days' => 'Нетто(60):Пожалуйста, оплатите в течение 60 дней с даты выпуска',
+    'payment.term.net.90.days' => 'Нетто (90):Пожалуйста, оплатите в течение 90 дней с даты выпуска.',
+    'payment.term.pia' => 'Требуется предоплата (PIA)',
+    'payment.term.polite' => 'Мы ценим ваш бизнес.Пожалуйста, отправьте платеж в течение 30 дней с момента получения этого счета.',
+    'payment.terms.default' => 'Оплатить в течение 14 дней',
+    'payment.terms.immediate' => 'Оплата должна быть произведена немедленно.',
+    'payment.terms.net15' => 'Оплата должна быть произведена в течение 15 дней.',
+    'payment.terms.net30' => 'Оплата должна быть произведена в течение 30 дней.',
+    'payment.terms.net60' => 'Оплата должна быть произведена в течение 60 дней.',
+    'paymentpeppol' => 'Платежи, сделанные через Peppol',
+    'paymentpeppol.reference.plural' => 'Ссылки на платежи с использованием Peppol',
+    'payments' => 'Платежи',
+    'paymentterm' => 'Срок оплаты',
+    'pdf' => 'PDF',
+    'pdf.archived.no' => 'PDF НЕ архивирован в Загрузки/Архив/Счет',
+    'pdf.archived.yes' => 'PDF Архивировано в Загрузки/Архив/Счет',
+    'pdf.include.zugferd' => 'Включить ZUGFeRD',
+    'pdf.include.zugferd.help' => 'Включение этой опции будет включать ZUGFeRD XML в PDF-файлы счетов-фактур,что является стандартом XML для счетов-фактур.<a href="https://www.ferd-net.de/">Дополнительная информация</a>',
+    'pdf.invoice.footer' => 'Нижний колонтитул PDF-файла',
+    'pdf.invoice.footer.hint' => 'Здесь вы можете ввести любой HTML-код, который будет отображаться в нижней части ваших счетов в формате PDF.',
+    'pdf.modal' => 'Модальный PDF',
+    'pdf.playwright' => 'Chromium PDF (Драматург)',
+    'pdf.quote.footer' => 'Цитата нижний колонтитул',
+    'pdf.quote.footer.hint' => 'Здесь вы можете ввести любой HTML-код, который будет отображаться в нижней части ваших цитат в формате PDF.',
+    'pdf.render.playwright.failed' => 'Не удалось отобразить PDF-файл через Playwright.',
+    'pdf.render.playwright.failed.solution' => 'Пожалуйста, попробуйте еще раз. Если проблема не исчезнет, ​​убедитесь, что команда `npm run build:playwright` была выполнена и что настроенная учетная запись рендеринга (PLAYWRIGHT_TEST_EMAIL в файле .env) может войти в систему.',
+    'pdf.settings' => 'Настройки PDF-файла',
+    'pdf.template' => 'PDF-шаблон',
+    'pdf.template.overdue' => 'Просроченный шаблон PDF',
+    'pdf.template.paid' => 'Платный шаблон PDF',
+    'pdf.watermark' => 'Включить водяные знаки PDF',
+    'peppol' => 'Счет-фактура Peppol Universal Business Language (UBL) 2.1 — проверено Ecosio',
+    'peppol.abbreviation' => 'Пеппол',
+    'peppol.allowance.or.charge.inherit' => 'Расходы на списание средств по счетам и расходы на списание средств по статьям счетов наследуются от заполненного документа Peppol Уровень списания средств',
+    'peppol.allowance.or.charge.inherit.inv' => 'Начисления за вычет расходов по счетам-фактурам и начисления за позиции в счетах-фактурах наследуются из заполненной формы Peppol Document Level Allowance.',
+    'peppol.allowance.or.charge.inherit.quote' => 'Расчеты надбавок к стоимости и надбавки за отдельные позиции в коммерческом предложении наследуются от расчета надбавок на уровне документа, заполненного в системе Peppol.',
+    'peppol.auto.update.exchange.rate' => 'Ежедневное автоматическое обновление обменного курса (курс Европейского центрального банка, без ручного поиска на xe.com)',
+    'peppol.client.check' => 'Данные Peppol, касающиеся этого клиента,недостаточны.По крайней мере, один отсутствует.См.Просмотр .Клиент .Параметры .Редактировать данные Peppol для электронного выставления счетов',
+    'peppol.client.defaults' => 'Заполните форму клиента Peppol настройками OpenPeppol по умолчанию для тестирования.',
+    'peppol.currency.code.from' => 'Из валюты, т.е.валюты налога страны происхождения (для изменения см.config/common/params.php TaxCurrencyCode)',
+    'peppol.currency.code.to' => 'В валюту, т.е.в валюту документа:см.функцию get.setting(\'currency.code.to\')',
+    'peppol.currency.from.to' => 'Один из From Currency сегодня конвертируется в этот из To Currency',
+    'peppol.currency.rate.last.updated' => 'Последнее обновление: {дата}',
+    'peppol.currency.to.from' => 'Один из To Currency сегодня конвертируется в этот из From Currency',
+    'peppol.debug.with.emojis' => 'Отладка электронных счетов-фактур с помощью эмодзи',
+    'peppol.debug.with.internal.validator' => 'Отладка электронных счетов-фактур с помощью внутреннего валидатора.',
+    'peppol.doc.currency.toggle' => 'Peppol Toggle Doc Currency',
+    'peppol.document.currency' => 'Валюта документа Peppol - включить/выключить режим просмотра',
+    'peppol.document.reference.null' => 'inv-number-null-inv-id',
+    'peppol.ecosio.validator' => 'Валидатор Ecosio для счетов-фактур OpenPeppol UBL (3.15.0) (он же BIS Billing 3.0.14)',
+    'peppol.electronic.invoicing' => 'Электронное выставление счетов Peppol',
+    'peppol.enable' => 'Включите Peppol с помощью универсального делового языка (UBL) 2.1',
+    'peppol.include.delivery.period' => 'Включить периоды доставки',
+    'peppol.invoice.note.not.found' => 'Счет-фактура не найден',
+    'peppol.label.switch.off' => 'Peppol по умолчанию включен',
+    'peppol.label.switch.on' => 'Peppol Defaults отключены',
+    'peppol.mandatory' => ' (Обязательный)',
+    'peppol.optional' => ' (Необязательный)',
+    'peppol.send.via.oxalis' => 'Отправить через Пеппол (кислица)',
+    'peppol.stand.in.code' => 'Код описания - указывает, какая основа будет использоваться для будущей даты налоговой точки, когда товары будут поставлены/оплачены.Если налоговая точка может быть определена, код описания взаимно исключается в периоде выставления счета.',
+    'peppol.store.cove.1.1.1' => 'Зарегистрируйтесь для доступа к API на сайте Store Cove',
+    'peppol.store.cove.1.1.2' => 'Создайте свой ключ API на сайте Store Cove и сохраните в разделе «Настройки.Просмотр.Онлайн-платежи.Store Cove.Ключ API»',
+    'peppol.store.cove.1.1.3' => 'Сделайте свой первый вызов API,чтобы получить ответ JSON.',
+    'peppol.store.cove.1.1.4' => 'Отправьте свой первый тестовый счет-фактуру Json, который вы получили, нажав на зеленую кнопку World=&gt;DE',
+    'peppol.stream.toggle' => 'Peppol - Кнопка переключения «Трансляция» или «Сохранить в файл»',
+    'peppol.tax.category.not.found' => 'Отсутствует код налоговой категории Peppol (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/).',
+    'peppol.tax.category.percent.not.found' => 'Отсутствует процент по налоговой категории Peppol (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/).',
+    'peppol.tax.rate.code' => 'Налоговый кодекс Peppol',
+    'peppol.trying.to.send.non.pdf.file' => 'В настоящее время со счетами Peppol отправляются только файлы в формате PDF.',
+    'peppol.unit' => 'Классификация единиц с использованием Peppol',
+    'peppol.unknown.document.type' => 'Неизвестный тип документа',
+    'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' => 'Источник:src/Invoice/Ubl/Invoice:Отсутствует описание документа - Ecosio:Документ НЕ ДОЛЖЕН содержать пустые элементы.Решение:В представлении счета-фактуры:Параметры .Изменить .Описание документа',
+    'peppol.validator.Invoice.cac.Note' => 'Источник:src/Invoice/Ubl/Invoice:Отсутствует примечание к счету-фактуре - Ecosio:Документ НЕ ДОЛЖЕН содержать пустые элементы.',
+    'peppol.validator.Invoice.cac.Party.cbc.EndPointID' => 'src/Invoice/Ubl/Party:Отсутствует адрес электронной почты - Ecosio:Электронный адрес ДОЛЖЕН быть указан.Решение:Клиент .Просмотр .Параметры .Редактировать данные Peppol для электронного выставления счетов .EndPointID',
+    'peppol.version' => 'Версия Пеппола',
+    'peppol.xml.stream' => 'Потоковое воспроизведение, т.е.отображение на экране браузера, а не в папке загрузок.',
+    'per.item' => 'за единицу товара',
+    'per.page.total' => 'на страницу.Всего',
+    'performance' => 'Производительность',
+    'performance.label.switch.off' => 'Более быстрый режим чтения и записи - см.config/common/params.php, найдите «режим»',
+    'performance.label.switch.on' => 'Более медленный режим «Только запись» — см.поиск «mode» в config/common/params.php',
+    'period' => 'Период',
+    'permission' => 'У вас нет необходимого разрешения.',
+    'personal.information' => 'Персональная информация',
+    'phone' => 'Телефон',
+    'phone.abbr' => 'П',
+    'phone.number' => 'Номер телефона',
+    'php.timezone.fail' => 'Кажется, часовой пояс не настроен.Проверьте date.timezone в вашей конфигурации php.В противном случае будет выбран <strong>%s</strong> .',
+    'php.timezone.success' => 'Настроен действительный часовой пояс.',
+    'php.version.fail' => 'Установлена ​​версия PHP %s, но для InvoicePlane требуется версия PHP %s или выше',
+    'php.version.success' => 'PHP, по-видимому, соответствует требованиям установки',
+    'platform' => 'Платформа',
+    'platform.PhpMyAdmin' => 'Версия PhpMyAdmin',
+    'platform.PhpSupport' => 'Поддержка PHP',
+    'platform.PhpVersion' => 'PHP-версия',
+    'platform.csrf' => 'Защита от межсайтовой подделки',
+    'platform.editor' => 'Редактор',
+    'platform.mySqlVersion' => 'Версия mySql',
+    'platform.netbeans.UTF-8' => 'Кодировка Netbeans UTF-8',
+    'platform.server' => 'Сервер',
+    'platform.sqlPath' => 'Путь SQL',
+    'platform.update' => 'Файлы и дополнения WampServer',
+    'platform.windowsVersion' => 'Windows 11 Домашняя версия',
+    'platform.xdebug' => 'Расширение Xdebug',
+    'please.enable.js' => 'Пожалуйста, включите Javascript для использования InvoicePlane',
+    'po.group' => 'Группа заказов на закупку',
+    'port' => 'Порт',
+    'position' => 'Позиция',
+    'possible.file.upload.attack' => 'Возможная атака на загрузку файлов: ',
+    'pre.password' => 'Стандартный пароль PDF-файла счета-фактуры (необязательно)',
+    'prefix' => 'Префикс',
+    'prev' => 'Предыдущая',
+    'preview' => 'Предварительный просмотр',
+    'price' => 'Цена',
+    'print' => 'Печать',
+    'print.qr.code' => 'Распечатать QR-код',
+    'product' => 'Продукт',
+    'product.add' => 'Добавить продукт',
+    'product.additional.item.property.name' => 'Peppol Дополнительное свойство Название элемента,например, Цвет',
+    'product.additional.item.property.value' => 'Peppol Дополнительное свойство Значение элемента,например, Черный',
+    'product.availability' => 'Доступность',
+    'product.availability.b2b' => 'Клиентский портал B2B (оптовая торговля)',
+    'product.availability.hint' => 'Интернет-магазин (розничная торговля) размещает этот товар на общедоступной витрине /магазина по указанной ниже розничной цене. Клиентский портал B2B (оптовая торговля) предоставляет к нему доступ только сотрудникам и клиентам через коммерческие предложения/заказы на продажу/счета-фактуры по указанной выше цене.',
+    'product.availability.webshop' => 'Интернет-магазин (розничная торговля)',
+    'product.client.association' => 'Ассоциация клиентов продукта',
+    'product.client.association.options' => 'Варианты ассоциации продукта и клиента',
+    'product.client.associations.completed' => 'Завершено установление партнерских отношений между продуктом и клиентом.',
+    'product.country.of.origin.code' => 'Код страны происхождения Peppol с использованием кодов стран ISO-3166-1:Alpha2',
+    'product.custom.fields' => 'Пользовательские поля продукта (например, Peppol:AdditionalItemProperty поле с множественным выбором цвета, значение черное)',
+    'product.description' => 'Описание продукта',
+    'product.edit' => 'Изменить продукт',
+    'product.error.summary' => 'Сводка ошибок продукта',
+    'product.families' => 'Семейства продуктов',
+    'product.form.tab.category' => 'Категория',
+    'product.form.tab.not.required' => 'Необязательные поля',
+    'product.form.tab.required' => 'Обязательные поля',
+    'product.found' => 'Продукт найден',
+    'product.history' => 'Невозможно удалить.Этот продукт есть в счете или предложении.',
+    'product.icc.id' => 'Код классификации предметов Peppol, например,9873242',
+    'product.icc.listid' => 'Код классификации предметов Peppol, идентификатор списка - например, SRV',
+    'product.icc.listversionid' => 'Идентификатор версии списка кодов классификации предметов Peppol (необязательно) — например,если ItemClassification предоставляется датскими поставщиками,следует использовать версию UNSPSC 19.0501.',
+    'product.id' => 'Идентификатор продукта',
+    'product.image' => 'Изображение',
+    'product.item.classification.code.scheme.id.not.found' => 'Код классификации товара Идентификатор схемы не найден',
+    'product.name' => 'Название продукта',
+    'product.not.found' => 'Продукт не найден',
+    'product.peppol.unit' => 'Блок с Peppol',
+    'product.price' => 'Цена',
+    'product.price.base.quantity' => 'Кол-во в продукте',
+    'product.property' => ' Свойство продукта',
+    'product.property.add' => ' Добавить свойство продукта',
+    'product.property.edit' => 'Изменить свойство продукта',
+    'product.property.index' => 'Индекс свойств продукта',
+    'product.property.name' => 'Имя',
+    'product.property.table' => 'Таблица свойств продукта',
+    'product.property.value' => 'Ценить',
+    'product.record.successfully.added' => 'Запись о продукте успешно добавлена',
+    'product.reorder.threshold' => 'Порог повторного заказа (зарезервированный буфер — пустое значение = буфер отсутствует, отображается/продается полное количество товара на складе)',
+    'product.retail.price' => 'Розничная цена (только в интернет-магазине — оставьте поле пустым, чтобы использовать указанную выше цену)',
+    'product.sii.id' => 'Идентификатор стандартной идентификации товара Peppol,связанный с указанной выше схемой,например, 14-значный идентификатор с добавлением нуля в базе данных глобальных номеров товаров (отображается под штрих-кодом)',
+    'product.sii.schemeid' => 'Peppol Standard Item Identification schemeid — например, 0160',
+    'product.sku' => 'Артикул',
+    'product.stock.quantity' => 'Текущий ассортимент',
+    'product.stock.quantity.not.yet.available' => 'Недоступно до тех пор, пока этот продукт не будет сохранен.',
+    'product.tariff' => 'Тариф',
+    'product.track.stock' => 'Поезда',
+    'product.trade.min.order.quantity' => 'Минимальный объем заказа для оптовых покупателей (пустое поле = условия оптовых закупок не указаны, кнопка «Оптовые цены» скрыта на витрине магазина)',
+    'product.trade.min.order.spend' => 'Минимальная сумма заказа для оптовых покупателей (пустое поле = условия оптовых покупателей не указаны, кнопка «Оптовые цены» на витрине магазина скрыта)',
+    'product.type' => 'Тип продукта',
+    'product.unit' => 'Единица продукта',
+    'product.unit.code.not.found' => 'Продукт не имеет связанного с ним кода блока.Продукт .Редактировать .Блок с Peppol.',
+    'product.units' => 'Единицы продукта',
+    'product.view.tab.details' => 'Подробная информация о продукте',
+    'product.view.tab.gallery' => 'Галерея продуктов',
+    'product.view.tab.images' => 'Изображения продукта',
+    'product.view.tab.properties' => 'Свойства продукта',
+    'productimage.add' => 'Добавить изображение продукта',
+    'productimage.deleted.from' => 'Изображение успешно удалено из следующего каталога:',
+    'productimage.form' => 'Форма изображения продукта',
+    'productimage.gallery' => 'Изображения, относящиеся к: ',
+    'productimage.index' => 'Индекс изображений продукта',
+    'productimage.list' => 'Список изображений, связанных с этим продуктом',
+    'productimage.no.file.uploaded' => 'Изображение не загружено.Возможно, дубликат.',
+    'productimage.plural' => 'Изображения продукта',
+    'productimage.possible.file.upload.attack' => 'Возможная атака на загрузку файлов:',
+    'productimage.upload' => 'Загрузить изображение продукта',
+    'productimage.uploaded.to' => 'Изображение загружено в следующий каталог: ',
+    'productimage.view' => 'В разделе «Просмотр продукта» можно добавить несколько изображений, относящихся к продукту.',
+    'products' => 'Продукция',
+    'products.form' => 'Форма продукта',
+    'products.remaining.after.this' => 'Осталось товаров после этого',
+    'profile.deleted' => 'Профиль был удален',
+    'profile.history' => 'Невозможно удалить профиль.История существует',
+    'profile.new' => 'Создайте профиль с новым адресом электронной почты или номером мобильного телефона, сделайте его активным и выберите данные компании, с которой вы хотите его связать.Эта информация автоматически появится в документации, например, в расценках и счетах-фактурах.',
+    'profile.not.deleted' => 'Профиль не был удален',
+    'profile.plural' => 'Профили',
+    'profile.property.label.company' => 'Компания',
+    'profile.property.label.current' => 'Текущий',
+    'profile.property.label.description' => 'Описание',
+    'profile.property.label.email' => 'Электронная почта',
+    'profile.property.label.mobile' => 'Мобильный',
+    'profile.singular' => 'Профиль',
+    'project' => 'Проект',
+    'project.add' => 'Проект Добавить',
+    'project.name' => 'Название проекта',
+    'projects' => 'Проекты',
+    'projects.form' => 'Проекты',
+    'properties' => 'Характеристики',
+    'provider.name' => 'Имя поставщика',
+    'provider.response' => 'Ответ поставщика',
+    'purchase.entry.add' => 'Добавить запись о покупке',
+    'purchase.entry.csv.imported' => 'Импортировано {count} записей о покупках ({skipped} строк пропущено).',
+    'purchase.entry.csv.no.file' => 'Файл CSV не загружен или произошла ошибка загрузки.',
+    'purchase.entry.delete' => 'Удалить запись о покупке',
+    'purchase.entry.edit' => 'Редактировать запись о покупке',
+    'purchase.entry.index' => 'Записи о покупках',
+    'purchase.entry.tax.year.locale.applied' => 'Применяется дата начала налогового года. Теперь вы можете группировать записи о покупках по кварталам НДС.',
+    'purchase.entry.tax.year.locale.invalid' => 'Неверное значение месяца или дня. Пожалуйста, выберите допустимый регион.',
+    'purchase.entry.tax.year.not.configured' => 'Группировка по кварталам НДС недоступна: начало налогового года (год, месяц, день) настроено не полностью. Воспользуйтесь ссылками в навигационной цепочке ниже, чтобы задать его.',
+    'purchase.price' => 'Цена покупки',
+    'qr.absolute.url' => 'Абсолютный URL, используемый для построения QR-кода выше',
+    'qr.code' => 'QR-код',
+    'qr.code.1' => 'QR-код 1',
+    'qr.code.details' => 'Подробности QR-кода',
+    'qr.code.instructions' => 'Приклейте это на окно. Сканируйте его каждый раз, когда получаете готовую услугу по уходу на дому, чтобы запросить следующий счет, который вы сможете оплатить немедленно выбранным вами способом. Это поможет нам при сверке банковских счетов. Спасибо.',
+    'qr.code.level.1' => 'Уровень кодирования — базовый.',
+    'qr.code.level.2' => 'Уровень кодирования:средний.',
+    'qr.code.level.3' => 'Уровень кодирования — продвинутый.',
+    'qr.code.settings' => 'Настройки QR-кода',
+    'qr.code.settings.bic' => 'БИК',
+    'qr.code.settings.effect' => 'Какое влияние оказывают указанные выше настройки на этот QR-код?',
+    'qr.code.settings.effect.explanation' => 'В реальном коде.нет.Все значения по умолчанию используются,поскольку используется очень простой реальный код выше.',
+    'qr.code.settings.enable' => 'Включить QR-код',
+    'qr.code.settings.enable.hint' => 'Включение этой опции будет включать QR-код для счетов-фактур в формате PDF.Вам необходимо заполнить данные получателя,IBAN и BIC ниже для корректной работы.В противном случае QR-код не будет отображаться.',
+    'qr.code.settings.iban' => 'IBAN',
+    'qr.code.settings.recipient' => 'Получатель',
+    'qr.code.settings.remittance.text' => 'Текст перевода',
+    'qr.code.settings.remittance.text.tags' => 'Текстовые теги денежных переводов',
+    'qr.code.source' => 'Источник QR-кода',
+    'qr.code.source.path' => 'ресурсы\\представления\\счет-фактура\\настройки\\логотип.и.адрес.компании.php',
+    'qr.code.type' => 'Тип QR-кода',
+    'qr.code.type.absolute.url' => 'Абсолютный (весь) URL-адрес на основе',
+    'qr.code.widget.used' => 'Виджет использован',
+    'qr.ecc.level' => 'Уровень Ecc QR-кода (по умолчанию:L)',
+    'qr.height.and.width' => 'Высота и ширина QR-кода (по умолчанию:60)',
+    'qr.meaning' => 'Значение',
+    'qr.meaning.benefit' => 'Сканируйте и вернитесь к просмотру (без ввода URL), где счет можно распечатать в формате PDF.Применимо ко всем пользователям с активной учетной записью клиента.',
+    'qr.output.type' => 'Тип выходного QR-кода (например, .svg, .png) (по умолчанию:png)',
+    'qr.version' => 'Номер версии QR-кода (самая ранняя 0, самая поздняя 40) (по умолчанию:40)',
+    'qty' => 'Кол-во',
+    'quantity' => 'Количество',
+    'quarter' => 'Четверть',
+    'quick.actions' => 'Быстрые действия',
+    'quick.pay' => 'Быстрая оплата',
+    'quote' => 'Цитировать',
+    'quote.add' => 'Цитата Добавить',
+    'quote.amount' => 'Сумма предложения',
+    'quote.amount.add' => 'Цитата Сумма Добавить',
+    'quote.amounts' => 'Цитировать Суммы',
+    'quote.approval.required' => 'Требуется утверждение сметы',
+    'quote.approve' => 'Утвердить',
+    'quote.approved' => 'Эта цитата была одобрена',
+    'quote.copied.to.invoice' => 'Цитата скопирована в НОВЫЙ счет-фактуру',
+    'quote.copied.to.quote' => 'Цитата скопирована в НОВУЮ цитату!',
+    'quote.copied.to.so' => 'Цитата скопирована в заказ на продажу',
+    'quote.custom' => 'Цитата на заказ',
+    'quote.custom.add' => 'Цитата Пользовательский Добавить',
+    'quote.date' => 'Дата цитаты',
+    'quote.dates' => 'Даты цитаты',
+    'quote.delete.not' => 'Счет не был удален.',
+    'quote.delivery.location.index.button.list' => 'Кавычки',
+    'quote.delivery.location.none' => 'К данному предложению не привязано ни одно место доставки.',
+    'quote.disable.flash.messages' => 'Отключить цитирование флэш-сообщений',
+    'quote.email.templates.not.configured' => 'Шаблоны писем не настроены.Настройки.Цитаты.Шаблоны цитат.Шаблон письма по умолчанию',
+    'quote.group' => 'Группа цитат',
+    'quote.id' => 'Цитата ID ',
+    'quote.item' => 'Цитата товара',
+    'quote.item.add' => 'Цитата Добавить элемент',
+    'quote.item.amount' => 'Цена товара Сумма',
+    'quote.item.amount.add' => 'Цитата Пункт Сумма Добавить',
+    'quote.item.cannot.delete' => 'Невозможно удалить цитату',
+    'quote.label.switch.off' => 'Расчет НДС',
+    'quote.label.switch.on' => 'Цитата без НДС',
+    'quote.must.be.approved.first' => 'Перед конвертацией необходимо утвердить смету.',
+    'quote.not.copied.to.invoice' => 'Счет НЕ создан из сметы!Дублировать счет.Скопируйте смету в другую смету,а затем скопируйте в счет.Каждая смета должна иметь соответствующий счет.',
+    'quote.number' => 'Номер предложения',
+    'quote.number.status' => 'Статус номера цитаты',
+    'quote.overview' => 'Обзор цитаты',
+    'quote.overview.period' => 'Период обзора цитаты',
+    'quote.password' => 'Укажите пароль PDF (необязательно)',
+    'quote.pre.password' => 'Укажите стандартный пароль PDF (необязательно)',
+    'quote.reject' => 'Отклонять',
+    'quote.rejected' => 'Эта цитата была отклонена',
+    'quote.sales.order.created.from.quote' => 'Заказ на продажу создан на основе коммерческого предложения, и вы ввели номер своего заказа на покупку!',
+    'quote.sales.order.not.created.from.quote' => 'Заказ на продажу не создан из предложения! Дублировать заказ на продажу.Скопируйте предложение в другое предложение,а затем скопируйте в заказ на продажу.Каждое предложение должно иметь соответствующий заказ на продажу.',
+    'quote.status.email.body' => 'Клиент %1$s имеет %2$s цитату %3$sСсылка на цитату:%4$s',
+    'quote.status.email.subject' => 'Клиент %1$s %2$s цитата %3$s',
+    'quote.tax' => 'Налоговая цитата',
+    'quote.tax.rate' => 'Рассчитать налоговую ставку',
+    'quote.tax.rate.add' => 'Цитата Ставка налога Добавить',
+    'quote.tax.rate.cannot.delete' => 'Невозможно удалить расчетную налоговую ставку',
+    'quote.tax.rate.incomplete.fields' => 'Незаполненные поля:необходимо включить налоговую ставку.Совет:включите нулевую налоговую ставку.',
+    'quote.tax.rate.saved' => 'Цитата Ставка налога сохранена',
+    'quote.template' => 'Шаблон цитаты',
+    'quote.templates' => 'Шаблоны цитат',
+    'quote.to.invoice' => 'Цитата для выставления счета',
+    'quote.to.so' => 'Цитата для заказа на продажу',
+    'quote.to.so.password' => 'Пароль заказа на продажу',
+    'quote.vat.quote' => 'Расчет НДС',
+    'quote.with.purchase.order.line.number' => 'Номер строки заказа на закупку (требование Peppol) — должен совпадать с номером строки заказа на продажу',
+    'quote.with.purchase.order.number' => 'Номер заказа на покупку — должен совпадать с номером заказа на продажу.',
+    'quote.with.purchase.order.person' => 'Лицо/отдел, размещающий заказ',
+    'quotes' => 'Кавычки',
+    'quotes.expire.after' => 'Срок действия котировок истекает через (дней)',
+    'quotes.requiring.approval' => 'Котировки, требующие утверждения',
+    'radiolist.choice' => 'Выбор списка радиостанций',
+    'read.only' => 'Только для чтения',
+    'read.this.please' => 'Пожалуйста, прочтите это!',
+    'reason' => 'Причина',
+    'reason.accident' => 'Несчастный случай',
+    'reason.birthdefect' => 'Врожденный дефект',
+    'reason.disease' => 'Болезнь',
+    'reason.maternity' => 'Материнство',
+    'reason.prevention' => 'Профилактика',
+    'reason.unknown' => 'Неизвестный',
+    'recent.clients' => 'Недавние клиенты',
+    'recent.invoices' => 'Последние счета-фактуры',
+    'recent.payments' => 'Последние платежи',
+    'recent.quotes' => 'Последние цитаты',
+    'record.successfully.created' => 'Запись успешно создана',
+    'record.successfully.created.not' => 'Запись не была успешно создана.',
+    'record.successfully.deleted' => 'Запись успешно удалена',
+    'record.successfully.updated' => 'Запись успешно обновлена',
+    'records.no' => 'Нет записей',
+    'recurring' => 'Повторяющийся',
+    'recurring.add' => 'Повторяющийся Добавить',
+    'recurring.client' => 'Клиент',
+    'recurring.create' => 'Создать повторяющийся счет',
+    'recurring.create.from.productclient' => 'Настройка регулярных платежей из списка товаров',
+    'recurring.deleted' => 'Удалено',
+    'recurring.frequency' => 'Частота',
+    'recurring.invoices' => 'Повторяющиеся счета-фактуры',
+    'recurring.no.invoices.selected' => 'Вы не выбрали ни одного счета.',
+    'recurring.no.products.associated' => 'С этим клиентом не связано ни одного товара. Пожалуйста, сначала воспользуйтесь функцией «Создать товары».',
+    'recurring.original.invoice.date' => 'Дата первоначального счета: ',
+    'recurring.setup' => 'Настройка регулярных обновлений',
+    'recurring.status.sent.only' => 'Повторяющимися могут быть только счета-фактуры со статусом «отправлено».',
+    'recurring.tooltip.next' => 'Следующая дата устанавливается с помощью индекса.',
+    'redirect.map' => 'Карта перенаправлений',
+    'refund' => 'Возвращать деньги',
+    'refund.confirm' => 'Вы уверены, что хотите вернуть этот платеж через %s?',
+    'refund.failed' => 'Возврат средств через %s не удался. Подробности смотрите в журналах платежного шлюза.',
+    'refund.no.provider.reference' => 'Для данного платежа не был указан платежный идентификатор %s, поэтому автоматический возврат средств невозможен.',
+    'refund.recorded' => 'Возврат средств осуществлен через %s. Справочный номер поставщика: %s',
+    'refund.successful' => 'Возврат средств через %s прошел успешно.',
+    'region' => 'Область',
+    'reject' => 'Отклонять',
+    'reject.this.quote' => 'Отклонить эту цитату',
+    'rejected' => 'Отклоненный',
+    'reminder' => 'Напоминание отправлено',
+    'remove' => 'Удалять',
+    'remove.logo' => 'Удалить логотип',
+    'report' => 'Отчет',
+    'report.aging.title' => 'Отчет о сроках погашения дебиторской задолженности',
+    'report.client.statement' => 'Выписка по клиентскому счету',
+    'report.options' => 'Параметры отчета',
+    'report.period.from_to' => 'Период: с {дата_исхода} по {дата_конца}',
+    'report.revenue.title' => 'Отчет об анализе доходов',
+    'report.sales.by.product' => 'Продажи по продуктам',
+    'report.sales.by.product.info' => 'В этом отчете указана общая сумма продаж продукта вместе с налогом на товар.Он не включает дополнительный налог на счет, связанный с этими продуктами.',
+    'report.sales.by.task' => 'Продажи по задачам',
+    'report.sales.by.task.info' => 'В этом отчете указана общая сумма продаж по задаче вместе с налогом на товар.Он не включает дополнительный налог на счет, связанный с этими задачами.',
+    'report.test.fraud.prevention.headers.api' => 'Тестирование API заголовков предотвращения мошенничества',
+    'reports' => 'Отчеты',
+    'reset' => 'Перезагрузить',
+    'reset.column.widths' => 'Сбросить ширину столбцов до значений по умолчанию.',
+    'reset.password' => 'Сбросить пароль',
+    'rules.peppol.en16931.001' => 'Необходимо указать Business Process или Profile ID.Обратитесь к config/common/params.php для поиска ProfileID',
+    'run.report' => 'Выполнить отчет',
+    'sales' => 'Продажи',
+    'sales.by.client' => 'Продажи через клиента',
+    'sales.by.date' => 'Продажи по дате',
+    'sales.with.tax' => 'Продажи с налогом',
+    'salesorder' => 'Заказ на продажу',
+    'salesorder.agree.to.terms' => 'Пожалуйста, согласитесь с Условиями, которые будут вам отправлены.',
+    'salesorder.assembled.packaged.prepared' => 'Собрано/Упаковано/Подготовлено',
+    'salesorder.cancelled' => 'Заказ на продажу отменен',
+    'salesorder.client.confirmed.terms' => 'Подтвержденные клиентом условия',
+    'salesorder.clients.purchase.order.number' => 'Номер заказа клиента',
+    'salesorder.clients.purchase.order.person' => 'Лицо, обрабатывающее заказ клиента на покупку',
+    'salesorder.copied.to.invoice' => 'Заказ на продажу скопирован в счет-фактуру',
+    'salesorder.copied.to.invoice.not' => 'Счет-фактура НЕ создан из Заказа на продажу! Дублируйте счет-фактуру.Скопируйте свой Заказ на продажу в другой Заказ на продажу,а затем скопируйте в счет-фактуру.Каждый Заказ на продажу должен иметь соответствующий счет-фактуру',
+    'salesorder.date.created' => 'Дата создания заказа на продажу',
+    'salesorder.default.group' => 'Группа по умолчанию для заказов на продажу',
+    'salesorder.goods.services.confirmed' => 'Клиент подтвердил доставку',
+    'salesorder.goods.services.delivered' => 'Товары/Услуги доставлены',
+    'salesorder.invoice' => 'Счет',
+    'salesorder.invoice.generate' => 'Сгенерировать счет-фактуру',
+    'salesorder.invoice.generated' => 'Счет-фактура сгенерирован',
+    'salesorder.invoice.number' => 'Номер счета-фактуры',
+    'salesorder.number' => 'Номер заказа на продажу',
+    'salesorder.number.status' => 'Номер заказа на продажу.Статус',
+    'salesorder.password' => 'Пароль заказа на продажу',
+    'salesorder.payment.terms' => 'Условия оплаты заказа на продажу,например:Пожалуйста, оплатите в течение 30 дней',
+    'salesorder.peppol.response.ab' => 'Подтверждено — получено, еще не обработано.',
+    'salesorder.peppol.response.acknowledge' => 'Подтверждаю только',
+    'salesorder.peppol.response.acknowledge.description' => 'Отправляет полный ответ о получении заказа, но не обрабатывает его, не принимая решения по отдельным позициям. Используйте функцию «Отправить ответ на заказ Peppol», когда будете готовы принять, отклонить или изменить отдельные позиции.',
+    'salesorder.peppol.response.ap' => 'Принял',
+    'salesorder.peppol.response.ca' => 'Принято с изменениями.',
+    'salesorder.peppol.response.failed' => 'Не удалось отправить ответ на заказ Peppol.',
+    'salesorder.peppol.response.failed.no.client' => 'Не удалось отправить ответ на заказ Peppol: у заказа на продажу нет клиента.',
+    'salesorder.peppol.response.failed.no.peppol' => 'Не удалось отправить ответ на заказ Peppol: у клиента отсутствует регистрация в Peppol.',
+    'salesorder.peppol.response.linestatus.accepted' => 'Принял',
+    'salesorder.peppol.response.linestatus.added' => 'Добавлен',
+    'salesorder.peppol.response.linestatus.alreadydelivered' => 'Уже доставлено',
+    'salesorder.peppol.response.linestatus.changed' => 'Измененный',
+    'salesorder.peppol.response.linestatus.rejected' => 'Отклоненный',
+    'salesorder.peppol.response.perline' => 'Ответ на заказ Пеппола',
+    'salesorder.peppol.response.preview' => 'Предварительный просмотр XML',
+    'salesorder.peppol.response.re' => 'Отклоненный',
+    'salesorder.peppol.response.send' => 'Отправить ответ на заказ Peppol',
+    'salesorder.peppol.response.sent' => 'Ответ на заказ Peppol отправлен.',
+    'salesorder.quote' => 'Цитировать',
+    'salesorder.recent' => 'Последние заказы на продажу',
+    'salesorder.reject' => 'Отклонение заказа на продажу',
+    'salesorder.rejected' => 'Заказ на продажу отклонен',
+    'salesorder.sent.to.customer' => 'Требуется соглашение об условиях',
+    'salesorder.to.invoice' => 'От заказа на продажу до выставления счета',
+    'salesorder.vat.salesorder' => 'Заказ на продажу с НДС',
+    'salesorders' => 'Заказы на продажу',
+    'save' => 'Сохранять',
+    'save.item.as.lookup' => 'Сохранить элемент как поиск',
+    'script' => 'Сценарий',
+    'search.family' => 'Поиск семьи',
+    'search.product' => 'Поиск продукта',
+    'security.disable.read.only.empty' => 'Параметр «Отключить только для чтения» в настоящее время не имеет значения 0 или 1.Законно установите его на 0 по умолчанию, чтобы была доступна функция «только для чтения» для предотвращения удаления счетов-фактур.',
+    'security.disable.read.only.info' => 'Предупреждение:включена функция «Только для чтения» для защиты счетов и предотвращения удаления.Отключите «disable.read.only», чтобы разрешить сброс отправленных счетов до черновиков',
+    'security.disable.read.only.success' => 'Успех:функциональность «Только чтение» для защиты счетов-фактур и предотвращения удаления была снова включена.',
+    'security.disable.read.only.true.draft.check.and.mark' => 'Предупреждение:Вы редактируете черновик, для которого отключен параметр «Только чтение»',
+    'security.disable.read.only.true.sent.check.and.mark' => 'Предупреждение:Вы редактируете отправленный счет-фактуру, для которого отключен параметр «Только чтение»',
+    'security.disable.read.only.warning' => 'Предупреждение:функция «Только чтение» для защиты счетов-фактур и предотвращения удаления отключена.',
+    'select.all' => 'Выбрать все',
+    'select.existing.client' => 'Выберите существующего клиента',
+    'select.family' => 'Выбрать семью',
+    'select.payment.method' => 'Выберите способ оплаты',
+    'select.project' => 'Выбрать проект',
+    'select.unit' => 'Выберите единицу',
+    'send' => 'Отправлять',
+    'send.email' => 'Отправить электронное письмо',
+    'send.telegram.invoice' => 'Отправить счет в Telegram',
+    'sent' => 'Отправил',
+    'set.new.password' => 'Установить новый пароль',
+    'set.to.read.only' => 'Установить для счета-фактуры статус «только чтение»',
+    'setting' => 'Параметр',
+    'setting.add' => 'Установка Добавить',
+    'setting.as.a.result.of ' => 'в результате',
+    'setting.assets.cleared.at' => 'Активы очищены в ',
+    'setting.assets.were.not.cleared.at' => 'Активы не были очищены в',
+    'setting.company' => 'Публичные данные компании',
+    'setting.company.private' => 'Конфиденциальные данные компании',
+    'setting.company.profile' => 'Изменение профиля, например, мобильного телефона и адреса электронной почты',
+    'setting.duplicate.key' => 'Не удалось завершить сохранение.У вас есть дубликат со следующим ключом:',
+    'setting.error.on.the.public.assets.folder' => 'ошибка в папке публичных ресурсов.',
+    'setting.form' => 'Установка формы',
+    'setting.key' => 'Установка ключа',
+    'setting.section' => 'Раздел',
+    'setting.subsection' => 'Подраздел',
+    'setting.translator.key' => 'Переводчик Ключ',
+    'setting.value' => 'Значение параметра',
+    'setting.you.have.cleared.the.cache' => 'Вы очистили кэш.',
+    'setting.you.have.not.cleared.the.cache.due.to.a' => 'Вы не очистили кэш',
+    'settings' => 'Настройки',
+    'settings.successfully.saved' => 'Настройки успешно сохранены',
+    'setup.choose.language' => 'Выберите язык',
+    'setup.choose.language.message' => 'Выберите язык для продолжения установки.',
+    'setup.complete' => 'Установка завершена',
+    'setup.complete.message' => 'InvoicePlane успешно установлен.Теперь вы можете войти.',
+    'setup.complete.secure.setup' => 'Если вы хотите обезопасить свою установку, вы можете отключить настройку на данный момент.Для этого замените строку <code>DISABLE_SETUP=false</code> на <code>DISABLE_SETUP=true</code> в вашем файле <code>ipconfig.php</code> .',
+    'setup.complete.support.note' => 'Если у вас возникли какие-либо проблемы или вам нужна помощь,посетите <a href="https://wiki.invoiceplane.com">официальную вики</a> или <a href="https://community.invoiceplane.com/">форум сообщества</a> .',
+    'setup.create.user' => 'Создать учетную запись пользователя',
+    'setup.create.user.message' => 'Это информация, которая вам понадобится для входа в InvoicePlane.',
+    'setup.database.configured.message' => 'База данных успешно настроена.',
+    'setup.database.details' => 'Подробности базы данных',
+    'setup.database.message' => 'Для подключения к вашей базе данных предоставьте следующую информацию.',
+    'setup.db.cannot.connect' => 'Невозможно подключиться к серверу базы данных с предоставленной информацией о базе данных.Проверьте учетные данные и повторите попытку.',
+    'setup.db.database.info' => 'Имя базы данных, которую вы создали для InvoicePlane.',
+    'setup.db.hostname.info' => 'Имя хоста вашей базы данных.',
+    'setup.db.password.info' => 'Пароль, связанный с базой данных.',
+    'setup.db.port.info' => 'Порт, на котором прослушивается ваше имя хоста.По умолчанию 3306.',
+    'setup.db.username.info' => 'Имя пользователя, связанное с базой данных.',
+    'setup.install.tables' => 'Установить таблицы',
+    'setup.other.contact' => 'Другие контакты',
+    'setup.prerequisites' => 'Предпосылки',
+    'setup.prerequisites.message' => 'Добро пожаловать в InvoicePlane! Любая проблема, перечисленная ниже, должна быть решена, прежде чем установка может быть продолжена.',
+    'setup.tables.errors' => 'Перед продолжением установки необходимо устранить указанные ниже ошибки.',
+    'setup.tables.success' => 'Таблицы базы данных успешно установлены.',
+    'setup.upgrade.message' => 'Перед продолжением установки необходимо устранить указанные ниже ошибки.',
+    'setup.upgrade.success' => 'Таблицы базы данных были успешно обновлены.',
+    'setup.upgrade.tables' => 'Таблицы обновления',
+    'setup.user.address.info' => 'Введенная ниже адресная информация будет отображаться в ваших счетах.',
+    'setup.user.contact.info' => 'Эта контактная информация также может отображаться в ваших счетах.',
+    'setup.user.email.info' => 'Ваш адрес электронной почты будет использоваться для входа в InvoicePlane.',
+    'setup.user.name.info' => 'Либо название вашей компании, либо ваше имя и фамилия.',
+    'setup.user.password.info' => 'Не забудьте использовать надежный пароль.Рекомендуется сочетание заглавных и строчных букв, цифр и символов.Минимальная длина:8 символов',
+    'setup.user.password.verify.info' => 'Подтвердите свой пароль, указав тот же пароль еще раз.',
+    'setup.v120.alert' => '<strong>Внимание!</strong><br> Очень важно, чтобы вы прочитали <a href="https://go.invoiceplane.com/v120update" target="_blank">это уведомление об обновлении,</a> в котором описаны некоторые существенные изменения в приложении InvoicePlane.',
+    'setup.v147.alert' => '<strong>Внимание!</strong><br> Откройте файл <code>application/config/config.php</code> и измените строку <code>$config[\'sess_use_database\'] = false;</code> на <code>$config[\'sess_use_database\'] = true;</code><br> Более подробную информацию можно найти <a href="https://go.invoiceplane.com/v147update" target="_blank">здесь.</a>',
+    'showing.of' => 'Показано %s из %s ',
+    'signup' => 'Зарегистрироваться',
+    'since' => 'с',
+    'single.choice' => 'Одиночный выбор',
+    'site.soletrader.about.choose' => 'Вот несколько веских причин выбрать нас:',
+    'site.soletrader.about.competitive.rates' => 'Конкурентоспособные цены',
+    'site.soletrader.about.contemporary' => 'Современные навыки',
+    'site.soletrader.about.dissatisfaction' => 'В случае неудовлетворенности качеством обслуживания мы переделаем работу бесплатно.',
+    'site.soletrader.about.finished' => 'Завершенные проекты',
+    'site.soletrader.about.happy' => 'Довольные клиенты',
+    'site.soletrader.about.quality' => 'Без ущерба качеству',
+    'site.soletrader.about.return' => 'Постоянные клиенты',
+    'site.soletrader.about.simply' => 'Просто снимите трубку, и мы переделаем работу.',
+    'site.soletrader.about.solved' => 'Решенные проблемы',
+    'site.soletrader.about.trained' => 'Наша команда хорошо обучена и опытна.',
+    'site.soletrader.about.we' => 'Мы усердно применяем свои навыки в меру своих возможностей.',
+    'site.soletrader.about.willing' => 'Готовность к ответной поддержке',
+    'site.soletrader.contact.address' => 'Адрес',
+    'site.soletrader.contact.email' => 'Электронная почта',
+    'site.soletrader.contact.lookout' => 'Мы всегда ищем новых клиентов.Если вы заинтересованы в сотрудничестве с нами, свяжитесь с нами одним из следующих способов.',
+    'site.soletrader.contact.phone' => 'Телефон',
+    'site.soletrader.contact.touch' => 'Свяжитесь с нами',
+    'site.soletrader.pricing.basic' => 'базовый',
+    'site.soletrader.pricing.choosePlan' => 'Выбрать план',
+    'site.soletrader.pricing.currencyPerMonth' => 'помесячно',
+    'site.soletrader.pricing.explore' => 'Ознакомьтесь с нашими гибкими ценами,чтобы найти идеальный вариант для ведения вашего бизнеса.',
+    'site.soletrader.pricing.plans' => 'Больше планов',
+    'site.soletrader.pricing.pricing' => ' Наши цены',
+    'site.soletrader.pricing.pro' => 'Профессиональный',
+    'site.soletrader.pricing.proPrice' => 'цена pro',
+    'site.soletrader.pricing.special' => 'особенный',
+    'site.soletrader.pricing.starter' => 'Стартер',
+    'site.soletrader.pricing.visits' => 'визиты',
+    'site.soletrader.team.assistant' => 'Помощник',
+    'site.soletrader.team.coordinator' => 'Координатор',
+    'site.soletrader.team.we' => 'Мы — группа заботливых, опытных и трудолюбивых людей.',
+    'site.soletrader.testimonial.we' => 'Вот отзывы',
+    'site.soletrader.testimonial.worker1' => 'Это мой отзыв',
+    'site.soletrader.testimonial.worker2' => 'Это мой отзыв',
+    'site.soletrader.testimonial.worker3' => 'Это мой отзыв',
+    'site.todays.date' => 'Сегодняшняя дата',
+    'six.months' => 'Шесть месяцев',
+    'smtp.mail.from' => 'Адрес отправителя SMTP для системных писем',
+    'smtp.password' => 'Пароль SMTP',
+    'smtp.port' => 'SMTP-порт',
+    'smtp.requires.authentication' => 'Требуется аутентификация',
+    'smtp.security' => 'Безопасность',
+    'smtp.server.address' => 'Адрес SMTP-сервера',
+    'smtp.ssl' => 'SSL',
+    'smtp.tls' => 'ТЛС',
+    'smtp.username' => 'Имя пользователя SMTP',
+    'smtp.verify.certs' => 'Проверка сертификатов SMTP',
+    'spreadsheet.import' => 'Импорт электронных таблиц',
+    'sql.file' => 'SQL-файл',
+    'start' => 'Начинать',
+    'start.date' => 'Дата начала',
+    'state' => 'Состояние',
+    'status' => 'Статус',
+    'status.invoice.cancelled' => 'Отменено',
+    'status.invoice.draft' => 'Черновик',
+    'status.invoice.overdue' => 'Просрочено',
+    'status.invoice.paid' => 'Оплаченный',
+    'status.invoice.partial' => 'Частично оплачено',
+    'status.invoice.sent' => 'Отправил',
+    'status.invoice.viewed' => 'Просмотрено',
+    'stop' => 'Останавливаться',
+    'stop.homecare.signing.up' => 'Регистрация для получения услуг по уходу на дому не требуется.',
+    'stop.logging.in' => 'Остановить вход в систему',
+    'stop.signing.up' => 'Остановить подписку',
+    'storecove' => 'Storecove',
+    'storecove.advisory.to.developer.field.easily.missed' => 'Поле, которое легко пропустить клиенту',
+    'storecove.create.a.sender.legal.entity.country' => '1.1.4.Создать отправителя - Юридическое лицо Страна',
+    'storecove.invoice.json.encoded' => 'StoreCove Json-кодированный счет-фактура',
+    'storecove.legal' => 'Юридический',
+    'storecove.legal.entity.id.for.json' => '1.1.4.Создайте отправителя — сохраните идентификатор юридического лица Cove, вставленный в invoice.json',
+    'storecove.legal.entity.identifier.id.not.found' => 'Параметры конфигурации Учет Поставщик Сторона Юридическое лицо Идентификатор компании не найден.',
+    'storecove.no.contract.exists' => 'Контракт не существует',
+    'storecove.not.available' => 'Нет в наличии',
+    'storecove.purchase.order.item.id.null' => 'po-item-id-null',
+    'storecove.receiver.identifier' => 'Идентификатор получателя — см.StoreCove 6.3',
+    'storecove.region.country.legal.tax' => 'Регион ---------- Страна --------- Юридический --------- Налог',
+    'storecove.salesorder.number.not.exist' => 'Номер заказа на продажу не существует',
+    'storecove.sender.identifier' => '6.2 Идентификатор отправителя',
+    'storecove.sender.identifier.basis' => '6.2 Идентификатор отправителя:юридический или налоговый',
+    'storecove.supplier.contact.email.not.found' => 'Контактный адрес электронной почты поставщика не найден.См.массив параметров конфигурации.',
+    'storecove.supplier.contact.firstname.not.found' => 'Контакт поставщика FirstName не найден.См.массив параметров конфигурации.',
+    'storecove.supplier.contact.lastname.not.found' => 'Контакт поставщика LastName не найден.См.массив параметров конфигурации.',
+    'storecove.supplier.contact.name.not.found' => 'Имя контакта поставщика не найдено.См.массив параметров конфигурации.',
+    'storecove.supplier.contact.telephone.not.found' => 'Контактный телефон поставщика не найден.См.массив параметров конфигурации.',
+    'storecove.tax' => 'Налог',
+    'storecove.tax.rate.code' => 'Код налоговой ставки Storecove',
+    'storecove.tax.scheme.identifier.id.not.found' => 'Параметры конфигурации Учетная схема налогообложения поставщика Идентификатор компании не найден.',
+    'stream' => 'Потоковое PDF в браузере / Модальное',
+    'street.address' => 'Адрес улицы',
+    'street.address.2' => 'Почтовый адрес (продолжение)',
+    'street.order' => 'Уборка территории — Уличный порядок',
+    'street.order.back.to.families' => 'Назад к разделу «Семьи»',
+    'street.order.drag.hint' => 'Перетащите улицы в том порядке, в котором вы хотите их очистить. Порядок сохраняется автоматически при перетаскивании строки.',
+    'street.order.manage.link' => 'Управление порядком на улице →',
+    'street.order.position' => 'Положение во время уборки:',
+    'subject' => 'Предмет',
+    'submenu' => 'Подменю',
+    'submit' => 'Представлять на рассмотрение',
+    'subtotal' => 'Промежуточный итог',
+    'success' => 'Успех',
+    'success.create.invoice' => 'Счет № {номер_счета} успешно создан',
+    'success.payment.received' => 'Получена оплата в размере {сумма} по счету № {номер_счета}',
+    'success.send.invoice' => 'Счет № {номер_счета} отправлен на адрес {адрес_клиента}',
+    'success.update.client' => 'Клиент {client_name} успешно обновился',
+    'successful' => 'Успешный',
+    'suggested.from.previous.selection' => 'Предложено на основе предыдущего выбора',
+    'sunday' => 'Воскресенье',
+    'system.settings' => 'Системные настройки',
+    'system.updates' => 'Обновления системы',
+    'system.updates.check.failed' => 'Проверка версии PHP не удалась.',
+    'system.updates.check.now' => 'Проверить сейчас',
+    'system.updates.current.version' => 'Текущая версия PHP',
+    'system.updates.last.checked' => 'Последняя проверка',
+    'system.updates.latest.version' => 'Последняя версия PHP',
+    'system.updates.never.checked' => 'Никогда не проверял',
+    'system.updates.outdated' => 'Доступна более новая версия PHP.',
+    'system.updates.security.release' => 'Выпуск информации о безопасности',
+    'system.updates.select.platform' => 'Выберите свою платформу, чтобы увидеть инструкции по обновлению.',
+    'system.updates.up.to.date' => 'PHP обновлен до последней версии.',
+    'system.updates.update.instructions' => 'Инструкции по обновлению',
+    'table' => 'Стол',
+    'task' => 'Задача',
+    'task.add' => 'Задача Добавить',
+    'task.description' => 'Описание задачи',
+    'task.finish.date' => 'Дата окончания',
+    'task.name' => 'Имя задачи',
+    'task.price' => 'Цена задания',
+    'tasks' => 'Задачи',
+    'tasks.form' => 'Форма задания',
+    'tax' => 'Налог',
+    'tax.code' => 'Налоговый кодекс',
+    'tax.code.short' => 'Налоговый кодекс',
+    'tax.exempt.notice' => 'Данная сделка освобождена от уплаты налогов.',
+    'tax.information' => 'Информация о налогах',
+    'tax.point' => 'Дата Налоговый пункт',
+    'tax.rate' => 'Ставка налога',
+    'tax.rate.active.not' => 'Внимание:ни одна налоговая ставка не активирована.Активируйте хотя бы одну налоговую ставку.Настройки .Налоговая ставка',
+    'tax.rate.add' => 'Налоговая ставка Добавить',
+    'tax.rate.code' => 'Код налоговой ставки по счету-фактуре',
+    'tax.rate.decimal.places' => 'Налоговая ставка, десятичные знаки',
+    'tax.rate.edit' => 'Изменить налоговую ставку',
+    'tax.rate.form' => 'Форма налоговой ставки',
+    'tax.rate.history.exists' => 'Невозможно удалить.История уже существует',
+    'tax.rate.name' => 'Название налоговой ставки, например, Стандартная',
+    'tax.rate.percent' => 'Процент налоговой ставки',
+    'tax.rate.placement' => 'Размещение налоговой ставки',
+    'tax.rates' => 'Налоговые ставки',
+    'tax.total.amount' => 'Общая сумма налога: {сумма}',
+    'tax.vat.rate' => 'Ставка НДС: {ставка}%',
+    'taxes' => 'Налоги',
+    'telegram' => 'Телеграмма',
+    'telegram.bot.api.chat.id' => 'Telegram:Не-бот:Личный аккаунт:Hello World:Тестовое сообщение:Получатель сообщения:<b>Идентификатор чата</b>',
+    'telegram.bot.api.chat.id.not.set' => 'Идентификатор чата владельца личной учетной записи Telegram, не являющегося ботом,который отправил боту первое сообщение и должен получить тестовое сообщение «Привет!» «Мир», не был настроен.',
+    'telegram.bot.api.current.status' => '<b>Текущее использование:</b> веб-хук не нужен, поскольку у клиентов нет идентификаторов чата и они не отправляют сообщения боту.',
+    'telegram.bot.api.enable' => 'Включить Телеграм',
+    'telegram.bot.api.enabled.not' => 'Телеграм не включен',
+    'telegram.bot.api.future.use' => '<b>Будущее использование:</b> Клиентам с идентификаторами чата отправляется счет-фактура в Telegram, и они подтверждают получение, отправляя подтверждение обратно на веб-хук.',
+    'telegram.bot.api.general.purpose' => '<b>Зарегистрированный бот, идентифицированный по токену,отправляет уведомления об оплате клиентов на указанный ниже зарегистрированный идентификатор чата (обычно это личный аккаунт администратора в Telegram, не являющийся ботом).</b>',
+    'telegram.bot.api.get.updates.failed' => 'Ваши обновления Telegram не удались.',
+    'telegram.bot.api.get.updates.success' => 'Ваши обновления Telegram успешно выполнены с помощью метода API getUpdates.',
+    'telegram.bot.api.hello.world.test.message' => 'Привет, мир от Telegram Bot Api.Спасибо разработчикам yiisoft!',
+    'telegram.bot.api.hello.world.test.message.sent' => 'Сообщение Hello World отправлено.',
+    'telegram.bot.api.hello.world.test.message.sent.not' => 'Сообщение Hello World НЕ отправлено.',
+    'telegram.bot.api.hello.world.test.message.use' => 'Отправьте простое тестовое сообщение «Hello World from Telegram Bot Api» на внешний идентификатор чата',
+    'telegram.bot.api.payment.method.id' => 'Идентификатор способа оплаты, использованный при регистрации автоматического платежа в Telegram.',
+    'telegram.bot.api.payment.notification.success' => 'Уведомление о платеже через Telegram успешно',
+    'telegram.bot.api.payment.notifications' => 'Уведомления о платежах Telegram',
+    'telegram.bot.api.provider.token' => 'Токен платежного провайдера Telegram (из @BotFather → Платежи → Stripe)',
+    'telegram.bot.api.token' => 'Токен API бота Telegram',
+    'telegram.bot.api.token.not.set' => 'Токен API Telegram Bot не установлен',
+    'telegram.bot.api.webhook.delete' => 'Удалить вебхук',
+    'telegram.bot.api.webhook.deleted' => 'Webhook только что был отключен,поэтому можно использовать ручной метод API getUpdates.',
+    'telegram.bot.api.webhook.secret.token' => 'Секретный токен Webhook для дополнительной безопасности (используется как параметр в функции setWebhook, а не как queryParameter)',
+    'telegram.bot.api.webhook.setup' => 'Вебхук настроен.',
+    'telegram.bot.api.webhook.setup.already' => 'Вебхук уже настроен.',
+    'telegram.bot.api.webhook.url.this.site' => 'URL-адрес Telegram Webhook этого сайта используется в функции TelegramHelper setWebhook.',
+    'telegram.invoice.client.chat.id.not.set' => 'У клиента отсутствует идентификатор чата в Telegram. Отредактируйте клиента и добавьте его идентификатор чата в Telegram.',
+    'telegram.invoice.link.created' => 'Создана ссылка для оплаты через Telegram. Скопируйте ссылку ниже.',
+    'telegram.invoice.link.created.menu' => 'Создать ссылку для оплаты в Telegram',
+    'telegram.invoice.sent' => 'Счет в Telegram успешно отправлен.',
+    'telegram.location.not.configured' => 'Координаты компании по широте и долготе не настроены. Задайте их в разделе «Настройки».',
+    'telegram.location.sent' => 'Местоположение компании успешно отправлено в Telegram.',
+    'telegram.pdf.not.found' => 'Для этого счета-фактуры не найден архивный PDF-файл. Сначала сгенерируйте его через «Параметры» → «Скачать PDF».',
+    'telegram.pdf.send.menu' => 'Отправить PDF через Telegram',
+    'telegram.pdf.sent' => 'Счет-фактура в формате PDF успешно отправлена ​​в Telegram.',
+    'telegram.stars.no.charge.id' => 'Возврат средств невозможен: в платежном уведомлении отсутствуют идентификатор платежа Telegram и идентификатор пользователя покупателя.',
+    'telegram.stars.refunded' => 'Возврат средств по платежу Telegram Stars успешно завершен.',
+    'template' => 'Шаблон счета-фактуры',
+    'templates' => 'Шаблоны счетов-фактур',
+    'term' => 'Условия и положения',
+    'term.1' => 'Я не читал положения и условия.',
+    'term.2' => 'Я прочитал(а) и согласен(сна) с условиями.',
+    'term.add.additional.terms.at.setting.repository' => 'Добавьте дополнительные условия в функцию getPaymentTerms репозитория настроек.',
+    'terms' => 'Условия',
+    'test.data.install' => 'Установить тестовые данные',
+    'test.data.use' => 'Использовать тестовые данные',
+    'test.remove' => 'Удалить тестовые данные',
+    'test.remove.tooltip' => 'Вид.Настройки.Общие.Установить тестовые данные.Нет и Вид.Настройки.Общие.Использовать тестовые данные.Нет',
+    'test.reset' => 'Сбросить тестовые данные',
+    'test.reset.setting' => 'Настройки Переустановить',
+    'test.reset.setting.tooltip' => 'Это приведет к удалению всех текущих настроек и переустановке настроек по умолчанию в InvoiceController/install.default.settings.on.first.run.',
+    'test.reset.tooltip' => 'Вид.Настройки.Общие.Установить тестовые данные.Да и Вид.Настройки.Общие.Использовать тестовые данные.Да',
+    'text' => 'Текст',
+    'textarea' => 'Текстовая область',
+    'theme' => 'Тема',
+    'this.month' => 'В этом месяце',
+    'this.quarter' => 'В этом квартале',
+    'this.year' => 'В этом году',
+    'thousands.separator' => 'Разделитель тысяч',
+    'time.created' => 'Время создания',
+    'time.zone' => 'Часовой пояс',
+    'title' => 'Заголовок',
+    'to.date' => 'На сегодняшний день',
+    'to.email' => 'На электронную почту',
+    'total' => 'Общий',
+    'total.balance' => 'Общий баланс',
+    'total.billed' => 'Всего выставлено счетов',
+    'total.paid' => 'Всего оплачено',
+    'transaction.reference' => 'Ссылка на транзакцию',
+    'transaction.successful' => 'Транзакция прошла успешно',
+    'treatment' => 'Уход',
+    'treatment.end' => 'Окончание лечения',
+    'treatment.start' => 'Начало лечения',
+    'true' => 'Истинный',
+    'try.again' => 'Попробуйте еще раз',
+    'two.factor.authentication' => 'Двухфакторная аутентификация',
+    'two.factor.authentication.attempt.failure' => 'Ошибка попытки двухфакторной аутентификации',
+    'two.factor.authentication.attempt.failure.must.setup' => 'Неудачная попытка двухфакторной аутентификации:необходимо настроить новый QR-код с секретом (+) и выбрать перезапись предыдущей записи при появлении соответствующего запроса.',
+    'two.factor.authentication.attempt.success' => 'Успешная попытка двухфакторной аутентификации',
+    'two.factor.authentication.compatible.apps' => 'Работает с любым приложением для аутентификации TOTP — например, Google Authenticator, Microsoft Authenticator, Authy, 1Password, Bitwarden, Yandex ID или Aegis. Используйте то, которое у вас уже установлено.',
+    'two.factor.authentication.disabled' => 'Двухфакторная аутентификация теперь отключена в целях дополнительной безопасности.',
+    'two.factor.authentication.enable' => 'Включить двухфакторную аутентификацию',
+    'two.factor.authentication.enabled.badge' => 'Включена двухфакторная аутентификация',
+    'two.factor.authentication.enabled.with.disabling' => 'Двухфакторная аутентификация в настоящее время включена для дополнительной безопасности и отключается после успешной аутентификации для дополнительного уровня безопасности до следующего входа в систему.Обязательное сканирование QR-кода после каждого входа в систему для нового секрета.',
+    'two.factor.authentication.enabled.without.disabling' => 'Двухфакторная аутентификация в настоящее время включена для дополнительной безопасности и не отключается после успешной аутентификации.QR-код больше не будет виден для сканирования после входа в систему и настройки двухфакторной аутентификации.',
+    'two.factor.authentication.error' => 'Ошибка двухфакторной аутентификации',
+    'two.factor.authentication.form.verify.login' => 'Подтвердите вход',
+    'two.factor.authentication.invalid.backup.recovery.code' => 'Неверный 8-значный код восстановления резервной копии',
+    'two.factor.authentication.invalid.code.format' => 'Неверный формат кода.Введите 6-значный код из вашего приложения.',
+    'two.factor.authentication.invalid.totp.code' => 'Неверный 6-значный одноразовый код аутентификации',
+    'two.factor.authentication.missing.code.or.secret' => 'Отсутствует код аутентификации или секрет 2FA.',
+    'two.factor.authentication.new.recovery.code' => 'Пожалуйста, введите один из ваших неиспользованных кодов восстановления резервной копии (8 символов) ниже.',
+    'two.factor.authentication.new.six.digit.code' => 'Введите новый 6-значный код аутентификации (отличный от кода настройки) из вашего приложения.',
+    'two.factor.authentication.no.secret.generated' => 'Секрет не сгенерирован.Пожалуйста, перезапустите установку.',
+    'two.factor.authentication.qr.code.enter.manually' => 'Или введите этот код в приложение Android вручную:',
+    'two.factor.authentication.rate.limit.reached' => 'Достигнут лимит скорости.Подождите 10 секунд.',
+    'two.factor.authentication.scan' => 'Отсканируйте этот QR-код с помощью приложения Aegis:',
+    'two.factor.authentication.setup' => 'Настройте двухфакторную аутентификацию',
+    'type' => 'Тип',
+    'ubl.version.required.2.4' => 'Версия UBL должна быть 2.1, 2.2, 2.3 или 2.4.',
+    'unit' => 'Единица',
+    'unit.add' => 'Добавить единицу',
+    'unit.already.exists' => 'Подразделение уже существует!',
+    'unit.description.not.provided' => 'Описание не предоставлено',
+    'unit.edit' => 'Редактировать блок',
+    'unit.history' => 'Невозможно удалить.История существует.',
+    'unit.name' => 'Название блока',
+    'unit.name.plrl' => 'Название подразделения (множественное число)',
+    'unit.peppol' => 'Пеппол',
+    'unit.peppol.add' => 'Единица Peppol Добавить',
+    'unit.peppol.code' => 'Код Peppol блока',
+    'unit.peppol.edit' => 'Юнит Пеппол Редактировать',
+    'unit.peppol.index' => 'Индекс Peppol единицы',
+    'units' => 'Единицы',
+    'unknown' => 'Неизвестный',
+    'unpaid' => 'Неоплаченный',
+    'updatecheck' => 'Обновлениепроверить',
+    'updatecheck.failed' => 'Updatecheck не удалось! Проверьте сетевое подключение.',
+    'updates' => 'Обновления',
+    'updates.available' => 'Доступны обновления!',
+    'upload.date' => 'Дата загрузки',
+    'upload.description' => 'Описание',
+    'upload.filename.description' => 'Имя файла Описание',
+    'upload.filename.new' => 'Новое имя файла',
+    'upload.filename.original' => 'Исходное имя файла',
+    'upload.index' => 'Загрузить индекс',
+    'upload.plural' => 'Загрузки',
+    'upload.url.key' => 'URL-адрес ключа',
+    'url' => 'URL-адрес',
+    'use.system.language' => 'Использовать системный язык',
+    'user' => 'Пользователь',
+    'user.account' => 'Счет пользователя для выставления счета',
+    'user.account.clients' => 'Клиенты с учетными записями пользователей',
+    'user.accounts' => 'Счета пользователей счетов',
+    'user.all.clients' => 'Добавить всех клиентов',
+    'user.all.clients.text' => '* Если эта опция отмечена,пользователь сможет видеть всех клиентов,включая тех, которые будут добавлены позже.',
+    'user.api.list' => 'Пользователи с предварительным счетом - зарегистрированные пользователи',
+    'user.client.active.no' => 'У вас нет клиентов с активными учетными записями пользователей.Администраторы назначают клиентов зарегистрированным учетным записям пользователей.',
+    'user.client.count' => '#',
+    'user.client.delete.not' => 'Удалить невозможно! У клиента уже есть документы.',
+    'user.client.no.account' => 'У этого клиента нет связанной с ним учетной записи пользователя,поэтому этот документ не может быть создан.',
+    'user.clients.assigned.not' => 'У этого пользователя нет назначенных ему клиентов.',
+    'user.form' => 'Форма пользователя',
+    'user.iban' => 'IBAN',
+    'user.inv.active.not' => 'Учетная запись пользователя не активна',
+    'user.inv.delete.blocked.callback' => 'Пользователь с активными ролями RBAC получит ошибку 403 Forbidden при следующем вызове OAuth-обратного вызова на адрес /invoice. Сначала используйте функцию «Отменить все роли», а затем удалите их.',
+    'user.inv.delete.blocked.roles' => 'Невозможно удалить: пользователь по-прежнему имеет роли RBAC:',
+    'user.inv.list.limit' => 'Количество записей, перечисленных на странице (Примечание:переопределяет значение по умолчанию)',
+    'user.inv.more.than.one.assigned' => 'Создание счета не удалось:проверьте настройки .Учетная запись пользователя.Для этого клиента назначено более одного пользователя.',
+    'user.inv.rbac.link' => 'Ссылка RBAC',
+    'user.inv.rbac.link.stable' => 'Связь RBAC стабильна — роль назначена, строка моста присутствует.',
+    'user.inv.rbac.link.sync.confirm' => 'Назначить роль наблюдателя (если она отсутствует) и синхронизировать строку моста RBAC для этого пользователя?',
+    'user.inv.rbac.link.synced' => 'Синхронизация связи RBAC завершена — роль наблюдателя назначена, если она отсутствовала.',
+    'user.inv.refer.to' => 'Значение по умолчанию — 10 записей на страницу — можно изменить, нажав здесь.',
+    'user.inv.role.accountant' => 'Бухгалтер',
+    'user.inv.role.accountant.assigned' => 'Назначенная роль бухгалтера',
+    'user.inv.role.accountant.default' => 'Бухгалтер клиента по умолчанию может просматривать счета-фактуры, оплачивать счета-фактуры, просматривать оплаты счетов-фактур и редактировать оплаты счетов-фактур.',
+    'user.inv.role.administrator' => 'Администратор',
+    'user.inv.role.administrator.already.assigned' => 'Роль администратора уже назначена.',
+    'user.inv.role.administrator.assigned' => 'Роль администратора уже назначена.',
+    'user.inv.role.all.new' => 'Все новые пользователи по умолчанию принимают на себя роль наблюдателя,т.е.могут просматривать документацию, но не могут редактировать отправленную им документацию,т.е.наблюдать или просматривать документацию.',
+    'user.inv.role.observer' => 'Наблюдатель',
+    'user.inv.role.observer.assigned' => 'Назначена роль наблюдателя',
+    'user.inv.role.observer.assigned.already' => 'Роль наблюдателя уже назначена.',
+    'user.inv.role.revoke.all' => 'Отменить все роли',
+    'user.inv.role.warning.revoke.all' => 'Вы уверены, что хотите отозвать все роли?',
+    'user.inv.role.warning.role' => 'Вы уверены, что хотите принять эту роль?',
+    'user.inv.role.worker' => 'Рабочий',
+    'user.inv.role.worker.assign' => 'Назначать',
+    'user.inv.role.worker.assigned' => 'Назначенная роль работника',
+    'user.inv.role.worker.none.available' => 'Нет несвязанных записей о работниках — сначала добавьте одну запись в раздел «Работник».',
+    'user.inv.role.worker.unavailable' => 'Не удалось назначить — выбранный сотрудник уже связан с другим пользователем.',
+    'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' => 'Невозможно назначить администраторский тип раскрывающегося списка не администратору',
+    'user.inv.type.cannot.allocate.guest.type.to.administrator' => 'Невозможно назначить гостевой тип раскрывающегося списка администратору',
+    'user.signup.please' => 'Пожалуйста, зарегистрируйтесь!',
+    'user.subscriber.number' => 'Номер абонента',
+    'user.type' => 'Тип пользователя',
+    'username' => 'Имя пользователя',
+    'users' => 'Пользователи',
+    'utility.assets.clear' => 'Очистить кэш активов',
+    'validation.amount.positive' => 'Сумма должна быть больше нуля.',
+    'validation.client.email.format' => 'Адрес электронной почты клиента должен быть действительным.',
+    'validation.currency.supported' => 'Валюта {curency} не поддерживается',
+    'validation.invoice.date.invalid' => 'Пожалуйста, укажите действительную дату выставления счета.',
+    'validation.invoice.number.required' => 'Номер счета-фактуры обязателен.',
+    'validator.fail' => 'Невозможно обработать поле %s:%s',
+    'validator.invalid.login.password' => 'Неверный логин или пароль',
+    'validator.password.change' => 'Ваш пароль был изменен',
+    'validator.password.not.match' => 'Пароли не совпадают',
+    'validator.password.not.match.new' => 'Ваши новые пароли не совпадают',
+    'validator.password.reset' => 'Ваш пароль был сброшен',
+    'validator.user.exist' => 'Пользователь с таким логином уже существует',
+    'validator.user.exist.not' => 'Пользователь с таким логином не существует',
+    'value' => 'Ценить',
+    'values' => 'Ценности',
+    'values.with.taxes' => 'Стоимость с налогами',
+    'variant' => 'Вариант',
+    'vat' => 'НДС',
+    'vat.abbreviation' => 'НДС',
+    'vat.break.down' => 'Резюме по НДС',
+    'vat.id' => 'ИНН',
+    'vat.id.short' => 'НДС',
+    'vat.invoice' => 'СЧЕТ-ФАКТУРА НДС',
+    'vat.rate' => 'Ставка НДС',
+    'vat.reg.no' => 'VAT Reg No',
+    'vat.registered' => 'Зарегистрирован плательщиком НДС',
+    'vendor.nikic.fast-route' => 'Создание более быстрых маршрутов',
+    'verify.password' => 'Подтвердите пароль',
+    'version.history' => 'История версий',
+    'view' => 'Вид',
+    'view.all' => 'Просмотреть все',
+    'view.client' => 'Просмотреть клиента',
+    'view.clients' => 'Посмотреть клиентов',
+    'view.contact.form.body' => 'Тело',
+    'view.contact.form.email' => 'Электронная почта',
+    'view.contact.form.name' => 'Имя',
+    'view.contact.form.subject' => 'Предмет',
+    'view.invoices' => 'Просмотр счетов',
+    'view.payment.logs' => 'Просмотр журналов онлайн-платежей',
+    'view.payments' => 'Просмотр платежей',
+    'view.product.families' => 'Просмотреть семейства продуктов',
+    'view.product.units' => 'Просмотр единиц продукции',
+    'view.products' => 'Просмотреть продукты',
+    'view.projects' => 'Посмотреть проекты',
+    'view.quotes' => 'Посмотреть цитаты',
+    'view.recurring.invoices' => 'Просмотр повторяющихся счетов',
+    'view.tasks' => 'Просмотреть задачи',
+    'viewed' => 'Просмотрено',
+    'warning' => 'Предупреждение',
+    'web' => 'Веб',
+    'web.address' => 'Веб-адрес',
+    'webshop.currency.refresh.already.current' => 'Курс обмена валют уже актуален на сегодня.',
+    'webshop.currency.refresh.disabled' => 'Автоматическое обновление обменного курса отключено.',
+    'webshop.currency.refresh.failed' => 'Не удалось получить актуальный обменный курс — пожалуйста, попробуйте позже.',
+    'webshop.currency.refresh.updated' => 'Курс обмена валют обновлен.',
+    'welcome' => 'Добро пожаловать',
+    'whatsapp' => 'WhatsApp',
+    'whatsapp.business.cloud.api.access.token' => 'Постоянный токен доступа (от системного пользователя в настройках бизнеса)',
+    'whatsapp.business.cloud.api.business.account.id' => 'Идентификатор бизнес-аккаунта WhatsApp',
+    'whatsapp.business.cloud.api.enable' => 'Включить WhatsApp',
+    'whatsapp.business.cloud.api.enabled.not' => 'WhatsApp недоступен',
+    'whatsapp.business.cloud.api.general.purpose' => '<b>WhatsApp Business Cloud API отправляет клиентам уведомления о готовности счетов-фактур с помощью предварительно утвержденного шаблона сообщения, идентифицируемого по идентификатору номера телефона и токену доступа, указанным ниже.</b>',
+    'whatsapp.business.cloud.api.not.configured' => 'WhatsApp настроен не полностью (требуются идентификатор номера телефона, токен доступа и название шаблона).',
+    'whatsapp.business.cloud.api.phone.number.id' => 'Идентификатор номера телефона (из WhatsApp -&gt; Настройка API — не видимый номер телефона)',
+    'whatsapp.business.cloud.api.template.language' => 'Код языка шаблона сообщения (например, en_GB)',
+    'whatsapp.business.cloud.api.template.name' => 'Название утвержденного шаблона сообщения',
+    'whatsapp.business.cloud.api.test.message.sent' => 'Тестовое сообщение в WhatsApp отправлено.',
+    'whatsapp.business.cloud.api.test.message.sent.not' => 'Тестовое сообщение WhatsApp не отправлено.',
+    'whatsapp.business.cloud.api.test.recipient.not.set' => 'Номер получателя теста не указан.',
+    'whatsapp.business.cloud.api.test.recipient.number' => 'Номер получателя для тестирования (должен быть предварительно проверен в Meta, пока приложение находится в режиме разработки).',
+    'whatsapp.business.cloud.api.webhook.current.status' => '<b>Текущее использование:</b> Реализовано подтверждение GET-запроса для сохранения подписки на веб-хук в панели управления Meta. Входящие POST-события (статусы доставки, ответы) только регистрируются — они пока не обрабатываются, как и веб-хук Telegram сегодня.',
+    'whatsapp.business.cloud.api.webhook.future.use' => '<b>Перспективы:</b> Обработка входящих событий может включать автоматическую запись статуса доставки/прочтения или обработку ответов клиентов.',
+    'whatsapp.business.cloud.api.webhook.url.this.site' => 'URL веб-хука WhatsApp для этого сайта — введите его, а также указанный ниже токен подтверждения, в разделе WhatsApp &gt; Конфигурация &gt; Веб-хуки на панели управления Meta.',
+    'whatsapp.business.cloud.api.webhook.verify.token' => 'Токен подтверждения веб-хука (значение, которое вы выбираете; вводится на панели управления Meta и отображается в процессе подтверждения соединения).',
+    'worker' => 'Рабочий',
+    'worker.assign' => 'Назначать',
+    'worker.assigned' => 'Назначенный работник',
+    'worker.firstname' => 'Имя',
+    'worker.lastname' => 'Фамилия',
+    'worker.linked.login' => 'Связанный вход',
+    'worker.unassigned' => 'Не назначено',
+    'workers' => 'Рабочие',
+    'wrong.passwordreset.token' => 'Не найден пользователь для предоставленного токена сброса.Если вы считаете, что это ошибка, обратитесь к администратору.',
+    'year' => 'Год',
+    'year.prefix' => 'Префикс года',
+    'years' => 'Годы',
+    'yes' => 'Да',
+    'zip' => 'Почтовый индекс',
+    'zip.code' => 'Почтовый индекс',
 ];
-

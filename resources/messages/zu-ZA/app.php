@@ -3,2946 +3,2296 @@
 declare(strict_types=1);
 
 return [
-'account.information' => 'Ulwazi lwe-akhawunti',
-'active' => 'Iyasebenza',
-'add' => 'Engeza',
-'add.invoice' => 'Engeza i-invoyisi',
-'add.client' => 'Engeza iklayenti',
-'add.family' => 'Engeza Umndeni',
-'add.files' => 'Engeza Amafayela...',
-'add.invoice.tax' => 'Engeza intela ye-invoyisi',
-'add.new.row' => 'Engeza umugqa omusha',
-'add.note' => 'Engeza Inothi',
-'add.notes' => 'Engeza Amanothi',
-'add.payment.provider' => 'Engeza Umhlinzeki Wenkokhelo',
-'add.product' => 'Engeza umkhiqizo',
-'add.quote' => 'Engeza i-Quote',
-'add.quote.tax' => 'Engeza I-Quote Tax',
-'add.task' => 'Engeza umsebenzi',
-'add.unit' => 'Engeza Iyunithi',
-'address' => 'Ikheli',
-'administrator' => 'Umlawuli',
-'after.amount' => 'Ngemva Kwenani',
-'after.amount.space' => 'Ngemva kwesamba esinesikhala esinganqamuki',
-'aging' => 'Ukuguga kwe-invoyisi',
-'aging.1.15' => '1 - 15 Izinsuku',
-'aging.16.30' => 'Izinsuku eziyi-16-30',
-'aging.above.30' => 'Ngaphezu kwezinsuku ezingu-30',
-'alert.no.client.assigned' => 'Alikho iklayenti elinikezwe le phrojekthi.',
-'alert.no.tasks.found' => 'Ayikho imisebenzi etholakele yale phrojekthi.',
-'alert.task.delete' => 'Isexwayiso! Ufuna ukususa umsebenzi osetshenziswe '
-	. 'ukwenza i-invoyisi.',
-'all' => 'Konke',
-'allowance.or.charge' => 'Isibonelelo noma Imali',
-'allowance.or.charge.add' => 'Ileveli Yedokhumenti (okungukuthi.'
-	. 'HHAYI ileveli Yolayini We-invoyisi) Imvume '
-	. 'noma Inkokhelo Yengeza',
-'allowance.or.charge.allowance' => 'Isibonelelo',
-'allowance.or.charge.allowance.vat' =>
-	'I-VAT yesibonelelo',
-'allowance.or.charge.amount' =>
-    'Inani Lenkokhelo Yesibonelelo (Inombolo Ye-Multiplier '
-	. 'Factor Njengephesenti iphindaphindwe Ngenani Lesisekelo)',
-'allowance.or.charge.base.amount' =>
-	'Inani lesisekelo',
-'allowance.or.charge.charge' => 'Shaja',
-'allowance.or.charge.charge.vat' =>
-	'Vat on charge',
-'allowance.or.charge.edit.allowance' =>
-	'Ileveli Yedokhumenti (okungukuthi.'
-	. 'HHAYI ileveli Yolayini Werisidi) Imvume '
-	. 'Hlela',
-'allowance.or.charge.edit.charge' =>
-	'Ileveli Yedokhumenti (okungukuthi.'
-	. 'AKUYONA ileveli Yolayini We-invoyisi) Hlela '
-	. 'Hlela',
-'allowance.or.charge.index' => 'Inkomba Yemvume noma Izindleko ezihlobene '
-	. 'nento yomugqa',
-'allowance.or.charge.inv' => 'Imvume ye-invoyisi noma inkokhiso',
-'allowance.or.charge.item' => 'Imvume Yento Ye-invoyisi noma Imali',
-'allowance.or.charge.item.add' =>
-	'Isibonelelo/Inkokhelo Engeza',
-'allowance.or.charge.multiplier.factor.numeric' =>
-	'I-Multiplier Factor Numeric',
-'allowance.or.charge.reason' => 'Isizathu',
-'allowance.or.charge.reason.code' =>
-	'Ikhodi yesizathu',
-'already.paid' => 'Le invoyisi yayisivele ikhokhiwe.',
-'amount' => 'Inani Lento Ye-invoyisi',
-'amount.add' => 'Inani Lento Ye-invoyisi Engeza',
-'amount.due' => 'Inani Elifunekayo',
-'amount.no' => 'Alikho inani le-invoyisi',
-'amount.settings' => 'Inani Izilungiselelo',
-'amounts' => 'Amanani we-invoyisi',
-'any.family' => 'Noma yimuphi umndeni',
-'apply.after.item.tax' => 'Faka isicelo Ngemva Kwentela Yento',
-'apply.before.item.tax' => 'Faka isicelo Ngaphambi Kwentela Yento',
-'approve' => 'Gunyaza',
-'approve.this.quote' => 'Vuma Lesi Sicaphuno',
-'approved' => 'Kuvunyelwe',
-'archive' => 'Faka kungobo yomlando i-pdf kokuthi '
-	. 'Okulayishiwe/Kungobo yomlando',
-'assign.client' => 'Yabela Iklayenti',
-'assign.client.on.signup' => 'Yabela iklayenti kumsebenzisi lapho ubhalisa.',
-'assign.client.on.signup.default.age.minimum.eighteen' =>
-	'Nikeza iklayenti elineminyaka yobudala eyisisekelo '
-	. 'eyishumi nesishiyagalombili kumsebenzisi lapho libhalisa.',
-'assign.client.on.signup.done' =>
-	'Yabelwe iklayenti kumsebenzisi lapho ibhalisa.',
-'assigned.clients' => 'Amaklayenti Abelwe',
-'attachment.list' => 'Uhlu Olunamathiselwe',
-'attachments' => 'Okunamathiselwe',
-'automatic.email.on.recur' =>
-    'Thumela i-imeyili ngokuzenzakalelayo ama-invoyisi avelayo',
-'back' => 'Emuva',
-'balance' => 'Ibhalansi',
-'balance.does.not.equal.zero' =>
-	'Ibhalansi ayilingani uziro.'
-	. 'Isimo Sikhokhiwe =&gt; Ibhalansi kufanele '
-	. 'ibe nguziro.',
-'base.invoice' => 'I-invoyisi eyisisekelo',
-'bcc' => 'BCC',
-'bcc.mails.to.admin' => 'Thumela wonke ama-imeyili aphumayo njenge-BCC '
-	. 'ku-akhawunti yomqondisi',
-'bcc.mails.to.admin.hint' =>
-	'I-akhawunti yomqondisi yi-akhawunti edalwe ngenkathi '
-	. 'kufakwa i-InvoicePlane.',
-'before.amount' => 'Ngaphambi Kwenani',
-'bill.to' => 'Ibhile ku',
-'birthdate' => 'Usuku lokuzalwa',
-'body' => 'Umzimba',
-'boolean' => 'I-Boolean',
-'bootstrap5' => 'I-Bootstrap 5',
-'bootstrap5.alert.close.button.font.size' =>
-	'Isexwayiso Vala Usayizi Wefonti Yenkinobho',
-'bootstrap5.alert.message.font' => 'Ifonti Yomlayezo Wokuxwayisa',
-'bootstrap5.alert.message.font.size' =>
-	'Usayizi Wefonti Yesaziso',
-'bootstrap5.layout.invoice.navbar.font' =>
-	'Isakhiwo Sefonti ye-invoyisi ye-Navbar',
-'bootstrap5.layout.invoice.navbar.font.size' =>
-	'Usayizi Wefonti Ye-invoyisi Ye-invoyisi',
-'bootstrap5.offcanvas.enable' => 'Nika amandla i-Offcanvas',
-'bootstrap5.offcanvas.placement' => 'Ukubekwa kwe-Offcanvas isb phezulu, phansi,'
-	. 'qala okungukuthi kwesokunxele, gcina okungukuthi '
-	. 'kwesokudla',
-'breadcrumb.product.index' => 'Inkomba Yomkhiqizo',
-'breadcrumb.product.property.index' => 'Inkomba Yempahla Yomkhiqizo',
-'calculate.discounts' => 'Bala Izaphulelo',
-'calendar.day.1' => 'Usuku olu-1',
-'calendar.day.15' => 'Izinsuku ezingu-15',
-'calendar.day.2' => '2 Izinsuku',
-'calendar.day.3' => '3 Izinsuku',
-'calendar.day.30' => 'Izinsuku ezingama-30',
-'calendar.day.4' => 'Izinsuku ezi-4',
-'calendar.day.5' => 'Izinsuku ezi-5',
-'calendar.day.6' => '6 Izinsuku',
-'calendar.month.1' => 'Inyanga engu-1',
-'calendar.month.10' => 'Izinyanga eziyi-10',
-'calendar.month.11' => 'Izinyanga eziyi-11',
-'calendar.month.2' => 'Izinyanga ezi-2',
-'calendar.month.3' => 'Izinyanga ezi-3',
-'calendar.month.4' => 'Izinyanga ezi-4',
-'calendar.month.5' => 'Izinyanga ezi-5',
-'calendar.month.6' => '6 Izinyanga',
-'calendar.month.7' => '7 Izinyanga',
-'calendar.month.8' => '8 Izinyanga',
-'calendar.month.9' => 'Izinyanga ezingu-9',
-'calendar.week.1' => 'Iviki elingu-1',
-'calendar.week.2' => '2 Amaviki',
-'calendar.week.3' => '3 Amasonto',
-'calendar.week.4' => '4 Amasonto',
-'calendar.year.1' => '1 Unyaka',
-'calendar.year.2' => 'iminyaka engu-2',
-'calendar.year.3' => '3 Iminyaka',
-'calendar.year.4' => 'Iminyaka emi-4',
-'calendar.year.5' => '5 Iminyaka',
-'can.be.changed' => 'Ingashintshwa',
-'cancel' => 'Khansela',
-'canceled' => 'Kukhanseliwe',
-'case.date' => 'Idethi Yecala',
-'case.number' => 'Inombolo yecala',
-'cash.discount' => 'Isaphulelo Semali',
-'category.primary' => 'Isigaba Esiyinhloko',
-'category.secondary' => 'Isigaba Sesibili',
-'caution.delete.invoices' => 'Ukuhlola Kuphela:'
-	. 'Susa wonke ama-invoyisi namarekhodi ahlobene.'
-	. '(Bona umsebenzi we-inv/flush)',
-'caution.deleted.invoices' => 'Ukuhlola Kuphela:'
-	. 'Wonke ama-invoyisi nezinkambu ezihlobene zisusiwe.',
-'cc' => 'CC',
-'change.client' => 'Shintsha iKlayenti',
-'change.password' => 'SHINTSHA iphasiwedi',
-'checking.for.news' => 'Ihlola Izindaba...',
-'checking.for.updates' => 'Ihlola Izibuyekezo...',
-'city' => 'Idolobha',
-'claim' => 'Uqale Isimangalo Esisemthethweni',
-'cldr' => 'phakathi',
-'client' => 'Iklayenti',
-'client.access' => 'Ukufinyelela Kweklayenti',
-'client.add' => 'Engeza iklayenti',
-'client.age' => 'Ubudala',
-'client.age.hint' => 'Le nkambu iyadingeka futhi iklayenti '
-	. 'kufanele okungenani libe neminyaka eyi-16 '
-	. 'ngokomthetho',
-'client.already.exists' => 'Iklayenti selivele likhona!',
-'client.birthdate.hint' => 'Uma usuku lokuzalwa lungaziwa, faka '
-	. '01/01/1901',
-'client.building.number' => 'Inombolo Yokwakha Yekhasimende',
-'client.contract.period.end' => 'Ukuphela Kwenkathi',
-'client.contract.period.start' => 'Isikhathi sokuqala',
-'client.contract.reference' => 'Inkomba Yenkontileka',
-'client.custom' => 'Umkhuba Wekhasimende',
-'client.custom.add' => 'Engeza Ngokwezifiso Iklayenti',
-'client.delete.history.exits.no' =>
-	'Ayikwazi ukususa.'
-	. 'Umlando Weklayenti ukhona.',
-'client.detail.changes' => 'Sicela usithumele i-imeyili uma le '
-	. 'mininingwane ishintsha.',
-'client.error.summary' => 'Isifinyezo sephutha',
-'client.form' => 'Ifomu Leklayenti',
-'client.frequency' => 'Imvamisa Yeklayenti',
-'client.group' => 'Iqembu Leklayenti',
-'client.has.not.assigned' => 'Lawa maklayenti awazange anikezwe i-akhawunti '
-	. 'yomsebenzisi.'
-	. 'Iklayenti elilodwa noma ngaphezulu nge-akhawunti '
-	. 'ngayinye yomsebenzisi.',
-'client.has.not.user.account' =>
-	'Leli klayenti alinayo i-akhawunti yomsebenzisi '
-	. 'noma alinikezwanga umsebenzisi okwamanje.'
-	. '1.'
-	. 'Qinisekisa ukuthi Iklayenti Libhalisiwe okungukuthi '
-	. 'line-akhawunti yomsebenzisi noma yabela leli '
-	. 'klayenti kumsebenzisi obhalisiwe njengamanje.'
-	. '2.'
-	. 'Izilungiselelo .'
-	. 'I-akhawunti Yomsebenzisi I-invoyisi .'
-	. 'Engeza I-akhawunti Yomsebenzisi 3.'
-	. 'Yabela leli klayenti ku-akhawunti yomsebenzisi '
-	. '4.'
-	. 'Ama-invoyisi kanye nezilinganiso ngeke zikwazi '
-	. 'ukudalelwa leli klayenti kulesi simo '
-	. 'samanje.',
-'client.has.user.account' => 'I-akhawunti yomsebenzisi',
-'client.import.list.blank' => 'Uhlu Lokungenisa Kwekhasimende Alulutho',
-'client.name' => 'Igama Leklayenti',
-'client.not.allocated.to.user' =>
-	'Iklayenti alabelwe umsebenzisi',
-'client.note' => 'Inothi Leklayenti',
-'client.note.add' => 'Inothi Leklayenti Engeza',
-'client.note.date' => 'Usuku Lweklayenti',
-'client.note.view' => 'Ukubuka Inothi Leklayenti',
-'client.notes' => 'Amanothi Eklayenti',
-'client.number' => 'Inombolo Yeklayenti',
-'client.peppol' => 'Imininingwane ye-Peppol yeklayenti',
-'client.peppol.accounting.cost' =>
-    'Ikhodi Yezindleko Zokubalwa Kwekhasimende Yokugcinwa '
-	. 'Kwamabhuku',
-'client.peppol.add' => 'Engeza imininingwane ye-Peppol ye-e-invoicing',
-'client.peppol.buyer.reference.default' =>
-	'Ireferensi yomthengi:'
-	. 'Uma kungekho Umuntu Wokuthintana naye '
-	. 'Wokuthenga I-oda Lokuthenga Kweklayenti oshiwo '
-	. 'iklayenti, lesi yisithenjwa somthengi esizenzakalelayo '
-	. 'noma Uku-oda komuntu.',
-'client.peppol.buyer.reference.example' =>
-	'isib.'
-	. 'igama lomuntu ojwayele uku-oda, inombolo '
-	. 'yesisebenzi yomuntu ojwayele uku-oda noma '
-	. 'ikhodi ekhomba lo muntu noma '
-	. 'umnyango/iqembu',
-'client.peppol.clientpeppols.form' =>
-    'Ifomu leKlayenti Lezimali/Iqembu Lekhasimende',
-'client.peppol.edit' => 'Hlela imininingwane ye-Peppol ye-e-invoicing',
-'client.peppol.endpointid' => 'I-ID Yephoyinti Lokugcina:'
-	. 'Ikheli le-imeyili',
-'client.peppol.endpointid.schemeid' => 'I-ID Yephuzu Lokugcina - i-schemeID '
-	. 'esekelwe ku-EAS (I-Electonric Address Scheme) '
-	. 'amadijithi angu-4 amakhodi, isb.'
-	. '0192',
-'client.peppol.financial.institution.branchid' =>
-	'I-Id Yegatsha Lesikhungo Sezezimali',
-'client.peppol.identificationid' => 'I-ID yokuhlonza',
-'client.peppol.identificationid.schemeid' => 'I-ID yokuhlonza - schemeID',
-'client.peppol.legal.entity.company.legal.form' =>
-	'Ifomu Lezomthetho Lenkampani Yebhizinisi - '
-	. 'Ulwazi Lomthetho Olwengeziwe oluphathelene noMdayisi '
-	. 'isb.'
-	. 'Yabelana Ngemali Enkulu',
-'client.peppol.legal.entity.companyid' =>
-	'I-ID Yenkampani Yebhizinisi Esemthethweni',
-'client.peppol.legal.entity.companyid.schemeid' =>
-	'I-ID Yenkampani Yebhizinisi Elisemthethweni - '
-	. 'i-ID yesikimu',
-'client.peppol.legal.entity.registration.name' =>
-	'Igama Lokubhaliswa Kwenhlangano Esemthethweni',
-'client.peppol.not.found' =>
-    'Iklayenti noma ikhasimende alikayilungisi imininingwane '
-	. 'yalo yakwa-Peppol.',
-'client.peppol.not.found.accounting.cost' =>
-	'Ayitholakali:'
-	. 'Izindleko Zokubalwa Kwezimali noma inani '
-	. 'lombhalo elicacisa ukuthi ingabhukha kuphi '
-	. 'idatha efanelekile kuma-akhawunti ezezimali Abathengi.',
-'client.peppol.not.found.delivery.location' =>
-	'Indawo yokulethwa Igama lezwe alitholakali',
-'client.peppol.not.found.id' =>
-	'Iklayenti alikayigcwalisi i-akhawunti yalo ye-akhawunti '
-	. 'ngaphansi kwemininingwane yeklayenti lalo le-Peppol '
-	. 'ku-inthanethi.',
-'client.peppol.not.found.id.supplier.assigned' =>
-	'I-Id Ye-akhawunti Yabelwe Umhlinzeki Wekhasimende '
-	. 'Ka-Peppol Ayitholakalanga',
-'client.peppol.not.found.invoice' =>
-	'Ayikho I-invoyisi Exhunyiwe Etholiwe',
-'client.peppol.not.found.purchase.order' =>
-	'I-Oda Yokuthengisa ayinayo Inombolo Ye-oda '
-	. 'Lokuthenga ehlotshaniswa nayo',
-'client.peppol.not.found.purchase.order.item.number' =>
-	'Into Yomugqa We-oda Lokuthengisa ayinayo '
-	. 'Inombolo Yesibonakaliso Yento Yomugqa Wokuthenga '
-	. 'ofanayo (I-Buyers Into Identification) ehlotshaniswa '
-	. 'nayo.'
-	. 'Umlawuli:'
-	. 'Hlela Inombolo Yento Yokuthengiswa Kwe-invoyisi.',
-'client.peppol.not.found.purchase.order.line.number' =>
-	'Inombolo Yomugqa We-oda Lokuthengisa ayinayo '
-	. 'Inombolo Yomugqa We-oda Lokuthenga (i-OrderLineReference '
-	. 'LineID) ehlotshaniswa nayo.'
-	. 'Umlawuli:'
-	. 'Hlela Inombolo Yomugqa Woku-oda Kwe-invoyisi.',
-'client.peppol.not.found.sales.order' =>
-	'I-Sales Order ayikho',
-'client.peppol.payee.financial.account.name' =>
-	'Igama le-Akhawunti Yezimali Yokhokhelwayo',
-'client.peppol.payee.financial.accountid' =>
-	'I-ID Ye-akhawunti Yezimali Yokhokhelwayo',
-'client.peppol.record.updated.successfully' =>
-	'Irekhodi le-Peppol libuyekezwe ngempumelelo',
-'client.peppol.supplier.assigned.account.id' =>
-	'I-Id Ye-akhawunti Yabelwe Umhlinzeki',
-'client.peppol.taxschemecompanyid' => 'I-ID Yenkampani Yohlelo Lwentela',
-'client.peppol.taxschemeid' => 'I-ID Yohlelo Lwentela',
-'client.postaladdress' => 'Ikheli Leposi',
-'client.postaladdress.add' => 'Engeza Ikheli Leposi Leklayenti',
-'client.postaladdress.additional.street.name' =>
-	'Igama Lomgwaqo Engeziwe',
-'client.postaladdress.available' => 'Amakheli Eposi Atholakalayo',
-'client.postaladdress.building.number' => 'Inombolo Yesakhiwo',
-'client.postaladdress.city.name' => 'Igama Ledolobha',
-'client.postaladdress.country' => 'Izwe',
-'client.postaladdress.countrysubentity' => 'I-Country Sub Entity',
-'client.postaladdress.none' => 'Iklayenti alinalo ikheli leposi',
-'client.postaladdress.postalzone' => 'Indawo yeposi',
-'client.postaladdress.street.name' => 'Igama lomgwaqo',
-'client.purchase.order.number' => 'Inombolo Ye-oda Lokuthenga Kwekhasimende',
-'client.streets' => 'Imigwaqo',
-'client.surname' => 'Isibongo Seklayenti',
-'client.surname.optional' => 'Isibongo Seklayenti (Ongakukhetha)',
-'client.title' => 'Isihloko Seklayenti (Mnu/Mrs/Miss/Dr/Prof)',
-'client.title.doctor' => 'UDkt',
-'client.title.miss' => 'Nkosazana',
-'client.title.mr' => 'UMnu',
-'client.title.mrs' => 'UNksz',
-'client.title.professor' => 'USolwazi',
-'client.view' => 'Ukubuka Kweklayenti',
-'clients' => 'Amaklayenti',
-'close' => 'Vala',
-'closed' => 'Kuvaliwe',
-'column' => 'Ikholomu',
-'common.date.created' => 'Idethi eyakhiwe ngayo',
-'common.date.modified' => 'Idethi Yokulungiswa',
-'common.name' => 'Igama',
-'company' => 'Inkampani',
-'company.deleted' => 'Inkampani isusiwe',
-'company.not.deleted' => 'Inkampani ayisusiwe ngoba unephrofayela yenkampani '
-	. 'enamathiselwe kuyo.',
-'company.private' => 'Inkampani Eyimfihlo',
-'company.private.logo' => 'Ilogo Yenkampani',
-'company.private.logo.height' => 'Ukuphakama Kwelogo',
-'company.private.logo.margin' => 'I-Logo Margin',
-'company.private.logo.width' => 'Ububanzi Belogo',
-'company.private.logo.will.be.removed.from.uploads.and.public.folder' =>
-	'Ilogo izosuswa kokulayishiwe nakufolda yomphakathi',
-'company.public' => 'Inkampani Esesidlangalaleni',
-'complete' => 'Qedela',
-'confirm' => 'Qinisekisa',
-'confirm.deletion' => 'Qinisekisa ukususwa',
-'contact.information' => 'Ulwazi lokuxhumana',
-'continue' => 'Qhubeka',
-'continue.with.developer.sandbox.hmrc' =>
-	'Qhubeka ne-Developer Gov Sandbox UK',
-'continue.with.facebook' => 'Qhubeka noFacebook',
-'continue.with.github' => 'Qhubeka nge-Github',
-'continue.with.google' => 'Qhubeka nge-Google',
-'continue.with.govuk' => 'Qhubeka noGov Uk',
-'continue.with.linkedin' => 'Qhubeka nge-LinkedIn',
-'continue.with.microsoftonline' => 'Qhubeka nge-MicrosoftOnline',
-'continue.with.vkontakte' => 'Qhubeka nge-VKontakte',
-'continue.with.x' => 'Qhubeka ngo-X',
-'continue.with.yandex' => 'Qhubeka ne-Yandex',
-'contract' => 'Inkontileka',
-'contract.add' => 'Engeza Inkontileka',
-'contract.contracts' => 'Izinkontileka',
-'contract.create' => 'Dala Izinkontileka zakho nge.'
-	. 'I-invoyisi.'
-	. 'Buka.'
-	. 'Izinketho.'
-	. 'Hlela.'
-	. 'Inkontileka izodalelwa iklayenti elenziwa kulo '
-	. 'I-invoyisi.'
-	. 'Xhuma le nkontileka kuma-invoyisi esikhathi '
-	. 'esizayo.',
-'contract.index.button.list' => 'Ama-invoyisi',
-'contract.name' => 'Igama',
-'contract.none' => 'Isikhumbuzi:'
-	. 'Asikho Inkontileka esethiwe yale invoyisi',
-'contract.period.end' => 'Ukuphela Kwenkathi',
-'contract.period.start' => 'Isikhathi sokuqala',
-'contract.reference' => 'Ireferensi',
-'contracts' => 'Izinkontileka',
-'copy.invoice' => 'Kopisha I-invoyisi',
-'copy.quote' => 'Kopisha Ingcaphuno',
-'count' => 'Ukubalwa kwe-invoyisi',
-'country' => 'Izwe',
-'create' => 'Dala',
-'create.credit.invoice' => 'Dala i-invoyisi yesikweletu',
-'create.credit.invoice.alert' =>
-    'Ukudala i-invoyisi yekhredithi kuzokwenza i-invoyisi '
-	. 'yamanje <em>ifundeke kuphela</em> okusho ukuthi '
-	. 'ngeke usakwazi ukuhlela i-invoyisi.'
-	. 'I-invoyisi yekhredithi izoqukatha isimo samanje '
-	. 'nazo zonke izinto kodwa ngamanani '
-	. 'angesihle namabhalansi.',
-'create.invoice' => 'Dala i-invoyisi',
-'create.product' => 'Dala umkhiqizo',
-'create.project' => 'Dala Iphrojekthi',
-'create.quote' => 'Dala i-Quote',
-'create.recurring' => 'Dala Okuphindaphindayo',
-'create.task' => 'Dala Umsebenzi',
-'created' => 'Kwakhiwe',
-'creation.unsuccessful' => 'Ukwakhiwa Kwerisidi Akuphumelelanga',
-'credit.invoice' => 'I-invoyisi Yesikweletu',
-'credit.invoice.date' => 'Idethi ye-invoyisi yekhredithi',
-'credit.invoice.details' => 'Imininingwane ye-invoyisi yekhredithi',
-'credit.invoice.for.invoice' => 'Incwadi yesikweletu',
-'credit.note.creation.successful' => 'Ukudalwa Kwenothi Lesikweletu Kuphumelele',
-'credit.note.creation.unsuccessful' => 'I-Credit Note noma I-Credit Memo '
-	. 'Creation, ukukhansela i-invoyisi, akuphumelelanga',
-'creditcard.cvv' => 'I-CVV / CSC',
-'creditcard.details' => 'Imininingwane yekhadi lesikweletu',
-'creditcard.expiry.month' => 'Inyanga yokuphelelwa yisikhathi',
-'creditcard.expiry.year' => 'Unyaka Wokuphelelwa yisikhathi',
-'creditcard.number' => 'Inombolo Yekhadi Lesikweletu',
-'cron.key' => 'Ukhiye we-CRON',
-'curl.store.cove.api.get.legal.entity.id.successful' =>
-	'Thola Ibhizinisi Elisemthethweni Impumelelo',
-'curl.store.cove.api.setup.legal.entity.successful' =>
-	'I-Store Cove Setup Call Api '
-	. '- Ibhizinisi Elisemthethweni Liphumelele',
-'curl.store.cove.api.setup.successful' =>
-	'I-Store Cove Setup Api Call '
-	. 'Iphumelele',
-'currency' => 'Imali',
-'currency.code' => 'Ikhodi yemali',
-'currency.symbol' => 'Uphawu Lwemali',
-'currency.symbol.placement' => 'Ukubekwa Kophawu Lwemali',
-'current.day' => 'Usuku lwamanje',
-'current.month' => 'Inyanga yamanje',
-'current.version' => 'Inguqulo Yamanje',
-'current.year' => 'Unyaka wamanje',
-'current.yy' => 'Unyaka wamanje (ifomethi enamadijithi angu-2)',
-'custom' => 'I-invoyisi Custom',
-'custom.field' => 'Inkambu Yangokwezifiso',
-'custom.field.add' => 'Inkambu Yangokwezifiso Engeza',
-'custom.field.form' => 'Ifomu Lenkambu Yangokwezifiso',
-'custom.field.location' => 'Isikhundla Sombhalo',
-'custom.field.number' => 'Inombolo',
-'custom.field.required' => 'Kudingeka',
-'custom.fields' => 'Izinkambu Ngokwezifiso',
-'custom.invoice.add' => 'Engeza i-invoyisi yangokwezifiso',
-'custom.title' => 'Isihloko Ngokwezifiso',
-'custom.value' => 'Inani Ngokwezifiso',
-'custom.value.delete' => 'Susa Inani Ngokwezifiso Kuqala',
-'custom.value.new' => 'Inani Ngokwezifiso Lisha',
-'custom.values' => 'Amanani Ngokwezifiso',
-'custom.values.edit' => 'Hlela Inani Ngokwezifiso',
-'custom.values.new' => 'Ivelu Yangokwezifiso Entsha',
-'dashboard' => 'Ideshibhodi',
-'database' => 'Isizindalwazi',
-'database.properly.configured' => 'Isizindalwazi simiswe kahle',
-'date' => 'Idethi ye-invoyisi',
-'date.actual.delivery' => 'Usuku Lokulethwa Kwangempela',
-'date.applied' => 'Usuku Lokusebenza',
-'date.created' => 'Idethi eyakhiwe ngayo',
-'date.format' => 'Ifomethi Yosuku',
-'date.issued' => 'Idethi Yokukhishwa / Okudalwe ngayo',
-'date.supplied' => 'Idethi enikeziwe',
-'dates' => 'Izinsuku ze-invoyisi',
-'datetime.immutable.date.created' => 'Dala',
-'datetime.immutable.date.created.mySql.format.year.month.filter' =>
-	'Ym',
-'datetime.immutable.date.modified' => 'Against',
-'datetime.immutable.time.created' => 'Isikhathi',
-'days' => 'Izinsuku',
-'debug' => 'Imodi yokususa iphutha ivuliwe',
-'decimal.point' => 'Iphuzu ledesimali',
-'default' => 'Okuzenzakalelayo',
-'default.country' => 'Izwe elizenzakalelayo',
-'default.email.template' => 'Isifanekiso Se-imeyili Esizenzakalelayo',
-'default.hourly.rate' => 'Isilinganiso sehora esizenzakalelayo',
-'default.invoice.group' => 'Iqembu le-invoyisi elizenzakalelayo',
-'default.invoice.tax.rate' => 'Isilinganiso Sentela Ye-invoyisi Ezenzakalelayo',
-'default.invoice.tax.rate.placement' =>
-	'Ukubekwa Kwesilinganiso Sentela Ye-invoyisi Okuzenzakalelayo',
-'default.item.tax.rate' => 'Isilinganiso Sentela Yento Ezenzakalelayo',
-'default.list.limit' => 'Inani Lezinto Ezisohlwini',
-'default.notes' => 'Amanothi Okuzenzakalelayo',
-'default.payment.method' => 'Indlela Yokukhokha Ezenzakalelayo',
-'default.pdf.template' => 'Okuzenzakalelayo Isifanekiso se-PDF',
-'default.public.template' => 'Isifanekiso Somphakathi Esizenzakalelayo',
-'default.quote.group' => 'Iqembu Lengcaphuno Elizenzakalelayo',
-'default.terms' => 'Imigomo ezenzakalelayo',
-'delete' => 'Susa',
-'delete.attachment.warning' => 'Uqinisekile ukuthi ufuna ukususa lesi '
-	. 'sinanyathiselwa?',
-'delete.client' => 'Susa Iklayenti',
-'delete.client.warning' => 'Uma ususa leli klayenti uzosusa '
-	. 'nanoma yimaphi ama-invoyisi, izingcaphuno nezinkokhelo '
-	. 'ezihlobene naleli klayenti.'
-	. 'Uqinisekile ukuthi ufuna ukususa unomphela '
-	. 'leli klayenti?',
-'delete.invoice' => 'Susa i-invoyisi',
-'delete.invoice.warning' => 'Uma ususa le invoyisi ngeke '
-	. 'ukwazi ukuyibuyisela emuva kwesikhathi.'
-	. 'Uqinisekile ukuthi ufuna ukususa unomphela '
-	. 'le-invoyisi?',
-'delete.quote' => 'Susa I-Quote',
-'delete.quote.warning' => 'Uma ususa lesi sicaphuni ngeke '
-	. 'ukwazi ukusibuyisela emuva kwesikhathi.'
-	. 'Uqinisekile ukuthi ufuna ukususa unomphela '
-	. 'lesi sisho?',
-'delete.record.warning' => 'Uqinisekile ukuthi ufuna ukususa leli '
-	. 'rekhodi?',
-'delete.sent' => 'Ayikwazi ukususa - i-invoyisi ithunyelwe',
-'delete.tax.warning' => 'Uqinisekile ukuthi ufuna ukususa le '
-	. 'ntela?',
-'delete.user.client.warning' => 'Uqinisekile ukuthi ufisa ukunganikezi leli '
-	. 'klayenti kulo msebenzisi?',
-'deleted' => 'Kususiwe',
-'deletion.forbidden' => 'Ukususa ama-invoyisi akuvunyelwe.'
-	. 'Sicela uthinte umlawuli noma ubheke '
-	. 'amadokhumenti.',
-'delivery' => 'Imininingwane Yokulethwa:'
-	. 'I-invoyisi/Inkathi Yokulethwa Izinsuku Zokuqala/ Zokuphela',
-'delivery.actual.delivery.date' => 'Idethi Yangempela Yokulethwa',
-'delivery.add' => 'Engeza ukulethwa',
-'delivery.date.created' => 'Idethi eyakhiwe ngayo',
-'delivery.date.modified' => 'Idethi Yokulethwa Okulungisiwe',
-'delivery.end.date' => 'Usuku Lokuphela Lokulethwa/Isikhathi Se-invoyisi',
-'delivery.location' => 'Indawo yokulethwa',
-'delivery.location.add' => 'Indawo yokulethwa Engeza',
-'delivery.location.add.in.invoice' =>
-	'Engeza indawo yokulethwa ngaphansi kwe-invoyisi '
-	. '.'
-	. 'Buka .'
-	. 'Izinketho .'
-	. 'Hlela',
-'delivery.location.building.number' => 'Inombolo Yesakhiwo',
-'delivery.location.client' => 'Izindawo Zokudiliva zeKlayenti',
-'delivery.location.delete' => 'Indawo yokulethwa Susa',
-'delivery.location.edit' => 'Ukudiliva Indawo Hlela',
-'delivery.location.electronic.address.scheme' =>
-	'I-Electronic Address Scheme (Uhlu Lwekhodi) '
-	. 'Okuzenzakalelayo:'
-	. '0088 European Article Numbering (EAN) '
-	. 'Location Code aka (GLN) Global '
-	. 'Location Izinombolo',
-'delivery.location.global.location.number' =>
-	'Inombolo yendawo yomhlaba wonke (amadijithi '
-	. 'ayi-13)',
-'delivery.location.id.not.found' =>
-	'Indawo Yokulethwa I-ID Yenombolo Yendawo '
-	. 'Yomhlaba Wonke Ayitholakali',
-'delivery.location.index.button.list' =>
-	'Ama-invoyisi',
-'delivery.location.none' => 'Ayikho indawo yokulethwa exhunywe kule '
-	. 'invoyisi',
-'delivery.location.peppol.output' => 'Ayikho indawo yokulethwa ehlotshaniswa nale '
-	. 'invoyisi.'
-	. 'Ngakho-ke akukho okukhiphayo kwe-Peppol',
-'delivery.location.plural' => 'Izindawo Zokudiliva',
-'delivery.location.view' => 'Ukubuka Kwendawo Yokulethwa',
-'delivery.party' => 'Iphathi yokulethwa',
-'delivery.party.add' => 'Iphathi Yokulethwa Engeza',
-'delivery.party.edit' => 'Ukudiliva Iphathi Hlela',
-'delivery.party.name' => ' Igama Lephathi',
-'delivery.party.view' => 'Ukubuka Kwephathi Yokulethwa',
-'delivery.start.date' => 'Idethi Yokuqala Yokulethwa/Isikhathi Se-invoyisi',
-'description' => 'Incazelo',
-'description.document' => 'Incazelo Yombhalo',
-'details' => 'Imininingwane',
-'development.progress' => 'Inqubekelaphambili Yentuthuko',
-'development.schema' => 'I-Schema',
-'disable.flash.messages' => 'Khubaza Imilayezo Ekhanyayo Ye-invoyisi',
-'disable.quickactions' => 'Khubaza ama-Quiacctions',
-'disable.sidebar' => 'Khubaza Ibha eseceleni',
-'discount' => 'Isaphulelo',
-'discount.amount' => 'Isaphulelo Inani',
-'discount.percent' => 'Iphesenti lesaphulelo',
-'discount.percentage' => 'Iphesenti lesaphulelo',
-'document.description' => 'Peppol Document Incazelo',
-'documentation' => 'Amadokhumenti',
-'download' => 'Landa',
-'download.pdf' => 'Landa i-PDF',
-'draft' => 'Okusalungiswa',
-'draft.guest' => 'Ama-invoyisi asalungiswa awabukeki kumakhasimende.',
-'draft.number.off' => 'Ama-invoyisi asalungiswa amasha ngeke abe '
-	. 'nenombolo ye-invoyisi.'
-	. 'Maka njengethunyelwe ukuze uthole inombolo '
-	. 'ye-invoyisi',
-'draft.number.on' => 'Ama-invoyisi amasha asalungiswa azoba nenombolo '
-	. 'ye-invoyisi',
-'drop.files.here' => 'Dedela amafayela lapha!',
-'due.date' => 'Izinsuku Ezimbili',
-'early.settlement.cash.discount' =>
-    'Isephulelo Semali Yokukhokha Ngaphambi Kwesikhathi',
-'edit' => 'Hlela',
-'elements' => 'Izinto',
-'email' => 'I-imeyili',
-'email.address' => 'Ikheli le-imeyili',
-'email.date' => 'Idethi Yokuthunyelwa I-imeyili',
-'email.default' => 'Okuzenzakalelayo',
-'email.default.none.set' => 'Akukho okuzenzakalelayo okusethiwe',
-'email.exception' => 'Okuhlukile Kokuthumela I-imeyili.',
-'email.from.dropdown' => 'Kusuka Kumakheli E-imeyili Okwehliswa Kwe-imeyili '
-	. 'azofakwa ku-MailerQuote Ifomu kanye nefomu '
-	. 'le-MailerInv',
-'email.include' => 'Faka',
-'email.invoice' => 'I-invoyisi ye-imeyili',
-'email.link.click.confirm' => 'Sicela uqinisekise ikheli lakho le-imeyili '
-	. 'ngokuchofoza lesi sixhumanisi',
-'email.log' => 'Ilogi Ethunyelwe Nge-imeyili',
-'email.logs' => 'Ama-invoyisi Athunyelwe Nge-imeyili',
-'email.logs.with.filter' => 'Ithunyelwe nge-imeyili',
-'email.not.configured' => 'Ngaphambi kokuthi uthumele I-imeyili, kufanele '
-	. 'ulungiselele izilungiselelo zakho ze-imeyili endaweni '
-	. 'Yezilungiselelo Zesistimu.',
-'email.not.sent.successfully' => 'I-imeyili AYIthunyelwanga ngempumelelo',
-'email.pdf.attachment' => 'Namathisela I-Quote/I-invoyisi ku-imeyili?',
-'email.quote' => 'I-imeyili Quote',
-'email.send.method' => 'Indlela Yokuthumela I-imeyili',
-'email.send.method.phpmail' => 'Imeyili ye-PHP',
-'email.send.method.sendmail' => 'Thumela i-imeyili',
-'email.send.method.smtp' => 'I-SMTP',
-'email.settings' => 'Izilungiselelo ze-imeyili',
-'email.source.email.template' => 'Kubuyiswe Ezilungiselelweni .'
-	. 'Isifanekiso Se-imeyili',
-'email.source.user.account' => 'Kubuyiswe kokuthi Izilungiselelo .'
-	. 'I-akhawunti Yomsebenzisi I-invoyisi',
-'email.successfully.sent' => 'I-imeyili ithunyelwe ngempumelelo',
-'email.template' => 'Isifanekiso Se-imeyili',
-'email.template.add' => 'Isifanekiso Se-imeyili Engeza',
-'email.template.already.exists' => 'Isifanekiso Se-imeyili sesivele sikhona!',
-'email.template.form' => 'Ifomu lesifanekiso se-imeyili',
-'email.template.from.email.leave.blank' =>
-	'Uma ushiya le nkambu ingenalutho,'
-	. 'ikheli le-imeyili le-akhawunti Yomsebenzisi lizofakwa '
-	. 'njengenani elihlelekayo efomini lomthumeli.'
-	. 'isib.'
-	. 'Ikheli le-imeyili leseva ye-accountant.'
-	. 'Ngokukhethekile sebenzisa ikheli le-imeyili elihlobene '
-	. 'neseva lapha.',
-'email.template.from.source' => 'Umthombo we-imeyili',
-'email.template.from.source.admin.email' =>
-	'Ikheli le-imeyili lomlawuli (config/common/params)',
-'email.template.from.source.froms.email' =>
-	'Kusuka Okuzenzakalelayo Kwethebula (izilungiselelo.'
-	. 'Kusuka Ekhelini Le-imeyili Olwehlayo)',
-'email.template.from.source.sender.email' =>
-	'Ikheli le-imeyili lomthumeli (config/common/params)',
-'email.template.not.configured' => 'Izifanekiso ze-imeyili azilungiselelwe.'
-	. 'Izilungiselelo.'
-	. 'Ama-invoyisi.'
-	. 'Izifanekiso ze-invoyisi.'
-	. 'Isifanekiso Se-imeyili Esizenzakalelayo',
-'email.template.overdue' => 'Isifanekiso Se-imeyili Sesiphelelwe Isikhathi',
-'email.template.paid' => 'Isifanekiso Se-imeyili Esikhokhelwayo',
-'email.template.successfully.added' => 'Isifanekiso Se-imeyili Sengezwe Ngempumelelo',
-'email.template.successfully.deleted' => 'Isifanekiso Se-imeyili Sisuswe Ngempumelelo',
-'email.template.successfully.edited' => 'Isifanekiso Se-imeyili Sihlelwe Ngempumelelo',
-'email.template.tags' => 'Omaka Besifanekiso Se-imeyili',
-'email.template.tags.instructions' => 'Omaka bezifanekiso bangasetshenziswa ukwengeza ulwazi '
-	. 'oluguqukayo njengegama leklayenti noma inombolo '
-	. 'ye-invoyisi kusifanekiso se-imeyili.'
-	. 'Chofoza kunkundla yombhalo Womzimba bese '
-	. 'ukhetha ithegi ekudonseleni phansi.'
-	. 'Izofakwa ngokuzenzakalelayo kunkundla yombhalo.',
-'email.template.type' => 'Uhlobo Lwesifanekiso Se-imeyili',
-'email.templates' => 'Izifanekiso ze-imeyili',
-'email.to.address.missing' => 'Kufanele ucacise ikheli le-imeyili i-imeyili '
-	. 'okufanele ithunyelwe kulo.',
-'email.warning.draft' => 'Ama-invoyisi asalungiswa kufanele amakwe kuqala '
-	. 'amakwe ukuthi athunyelwe ukuze avele '
-	. 'ngasohlangothini lweklayenti futhi ngemva kwalokho '
-	. 'angathunyelwa nge-imeyili.',
-'enable.debug.mode' => 'Nika amandla Imodi Yokususa iphutha',
-'enable.online.payments' => 'Nika amandla izinkokhelo ze-inthanethi',
-'enable.permissive.search.clients' => 'Nika amandla ukusesha okuvunyelwe',
-'enable.projects' => 'Nika amandla imojula Yemiklamo',
-'enable.vat' => 'Nika amandla i-VAT',
-'enable.vat.message' => 'Bonisa umlayezo wesikhumbuzo se-VAT ngenhla '
-	. 'kwenkinobho yezinketho ekubukweni',
-'enable.vat.warning.line.1' =>
-	'1.'
-	. 'Uma i-VAT inikwe amandla, izinto '
-	. 'zomugqa ngamunye kuphela ku-invoyisi ezikhokhiswa '
-	. 'intela nge-vat.'
-	. 'ie.'
-	. 'Izintela ze-Quote/Invoyisi ngeke zivele ku-invoyisi '
-	. 'futhi zizokwehliswa zibe ngu-0.',
-'enable.vat.warning.line.2' =>
-	'2.'
-	. 'Uma i-VAT inikwe amandla, azikho '
-	. 'izintela ezingezona e-inthanethi, njengoba kushiwo '
-	. 'ngenhla, ezenza inani lentela.',
-'enable.vat.warning.line.3' =>
-	'3.'
-	. 'Dala izingcaphuno ze-VAT/ama-invoyisi kusizindalwazi esihlukile.',
-'enable.vat.warning.line.4' =>
-	'4.'
-	. 'Zonke izinto ezintsha ze-invoyisi ye-VAT '
-	. 'zimakwe ngefulegi elithi belongs_to_vat_invoyisi.',
-'enabled' => 'Inikwe amandla',
-'end' => 'Qeda',
-'end.date' => 'Idethi Yokuphela',
-'enforcement' => 'Ikheli Lesikhulu Esiphoqelelayo',
-'enter' => 'Ngena',
-'enter.payment' => 'Faka Inkokhelo',
-'error.duplicate.file' => 'Iphutha:'
-	. 'Igama lefayela eliyimpinda, sicela ulishintshe!',
-'errors' => 'Amaphutha',
-'every' => 'Njalo',
-'example' => 'Isibonelo',
-'expired' => 'Iphelelwe yisikhathi',
-'expires' => 'Iphelelwa yisikhathi',
-'extra.information' => 'Ulwazi olwengeziwe',
-'failure' => 'Ukwehluleka',
-'false' => 'Amanga',
-'families' => 'Imindeni',
-'family' => 'Umndeni',
-'family.add' => 'Faka Umndeni',
-'family.already.exists' => 'Umndeni usuvele ukhona!',
-'family.history' => 'Umlando Womndeni ukhona.'
-	. 'Ayikwazi ukususa',
-'family.name' => 'Igama lomkhaya',
-'family.search' => 'Ukusesha Komndeni',
-'faq' => 'Imibuzo Evame Ukubuzwa',
-'faq.ai.callback.session' => 'Umshayeli wendiza:'
-	. 'Ngingayifaka kanjani i-https:'
-	. '//github.'
-	. 'com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.'
-	. 'php ukuze ngithuthukise ukuphathwa kwezwe '
-	. 'kumsebenzi othi `callbackGithub`?',
-'faq.business.rules' => 'Iyini Imithetho Yebhizinisi LakwaPeppol?',
-'faq.gov.developer.sandbox.hmrc' =>
-	'Ngixhuma kanjani le nkomba ku-HMRC '
-	. 'Developer Sandbox?',
-'faq.lamp.alpine' => 'Ngingayisetha kanjani le nkomba ku-Linux '
-	. 'Alpine, Apache2, mySql/mariadb kanye ne-php?',
-'faq.oauth2' => 'Ngiyisetha kanjani i-OAuth2 Identity Provider '
-	. 'isb ukubhalisa nokungena nge-Facebook',
-'faq.payment.provider' => 'Ngisetha kanjani Umhlinzeki Wenkokhelo Ye-inthanethi?',
-'faq.php.info.all' => 'Konke',
-'faq.php.info.configuration' => 'Ukucushwa',
-'faq.php.info.credits' => 'Amakhredithi',
-'faq.php.info.details' => 'Php Imininingwane Yolwazi',
-'faq.php.info.environment' => 'Imvelo',
-'faq.php.info.general' => 'Okujwayelekile',
-'faq.php.info.licence' => 'Ilayisensi',
-'faq.php.info.modules' => 'Amamojula',
-'faq.php.info.variables' => 'Okuguquguqukayo',
-'faq.shared.hosting' => 'Ngisingatha kanjani i-yii3i ekusingatheni okwabiwe?',
-'faq.taxpoint' => 'Indlela yokunquma ukuthi liyini Iphuzu '
-	. 'Lentela?',
-'faq.yii.requirement.checker' => 'Yii Isihloli Sezidingo Zohlelo Lokusebenza',
-'fax' => 'Ifeksi',
-'fax.abbr' => 'F',
-'fax.number' => 'Inombolo Yefeksi',
-'field' => 'Inkambu',
-'filter.clients' => 'Hlunga amaklayenti',
-'filter.invoices' => 'Hlunga ama-invoyisi',
-'filter.payments' => 'Hlunga Izinkokhelo',
-'filter.quotes' => 'Hlunga Izilinganiso',
-'first' => 'Okokuqala',
-'first.day.of.week' => 'Usuku lokuqala lweviki',
-'first.reset' => 'Okokuqala susa izingcaphuno zokuhlola nama-invoyisi '
-	. 'owadalele ukuhlolwa.'
-	. 'Bese idatha yokuhlola ingasuswa.',
-'flash.messages.appear.here' => 'Imilayezo ekhanyayo ivela lapha.',
-'footer' => 'Unyaweni',
-'forgot.your.password' => 'Ngikhohlwe iphasiwedi yami',
-'form.error' => 'Amaphutha efomu',
-'from.date' => 'Kusuka Kudethi',
-'from.default.in.dropdown' =>
-    'Ikheli le-imeyili elizenzakalelayo ohlwini lokudonsela '
-	. 'phansi',
-'from.email' => 'Kusuka ku-imeyili',
-'from.email.address' => 'Kusuka Kumakheli E-imeyili:'
-	. 'Khetha okuzenzakalelayo',
-'from.include.in.dropdown' => 'Faka le imeyili ohlwini olwehliswayo',
-'from.name' => 'Kusuka Egameni',
-'front.page' => 'Ikhasi Eliphambili',
-'gateway.online.payment' => 'Inkokhelo Ye-inthanethi',
-'gender' => 'Ubulili',
-'gender.female' => 'Owesifazane',
-'gender.male' => 'Owesilisa',
-'gender.other' => 'Okunye',
-'general' => 'Okujwayelekile',
-'general.no' => 'Cha',
-'general.settings' => 'Izilungiselelo Ezijwayelekile',
-'general.yes' => 'Yebo',
-'generate' => 'Khiqiza',
-'generate.copy' => 'Khiqiza Ikhophi',
-'generate.invoice.number.for.draft' =>
-	'Dala inombolo ye-invoyisi yama-invoyisi asalungiswa',
-'generate.quote.number.for.draft' =>
-	'Dala inombolo yekhwothi yezingcaphuno ezisalungiswa',
-'generator' => 'Ijeneretha',
-'generator.add' => 'Ijeneretha Engeza',
-'generator.camelcase.capital.name' =>
-    'I-Camelcase Capital Name esetshenziswa ku-Controller '
-	. 'kanye namagama e-Repository isb.'
-	. 'I-TaxRate.'
-	. 'Sebenzisa \'Umkhiqizo\' uma usebenzisa isibonelo '
-	. 'esingenhla \'somkhiqizo\'',
-'generator.camelcase.capital.name.product' =>
-	'Umkhiqizo',
-'generator.controller.and.repository' => 'Isilawuli kanye Nenqolobane',
-'generator.controller.layout.directory' =>
-    'Uhla Lwemibhalo Yesakhiwo Sesilawuli isb.'
-	. 'i-dirname(i-dirname(__DIR__)) evela ngemva kokwakhiwa kwesilawuli.'
-	. 'Ifayela lesilawuli lihlala kokuthi (__DIR__) '
-	. 'futhi liyizinkomba ezimbili ngezansi kwenkomba '
-	. 'ethi \'src\' ezosetshenziswa \'njengesisekelo\' ukwengeza '
-	. 'indlela eya kuhla lwemibhalo Yesakhiwo.',
-'generator.controller.layout.directory.dot.path' =>
-	'Indlela Yechashazi Yesakhiwo Sesilawuli isb.'
-	. '\'/views/layout/invoice.'
-	. 'php\' evela ngemva nje kokwakha '
-	. 'isilawuli (ngaphandle kwe-aphostrophe) futhi yengezwe '
-	. 'endaweni yemibhalo ye-src engenhla.',
-'generator.controller.layout.directory.dot.path.placeholder' =>
-	'Indlela Yechashazi Yokuhlelwa Kwesakhiwo Sesilawuli',
-'generator.controller.layout.directory.placeholder' =>
-	'Uhla Lwemibhalo Yesakhiwo Sesilawuli isb.'
-	. 'i-dirname(i-dirname(__DIR__))',
-'generator.controller.path.layout' => 'Indlela Yefayela Lesakhiwo',
-'generator.created.at.include' => 'Faka i-created_at field Ebhizinisini',
-'generator.deleted.at.include' => 'Faka nenkambu esusiwe_ebhizinisini',
-'generator.external.entity' =>
-    'Ibhizinisi langaphandle elisetshenziswe kuleli bhizinisi.'
-	. 'I-Setting Entity iwukhiye olula =&gt;'
-	. 'i-ID ye-value pair indexed database.',
-'generator.external.entity.default' => 'Ibhizinisi langaphandle isb.'
-	. 'I-MyEntity ayihlanganisi indlela.'
-	. 'Indlela eyakhiwe ku-Generator.'
-	. 'Okuzenzakalelayo:'
-	. 'Ukusetha',
-'generator.external.entity.placeholder' => 'Ibhizinisi langaphandle isb.'
-	. 'I-MyEntity ayihlanganisi indlela.'
-	. 'Indlela eyakhiwe ku-Generator.'
-	. 'Okuzenzakalelayo:'
-	. 'Ukusetha.'
-	. 'Inqolobane eyengeziwe isb.'
-	. 'Ukusetha Inqolobane ngaphezu kwenqolobane eyinhloko.',
-'generator.file.type.not.found' =>
-	'Uhlobo lwefayela alutholakali.',
-'generator.flash.include' =>
-    'Bandakanya Umlayezo We-Flash kokuthi Engeza/Hlela/Buka/Susa '
-	. 'umsebenzi kusilawuli',
-'generator.generate' => 'Khiqiza',
-'generator.generated' => ' ekhiqizwe ngo ',
-'generator.google.translate.any' => 'Humusha isiNgisi\\any_lang.'
-	. 'php',
-'generator.google.translate.app' => 'Humusha isiNgisi\\app_lang.'
-	. 'php',
-'generator.google.translate.common' => 'Humusha isiNgisi\\common_lang.'
-	. 'php',
-'generator.google.translate.diff' => 'Humusha isiNgisi\\diff_lang.'
-	. 'php',
-'generator.google.translate.gateway' => 'Humusha isiNgisi\\gateway_lang.'
-	. 'php',
-'generator.google.translate.ip' => 'Humusha isiNgisi\\ip_lang.'
-	. 'php',
-'generator.google.translate.latest.a' =>
-	'Humusha isiNgisi\\a_latest_lang.'
-	. 'php',
-'generator.google.translate.latest.b' =>
-	'Humusha isiNgisi\\b_latest_lang.'
-	. 'php',
-'generator.headerline.include' => 'Faka i-Header uma i-Ajax idingeka',
-'generator.history' => 'Leli rekhodi linobudlelwano bokukhiqiza obukhona '
-	. 'ngakho alikwazi ukususwa.'
-	. 'Susa lobu budlelwano kuqala.',
-'generator.modified.at.include' => 'Bandakanya i-modified_at field Ebhizinisini',
-'generator.namespace' => 'Indawo yamagama',
-'generator.namespace.before.entity' =>
-    'Isikhala segama ngaphambi kwendlela yebhizinisi '
-	. 'isb.'
-	. 'Uhlelo lokusebenza\\I-invoyisi (HAYI Uhlelo Lokusebenza\\Irisidi\\Entity)',
-'generator.relation.form' => 'Ifomu Lobudlelwano Bejeneretha',
-'generator.relation.form.camelcase.name' =>
-	'Igama lekhamela elingafaki i-id (isb.'
-	. 'tax_rate_id \'ukhiye/ubudlelwane bangaphandle\' kuthebula Lomkhiqizo '
-	. 'elenziwe laba lula ukuze libe '
-	. 'Izinga Lentela KANYE yigama Lebhizinisi)',
-'generator.relation.form.entity.generator' =>
-	'Ijeneretha yebhizinisi',
-'generator.relation.form.lowercase.name' =>
-	'Igama lombhalo omncane elingabandakanyi i-id '
-	. '(isb.'
-	. 'tax_rate_id \'ukhiye wangaphandle/ubudlelwane\' kuthebula lomkhiqizo '
-	. 'elenziwe lula ukuba libe yi-tax.'
-	. 'rate)',
-'generator.relation.form.view.field.name' =>
-	'Buka Igama Lenkundla',
-'generator.relations' => 'Ubudlelwano beGeneretha',
-'generator.relations.add' => 'Ubudlelwano Bamajeneretha Engeza',
-'generator.route.prefix' => 'Isiqalo somzila isb.'
-	. 'i-invoyisi \'ku-invoyisi/umkhiqizo\' ezovela ngemva kokwakhiwa '
-	. 'kwesilawuli.',
-'generator.route.suffix' => 'Isijobelelo somzila isb.'
-	. 'umkhiqizo \'ku-invoyisi/umkhiqizo\' ozovela ngemva kokwakhiwa '
-	. 'kwesilawuli.',
-'generator.small.plural.name' => 'Igama elincane lobuningi elisetshenziswa'
-    . ' Kusilawuli '
-	. 'somsebenzi wesilawuli senkomba ukuze kufakwe '
-	. 'kuhlu zonke izinhlobo zamajeneretha ebhizinisi.'
-	. 'Ngokuvamile inani elingenhla elino-s ekugcineni.',
-'generator.small.plural.name.placeholder' =>
-	'Igama Elincane Eliningi',
-'generator.small.plural.name.products' =>
-	'imikhiqizo',
-'generator.small.singular.name' => 'Igama elincane elisebunyeni elisetshenziswa'
-    . ' kusilawuli '
-	. 'ukuhlela, nokubuka imisebenzi yesilawuli.'
-	. 'Ngokujwayelekile kuyafana neSijobelelo Somzila.'
-	. 'isib.'
-	. 'umkhiqizo',
-'generator.small.singular.name.placeholder' =>
-	'Igama Elincane Elilodwa',
-'generator.small.singular.name.product' =>
-	'umkhiqizo',
-'generator.table' => 'Ithebula',
-'generator.table.used.to.generate.entity.controller.repository' =>
-	'Ithebula elisetshenziselwa ukukhiqiza Ibhizinisi, Isilawuli '
-	. 'Engeza Hlela Susa Ukubuka, Inqolobane,'
-	. 'Isevisi, Imephu',
-'generator.updated.at.include' => 'Bandakanya inkambu ebuyekeziwe Ebhizinisini',
-'generators' => 'Amajeneretha',
-'generators.relation' => 'Ubudlelwano Bamajeneretha',
-'gln' => 'I-GLN',
-'gov.developer.sandbox' => 'Ibhokisi lesihlabathi likanjiniyela',
-'gov.developer.sandbox.uk' => 'Hmrc',
-'gridview.api' => 'I-API',
-'gridview.create.at' => 'Idalwe ngo-',
-'gridview.login' => 'Ngena ngemvume',
-'gridview.profile' => 'Iphrofayela',
-'gridview.title' => 'Uhlu lwabasebenzisi',
-'group' => 'Iqembu',
-'group.add' => 'Faka iqembu',
-'group.document.number' => 'Inombolo Yedokhumenti Ayikhiqizwanga.'
-	. 'Hlola Amaqembu.',
-'group.form' => 'Ifomu leqembu',
-'group.history' => 'Umlando Weqembu ukhona.'
-	. 'Ayikwazi ukususa',
-'groups' => 'Amaqembu',
-'guest.account.denied' => 'Le akhawunti ayimisiwe.'
-	. 'Sicela uthinte umlawuli wesistimu.',
-'guest.read.only' => 'Isivakashi (Funda Kuphela)',
-'guest.url' => 'I-URL yesivakashi',
-'hide.or.unhide.columns' => 'Fihla noma ungafihli amakholomu',
-'hint.greater.than.zero.please' =>
-	'Ngicela, ngaphezu kuka-0.'
-	. '00!',
-'hint.this.field.is.not.required' =>
-	'Le nkambu ayidingekile',
-'hint.this.field.is.required' =>
-	'Le nkundla iyadingeka',
-'home' => 'Ikhaya',
-'home.caption.slide1' => 'Bhalisa futhi Ngena njengomlawuli.'
-	. 'Ayikho i-inthanethi .'
-	. 'unganaki uxhumano lwephutha le-imeyili.',
-'home.caption.slide2' => 'Njengomlawuli, bhalisa umsebenzisi.'
-	. 'I-akhawunti ye-imeyili isemthethweni futhi uxhumano '
-	. 'lwe-inthanethi .'
-	. 'qinisekisa.'
-	. 'Umsebenzisi uzothola i-akhawunti yeklayenti.',
-'home.caption.slide3' => 'I-akhawunti ye-imeyili ayivumelekile, futhi akukho '
-	. 'uxhumano lwe-inthanethi .'
-	. 'ngena ngemvume futhi I-akhawunti yomsebenzisi '
-	. 'ye-invoyisi yenza isebenze ngaphansi kokuthi '
-	. 'Izilungiselelo.'
-	. 'Dala i-akhawunti yeklayenti.'
-	. 'Yabela umsebenzisi',
-'home.caption.slides.location.debug.mode' =>
-	'Le ndawo yokuqukethwe:'
-	. '/resources/views/site/index.'
-	. 'php ngaphakathi .'
-	. '/resources/views/layout/.'
-	. '.'
-	. 'kanye nendawo yesilayidi sokuhumusha .'
-	. '/resources/messages/app.'
-	. 'php',
-'hostname' => 'Igama lomethuleli',
-'id' => 'I-ID',
-'identifier.format' => 'Ukufometha kwesihlonzi',
-'identifier.format.template.tags' => 'Omaka besifanekiso sesikhombi',
-'identifier.format.template.tags.instructions' =>
-	'Omaka bezifanekiso bangasetshenziswa ukwengeza ulwazi '
-	. 'oluguqukayo njengegama leklayenti noma inombolo '
-	. 'ye-invoyisi kusifanekiso se-imeyili.'
-	. 'Chofoza kunkambu <b>yokufometha ye-Identifier</b> bese '
-	. 'ukhetha umaka kokwehlayo.'
-	. 'Izofakwa ngokuzenzakalelayo kunkundla yombhalo.',
-'identity.provider.authentication.successful' =>
-    'Ugunyazwe ngempumelelo nge-Identity Provider oyikhethile,'
-	. 'ubhalise, futhi wabelwe i-akhawunti yeklayenti.'
-	. 'Chofoza lapha phakathi nehora elilandelayo '
-	. 'ukuze wenze i-akhawunti yakho isebenze.'
-	. 'Unehora lokungena ngemvume kokuqala.',
-'image.overdue' => 'Indawo yesithombe:'
-	. '/invoice/public/img/overdue.'
-	. 'png',
-'image.paid' => 'Indawo yesithombe:'
-	. '/invoice/public/img/paid.'
-	. 'png',
-'import' => 'Ngenisa',
-'import.data' => 'Ngenisa Idatha',
-'import.from.csv' => 'Ngenisa kusuka ku-CSV',
-'in.progress' => 'Kuyaqhubeka',
-'inactive' => 'Ayisebenzi',
-'index.checkbox.add.some.items.to.enable' =>
-	'I-invoyisi ayinazo izinto.'
-	. 'Engeza izinto ukuze unike amandla '
-	. 'ibhokisi lokuhlola',
-'index.footer.showing' => 'Ibonisa %s kwezingu-%s',
-'index.showing' => 'Ibonisa %s kwezingu-%s',
-'info.task.readonly' => 'Lo msebenzi awusakwazi ukushintshwa ngoba '
-	. 'usuvele ufakwe i-invoyisi.',
-'install.test.data' => 'Idatha yokuhlola manje ingafakwa',
-'install.test.data.exists.already' =>
-	'Idatha Yokuhlola I-invoyisi isivele ikhona',
-'install.test.data.goto.tab.index' =>
-	'Iya kuzilungiselelo .'
-	. 'Okuvamile .'
-	. 'Faka Idatha Yokuhlola',
-'interface' => 'Isixhumi esibonakalayo',
-'invalid.amount' => 'Inani Elingavumelekile',
-'invalid.subscriber.number' => 'Inombolo Yokubhalisa Engavumelekile',
-'invoice' => 'I-invoyisi',
-'invoiced' => 'I-invoyisi',
-'invoiceplane' => 'I-invoicePlane',
-'invoiceplane.clients' => 'Amaklayenti afakiwe',
-'invoiceplane.database.name' => 'Igama lesizindalwazi',
-'invoiceplane.database.password' => 'Iphasiwedi',
-'invoiceplane.database.username' => 'Igama lomsebenzisi',
-'invoiceplane.families' => 'Imindeni ifakiwe',
-'invoiceplane.import' => 'Hlola Ukuxhumana',
-'invoiceplane.import.complete.connection.closed' =>
-	'Ukungenisa kuqedile! Uxhumano luvaliwe!',
-'invoiceplane.import.connected' => 'Unoxhumo!',
-'invoiceplane.import.proceed' => 'Qhubeka nenqubo yokungenisa',
-'invoiceplane.import.proceed.alert' => 'Uqinisekile ukuthi ufuna ukuqhubeka?',
-'invoiceplane.imported' => 'Amathebula angenisiwe',
-'invoiceplane.news' => 'I-invoicePlane News',
-'invoiceplane.no.connection' => 'Alukho Uxhumo',
-'invoiceplane.no.username.or.password' =>
-	'Sicela ulondoloze igama lakho lesizindalwazi,'
-	. 'Igama lomsebenzisi, kanye nephasiwedi ye-InvoicePlane',
-'invoiceplane.products' => 'Imikhiqizo ifakiwe',
-'invoiceplane.tables' => 'Ngenisa Iklayenti Lamathebula Le-invoicePlane, Umkhiqizo,'
-	. 'Iyunithi, Umndeni, Isilinganiso Sentela kumathebula '
-	. 'angenalutho.'
-	. 'Akufanele kube khona idatha ekhona '
-	. 'kulawa mathebula ngaphambi kokungenisa futhi '
-	. 'kungabikho imibhalo ekhona isib.'
-	. 'Ama-invoyisi.',
-'invoiceplane.tables.not.empty' => 'Iklayenti lakho, Umkhiqizo, Iyunithi, Umndeni,'
-	. 'kanye namathebula Wesilinganiso Sentela kufanele '
-	. 'angabi nalutho ngaphambi kokungenisa',
-'invoiceplane.taxrates' => 'Izilinganiso Zentela zifakwe nesilinganiso Sentela '
-	. 'engu-Zero esiyisibopho kanye Nesilinganiso Sentela '
-	. 'Esivamile.',
-'invoiceplane.units' => 'Amayunithi afakiwe',
-'invoiceplane.yes.connection' =>
-    'Yebo Unokuxhumana kusizindalwazi sakho se-invoiceplane!',
-'invoices' => 'Ama-invoyisi',
-'invoices.due.after' => 'Ama-invoyisi afuneka ngemuva (Izinsuku)',
-'is.not.writable' => 'ayibhaleki',
-'is.writable' => 'iyabhaleka',
-'item' => 'Into ye-invoyisi',
-'item.add' => 'Engeza into ye-invoyisi',
-'item.allowance' => 'Isibonelelo Sento',
-'item.charge' => 'Inkokhelo Yento',
-'item.date' => 'Idethi Yento',
-'item.discount' => 'Isaphulelo Sento',
-'item.lookup' => 'Ukubheka Into Ye-invoyisi',
-'item.lookup.form' => 'Ifomu Lokubheka Into',
-'item.lookups' => 'Ukubheka Izinto',
-'item.name' => 'Igama lento',
-'item.tax' => 'Intela Yento',
-'item.tax.excluded' => 'I-SubTotal x Iphesenti Lentela (Intela '
-	. 'Yento ayifakiwe)',
-'item.tax.included' => '(Isamba Esingaphansi + Nentela Yento) '
-	. 'x Iphesenti Lentela',
-'item.tax.rate' => 'Isilinganiso Sentela Yento',
-'items' => 'Izinto ze-invoyisi',
-'judgement' => 'Ukwahlulela Kuzuziwe',
-'label' => 'Ilebula',
-'label.switch.off' => 'I-invoyisi ye-VAT',
-'label.switch.on' => 'AYIKHO I-invoyisi ye-VAT',
-'language' => 'Ulimi',
-'last' => 'Okokugcina',
-'last.month' => 'Inyanga edlule',
-'last.quarter' => 'Ikota yokugcina',
-'last.year' => 'Ngonyaka odlule',
-'layout.add' => 'Engeza',
-'layout.add.post' => 'Engeza okuthunyelwe',
-'layout.add.random-content' => 'Engeza okuqukethwe okungahleliwe',
-'layout.add.tag' => 'Engeza ithegi',
-'layout.archive' => 'Faka kungobo yomlando',
-'layout.archive.for-year' => 'Faka kungobo yomlando ye-{year}',
-'layout.blog' => 'Ibhulogi',
-'layout.change-language' => 'Shintsha ulimi',
-'layout.console' => 'Ikhonsoli',
-'layout.content' => 'Okuqukethwe',
-'layout.create.new-user' => 'Dala umsebenzisi omusha',
-'layout.db.schema' => 'DB Schema',
-'layout.go.home' => 'Buyela Ekhaya',
-'layout.login' => 'Ngena ngemvume',
-'layout.migrations' => 'Ukufuduka',
-'layout.no-records' => 'Awekho amarekhodi',
-'layout.not-found' => 'Akutholakalanga',
-'layout.page.not-authorised' => 'Akugunyaziwe:'
-	. 'Imininingwane yokuqinisekisa ayilungile.',
-'layout.page.not-found' => 'Ikhasi elithi {url} alitholakalanga.',
-'layout.page.user-cancelled-oauth2' =>
-    'Umsebenzisi Ukhansele Ukungena / Ukubhalisa '
-	. 'Nge-Identity Provider isb Facebook',
-'layout.pagination-summary' => 'Ibonisa amaposi angu-{pageSize} kokungu-{total}',
-'layout.password' => 'Iphasiwedi',
-'layout.password-verify' => 'Qinisekisa iphasiwedi yakho',
-'layout.password-verify.new' => 'Qinisekisa iphasiwedi yakho entsha',
-'layout.password.new' => 'Iphasiwedi Entsha',
-'layout.password.otp' => 'Iphasiwedi ye-OTP',
-'layout.rbac.assign-role' => 'Yabela umsebenzi we-RBAC kumsebenzisi',
-'layout.remember' => 'Ngikhumbule',
-'layout.reset' => 'Setha kabusha',
-'layout.show-more' => 'khombisa okuningi',
-'layout.submit' => 'Thumela',
-'layout.title' => 'Isihloko',
-'layout.total.posts' => 'Okuthunyelwe okuphelele okungu-{count}',
-'left.pad' => 'Iphedi Yesokunxele',
-'letter' => 'Incwadi Yezinsuku Eziyisi-7 Ngaphambi Kokwenza '
-	. 'Ithunyelwe',
-'loading.error' => 'Kubonakala sengathi uhlelo lokusebenza lubambekile '
-	. 'ngenxa yephutha.',
-'loading.error.help' => 'Thola Usizo',
-'login' => 'Ngena ngemvume',
-'login.logo' => 'Ilogo yokungena',
-'loginalert.credentials.incorrect' => 'I-imeyili noma iphasiwedi ayilungile.',
-'loginalert.no.password' => 'Sicela ufake iphasiwedi.',
-'loginalert.user.inactive' => 'Lo msebenzisi umakwe njengongasebenzi.'
-	. 'Sicela uthinte umlawuli wesistimu.',
-'loginalert.user.not.found' => 'Ayikho i-akhawunti ebhaliswe ngaleli kheli '
-	. 'le-imeyili.',
-'loginalert.wrong.auth.code' => 'Ukusetha kabusha iphasiwedi kunqatshiwe.'
-	. 'Unikeze ithokheni yokuqinisekisa engavumelekile.',
-'logo' => 'Ilogo ye-invoyisi',
-'logout' => 'Phuma',
-'loss' => 'Icishiwe',
-'mark.invoices.sent.copy' => 'Maka ama-invoyisi njengathunyelwe lapho ukopisha '
-	. 'i-invoyisi',
-'mark.invoices.sent.pdf' => 'Maka ama-invoyisi njengathunyelwe lapho i-PDF '
-	. 'yenziwe',
-'mark.quotes.sent.pdf' => 'Maka izingcaphuno njengezithunyelwe lapho i-PDF '
-	. 'yenziwe',
-'mark.sent.copy.on' => 'Maka ama-invoyisi njengathunyelwe uma ukopisha '
-	. 'i-invoyisi Ivuliwe.'
-	. 'Kufanele ivulwe kuphela ngesikhathi sokuthuthukiswa',
-'mark.sent.off' => 'Maka ama-invoyisi njengathunyelwe lapho kukopishwa '
-	. 'ama-invoyisi .'
-	. 'IVALIWE okwamanje.'
-	. 'Kusethwe kuphela KUVULIWE phakathi nokuthuthukiswa.'
-	. 'Chofoza lapha ukuze uyivule',
-'mark.sent.on' => 'Maka ama-invoyisi njengathunyelwe ekukopisheni ama-invoyisi '
-	. '.'
-	. 'IVULIWE okwamanje.'
-	. 'Njalo ivale ngesikhathi sokukhiqiza.'
-	. 'Chofoza lapha ukuze UYIVALE',
-'max' => 'Ubukhulu',
-'max.quantity' => 'Ubuningi bobuningi',
-'menu' => 'Imenyu',
-'menu.about' => 'Mayelana',
-'menu.accreditations' => 'Ukugunyazwa',
-'menu.blog' => 'Ibhulogi',
-'menu.comments-feed' => 'Okuphakelayo kwamazwana',
-'menu.contact.details' => 'Imniningwano Yokuxhumana',
-'menu.contact.soon' => 'Siyabonga ngokusithinta, sizokuthinta ngokushesha okukhulu.',
-'menu.contact.us' => 'Xhumana nathi',
-'menu.gallery' => 'Igalari',
-'menu.language' => 'Ulimi',
-'menu.login' => 'Ngena ngemvume',
-'menu.logout' => 'Phuma ({ngena})',
-'menu.pricing' => 'Intengo',
-'menu.privacy.policy' => 'Inqubomgomo yobumfihlo',
-'menu.signup' => 'Bhalisela',
-'menu.swagger' => 'Swagger',
-'menu.team' => 'Ithimba',
-'menu.terms.of.service' => 'Imigomo Yesevisi',
-'menu.testimonial' => 'Ubufakazi',
-'menu.users' => 'Abasebenzisi',
-'merchant' => 'Umthengisi',
-'merchant.add' => 'Engeza umthengisi',
-'merchant.driver' => 'Umshayeli',
-'merchant.reference' => 'Ireferensi',
-'merchant.response' => 'Impendulo',
-'min.quantity' => 'Ubungako obuncane',
-'mobile' => 'Iselula',
-'mobile.number' => 'Inombolo yeselula',
-'monday' => 'UMsombuluko',
-'monospaced.font.for.amounts' => 'Sebenzisa ifonti ye-Monospace ngamanani',
-'month' => 'Inyanga',
-'month.prefix' => 'Isiqalo Senyanga',
-'mpdf' => 'I-Mpdf',
-'mpdf.allow.charset.conversion' => 'Vumela Ukuguqulwa Kokusetha Uhlamvu',
-'mpdf.auto.arabic' => 'I-Auto Arabic',
-'mpdf.auto.language.to.font' =>
-	'Ulimi oluzenzakalelayo ukuya kufonti',
-'mpdf.auto.script.to.lang' =>
-	'I-Auto Script to Language',
-'mpdf.auto.vietnamese' => 'Imoto yaseVietnam',
-'mpdf.cjk' => 'Ifonti yesiShayina, isiJapane, isiKorea',
-'mpdf.ltr' => 'Kwesobunxele kuya kwesokudla',
-'mpdf.show.image.errors' => 'Bonisa amaphutha esithombe',
-'mtd' => 'Ukwenza Idijithali Yentela',
-'mtd.fph' => 'Izihloko Zokuvimbela Ukukhwabanisa',
-'mtd.fph.all.valid' => 'Zonke Izihloko Zokuvimbela Ukukhwabanisa Ziyasebenza',
-'mtd.fph.generate' => 'Khiqiza',
-'mtd.fph.no.provided' => 'Azikho Izihloko Zokuvimbela Ukukhwabanisa Ezinikeziwe',
-'mtd.fph.record.alert' => 'Ingabe uqinisekile ukuthi ufuna ukurekhoda '
-	. 'imininingwane entsha Yesihloko Sokuvimbela Ukukhwabanisa?'
-	. 'Imininingwane yangaphambilini izosulwa uma ilondoloziwe!',
-'mtd.fph.screen.timestamp' => 'Isitembu sesikhathi',
-'mtd.fph.some.advisories' => 'Okungenani unhlokweni owodwa kungenzeka awuvumelekile',
-'mtd.fph.some.invalid' => 'Okungenani unhlokweni owodwa awuvumelekile',
-'mtd.gov.client.browser.do.not.track' =>
-	'Inani elibonisa ukuthi inketho ethi '
-	. 'Ungalandeli ivuliwe yini esipheqululini',
-'mtd.gov.client.browser.do.not.track.eg' =>
-	'isib amanga',
-'mtd.gov.client.browser.js.user.agent' =>
-	'I-Gov-Client-Browser-JS-User-Agent',
-'mtd.gov.client.browser.js.user.agent.eg' =>
-	'isb Mozilla/5.'
-	. '0 (iPad; U; CPU OS '
-	. '3 2.'
-	. '1 njenge-Mac OS X; en-us) '
-	. '(KHTML, njengeGecko) Mobile/7B405',
-'mtd.gov.client.browser.plugins' =>
-	'Uhlu lwama-plug-in esiphequluli kudivayisi yokuqala',
-'mtd.gov.client.browser.plugins.eg' =>
-	'isb.'
-	. 'Shockwave%20F1ash Chromium%20PDF%20Viewer',
-'mtd.gov.client.connection.method' =>
-	'I-Gov-Client-Connection-Method',
-'mtd.gov.client.device.id' =>
-	'I-Id yedivayisi',
-'mtd.gov.client.device.id.eg' =>
-	'isibonelo, beec798b-b366-47fa-b1f8-92cede14a1ce',
-'mtd.gov.client.local.ips' =>
-	'I-Ips yendawo',
-'mtd.gov.client.multi.factor' =>
-	'I-Multi Factor',
-'mtd.gov.client.multi.factor.eg' =>
-	'isib.'
-	. 'type=OTP;isimo=impumelelo,uhlobo=SMS;'
-    . 'isimo=ukwehluleka,uhlobo=Biometric, uhlobo=SMS;'
-    . ' isitembu sesikhathi=2023-04-01T12:'
-	. '34:'
-	. '56Z; unique-reference=abc123xyz',
-'mtd.gov.client.multi.factor.otp' =>
-	'Iphasiwedi yesikhathi esisodwa (OTP):',
-'mtd.gov.client.public.ip' =>
-	'I-Public Ip',
-'mtd.gov.client.public.port' =>
-	'Ichweba Lomphakathi (hhayi i-http 80,'
-	. 'futhi hhayi i-https 443 isb '
-	. '57961)',
-'mtd.gov.client.screens' => 'Izikrini Zikahulumeni-zeklayenti',
-'mtd.gov.client.screens.colour.depth' =>
-	'Ukujula Kombala',
-'mtd.gov.client.screens.height' =>
-	'Ukuphakama Kwesikrini',
-'mtd.gov.client.screens.pixels' =>
-	'amaphikseli',
-'mtd.gov.client.screens.scaling.factor' =>
-	'Isikali Factor',
-'mtd.gov.client.screens.scaling.factor.bits' =>
-	'izingcezu',
-'mtd.gov.client.screens.width' =>
-	'Ububanzi besikrini',
-'mtd.gov.client.timezone' => 'Indawo yesikhathi',
-'mtd.gov.client.user.ids' =>
-	'I-ID yomsebenzisi',
-'mtd.gov.client.user.ids.uuid' =>
-	'awu',
-'mtd.gov.client.window.size' =>
-	'Usayizi Wewindi',
-'mtd.gov.client.window.size.pixels' =>
-	'amaphikseli',
-'mtd.gov.vendor.forwarded' => 'Uhlu olunikeza imininingwane nge-inthanethi phakathi '
-	. 'kwamasevisi anqamula i-Transport Layer Security '
-	. '(TLS)',
-'mtd.gov.vendor.license.ids' =>
-	'Isakhiwo sedatha yenani elingukhiye lokhiye '
-	. 'belayisense abaheshi abahlobene nesofthiwe yomthengisi '
-	. 'eqalise isicelo se-API kudivayisi yokuqala',
-'mtd.gov.vendor.public.ip' =>
-	'Ikheli lasesizindeni se-intanethi lamaseva idivayisi '
-	. 'yokuqala ethumele kuzo izicelo zayo',
-'mtd.gov.vendor.version' => 'Isakhiwo sedatha yenani elingukhiye lezinguqulo '
-	. 'zesofthiwe ezibandakanyekayo ekusingatheni isicelo',
-'multiple.choice' => 'Ukukhetha Okuningi',
-'name' => 'Igama',
-'new' => 'Okusha',
-'new.password' => 'Iphasiwedi Entsha',
-'new.product' => 'Umkhiqizo omusha',
-'new.task' => 'Umsebenzi omusha',
-'next' => 'Olandelayo',
-'next.date' => 'Idethi Elandelayo',
-'next.id' => 'I-ID elandelayo',
-'no' => 'Cha',
-'no.attachments' => 'Akukho okunamathiselwe',
-'no.client' => 'Alikho iklayenti',
-'no.file.uploaded' => 'Alikho ifayela elilayishiwe',
-'no.overdue.invoices' => 'Awekho ama-invoyisi asedlulelwe yisikhathi',
-'no.quotes.requiring.approval' => 'Awekho amakhwothi adinga ukugunyazwa.',
-'no.records' => 'Awekho amarekhodi',
-'no.updates.available' => 'Azikho izibuyekezo ezitholakalayo.',
-'none' => 'Lutho',
-'not.available' => 'Akutholakali',
-'not.found' => 'I-invoyisi ayitholakali',
-'not.set' => 'Akusethiwe okwamanje',
-'not.started' => 'Akuqaliwe',
-'note' => 'Qaphela',
-'notes' => 'Amanothi',
-'number' => '#',
-'number.format' => 'Ifomethi yenombolo',
-'number.format.compact.comma' => '1000000,00 (Ifomethi ehlangene enokhefana wedesimali)',
-'number.format.compact.point' => '1000000.'
-	. '00 (Ifomethi ehlangene enephoyinti ledesimali)',
-'number.format.european' => '1.'
-	. '000.'
-	. '000,00 (ifomethi yaseYurophu)',
-'number.format.iso.80k.1' =>
-	'1 000 000.'
-	. '00 (ISO 80000-1)',
-'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 '
-	. 'enokhefana wedesimali)',
-'number.format.iso80k1.point' => '1 000 000.'
-	. '00 (ISO 80000-1 enephoyinti ledesimali)',
-'number.format.us.uk' => '1,000,000.'
-	. '00 (ifomethi yase-US/UK)',
-'number.missing.therefore.use.invoice.id' =>
-	'inombolo ye-invoyisi-ayikho-ngakho-i-invoyisi-id-',
-'number.no' => 'Ayikho inombolo ye-invoyisi',
-'oauth2' => 'I-OAuth 2.'
-	. '0',
-'oauth2.google.people.api.v1.client.id' =>
-	'I-Client Id',
-'oauth2.google.people.api.v1.client.secret' =>
-	'Imfihlo Yekhasimende',
-'online.log' => 'Ilogi ye-inthanethi',
-'online.payment' => 'Inkokhelo Ye-inthanethi',
-'online.payment.3dauth.redirect' => 'Sicela ulinde ngenkathi sikuqondisa kabusha '
-	. 'kumkhiphi wekhadi lakho ukuze uqinisekiswe.',
-'online.payment.accessKey' => 'Ukhiye Wokufinyelela',
-'online.payment.accessToken' => 'Ithokheni yokufinyelela',
-'online.payment.accountId' => 'I-ID ye-akhawunti',
-'online.payment.accountNumber' => 'Inombolo Ye-akhawunti',
-'online.payment.apiKey' => 'I-Api Key',
-'online.payment.apiLoginId' => 'I-Id yokungena ye-Api',
-'online.payment.appId' => 'I-Id yohlelo lokusebenza',
-'online.payment.appSecret' => 'Imfihlo Yohlelo Lokusebenza',
-'online.payment.callbackPassword' => 'Iphasiwedi yokushayela emuva',
-'online.payment.card.invalid' => 'Leli khadi lesikweletu alivumelekile.'
-	. 'Sicela uhlole imininingwane enikeziwe.',
-'online.payment.clientId' => 'I-Client Id',
-'online.payment.clientSecret' => 'Imfihlo Yekhasimende',
-'online.payment.creditcard.hint' => 'Uma ufuna ukukhokha ngekhadi lesikweletu '
-	. 'sicela ufake imininingwane engezansi.'
-	. '<br/> Imininingwane yekhadi lesikweletu ayigcinwa '
-	. 'eziphakelini zethu futhi izodluliselwa esangweni '
-	. 'lokukhokha ku-inthanethi kusetshenziswa uxhumano oluvikelekile.',
-'online.payment.developerMode' => 'Imodi Yonjiniyela',
-'online.payment.for' => 'Inkokhelo Ye-inthanethi ye',
-'online.payment.for.invoice' => 'Inkokhelo ye-inthanethi ye-invoyisi',
-'online.payment.installationId' => 'I-Id yokufaka',
-'online.payment.merchantAccessCode' => 'Ikhodi Yokufinyelela Komthengisi',
-'online.payment.merchantId' => 'I-Id yomthengisi',
-'online.payment.merchantKey' => 'Ukhiye Womthengisi',
-'online.payment.method' => 'Indlela Yokukhokha Ku-inthanethi',
-'online.payment.partner' => 'Uzakwethu',
-'online.payment.partnerID' => 'I-ID kazakwethu',
-'online.payment.password' => 'Iphasiwedi',
-'online.payment.payment.cancelled' => 'Inkokhelo ikhanseliwe.',
-'online.payment.payment.failed' => 'Inkokhelo yehlulekile.'
-	. 'Sicela uzame futhi.',
-'online.payment.payment.redirect' => 'Sicela ulinde ngenkathi sikuqondisa kabusha '
-	. 'ekhasini lokukhokha.',
-'online.payment.payment.successful' => 'Inkokhelo ye-invoyisi %s iphumelele!',
-'online.payment.pdtKey' => 'I-Pdt Key',
-'online.payment.privateKey' => 'Ukhiye Oyimfihlo',
-'online.payment.profileID' => 'I-ID yephrofayela',
-'online.payment.profileId' => 'I-Id yephrofayela',
-'online.payment.publicKey' => 'Ukhiye Womphakathi',
-'online.payment.publicKeyId' => 'I-Id Yokhiye Womphakathi',
-'online.payment.publishableKey' => 'Ukhiye Oshicilelwe',
-'online.payment.pxPostPassword' => 'Px Thumela Iphasiwedi',
-'online.payment.pxPostUsername' => 'Px Thumela Igama lomsebenzisi',
-'online.payment.referrerId' => 'I-ID ye-referrer',
-'online.payment.region' => 'Isifunda',
-'online.payment.returnUrl' => 'Buyisa i-Url',
-'online.payment.sandbox' => 'Ibhokisi lesihlabathi',
-'online.payment.sandboxId' => 'I-ID yebhokisi lesihlabathi',
-'online.payment.secret' => 'Imfihlo',
-'online.payment.secretKey' => 'Ukhiye Oyimfihlo',
-'online.payment.secretWord' => 'Izwi eliyimfihlo',
-'online.payment.secureHash' => 'Vikela i-Hash',
-'online.payment.sharedSecret' => 'Imfihlo eyabiwe',
-'online.payment.signature' => 'Isiginesha',
-'online.payment.siteCode' => 'Ikhodi Yesayithi',
-'online.payment.siteId' => 'I-Id yesayithi',
-'online.payment.storeId' => 'I-ID yesitolo',
-'online.payment.storePassword' => 'Gcina Iphasiwedi',
-'online.payment.subAccountId' => 'I-ID ye-akhawunti engaphansi',
-'online.payment.testMode' => 'Imodi yokuhlola',
-'online.payment.testOrLiveApiKey' => 'Hlola noma u-Live Api Key '
-	. 'okungukuthi iqala ngokuthi test_ noma '
-	. 'live_',
-'online.payment.transactionKey' => 'Ukhiye Wokwenziwe',
-'online.payment.transactionPassword' => 'Iphasiwedi yokwenziwe',
-'online.payment.username' => 'Igama lomsebenzisi',
-'online.payment.vendor' => 'Umthengisi',
-'online.payment.version' => 'Inguqulo ye-Omnipay (ihloliwe) / Iyahambisana '
-	. 'ne-PCI (Ayikho imininingwane yekhadi lesikweletu '
-	. 'egcinwe kulesi sizindalwazi) (ayithikhiwe)',
-'online.payment.webhookId' => 'I-ID ye-Webhook',
-'online.payment.websiteKey' => 'Ukhiye Wewebhusayithi',
-'online.payments' => 'Izinkokhelo eziku-inthanethi',
-'open' => 'Vula',
-'open.invoices' => 'Vula ama-invoyisi',
-'open.quotes' => 'Vula ama-Quotes',
-'open.reports.in.new.tab' =>
-	'Vula Imibiko Kuthebhu Yesiphequluli entsha',
-'optional' => 'Ongakukhetha',
-'options' => 'Izinketho',
-'order' => 'Oda',
-'orm' => 'I-Orm',
-'other.settings' => 'Ezinye Izilungiselelo',
-'overdue' => 'Sekwephuzile',
-'overdue.invoices' => 'Ama-invoyisi Adlulelwe yisikhathi',
-'overview' => 'Uhlolojikelele lwe-invoyisi',
-'overview.period' => 'Isikhathi Sokubuka I-invoyisi',
-'page' => 'Ikhasi',
-'paid' => 'Ikhokhiwe',
-'password' => 'Iphasiwedi',
-'password.change' => 'SHINTSHA iphasiwedi',
-'password.changed' => 'Iphasiwedi ishintshwe ngempumelelo',
-'password.reset' => 'Setha kabusha Iphasiwedi',
-'password.reset.email' => 'Ucele iphasiwedi entsha ukuze uyifake.'
-	. 'Sicela uchofoze isixhumanisi ebhokisini lakho '
-	. 'lokungenayo ukuze usethe kabusha iphasiwedi '
-	. 'yakho.',
-'password.reset.failed' => 'Kwenzeke iphutha ngenkathi uzama ukuthumela '
-	. 'i-imeyili yokusetha kabusha iphasiwedi yakho.'
-	. 'Sicela ubuyekeze amalogi ohlelo lokusebenza '
-	. 'noma uthinte umlawuli wesistimu.',
-'password.reset.info' => 'Uzothola i-imeyili enesixhumanisi sokusetha kabusha '
-	. 'iphasiwedi yakho.',
-'password.reset.request.token' => 'Cela Ithokheni Yokusetha Kabusha Iphasiwedi',
-'past.month' => 'Inyanga edlule',
-'past.quarter' => 'Ikota edlule',
-'past.year' => 'Ngonyaka odlule',
-'pay.now' => 'Khokha Manje',
-'payment' => 'Inkokhelo',
-'payment.add' => 'Inkokhelo Engeza',
-'payment.cannot.delete' => 'Awukwazi ukususa inkokhelo',
-'payment.cannot.exceed.balance' => 'Inani lokukhokha alikwazi ukweqa ibhalansi '
-	. 'ye-invoyisi.',
-'payment.custom' => 'Ukukhokha Ngokwezifiso',
-'payment.custom.add' => 'Inkokhelo Ngokwezifiso Engeza',
-'payment.date' => 'Usuku Lokukhokha',
-'payment.deleted' => 'Inkokhelo Isusiwe',
-'payment.description' => 'Inkokhelo ye-invoyisi %s',
-'payment.form' => 'Ifomu Lokukhokha',
-'payment.gateway.default.locale' => 'Indawo ezenzakalelayo isb en.'
-	. 'GB',
-'payment.gateway.mollie.api.key.has.been.setup' =>
-	'I-Mollie Payment Gateway Test noma '
-	. 'i-Live Api Key isethiwe.',
-'payment.gateway.mollie.api.key.needs.to.be.setup' =>
-	'I-Mollie Payment Gateway Test noma '
-	. 'i-Live Api Key idinga ukusethwa.',
-'payment.gateway.mollie.api.payment.id' =>
-	'I-Id Yokukhokha ka-Mollie:',
-'payment.gateway.no' => 'Awekho amasango okukhokha asethiwe ngaphansi '
-	. 'kokuthi Izilungiselelo .'
-	. 'Buka .'
-	. 'Inkokhelo Ye-inthanethi',
-'payment.history' => 'Umlando Wokukhokha',
-'payment.information.braintree.braintree.no.omnipay.version' =>
-	'Okwamanje ayikho i-Braintree Omnipay Version '
-	. 'ehambisana ne-Braintree Version 6.'
-	. '9.'
-	. '1.'
-	. 'Susa ukumaka Inguqulo ye-Omnipay ukuze '
-	. 'usebenzise inguqulo ethobelana ne-PCI ngaphansi '
-	. 'kokuthi Ukubuka Kwezilungiselelo',
-'payment.information.invoice.number.not.provided' =>
-	'Inombolo ye-invoyisi ayinikeziwe',
-'payment.information.no.information.provided' =>
-	'Alukho ulwazi olunikeziwe',
-'payment.information.none' => 'Lutho',
-'payment.information.omnipay.driver.being.used' =>
-	'Umshayeli ongu-{{$d}} osuka ku-Omnipay uyasetshenziswa.',
-'payment.information.payment.method.required' =>
-	'Indlela yokukhokha iyadingeka kule invoyisi.',
-'payment.information.stripe.api.key' =>
-	'I-Stripe Payment Gateway Secret Key '
-	. '/ Api Key idinga ukusethwa.',
-'payment.logs' => 'Amalogi Okukhokha',
-'payment.method' => 'Indlela yokukhokha',
-'payment.method.add' => 'Indlela Yokukhokha Engeza',
-'payment.method.already.exists' => 'Indlela yokukhokha isivele ikhona!',
-'payment.method.form' => 'Ifomu Lendlela Yokukhokha',
-'payment.method.history' => 'Ayikwazi ukususa.'
-	. 'Umlando weNdlela yokukhokha ukhona.',
-'payment.methods' => 'Izindlela Zokukhokha',
-'payment.no.invoice.sent' => 'Awekho ama-invoyisi athunyelwe yithi noma '
-	. 'abukwe ikhasimende.',
-'payment.provider' => 'Umhlinzeki Wenkokhelo',
-'payment.term' => 'Imigomo Yokukhokha',
-'payment.term.0.days' => 'Sicela usebenzise enye yezindlela zokukhokha '
-	. 'ezinikeziwe',
-'payment.term.add.additional.terms.at.setting.repository' =>
-	'Engeza Imigomo Eyengeziwe kumsebenzi we-Setting '
-	. 'Repository getPaymentTerms.',
-'payment.term.eom.120.days' =>
-	'I-EOM(120):'
-	. 'Sicela ukhokhe zingakapheli izinsuku eziyi-120 '
-	. 'Ekupheleni kwenyanga yedethi yokukhishwa',
-'payment.term.eom.15.days' =>
-	'I-EOM(15):'
-	. 'Sicela ukhokhe zingakapheli izinsuku eziyi-15 '
-	. 'zokuphela kwenyanga yedethi yokukhishwa',
-'payment.term.eom.30.days' =>
-	'I-EOM(30):'
-	. 'Sicela ukhokhe zingakapheli izinsuku ezingu-30 '
-	. 'zokuphela kwenyanga yedethi yokukhishwa',
-'payment.term.eom.60.days' =>
-	'I-EOM(60):'
-	. 'Sicela ukhokhe zingakapheli izinsuku ezingu-60 '
-	. 'zokuphela kwenyanga yedethi yokukhishwa',
-'payment.term.eom.90.days' =>
-	'I-EOM(90):'
-	. 'Sicela ukhokhe zingakapheli izinsuku ezingu-90 '
-	. 'zokuphela kwenyanga yedethi yokukhishwa',
-'payment.term.general' => 'Inkokhelo kufanele ingakapheli izinsuku ezingama-30',
-'payment.term.mfi.15' => 'I-MFI(15):'
-	. 'Sicela ukhokhe ngomhla ka-15 weNyanga '
-	. 'Elandela Usuku Lokukhishwa Kwenyanga',
-'payment.term.net.120.days' =>
-	'I-Net(120):'
-	. 'Sicela ukhokhe zingakapheli izinsuku eziyi-120 '
-	. 'zedethi yokukhishwa',
-'payment.term.net.15.days' =>
-	'I-Net(15):'
-	. 'Sicela ukhokhe zingakapheli izinsuku eziyi-15 '
-	. 'zedethi yokukhishwa.',
-'payment.term.net.30.days' =>
-	'I-Net(30):'
-	. 'Sicela ukhokhe zingakapheli izinsuku ezingama-30 '
-	. 'zosuku lokukhishwa',
-'payment.term.net.60.days' =>
-	'I-Net(60):'
-	. 'Sicela ukhokhe zingakapheli izinsuku ezingu-60 '
-	. 'zosuku lokukhishwa',
-'payment.term.net.90.days' =>
-	'I-Net(90):'
-	. 'Sicela ukhokhe zingakapheli izinsuku ezingu-90 '
-	. 'zosuku lokukhishwa',
-'payment.term.pia' => 'Inkokhelo iyadingeka ngaphambi kwesikhathi (PIA)',
-'payment.term.polite' => 'Siyalithokozela ibhizinisi lakho.'
-	. 'Sicela uthumele inkokhelo yakho zingakapheli '
-	. 'izinsuku ezingu-30 uthole le-invoyisi.',
-'payment.terms.default' => 'Khokha zingakapheli izinsuku eziyi-14',
-'paymentpeppol' => 'Izinkokhelo ezenziwe nge-Peppol',
-'paymentpeppol.reference.plural' => 'Izithenjwa Zokukhokha zisebenzisa i-Peppol',
-'payments' => 'Izinkokhelo',
-'paymentterm' => 'Isikhathi Sokukhokha',
-'pdf' => 'PDF',
-'pdf.archived.no' => 'I-Pdf AYIGCINWE kungobo yomlando kokuthi '
-	. 'Okulayishiwe/kungobo yomlando/i-invoyisi',
-'pdf.archived.yes' => 'I-Pdf Ifakwe kungobo yomlando kokuthi '
-	. 'Okulayishiwe/kungobo yomlando/i-invoyisi',
-'pdf.include.zugferd' => 'Faka i-ZUGFeRD',
-'pdf.include.zugferd.help' => 'Ukunika amandla le nketho kuzobandakanya '
-	. 'i-ZUGFeRD XML kuma-invoyisi e-PDF, okuyindinganiso '
-	. 'ye-XML yama-invoyisi.'
-	. '<a href="https:'
-	. '//www.'
-	. 'ferd-net.'
-	. 'de/">Ulwazi olwengeziwe</a>',
-'pdf.invoice.footer' => 'PDF Footer',
-'pdf.invoice.footer.hint' => 'Ungafaka noma iyiphi i-HTML lapha '
-	. 'ezoboniswa phansi kwama-invoyisi akho e-PDF.',
-'pdf.modal' => 'I-Modal PDF',
-'pdf.quote.footer' => 'Caphula unyaweni',
-'pdf.quote.footer.hint' => 'Ungafaka noma iyiphi i-HTML lapha '
-	. 'ezoboniswa phansi kwezingcaphuno zakho ze-PDF.',
-'pdf.settings' => 'Izilungiselelo ze-PDF',
-'pdf.template' => 'Isifanekiso se-PDF',
-'pdf.template.overdue' => 'Isifanekiso Se-PDF Esidlulelwe yisikhathi',
-'pdf.template.paid' => 'Isifanekiso se-PDF esikhokhelwe',
-'pdf.watermark' => 'Nika amandla ama-Watermark e-PDF',
-'peppol' => 'I-Peppol Universal Business Language (UBL) '
-	. '2.'
-	. '1 I-invoyisi - I-Ecosio Iqinisekisiwe',
-'peppol.abbreviation' => 'Peppol',
-'peppol.allowance.or.charge.inherit' =>
-	'Izindleko Zokuvunyelwa Kwe-invoyisi kanye Nezindleko '
-	. 'Zemvume Yento Ye-invoyisi njengefa elivela '
-	. 'Enkokhelweni Yesibonelelo Sezinga Ledokhumenti Ye-Peppol '
-	. 'eqediwe',
-'peppol.client.check' => 'Imininingwane ye-Peppol ehlobene naleli klayenti '
-	. 'ayanele.'
-	. 'Okungenani eyodwa ayikho.'
-	. 'Bheka okuthi Buka .'
-	. 'Iklayenti .'
-	. 'Izinketho .'
-	. 'Hlela imininingwane ye-Peppol ye-invoyisi ye-e',
-'peppol.client.defaults' => 'Gcwalisa Ifomu le-Peppol Leklayenti ngokuzenzakalelayo '
-	. 'kwe-OpenPeppol ukuze uhlolwe.',
-'peppol.currency.code.from' => 'Kusuka kuMali ie.'
-	. 'Izwe Lohlobo Lwemali Lwentela Yomsuka '
-	. '(Ukuze ushintshe bheka okuthi config/common/params.'
-	. 'php TaxCurrencyCode)',
-'peppol.currency.code.to' => 'Ukuze Imali ie.'
-	. 'Imali Yedokhumenti:'
-	. 'bona umsebenzi get.'
-	. 'setting(\'currency.'
-	. 'code.'
-	. 'to\')',
-'peppol.currency.from.to' => 'Eyodwa ye-Kusuka ku-Currency namuhla iguqulela '
-	. 'lokhu kwe-To Currency',
-'peppol.currency.to.from' => 'Eyodwa ye-To Currency namuhla iguqulela '
-	. 'kulokhu kokuthi Ukusuka Kumali',
-'peppol.document.reference.null' => 'inombolo ye-inv-null-inv-id',
-'peppol.ecosio.validator' => 'I-Ecosio Validator ye-OpenPeppol UBL Invoyisi '
-	. '(3.'
-	. '15.'
-	. '0) (eyaziwa nangokuthi i-BIS Billing '
-	. '3.'
-	. '0.'
-	. '14)',
-'peppol.electronic.invoicing' => 'I-Peppol Electronic Invoicing',
-'peppol.enable' => 'Nika amandla i-Peppol isebenzisa Ulimi '
-	. 'Lwebhizinisi Lomhlaba Wonke (UBL) 2.'
-	. '1',
-'peppol.include.delivery.period' => 'Bandakanya Izikhathi Zokulethwa',
-'peppol.invoice.note.not.found' =>
-	'Inothi le-invoyisi alitholakali',
-'peppol.label.switch.off' => 'Okuzenzakalelayo kwe-Peppol kunikwe amandla',
-'peppol.label.switch.on' => 'Okuzenzakalelayo kwe-Peppol Kukhutshaziwe',
-'peppol.mandatory' => ' (Kuphoqelekile)',
-'peppol.optional' => ' (Ongakukhetha)',
-'peppol.stand.in.code' => 'Ikhodi yencazelo - ekhombisa ukuthi '
-	. 'yisiphi isisekelo esizosetshenziswa ngedethi yesikhathi '
-	. 'esizayo yephoyinti lentela lapho izimpahla '
-	. 'zihlinzekwa/zikhokhwa.'
-	. 'Uma iphoyinti lentela linganqunywa, ikhodi '
-	. 'yencazelo ayibandakanyiwe ngokuhlanganyela Enkathini Ye-invoyisi.',
-'peppol.store.cove.1.1.1' =>
-	'Bhalisela Ukufinyelela kwe-API kuwebhusayithi ye-Store '
-	. 'Cove',
-'peppol.store.cove.1.1.2' =>
-	'Dala ukhiye wakho we-API kusuka '
-	. 'kuwebhusayithi ye-Store Cove futhi ugcine '
-	. 'kokuthi Izilungiselelo.'
-	. 'Buka.'
-	. 'Inkokhelo Ye-inthanethi.'
-	. 'I-Store Cove.'
-	. 'Ukhiye we-Api',
-'peppol.store.cove.1.1.3' =>
-	'Yenza ikholi yakho yokuqala ye-API '
-	. 'ukuze uthole impendulo ye-JSON.',
-'peppol.store.cove.1.1.4' =>
-	'Thumela i-invoyisi yakho yokuqala yokuhlolwa '
-	. 'kwe-Json oyithole ngokuchofoza inkinobho eluhlaza '
-	. 'Umhlaba=&gt;DE',
-'peppol.stream.toggle' => 'I-Peppol - \'Sakaza\' noma \'Londoloza '
-	. 'Kufayela\' Inkinobho Yokuguqula',
-'peppol.tax.category.not.found' =>
-	'Ikhodi Yesigaba Sentela ye-Peppol (https:'
-	. '//docs.'
-	. 'peppol.'
-	. 'eu/poacc/billing/3.'
-	. '0/codelist/UNCL5305/) ayikho.',
-'peppol.tax.category.percent.not.found' =>
-	'Iphesenti Lesigaba Sentela se-Peppol (https:'
-	. '//docs.'
-	. 'peppol.'
-	. 'eu/poacc/billing/3.'
-	. '0/codelist/UNCL5305/) alikho.',
-'peppol.tax.rate.code' => 'Ikhodi Yesilinganiso Sentela ye-Peppol',
-'peppol.trying.to.send.non.pdf.file' =>
-	'Amafayela e-PDF kuphela athunyelwayo nama-invoyisi '
-	. 'akwa-Peppol',
-'peppol.unit' => 'Ukuhlukaniswa Kweyunithi kusetshenziswa i-Peppol',
-'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' =>
-	'Umthombo:'
-	. 'src/I-invoyisi/Ubl/I-invoyisi:'
-	. 'Incazelo yedokhumenti engekho - I-Ecosio:'
-	. 'Idokhumenti AKUMELE iqukathe izinto ezingenalutho.'
-	. 'Isixazululo:'
-	. 'Ukubuka Kwe-invoyisi:'
-	. 'Izinketho .'
-	. 'Hlela .'
-	. 'Incazelo Yedokhumenti',
-'peppol.validator.Invoice.cac.Note' =>
-	'Umthombo:'
-	. 'src/I-invoyisi/Ubl/I-invoyisi:'
-	. 'Inothi le-invoyisi engekho - I-Ecosio:'
-	. 'Idokhumenti AKUMELE iqukathe izinto ezingenalutho.',
-'peppol.validator.Invoice.cac.Party.cbc.EndPointID' =>
-	'src/Invoyisi/Ubl/Iphathi:'
-	. 'Ikheli le-imeyili elingekho - I-Ecosio:'
-	. 'Ikheli Le-elekthronikhi KUMELE linikezwe.'
-	. 'Isixazululo:'
-	. 'Iklayenti .'
-	. 'Buka .'
-	. 'Izinketho .'
-	. 'Hlela imininingwane ye-Peppol ye-invoyisi ye-imeyili '
-	. '.'
-	. 'EndPointID',
-'peppol.version' => 'Inguqulo ye-Peppol',
-'peppol.xml.stream' => 'Sakaza ie.'
-	. 'bonisa esikrinini kusiphequluli esikhundleni sefolda '
-	. 'yokulanda.',
-'per.item' => 'ngento ngayinye',
-'per.page.total' => 'ekhasini ngalinye.'
-	. 'Ingqikithi',
-'performance' => 'Ukusebenza',
-'performance.label.switch.off' => 'Imodi Yokufunda Nokubhala Ngokushesha - '
-	. 'bheka ku-config/common/params.'
-	. 'php search \'imodi\'',
-'performance.label.switch.on' => 'Imodi Yokubhala Kanensa Kuphela - '
-	. 'bheka ku-config/common/params.'
-	. 'php sesha \'imodi\'',
-'period' => 'Isikhathi',
-'permission' => 'Awunayo imvume edingekayo.',
-'personal.information' => 'Ulwazi lomuntu siqu',
-'phone' => 'Ucingo',
-'phone.abbr' => 'P',
-'phone.number' => 'Inombolo yocingo',
-'php.timezone.fail' => 'Kubonakala sengathi ayikho izoni yesikhathi '
-	. 'emisiwe.'
-	. 'Sicela uhlole i-date.'
-	. 'timezone ekucushweni kwakho kwe-php.'
-	. 'Uma kungenjalo <strong>%s</strong> izokhethwa.',
-'php.timezone.success' => 'Indawo yesikhathi evumelekile ilungisiwe.',
-'php.version.fail' => 'Inguqulo ye-PHP %s ifakiwe kodwa '
-	. 'i-InvoicePlane idinga inguqulo ye-PHP %s '
-	. 'noma ngaphezulu',
-'php.version.success' => 'I-PHP ibonakala ihlangabezana nemfuneko yokufaka',
-'platform' => 'Inkundla',
-'platform.PhpMyAdmin' => 'PhpMyAdmin Version',
-'platform.PhpSupport' => 'Php Ukusekela',
-'platform.PhpVersion' => 'Php Inguqulo',
-'platform.csrf' => 'Cross Site Forgery Protection',
-'platform.editor' => 'Mhleli',
-'platform.mySqlVersion' => 'Inguqulo ye-mySql',
-'platform.netbeans.UTF-8' => 'Umbhalo wekhodi we-Netbeans UTF-8',
-'platform.server' => 'Iseva',
-'platform.sqlPath' => 'Indlela ye-Sql',
-'platform.update' => 'Amafayela we-WampServer nama-Addons',
-'platform.windowsVersion' => 'I-Windows 11 Home Edition',
-'platform.xdebug' => 'Isandiso se-Xdebug',
-'please.enable.js' => 'Sicela unike amandla i-Javascript ukuze '
-	. 'usebenzise i-InvoicePlane',
-'po.group' => 'Thenga Iqembu le-oda',
-'port' => 'Itheku',
-'position' => 'Isikhundla',
-'possible.file.upload.attack' => 'Ukuhlaselwa kokulayisha ifayela okungenzeka: ',
-'pre.password' => 'Iphasiwedi ejwayelekile ye-invoyisi ye-PDF (uyazikhethela)',
-'prefix' => 'Isiqalo',
-'prev' => 'Okwedlule',
-'preview' => 'Buka kuqala',
-'price' => 'Inani',
-'product' => 'Umkhiqizo',
-'product.add' => 'Engeza umkhiqizo',
-'product.additional.item.property.name' =>
-	'Igama Lempahla Eyengeziwe ye-Peppol isb.'
-	. 'Umbala',
-'product.additional.item.property.value' =>
-	'Inani Lempahla Eyengeziwe ye-Peppol isb.'
-	. 'Mnyama',
-'product.country.of.origin.code' =>
-	'I-Peppol Country of Origin Code '
-	. 'isebenzisa ISO-3166-1:'
-	. 'Alpha2 Country Codes',
-'product.custom.fields' => 'Izinkambu Ezingokwezifiso Zomkhiqizo (isb.'
-	. 'I-Peppol:'
-	. 'I-ExpressItemProperty inkambu yokukhethwa kwenani eliningi '
-	. 'lombala inani elimnyama)',
-'product.description' => 'Incazelo yomkhiqizo',
-'product.edit' => 'Hlela Umkhiqizo',
-'product.error.summary' => 'Isifinyezo Sephutha Lomkhiqizo',
-'product.families' => 'Imindeni yomkhiqizo',
-'product.form.tab.category' => 'Isigaba',
-'product.form.tab.not.required' =>
-	'Izinkambu ezingadingeki',
-'product.form.tab.required' => 'Izinkambu ezidingekayo',
-'product.found' => 'Umkhiqizo utholakele',
-'product.history' => 'Ayikwazi ukususa.'
-	. 'Lo mkhiqizo uku-invoyisi noma ikhwothi.',
-'product.icc.id' => 'I-ID Yekhodi Yokuhlukaniswa Kwento yakwa-Peppol '
-	. 'isb.'
-	. '9873242',
-'product.icc.listid' => 'I-id yohlu lwekhodi ye-Peppol Classificaiton '
-	. '- isb.'
-	. 'I-SRV',
-'product.icc.listversionid' => 'I-ID Yenguqulo Yohlu Lwekhodi Yezinto '
-	. 'ze-Peppol (Ongakukhetha) - isb.'
-	. 'Uma i-ItemClassification ihlinzekwa kubahlinzeki be-Danish,'
-	. 'inguqulo ye-UNSPSC 19.'
-	. '0501 kufanele isetshenziswe.',
-'product.id' => 'Ubunikazi bomkhiqizo',
-'product.image' => 'Isithombe',
-'product.item.classification.code.scheme.id.not.found' =>
-	'I-Id Yohlelo Lokuhlukaniswa Kwento Yomkhiqizo '
-	. 'ayitholakali',
-'product.name' => 'Igama lomkhiqizo',
-'product.not.found' => 'Umkhiqizo awutholakali',
-'product.peppol.unit' => 'Iyunithi nePeppol',
-'product.price' => 'Inani',
-'product.price.base.quantity' => 'qty kuMkhiqizo',
-'product.property' => ' Impahla Yomkhiqizo',
-'product.property.add' => ' Impahla Yomkhiqizo Engeza',
-'product.property.edit' => 'Hlela Impahla Yomkhiqizo',
-'product.property.index' => 'Inkomba Yempahla Yomkhiqizo',
-'product.property.name' => 'Igama',
-'product.property.table' => 'Ithebula Lempahla Yomkhiqizo',
-'product.property.value' => 'Inani',
-'product.record.successfully.added' => 'Irekhodi Lomkhiqizo lengezwe ngempumelelo',
-'product.sii.id' => 'I-id Yokuhlonza Into Ejwayelekile yakwa-Peppol '
-	. 'ehlobene nohlelo olungenhla - isb.'
-	. 'Isihlonzi esiyidijithi eziyi-14 esifakwe uziro '
-	. 'kusizindalwazi seNombolo Yento Yohwebo Yezwe '
-	. '(ivela ngaphansi kwebhakhodi)',
-'product.sii.schemeid' => 'Uhlelo Lokuhlonza Into Ejwayelekile yakwa-Peppol '
-	. '- isb.'
-	. '0160',
-'product.sku' => 'I-SKU',
-'product.tariff' => 'I-Tariff',
-'product.unit' => 'Iyunithi Yomkhiqizo',
-'product.unit.code.not.found' =>
-	'Umkhiqizo awunayo Ikhodi yeyunithi ehlotshaniswa '
-	. 'nawo.'
-	. 'Umkhiqizo .'
-	. 'Hlela .'
-	. 'Iyunithi ne-Peppol.',
-'product.units' => 'Amayunithi Omkhiqizo',
-'product.view.tab.details' => 'Imininingwane Yomkhiqizo',
-'product.view.tab.gallery' => 'Igalari Yomkhiqizo',
-'product.view.tab.images' => 'Izithombe Zomkhiqizo',
-'product.view.tab.properties' => 'Izakhiwo Zomkhiqizo',
-'productimage.add' => 'Engeza Isithombe Somkhiqizo',
-'productimage.deleted.from' => 'Isithombe sisuswe ngempumelelo ohlwini lwemibhalo '
-	. 'olulandelayo:',
-'productimage.form' => 'Ifomu lesithombe somkhiqizo',
-'productimage.gallery' => 'Izithombe eziphathelene ne: ',
-'productimage.index' => 'Inkomba yesithombe somkhiqizo',
-'productimage.list' => 'Uhlu lwezithombe ezihlobene nalo mkhiqizo',
-'productimage.no.file.uploaded' => 'Asikho isithombe esilayishiwe.'
-	. 'Impinda engenzeka.',
-'productimage.plural' => 'Izithombe Zomkhiqizo',
-'productimage.possible.file.upload.attack' =>
-	'Ukuhlaselwa kokulayisha ifayela okungenzeka:',
-'productimage.upload' => 'Layisha Isithombe Somkhiqizo',
-'productimage.uploaded.to' => 'Isithombe silayishwe ohlwini lwemibhalo olulandelayo: ',
-'productimage.view' => 'Izithombe eziningi eziphathelene nomkhiqizo zingangezwa '
-	. 'ngaphansi kokubukwa komkhiqizo',
-'products' => 'Imikhiqizo',
-'products.form' => 'Ifomu Lomkhiqizo',
-'profile.deleted' => 'Iphrofayela isuliwe',
-'profile.history' => 'Ayikwazi ukususa iphrofayela.'
-	. 'Umlando ukhona',
-'profile.new' => 'Dala iphrofayela ngekheli le-imeyili elisha,'
-	. 'noma inombolo yeselula, yenze isebenze,'
-	. 'bese ukhetha imininingwane yenkampani ofisa '
-	. 'ukuyixhumanisa nayo.'
-	. 'Lolu lwazi luzovela ngokuzenzakalelayo kumadokhumenti '
-	. 'isb.'
-	. 'izingcaphuno nama-invoyisi.',
-'profile.not.deleted' => 'Iphrofayela ayisusiwe',
-'profile.plural' => 'Amaphrofayili',
-'profile.property.label.company' => 'Inkampani',
-'profile.property.label.current' => 'Okwamanje',
-'profile.property.label.description' => 'Incazelo',
-'profile.property.label.email' => 'I-imeyili',
-'profile.property.label.mobile' => 'Iselula',
-'profile.singular' => 'Iphrofayela',
-'project' => 'Iphrojekthi',
-'project.add' => 'Faka iphrojekthi',
-'project.name' => 'Igama lephrojekthi',
-'projects' => 'Amaphrojekthi',
-'projects.form' => 'Amaphrojekthi',
-'properties' => 'Izakhiwo',
-'provider.name' => 'Igama Lomhlinzeki',
-'provider.response' => 'Impendulo Yomhlinzeki',
-'purchase.price' => 'Intengo yokuthenga',
-'Q1' => 'Q1',
-'Q2' => 'Q2',
-'Q3' => 'Q3',
-'Q4' => 'Q4',
-'qr.absolute.url' => 'I-Absolute Url isetshenziselwe ukwakha ngaphezu '
-	. 'kwekhodi ye-Qr',
-'qr.code' => 'Ikhodi ye-QR',
-'qr.code.1' => 'Ikhodi ye-QR 1',
-'qr.code.details' => 'Imininingwane Yekhodi Ye-QR',
-'qr.code.level.1' => 'Izinga lokubhala ngekhodi liyisisekelo',
-'qr.code.level.2' => 'Izinga lokubhala ngekhodi liphakathi',
-'qr.code.level.3' => 'Izinga lokubhala ngekhodi Lithuthukile',
-'qr.code.settings' => 'Izilungiselelo Zekhodi ye-QR',
-'qr.code.settings.bic' => 'I-BIC',
-'qr.code.settings.effect' => 'Izilungiselelo ezingenhla zinamuphi umphumela kule '
-	. 'Khodi ye-Qr?',
-'qr.code.settings.effect.explanation' =>
-	'Kwikhodi yangempela .'
-	. 'akukho.'
-	. 'Konke okumisiwe kusetshenziswa ngoba ikhodi '
-	. 'yangempela eyisisekelo ngenhla isetshenziswa.',
-'qr.code.settings.enable' => 'Nika amandla Ikhodi ye-QR',
-'qr.code.settings.enable.hint' =>
-	'Ukunika amandla le nketho kuzofaka '
-	. 'ikhodi ye-QR yama-invoyisi e-PDF.'
-	. 'Kufanele ugcwalise umamukeli, i-IBAN ne-BIC '
-	. 'ngezansi ukuze usebenze ngendlela efanele.'
-	. 'Uma kungenjalo ikhodi ye-QR ngeke '
-	. 'iboniswe.',
-'qr.code.settings.iban' => 'IBAN',
-'qr.code.settings.recipient' => 'Umamukeli',
-'qr.code.settings.remittance.text' =>
-	'Umbhalo Wemali Ethunyelwayo',
-'qr.code.settings.remittance.text.tags' =>
-	'Amathegi Ombhalo Wemali Ethunyelwayo',
-'qr.code.source' => 'Umthombo wekhodi ye-Qr',
-'qr.code.source.path' => 'imithombo\\ukubukwa\\invoyisi\\setting\\company.'
-	. 'logo.'
-	. 'and.'
-	. 'address.'
-	. 'php',
-'qr.code.type' => 'Uhlobo lwekhodi ye-QR',
-'qr.code.type.absolute.url' =>
-	'I-Absolute (yonke) Isekelwe ku-Url',
-'qr.code.widget.used' => 'Iwijethi esetshenzisiwe',
-'qr.ecc.level' => 'I-QR Code Ecc Level (Okuzenzakalelayo:'
-	. 'L)',
-'qr.height.and.width' => 'Ikhodi ye-QR Ubude Nobubanzi (Okuzenzakalelayo:'
-	. '60)',
-'qr.meaning' => 'Incazelo',
-'qr.meaning.benefit' => 'Skena futhi ubuyele ukuze ubuke '
-	. '(ngaphandle kokuthayipha i-url) lapho i-invoyisi '
-	. 'ingaphrintwa khona ngefomethi ye-pdf.'
-	. 'Isebenza kubo bonke abasebenzisi abane-akhawunti '
-	. 'yeklayenti esebenzayo.',
-'qr.output.type' => 'Uhlobo Lokukhipha Ikhodi ye-QR (isb.'
-	. '.'
-	. 'svg, .'
-	. 'png) (Okuzenzakalelayo:'
-	. 'png)',
-'qr.version' => 'Inombolo Yenguqulo Yekhodi Ye-QR (yangaphambili '
-	. '0 yakamuva 40) (Okuzenzakalelayo:'
-	. '40)',
-'qty' => 'Qty',
-'quantity' => 'Ubuningi',
-'quarter' => 'Ikota',
-'quick.actions' => 'Izenzo Ezisheshayo',
-'quote' => 'Quote',
-'quote.add' => 'Quote Engeza',
-'quote.amount' => 'Quote Inani',
-'quote.amount.add' => 'Ikhotheshini Inani Engeza',
-'quote.amounts' => 'Quote Amanani',
-'quote.approve' => 'Gunyaza',
-'quote.approved' => 'Lesi sisho sivunyiwe',
-'quote.copied.to.invoice' => 'Ingcaphuno ikopishelwe ku-invoyisi ENTSHA',
-'quote.copied.to.quote' => 'Ingcaphuno ikopishwe ku-Quote ENTSHA!',
-'quote.copied.to.so' => 'Ingcaphuno Ikopishelwe ku-Oda Yokuthengisa',
-'quote.custom' => 'Quote Custom',
-'quote.custom.add' => 'Quote Ngokwezifiso Engeza',
-'quote.date' => 'Usuku lokucaphuna',
-'quote.dates' => 'Quote Izinsuku',
-'quote.delete.not' => 'I-invoyisi ayisusiwe.',
-'quote.delivery.location.index.button.list' =>
-	'Izingcaphuno',
-'quote.delivery.location.none' => 'Ayikho indawo yokulethwa exhunywe kulesi '
-	. 'sisho.',
-'quote.disable.flash.messages' => 'Khubaza Imilayezo ye-Quote Flash',
-'quote.email.templates.not.configured' =>
-	'Izifanekiso ze-imeyili azilungiselelwe.'
-	. 'Izilungiselelo.'
-	. 'Izingcaphuno.'
-	. 'Izifanekiso Zecaphuna.'
-	. 'Isifanekiso Se-imeyili Esizenzakalelayo',
-'quote.group' => 'Quote Group',
-'quote.id' => 'I-ID yengcaphuno ',
-'quote.item' => 'Quote Into',
-'quote.item.add' => 'Faka Into Yengcaphuno',
-'quote.item.amount' => 'Quote Into Inani',
-'quote.item.amount.add' => 'I-Quote Into Inani Lokwengeza',
-'quote.item.cannot.delete' => 'Ayikwazi ukususa into yokucaphuna',
-'quote.label.switch.off' => 'I-VAT Quote',
-'quote.label.switch.on' => 'Ingcaphuno ye-VAT engeyona',
-'quote.not.copied.to.invoice' =>
-	'I-invoyisi AYIDAKWE kusuka ku-Quote! I-invoyisi '
-	. 'eyimpinda.'
-	. 'Kopisha Ingcaphuno yakho kwenye ikhwothi '
-	. 'bese ukopisha ku-invoyisi.'
-	. 'Ikhwothi ngayinye kufanele ibe ne-invoyisi '
-	. 'efanayo.',
-'quote.number' => 'Inombolo ye-Quote',
-'quote.number.status' => 'Quote Inombolo Isimo',
-'quote.overview' => 'Quote Uhlolojikelele',
-'quote.overview.period' => 'Quote Uhlolojikelele Period',
-'quote.password' => 'Caphula iphasiwedi ye-PDF (uyazikhethela)',
-'quote.pre.password' => 'Caphuna iphasiwedi ejwayelekile ye-PDF (uyazikhethela)',
-'quote.reject' => 'Yenqaba',
-'quote.rejected' => 'Lesi sisho sinqatshiwe',
-'quote.sales.order.created.from.quote' =>
-	'I-Sales Order idalwe kusuka ku-Quote '
-	. 'futhi ufake inombolo yakho ye-oda '
-	. 'lokuthenga!',
-'quote.sales.order.not.created.from.quote' =>
-	'I-oda lokuthengisa alidaliwe kusuka ku-Quote!'
-	. 'I-oda Lokuthengisa eliyimpinda.'
-	. 'Kopisha Ingcaphuno yakho kwenye ikhwothi '
-	. 'bese ukopisha ku-oda lokuthengisa.'
-	. 'Ikhwothi ngayinye kufanele ibe ne-oda '
-	. 'lokuthengisa elifanayo.',
-'quote.status.email.body' => 'Iklayenti %1$s ine-%2$s ikhwothi %3$sXhumanisa '
-	. 'Ingcaphuno:'
-	. '%4$s',
-'quote.status.email.subject' => 'Iklayenti %1$s %2$s icaphuna %3$s',
-'quote.tax' => 'I-Quote Tax',
-'quote.tax.rate' => 'I-Quote Tax Rate',
-'quote.tax.rate.add' => 'Isilinganiso Sentela Yengcaphuno Engeza',
-'quote.tax.rate.cannot.delete' =>
-	'Ayikwazi ukususa Isilinganiso Sentela Yengcaphuno',
-'quote.tax.rate.incomplete.fields' =>
-	'Izinkambu ezingaphelele:'
-	. 'Kufanele ufake inani lentela.'
-	. 'Ithiphu:'
-	. 'Faka nenani lentela elinguziro.',
-'quote.tax.rate.saved' => 'I-Quote Tax Rate ilondoloziwe',
-'quote.template' => 'Quote Isifanekiso',
-'quote.templates' => 'Quote Izifanekiso',
-'quote.to.invoice' => 'Quote ku-invoyisi',
-'quote.to.so' => 'Ingcaphuno ku-Sales Order',
-'quote.to.so.password' => 'Iphasiwedi ye-oda lokuthengisa',
-'quote.vat.quote' => 'I-VAT Quote',
-'quote.with.purchase.order.line.number' =>
-	'Inombolo Yomugqa We-oda Lokuthenga (Imfuneko '
-	. 'ye-Peppol) - ukuze ihambisane neNombolo '
-	. 'Yomugqa We-oda Lokuthengisa',
-'quote.with.purchase.order.number' =>
-	'Inombolo ye-oda yokuthenga - izomataniswa '
-	. 'nenombolo ye-oda lokuthengisa',
-'quote.with.purchase.order.person' =>
-	'Umuntu/Umnyango ofaka i-oda',
-'quotes' => 'Izingcaphuno',
-'quotes.expire.after' => 'Izingcaphuno Ziphelelwa Isikhathi Ngemva (Izinsuku)',
-'quotes.requiring.approval' => 'Izingcaphuno Ezidinga Ukugunyazwa',
-'read.only' => 'Funda kuphela',
-'read.this.please' => 'Sicela ufunde lokhu!',
-'reason' => 'Isizathu',
-'reason.accident' => 'Ingozi',
-'reason.birthdefect' => 'Ukukhubazeka kokuzalwa',
-'reason.disease' => 'Izifo',
-'reason.maternity' => 'Ukubeletha',
-'reason.prevention' => 'Ukuvimbela',
-'reason.unknown' => 'Akwaziwa',
-'recent.clients' => 'Amaklayenti akamuva',
-'recent.invoices' => 'Ama-invoyisi akamuva',
-'recent.payments' => 'Izinkokhelo zakamuva',
-'recent.quotes' => 'Izingcaphuno zakamuva',
-'record.successfully.created' => 'Ukurekhoda kudalwe ngempumelelo',
-'record.successfully.deleted' => 'Ukurekhoda kususwe ngempumelelo',
-'record.successfully.updated' => 'Ukurekhoda kubuyekezwe ngempumelelo',
-'records.no' => 'Awekho Amarekhodi',
-'recurring' => 'Okuphindaphindayo',
-'recurring.add' => 'Ukungeza Okuphindaphindiwe',
-'recurring.deleted' => 'Kususiwe',
-'recurring.frequency' => 'Imvamisa',
-'recurring.invoices' => 'Ama-invoyisi aphindaphindayo',
-'recurring.no.invoices.selected' => 'Awukhethanga noma yimaphi ama-invoyisi.',
-'recurring.original.invoice.date' => 'Idethi ye-invoyisi yoqobo: ',
-'recurring.status.sent.only' => 'Ama-invoyisi anesimo sokuthunyelwa kuphela angenziwa '
-	. 'aphindelela',
-'recurring.tooltip.next' => 'Usuku olulandelayo lusethwa kusetshenziswa inkomba.',
-'reject' => 'Yenqaba',
-'reject.this.quote' => 'Yenqaba Lesi Sicaphuno',
-'rejected' => 'Kwaliwe',
-'reminder' => 'Isikhumbuzi sithunyelwe',
-'remove' => 'Susa',
-'remove.logo' => 'Susa Ilogo',
-'report' => 'Bika',
-'report.options' => 'Bika Izinketho',
-'report.sales.by.product' => 'Ukuthengisa ngoMkhiqizo',
-'report.sales.by.product.info' =>
-	'Lo mbiko unikeza inani eliphelele '
-	. 'lokuthengiswa komkhiqizo kanye nentela yento '
-	. 'yawo.'
-	. 'Ayifaki intela ye-invoyisi eyengeziwe ehlobene '
-	. 'nale mikhiqizo.',
-'report.sales.by.task' => 'Ukuthengisa Ngomsebenzi',
-'report.sales.by.task.info' =>
-	'Lo mbiko unikeza inani eliphelele '
-	. 'lokuthengiswa komsebenzi kanye nentela yento '
-	. 'yawo.'
-	. 'Ayifaki intela ye-invoyisi eyengeziwe ehlobene '
-	. 'nale misebenzi.',
-'report.test.fraud.prevention.headers.api' =>
-	'I-Test Fraud Prevention Headers API',
-'reports' => 'Imibiko',
-'reset' => 'Setha kabusha',
-'reset.password' => 'Setha kabusha iphasiwedi',
-'rules.peppol.en16931.001' => 'Inqubo Yebhizinisi noma I-ID Yephrofayela '
-	. 'kufanele ihlinzekwe.'
-	. 'Bheka ku-config/common/params.'
-	. 'php search ProfileID',
-'run.report' => 'Qalisa umbiko',
-'sales' => 'Ukuthengisa',
-'sales.by.client' => 'Ukuthengisa ngeKlayenti',
-'sales.by.date' => 'Ukuthengisa ngedethi',
-'sales.with.tax' => 'Ukuthengisa Ngentela',
-'salesorder' => 'I-oda yokuthengisa',
-'salesorder.agree.to.terms' => 'Sicela wamukele Imigomo ezothunyelwa kuwe '
-	. 'manje',
-'salesorder.assembled.packaged.prepared' => 'Kuhlanganisiwe/Kupakishiwe/Kulungisiwe',
-'salesorder.cancelled' => 'I-oda Lokuthengisa Likhanseliwe',
-'salesorder.client.confirmed.terms' => 'Imigomo Eqinisekisiwe Yekhasimende',
-'salesorder.clients.purchase.order.number' =>
-	'Inombolo Ye-oda Lokuthenga Kwekhasimende',
-'salesorder.clients.purchase.order.person' =>
-	'Umuntu We-oda Lokuthenga Leklayenti Ophethe '
-	. 'i-oda lakhe',
-'salesorder.copied.to.invoice' => 'I-oda lokuthengisa likopishelwe ku-invoyisi',
-'salesorder.copied.to.invoice.not' =>
-	'I-invoyisi AYIDALWA ku-Sales Order! I-invoyisi '
-	. 'eyimpinda.'
-	. 'Kopisha i-Sales Order yakho kwenye '
-	. 'i-Sales Order bese ukopisha ku-invoyisi.'
-	. 'I-Sales Order ngayinye kufanele ibe '
-	. 'ne-invoyisi efanayo',
-'salesorder.date.created' => 'Idethi yokudayiswa kwe-oda lokuthengisa',
-'salesorder.default.group' => 'Iqembu elizenzakalelayo le-oda lokuthengisa',
-'salesorder.goods.services.confirmed' => 'Ukulethwa Okuqinisekisiwe Kwekhasimende',
-'salesorder.goods.services.delivered' => 'Izimpahla/Isevisi Ilethiwe',
-'salesorder.invoice' => 'I-invoyisi',
-'salesorder.invoice.generate' => 'Khiqiza i-invoyisi',
-'salesorder.invoice.generated' => 'I-invoyisi Yakhiwe',
-'salesorder.invoice.number' => 'Inombolo ye-invoyisi',
-'salesorder.number' => 'Inombolo ye-oda yokuthengisa',
-'salesorder.number.status' => 'Isimo se-oda No',
-'salesorder.password' => 'Iphasiwedi ye-oda lokuthengisa',
-'salesorder.payment.terms' => 'Imigomo Yokukhokha Ye-oda Lokuthengisa isb.'
-	. 'Sicela ukhokhe zingakapheli izinsuku ezingama-30',
-'salesorder.recent' => 'Ama-oda Okuthengiswa Kwakamuva',
-'salesorder.reject' => 'Ukwenqatshwa kwe-oda lokuthengisa',
-'salesorder.rejected' => 'Umyalelo Wokuthengisa Unqatshiwe',
-'salesorder.sent.to.customer' => 'Kudingeka Isivumelwano Semibandela',
-'salesorder.to.invoice' => 'I-oda lokuthengisa ku-invoyisi',
-'salesorder.vat.salesorder' => 'I-VAT Sales Order',
-'salesorders' => 'Ama-oda okuthengisa',
-'save' => 'Londoloza',
-'save.item.as.lookup' => 'Londoloza into njengokubheka',
-'search.family' => 'Sesha Umndeni',
-'search.product' => 'Sesha umkhiqizo',
-'security.disable.read.only.empty' =>
-	'Isilungiselelo sokukhubaza ukufunda kuphela okwamanje '
-	. 'asinalo inani elingu-0 noma elingu-1.'
-	. 'Isethe ngokusemthethweni ibe ngu-0 ngokuzenzakalelayo '
-	. 'ukuze kutholakale umsebenzi wokufunda kuphela '
-	. 'ukuze kuvinjelwe ukususwa kwe-invoyisi.',
-'security.disable.read.only.info' =>
-	'Isexwayiso:'
-	. 'Umsebenzi Wokufunda Kuphela Wokuvikela I-invoyisi '
-	. 'Nokuvimbela Ukususwa kunikwe amandla.'
-	. 'Khubaza i-\'disable.'
-	. 'read.'
-	. 'only\' ukuze uvumele ama-invoyisi athunyelwe '
-	. 'ukuthi asethwe kabusha ukuze asalungiswa',
-'security.disable.read.only.success' =>
-	'Impumelelo:'
-	. 'Umsebenzi Wokufunda Kuphela Wokuvikela I-invoyisi '
-	. 'Nokuvimbela Ukususwa kunikwe amandla kabusha',
-'security.disable.read.only.true.draft.check.and.mark' =>
-	'Isexwayiso:'
-	. 'Uhlela okusalungiswa ngesilungiselelo sokukhubaza ukufunda '
-	. 'kuphela kokuthi iqiniso',
-'security.disable.read.only.true.sent.check.and.mark' =>
-	'Isexwayiso:'
-	. 'Uhlela i-invoyisi ethunyelwe ngesilungiselelo sokukhubaza '
-	. 'ukufunda kuphela kokuthi iqiniso',
-'security.disable.read.only.warning' =>
-	'Isexwayiso:'
-	. 'Umsebenzi Wokufunda Kuphela Wokuvikela I-invoyisi '
-	. 'Nokuvimbela Ukususwa kukhutshaziwe',
-'select.family' => 'Khetha umndeni',
-'select.payment.method' => 'Khetha Indlela Yokukhokha',
-'select.project' => 'Khetha iphrojekthi',
-'select.unit' => 'Khetha iyunithi',
-'send' => 'Thumela',
-'send.email' => 'Thumela I-imeyili',
-'sent' => 'Ithunyelwe',
-'set.new.password' => 'Setha iphasiwedi entsha',
-'set.to.read.only' => 'Setha i-invoyisi ukuthi ifunde kuphela',
-'setting' => 'Ukusetha',
-'setting.add' => 'Ukusetha Engeza',
-'setting.as.a.result.of ' =>
-	'ngomphumela we',
-'setting.assets.cleared.at' => 'Izimpahla zisulwe ngo ',
-'setting.assets.were.not.cleared.at' =>
-	'Izimpahla azizange zisuswe',
-'setting.company' => 'Imininingwane Yomphakathi Yenkampani',
-'setting.company.private' => 'Imininingwane Eyimfihlo Yenkampani',
-'setting.company.profile' => 'Ukushintsha iphrofayili isb.'
-	. 'iselula nekheli le-imeyili',
-'setting.duplicate.key' => 'Ayikwazanga ukuqedela ukulondoloza.'
-	. 'Unempinda enokhiye olandelayo:',
-'setting.error.on.the.public.assets.folder' =>
-	'iphutha kufolda yezimpahla zomphakathi.',
-'setting.form' => 'Ukusetha Ifomu',
-'setting.key' => 'Ukhiye Wokusetha',
-'setting.section' => 'Ingxenye',
-'setting.subsection' => 'Isigatshana',
-'setting.translator.key' => 'Ukhiye Womhumushi',
-'setting.value' => 'Ukusetha Inani',
-'setting.you.have.cleared.the.cache' =>
-	'Usule inqolobane.',
-'setting.you.have.not.cleared.the.cache.due.to.a' =>
-	'Awukayisuli inqolobane ku-a',
-'settings' => 'Izilungiselelo',
-'settings.successfully.saved' => 'Izilungiselelo zilondolozwe ngempumelelo',
-'setup.choose.language' => 'Khetha Ulimi',
-'setup.choose.language.message' => 'Khetha ulimi ukuze uqhubeke nokufaka.',
-'setup.complete' => 'Ukufakwa Kuqediwe',
-'setup.complete.message' => 'I-InvoicePlane ifakwe ngempumelelo.'
-	. 'Ungangena manje.',
-'setup.complete.secure.setup' => 'Uma ufuna ukuvikela ukufakwa kwakho,'
-	. 'ungase ukhubaze ukusetha okwamanje.'
-	. 'Ukwenza kanjalo, buyisela umugqa <code>DISABLE_SETUP=false</code> '
-	. 'ngokuthi <code>DISABLE_SETUP=true</code> efayeleni lakho le '
-	. '<code>ipconfig.'
-	. 'php</code> .',
-'setup.complete.support.note' => 'Uma uhlangabezana nanoma yiziphi izinkinga '
-	. 'noma udinga usizo bheka i '
-	. '<a href="https:'
-	. '//wiki.'
-	. 'invoiceplane.'
-	. 'com">-wiki esemthethweni</a> noma <a href="https:'
-	. '//community.'
-	. 'invoiceplane.'
-	. 'com/">inkundla yomphakathi</a> .',
-'setup.create.user' => 'Dala i-Akhawunti Yomsebenzisi',
-'setup.create.user.message' => 'Lolu ulwazi ozoludinga ukuze ungene '
-	. 'ku-InvoicePlane.',
-'setup.database.configured.message' => 'Isizindalwazi simiswe ngempumelelo.',
-'setup.database.details' => 'Imininingwane Yesizindalwazi',
-'setup.database.message' => 'Nikeza ulwazi olulandelayo ukuze uxhume '
-	. 'kusizindalwazi sakho.',
-'setup.db.cannot.connect' => 'Ayikwazi ukuxhuma kuseva yolwazi ngolwazi '
-	. 'olunikeziwe lwesizindalwazi.'
-	. 'Sicela uhlole imininingwane bese uzama '
-	. 'futhi.',
-'setup.db.database.info' => 'Igama lesizindalwazi osidalile se-InvoicePlane.',
-'setup.db.hostname.info' => 'Igama lomethuleli lesizindalwazi sakho.',
-'setup.db.password.info' => 'Iphasiwedi ehlobene nesizindalwazi.',
-'setup.db.port.info' => 'Imbobo igama lomethuleli wakho elilalele '
-	. 'kuyo.'
-	. 'Okuzenzakalelayo kungu-3306.',
-'setup.db.username.info' => 'Igama lomsebenzisi elihlotshaniswa nesizindalwazi.',
-'setup.install.tables' => 'Faka Amathebula',
-'setup.other.contact' => 'Omunye Othintana naye',
-'setup.prerequisites' => 'Okudingekayo',
-'setup.prerequisites.message' => 'Siyakwamukela ku-InvoicePlane! Noma iyiphi inkinga '
-	. 'esohlwini olungezansi kufanele ixazululwe ngaphambi '
-	. 'kokuthi ukufakwa kuqhubeke.',
-'setup.tables.errors' => 'Amaphutha angezansi adinga ukuxazululwa ngaphambi '
-	. 'kokuthi ukufakwa kuqhubeke.',
-'setup.tables.success' => 'Amathebula esizindalwazi afakwe ngempumelelo.',
-'setup.upgrade.message' => 'Amaphutha angezansi adinga ukuxazululwa ngaphambi '
-	. 'kokuthi ukufakwa kuqhubeke.',
-'setup.upgrade.success' => 'Amathebula esizindalwazi athuthukiswe ngempumelelo.',
-'setup.upgrade.tables' => 'Thuthukisa Amathebula',
-'setup.user.address.info' => 'Ulwazi lwekheli olufakwe ngezansi luzovela '
-	. 'kuma-invoyisi akho.',
-'setup.user.contact.info' => 'Lolu lwazi lokuxhumana lungaphinda luvele '
-	. 'kuma-invoyisi akho.',
-'setup.user.email.info' => 'Ikheli lakho le-imeyili lizosetshenziswa ukuze '
-	. 'ungene ku-InvoicePlane.',
-'setup.user.name.info' => 'Kungaba igama lenkampani yakho noma '
-	. 'isibongo sakho nesibongo.',
-'setup.user.password.info' => 'Khumbula ukusebenzisa iphasiwedi eqinile.'
-	. 'Kunconywa inhlanganisela yezinhlamvu ezinkulu nezincane,'
-	. 'izinombolo nezimpawu.'
-	. 'Ubude obuncane:'
-	. 'izinhlamvu ezingu-8',
-'setup.user.password.verify.info' =>
-	'Qinisekisa iphasiwedi yakho ngokunikeza iphasiwedi '
-	. 'efanayo futhi.',
-'setup.v120.alert' => '<strong>Qaphela!</strong><br> Kubaluleke kakhulu ukuthi ufunde '
-	. '<a href="https:'
-	. '//go.'
-	. 'invoiceplane.'
-	. 'com/v120update" target="_blank">lesi saziso sokubuyekeza</a> mayelana '
-	. 'nezinguquko ezibalulekile zohlelo lokusebenza lwe-InvoicePlane.',
-'setup.v147.alert' => '<strong>Qaphela!</strong><br> Sicela uvule <code>application/config/config.'
-	. 'php</code> futhi ushintshe umugqa <code>$config[\'sess_use_database\'] '
-	. '= false;</code> ku- <code>$config[\'sess_use_database\'] = '
-	. 'true;</code> .'
-	. '<br> Imininingwane eyengeziwe ingatholakala <a '
-	. 'href="https:'
-	. '//go.'
-	. 'invoiceplane.'
-	. 'com/v147update" target="_blank">lapha</a>',
-'showing.of' => 'Ibonisa %s kwezingu-%s ',
-'signup' => 'Bhalisela',
-'single.choice' => 'Ukukhetha Okukodwa',
-'site.soletrader.about.choose' => 'Nazi izizathu ezithandekayo zokuthi usikhethe:',
-'site.soletrader.about.competitive.rates' =>
-	'Amanani Wokuncintisana',
-'site.soletrader.about.contemporary' => 'Amakhono esimanje',
-'site.soletrader.about.dissatisfaction' => 'Uma kwenzeka kuba nokunganeliseki kwenkonzo '
-	. 'sizowenza kabusha umsebenzi mahhala.',
-'site.soletrader.about.finished' => 'Amaphrojekthi Aphelile',
-'site.soletrader.about.happy' => 'Amakhasimende ajabule',
-'site.soletrader.about.quality' => 'Ngaphandle kokudela ikhwalithi',
-'site.soletrader.about.return' => 'Buyisa Amakhasimende',
-'site.soletrader.about.simply' => 'Vele uthathe ifoni bese sizokwenza '
-	. 'kabusha umsebenzi.',
-'site.soletrader.about.solved' => 'Izinkinga Zixazululiwe',
-'site.soletrader.about.trained' => 'Iqembu lethu liqeqeshwe kahle futhi '
-	. 'linesipiliyoni.',
-'site.soletrader.about.we' => 'Sisebenzisa amakhono ethu ngenkuthalo ngawo '
-	. 'wonke amandla ethu.',
-'site.soletrader.about.willing' => 'Ukuvuma Ukubuyisela Ukusekela',
-'site.soletrader.contact.address' => 'Ikheli',
-'site.soletrader.contact.email' => 'I-imeyili',
-'site.soletrader.contact.lookout' => 'Sihlale sibheke ukusebenzisana namakhasimende amasha.'
-	. 'Uma ungathanda ukusebenza nathi, sicela '
-	. 'usithinte ngenye yezindlela ezilandelayo.',
-'site.soletrader.contact.phone' => 'Ucingo',
-'site.soletrader.contact.touch' => 'Xhumana',
-'site.soletrader.pricing.basic' => 'okuyisisekelo',
-'site.soletrader.pricing.choosePlan' => 'Khetha Uhlelo',
-'site.soletrader.pricing.currencyPerMonth' => 'ngenyanga',
-'site.soletrader.pricing.explore' => 'Hlola amanani ethu aguquguqukayo ukuze '
-	. 'uthole okulingana kahle kakhulu ukuze '
-	. 'uqhube ibhizinisi lakho.',
-'site.soletrader.pricing.plans' => 'Izinhlelo eziningi',
-'site.soletrader.pricing.pricing' => ' Intengo Yethu',
-'site.soletrader.pricing.pro' => 'Uchwepheshe',
-'site.soletrader.pricing.proPrice' => 'pro Price',
-'site.soletrader.pricing.special' => 'ekhethekile',
-'site.soletrader.pricing.starter' => 'Umqali',
-'site.soletrader.pricing.visits' => 'ukuvakasha',
-'site.soletrader.team.assistant' => 'Umsizi',
-'site.soletrader.team.coordinator' => 'Umxhumanisi',
-'site.soletrader.team.we' => 'Siyiqembu labantu abakhathalelayo, abanokuhlangenwe nakho,'
-	. 'nabakhuthele.',
-'site.soletrader.testimonial.we' => 'Lezi yizo ubufakazi',
-'site.soletrader.testimonial.worker1' => 'Lokhu kungubufakazi bami',
-'site.soletrader.testimonial.worker2' => 'Lokhu kungubufakazi bami',
-'site.soletrader.testimonial.worker3' => 'Lokhu kungubufakazi bami',
-'site.todays.date' => 'Usuku lwanamuhla',
-'six.months' => 'Izinyanga eziyisithupha',
-'smtp.mail.from' => 'Ikheli Lomthumeli we-SMTP lama-imeyili esistimu',
-'smtp.password' => 'Iphasiwedi ye-SMTP',
-'smtp.port' => 'Imbobo ye-SMTP',
-'smtp.requires.authentication' => 'Idinga Ukuqinisekisa',
-'smtp.security' => 'Ezokuphepha',
-'smtp.server.address' => 'Ikheli Leseva ye-SMTP',
-'smtp.ssl' => 'I-SSL',
-'smtp.tls' => 'I-TLS',
-'smtp.username' => 'Igama lomsebenzisi le-SMTP',
-'smtp.verify.certs' => 'Qinisekisa izitifiketi ze-SMTP',
-'sql.file' => 'Ifayela le-SQL',
-'start' => 'Qala',
-'start.date' => 'Usuku okuqalwa ngalo',
-'state' => 'Izwe',
-'status' => 'Isimo',
-'stop' => 'Ima',
-'stop.logging.in' => 'Misa ukungena',
-'stop.signing.up' => 'Yeka ukubhalisa',
-'storecove' => 'Isitolo sesitolo',
-'storecove.advisory.to.developer.field.easily.missed' =>
-	'Inkambu igejwe kalula yikhasimende',
-'storecove.create.a.sender.legal.entity.country' =>
-	'1.'
-	. '1.'
-	. '4.'
-	. 'Dala umthumeli - Izwe Lebhizinisi '
-	. 'Elisemthethweni',
-'storecove.invoice.json.encoded' => 'I-invoyisi Ebhalwe Ngekhodi YesitoloCove Json',
-'storecove.legal' => 'Okusemthethweni',
-'storecove.legal.entity.id.for.json' =>
-	'1.'
-	. '1.'
-	. '4.'
-	. 'Dala umthumeli - I-Id ye-Store '
-	. 'Cove Legal Entity ifakwe ku-invoice.'
-	. 'json',
-'storecove.legal.entity.identifier.id.not.found' =>
-	'Lungiselela amapharamitha I-Id yeNkampani Yebhizinisi '
-	. 'Ebalwa Ngomhlinzeki Wezimali ayitholakali.',
-'storecove.no.contract.exists' => 'Ayikho inkontileka ekhona',
-'storecove.not.available' => 'Akutholakali',
-'storecove.purchase.order.item.id.null' =>
-	'po-item-id-null',
-'storecove.receiver.identifier' => 'Isikhombi Somamukeli - bona i-StoreCove '
-	. '6.'
-	. '3',
-'storecove.region.country.legal.tax' =>
-	'Isifunda ---------- Izwe --------- Ezomthetho '
-	. '--------- Intela',
-'storecove.salesorder.number.not.exist' =>
-	'Inombolo ye-oda lokuthengisa ayikho',
-'storecove.sender.identifier' => '6.'
-	. '2 Inkomba yomthumeli',
-'storecove.sender.identifier.basis' => '6.'
-	. '2 Isisekelo Sesikhombi Somthumeli - '
-	. 'Ezomthetho noma Zentela',
-'storecove.supplier.contact.email.not.found' =>
-	'I-imeyili Yokuxhumana Nomhlinzeki Ayitholakali.'
-	. 'Bheka kuhlelo lwamapharamitha okumisa.',
-'storecove.supplier.contact.firstname.not.found' =>
-	'Igama Lokuthintana Nomhlinzeki Alitholakali.'
-	. 'Bheka kuhlelo lwamapharamitha okumisa.',
-'storecove.supplier.contact.lastname.not.found' =>
-	'Isibongo Sokuthintana Nomhlinzeki Asitholakali.'
-	. 'Bheka kuhlelo lwamapharamitha okumisa.',
-'storecove.supplier.contact.name.not.found' =>
-	'Igama Lokuthintana Nomhlinzeki Alitholakali.'
-	. 'Bheka kuhlelo lwamapharamitha okumisa.',
-'storecove.supplier.contact.telephone.not.found' =>
-	'Ifoni Yokuthintana Nomhlinzeki Ayitholakali.'
-	. 'Bheka kuhlelo lwamapharamitha okumisa.',
-'storecove.tax' => 'Intela',
-'storecove.tax.rate.code' => 'Ikhodi Yesilinganiso Sentela ye-Storecove',
-'storecove.tax.scheme.identifier.id.not.found' =>
-	'Lungiselela amapharamitha I-Id yenkampani ye-Accounting '
-	. 'Supplier Party Tax Scheme ayitholakali.',
-'stream' => 'Sakaza i-Pdf kusiphequluli / i-Modal',
-'street.address' => 'Ikheli lesitaladi',
-'street.address.2' => 'Ikheli Lomgwaqo (qhubeka.'
-	. ')',
-'subject' => 'Isihloko',
-'submenu' => 'Imenyu engaphansi',
-'submit' => 'Thumela',
-'subtotal' => 'Isamba esingaphansi',
-'success' => 'Impumelelo',
-'successful' => 'Iphumelele',
-'sunday' => 'NgeSonto',
-'system.settings' => 'Izilungiselelo Zesistimu',
-'table' => 'Ithebula',
-'task' => 'Umsebenzi',
-'task.add' => 'Faka umsebenzi',
-'task.description' => 'Incazelo yomsebenzi',
-'task.finish.date' => 'Idethi yokuqeda',
-'task.name' => 'Igama lomsebenzi',
-'task.price' => 'Intengo yomsebenzi',
-'tasks' => 'Imisebenzi',
-'tasks.form' => 'Ifomu lomsebenzi',
-'tax' => 'Intela',
-'tax.code' => 'Ikhodi Yezintela',
-'tax.code.short' => 'Ikhodi Yentela',
-'tax.information' => 'Ulwazi Lwezintela',
-'tax.point' => 'Iphoyinti Lentela Losuku',
-'tax.rate' => 'Isilinganiso Sentela',
-'tax.rate.add' => 'Isilinganiso Sentela Engeza',
-'tax.rate.code' => 'Ikhodi Yesilinganiso Sentela Ye-invoyisi',
-'tax.rate.decimal.places' => 'Isilinganiso Sentela Izindawo zamadesimali',
-'tax.rate.edit' => 'Hlela Isilinganiso Sentela',
-'tax.rate.form' => 'Ifomu Lesilinganiso Sentela',
-'tax.rate.history.exists' => 'Ayikwazi ukususa.'
-	. 'Umlando usuvele uyaphuma',
-'tax.rate.name' => 'Igama Lesilinganiso Sentela isb.'
-	. 'Okujwayelekile',
-'tax.rate.percent' => 'Iphesenti Lesilinganiso Sentela',
-'tax.rate.placement' => 'Ukubekwa Kwezinga Lentela',
-'tax.rates' => 'Izilinganiso Zentela',
-'taxes' => 'Izintela',
-'telegram' => 'I-Telegram',
-'telegram.bot.api.chat.id' =>
-	'ITelegramu:'
-	. 'Okungeyona i-bot:'
-	. 'I-akhawunti yomuntu siqu:'
-	. 'Sawubona Umhlaba:'
-	. 'Umlayezo Wokuhlola:'
-	. 'Umamukeli Womlayezo:'
-	. '<b>I-Chat Id</b>',
-'telegram.bot.api.chat.id.not.set' =>
-	'I-Chat Id yomphathi we-akhawunti yetelegram '
-	. 'yomuntu siqu engeyona ye-bot ethumele '
-	. 'i-bot umlayezo wayo wokuqala futhi '
-	. 'ezokwamukela umlayezo wokuhlola othi \'Sawubona\''
-	. '\'Umhlaba\' awukasethwa.',
-'telegram.bot.api.current.status' =>
-	'<b>Ukusetshenziswa kwamanje:'
-	. '</b> Asikho isidingo se-webhook ngoba '
-	. 'amakhasimende awanawo ama-id engxoxo futhi '
-	. 'awathumeli imilayezo ku-bot.',
-'telegram.bot.api.enable' => 'Nika amandla iTelegramu',
-'telegram.bot.api.enabled.not' =>
-	'ITelegramu Ayivunyelwe',
-'telegram.bot.api.future.use' =>
-	'<b>Ukusetshenziswa kwesikhathi esizayo:'
-	. '</b> Amaklayenti anama-id engxoxo athunyelwa '
-	. 'i-invoyisi yocingo futhi aqinisekisa irisidi '
-	. 'ngokubuyisela isiqinisekiso ku-webhook',
-'telegram.bot.api.general.purpose' =>
-	'<b>I-Bot Ebhalisiwe, ekhonjwa ngethokheni, ithumela '
-	. 'Izaziso Zokukhokha Kwekhasimende ku-Id Yengxoxo '
-	. 'Ebhalisiwe ngezansi (imvamisa i-akhawunti yocingo '
-	. 'yomuntu siqu engeyona ye-bot).'
-	. '</b>',
-'telegram.bot.api.get.updates.failed' =>
-	'Ukubuyekezwa kwakho kweTelegramu kuhlulekile.',
-'telegram.bot.api.get.updates.success' =>
-	'Ukubuyekezwa kwakho kweTelegramu kuphumelele kusetshenziswa '
-	. 'indlela ye-api ethi GetUpdates.',
-'telegram.bot.api.hello.world.test.message' =>
-	'Sawubona Umhlaba kusuka kuTelegram Bot '
-	. 'Api.'
-	. 'Siyabonga bonjiniyela be-yiisoft!',
-'telegram.bot.api.hello.world.test.message.sent' =>
-	'Sawubona Umhlaba uthunyelwe.',
-'telegram.bot.api.hello.world.test.message.sent.not' =>
-	'Umlayezo Womhlaba Wonke awuthunyelwanga.',
-'telegram.bot.api.hello.world.test.message.use' =>
-	'Thumela umlayezo wokuhlola oyisisekelo othi '
-	. '\'Sawubona Mhlaba usuka ku-Telegram Bot '
-	. 'Api\' uye ku-id yengxoxo yangaphandle',
-'telegram.bot.api.payment.notification.success' =>
-	'Isaziso Senkokhelo Yocingo Siphumelele',
-'telegram.bot.api.payment.notifications' =>
-	'Izaziso zenkokhelo yocingo',
-'telegram.bot.api.token' => 'I-Telegram Bot Api Token',
-'telegram.bot.api.token.not.set' =>
-	'Ithokheni yeTelegram Bot Api Ayisethiwe',
-'telegram.bot.api.webhook.delete' =>
-	'Susa i-Webbhook',
-'telegram.bot.api.webhook.deleted' =>
-	'I-Webhook isanda kukhutshazwa ukuze kusetshenziswe '
-	. 'i-api get method getUpdates.',
-'telegram.bot.api.webhook.secret.token' =>
-	'I-Webhook Secret Token ukuze uthole '
-	. 'ukuphepha okwengeziwe (Isetshenziswa njengepharamitha kumsebenzi '
-	. 'we-setWebhook hhayi njengombuzoParameter)',
-'telegram.bot.api.webhook.setup' =>
-	'I-webhook isethiwe.',
-'telegram.bot.api.webhook.setup.already' =>
-	'I-webhook isivele isethiwe.',
-'telegram.bot.api.webhook.url.this.site' =>
-	'I-Telegram Webhook Url yale sayithi '
-	. 'esetshenziswa ku-TelegramHelper setWebhook function.',
-'template' => 'Isifanekiso se-invoyisi',
-'templates' => 'Izifanekiso zama-invoyisi',
-'term' => 'Imibandela',
-'term.1' => 'Angikayifundi imigomo nemibandela.',
-'term.2' => 'Ngifundile futhi ngiyavumelana nemigomo nemibandela.',
-'term.add.additional.terms.at.setting.repository' =>
-	'Engeza Imigomo Eyengeziwe kumsebenzi we-Setting '
-	. 'Repository getPaymentTerms.',
-'terms' => 'Imigomo',
-'test.data.install' => 'Faka Idatha Yokuhlola',
-'test.data.use' => 'Sebenzisa Idatha Yokuhlola',
-'test.remove' => 'Susa Idatha Yokuhlola',
-'test.remove.tooltip' => 'Buka.'
-	. 'Izilungiselelo.'
-	. 'Okuvamile.'
-	. 'Faka Idatha Yokuhlola.'
-	. 'Cha bese Ubuka.'
-	. 'Izilungiselelo.'
-	. 'Okuvamile.'
-	. 'Sebenzisa Idatha Yokuhlola.'
-	. 'Cha',
-'test.reset' => 'Setha kabusha Idatha Yokuhlola',
-'test.reset.setting' => 'Izilungiselelo Faka kabusha',
-'test.reset.setting.tooltip' => 'Lokhu kuzosusa zonke izilungiselelo zamanje '
-	. 'futhi kufake kabusha izilungiselelo ezizenzakalelayo '
-	. 'ku-InvoiceController/install.'
-	. 'default.'
-	. 'settings.'
-	. 'on.'
-	. 'first.'
-	. 'run',
-'test.reset.tooltip' => 'Buka.'
-	. 'Izilungiselelo.'
-	. 'Okuvamile.'
-	. 'Faka Idatha Yokuhlola.'
-	. 'Yebo bese Ubuka.'
-	. 'Izilungiselelo.'
-	. 'Okuvamile.'
-	. 'Sebenzisa Idatha Yokuhlola.'
-	. 'Yebo',
-'text' => 'Umbhalo',
-'theme' => 'Itimu',
-'this.month' => 'Le Nyanga',
-'this.quarter' => 'Le Quarter',
-'this.year' => 'Kulo nyaka',
-'thousands.separator' => 'Izinkulungwane Separator',
-'time.created' => 'Isikhathi Esidaliwe',
-'time.zone' => 'Indawo Yesikhathi',
-'title' => 'Isihloko',
-'to.date' => 'Kuze kube manje',
-'to.email' => 'Ku-imeyili',
-'total' => 'Ingqikithi',
-'total.balance' => 'Ibhalansi ephelele',
-'total.billed' => 'Isamba esikhokhisiwe',
-'total.paid' => 'Isamba Esikhokhiwe',
-'transaction.reference' => 'Inkomba yokwenziwe',
-'transaction.successful' => 'Ukuthenga kuphumelele',
-'treatment' => 'Ukwelashwa',
-'treatment.end' => 'Ukuphela Kokwelashwa',
-'treatment.start' => 'Ukuqala Kokwelashwa',
-'true' => 'Iqiniso',
-'try.again' => 'Zama futhi',
-'two.factor.authentication' => 'Ukuqinisekiswa Kwezinto Ezimbili',
-'two.factor.authentication.attempt.failure' =>
-	'Ukuhluleka Kwemizamo Yokuqinisekisa Okubili',
-'two.factor.authentication.attempt.failure.must.setup' =>
-	'Ukwehluleka Komzamo Wokufakazela Ubuqiniso Okubili:'
-	. 'Kumelwe usethe ikhodi entsha ye-qr '
-	. 'eyimfihlo (+) bese ukhetha ukubhala '
-	. 'ngaphezulu okufakile kwangaphambilini lapho uyalwa.',
-'two.factor.authentication.attempt.success' =>
-	'Impumelelo Yomzamo Wokufakazela Ubuqiniso Okubili',
-'two.factor.authentication.disabled' => 'I-Two Factor Authentication manje ikhutshaziwe '
-	. 'ukuze kuvikeleke okwengeziwe.',
-'two.factor.authentication.enable' => 'Nika amandla i-Two Factor Authentication',
-'two.factor.authentication.enabled.with.disabling' =>
-	'Ukuqinisekiswa Kwezinto Ezimbili okwamanje kunikwe '
-	. 'amandla ukuze kuvikeleke okwengeziwe futhi '
-	. 'kuyakhutshazwa ngemva kokufakazela ubuqiniso ngempumelelo '
-	. 'kwesendlalelo esengeziwe sokuvikela kuze kube '
-	. 'ukungena ngemvume okulandelayo.'
-	. 'Ukuskena okuyimpoqo kwekhodi ye-Qr, ngemva '
-	. 'kokungena ngakunye, ukuze uthole imfihlo '
-	. 'entsha.',
-'two.factor.authentication.enabled.without.disabling' =>
-	'Ukuqinisekiswa Kwezinto Ezimbili okwamanje kunikwe '
-	. 'amandla ukuze kuvikeleke okwengeziwe futhi '
-	. 'akukhutshazwanga ngemva kokufakazela ubuqiniso ngempumelelo '
-	. 'Ikhodi ye-Qr ngeke iphinde ibonakale '
-	. 'ukuze iskenwe, ngemva kokungena ngemvume,'
-	. 'ngemva kokusetha ukuqinisekiswa kwezinto ezimbili.',
-'two.factor.authentication.error' => 'Iphutha Lokufakazela Ubuqiniso Bezinto Ezimbili',
-'two.factor.authentication.form.verify.login' =>
-	'Qinisekisa Ukungena',
-'two.factor.authentication.invalid.code.format' =>
-	'Ifomethi yekhodi engavumelekile.'
-	. 'Sicela ufake ikhodi enamadijithi angu-6 '
-	. 'kusukela kuhlelo lwakho lokusebenza.',
-'two.factor.authentication.missing.code.or.secret' =>
-	'Ikhodi yokuqinisekisa engekho noma imfihlo '
-	. 'ye-2FA.',
-'two.factor.authentication.new.six.digit.code' =>
-	'Sicela ufake ikhodi entsha yokuqinisekisa '
-	. 'enezinhlamvu ezingu-6 (ehlukile kwikhodi yokusetha) '
-	. 'evela kuhlelo lwakho lokusebenza.',
-'two.factor.authentication.no.secret.generated' =>
-	'Ayikho imfihlo eyenziwe.'
-	. 'Sicela uqale kabusha ukusetha.',
-'two.factor.authentication.qr.code.enter.manually' =>
-	'Noma faka le khodi mathupha '
-	. 'ohlelweni lokusebenza lwe-android:',
-'two.factor.authentication.scan' => 'Skena le khodi ye-QR ngohlelo '
-	. 'lwakho lokusebenza lwe-Aegis:',
-'two.factor.authentication.setup' => 'Setha Ukuqinisekiswa Kwezinto Ezimbili',
-'type' => 'Uhlobo',
-'unit' => 'Iyunithi',
-'unit.add' => 'Iyunithi Engeza',
-'unit.already.exists' => 'Iyunithi isivele ikhona!',
-'unit.description.not.provided' => 'Incazelo ayinikeziwe',
-'unit.edit' => 'Hlela Iyunithi',
-'unit.history' => 'Ayikwazi ukususa.'
-	. 'Umlando ukhona.',
-'unit.name' => 'Igama leyunithi',
-'unit.name.plrl' => 'Igama leyunithi (ifomu lobuningi)',
-'unit.peppol' => 'Peppol',
-'unit.peppol.add' => 'Iyunithi Peppol Engeza',
-'unit.peppol.code' => 'Ikhodi yeyunithi ye-Peppol',
-'unit.peppol.edit' => 'Iyunithi Peppol Hlela',
-'unit.peppol.index' => 'Iyunithi ye-Peppol Index',
-'units' => 'Amayunithi',
-'unknown' => 'Akwaziwa',
-'unpaid' => 'Okungakhokhelwa',
-'updatecheck' => 'Buyekeza hlola',
-'updatecheck.failed' => 'Ukuhlola isibuyekezo kuhlulekile! Hlola uxhumano '
-	. 'lwakho lwenethiwekhi.',
-'updates' => 'Izibuyekezo',
-'updates.available' => 'Izibuyekezo ziyatholakala!',
-'upload.date' => 'Idethi yokulayisha',
-'upload.description' => 'Incazelo',
-'upload.filename.description' => 'Incazelo Yegama Lefayela',
-'upload.filename.new' => 'Igama Lefayela elisha',
-'upload.filename.original' => 'Igama Lefayela Loqobo',
-'upload.index' => 'Layisha Inkomba',
-'upload.plural' => 'Okulayishiwe',
-'upload.url.key' => 'Ukhiye we-Url',
-'use.system.language' => 'Sebenzisa ulimi Lwesistimu',
-'user' => 'Umsebenzisi',
-'user.account' => 'I-akhawunti yomsebenzisi we-invoyisi',
-'user.account.clients' => 'Amaklayenti Anama-Akhawunti Womsebenzisi',
-'user.accounts' => 'Ama-akhawunti womsebenzisi we-invoyisi',
-'user.all.clients' => 'Engeza wonke amakhasimende',
-'user.all.clients.text' => '* Uma le nketho ithikhiwe,'
-	. 'umsebenzisi uzokwazi ukubona wonke amaklayenti,'
-	. 'kuhlanganise nalawo angezwa kamuva.',
-'user.api.list' => 'Abasebenzisi Be-invoyisi Yangaphambili - Abasebenzisi '
-	. 'Ababhalisiwe',
-'user.client.active.no' => 'Awunawo amaklayenti anama-akhawunti omsebenzisi asebenzayo.'
-	. 'Abalawuli babela amaklayenti ku-akhawunti yomsebenzisi '
-	. 'ebhalisiwe.',
-'user.client.count' => '#',
-'user.client.no.account' => 'Leli klayenti alinayo i-akhawunti yomsebenzisi '
-	. 'ehlotshaniswa nalo ngakho le dokhumenti '
-	. 'ayikwazi ukudalwa.',
-'user.clients.assigned.not' => 'Lo msebenzisi akanawo amaklayenti anikezwe '
-	. 'wona.',
-'user.form' => 'Ifomu lomsebenzisi',
-'user.iban' => 'IBAN',
-'user.inv.active.not' => 'I-Akhawunti Yomsebenzisi ayisebenzi',
-'user.inv.list.limit' => 'Inombolo yamarekhodi asohlwini lwekhasi ngalinye '
-	. '(Qaphela:'
-	. 'Ikhipha okuzenzakalelayo)',
-'user.inv.more.than.one.assigned' =>
-	'Ukwakhiwa Kwerisidi Akuphumelelanga:'
-	. 'Xhumana Nezilungiselelo zakho .'
-	. 'I-Akhawunti Yomsebenzisi.'
-	. 'Umsebenzisi ongaphezu koyedwa unikezwe leli '
-	. 'klayenti.',
-'user.inv.refer.to' => 'Okuzenzakalelayo kwamarekhodi ayi-10 ekhasini ngalinye '
-	. 'kungase kucishwe ngokuchofoza lapha.',
-'user.inv.role.accountant' => 'Umgcinimabhuku',
-'user.inv.role.accountant.assigned' =>
-	'Iqhaza Lokubalwa Kwezimali Kwabelwe',
-'user.inv.role.accountant.default' =>
-	'I-Accountant yeklayenti, ngokuzenzakalelayo, ingakwazi ukubuka '
-	. 'ama-invoyisi, ikhokhe ama-invoyisi, ibuke izinkokhelo '
-	. 'zama-invoyisi, futhi ihlele izinkokhelo zama-invoyisi.',
-'user.inv.role.administrator' => 'Umlawuli',
-'user.inv.role.administrator.already.assigned' =>
-	'Indima yomlawuli isivele yabelwe',
-'user.inv.role.administrator.assigned' =>
-	'Indima yomlawuli manje isinikiwe.',
-'user.inv.role.all.new' =>
-	'Bonke abasebenzisi abasha ngokuzenzakalela bazothatha '
-	. 'indima yokubuka okungukuthi.'
-	. 'angabuka Amadokhumenti futhi angawahleli Amadokhumenti '
-	. 'athunyelwe kubo isb.'
-	. 'bheka noma ubheke imibhalo.',
-'user.inv.role.observer' => 'Isibukeli',
-'user.inv.role.observer.assigned' =>
-	'Indima Yesibukeli Yabelwe',
-'user.inv.role.observer.assigned.already' =>
-	'Indima Yombukeli isivele yabelwe.',
-'user.inv.role.revoke.all' =>
-	'Hoxisa Zonke Izindima',
-'user.inv.role.warning.revoke.all' =>
-	'Uqinisekile ukuthi ufuna ukuhoxisa zonke '
-	. 'izindima',
-'user.inv.role.warning.role' =>
-	'Uqinisekile ukuthi ufuna ukuthatha le '
-	. 'ndima?',
-'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' =>
-	'Ayikwazi ukunikeza uhlobo lomqondisi olwehliswayo '
-	. 'kongeyena umlawuli',
-'user.inv.type.cannot.allocate.guest.type.to.administrator' =>
-	'Asikwazi ukwabela umlawuli uhlobo lwesivakashi '
-	. 'sokwehla',
-'user.signup.please' => 'Sicela ubhalise!',
-'user.subscriber.number' => 'Inombolo Yokubhalisa',
-'user.type' => 'Uhlobo lomsebenzisi',
-'username' => 'Igama lomsebenzisi',
-'users' => 'Abasebenzisi',
-'utility.assets.clear' => 'Sula Inqolobane Yempahla',
-'validator.fail' => 'Ayikwazi ukucubungula inkambu %s:'
-	. '%s',
-'validator.invalid.login.password' => 'Ukungena ngemvume okungavumelekile noma iphasiwedi',
-'validator.password.change' => 'Iphasiwedi yakho ishintshiwe',
-'validator.password.not.match' => 'Amagama-mfihlo awafani',
-'validator.password.not.match.new' =>
-	'Amaphasiwedi akho amasha awafani',
-'validator.password.reset' => 'Iphasiwedi yakho isethwe kabusha',
-'validator.user.exist' => 'Umsebenzisi onalokhu kungena ngemvume usevele '
-	. 'ekhona',
-'validator.user.exist.not' => 'Umsebenzisi onalokhu kungena akekho',
-'value' => 'Inani',
-'values' => 'Amanani',
-'values.with.taxes' => 'Amanani anezintela',
-'vat' => 'I-VAT',
-'vat.abbreviation' => 'I-VAT',
-'vat.break.down' => 'Isifinyezo se-VAT',
-'vat.id' => 'I-ID ye-VAT',
-'vat.id.short' => 'I-VAT',
-'vat.invoice' => 'I-INVOICE YE-VAT',
-'vat.rate' => 'I-VAT Rate',
-'vat.reg.no' => 'I-VAT Reg No',
-'vat.registered' => 'I-VAT Ibhalisiwe',
-'vendor.nikic.fast-route' => 'Ukwakha Imizila Esheshayo',
-'verify.password' => 'Qinisekisa Iphasiwedi',
-'version.history' => 'Umlando Wenguqulo',
-'view' => 'Buka',
-'view.all' => 'Buka Konke',
-'view.client' => 'Buka iKlayenti',
-'view.clients' => 'Buka Abathengi',
-'view.contact.form.body' => 'Umzimba',
-'view.contact.form.email' => 'I-imeyili',
-'view.contact.form.name' => 'Igama',
-'view.contact.form.subject' => 'Isihloko',
-'view.invoices' => 'Buka ama-invoyisi',
-'view.payment.logs' => 'Buka Amalogi Okukhokha Ku-inthanethi',
-'view.payments' => 'Buka Izinkokhelo',
-'view.product.families' => 'Buka Imindeni Yomkhiqizo',
-'view.product.units' => 'Buka amayunithi womkhiqizo',
-'view.products' => 'Buka Imikhiqizo',
-'view.projects' => 'Buka Amaphrojekthi',
-'view.quotes' => 'Buka Izingcaphuno',
-'view.recurring.invoices' => 'Buka Ama-invoyisi Avela Kaningi',
-'view.tasks' => 'Buka Imisebenzi',
-'viewed' => 'Ibukiwe',
-'warning' => 'Isexwayiso',
-'web' => 'Iwebhu',
-'web.address' => 'Ikheli Lewebhu',
-'welcome' => 'Siyakwamukela',
-'wrong.passwordreset.token' => 'Akekho umsebenzisi otholelwe ithokheni yokusetha '
-	. 'kabusha enikeziwe.'
-	. 'Uma ucabanga ukuthi leli iphutha,'
-	. 'xhumana nomlawuli wakho.',
-'year' => 'Unyaka',
-'year.prefix' => 'Isiqalo Sonyaka',
-'years' => 'Iminyaka',
-'yes' => 'Yebo',
-'zip' => 'Ikhodi Yeposi',
-
-'zip.code' => 'Ikhodi Yeposi','allowance.or.charge.allowance.tax' => 'Intela yesibonelelo',
-'allowance.or.charge.charge.tax' =>
-	'Intela ekhokhiswayo',
-'allowance.or.charge.inv.add' =>
-	'Engeza imvume ye-invoyisi noma inkokhiso',
-'allowance.or.charge.level' => 'Ileveli (⬅ ️Sekukonke, Into Yomugqa '
-	. '➡)',
-'allowance.or.charge.shipping.handling.packaging' =>
-	'Ukuthumela/Ukuphatha/Ukupakisha',
-'allowance.or.charge.shipping.handling.packaging.vat' =>
-	'VAT on Shipping/Hand/Packaging',
-'allowance.or.charge.shipping.handling.packaging.tax' =>
-	'Intela Yokuthumela/Ukuphatha/Ukupakisha',
-'amount.payment' => 'Imali Yokukhokha okufanele ikhokhwe ngokugcwele',
-'calendar' => 'Ikhalenda',
-'continue.with.developersandboxhmrc' => 'Qhubeka ne-Developer Gov Sandbox UK',
-'continue.with.oidc' => 'Qhubeka nge-Open Id Connect',
-'continue.with.openbanking' => 'Qhubeka ne-Open Banking',
-'converted.to.invoice' => 'Iguqulelwe ku-invoyisi',
-'converted.to.so' => 'Iguqulelwe ku-Sales Order',
-'custom.field.edit' => 'Hlela Inkambu Yangokwezifiso',
-'delete.quote.single' => 'Lesi sicaphuni singasuswa ngoba alikho '
-	. 'i-oda lokuthengisa noma i-invoyisi ehlotshaniswa '
-	. 'nayo',
-'delete.quote.derived' => 'I-oda Lokuthengisa noma i-invoyisi ixhunywe '
-	. 'kule Khotheshini futhi ayikwazi ukususwa.',
-'extended' => 'Kunwetshiwe',
-'extended.language' => 'Ulimi Olunwetshiwe',
-'file' => 'Ifayela',
-'grand.fathered' => 'Ubaba Omkhulu',
-'layout.password.otp.6' => 'Iphasiwedi ye-OTP (amadijithi ayi-6)',
-'layout.password.otp.6.8' =>
-	'Iphasiwedi ye-OTP (amadijithi ayi-6) / '
-	. 'Amakhodi Okubuyisela Isipele (amadijithi ayi-8)',
-'oauth2.account.locked' => 'I-akhawunti Ikhiyiwe',
-'oauth2.backup.recovery.codes' => 'Yenza isipele amakhodi wokutakula.'
-	. 'Gcina endaweni ephephile.',
-'oauth2.backup.recovery.codes.regenerate' =>
-	'Khiqiza kabusha Amakhodi Okubuyisela Isipele',
-'oauth2.consent.required' => 'Kudingeka imvume',
-'oauth2.default' => 'Ukucushwa okuzenzakalelayo kwe-oauth2.'
-	. '0 kusetshenzisiwe',
-'oauth2.invalid.request' => 'Isicelo esingavumelekile',
-'oauth2.invalid.client' => 'Iklayenti elingavumelekile',
-'oauth2.invalid.grant' => 'Isibonelelo esingavumelekile',
-'oauth2.login.required' => 'Kudingeka ukungena ngemvume',
-'oauth2.missing.authentication.code.or.state.parameter' =>
-	'Ikhodi yokuqinisekisa ayikho noma ipharamitha '
-	. 'yesifunda.',
-'oauth2.missing.state.parameter.possible.csrf.attack' =>
-	'Ipharamitha Yesifunda ayikho.'
-	. 'Ukuhlasela kwe-csrf okungenzeka',
-'oauth2.server.error' => 'Iphutha leseva',
-'oauth2.temporarily.unavailable' => 'Ayitholakali okwesikhashana',
-'oauth2.test.user.creation.not.allowed.prod.env' =>
-	'Hlola ukudalwa komsebenzisi akuvunyelwe endaweni '
-	. 'yokukhiqiza.',
-'oauth2.unauthorized.client' => 'Iklayenti elingagunyaziwe',
-'oauth2.unsupported.response.type' => 'Uhlobo Lwempendulo Engasekelwe',
-'oauth2.unsupported.grant.type' => 'Uhlobo Lwesibonelelo Olungasekelwe',
-'online.payment.apiToken' => 'Ithokheni ye-API',
-'online.payment.thirdPartyProvider' => 'Umhlinzeki Weqembu Lesithathu isb.'
-	. 'Omangalisayo',
-'open.banking.pay.with' => 'Khokha nge-Open Banking: ',
-'open.banking.not.configured' => 'I-Open Banking ayilungiselelwe.'
-	. 'Sicela uthinte abosekelo.',
-'radiolist.choice' => 'I-Radio List Choice',
-'region' => 'Isifunda',
-'script' => 'Iskripthi',
-'tax.rate.active.not' => 'Isexwayiso:'
-	. 'Awekho amanani entela enziwe asebenza.'
-	. 'Yenza kusebenze okungenani isilinganiso esisodwa '
-	. 'sentela.'
-	. 'Izilungiselelo .'
-	. 'Izinga Lentela',
-'textarea' => 'Indawo Yombhalo',
-'two.factor.authentication.invalid.backup.recovery.code' =>
-	'Ikhodi yokutakula eyisipele engamadijithi angu-8 '
-	. 'engavumelekile',
-'two.factor.authentication.invalid.totp.code' =>
-	'Ikhodi yokuqinisekisa yesikhathi esisodwa engavumelekile '
-	. 'enezinhlamvu ezingu-6',
-'two.factor.authentication.rate.limit.reached' =>
-	'Umkhawulo Wesilinganiso ufinyelelwe.'
-	. 'Sicela ulinde imizuzwana engu-10.',
-'url' => 'I-Url',
-'variant' => 'Okuhlukile',
-'approval.required' => 'Kudingeka Ukugunyaza',
-'quote.approval.required' => 'Kudingeka ukugunyazwa kwekhwothi',
-'quote.must.be.approved.first' =>
-	'Ikhotheshini kufanele ivunywe ngaphambi kokuguqulwa',
+    'PEPPOL.COMMON.R040' => 'I-GLN kumele ibe nefomethi evumelekile ngokwemithetho ye-GS1',
+    'PEPPOL.COMMON.R041' => 'Inombolo yenhlangano yaseNorway KUMELE ishiwo ngefomethi efanele',
+    'PEPPOL.COMMON.R042' => 'Inombolo ye-CVR yesiDanish KUMELE ishiwo ngefomethi efanele',
+    'PEPPOL.COMMON.R043' => 'Inombolo yebhizinisi laseBelgium KUMELE ishiwo ngefomethi efanele',
+    'PEPPOL.COMMON.R044' => 'Ikhodi ye-IPA (Ikhodi Yeyunithi Yenhlangano Eyingqayizivele) kumele ishiwo ngendlela efanele',
+    'PEPPOL.COMMON.R045' => 'Ikhodi Yentela (i-Codice Fiscale) kumele ishiwo ngendlela efanele',
+    'PEPPOL.COMMON.R046' => 'Ikhodi Yentela (i-Codice Fiscale) yohlelo lukazwelonke KUMELE ishiwo ngendlela efanele',
+    'PEPPOL.COMMON.R047' => 'Ikhodi ye-VAT yase-Italy (i-Partita Iva) kumele ishiwo ngefomethi efanele',
+    'PEPPOL.COMMON.R049' => 'Inombolo yenhlangano yaseSweden KUMELE ishiwo ngefomethi efanele',
+    'PEPPOL.COMMON.R050' => 'Inombolo Yebhizinisi Lase-Australia (i-ABN) KUMELE ibhalwe ngendlela efanele',
+    'PEPPOL.COMMON.R052' => 'Inombolo yegumbi lezentengiselwano laseDenmark KUMELE ibhalwe ngendlela efanele',
+    'PEPPOL.COMMON.R053' => 'Inombolo ye-Danish ERSTORG KUMELE ishiwo ngefomethi efanele',
+    'PEPPOL.EN16931.R001' => 'Inqubo yebhizinisi KUMELE ihlinzekwe',
+    'PEPPOL.EN16931.R002' => 'Kuvunyelwe inothi elilodwa kuphela ngaphandle kokuthi izinhlangothi zombili zi-DE',
+    'PEPPOL.EN16931.R003' => 'Kudingeka ireferensi yomthengi noma ireferensi ye-oda',
+    'PEPPOL.EN16931.R004.INVALID' => 'Ifomethi yokuhlonza imininingwane engavumelekile',
+    'PEPPOL.EN16931.R004.REQUIRED' => 'Kudingeka isihlonzi semininingwane',
+    'PEPPOL.EN16931.R005' => 'Imali yentela kumele ihluke kuhlobo lwemali yedokhumenti',
+    'PEPPOL.EN16931.R007' => 'Inqubo yebhizinisi KUMELE ibe ngefomethi ',
+    'PEPPOL.EN16931.R008' => 'Isici esingenalutho: ',
+    'PEPPOL.EN16931.R010' => 'Kudingeka ikheli le-elekthronikhi lomthengi',
+    'PEPPOL.EN16931.R020' => 'Ikheli lomthengisi le-elekthronikhi liyadingeka',
+    'PEPPOL.EN16931.R040' => 'Inani kumele lilingane nephesenti eliyisisekelo */100',
+    'PEPPOL.EN16931.R041' => 'Inani eliyisisekelo liyadingeka uma iphesenti linikezwa',
+    'PEPPOL.EN16931.R042' => 'Iphesenti elidingekayo uma inani eliyisisekelo linikezwa',
+    'PEPPOL.EN16931.R043' => 'I-ChargeIndicator kumele ibe &#39;yiqiniso&#39; noma &#39;ngamanga&#39;',
+    'PEPPOL.EN16931.R044' => 'Inkokhelo yezinga lentengo ayivunyelwe',
+    'PEPPOL.EN16931.R046' => 'Iphutha lokubala intengo yento',
+    'PEPPOL.EN16931.R051' => 'Zonke izimali kumele zisebenzise uhlobo lwemali lwedokhumenti',
+    'PEPPOL.EN16931.R053' => 'Isamba sentela esisodwa kanye nesamba esincane siyadingeka',
+    'PEPPOL.EN16931.R054' => 'Inani lentela elingavumelekile ngaphandle kokubalwa kwenani elingaphansi',
+    'PEPPOL.EN16931.R055' => 'Inani lentela kumele libe nophawu olufanayo',
+    'PEPPOL.EN16931.R061' => 'Ireferensi yesibopho iyadingeka ukuze kukhishwe imali ngqo',
+    'PEPPOL.EN16931.R080' => 'Ireferensi yephrojekthi eyodwa kuphela ivunyelwe',
+    'Q1' => 'Q1',
+    'Q2' => 'Q2',
+    'Q3' => 'Q3',
+    'Q4' => 'Q4',
+    'account.information' => 'Ulwazi lwe-akhawunti',
+    'active' => 'Iyasebenza',
+    'active.not' => 'Akusebenzi',
+    'add' => 'Engeza',
+    'add.client' => 'Engeza iklayenti',
+    'add.family' => 'Engeza Umndeni',
+    'add.files' => 'Engeza Amafayela...',
+    'add.invoice' => 'Engeza i-invoyisi',
+    'add.invoice.tax' => 'Engeza intela ye-invoyisi',
+    'add.new.row' => 'Engeza umugqa omusha',
+    'add.note' => 'Engeza Inothi',
+    'add.notes' => 'Engeza Amanothi',
+    'add.payment.provider' => 'Engeza Umhlinzeki Wenkokhelo',
+    'add.product' => 'Engeza umkhiqizo',
+    'add.quote' => 'Engeza i-Quote',
+    'add.quote.tax' => 'Engeza I-Quote Tax',
+    'add.task' => 'Engeza umsebenzi',
+    'add.unit' => 'Engeza Iyunithi',
+    'address' => 'Ikheli',
+    'administrator' => 'Umlawuli',
+    'after.amount' => 'Ngemva Kwenani',
+    'after.amount.space' => 'Ngemva kwesamba esinesikhala esinganqamuki',
+    'aging' => 'Ukuguga kwe-invoyisi',
+    'aging.1.15' => '1 - 15 Izinsuku',
+    'aging.16.30' => 'Izinsuku eziyi-16-30',
+    'aging.above.30' => 'Ngaphezu kwezinsuku ezingu-30',
+    'alert.no.client.assigned' => 'Alikho iklayenti elinikezwe le phrojekthi.',
+    'alert.no.tasks.found' => 'Ayikho imisebenzi etholakele yale phrojekthi.',
+    'alert.task.delete' => 'Isexwayiso! Ufuna ukususa umsebenzi osetshenziswe ukwenza i-invoyisi.',
+    'all' => 'Konke',
+    'allowance.or.charge' => 'Isibonelelo noma Imali',
+    'allowance.or.charge.add' => 'Ileveli Yedokhumenti (okungukuthi.HHAYI ileveli Yolayini We-invoyisi) Imvume noma Inkokhelo Yengeza',
+    'allowance.or.charge.allowance' => 'Isibonelelo',
+    'allowance.or.charge.allowance.tax' => 'Intela yesibonelelo',
+    'allowance.or.charge.allowance.vat' => 'I-VAT yesibonelelo',
+    'allowance.or.charge.amount' => 'Inani Lenkokhelo Yesibonelelo (Inombolo Ye-Multiplier Factor Njengephesenti iphindaphindwe Ngenani Lesisekelo)',
+    'allowance.or.charge.amount.fixed.must.be.positive' => 'Inani eliqinile kumele libe ngaphezu kuka-0.',
+    'allowance.or.charge.base.amount' => 'Inani lesisekelo',
+    'allowance.or.charge.base.amount.required.when.mfn.set' => 'Inani eliyisisekelo kumele libe likhulu kuno-0 uma kusetha i-multiplier factor.',
+    'allowance.or.charge.charge' => 'Shaja',
+    'allowance.or.charge.charge.tax' => 'Intela ekhokhiswayo',
+    'allowance.or.charge.charge.vat' => 'Vat on charge',
+    'allowance.or.charge.edit.allowance' => 'Ileveli Yedokhumenti (okungukuthi.HHAYI ileveli Yolayini Werisidi) Imvume Hlela',
+    'allowance.or.charge.edit.charge' => 'Ileveli Yedokhumenti (okungukuthi.AKUYONA ileveli Yolayini We-invoyisi) Hlela Hlela',
+    'allowance.or.charge.index' => 'Inkomba Yemvume noma Izindleko ezihlobene nento yomugqa',
+    'allowance.or.charge.inv' => 'Imvume ye-invoyisi noma inkokhiso',
+    'allowance.or.charge.inv.add' => 'Engeza imvume ye-invoyisi noma inkokhiso',
+    'allowance.or.charge.item' => 'Imvume Yento Ye-invoyisi noma Imali',
+    'allowance.or.charge.item.add' => 'Isibonelelo/Inkokhelo Engeza',
+    'allowance.or.charge.item.invoice' => 'Isibonelelo Sento Ye-invoyisi Noma Inkokhelo',
+    'allowance.or.charge.item.quote' => 'Isibonelelo Sento Noma Imali Yokukhokhisa',
+    'allowance.or.charge.level' => 'Ileveli (⬅ ️Sekukonke, Into Yomugqa ➡)',
+    'allowance.or.charge.multiplier.factor.numeric' => 'I-Multiplier Factor Numeric',
+    'allowance.or.charge.quote' => 'Isibonelelo noma Imali Yekhotheshini',
+    'allowance.or.charge.quote.add' => 'Engeza Isibonelelo Sekhotheshini noma Inkokhelo',
+    'allowance.or.charge.reason' => 'Isizathu',
+    'allowance.or.charge.reason.code' => 'Ikhodi yesizathu',
+    'allowance.or.charge.shipping.handling.packaging' => 'Ukuthumela/Ukuphatha/Ukupakisha',
+    'allowance.or.charge.shipping.handling.packaging.tax' => 'Intela Yokuthumela/Ukuphatha/Ukupakisha',
+    'allowance.or.charge.shipping.handling.packaging.vat' => 'VAT on Shipping/Hand/Packaging',
+    'already.paid' => 'Le invoyisi yayisivele ikhokhiwe.',
+    'amount' => 'Inani Lento Ye-invoyisi',
+    'amount.add' => 'Inani Lento Ye-invoyisi Engeza',
+    'amount.due' => 'Inani Elifunekayo',
+    'amount.inv.item' => 'Inani Lento Yerisidi',
+    'amount.no' => 'Alikho inani le-invoyisi',
+    'amount.payment' => 'Imali Yokukhokha okufanele ikhokhwe ngokugcwele',
+    'amount.quote.item' => 'Inani Lento Yesilinganiso',
+    'amount.settings' => 'Inani Izilungiselelo',
+    'amounts' => 'Amanani we-invoyisi',
+    'any.family' => 'Noma yimuphi umndeni',
+    'api.error.forbidden' => 'Awunayo imvume yokufinyelela lo mthombo',
+    'api.error.not_found' => 'I-{resource} eceliwe ayitholakalanga',
+    'api.error.unauthorized' => 'Ukuqinisekiswa kuyadingeka ukuze kufinyelelwe lo mthombo',
+    'api.error.validation_failed' => 'Ukuqinisekisa kwehlulekile. Sicela uhlole okufakile.',
+    'api.success.created' => '{resource} idalwe ngempumelelo',
+    'api.success.deleted' => 'I-{resource} isusiwe ngempumelelo',
+    'api.success.updated' => 'I-{resource} ibuyekezwe ngempumelelo',
+    'app.cdn.not.node.module' => 'Sebenzisa i-AppCdnAsset (Hhayi i-AppNodeModulesAsset)',
+    'apply.after.item.tax' => 'Faka isicelo Ngemva Kwentela Yento',
+    'apply.before.item.tax' => 'Faka isicelo Ngaphambi Kwentela Yento',
+    'approval.required' => 'Kudingeka Ukugunyaza',
+    'approve' => 'Gunyaza',
+    'approve.this.quote' => 'Vuma Lesi Sicaphuno',
+    'approved' => 'Kuvunyelwe',
+    'archive' => 'Faka kungobo yomlando i-pdf kokuthi Okulayishiwe/Kungobo yomlando',
+    'assign.client' => 'Yabela Iklayenti',
+    'assign.client.on.signup' => 'Yabela iklayenti kumsebenzisi lapho ubhalisa.',
+    'assign.client.on.signup.default.age.minimum.eighteen' => 'Nikeza iklayenti elineminyaka yobudala eyisisekelo eyishumi nesishiyagalombili kumsebenzisi lapho libhalisa.',
+    'assign.client.on.signup.done' => 'Yabelwe iklayenti kumsebenzisi lapho ibhalisa.',
+    'assigned.clients' => 'Amaklayenti Abelwe',
+    'attachment.list' => 'Uhlu Olunamathiselwe',
+    'attachments' => 'Okunamathiselwe',
+    'autofit.columns' => 'Faka ngokuzenzakalelayo ububanzi bekholomu kokuqukethwe',
+    'automatic.email.on.recur' => 'Thumela i-imeyili ngokuzenzakalelayo ama-invoyisi avelayo',
+    'back' => 'Emuva',
+    'backup' => 'Isipele',
+    'backup.database' => 'Isipele Sedathabheyisi',
+    'backup.database.description' => 'Landa ikhophi ecindezelwe yesizindalwazi sonke — yonke ithebula, isakhiwo kanye nedatha — njengefayela elilodwa le-.sql.gz. Ligcine endaweni ephephile ngaphandle kwale seva.',
+    'backup.database.download' => 'Landa Isipele Sedathabheyisi',
+    'backup.download.failed' => 'Ukusekela ngokulondoloza idatha kuhlulekile',
+    'bacs.account.number' => 'Inombolo Ye-akhawunti',
+    'bacs.bank.details' => 'Imininingwane Yebhange',
+    'bacs.copy' => 'Kopisha ebhodini lokunamathisela',
+    'bacs.mobile.tip' => 'Kuselula, thepha izithonjana zokukopisha eduze kwenkambu ngayinye ukuze unamathisele imininingwane ngqo kuhlelo lwakho lokusebenza lwasebhange.',
+    'bacs.no.outstanding.invoices' => 'Azikho izinkokhelo ezisele okwamanje.',
+    'bacs.no.outstanding.invoices.hint' => 'Ibhalansi yakho icacile — akukho okufanele ukukhokhe njengamanje.',
+    'bacs.not.yet.configured' => 'Imininingwane yokudluliselwa kwemali ebhange ayikatholakali okwamanje.',
+    'bacs.not.yet.configured.hint' => 'Sicela usithinte ngqo ukuze uthole imininingwane yokukhokha.',
+    'bacs.outstanding.invoices' => 'Ama-invoyisi Angakakhokhwa',
+    'bacs.pay.by.bank.transfer' => 'Khokha Ngokudluliswa Kwebhange',
+    'bacs.payee' => 'Umkhokheli',
+    'bacs.payment.instructions' => 'Sebenzisa ikhodi yokuhlunga, inombolo ye-akhawunti, kanye nereferensi eboniswe ngenhla lapho wenza ukudluliselwa kwebhange. Ireferensi isisiza ukuthi siqhathanise inkokhelo yakho ne-akhawunti yakho.',
+    'bacs.quick.pay' => 'Khokha Ngokudluliswa Kwebhange (i-BACS / Izinkokhelo Ezisheshayo)',
+    'bacs.reference' => 'Ireferensi Yakho',
+    'bacs.scan.qr.hint' => 'Uhlelo lwakho lokusebenza lwasebhange luzovula ngegama lomuntu okhokhelwayo, ikhodi yokuhlunga, inombolo ye-akhawunti kanye nenani eligcwaliswe kusengaphambili — akudingeki ukuthayipha.',
+    'bacs.scan.to.pay' => 'Skena ukuze uthole imininingwane yokukhokha',
+    'bacs.sort.code' => 'Ikhodi Yokuhlunga',
+    'balance' => 'Ibhalansi',
+    'balance.does.not.equal.zero' => 'Ibhalansi ayilingani uziro.Isimo Sikhokhiwe =&gt; Ibhalansi kufanele ibe nguziro.',
+    'bank.ref' => 'Ireferensi yeBhange',
+    'base.invoice' => 'I-invoyisi eyisisekelo',
+    'bcc' => 'BCC',
+    'bcc.mails.to.admin' => 'Thumela wonke ama-imeyili aphumayo njenge-BCC ku-akhawunti yomqondisi',
+    'bcc.mails.to.admin.hint' => 'I-akhawunti yomqondisi yi-akhawunti edalwe ngenkathi kufakwa i-InvoicePlane.',
+    'before.amount' => 'Ngaphambi Kwenani',
+    'bill.to' => 'Ibhile ku',
+    'birthdate' => 'Usuku lokuzalwa',
+    'body' => 'Umzimba',
+    'boolean' => 'I-Boolean',
+    'bootstrap5' => 'I-Bootstrap 5',
+    'bootstrap5.alert.close.button.font.size' => 'Isexwayiso Vala Usayizi Wefonti Yenkinobho',
+    'bootstrap5.alert.message.font' => 'Ifonti Yomlayezo Wokuxwayisa',
+    'bootstrap5.alert.message.font.size' => 'Usayizi Wefonti Yesaziso',
+    'bootstrap5.cdn.not.node.module' => 'I-Bootstrap5 Cdn (Akuyona i-Node Module)',
+    'bootstrap5.form.font.size' => 'Usayizi Wefonti Yefomu (i-px)',
+    'bootstrap5.form.input.height' => 'Ukuphakama Kokufaka Ifomu (i-px)',
+    'bootstrap5.layout.guest.navbar.font' => 'Isakhiwo sefonti ye-Navbar yesivakashi',
+    'bootstrap5.layout.guest.navbar.font.size' => 'Usayizi Wefonti Yesivakashi Se-Navbar',
+    'bootstrap5.layout.invoice.navbar.font' => 'Isakhiwo Sefonti ye-invoyisi ye-Navbar',
+    'bootstrap5.layout.invoice.navbar.font.size' => 'Usayizi Wefonti Ye-invoyisi Ye-invoyisi',
+    'bootstrap5.layout.main.navbar.font' => 'Isakhiwo Sefonti Eyinhloko Ye-Navbar',
+    'bootstrap5.layout.main.navbar.font.size' => 'Usayizi Wefonti Ye-Navbar Eyinhloko Yesakhiwo',
+    'bootstrap5.offcanvas.enable' => 'Nika amandla i-Offcanvas',
+    'bootstrap5.offcanvas.placement' => 'Ukubekwa kwe-Offcanvas isb phezulu, phansi,qala okungukuthi kwesokunxele, gcina okungukuthi kwesokudla',
+    'bootstrap5.sidebar.background' => 'Umbala Wangemuva Webha Eseceleni',
+    'bootstrap5.sidebar.guest.background' => 'Umbala Wangemuva Webha Eseceleni Yesivakashi',
+    'breadcrumb.product.index' => 'Inkomba Yomkhiqizo',
+    'breadcrumb.product.property.index' => 'Inkomba Yempahla Yomkhiqizo',
+    'business.error.client.credit_limit' => 'Iklayenti u-{client_name} udlule umkhawulo wesikweletu ongu-{limit}',
+    'business.error.insufficient_stock' => 'Isitoko esinganele somkhiqizo {product_name}. Kuyatholakala: {available}, Kuyadingeka: {required}',
+    'business.error.invoice.already_paid' => 'I-invoyisi #{invoice_number} isivele imakwe njengekhokhiwe',
+    'business.error.payment.gateway_failed' => 'Ukucutshungulwa kwenkokhelo kwehlulekile: {error_message}',
+    'calculate.discounts' => 'Bala Izaphulelo',
+    'calendar' => 'Ikhalenda',
+    'calendar.day.1' => 'Usuku olu-1',
+    'calendar.day.15' => 'Izinsuku ezingu-15',
+    'calendar.day.2' => '2 Izinsuku',
+    'calendar.day.3' => '3 Izinsuku',
+    'calendar.day.30' => 'Izinsuku ezingama-30',
+    'calendar.day.4' => 'Izinsuku ezi-4',
+    'calendar.day.5' => 'Izinsuku ezi-5',
+    'calendar.day.6' => '6 Izinsuku',
+    'calendar.month.1' => 'Inyanga engu-1',
+    'calendar.month.10' => 'Izinyanga eziyi-10',
+    'calendar.month.11' => 'Izinyanga eziyi-11',
+    'calendar.month.2' => 'Izinyanga ezi-2',
+    'calendar.month.3' => 'Izinyanga ezi-3',
+    'calendar.month.4' => 'Izinyanga ezi-4',
+    'calendar.month.5' => 'Izinyanga ezi-5',
+    'calendar.month.6' => '6 Izinyanga',
+    'calendar.month.7' => '7 Izinyanga',
+    'calendar.month.8' => '8 Izinyanga',
+    'calendar.month.9' => 'Izinyanga ezingu-9',
+    'calendar.week.1' => 'Iviki elingu-1',
+    'calendar.week.2' => '2 Amaviki',
+    'calendar.week.3' => '3 Amasonto',
+    'calendar.week.4' => '4 Amasonto',
+    'calendar.year.1' => '1 Unyaka',
+    'calendar.year.2' => 'iminyaka engu-2',
+    'calendar.year.3' => '3 Iminyaka',
+    'calendar.year.4' => 'Iminyaka emi-4',
+    'calendar.year.5' => '5 Iminyaka',
+    'can.be.changed' => 'Ingashintshwa',
+    'cancel' => 'Khansela',
+    'canceled' => 'Kukhanseliwe',
+    'cannot.delete' => 'Awukwazi ukususa. Susa amarekhodi ahlobene kuqala',
+    'capture.gps.on.send' => 'Thwebula Indawo ye-GPS Uma Uyikhipha Kuthunyelwe',
+    'capture.gps.on.send.description' => 'Kugcinelwe umsebenzi wesimo sesisebenzi/somphathi wesikhathi esizayo (kuqalwe/kuqediwe izimo phakathi kokusalungiswa nokuthunyelwa, ngendima &quot;yesisebenzi&quot; ebheke emisebenzini yabo eyabelwe kuphela) — akukakhiwa okwamanje, ngakho ukuvula lokhu okwamanje akunamphumela.',
+    'cart.insufficient.stock' => 'Besinazo kuphela izinto ezanele esitokweni ukuze singeze ingxenye yalokho okucelile — inqola yakho ibuyekeziwe yaba yinani elikhulu kunawo wonke elitholakalayo njengamanje.',
+    'case.date' => 'Idethi Yecala',
+    'case.number' => 'Inombolo yecala',
+    'cash.discount' => 'Isaphulelo Semali',
+    'category.primary' => 'Isigaba Esiyinhloko',
+    'category.secondary' => 'Isigaba Sesibili',
+    'caution.delete.invoices' => 'Ukuhlola Kuphela:Susa wonke ama-invoyisi namarekhodi ahlobene.(Bona umsebenzi we-inv/flush)',
+    'caution.deleted.invoices' => 'Ukuhlola Kuphela:Wonke ama-invoyisi nezinkambu ezihlobene zisusiwe.',
+    'cc' => 'CC',
+    'change.client' => 'Shintsha iKlayenti',
+    'change.password' => 'SHINTSHA iphasiwedi',
+    'checking.for.news' => 'Ihlola Izindaba...',
+    'checking.for.updates' => 'Ihlola Izibuyekezo...',
+    'checkout' => 'Hlola',
+    'checkout.failed' => 'Uxolo, asikwazanga ukufaka i-oda lakho. Sicela uzame futhi.',
+    'city' => 'Idolobha',
+    'claim' => 'Uqale Isimangalo Esisemthethweni',
+    'cldr' => 'phakathi',
+    'client' => 'Iklayenti',
+    'client.access' => 'Ukufinyelela Kweklayenti',
+    'client.add' => 'Engeza iklayenti',
+    'client.age' => 'Ubudala',
+    'client.age.hint' => 'Le nkambu iyadingeka futhi iklayenti kufanele okungenani libe neminyaka eyi-16 ngokomthetho',
+    'client.already.exists' => 'Iklayenti selivele likhona!',
+    'client.birthdate.hint' => 'Uma usuku lokuzalwa lungaziwa, faka 01/01/1901',
+    'client.building.number' => 'Inombolo Yokwakha Yekhasimende',
+    'client.contract.period.end' => 'Ukuphela Kwenkathi',
+    'client.contract.period.start' => 'Isikhathi sokuqala',
+    'client.contract.reference' => 'Inkomba Yenkontileka',
+    'client.custom' => 'Umkhuba Wekhasimende',
+    'client.custom.add' => 'Engeza Ngokwezifiso Iklayenti',
+    'client.deactivate.warning' => 'Isexwayiso: Ama-invoyisi kanye namadokhumenti omthombo ahlobene, ngeke abonakale uma iklayenti lingasebenzi.',
+    'client.delete.history.exits.no' => 'Ayikwazi ukususa.Umlando Weklayenti ukhona.',
+    'client.detail.changes' => 'Sicela usithumele i-imeyili uma le mininingwane ishintsha.',
+    'client.error.summary' => 'Isifinyezo sephutha',
+    'client.form' => 'Ifomu Leklayenti',
+    'client.frequency' => 'Imvamisa Yeklayenti',
+    'client.group' => 'Iqembu Leklayenti',
+    'client.has.not.assigned' => 'Lawa maklayenti awazange anikezwe i-akhawunti yomsebenzisi.Iklayenti elilodwa noma ngaphezulu nge-akhawunti ngayinye yomsebenzisi.',
+    'client.has.not.user.account' => 'Leli klayenti alinayo i-akhawunti yomsebenzisi noma alinikezwanga umsebenzisi okwamanje.1.Qinisekisa ukuthi Iklayenti Libhalisiwe okungukuthi line-akhawunti yomsebenzisi noma yabela leli klayenti kumsebenzisi obhalisiwe njengamanje.2.Izilungiselelo .I-akhawunti Yomsebenzisi I-invoyisi .Engeza I-akhawunti Yomsebenzisi 3.Yabela leli klayenti ku-akhawunti yomsebenzisi 4.Ama-invoyisi kanye nezilinganiso ngeke zikwazi ukudalelwa leli klayenti kulesi simo samanje.',
+    'client.has.user.account' => 'I-akhawunti yomsebenzisi',
+    'client.import.list.blank' => 'Uhlu Lokungenisa Kwekhasimende Alulutho',
+    'client.name' => 'Igama Leklayenti',
+    'client.not.allocated.to.user' => 'Iklayenti alabelwe umsebenzisi',
+    'client.not.found' => 'Iklayenti alitholakali',
+    'client.note' => 'Inothi Leklayenti',
+    'client.note.add' => 'Inothi Leklayenti Engeza',
+    'client.note.date' => 'Usuku Lweklayenti',
+    'client.note.view' => 'Ukubuka Inothi Leklayenti',
+    'client.notes' => 'Amanothi Eklayenti',
+    'client.number' => 'Inombolo Yeklayenti',
+    'client.peppol' => 'Imininingwane ye-Peppol yeklayenti',
+    'client.peppol.accounting.cost' => 'Ikhodi Yezindleko Zokubalwa Kwekhasimende Yokugcinwa Kwamabhuku',
+    'client.peppol.add' => 'Engeza imininingwane ye-Peppol ye-e-invoicing',
+    'client.peppol.buyer.reference.default' => 'Ireferensi yomthengi:Uma kungekho Umuntu Wokuthintana naye Wokuthenga I-oda Lokuthenga Kweklayenti oshiwo iklayenti, lesi yisithenjwa somthengi esizenzakalelayo noma Uku-oda komuntu.',
+    'client.peppol.buyer.reference.example' => 'isib.igama lomuntu ojwayele uku-oda, inombolo yesisebenzi yomuntu ojwayele uku-oda noma ikhodi ekhomba lo muntu noma umnyango/iqembu',
+    'client.peppol.clientpeppols.form' => 'Ifomu leKlayenti Lezimali/Iqembu Lekhasimende',
+    'client.peppol.edit' => 'Hlela imininingwane ye-Peppol ye-e-invoicing',
+    'client.peppol.endpointid' => 'I-ID Yephoyinti Lokugcina:Ikheli le-imeyili',
+    'client.peppol.endpointid.schemeid' => 'I-ID Yephuzu Lokugcina - i-schemeID esekelwe ku-EAS (I-Electonric Address Scheme) amadijithi angu-4 amakhodi, isb.0192',
+    'client.peppol.financial.institution.branchid' => 'I-Id Yegatsha Lesikhungo Sezezimali',
+    'client.peppol.identificationid' => 'I-ID yokuhlonza',
+    'client.peppol.identificationid.schemeid' => 'I-ID yokuhlonza - schemeID',
+    'client.peppol.legal.entity.company.legal.form' => 'Ifomu Lezomthetho Lenkampani Yebhizinisi - Ulwazi Lomthetho Olwengeziwe oluphathelene noMdayisi isb.Yabelana Ngemali Enkulu',
+    'client.peppol.legal.entity.companyid' => 'I-ID Yenkampani Yebhizinisi Esemthethweni',
+    'client.peppol.legal.entity.companyid.schemeid' => 'I-ID Yenkampani Yebhizinisi Elisemthethweni - i-ID yesikimu',
+    'client.peppol.legal.entity.registration.name' => 'Igama Lokubhaliswa Kwenhlangano Esemthethweni',
+    'client.peppol.not.found' => 'Iklayenti noma ikhasimende alikayilungisi imininingwane yalo yakwa-Peppol.',
+    'client.peppol.not.found.accounting.cost' => 'Ayitholakali:Izindleko Zokubalwa Kwezimali noma inani lombhalo elicacisa ukuthi ingabhukha kuphi idatha efanelekile kuma-akhawunti ezezimali Abathengi.',
+    'client.peppol.not.found.delivery.location' => 'Indawo yokulethwa Igama lezwe alitholakali',
+    'client.peppol.not.found.id' => 'Iklayenti alikayigcwalisi i-akhawunti yalo ye-akhawunti ngaphansi kwemininingwane yeklayenti lalo le-Peppol ku-inthanethi.',
+    'client.peppol.not.found.id.supplier.assigned' => 'I-Id Ye-akhawunti Yabelwe Umhlinzeki Wekhasimende Ka-Peppol Ayitholakalanga',
+    'client.peppol.not.found.invoice' => 'Ayikho I-invoyisi Exhunyiwe Etholiwe',
+    'client.peppol.not.found.purchase.order' => 'I-Oda Yokuthengisa ayinayo Inombolo Ye-oda Lokuthenga ehlotshaniswa nayo',
+    'client.peppol.not.found.purchase.order.item.number' => 'Into Yomugqa We-oda Lokuthengisa ayinayo Inombolo Yesibonakaliso Yento Yomugqa Wokuthenga ofanayo (I-Buyers Into Identification) ehlotshaniswa nayo.Umlawuli:Hlela Inombolo Yento Yokuthengiswa Kwe-invoyisi.',
+    'client.peppol.not.found.purchase.order.line.number' => 'Inombolo Yomugqa We-oda Lokuthengisa ayinayo Inombolo Yomugqa We-oda Lokuthenga (i-OrderLineReference LineID) ehlotshaniswa nayo.Umlawuli:Hlela Inombolo Yomugqa Woku-oda Kwe-invoyisi.',
+    'client.peppol.not.found.sales.order' => 'I-Sales Order ayikho',
+    'client.peppol.payee.financial.account.name' => 'Igama le-Akhawunti Yezimali Yokhokhelwayo',
+    'client.peppol.payee.financial.accountid' => 'I-ID Ye-akhawunti Yezimali Yokhokhelwayo',
+    'client.peppol.po.item.id' => 'I-ID Yento ye-Peppol PO',
+    'client.peppol.po.line.id' => 'I-ID Yomugqa we-Peppol PO',
+    'client.peppol.record.updated.successfully' => 'Irekhodi le-Peppol libuyekezwe ngempumelelo',
+    'client.peppol.supplier.assigned.account.id' => 'I-Id Ye-akhawunti Yabelwe Umhlinzeki',
+    'client.peppol.taxschemecompanyid' => 'I-ID Yenkampani Yohlelo Lwentela',
+    'client.peppol.taxschemeid' => 'I-ID Yohlelo Lwentela',
+    'client.po.number' => 'Inombolo ye-oda lokuthenga lekhasimende',
+    'client.po.person' => 'Oxhumana naye nge-oda lokuthenga lekhasimende',
+    'client.postaladdress' => 'Ikheli Leposi',
+    'client.postaladdress.add' => 'Engeza Ikheli Leposi Leklayenti',
+    'client.postaladdress.additional.street.name' => 'Igama Lomgwaqo Engeziwe',
+    'client.postaladdress.available' => 'Amakheli Eposi Atholakalayo',
+    'client.postaladdress.building.number' => 'Inombolo Yesakhiwo',
+    'client.postaladdress.city.name' => 'Igama Ledolobha',
+    'client.postaladdress.country' => 'Izwe',
+    'client.postaladdress.countrysubentity' => 'I-Country Sub Entity',
+    'client.postaladdress.none' => 'Iklayenti alinalo ikheli leposi',
+    'client.postaladdress.postalzone' => 'Indawo yeposi',
+    'client.postaladdress.street.name' => 'Igama lomgwaqo',
+    'client.purchase.order.number' => 'Inombolo Ye-oda Lokuthenga Kwekhasimende',
+    'client.streets' => 'Imigwaqo',
+    'client.surname' => 'Isibongo Seklayenti',
+    'client.surname.optional' => 'Isibongo Seklayenti (Ongakukhetha)',
+    'client.telegram.chat.id' => 'I-ID Yengxoxo Ye-Telegram',
+    'client.title' => 'Isihloko Seklayenti (Mnu/Mrs/Miss/Dr/Prof)',
+    'client.title.doctor' => 'UDkt',
+    'client.title.miss' => 'Nkosazana',
+    'client.title.mr' => 'UMnu',
+    'client.title.mrs' => 'UNksz',
+    'client.title.professor' => 'USolwazi',
+    'client.view' => 'Ukubuka Kweklayenti',
+    'clients' => 'Amaklayenti',
+    'close' => 'Vala',
+    'closed' => 'Kuvaliwe',
+    'column' => 'Ikholomu',
+    'common.date.created' => 'Idethi eyakhiwe ngayo',
+    'common.date.modified' => 'Idethi Yokulungiswa',
+    'common.name' => 'Igama',
+    'company' => 'Inkampani',
+    'company.deleted' => 'Inkampani isusiwe',
+    'company.not.deleted' => 'Inkampani ayisusiwe ngoba unephrofayela yenkampani enamathiselwe kuyo.',
+    'company.private' => 'Inkampani Eyimfihlo',
+    'company.private.logo' => 'Ilogo Yenkampani',
+    'company.private.logo.height' => 'Ukuphakama Kwelogo',
+    'company.private.logo.margin' => 'I-Logo Margin',
+    'company.private.logo.width' => 'Ububanzi Belogo',
+    'company.private.logo.will.be.removed.from.uploads.and.public.folder' => 'Ilogo izosuswa kokulayishiwe nakufolda yomphakathi',
+    'company.public' => 'Inkampani Esesidlangalaleni',
+    'company.seo' => 'Incazelo Yokuthuthukisa Injini Yokusesha (i-SEO)',
+    'complete' => 'Qedela',
+    'confirm' => 'Qinisekisa',
+    'confirm.deletion' => 'Qinisekisa ukususwa',
+    'consent.periodic.invoice' => 'I-invoyisi Yokubhalisa Yanyanga Zonke/Yamasonto Onke nge-Telegram ',
+    'consent.telegram.chat.id' => 'I-ID Yengxoxo Ye-Telegram (iyadingeka ukuze kutholakale izaziso zokukhokha — thumela umyalezo ku-@userinfobot ku-Telegram ukuze uthole eyakho)',
+    'consent.telegram.outstanding' => 'Ngiyavuma ukwaziswa ngeTelegram uma inkokhelo ingakakhokhwa.',
+    'contact.information' => 'Ulwazi lokuxhumana',
+    'continue' => 'Qhubeka',
+    'continue.with.developer.sandbox.hmrc' => 'Qhubeka ne-Developer Gov Sandbox UK',
+    'continue.with.developersandboxhmrc' => 'Qhubeka ne-Developer Gov Sandbox UK',
+    'continue.with.facebook' => 'Qhubeka noFacebook',
+    'continue.with.github' => 'Qhubeka nge-Github',
+    'continue.with.google' => 'Qhubeka nge-Google',
+    'continue.with.govuk' => 'Qhubeka noGov Uk',
+    'continue.with.linkedin' => 'Qhubeka nge-LinkedIn',
+    'continue.with.microsoftonline' => 'Qhubeka nge-MicrosoftOnline',
+    'continue.with.oidc' => 'Qhubeka nge-Open Id Connect',
+    'continue.with.openbanking' => 'Qhubeka ne-Open Banking',
+    'continue.with.vkontakte' => 'Qhubeka nge-VKontakte',
+    'continue.with.x' => 'Qhubeka ngo-X',
+    'continue.with.yandex' => 'Qhubeka ne-Yandex',
+    'contract' => 'Inkontileka',
+    'contract.add' => 'Engeza Inkontileka',
+    'contract.contracts' => 'Izinkontileka',
+    'contract.create' => 'Dala Izinkontileka zakho nge.I-invoyisi.Buka.Izinketho.Hlela.Inkontileka izodalelwa iklayenti elenziwa kulo I-invoyisi.Xhuma le nkontileka kuma-invoyisi esikhathi esizayo.',
+    'contract.index.button.list' => 'Ama-invoyisi',
+    'contract.name' => 'Igama',
+    'contract.none' => 'Isikhumbuzi:Asikho Inkontileka esethiwe yale invoyisi',
+    'contract.period.end' => 'Ukuphela Kwenkathi',
+    'contract.period.start' => 'Isikhathi sokuqala',
+    'contract.reference' => 'Ireferensi',
+    'contracts' => 'Izinkontileka',
+    'converted.to.invoice' => 'Iguqulelwe ku-invoyisi',
+    'converted.to.so' => 'Iguqulelwe ku-Sales Order',
+    'copied' => 'Kukopishiwe!',
+    'copy' => 'Kopisha',
+    'copy.all.to.date' => 'Kopisha Konke Kuze Kube Sesikhathini',
+    'copy.all.to.date.new.date' => 'Usuku Olusha',
+    'copy.all.to.date.warning' => 'Lokhu kuzokopisha yonke i-invoyisi eboniswa yizihlungi zakho ezingenhla kuze kube usuku olungezansi, ngayinye ihlala neklayenti layo.',
+    'copy.invoice' => 'Kopisha I-invoyisi',
+    'copy.quote' => 'Kopisha Ingcaphuno',
+    'count' => 'Ukubalwa kwe-invoyisi',
+    'country' => 'Izwe',
+    'create' => 'Dala',
+    'create.credit.invoice' => 'Dala i-invoyisi yesikweletu',
+    'create.credit.invoice.alert' => 'Ukudala i-invoyisi yekhredithi kuzokwenza i-invoyisi yamanje <em>ifundeke kuphela</em> okusho ukuthi ngeke usakwazi ukuhlela i-invoyisi.I-invoyisi yekhredithi izoqukatha isimo samanje nazo zonke izinto kodwa ngamanani angesihle namabhalansi.',
+    'create.invoice' => 'Dala i-invoyisi',
+    'create.new.client' => 'Dala iKlayenti elisha',
+    'create.product' => 'Dala umkhiqizo',
+    'create.project' => 'Dala Iphrojekthi',
+    'create.quote' => 'Dala i-Quote',
+    'create.recurring' => 'Dala Okuphindaphindayo',
+    'create.task' => 'Dala Umsebenzi',
+    'created' => 'Kwakhiwe',
+    'creation.unsuccessful' => 'Ukwakhiwa Kwerisidi Akuphumelelanga',
+    'credit.invoice' => 'I-invoyisi Yesikweletu',
+    'credit.invoice.date' => 'Idethi ye-invoyisi yekhredithi',
+    'credit.invoice.details' => 'Imininingwane ye-invoyisi yekhredithi',
+    'credit.invoice.for.invoice' => 'Incwadi yesikweletu',
+    'credit.note.creation.successful' => 'Ukudalwa Kwenothi Lesikweletu Kuphumelele',
+    'credit.note.creation.unsuccessful' => 'I-Credit Note noma I-Credit Memo Creation, ukukhansela i-invoyisi, akuphumelelanga',
+    'creditcard.cvv' => 'I-CVV / CSC',
+    'creditcard.details' => 'Imininingwane yekhadi lesikweletu',
+    'creditcard.expiry.month' => 'Inyanga yokuphelelwa yisikhathi',
+    'creditcard.expiry.year' => 'Unyaka Wokuphelelwa yisikhathi',
+    'creditcard.number' => 'Inombolo Yekhadi Lesikweletu',
+    'cron.key' => 'Ukhiye we-CRON',
+    'curl.store.cove.api.get.legal.entity.id.successful' => 'Thola Ibhizinisi Elisemthethweni Impumelelo',
+    'curl.store.cove.api.setup.legal.entity.successful' => 'I-Store Cove Setup Call Api - Ibhizinisi Elisemthethweni Liphumelele',
+    'curl.store.cove.api.setup.successful' => 'I-Store Cove Setup Api Call Iphumelele',
+    'currency' => 'Imali',
+    'currency.and.number.settings' => 'Izilungiselelo Zemali Nezinombolo',
+    'currency.code' => 'Ikhodi yemali',
+    'currency.name.EUR' => 'Ama-Euro',
+    'currency.name.GBP' => 'Amaphawundi aseBrithani',
+    'currency.name.USD' => 'Amadola aseMelika',
+    'currency.symbol' => 'Uphawu Lwemali',
+    'currency.symbol.EUR' => '€',
+    'currency.symbol.GBP' => '£',
+    'currency.symbol.USD' => '$',
+    'currency.symbol.placement' => 'Ukubekwa Kophawu Lwemali',
+    'current.day' => 'Usuku lwamanje',
+    'current.month' => 'Inyanga yamanje',
+    'current.version' => 'Inguqulo Yamanje',
+    'current.year' => 'Unyaka wamanje',
+    'current.yy' => 'Unyaka wamanje (ifomethi enamadijithi angu-2)',
+    'custom' => 'I-invoyisi Custom',
+    'custom.field' => 'Inkambu Yangokwezifiso',
+    'custom.field.add' => 'Inkambu Yangokwezifiso Engeza',
+    'custom.field.edit' => 'Hlela Inkambu Yangokwezifiso',
+    'custom.field.form' => 'Ifomu Lenkambu Yangokwezifiso',
+    'custom.field.location' => 'Isikhundla Sombhalo',
+    'custom.field.number' => 'Inombolo',
+    'custom.field.required' => 'Kudingeka',
+    'custom.fields' => 'Izinkambu Ngokwezifiso',
+    'custom.invoice.add' => 'Engeza i-invoyisi yangokwezifiso',
+    'custom.title' => 'Isihloko Ngokwezifiso',
+    'custom.value' => 'Inani Ngokwezifiso',
+    'custom.value.delete' => 'Susa Inani Ngokwezifiso Kuqala',
+    'custom.value.new' => 'Inani Ngokwezifiso Lisha',
+    'custom.values' => 'Amanani Ngokwezifiso',
+    'custom.values.edit' => 'Hlela Inani Ngokwezifiso',
+    'custom.values.new' => 'Ivelu Yangokwezifiso Entsha',
+    'dashboard' => 'Ideshibhodi',
+    'dashboard.outstanding_invoices' => 'Ama-invoyisi Angakakhokhwa',
+    'dashboard.overdue_amount' => 'Inani Elidlulelwe Yisikhathi',
+    'dashboard.overview.title' => 'Ukubuka Konke Kwezezimali',
+    'dashboard.recent_payments' => 'Izinkokhelo Zakamuva',
+    'dashboard.total_revenue' => 'Imali Engenayo Yonke Kule Nyanga',
+    'database' => 'Isizindalwazi',
+    'database.properly.configured' => 'Isizindalwazi simiswe kahle',
+    'date' => 'Idethi ye-invoyisi',
+    'date.actual.delivery' => 'Usuku Lokulethwa Kwangempela',
+    'date.applied' => 'Usuku Lokusebenza',
+    'date.created' => 'Idethi eyakhiwe ngayo',
+    'date.format' => 'Ifomethi Yosuku',
+    'date.issued' => 'Idethi Yokukhishwa / Okudalwe ngayo',
+    'date.supplied' => 'Idethi enikeziwe',
+    'dates' => 'Izinsuku ze-invoyisi',
+    'datetime.immutable.date.created' => 'Dala',
+    'datetime.immutable.date.created.mySql.format.year.month.filter' => 'Ym',
+    'datetime.immutable.date.modified' => 'Against',
+    'datetime.immutable.time.created' => 'Isikhathi',
+    'days' => 'Izinsuku',
+    'debug' => 'Imodi yokususa iphutha ivuliwe',
+    'decimal.point' => 'Iphuzu ledesimali',
+    'default' => 'Okuzenzakalelayo',
+    'default.country' => 'Izwe elizenzakalelayo',
+    'default.email.template' => 'Isifanekiso Se-imeyili Esizenzakalelayo',
+    'default.hourly.rate' => 'Isilinganiso sehora esizenzakalelayo',
+    'default.invoice.group' => 'Iqembu le-invoyisi elizenzakalelayo',
+    'default.invoice.tax.rate' => 'Isilinganiso Sentela Ye-invoyisi Ezenzakalelayo',
+    'default.invoice.tax.rate.placement' => 'Ukubekwa Kwesilinganiso Sentela Ye-invoyisi Okuzenzakalelayo',
+    'default.item.tax.rate' => 'Isilinganiso Sentela Yento Ezenzakalelayo',
+    'default.list.limit' => 'Inani Lezinto Ezisohlwini',
+    'default.list.limit.hint' => 'Isetha ukuthi zingaki imigqa evela emakhasini ohlu. Ilondolozwe ngokushesha — umphumela uyabonakala uma uvakashela uhlu.',
+    'default.notes' => 'Amanothi Okuzenzakalelayo',
+    'default.payment.method' => 'Indlela Yokukhokha Ezenzakalelayo',
+    'default.pdf.template' => 'Okuzenzakalelayo Isifanekiso se-PDF',
+    'default.public.template' => 'Isifanekiso Somphakathi Esizenzakalelayo',
+    'default.quote.group' => 'Iqembu Lengcaphuno Elizenzakalelayo',
+    'default.terms' => 'Imigomo ezenzakalelayo',
+    'delete' => 'Susa',
+    'delete.attachment.warning' => 'Uqinisekile ukuthi ufuna ukususa lesi sinanyathiselwa?',
+    'delete.client' => 'Susa Iklayenti',
+    'delete.client.warning' => 'Uma ususa leli klayenti uzosusa nanoma yimaphi ama-invoyisi, izingcaphuno nezinkokhelo ezihlobene naleli klayenti.Uqinisekile ukuthi ufuna ukususa unomphela leli klayenti?',
+    'delete.invoice' => 'Susa i-invoyisi',
+    'delete.invoice.action' => 'Susa Isenzo Serisidi',
+    'delete.invoice.archive' => 'I-invoyisi Yengobo Yomlando',
+    'delete.invoice.date.soft.deleted' => 'Kususiwe Okuthambile (Imininingwane Iyabuyiselwa)',
+    'delete.invoice.restore' => 'Buyisela',
+    'delete.invoice.restore.warning' => 'Uqinisekile ukuthi ufuna ukubuyisela le invoyisi?',
+    'delete.invoice.restored' => 'Irisidi ibuyiselwe ngempumelelo.',
+    'delete.invoice.trash' => 'Udoti we-invoyisi',
+    'delete.invoice.trash.empty' => 'Awekho ama-invoyisi agciniwe.',
+    'delete.invoice.warning' => 'Uma ususa le invoyisi ngeke ukwazi ukuyibuyisela emuva kwesikhathi.Uqinisekile ukuthi ufuna ukususa unomphela le-invoyisi?',
+    'delete.quote' => 'Susa I-Quote',
+    'delete.quote.derived' => 'I-oda Lokuthengisa noma i-invoyisi ixhunywe kule Khotheshini futhi ayikwazi ukususwa.',
+    'delete.quote.single' => 'Lesi sicaphuni singasuswa ngoba alikho i-oda lokuthengisa noma i-invoyisi ehlotshaniswa nayo',
+    'delete.quote.warning' => 'Uma ususa lesi sicaphuni ngeke ukwazi ukusibuyisela emuva kwesikhathi.Uqinisekile ukuthi ufuna ukususa unomphela lesi sisho?',
+    'delete.record.warning' => 'Uqinisekile ukuthi ufuna ukususa leli rekhodi?',
+    'delete.sent' => 'Ayikwazi ukususa - i-invoyisi ithunyelwe',
+    'delete.tax.warning' => 'Uqinisekile ukuthi ufuna ukususa le ntela?',
+    'delete.user.client.warning' => 'Uqinisekile ukuthi ufisa ukunganikezi leli klayenti kulo msebenzisi?',
+    'deleted' => 'Kususiwe',
+    'deletion.forbidden' => 'Ukususa ama-invoyisi akuvunyelwe.Sicela uthinte umlawuli noma ubheke amadokhumenti.',
+    'delivery' => 'Imininingwane Yokulethwa:I-invoyisi/Inkathi Yokulethwa Izinsuku Zokuqala/ Zokuphela',
+    'delivery.actual.delivery.date' => 'Idethi Yangempela Yokulethwa',
+    'delivery.add' => 'Engeza ukulethwa',
+    'delivery.date.created' => 'Idethi eyakhiwe ngayo',
+    'delivery.date.modified' => 'Idethi Yokulethwa Okulungisiwe',
+    'delivery.end.date' => 'Usuku Lokuphela Lokulethwa/Isikhathi Se-invoyisi',
+    'delivery.location' => 'Indawo yokulethwa',
+    'delivery.location.add' => 'Indawo yokulethwa Engeza',
+    'delivery.location.add.in.invoice' => 'Engeza indawo yokulethwa ngaphansi kwe-invoyisi .Buka .Izinketho .Hlela',
+    'delivery.location.building.number' => 'Inombolo Yesakhiwo',
+    'delivery.location.client' => 'Izindawo Zokudiliva zeKlayenti',
+    'delivery.location.delete' => 'Indawo yokulethwa Susa',
+    'delivery.location.edit' => 'Ukudiliva Indawo Hlela',
+    'delivery.location.electronic.address.scheme' => 'I-Electronic Address Scheme (Uhlu Lwekhodi) Okuzenzakalelayo:0088 European Article Numbering (EAN) Location Code aka (GLN) Global Location Izinombolo',
+    'delivery.location.global.location.number' => 'Inombolo yendawo yomhlaba wonke (amadijithi ayi-13)',
+    'delivery.location.id.not.found' => 'Indawo Yokulethwa I-ID Yenombolo Yendawo Yomhlaba Wonke Ayitholakali',
+    'delivery.location.index.button.list' => 'Ama-invoyisi',
+    'delivery.location.none' => 'Ayikho indawo yokulethwa exhunywe kule invoyisi',
+    'delivery.location.peppol.output' => 'Ayikho indawo yokulethwa ehlotshaniswa nale invoyisi.Ngakho-ke akukho okukhiphayo kwe-Peppol',
+    'delivery.location.plural' => 'Izindawo Zokudiliva',
+    'delivery.location.view' => 'Ukubuka Kwendawo Yokulethwa',
+    'delivery.party' => 'Iphathi yokulethwa',
+    'delivery.party.add' => 'Iphathi Yokulethwa Engeza',
+    'delivery.party.edit' => 'Ukudiliva Iphathi Hlela',
+    'delivery.party.name' => ' Igama Lephathi',
+    'delivery.party.view' => 'Ukubuka Kwephathi Yokulethwa',
+    'delivery.start.date' => 'Idethi Yokuqala Yokulethwa/Isikhathi Se-invoyisi',
+    'demographics' => 'Izibalo zabantu',
+    'description' => 'Incazelo',
+    'description.document' => 'Incazelo Yombhalo',
+    'details' => 'Imininingwane',
+    'development.progress' => 'Inqubekelaphambili Yentuthuko',
+    'development.schema' => 'I-Schema',
+    'disable.flash.messages' => 'Khubaza Imilayezo Ekhanyayo Ye-invoyisi',
+    'disable.quickactions' => 'Khubaza ama-Quiacctions',
+    'disable.sidebar' => 'Khubaza Ibha eseceleni',
+    'discount' => 'Isaphulelo',
+    'discount.amount' => 'Isaphulelo Inani',
+    'discount.percent' => 'Iphesenti lesaphulelo',
+    'discount.percentage' => 'Iphesenti lesaphulelo',
+    'do.not.send' => 'Ungathumeli',
+    'do.not.send.blocksBulkSent' => 'I-invoyisi(ama-invoyisi) ayimakiwe njengethunyelwe — Ifulegi elithi Ungathumeli lisethiwe.',
+    'do.not.send.blocksEmail' => 'Le invoyisi iphawulwe ngokuthi Ungathumeli futhi ayikwazi ukuthunyelwa nge-imeyili kumakhasimende.',
+    'do.not.send.flashCleared' => 'Ifulegi lika-Do Not Thumela lisusiwe.',
+    'do.not.send.flashSet' => 'Isethi yefulegi ethi Ungathumeli — le invoyisi ayikwazi ukuphawulwa ukuthi ithunyelwe kuze kube yilapho isuliwe.',
+    'do.not.send.not.set' => 'Akusethiwe',
+    'do.not.send.reason.customer_dispute' => 'Impikiswano yamakhasimende',
+    'do.not.send.reason.damage_occurred' => 'Umonakalo wenzekile',
+    'do.not.send.reason.job_incomplete' => 'Umsebenzi awukaqedwa',
+    'do.not.send.reason.other' => 'Okunye',
+    'do.not.send.reason.property_inaccessible' => 'Indawo engafinyeleleki',
+    'do.not.send.reason.safety_concern' => 'Ukukhathazeka ngokuphepha',
+    'document.description' => 'Peppol Document Incazelo',
+    'documentation' => 'Amadokhumenti',
+    'download' => 'Landa',
+    'download.pdf' => 'Landa i-PDF',
+    'download.template' => 'Landa Isifanekiso',
+    'draft' => 'Okusalungiswa',
+    'draft.guest' => 'Ama-invoyisi asalungiswa awabukeki kumakhasimende.',
+    'draft.number.off' => 'Ama-invoyisi asalungiswa amasha ngeke abe nenombolo ye-invoyisi.Maka njengethunyelwe ukuze uthole inombolo ye-invoyisi',
+    'draft.number.on' => 'Ama-invoyisi amasha asalungiswa azoba nenombolo ye-invoyisi',
+    'drop.files.here' => 'Dedela amafayela lapha!',
+    'due.date' => 'Izinsuku Ezimbili',
+    'dwelling' => 'Indawo yokuhlala',
+    'dwelling.add' => 'Engeza Indawo Yokuhlala',
+    'dwelling.edit' => 'Hlela Indawo Yokuhlala',
+    'dwelling.family' => 'Umgwaqo',
+    'dwelling.flat.unit' => 'Ifulethi / Iyunithi',
+    'dwelling.house.number' => 'Inombolo Yendlu',
+    'dwelling.house.number.suffix' => 'Isijobelelo Senombolo Yendlu',
+    'dwelling.latitude' => 'I-Latitude',
+    'dwelling.longitude' => 'Ubude',
+    'dwelling.plural' => 'Izindlu zokuhlala',
+    'dwelling.postcode' => 'Ikhodi yeposi',
+    'dwelling.source' => 'Umthombo',
+    'dwelling.view' => 'Buka Indawo Yokuhlala',
+    'early.settlement.cash.discount' => 'Isephulelo Semali Yokukhokha Ngaphambi Kwesikhathi',
+    'edit' => 'Hlela',
+    'elements' => 'Izinto',
+    'email' => 'I-imeyili',
+    'email.address' => 'Ikheli le-imeyili',
+    'email.client' => 'Iklayenti le-imeyili',
+    'email.date' => 'Idethi Yokuthunyelwa I-imeyili',
+    'email.default' => 'Okuzenzakalelayo',
+    'email.default.none.set' => 'Akukho okuzenzakalelayo okusethiwe',
+    'email.exception' => 'Okuhlukile Kokuthumela I-imeyili.',
+    'email.from.dropdown' => 'Kusuka Kumakheli E-imeyili Okwehliswa Kwe-imeyili azofakwa ku-MailerQuote Ifomu kanye nefomu le-MailerInv',
+    'email.include' => 'Faka',
+    'email.invoice' => 'I-invoyisi ye-imeyili',
+    'email.invoice.created.body' => '
+        <h2>Sawubona {igama_leklayenti},</h2><p> Sikudalele i-invoyisi entsha:</p><ul><li> <strong>Inombolo ye-invoyisi:</strong> #{invoyisi_number}</li><li> <strong>Usuku:</strong> {invoyisi_date}</li><li> <strong>Usuku Lokuphelelwa Yisikhathi:</strong> {usuku_lokuphelelwa yisikhathi}</li><li> <strong>Inani:</strong> {inani}</li></ul><p> <a href="{view_link}">Buka i-invoyisi</a> | <a href="{payment_link}">Khokha Manje</a></p><p> Imigomo Yokukhokha: {payment_terms}</p><p> Ozithobayo,<br> {Igama Lenkampani}</p>
+    ',
+    'email.invoice.created.subject' => 'I-invoyisi entsha #{invoyisi_number} evela ku-{company_name}',
+    'email.invoice.overdue.subject' => 'I-Invoyisi #{invoyisi_number} idlulile isikhathi: Kudingeka ukunakwa okusheshayo',
+    'email.invoice.reminder.subject' => 'Isikhumbuzi Sokukhokha - I-invoyisi #{invoyisi_number}',
+    'email.link.click.confirm' => 'Sicela uqinisekise ikheli lakho le-imeyili ngokuchofoza lesi sixhumanisi',
+    'email.log' => 'Ilogi Ethunyelwe Nge-imeyili',
+    'email.logs' => 'Ama-invoyisi Athunyelwe Nge-imeyili',
+    'email.logs.table' => 'Ithebula lamalogi e-imeyili aqondene nale invoyisi',
+    'email.logs.with.filter' => 'Ithunyelwe nge-imeyili',
+    'email.not.configured' => 'Ngaphambi kokuthi uthumele I-imeyili, kufanele ulungiselele izilungiselelo zakho ze-imeyili endaweni Yezilungiselelo Zesistimu.',
+    'email.not.sent.successfully' => 'I-imeyili AYIthunyelwanga ngempumelelo',
+    'email.pdf.attachment' => 'Namathisela I-Quote/I-invoyisi ku-imeyili?',
+    'email.placeholder' => 'name@example.com',
+    'email.quote' => 'I-imeyili Quote',
+    'email.send.method' => 'Indlela Yokuthumela I-imeyili',
+    'email.send.method.phpmail' => 'Imeyili ye-PHP',
+    'email.send.method.sendmail' => 'Thumela i-imeyili',
+    'email.send.method.smtp' => 'I-SMTP',
+    'email.settings' => 'Izilungiselelo ze-imeyili',
+    'email.source.email.template' => 'Kubuyiswe Ezilungiselelweni .Isifanekiso Se-imeyili',
+    'email.source.user.account' => 'Kubuyiswe kokuthi Izilungiselelo .I-akhawunti Yomsebenzisi I-invoyisi',
+    'email.successfully.sent' => 'I-imeyili ithunyelwe ngempumelelo',
+    'email.template' => 'Isifanekiso Se-imeyili',
+    'email.template.add' => 'Isifanekiso Se-imeyili Engeza',
+    'email.template.already.exists' => 'Isifanekiso Se-imeyili sesivele sikhona!',
+    'email.template.form' => 'Ifomu lesifanekiso se-imeyili',
+    'email.template.from.email.leave.blank' => 'Uma ushiya le nkambu ingenalutho,ikheli le-imeyili le-akhawunti Yomsebenzisi lizofakwa njengenani elihlelekayo efomini lomthumeli.isib.Ikheli le-imeyili leseva ye-accountant.Ngokukhethekile sebenzisa ikheli le-imeyili elihlobene neseva lapha.',
+    'email.template.from.source' => 'Umthombo we-imeyili',
+    'email.template.from.source.admin.email' => 'Ikheli le-imeyili lomlawuli (config/common/params)',
+    'email.template.from.source.froms.email' => 'Kusuka Okuzenzakalelayo Kwethebula (izilungiselelo.Kusuka Ekhelini Le-imeyili Olwehlayo)',
+    'email.template.from.source.sender.email' => 'Ikheli le-imeyili lomthumeli (config/common/params)',
+    'email.template.not.configured' => 'Izifanekiso ze-imeyili azilungiselelwe.Izilungiselelo.Ama-invoyisi.Izifanekiso ze-invoyisi.Isifanekiso Se-imeyili Esizenzakalelayo',
+    'email.template.overdue' => 'Isifanekiso Se-imeyili Sesiphelelwe Isikhathi',
+    'email.template.paid' => 'Isifanekiso Se-imeyili Esikhokhelwayo',
+    'email.template.successfully.added' => 'Isifanekiso Se-imeyili Sengezwe Ngempumelelo',
+    'email.template.successfully.deleted' => 'Isifanekiso Se-imeyili Sisuswe Ngempumelelo',
+    'email.template.successfully.edited' => 'Isifanekiso Se-imeyili Sihlelwe Ngempumelelo',
+    'email.template.tags' => 'Omaka Besifanekiso Se-imeyili',
+    'email.template.tags.instructions' => 'Omaka bezifanekiso bangasetshenziswa ukwengeza ulwazi oluguqukayo njengegama leklayenti noma inombolo ye-invoyisi kusifanekiso se-imeyili.Chofoza kunkundla yombhalo Womzimba bese ukhetha ithegi ekudonseleni phansi.Izofakwa ngokuzenzakalelayo kunkundla yombhalo.',
+    'email.template.type' => 'Uhlobo Lwesifanekiso Se-imeyili',
+    'email.templates' => 'Izifanekiso ze-imeyili',
+    'email.to.address.missing' => 'Kufanele ucacise ikheli le-imeyili i-imeyili okufanele ithunyelwe kulo.',
+    'email.warning.draft' => 'Ama-invoyisi asalungiswa kufanele amakwe kuqala amakwe ukuthi athunyelwe ukuze avele ngasohlangothini lweklayenti futhi ngemva kwalokho angathunyelwa nge-imeyili.',
+    'enable.debug.mode' => 'Nika amandla Imodi Yokususa iphutha',
+    'enable.online.payments' => 'Nika amandla izinkokhelo ze-inthanethi',
+    'enable.permissive.search.clients' => 'Nika amandla ukusesha okuvunyelwe',
+    'enable.projects' => 'Nika amandla imojula Yemiklamo',
+    'enable.vat' => 'Nika amandla i-VAT',
+    'enable.vat.message' => 'Bonisa umlayezo wesikhumbuzo se-VAT ngenhla kwenkinobho yezinketho ekubukweni',
+    'enable.vat.warning.line.1' => '1.Uma i-VAT inikwe amandla, izinto zomugqa ngamunye kuphela ku-invoyisi ezikhokhiswa intela nge-vat.ie.Izintela ze-Quote/Invoyisi ngeke zivele ku-invoyisi futhi zizokwehliswa zibe ngu-0.',
+    'enable.vat.warning.line.2' => '2.Uma i-VAT inikwe amandla, azikho izintela ezingezona e-inthanethi, njengoba kushiwo ngenhla, ezenza inani lentela.',
+    'enable.vat.warning.line.3' => '3.Dala izingcaphuno ze-VAT/ama-invoyisi kusizindalwazi esihlukile.',
+    'enable.vat.warning.line.4' => '4.Zonke izinto ezintsha ze-invoyisi ye-VAT zimakwe ngefulegi elithi belongs_to_vat_invoyisi.',
+    'enabled' => 'Inikwe amandla',
+    'end' => 'Qeda',
+    'end.date' => 'Idethi Yokuphela',
+    'enforcement' => 'Ikheli Lesikhulu Esiphoqelelayo',
+    'enter' => 'Ngena',
+    'enter.payment' => 'Faka Inkokhelo',
+    'error.duplicate.file' => 'Iphutha:Igama lefayela eliyimpinda, sicela ulishintshe!',
+    'error.summary' => 'Isifinyezo Sephutha',
+    'errors' => 'Amaphutha',
+    'every' => 'Njalo',
+    'example' => 'Isibonelo',
+    'expired' => 'Iphelelwe yisikhathi',
+    'expires' => 'Iphelelwa yisikhathi',
+    'extended' => 'Kunwetshiwe',
+    'extended.language' => 'Ulimi Olunwetshiwe',
+    'extra.information' => 'Ulwazi olwengeziwe',
+    'failure' => 'Ukwehluleka',
+    'false' => 'Amanga',
+    'families' => 'Imindeni',
+    'family' => 'Umndeni',
+    'family.add' => 'Faka Umndeni',
+    'family.already.exists' => 'Umndeni usuvele ukhona!',
+    'family.comma.list' => 'Uhlu Lwezinombolo Zomkhiqizo isib. 1, 2, 5, 7 Lomkhiqizi Womkhiqizo',
+    'family.history' => 'Umlando Womndeni ukhona.Ayikwazi ukususa',
+    'family.name' => 'Igama lomkhaya',
+    'family.product.prefix' => 'Isiqalo Sohlu Lwezinombolo Zomkhiqizo isib. Indlu',
+    'family.product.prefix.required.when.commalist.filled' => 'Isiqalo somkhiqizo siyadingeka uma kunikezwa uhlu lwamakhoma.',
+    'family.search' => 'Ukusesha Komndeni',
+    'faq' => 'Imibuzo Evame Ukubuzwa',
+    'faq.ai.callback.session' => 'Umshayeli wendiza:Ngingayifaka kanjani i-https://github.com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.php ukuze ngithuthukise ukuphathwa kwezwe kumsebenzi othi `callbackGithub`?',
+    'faq.answer' => 'Impendulo',
+    'faq.business.rules' => 'Iyini Imithetho Yebhizinisi LakwaPeppol?',
+    'faq.gov.developer.sandbox.hmrc' => 'Ngixhuma kanjani le nkomba ku-HMRC Developer Sandbox?',
+    'faq.homecare.auto.invoice' => 'Iyini i-Homecare Cleaning Auto Invoice?',
+    'faq.lamp.alpine' => 'Ngingayisetha kanjani le nkomba ku-Linux Alpine, Apache2, mySql/mariadb kanye ne-php?',
+    'faq.oauth2' => 'Ngiyisetha kanjani i-OAuth2 Identity Provider isb ukubhalisa nokungena nge-Facebook',
+    'faq.payment.provider' => 'Ngisetha kanjani Umhlinzeki Wenkokhelo Ye-inthanethi?',
+    'faq.php.info.all' => 'Konke',
+    'faq.php.info.configuration' => 'Ukucushwa',
+    'faq.php.info.credits' => 'Amakhredithi',
+    'faq.php.info.details' => 'Php Imininingwane Yolwazi',
+    'faq.php.info.environment' => 'Imvelo',
+    'faq.php.info.general' => 'Okujwayelekile',
+    'faq.php.info.licence' => 'Ilayisensi',
+    'faq.php.info.modules' => 'Amamojula',
+    'faq.php.info.variables' => 'Okuguquguqukayo',
+    'faq.question' => 'Umbuzo',
+    'faq.shared.hosting' => 'Ngisingatha kanjani i-yii3i ekusingatheni okwabiwe?',
+    'faq.sort.order' => 'Hlela i-oda',
+    'faq.taxpoint' => 'Indlela yokunquma ukuthi liyini Iphuzu Lentela?',
+    'faq.wsl.to.alpine' => 'Ngingayibuyekeza kanjani isayithi elibanjwe e-alpine ngisebenzisa i-wsl ye-Windows 11 (i-Windows Subsystem ye-Linux)',
+    'faq.yii.requirement.checker' => 'Yii Isihloli Sezidingo Zohlelo Lokusebenza',
+    'fax' => 'Ifeksi',
+    'fax.abbr' => 'F',
+    'fax.number' => 'Inombolo Yefeksi',
+    'field' => 'Inkambu',
+    'file' => 'Ifayela',
+    'filter.clients' => 'Hlunga amaklayenti',
+    'filter.invoices' => 'Hlunga ama-invoyisi',
+    'filter.payments' => 'Hlunga Izinkokhelo',
+    'filter.quotes' => 'Hlunga Izilinganiso',
+    'first' => 'Okokuqala',
+    'first.day.of.week' => 'Usuku lokuqala lweviki',
+    'first.reset' => 'Okokuqala susa izingcaphuno zokuhlola nama-invoyisi owadalele ukuhlolwa.Bese idatha yokuhlola ingasuswa.',
+    'flash.messages.appear.here' => 'Imilayezo ekhanyayo ivela lapha.',
+    'footer' => 'Unyaweni',
+    'forgot.your.password' => 'Ngikhohlwe iphasiwedi yami',
+    'form.error' => 'Amaphutha efomu',
+    'from.date' => 'Kusuka Kudethi',
+    'from.default.in.dropdown' => 'Ikheli le-imeyili elizenzakalelayo ohlwini lokudonsela phansi',
+    'from.email' => 'Kusuka ku-imeyili',
+    'from.email.address' => 'Kusuka Kumakheli E-imeyili:Khetha okuzenzakalelayo',
+    'from.include.in.dropdown' => 'Faka le imeyili ohlwini olwehliswayo',
+    'from.name' => 'Kusuka Egameni',
+    'front.page' => 'Ikhasi Eliphambili',
+    'gateway.online.payment' => 'Inkokhelo Ye-inthanethi',
+    'gateway.status.page.summary' => 'Ikhasi %d kwangu-%d',
+    'gender' => 'Ubulili',
+    'gender.female' => 'Owesifazane',
+    'gender.male' => 'Owesilisa',
+    'gender.other' => 'Okunye',
+    'general' => 'Okujwayelekile',
+    'general.no' => 'Cha',
+    'general.settings' => 'Izilungiselelo Ezijwayelekile',
+    'general.yes' => 'Yebo',
+    'generate' => 'Khiqiza',
+    'generate.copy' => 'Khiqiza Ikhophi',
+    'generate.invoice.number.for.draft' => 'Dala inombolo ye-invoyisi yama-invoyisi asalungiswa',
+    'generate.quote.number.for.draft' => 'Dala inombolo yekhwothi yezingcaphuno ezisalungiswa',
+    'generator' => 'Ijeneretha',
+    'generator.add' => 'Ijeneretha Engeza',
+    'generator.camelcase.capital.name' => 'I-Camelcase Capital Name esetshenziswa ku-Controller kanye namagama e-Repository isb.I-TaxRate.Sebenzisa \'Umkhiqizo\' uma usebenzisa isibonelo esingenhla \'somkhiqizo\'',
+    'generator.camelcase.capital.name.product' => 'Umkhiqizo',
+    'generator.controller.and.repository' => 'Isilawuli kanye Nenqolobane',
+    'generator.controller.layout.directory' => 'Uhla Lwemibhalo Yesakhiwo Sesilawuli isb.i-dirname(i-dirname(__DIR__)) evela ngemva kokwakhiwa kwesilawuli.Ifayela lesilawuli lihlala kokuthi (__DIR__) futhi liyizinkomba ezimbili ngezansi kwenkomba ethi \'src\' ezosetshenziswa \'njengesisekelo\' ukwengeza indlela eya kuhla lwemibhalo Yesakhiwo.',
+    'generator.controller.layout.directory.dot.path' => 'Indlela Yechashazi Yesakhiwo Sesilawuli isb.\'/views/layout/invoice.php\' evela ngemva nje kokwakha isilawuli (ngaphandle kwe-aphostrophe) futhi yengezwe endaweni yemibhalo ye-src engenhla.',
+    'generator.controller.layout.directory.dot.path.placeholder' => 'Indlela Yechashazi Yokuhlelwa Kwesakhiwo Sesilawuli',
+    'generator.controller.layout.directory.placeholder' => 'Uhla Lwemibhalo Yesakhiwo Sesilawuli isb.i-dirname(i-dirname(__DIR__))',
+    'generator.controller.path.layout' => 'Indlela Yefayela Lesakhiwo',
+    'generator.created.at.include' => 'Faka i-created_at field Ebhizinisini',
+    'generator.deleted.at.include' => 'Faka nenkambu esusiwe_ebhizinisini',
+    'generator.external.entity' => 'Ibhizinisi langaphandle elisetshenziswe kuleli bhizinisi.I-Setting Entity iwukhiye olula =&gt;i-ID ye-value pair indexed database.',
+    'generator.external.entity.default' => 'Ibhizinisi langaphandle isb.I-MyEntity ayihlanganisi indlela.Indlela eyakhiwe ku-Generator.Okuzenzakalelayo:Ukusetha',
+    'generator.external.entity.placeholder' => 'Ibhizinisi langaphandle isb.I-MyEntity ayihlanganisi indlela.Indlela eyakhiwe ku-Generator.Okuzenzakalelayo:Ukusetha.Inqolobane eyengeziwe isb.Ukusetha Inqolobane ngaphezu kwenqolobane eyinhloko.',
+    'generator.file.type.not.found' => 'Uhlobo lwefayela alutholakali.',
+    'generator.flash.include' => 'Bandakanya Umlayezo We-Flash kokuthi Engeza/Hlela/Buka/Susa umsebenzi kusilawuli',
+    'generator.generate' => 'Khiqiza',
+    'generator.generated' => ' ekhiqizwe ngo ',
+    'generator.google.translate.all.locales' => 'I-Google Translate Zonke Izindawo (Umehluko)',
+    'generator.google.translate.any' => 'Humusha isiNgisi\\any_lang.php',
+    'generator.google.translate.app' => 'Humusha isiNgisi\\app_lang.php',
+    'generator.google.translate.common' => 'Humusha isiNgisi\\common_lang.php',
+    'generator.google.translate.diff' => 'Humusha isiNgisi\\diff_lang.php',
+    'generator.google.translate.gateway' => 'Humusha isiNgisi\\gateway_lang.php',
+    'generator.google.translate.info' => 'Idokhumenti Yolwazi Lokuhumusha (invoyisi.php)',
+    'generator.google.translate.ip' => 'Humusha isiNgisi\\ip_lang.php',
+    'generator.google.translate.latest.a' => 'Humusha isiNgisi\\a_latest_lang.php',
+    'generator.google.translate.latest.b' => 'Humusha isiNgisi\\b_latest_lang.php',
+    'generator.headerline.include' => 'Faka i-Header uma i-Ajax idingeka',
+    'generator.history' => 'Leli rekhodi linobudlelwano bokukhiqiza obukhona ngakho alikwazi ukususwa.Susa lobu budlelwano kuqala.',
+    'generator.modified.at.include' => 'Bandakanya i-modified_at field Ebhizinisini',
+    'generator.namespace' => 'Indawo yamagama',
+    'generator.namespace.before.entity' => 'Isikhala segama ngaphambi kwendlela yebhizinisi isb.Uhlelo lokusebenza\\I-invoyisi (HAYI Uhlelo Lokusebenza\\Irisidi\\Entity)',
+    'generator.relation.form' => 'Ifomu Lobudlelwano Bejeneretha',
+    'generator.relation.form.camelcase.name' => 'Igama lekhamela elingafaki i-id (isb.tax_rate_id \'ukhiye/ubudlelwane bangaphandle\' kuthebula Lomkhiqizo elenziwe laba lula ukuze libe Izinga Lentela KANYE yigama Lebhizinisi)',
+    'generator.relation.form.entity.generator' => 'Ijeneretha yebhizinisi',
+    'generator.relation.form.lowercase.name' => 'Igama lombhalo omncane elingabandakanyi i-id (isb.tax_rate_id \'ukhiye wangaphandle/ubudlelwane\' kuthebula lomkhiqizo elenziwe lula ukuba libe yi-tax.rate)',
+    'generator.relation.form.view.field.name' => 'Buka Igama Lenkundla',
+    'generator.relations' => 'Ubudlelwano beGeneretha',
+    'generator.relations.add' => 'Ubudlelwano Bamajeneretha Engeza',
+    'generator.route.prefix' => 'Isiqalo somzila isb.i-invoyisi \'ku-invoyisi/umkhiqizo\' ezovela ngemva kokwakhiwa kwesilawuli.',
+    'generator.route.suffix' => 'Isijobelelo somzila isb.umkhiqizo \'ku-invoyisi/umkhiqizo\' ozovela ngemva kokwakhiwa kwesilawuli.',
+    'generator.small.plural.name' => 'Igama elincane lobuningi elisetshenziswa Kusilawuli somsebenzi wesilawuli senkomba ukuze kufakwe kuhlu zonke izinhlobo zamajeneretha ebhizinisi.Ngokuvamile inani elingenhla elino-s ekugcineni.',
+    'generator.small.plural.name.placeholder' => 'Igama Elincane Eliningi',
+    'generator.small.plural.name.products' => 'imikhiqizo',
+    'generator.small.singular.name' => 'Igama elincane elisebunyeni elisetshenziswa kusilawuli ukuhlela, nokubuka imisebenzi yesilawuli.Ngokujwayelekile kuyafana neSijobelelo Somzila.isib.umkhiqizo',
+    'generator.small.singular.name.placeholder' => 'Igama Elincane Elilodwa',
+    'generator.small.singular.name.product' => 'umkhiqizo',
+    'generator.table' => 'Ithebula',
+    'generator.table.used.to.generate.entity.controller.repository' => 'Ithebula elisetshenziselwa ukukhiqiza Ibhizinisi, Isilawuli Engeza Hlela Susa Ukubuka, Inqolobane,Isevisi, Imephu',
+    'generator.updated.at.include' => 'Bandakanya inkambu ebuyekeziwe Ebhizinisini',
+    'generators' => 'Amajeneretha',
+    'generators.relation' => 'Ubudlelwano Bamajeneretha',
+    'gln' => 'I-GLN',
+    'gocardless.direct.debit.collection.scheduled.for' => 'Iqoqo lakho le-Direct Debit lihlelelwe i-%s.',
+    'gov.developer.sandbox' => 'Ibhokisi lesihlabathi likanjiniyela',
+    'gov.developer.sandbox.uk' => 'Hmrc',
+    'grand.fathered' => 'Ubaba Omkhulu',
+    'gridview.api' => 'I-API',
+    'gridview.create.at' => 'Idalwe ngo-',
+    'gridview.login' => 'Ngena ngemvume',
+    'gridview.profile' => 'Iphrofayela',
+    'gridview.title' => 'Uhlu lwabasebenzisi',
+    'group' => 'Iqembu',
+    'group.add' => 'Faka iqembu',
+    'group.by' => 'Qoqa ngeqembu',
+    'group.document.number' => 'Inombolo Yedokhumenti Ayikhiqizwanga.Hlola Amaqembu.',
+    'group.form' => 'Ifomu leqembu',
+    'group.history' => 'Umlando Weqembu ukhona.Ayikwazi ukususa',
+    'grouping' => 'Ukuqoqa',
+    'grouping.none' => 'Akukho Ukuhlanganisa Amaqembu',
+    'groups' => 'Amaqembu',
+    'guest.account.denied' => 'Le akhawunti ayimisiwe.Sicela uthinte umlawuli wesistimu.',
+    'guest.read.only' => 'Isivakashi (Funda Kuphela)',
+    'guest.url' => 'I-URL yesivakashi',
+    'hide.or.unhide.columns' => 'Fihla noma ungafihli amakholomu',
+    'hint.greater.than.zero.please' => 'Ngicela, ngaphezu kuka-0.00!',
+    'hint.this.field.is.not.required' => 'Le nkambu ayidingekile',
+    'hint.this.field.is.required' => 'Le nkundla iyadingeka',
+    'home' => 'Ikhaya',
+    'home.caption.slide1' => 'Bhalisa futhi Ngena njengomlawuli.Ayikho i-inthanethi .unganaki uxhumano lwephutha le-imeyili.',
+    'home.caption.slide2' => 'Njengomlawuli, bhalisa umsebenzisi.I-akhawunti ye-imeyili isemthethweni futhi uxhumano lwe-inthanethi .qinisekisa.Umsebenzisi uzothola i-akhawunti yeklayenti.',
+    'home.caption.slide3' => 'I-akhawunti ye-imeyili ayivumelekile, futhi akukho uxhumano lwe-inthanethi .ngena ngemvume futhi I-akhawunti yomsebenzisi ye-invoyisi yenza isebenze ngaphansi kokuthi Izilungiselelo.Dala i-akhawunti yeklayenti.Yabela umsebenzisi',
+    'home.caption.slides.location.debug.mode' => 'Le ndawo yokuqukethwe:/resources/views/site/index.php ngaphakathi ./resources/views/layout/..kanye nendawo yesilayidi sokuhumusha ./resources/messages/app.php',
+    'homecare' => 'Ukunakekelwa Kwasekhaya',
+    'homecare.auto.invoice.enabled' => 'Nika amandla i-invoyisi ezenzakalelayo ye-QR Yokunakekelwa Kwasekhaya',
+    'homecare.column.client.active' => 'Iklayenti Liyasebenza',
+    'homecare.column.delivery.add' => 'Engeza Ukulethwa',
+    'homecare.column.pdf.email' => 'Izenzo ze-PDF / ze-imeyili',
+    'homecare.column.quick.pay' => 'Inkokhelo Esheshayo',
+    'homecare.column.workflow.type' => 'Uhlobo Lokuhamba Komsebenzi',
+    'homecare.column.year.month' => 'Unyaka-Inyanga',
+    'homecare.current.run' => 'Ukusebenza Kwamanje',
+    'homecare.current.run.category.secondary' => 'Ukusebenza Kwamanje — Indawo',
+    'homecare.current.run.last.run.date' => 'Ukugijima Kwamanje — Usuku Lokusebenza Kokugcina',
+    'homecare.hidden.columns' => 'Amakholomu e-inv/index — Imodi Yokunakekela Ikhaya',
+    'homecare.hidden.columns.description' => 'Fihla lawa makholomu ku-inv/index ngenkathi i-Home Care QR Auto-Invoice ivuliwe, ukuze abaphathi babone igridi emfushane nesebenziseka kalula efonini. Okuthi Isisebenzi, Inani, kanye nokuthi Ungathumeli kuhlala kubonakala. Igridi evamile ayithinteki ngenkathi i-Home Care QR Auto-Invoice ivaliwe.',
+    'homecare.hidden.columns.guest' => 'Amakholomu e-inv/ezivakashi — Imodi Yokunakekela Ikhaya',
+    'homecare.hidden.columns.guest.description' => 'Fihla la makholomu kugridi ye-invoyisi ebheke isivakashi (i-inv/isivakashi) ngenkathi i-Home Care QR Auto-Invoice ivuliwe. Inombolo, ukulanda kwe-PDF, kanye nesimo kuhlala kubonakala. Igridi yezivakashi evamile ayithinteki ngenkathi i-Home Care QR Auto-Invoice ivaliwe.',
+    'homecare.mobile.rotate.tip.body' => 'Uma i-inv/index izwakala iminyene ku-portrait, zama i-landscape. Swayipha phansi kusukela ekhoneni eliphezulu kwesokudla ukuze uthole izilungiselelo ezisheshayo, bese uswayipha phansi futhi ukuze uyinwebe — isithonjana se-rotate-lock sikuphaneli enwetshiwe.',
+    'homecare.mobile.rotate.tip.title' => 'Icebiso le-Android:',
+    'homecare.offline.download.button' => '📥 Landa ukuze ungaxhunyiwe ku-inthanethi',
+    'homecare.offline.download.failed' => 'Ayikwazi ukulanda ama-invoyisi ukuze asetshenziswe ungaxhunyiwe ku-inthanethi — sicela uzame futhi ngenkathi uxhumekile.',
+    'homecare.offline.download.success' => 'Kulandwe i-invoyisi ye-%s ukuze isetshenziswe ungaxhunyiwe ku-inthanethi.',
+    'homecare.offline.downloaded.at' => 'Kulandiwe',
+    'homecare.offline.empty' => 'Awekho ama-invoyisi alandiwe okwamanje. Xhuma kwi-inthanethi bese uthepha okuthi &quot;Landa ukuze ungaxhunyiwe ku-inthanethi&quot; ohlwini lwakho lwama-invoyisi kuqala.',
+    'homecare.offline.install.button' => '📲 Faka uhlelo lokusebenza',
+    'homecare.offline.install.generic.message' => 'Faka lolu hlelo lokusebenza ukuze lufinyeleleke ungaxhunyiwe ku-inthanethi oluhlala isikhathi esingaphezu kwezinsuku ezimbalwa.',
+    'homecare.offline.install.ios.message' => 'Ukuze uthole ukufinyelela okungaxhunyiwe ku-inthanethi okusinda izinsuku ezingaphezu kwezimbalwa ngaphandle kokuvakasha, thepha Yabelana, bese uthi &quot;Engeza Esikrinini Sasekhaya&quot;.',
+    'homecare.offline.title' => 'Ama-invoyisi ami angaxhunyiwe ku-inthanethi',
+    'homecare.offline.view.button' => '📱 Buka ikhophi engaxhunyiwe ku-inthanethi',
+    'homecare.scan.contact.us' => 'Asikwazanga ukucubungula lokhu kuskena. Sicela uxhumane nathi ngqo.',
+    'homecare.scan.not.eligible' => 'Akukho invoyisi entsha edingekayo njengamanje. Uma ucabanga ukuthi lokhu kuyiphutha, sicela usithinte.',
+    'homecare.scan.thanks' => 'Ngiyabonga — i-invoyisi yakho isivele yenziwe futhi isilungele ukubukwa ku-akhawunti yakho.',
+    'homecare.scan.title' => 'Ukunakekelwa Kwasekhaya',
+    'homecare.signup.category.new.area' => 'Indawo yami ayifakiwe ohlwini — lena yindawo entsha',
+    'homecare.signup.confirmed.expired' => 'Lesi sixhumanisi sokuqinisekisa siphelelwe yisikhathi noma sesivele sisetshenzisiwe. Sicela ubhalise futhi.',
+    'homecare.signup.confirmed.paid' => 'Ngiyabonga — i-akhawunti yakho isilungisiwe futhi i-invoyisi yakho yokuqala iphawulwe ngokuthi ikhokhelwe. Ikhodi yakho ye-QR isilungile ngezansi: yinamathisele endaweni ebonakalayo bese uyiskena ngemva kokuvakasha ngakunye kwesikhathi esizayo ukuze ucele i-invoyisi yakho elandelayo ngokuzenzakalelayo.',
+    'homecare.signup.confirmed.setup.incomplete' => 'Asikwazanga ukuqeda ukusetha i-akhawunti yakho. Sicela uxhumane nathi ngqo.',
+    'homecare.signup.confirmed.unpaid' => 'Ngiyabonga — i-akhawunti yakho isilungisiwe futhi i-invoyisi yakho yokuqala isithunyelwe. Ikhodi yakho ye-QR isilungele ukuphrintwa manje, kodwa ukuskena ngokuzenzakalelayo ukuze kube yi-invoyisi kuzoqala ukusebenza kuphela uma i-invoyisi isiphawulwe ukuthi ikhokhelwe.',
+    'homecare.signup.payment.have.paid.cash' => 'Sengivele ngikhokhe imali',
+    'homecare.signup.payment.will.pay.today' => 'Ngizokhokha namuhla',
+    'homecare.signup.street.name' => 'Igama lomgwaqo',
+    'homecare.signup.title' => 'Ukubhalisa Ukunakekelwa Kwasekhaya',
+    'homecare.visit.log.description' => 'Yonke imizamo yokuskena i-QR yokuhlanza ukunakekelwa kwasekhaya kanye nomphumela wayo, ukuze kubonakale abasebenzi kuphela — ikhasi lemiphumela yokuskena elibhekene namakhasimende lijwayelekile ngamabomu futhi alilokothi libonise leli zinga lemininingwane.',
+    'homecare.visit.log.invoice' => 'Irisidi',
+    'homecare.visit.log.outcome' => 'Umphumela',
+    'homecare.visit.log.reason' => 'Isizathu (abasebenzi kuphela)',
+    'homecare.visit.log.sent.status' => 'Isimo Esithunyelwe',
+    'homecare.visit.log.sent.status.tooltip' => 'Ama-invoyisi azenzakalelayo e-HomeCare ahlala edalwa ngesimo esithi &#39;Kuthunyelwe&#39;, kungakhathaliseki ukuthi kulungiselelweni &#39;Maka i-invoyisi njengethunyelwe uma ukopisha i-invoyisi&#39; — leso silungiselelo sisebenza kuphela kwamanye amathuluzi okukopisha ama-invoyisi. Thepha/chofoza ukuze usivule.',
+    'homecare.visit.log.title' => 'Ilogi Yokuskena ye-QR Yokunakekelwa Kwasekhaya',
+    'homecare.visit.log.visited.at' => 'Kuvakashelwe',
+    'hostname' => 'Igama lomethuleli',
+    'id' => 'I-ID',
+    'identifier.format' => 'Ukufometha kwesihlonzi',
+    'identifier.format.template.tags' => 'Omaka besifanekiso sesikhombi',
+    'identifier.format.template.tags.instructions' => 'Omaka bezifanekiso bangasetshenziswa ukwengeza ulwazi oluguqukayo njengegama leklayenti noma inombolo ye-invoyisi kusifanekiso se-imeyili.Chofoza kunkambu <b>yokufometha ye-Identifier</b> bese ukhetha umaka kokwehlayo.Izofakwa ngokuzenzakalelayo kunkundla yombhalo.',
+    'identity.provider.authentication.successful' => 'Ugunyazwe ngempumelelo nge-Identity Provider oyikhethile,ubhalise, futhi wabelwe i-akhawunti yeklayenti.Chofoza lapha phakathi nehora elilandelayo ukuze wenze i-akhawunti yakho isebenze.Unehora lokungena ngemvume kokuqala.',
+    'image.overdue' => 'Indawo yesithombe:/invoice/public/img/overdue.png',
+    'image.paid' => 'Indawo yesithombe:/invoice/public/img/paid.png',
+    'import' => 'Ngenisa',
+    'import.data' => 'Ngenisa Idatha',
+    'import.from.csv' => 'Ngenisa kusuka ku-CSV',
+    'import.spreadsheet' => 'Ngenisa ispredishithi',
+    'in.progress' => 'Kuyaqhubeka',
+    'inactive' => 'Ayisebenzi',
+    'index.checkbox.add.some.items.to.enable' => 'I-invoyisi ayinazo izinto.Engeza izinto ukuze unike amandla ibhokisi lokuhlola',
+    'index.footer.showing' => 'Ibonisa %s kwezingu-%s',
+    'index.showing' => 'Ibonisa %s kwezingu-%s',
+    'info.task.readonly' => 'Lo msebenzi awusakwazi ukushintshwa ngoba usuvele ufakwe i-invoyisi.',
+    'install.pdf.viewer.extension' => 'Faka isandiso se-PDF Viewer',
+    'install.test.data' => 'Idatha yokuhlola manje ingafakwa',
+    'install.test.data.exists.already' => 'Idatha Yokuhlola I-invoyisi isivele ikhona',
+    'install.test.data.goto.tab.index' => 'Iya kuzilungiselelo .Okuvamile .Faka Idatha Yokuhlola',
+    'interface' => 'Isixhumi esibonakalayo',
+    'inv.cdn.not.node.module' => 'Sebenzisa i-InvoiceCdnAsset (Hhayi i-InvoiceNodeModulesAsset)',
+    'invalid.amount' => 'Inani Elingavumelekile',
+    'invalid.subscriber.number' => 'Inombolo Yokubhalisa Engavumelekile',
+    'invoice' => 'I-invoyisi',
+    'invoice.created.from.quote' => 'Irisidi idalwe ngesilinganiso',
+    'invoice.needs.to.be.sent' => 'Ukuze ubone izinkinobho zokukhokha zishintsha isimo sibe esithunyelwe.',
+    'invoice.origin' => 'Umsuka',
+    'invoice.to.html' => 'Irisidi ku-Html',
+    'invoice.trash' => 'Udoti we-invoyisi',
+    'invoice.validation.errors' => 'Amaphutha Okuqinisekisa I-invoyisi',
+    'invoiced' => 'I-invoyisi',
+    'invoiceplane' => 'I-invoicePlane',
+    'invoiceplane.clients' => 'Amaklayenti afakiwe',
+    'invoiceplane.database.name' => 'Igama lesizindalwazi',
+    'invoiceplane.database.password' => 'Iphasiwedi',
+    'invoiceplane.database.username' => 'Igama lomsebenzisi',
+    'invoiceplane.families' => 'Imindeni ifakiwe',
+    'invoiceplane.import' => 'Hlola Ukuxhumana',
+    'invoiceplane.import.complete.connection.closed' => 'Ukungenisa kuqedile! Uxhumano luvaliwe!',
+    'invoiceplane.import.connected' => 'Unoxhumo!',
+    'invoiceplane.import.proceed' => 'Qhubeka nenqubo yokungenisa',
+    'invoiceplane.import.proceed.alert' => 'Uqinisekile ukuthi ufuna ukuqhubeka?',
+    'invoiceplane.imported' => 'Amathebula angenisiwe',
+    'invoiceplane.news' => 'I-invoicePlane News',
+    'invoiceplane.no.connection' => 'Alukho Uxhumo',
+    'invoiceplane.no.username.or.password' => 'Sicela ulondoloze igama lakho lesizindalwazi,Igama lomsebenzisi, kanye nephasiwedi ye-InvoicePlane',
+    'invoiceplane.products' => 'Imikhiqizo ifakiwe',
+    'invoiceplane.tables' => 'Ngenisa Iklayenti Lamathebula Le-invoicePlane, Umkhiqizo,Iyunithi, Umndeni, Isilinganiso Sentela kumathebula angenalutho.Akufanele kube khona idatha ekhona kulawa mathebula ngaphambi kokungenisa futhi kungabikho imibhalo ekhona isib.Ama-invoyisi.',
+    'invoiceplane.tables.not.empty' => 'Iklayenti lakho, Umkhiqizo, Iyunithi, Umndeni,kanye namathebula Wesilinganiso Sentela kufanele angabi nalutho ngaphambi kokungenisa',
+    'invoiceplane.taxrates' => 'Izilinganiso Zentela zifakwe nesilinganiso Sentela engu-Zero esiyisibopho kanye Nesilinganiso Sentela Esivamile.',
+    'invoiceplane.units' => 'Amayunithi afakiwe',
+    'invoiceplane.yes.connection' => 'Yebo Unokuxhumana kusizindalwazi sakho se-invoiceplane!',
+    'invoices' => 'Ama-invoyisi',
+    'invoices.due.after' => 'Ama-invoyisi afuneka ngemuva (Izinsuku)',
+    'is.not.writable' => 'ayibhaleki',
+    'is.writable' => 'iyabhaleka',
+    'item' => 'Into ye-invoyisi',
+    'item.add' => 'Engeza into ye-invoyisi',
+    'item.allowance' => 'Isibonelelo Sento',
+    'item.charge' => 'Inkokhelo Yento',
+    'item.date' => 'Idethi Yento',
+    'item.discount' => 'Isaphulelo Sento',
+    'item.lookup' => 'Ukubheka Into Ye-invoyisi',
+    'item.lookup.form' => 'Ifomu Lokubheka Into',
+    'item.lookups' => 'Ukubheka Izinto',
+    'item.name' => 'Igama lento',
+    'item.tax' => 'Intela Yento',
+    'item.tax.excluded' => 'I-SubTotal x Iphesenti Lentela (Intela Yento ayifakiwe)',
+    'item.tax.included' => '(Isamba Esingaphansi + Nentela Yento) x Iphesenti Lentela',
+    'item.tax.rate' => 'Isilinganiso Sentela Yento',
+    'items' => 'Izinto ze-invoyisi',
+    'judgement' => 'Ukwahlulela Kuzuziwe',
+    'label' => 'Ilebula',
+    'label.switch.off' => 'I-invoyisi ye-VAT',
+    'label.switch.on' => 'AYIKHO I-invoyisi ye-VAT',
+    'language' => 'Ulimi',
+    'last' => 'Okokugcina',
+    'last.month' => 'Inyanga edlule',
+    'last.quarter' => 'Ikota yokugcina',
+    'last.year' => 'Ngonyaka odlule',
+    'layout.add' => 'Engeza',
+    'layout.add.post' => 'Engeza okuthunyelwe',
+    'layout.add.random-content' => 'Engeza okuqukethwe okungahleliwe',
+    'layout.add.tag' => 'Engeza ithegi',
+    'layout.archive' => 'Faka kungobo yomlando',
+    'layout.archive.for-year' => 'Faka kungobo yomlando ye-{year}',
+    'layout.blog' => 'Ibhulogi',
+    'layout.change-language' => 'Shintsha ulimi',
+    'layout.console' => 'Ikhonsoli',
+    'layout.content' => 'Okuqukethwe',
+    'layout.create.new-user' => 'Dala umsebenzisi omusha',
+    'layout.db.schema' => 'DB Schema',
+    'layout.go.home' => 'Buyela Ekhaya',
+    'layout.login' => 'Ngena ngemvume',
+    'layout.migrations' => 'Ukufuduka',
+    'layout.no-records' => 'Awekho amarekhodi',
+    'layout.not-found' => 'Akutholakalanga',
+    'layout.page.not-authorised' => 'Akugunyaziwe:Imininingwane yokuqinisekisa ayilungile.',
+    'layout.page.not-found' => 'Ikhasi elithi {url} alitholakalanga.',
+    'layout.page.user-cancelled-oauth2' => 'Umsebenzisi Ukhansele Ukungena / Ukubhalisa Nge-Identity Provider isb Facebook',
+    'layout.pagination-summary' => 'Ibonisa amaposi angu-{pageSize} kokungu-{total}',
+    'layout.password' => 'Iphasiwedi',
+    'layout.password-verify' => 'Qinisekisa iphasiwedi yakho',
+    'layout.password-verify.new' => 'Qinisekisa iphasiwedi yakho entsha',
+    'layout.password.new' => 'Iphasiwedi Entsha',
+    'layout.password.otp' => 'Iphasiwedi ye-OTP',
+    'layout.password.otp.6' => 'Iphasiwedi ye-OTP (amadijithi ayi-6)',
+    'layout.password.otp.6.8' => 'Iphasiwedi ye-OTP (amadijithi ayi-6) / Amakhodi Okubuyisela Isipele (amadijithi ayi-8)',
+    'layout.password.otp.6.first' => 'Faka ikhodi enezinombolo ezingu-6 kusuka kuhlelo lwakho lokusebenza lokufakazela ubuqiniso',
+    'layout.password.otp.recovery.8' => 'Faka ikhodi yakho yokubuyisela emuva (izinhlamvu ezingu-8)',
+    'layout.password.otp.use.6.digit.code' => 'Sebenzisa ikhodi yakho enezinombolo ezingu-6 esikhundleni salokho',
+    'layout.password.otp.use.recovery.code' => 'Sebenzisa ikhodi yokutakula esikhundleni salokho',
+    'layout.password.otp.verify.6' => 'Faka Iphasiwedi Yesibili Ehlukile Ye-Aegis Ekhiqizwe Nge-OTP (izinombolo eziyi-6)',
+    'layout.rbac.assign-role' => 'Yabela umsebenzi we-RBAC kumsebenzisi',
+    'layout.remember' => 'Ngikhumbule',
+    'layout.reset' => 'Setha kabusha',
+    'layout.show-more' => 'khombisa okuningi',
+    'layout.submit' => 'Thumela',
+    'layout.title' => 'Isihloko',
+    'layout.total.posts' => 'Okuthunyelwe okuphelele okungu-{count}',
+    'left.pad' => 'Iphedi Yesokunxele',
+    'letter' => 'Incwadi Yezinsuku Eziyisi-7 Ngaphambi Kokwenza Ithunyelwe',
+    'loading.error' => 'Kubonakala sengathi uhlelo lokusebenza lubambekile ngenxa yephutha.',
+    'loading.error.help' => 'Thola Usizo',
+    'location' => 'Indawo',
+    'location.accuracy' => 'Ukunemba',
+    'location.latitude' => 'I-Latitude',
+    'location.longitude' => 'Ubude',
+    'location.test.button' => 'Hlola Indawo Yami',
+    'location.tester' => 'Hlola Indawo Yedivayisi Yakho',
+    'location.tester.description' => 'Isebenzisa imvume yendawo yesiphequluli sakho ukubonisa izixhumanisi ze-GPS zamanje zale divayisi. Akukho okugciniwe — lokhu kwenzelwa ukuqinisekisa ukuthi indawo isebenza kule divayisi ngaphambi kokuyethemba kwenye indawo. Kudinga i-HTTPS kanye nomyalo wemvume yendawo owamukelayo.',
+    'login' => 'Ngena ngemvume',
+    'login.logo' => 'Ilogo yokungena',
+    'loginalert.credentials.incorrect' => 'I-imeyili noma iphasiwedi ayilungile.',
+    'loginalert.no.password' => 'Sicela ufake iphasiwedi.',
+    'loginalert.user.emailnotverified' => 'Ukufinyelela Kwenqatshiwe: Chofoza kusixhumanisi sokuqinisekisa esithunyelwe ekhelini lakho le-imeyili.',
+    'loginalert.user.inactive' => 'Lo msebenzisi umakwe njengongasebenzi.Sicela uthinte umlawuli wesistimu.',
+    'loginalert.user.not.found' => 'Ayikho i-akhawunti ebhaliswe ngaleli kheli le-imeyili.',
+    'loginalert.wrong.auth.code' => 'Ukusetha kabusha iphasiwedi kunqatshiwe.Unikeze ithokheni yokuqinisekisa engavumelekile.',
+    'logo' => 'Ilogo ye-invoyisi',
+    'logout' => 'Phuma',
+    'loss' => 'Icishiwe',
+    'mark.invoices.sent.copy' => 'Maka ama-invoyisi njengathunyelwe lapho ukopisha i-invoyisi',
+    'mark.invoices.sent.pdf' => 'Maka ama-invoyisi njengathunyelwe lapho i-PDF yenziwe',
+    'mark.quotes.sent.pdf' => 'Maka izingcaphuno njengezithunyelwe lapho i-PDF yenziwe',
+    'mark.sent.copy.on' => 'Maka ama-invoyisi njengathunyelwe uma ukopisha i-invoyisi Ivuliwe.Kufanele ivulwe kuphela ngesikhathi sokuthuthukiswa',
+    'mark.sent.off' => 'Maka ama-invoyisi njengathunyelwe lapho kukopishwa ama-invoyisi .IVALIWE okwamanje.Kusethwe kuphela KUVULIWE phakathi nokuthuthukiswa.Chofoza lapha ukuze uyivule',
+    'mark.sent.on' => 'Maka ama-invoyisi njengathunyelwe ekukopisheni ama-invoyisi .IVULIWE okwamanje.Njalo ivale ngesikhathi sokukhiqiza.Chofoza lapha ukuze UYIVALE',
+    'max' => 'Ubukhulu',
+    'max.quantity' => 'Ubuningi bobuningi',
+    'menu' => 'Imenyu',
+    'menu.about' => 'Mayelana',
+    'menu.accreditations' => 'Ukugunyazwa',
+    'menu.blog' => 'Ibhulogi',
+    'menu.comments-feed' => 'Okuphakelayo kwamazwana',
+    'menu.contact.details' => 'Imniningwano Yokuxhumana',
+    'menu.contact.interest' => 'Isilinganiso Sokuhweba / Ifomu Lokuxhumana',
+    'menu.contact.soon' => 'Siyabonga ngokusithinta, sizokuthinta ngokushesha okukhulu.',
+    'menu.contact.us' => 'Xhumana nathi',
+    'menu.gallery' => 'Igalari',
+    'menu.gateway.status' => 'Isimo seSango Lokukhokha',
+    'menu.language' => 'Ulimi',
+    'menu.login' => 'Ngena ngemvume',
+    'menu.logout' => 'Phuma ({ngena})',
+    'menu.pricing' => 'Intengo',
+    'menu.privacy.policy' => 'Inqubomgomo yobumfihlo',
+    'menu.signup' => 'Bhalisela',
+    'menu.swagger' => 'Swagger',
+    'menu.team' => 'Ithimba',
+    'menu.terms.of.service' => 'Imigomo Yesevisi',
+    'menu.testimonial' => 'Ubufakazi',
+    'menu.users' => 'Abasebenzisi',
+    'menu.webshop' => 'Isitolo sewebhu',
+    'merchant' => 'Umthengisi',
+    'merchant.add' => 'Engeza umthengisi',
+    'merchant.driver' => 'Umshayeli',
+    'merchant.reference' => 'Ireferensi',
+    'merchant.response' => 'Impendulo',
+    'min.quantity' => 'Ubungako obuncane',
+    'mobile' => 'Iselula',
+    'mobile.hint' => 'isib. +447700900000',
+    'mobile.number' => 'Inombolo yeselula',
+    'mobile.placeholder' => '+447700900000',
+    'monday' => 'UMsombuluko',
+    'monitoring.health.cache' => 'Uhlelo Lwenqolobane',
+    'monitoring.health.database' => 'Ukuxhumeka Kwedathabheyisi',
+    'monitoring.health.storage' => 'Isitoreji Sefayela',
+    'monitoring.metrics.errors' => 'Izinga Lephutha',
+    'monitoring.metrics.requests' => 'Izicelo Eziphelele',
+    'monitoring.metrics.response_time' => 'Isikhathi Esimaphakathi Sokuphendula',
+    'monospaced.font.for.amounts' => 'Sebenzisa ifonti ye-Monospace ngamanani',
+    'month' => 'Inyanga',
+    'month.prefix' => 'Isiqalo Senyanga',
+    'mpdf' => 'I-Mpdf',
+    'mpdf.allow.charset.conversion' => 'Vumela Ukuguqulwa Kokusetha Uhlamvu',
+    'mpdf.auto.arabic' => 'I-Auto Arabic',
+    'mpdf.auto.language.to.font' => 'Ulimi oluzenzakalelayo ukuya kufonti',
+    'mpdf.auto.script.to.lang' => 'I-Auto Script to Language',
+    'mpdf.auto.vietnamese' => 'Imoto yaseVietnam',
+    'mpdf.cjk' => 'Ifonti yesiShayina, isiJapane, isiKorea',
+    'mpdf.ltr' => 'Kwesobunxele kuya kwesokudla',
+    'mpdf.show.image.errors' => 'Bonisa amaphutha esithombe',
+    'mtd' => 'Ukwenza Idijithali Yentela',
+    'mtd.fph' => 'Izihloko Zokuvimbela Ukukhwabanisa',
+    'mtd.fph.all.valid' => 'Zonke Izihloko Zokuvimbela Ukukhwabanisa Ziyasebenza',
+    'mtd.fph.generate' => 'Khiqiza',
+    'mtd.fph.no.provided' => 'Azikho Izihloko Zokuvimbela Ukukhwabanisa Ezinikeziwe',
+    'mtd.fph.record.alert' => 'Ingabe uqinisekile ukuthi ufuna ukurekhoda imininingwane entsha Yesihloko Sokuvimbela Ukukhwabanisa?Imininingwane yangaphambilini izosulwa uma ilondoloziwe!',
+    'mtd.fph.screen.timestamp' => 'Isitembu sesikhathi',
+    'mtd.fph.some.advisories' => 'Okungenani unhlokweni owodwa kungenzeka awuvumelekile',
+    'mtd.fph.some.invalid' => 'Okungenani unhlokweni owodwa awuvumelekile',
+    'mtd.gov.client.browser.do.not.track' => 'Inani elibonisa ukuthi inketho ethi Ungalandeli ivuliwe yini esipheqululini',
+    'mtd.gov.client.browser.do.not.track.eg' => 'isib amanga',
+    'mtd.gov.client.browser.js.user.agent' => 'I-Gov-Client-Browser-JS-User-Agent',
+    'mtd.gov.client.browser.js.user.agent.eg' => 'isb Mozilla/5.0 (iPad; U; CPU OS 3 2.1 njenge-Mac OS X; en-us) (KHTML, njengeGecko) Mobile/7B405',
+    'mtd.gov.client.browser.plugins' => 'Uhlu lwama-plug-in esiphequluli kudivayisi yokuqala',
+    'mtd.gov.client.browser.plugins.eg' => 'isb.Shockwave%20F1ash Chromium%20PDF%20Viewer',
+    'mtd.gov.client.connection.method' => 'I-Gov-Client-Connection-Method',
+    'mtd.gov.client.device.id' => 'I-Id yedivayisi',
+    'mtd.gov.client.device.id.eg' => 'isibonelo, beec798b-b366-47fa-b1f8-92cede14a1ce',
+    'mtd.gov.client.local.ips' => 'I-Ips yendawo',
+    'mtd.gov.client.multi.factor' => 'I-Multi Factor',
+    'mtd.gov.client.multi.factor.eg' => 'isib.type=OTP;isimo=impumelelo,uhlobo=SMS;isimo=ukwehluleka,uhlobo=Biometric, uhlobo=SMS; isitembu sesikhathi=2023-04-01T12:34:56Z; unique-reference=abc123xyz',
+    'mtd.gov.client.multi.factor.otp' => 'Iphasiwedi yesikhathi esisodwa (OTP):',
+    'mtd.gov.client.public.ip' => 'I-Public Ip',
+    'mtd.gov.client.public.port' => 'Ichweba Lomphakathi (hhayi i-http 80,futhi hhayi i-https 443 isb 57961)',
+    'mtd.gov.client.screens' => 'Izikrini Zikahulumeni-zeklayenti',
+    'mtd.gov.client.screens.colour.depth' => 'Ukujula Kombala',
+    'mtd.gov.client.screens.height' => 'Ukuphakama Kwesikrini',
+    'mtd.gov.client.screens.pixels' => 'amaphikseli',
+    'mtd.gov.client.screens.scaling.factor' => 'Isikali Factor',
+    'mtd.gov.client.screens.scaling.factor.bits' => 'izingcezu',
+    'mtd.gov.client.screens.width' => 'Ububanzi besikrini',
+    'mtd.gov.client.timezone' => 'Indawo yesikhathi',
+    'mtd.gov.client.user.ids' => 'I-ID yomsebenzisi',
+    'mtd.gov.client.user.ids.uuid' => 'awu',
+    'mtd.gov.client.window.size' => 'Usayizi Wewindi',
+    'mtd.gov.client.window.size.pixels' => 'amaphikseli',
+    'mtd.gov.vendor.forwarded' => 'Uhlu olunikeza imininingwane nge-inthanethi phakathi kwamasevisi anqamula i-Transport Layer Security (TLS)',
+    'mtd.gov.vendor.license.ids' => 'Isakhiwo sedatha yenani elingukhiye lokhiye belayisense abaheshi abahlobene nesofthiwe yomthengisi eqalise isicelo se-API kudivayisi yokuqala',
+    'mtd.gov.vendor.public.ip' => 'Ikheli lasesizindeni se-intanethi lamaseva idivayisi yokuqala ethumele kuzo izicelo zayo',
+    'mtd.gov.vendor.version' => 'Isakhiwo sedatha yenani elingukhiye lezinguqulo zesofthiwe ezibandakanyekayo ekusingatheni isicelo',
+    'mtd.hmrc' => 'I-HMRC Ukwenza Intela Yedijithali',
+    'mtd.vat.obligations' => 'Izibopho ze-VAT',
+    'mtd.vat.obligations.missing.vrn.or.token' => 'Inombolo Yokubhalisa ye-VAT noma ithokheni yokufinyelela ye-HMRC ayisethiwe',
+    'mtd.vat.registration.number' => 'Inombolo Yokubhalisa i-VAT (i-VRN)',
+    'mtd.vat.registration.number.hint' => 'Inombolo enezinombolo ezingu-9 esitifiketini sakho sokubhalisa i-VAT',
+    'mtd.vat.return.submit' => 'Thumela Imbuyiselo ye-VAT',
+    'multiple.choice' => 'Ukukhetha Okuningi',
+    'name' => 'Igama',
+    'new' => 'Okusha',
+    'new.password' => 'Iphasiwedi Entsha',
+    'new.product' => 'Umkhiqizo omusha',
+    'new.task' => 'Umsebenzi omusha',
+    'next' => 'Olandelayo',
+    'next.date' => 'Idethi Elandelayo',
+    'next.id' => 'I-ID elandelayo',
+    'no' => 'Cha',
+    'no.attachments' => 'Akukho okunamathiselwe',
+    'no.client' => 'Alikho iklayenti',
+    'no.file.uploaded' => 'Alikho ifayela elilayishiwe',
+    'no.overdue.invoices' => 'Awekho ama-invoyisi asedlulelwe yisikhathi',
+    'no.quotes.requiring.approval' => 'Awekho amakhwothi adinga ukugunyazwa.',
+    'no.records' => 'Awekho amarekhodi',
+    'no.updates.available' => 'Azikho izibuyekezo ezitholakalayo.',
+    'none' => 'Lutho',
+    'not.available' => 'Akutholakali',
+    'not.found' => 'I-invoyisi ayitholakali',
+    'not.set' => 'Akusethiwe okwamanje',
+    'not.started' => 'Akuqaliwe',
+    'note' => 'Qaphela',
+    'notes' => 'Amanothi',
+    'number' => '#',
+    'number.format' => 'Ifomethi yenombolo',
+    'number.format.compact.comma' => '1000000,00 (Ifomethi ehlangene enokhefana wedesimali)',
+    'number.format.compact.point' => '1000000.00 (Ifomethi ehlangene enephoyinti ledesimali)',
+    'number.format.european' => '1.000.000,00 (ifomethi yaseYurophu)',
+    'number.format.iso.80k.1' => '1 000 000.00 (ISO 80000-1)',
+    'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 enokhefana wedesimali)',
+    'number.format.iso80k1.point' => '1 000 000.00 (ISO 80000-1 enephoyinti ledesimali)',
+    'number.format.us.uk' => '1,000,000.00 (ifomethi yase-US/UK)',
+    'number.missing.therefore.use.invoice.id' => 'inombolo ye-invoyisi-ayikho-ngakho-i-invoyisi-id-',
+    'number.no' => 'Ayikho inombolo ye-invoyisi',
+    'oauth2' => 'I-OAuth 2.0',
+    'oauth2.account.locked' => 'I-akhawunti Ikhiyiwe',
+    'oauth2.backup.recovery.codes' => 'Yenza isipele amakhodi wokutakula.Gcina endaweni ephephile.',
+    'oauth2.backup.recovery.codes.regenerate' => 'Khiqiza kabusha Amakhodi Okubuyisela Isipele',
+    'oauth2.consent.required' => 'Kudingeka imvume',
+    'oauth2.default' => 'Ukucushwa okuzenzakalelayo kwe-oauth2.0 kusetshenzisiwe',
+    'oauth2.google.people.api.v1.client.id' => 'I-Client Id',
+    'oauth2.google.people.api.v1.client.secret' => 'Imfihlo Yekhasimende',
+    'oauth2.invalid.client' => 'Iklayenti elingavumelekile',
+    'oauth2.invalid.grant' => 'Isibonelelo esingavumelekile',
+    'oauth2.invalid.request' => 'Isicelo esingavumelekile',
+    'oauth2.login.required' => 'Kudingeka ukungena ngemvume',
+    'oauth2.missing.authentication.code.or.state.parameter' => 'Ikhodi yokuqinisekisa ayikho noma ipharamitha yesifunda.',
+    'oauth2.missing.state.parameter.possible.csrf.attack' => 'Ipharamitha Yesifunda ayikho.Ukuhlasela kwe-csrf okungenzeka',
+    'oauth2.server.error' => 'Iphutha leseva',
+    'oauth2.temporarily.unavailable' => 'Ayitholakali okwesikhashana',
+    'oauth2.test.user.creation.not.allowed.prod.env' => 'Hlola ukudalwa komsebenzisi akuvunyelwe endaweni yokukhiqiza.',
+    'oauth2.unauthorized.client' => 'Iklayenti elingagunyaziwe',
+    'oauth2.unsupported.grant.type' => 'Uhlobo Lwesibonelelo Olungasekelwe',
+    'oauth2.unsupported.response.type' => 'Uhlobo Lwempendulo Engasekelwe',
+    'online.log' => 'Ilogi ye-inthanethi',
+    'online.payment' => 'Inkokhelo Ye-inthanethi',
+    'online.payment.3dauth.redirect' => 'Sicela ulinde ngenkathi sikuqondisa kabusha kumkhiphi wekhadi lakho ukuze uqinisekiswe.',
+    'online.payment.accessKey' => 'Ukhiye Wokufinyelela',
+    'online.payment.accessToken' => 'Ithokheni yokufinyelela',
+    'online.payment.accountId' => 'I-ID ye-akhawunti',
+    'online.payment.accountNumber' => 'Inombolo Ye-akhawunti',
+    'online.payment.adyen.hmac.kcv.hint' => 'U-Adyen ubonisa inani lokhiye omusha we-HMAC kanye kuphela — ukuwukopisha akufani nokulondoloza ikhasi lokucushwa kwe-webhook. Qinisekisa, bese uqhathanisa i-KCV eboniswe lapha ne-KCV endaweni yamakhasimende ka-Adyen yale webhook ngaphambi kokuthembela kuyo.',
+    'online.payment.adyen.hmac.kcv.not.configured' => 'Akukho khiye we-Adyen webhook HMAC olungiselelwe, noma awusebenzi nge-hexadecimal.',
+    'online.payment.adyen.hmac.kcv.result' => 'I-KCV yalesi sikhiye ingu-%s — qhathanisa ne-KCV eboniswe endaweni yamakhasimende ka-Adyen yale webhook. Uma zingahambisani, kungenzeka ukuthi isikhiye sikopishiwe kodwa asizange silondolozwe ohlangothini luka-Adyen — siphinde sikhiqize futhi qiniseka ukuthi uchofoza okuthi Gcina kulokhu.',
+    'online.payment.adyen.hmac.kcv.verify' => 'Qinisekisa ukhiye we-HMAC (bonisa i-KCV)',
+    'online.payment.apiKey' => 'I-Api Key',
+    'online.payment.apiLoginId' => 'I-Id yokungena ye-Api',
+    'online.payment.apiToken' => 'Ithokheni ye-API',
+    'online.payment.appId' => 'I-Id yohlelo lokusebenza',
+    'online.payment.appSecret' => 'Imfihlo Yohlelo Lokusebenza',
+    'online.payment.callbackPassword' => 'Iphasiwedi yokushayela emuva',
+    'online.payment.card.invalid' => 'Leli khadi lesikweletu alivumelekile.Sicela uhlole imininingwane enikeziwe.',
+    'online.payment.checkout_com.environmentSubdomain' => 'Isizinda Esingaphansi Kwemvelo',
+    'online.payment.checkout_com.processingChannelId' => 'I-Id Yesiteshi Esicubungulwayo',
+    'online.payment.checkout_com.publicKey' => 'Ukhiye we-API Womphakathi',
+    'online.payment.checkout_com.secretKey' => 'Ukhiye We-API Oyimfihlo',
+    'online.payment.checkout_com.webhookSecret' => 'Ukhiye Wokusayina we-Webhook',
+    'online.payment.clientId' => 'I-Client Id',
+    'online.payment.clientKey' => 'Ukhiye Weklayenti',
+    'online.payment.clientSecret' => 'Imfihlo Yekhasimende',
+    'online.payment.creditcard.hint' => 'Uma ufuna ukukhokha ngekhadi lesikweletu sicela ufake imininingwane engezansi.<br/> Imininingwane yekhadi lesikweletu ayigcinwa eziphakelini zethu futhi izodluliselwa esangweni lokukhokha ku-inthanethi kusetshenziswa uxhumano oluvikelekile.',
+    'online.payment.developerMode' => 'Imodi Yonjiniyela',
+    'online.payment.find.here' => 'Thola lapha →',
+    'online.payment.for' => 'Inkokhelo Ye-inthanethi ye',
+    'online.payment.for.invoice' => 'Inkokhelo ye-inthanethi ye-invoyisi',
+    'online.payment.get.credentials' => 'Thola iziqinisekiso →',
+    'online.payment.installationId' => 'I-Id yokufaka',
+    'online.payment.keyId' => 'Ubunikazi bokhiye',
+    'online.payment.keySecret' => 'Imfihlo Eyinhloko',
+    'online.payment.locationId' => 'I-ID Yendawo',
+    'online.payment.login' => 'Ukungena Komthengisi',
+    'online.payment.merchantAccessCode' => 'Ikhodi Yokufinyelela Komthengisi',
+    'online.payment.merchantAccount' => 'I-Akhawunti Yomthengisi',
+    'online.payment.merchantId' => 'I-Id yomthengisi',
+    'online.payment.merchantKey' => 'Ukhiye Womthengisi',
+    'online.payment.method' => 'Indlela Yokukhokha Ku-inthanethi',
+    'online.payment.partner' => 'Uzakwethu',
+    'online.payment.partnerID' => 'I-ID kazakwethu',
+    'online.payment.password' => 'Iphasiwedi',
+    'online.payment.password1' => 'Iphasiwedi #1',
+    'online.payment.password2' => 'Iphasiwedi #2',
+    'online.payment.password3' => 'Iphasiwedi #3 (I-API Yokubuyiselwa Kwemali, ongayikhetha)',
+    'online.payment.payment.cancelled' => 'Inkokhelo ikhanseliwe.',
+    'online.payment.payment.failed' => 'Inkokhelo yehlulekile.Sicela uzame futhi.',
+    'online.payment.payment.processing' => 'Inkokhelo ye-Invoice %s isacutshungulwa. Sicela uhlole futhi maduze ukuze uqinisekise.',
+    'online.payment.payment.redirect' => 'Sicela ulinde ngenkathi sikuqondisa kabusha ekhasini lokukhokha.',
+    'online.payment.payment.successful' => 'Inkokhelo ye-invoyisi %s iphumelele!',
+    'online.payment.pdtKey' => 'I-Pdt Key',
+    'online.payment.privateKey' => 'Ukhiye Oyimfihlo',
+    'online.payment.profileID' => 'I-ID yephrofayela',
+    'online.payment.profileId' => 'I-Id yephrofayela',
+    'online.payment.publicKey' => 'Ukhiye Womphakathi',
+    'online.payment.publicKeyId' => 'I-Id Yokhiye Womphakathi',
+    'online.payment.publishableKey' => 'Ukhiye Oshicilelwe',
+    'online.payment.pxPostPassword' => 'Px Thumela Iphasiwedi',
+    'online.payment.pxPostUsername' => 'Px Thumela Igama lomsebenzisi',
+    'online.payment.referrerId' => 'I-ID ye-referrer',
+    'online.payment.region' => 'Isifunda',
+    'online.payment.returnUrl' => 'Buyisa i-Url',
+    'online.payment.sandbox' => 'Ibhokisi lesihlabathi',
+    'online.payment.sandboxId' => 'I-ID yebhokisi lesihlabathi',
+    'online.payment.secret' => 'Imfihlo',
+    'online.payment.secretKey' => 'Ukhiye Oyimfihlo',
+    'online.payment.secretWord' => 'Izwi eliyimfihlo',
+    'online.payment.secureHash' => 'Vikela i-Hash',
+    'online.payment.sharedSecret' => 'Imfihlo eyabiwe',
+    'online.payment.shopId' => 'I-ID Yesitolo',
+    'online.payment.signature' => 'Isiginesha',
+    'online.payment.signingKid' => 'Ukusayina i-Key ID (ingane)',
+    'online.payment.siteCode' => 'Ikhodi Yesayithi',
+    'online.payment.siteId' => 'I-Id yesayithi',
+    'online.payment.storeId' => 'I-ID yesitolo',
+    'online.payment.storePassword' => 'Gcina Iphasiwedi',
+    'online.payment.subAccountId' => 'I-ID ye-akhawunti engaphansi',
+    'online.payment.testMode' => 'Imodi yokuhlola',
+    'online.payment.testOrLiveApiKey' => 'Hlola noma u-Live Api Key okungukuthi iqala ngokuthi test_ noma live_',
+    'online.payment.thirdPartyProvider' => 'Umhlinzeki Weqembu Lesithathu isb.Omangalisayo',
+    'online.payment.transactionKey' => 'Ukhiye Wokwenziwe',
+    'online.payment.transactionPassword' => 'Iphasiwedi yokwenziwe',
+    'online.payment.username' => 'Igama lomsebenzisi',
+    'online.payment.vendor' => 'Umthengisi',
+    'online.payment.version' => 'Inguqulo ye-Omnipay (ihloliwe) / Iyahambisana ne-PCI (Ayikho imininingwane yekhadi lesikweletu egcinwe kulesi sizindalwazi) (ayithikhiwe)',
+    'online.payment.webhookHmacKey' => 'Ukhiye we-Webhook Hmac',
+    'online.payment.webhookId' => 'I-ID ye-Webhook',
+    'online.payment.webhookSecret' => 'Imfihlo ye-Webhook',
+    'online.payment.websiteKey' => 'Ukhiye Wewebhusayithi',
+    'online.payments' => 'Izinkokhelo eziku-inthanethi',
+    'open' => 'Vula',
+    'open.banking.not.configured' => 'I-Open Banking ayilungiselelwe.Sicela uthinte abosekelo.',
+    'open.banking.pay.with' => 'Khokha nge-Open Banking: ',
+    'open.invoices' => 'Vula ama-invoyisi',
+    'open.quotes' => 'Vula ama-Quotes',
+    'open.reports.in.new.tab' => 'Vula Imibiko Kuthebhu Yesiphequluli entsha',
+    'optional' => 'Ongakukhetha',
+    'options' => 'Izinketho',
+    'order' => 'Oda',
+    'orm' => 'I-Orm',
+    'other.settings' => 'Ezinye Izilungiselelo',
+    'overdue' => 'Sekwephuzile',
+    'overdue.invoices' => 'Ama-invoyisi Adlulelwe yisikhathi',
+    'overview' => 'Uhlolojikelele lwe-invoyisi',
+    'overview.period' => 'Isikhathi Sokubuka I-invoyisi',
+    'page' => 'Ikhasi',
+    'paid' => 'Ikhokhiwe',
+    'password' => 'Iphasiwedi',
+    'password.change' => 'SHINTSHA iphasiwedi',
+    'password.changed' => 'Iphasiwedi ishintshwe ngempumelelo',
+    'password.reset' => 'Setha kabusha Iphasiwedi',
+    'password.reset.email' => 'Ucele iphasiwedi entsha ukuze uyifake.Sicela uchofoze isixhumanisi ebhokisini lakho lokungenayo ukuze usethe kabusha iphasiwedi yakho.',
+    'password.reset.failed' => 'Kwenzeke iphutha ngenkathi uzama ukuthumela i-imeyili yokusetha kabusha iphasiwedi yakho.Sicela ubuyekeze amalogi ohlelo lokusebenza noma uthinte umlawuli wesistimu.',
+    'password.reset.info' => 'Uzothola i-imeyili enesixhumanisi sokusetha kabusha iphasiwedi yakho.',
+    'password.reset.request.token' => 'Cela Ithokheni Yokusetha Kabusha Iphasiwedi',
+    'past.month' => 'Inyanga edlule',
+    'past.quarter' => 'Ikota edlule',
+    'past.year' => 'Ngonyaka odlule',
+    'pay.now' => 'Khokha Manje',
+    'payment' => 'Inkokhelo',
+    'payment.add' => 'Inkokhelo Engeza',
+    'payment.cannot.delete' => 'Awukwazi ukususa inkokhelo',
+    'payment.cannot.exceed.balance' => 'Inani lokukhokha alikwazi ukweqa ibhalansi ye-invoyisi.',
+    'payment.custom' => 'Ukukhokha Ngokwezifiso',
+    'payment.custom.add' => 'Inkokhelo Ngokwezifiso Engeza',
+    'payment.date' => 'Usuku Lokukhokha',
+    'payment.deleted' => 'Inkokhelo Isusiwe',
+    'payment.description' => 'Inkokhelo ye-invoyisi %s',
+    'payment.form' => 'Ifomu Lokukhokha',
+    'payment.gateway.default.locale' => 'Indawo ezenzakalelayo isb en.GB',
+    'payment.gateway.mollie.api.key.has.been.setup' => 'I-Mollie Payment Gateway Test noma i-Live Api Key isethiwe.',
+    'payment.gateway.mollie.api.key.needs.to.be.setup' => 'I-Mollie Payment Gateway Test noma i-Live Api Key idinga ukusethwa.',
+    'payment.gateway.mollie.api.payment.id' => 'I-Id Yokukhokha ka-Mollie:',
+    'payment.gateway.no' => 'Awekho amasango okukhokha asethiwe ngaphansi kokuthi Izilungiselelo .Buka .Inkokhelo Ye-inthanethi',
+    'payment.history' => 'Umlando Wokukhokha',
+    'payment.information.braintree.braintree.no.omnipay.version' => 'Okwamanje ayikho i-Braintree Omnipay Version ehambisana ne-Braintree Version 6.9.1.Susa ukumaka Inguqulo ye-Omnipay ukuze usebenzise inguqulo ethobelana ne-PCI ngaphansi kokuthi Ukubuka Kwezilungiselelo',
+    'payment.information.invoice.number.not.provided' => 'Inombolo ye-invoyisi ayinikeziwe',
+    'payment.information.no.information.provided' => 'Alukho ulwazi olunikeziwe',
+    'payment.information.none' => 'Lutho',
+    'payment.information.omnipay.driver.being.used' => 'Umshayeli ongu-{{$d}} osuka ku-Omnipay uyasetshenziswa.',
+    'payment.information.payment.method.required' => 'Indlela yokukhokha iyadingeka kule invoyisi.',
+    'payment.information.stripe.api.key' => 'I-Stripe Payment Gateway Secret Key / Api Key idinga ukusethwa.',
+    'payment.logs' => 'Amalogi Okukhokha',
+    'payment.method' => 'Indlela yokukhokha',
+    'payment.method.add' => 'Indlela Yokukhokha Engeza',
+    'payment.method.already.exists' => 'Indlela yokukhokha isivele ikhona!',
+    'payment.method.form' => 'Ifomu Lendlela Yokukhokha',
+    'payment.method.history' => 'Ayikwazi ukususa.Umlando weNdlela yokukhokha ukhona.',
+    'payment.methods' => 'Izindlela Zokukhokha',
+    'payment.no.invoice.sent' => 'Awekho ama-invoyisi athunyelwe yithi noma abukwe ikhasimende.',
+    'payment.option' => 'Ungathanda ukukhokha kanjani?',
+    'payment.provider' => 'Umhlinzeki Wenkokhelo',
+    'payment.term' => 'Imigomo Yokukhokha',
+    'payment.term.0.days' => 'Sicela usebenzise enye yezindlela zokukhokha ezinikeziwe',
+    'payment.term.add.additional.terms.at.setting.repository' => 'Engeza Imigomo Eyengeziwe kumsebenzi we-Setting Repository getPaymentTerms.',
+    'payment.term.eom.120.days' => 'I-EOM(120):Sicela ukhokhe zingakapheli izinsuku eziyi-120 Ekupheleni kwenyanga yedethi yokukhishwa',
+    'payment.term.eom.15.days' => 'I-EOM(15):Sicela ukhokhe zingakapheli izinsuku eziyi-15 zokuphela kwenyanga yedethi yokukhishwa',
+    'payment.term.eom.30.days' => 'I-EOM(30):Sicela ukhokhe zingakapheli izinsuku ezingu-30 zokuphela kwenyanga yedethi yokukhishwa',
+    'payment.term.eom.60.days' => 'I-EOM(60):Sicela ukhokhe zingakapheli izinsuku ezingu-60 zokuphela kwenyanga yedethi yokukhishwa',
+    'payment.term.eom.90.days' => 'I-EOM(90):Sicela ukhokhe zingakapheli izinsuku ezingu-90 zokuphela kwenyanga yedethi yokukhishwa',
+    'payment.term.general' => 'Inkokhelo kufanele ingakapheli izinsuku ezingama-30',
+    'payment.term.mfi.15' => 'I-MFI(15):Sicela ukhokhe ngomhla ka-15 weNyanga Elandela Usuku Lokukhishwa Kwenyanga',
+    'payment.term.net.120.days' => 'I-Net(120):Sicela ukhokhe zingakapheli izinsuku eziyi-120 zedethi yokukhishwa',
+    'payment.term.net.15.days' => 'I-Net(15):Sicela ukhokhe zingakapheli izinsuku eziyi-15 zedethi yokukhishwa.',
+    'payment.term.net.30.days' => 'I-Net(30):Sicela ukhokhe zingakapheli izinsuku ezingama-30 zosuku lokukhishwa',
+    'payment.term.net.60.days' => 'I-Net(60):Sicela ukhokhe zingakapheli izinsuku ezingu-60 zosuku lokukhishwa',
+    'payment.term.net.90.days' => 'I-Net(90):Sicela ukhokhe zingakapheli izinsuku ezingu-90 zosuku lokukhishwa',
+    'payment.term.pia' => 'Inkokhelo iyadingeka ngaphambi kwesikhathi (PIA)',
+    'payment.term.polite' => 'Siyalithokozela ibhizinisi lakho.Sicela uthumele inkokhelo yakho zingakapheli izinsuku ezingu-30 uthole le-invoyisi.',
+    'payment.terms.default' => 'Khokha zingakapheli izinsuku eziyi-14',
+    'payment.terms.immediate' => 'Inkokhelo kufanele ikhokhwe ngokushesha',
+    'payment.terms.net15' => 'Inkokhelo kufanele ikhokhwe zingakapheli izinsuku ezingu-15',
+    'payment.terms.net30' => 'Inkokhelo kufanele ikhokhwe zingakapheli izinsuku ezingu-30',
+    'payment.terms.net60' => 'Inkokhelo kufanele ikhokhwe zingakapheli izinsuku ezingu-60',
+    'paymentpeppol' => 'Izinkokhelo ezenziwe nge-Peppol',
+    'paymentpeppol.reference.plural' => 'Izithenjwa Zokukhokha zisebenzisa i-Peppol',
+    'payments' => 'Izinkokhelo',
+    'paymentterm' => 'Isikhathi Sokukhokha',
+    'pdf' => 'PDF',
+    'pdf.archived.no' => 'I-Pdf AYIGCINWE kungobo yomlando kokuthi Okulayishiwe/kungobo yomlando/i-invoyisi',
+    'pdf.archived.yes' => 'I-Pdf Ifakwe kungobo yomlando kokuthi Okulayishiwe/kungobo yomlando/i-invoyisi',
+    'pdf.include.zugferd' => 'Faka i-ZUGFeRD',
+    'pdf.include.zugferd.help' => 'Ukunika amandla le nketho kuzobandakanya i-ZUGFeRD XML kuma-invoyisi e-PDF, okuyindinganiso ye-XML yama-invoyisi.<a href="https://www.ferd-net.de/">Ulwazi olwengeziwe</a>',
+    'pdf.invoice.footer' => 'PDF Footer',
+    'pdf.invoice.footer.hint' => 'Ungafaka noma iyiphi i-HTML lapha ezoboniswa phansi kwama-invoyisi akho e-PDF.',
+    'pdf.modal' => 'I-Modal PDF',
+    'pdf.playwright' => 'I-Chromium PDF (Umbhali Wemidlalo)',
+    'pdf.quote.footer' => 'Caphula unyaweni',
+    'pdf.quote.footer.hint' => 'Ungafaka noma iyiphi i-HTML lapha ezoboniswa phansi kwezingcaphuno zakho ze-PDF.',
+    'pdf.render.playwright.failed' => 'Yehlulekile ukuveza i-PDF nge-Playwright',
+    'pdf.render.playwright.failed.solution' => 'Sicela uzame futhi. Uma lokhu kuqhubeka, hlola ukuthi i-`npm run build:playwright` isetshenzisiwe nokuthi i-akhawunti yokunikeza elungiselelwe (PLAYWRIGHT_TEST_EMAIL ku-.env) ingangena ngemvume.',
+    'pdf.settings' => 'Izilungiselelo ze-PDF',
+    'pdf.template' => 'Isifanekiso se-PDF',
+    'pdf.template.overdue' => 'Isifanekiso Se-PDF Esidlulelwe yisikhathi',
+    'pdf.template.paid' => 'Isifanekiso se-PDF esikhokhelwe',
+    'pdf.watermark' => 'Nika amandla ama-Watermark e-PDF',
+    'peppol' => 'I-Peppol Universal Business Language (UBL) 2.1 I-invoyisi - I-Ecosio Iqinisekisiwe',
+    'peppol.abbreviation' => 'Peppol',
+    'peppol.allowance.or.charge.inherit' => 'Izindleko Zokuvunyelwa Kwe-invoyisi kanye Nezindleko Zemvume Yento Ye-invoyisi njengefa elivela Enkokhelweni Yesibonelelo Sezinga Ledokhumenti Ye-Peppol eqediwe',
+    'peppol.allowance.or.charge.inherit.inv' => 'Izindleko Zesibonelelo Se-invoyisi kanye Nezindleko Zesibonelelo Sento Se-invoyisi zizuza njengefa elivela ku-Peppol Document Level Allowance Charge ephelele',
+    'peppol.allowance.or.charge.inherit.quote' => 'Izindleko Zesibonelelo Sekhotheshini kanye Nezindleko Zesibonelelo Sento Sekhotheshini zizuza njengefa elivela ku-Peppol Document Level Allowance Charge ephelele',
+    'peppol.auto.update.exchange.rate' => 'Izinga lokushintshanisa elizenzakalelayo nsuku zonke (izinga leBhange Elikhulu laseYurophu, akukho ukubheka ngesandla kwe-xe.com)',
+    'peppol.client.check' => 'Imininingwane ye-Peppol ehlobene naleli klayenti ayanele.Okungenani eyodwa ayikho.Bheka okuthi Buka .Iklayenti .Izinketho .Hlela imininingwane ye-Peppol ye-invoyisi ye-e',
+    'peppol.client.defaults' => 'Gcwalisa Ifomu le-Peppol Leklayenti ngokuzenzakalelayo kwe-OpenPeppol ukuze uhlolwe.',
+    'peppol.currency.code.from' => 'Kusuka kuMali ie.Izwe Lohlobo Lwemali Lwentela Yomsuka (Ukuze ushintshe bheka okuthi config/common/params.php TaxCurrencyCode)',
+    'peppol.currency.code.to' => 'Ukuze Imali ie.Imali Yedokhumenti:bona umsebenzi get.setting(\'currency.code.to\')',
+    'peppol.currency.from.to' => 'Eyodwa ye-Kusuka ku-Currency namuhla iguqulela lokhu kwe-To Currency',
+    'peppol.currency.rate.last.updated' => 'Kubuyekezwe okokugcina: {usuku}',
+    'peppol.currency.to.from' => 'Eyodwa ye-To Currency namuhla iguqulela kulokhu kokuthi Ukusuka Kumali',
+    'peppol.debug.with.emojis' => 'Lungisa ama-invoyisi e-imeyili ngama-emoji',
+    'peppol.debug.with.internal.validator' => 'Lungisa ama-invoyisi e-imeyili nge-Internal Validator',
+    'peppol.doc.currency.toggle' => 'I-Peppol Guqula Imali Yedokhumenti',
+    'peppol.document.currency' => 'Imali Yedokhumenti yePeppol - vula i-View',
+    'peppol.document.reference.null' => 'inombolo ye-inv-null-inv-id',
+    'peppol.ecosio.validator' => 'I-Ecosio Validator ye-OpenPeppol UBL Invoyisi (3.15.0) (eyaziwa nangokuthi i-BIS Billing 3.0.14)',
+    'peppol.electronic.invoicing' => 'I-Peppol Electronic Invoicing',
+    'peppol.enable' => 'Nika amandla i-Peppol isebenzisa Ulimi Lwebhizinisi Lomhlaba Wonke (UBL) 2.1',
+    'peppol.include.delivery.period' => 'Bandakanya Izikhathi Zokulethwa',
+    'peppol.invoice.note.not.found' => 'Inothi le-invoyisi alitholakali',
+    'peppol.label.switch.off' => 'Okuzenzakalelayo kwe-Peppol kunikwe amandla',
+    'peppol.label.switch.on' => 'Okuzenzakalelayo kwe-Peppol Kukhutshaziwe',
+    'peppol.mandatory' => ' (Kuphoqelekile)',
+    'peppol.optional' => ' (Ongakukhetha)',
+    'peppol.send.via.oxalis' => 'Thumela ngePeppol (Oxalis)',
+    'peppol.stand.in.code' => 'Ikhodi yencazelo - ekhombisa ukuthi yisiphi isisekelo esizosetshenziswa ngedethi yesikhathi esizayo yephoyinti lentela lapho izimpahla zihlinzekwa/zikhokhwa.Uma iphoyinti lentela linganqunywa, ikhodi yencazelo ayibandakanyiwe ngokuhlanganyela Enkathini Ye-invoyisi.',
+    'peppol.store.cove.1.1.1' => 'Bhalisela Ukufinyelela kwe-API kuwebhusayithi ye-Store Cove',
+    'peppol.store.cove.1.1.2' => 'Dala ukhiye wakho we-API kusuka kuwebhusayithi ye-Store Cove futhi ugcine kokuthi Izilungiselelo.Buka.Inkokhelo Ye-inthanethi.I-Store Cove.Ukhiye we-Api',
+    'peppol.store.cove.1.1.3' => 'Yenza ikholi yakho yokuqala ye-API ukuze uthole impendulo ye-JSON.',
+    'peppol.store.cove.1.1.4' => 'Thumela i-invoyisi yakho yokuqala yokuhlolwa kwe-Json oyithole ngokuchofoza inkinobho eluhlaza Umhlaba=&gt;DE',
+    'peppol.stream.toggle' => 'I-Peppol - \'Sakaza\' noma \'Londoloza Kufayela\' Inkinobho Yokuguqula',
+    'peppol.tax.category.not.found' => 'Ikhodi Yesigaba Sentela ye-Peppol (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/) ayikho.',
+    'peppol.tax.category.percent.not.found' => 'Iphesenti Lesigaba Sentela se-Peppol (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/) alikho.',
+    'peppol.tax.rate.code' => 'Ikhodi Yesilinganiso Sentela ye-Peppol',
+    'peppol.trying.to.send.non.pdf.file' => 'Amafayela e-PDF kuphela athunyelwayo nama-invoyisi akwa-Peppol',
+    'peppol.unit' => 'Ukuhlukaniswa Kweyunithi kusetshenziswa i-Peppol',
+    'peppol.unknown.document.type' => 'Uhlobo Lwedokhumenti Olungaziwa',
+    'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' => 'Umthombo:src/I-invoyisi/Ubl/I-invoyisi:Incazelo yedokhumenti engekho - I-Ecosio:Idokhumenti AKUMELE iqukathe izinto ezingenalutho.Isixazululo:Ukubuka Kwe-invoyisi:Izinketho .Hlela .Incazelo Yedokhumenti',
+    'peppol.validator.Invoice.cac.Note' => 'Umthombo:src/I-invoyisi/Ubl/I-invoyisi:Inothi le-invoyisi engekho - I-Ecosio:Idokhumenti AKUMELE iqukathe izinto ezingenalutho.',
+    'peppol.validator.Invoice.cac.Party.cbc.EndPointID' => 'src/Invoyisi/Ubl/Iphathi:Ikheli le-imeyili elingekho - I-Ecosio:Ikheli Le-elekthronikhi KUMELE linikezwe.Isixazululo:Iklayenti .Buka .Izinketho .Hlela imininingwane ye-Peppol ye-invoyisi ye-imeyili .EndPointID',
+    'peppol.version' => 'Inguqulo ye-Peppol',
+    'peppol.xml.stream' => 'Sakaza ie.bonisa esikrinini kusiphequluli esikhundleni sefolda yokulanda.',
+    'per.item' => 'ngento ngayinye',
+    'per.page.total' => 'ekhasini ngalinye.Ingqikithi',
+    'performance' => 'Ukusebenza',
+    'performance.label.switch.off' => 'Imodi Yokufunda Nokubhala Ngokushesha - bheka ku-config/common/params.php search \'imodi\'',
+    'performance.label.switch.on' => 'Imodi Yokubhala Kanensa Kuphela - bheka ku-config/common/params.php sesha \'imodi\'',
+    'period' => 'Isikhathi',
+    'permission' => 'Awunayo imvume edingekayo.',
+    'personal.information' => 'Ulwazi lomuntu siqu',
+    'phone' => 'Ucingo',
+    'phone.abbr' => 'P',
+    'phone.number' => 'Inombolo yocingo',
+    'php.timezone.fail' => 'Kubonakala sengathi ayikho izoni yesikhathi emisiwe.Sicela uhlole i-date.timezone ekucushweni kwakho kwe-php.Uma kungenjalo <strong>%s</strong> izokhethwa.',
+    'php.timezone.success' => 'Indawo yesikhathi evumelekile ilungisiwe.',
+    'php.version.fail' => 'Inguqulo ye-PHP %s ifakiwe kodwa i-InvoicePlane idinga inguqulo ye-PHP %s noma ngaphezulu',
+    'php.version.success' => 'I-PHP ibonakala ihlangabezana nemfuneko yokufaka',
+    'platform' => 'Inkundla',
+    'platform.PhpMyAdmin' => 'PhpMyAdmin Version',
+    'platform.PhpSupport' => 'Php Ukusekela',
+    'platform.PhpVersion' => 'Php Inguqulo',
+    'platform.csrf' => 'Cross Site Forgery Protection',
+    'platform.editor' => 'Mhleli',
+    'platform.mySqlVersion' => 'Inguqulo ye-mySql',
+    'platform.netbeans.UTF-8' => 'Umbhalo wekhodi we-Netbeans UTF-8',
+    'platform.server' => 'Iseva',
+    'platform.sqlPath' => 'Indlela ye-Sql',
+    'platform.update' => 'Amafayela we-WampServer nama-Addons',
+    'platform.windowsVersion' => 'I-Windows 11 Home Edition',
+    'platform.xdebug' => 'Isandiso se-Xdebug',
+    'please.enable.js' => 'Sicela unike amandla i-Javascript ukuze usebenzise i-InvoicePlane',
+    'po.group' => 'Thenga Iqembu le-oda',
+    'port' => 'Itheku',
+    'position' => 'Isikhundla',
+    'possible.file.upload.attack' => 'Ukuhlaselwa kokulayisha ifayela okungenzeka: ',
+    'pre.password' => 'Iphasiwedi ejwayelekile ye-invoyisi ye-PDF (uyazikhethela)',
+    'prefix' => 'Isiqalo',
+    'prev' => 'Okwedlule',
+    'preview' => 'Buka kuqala',
+    'price' => 'Inani',
+    'print' => 'Phrinta',
+    'print.qr.code' => 'Phrinta ikhodi ye-QR',
+    'product' => 'Umkhiqizo',
+    'product.add' => 'Engeza umkhiqizo',
+    'product.additional.item.property.name' => 'Igama Lempahla Eyengeziwe ye-Peppol isb.Umbala',
+    'product.additional.item.property.value' => 'Inani Lempahla Eyengeziwe ye-Peppol isb.Mnyama',
+    'product.availability' => 'Ukutholakala',
+    'product.availability.b2b' => 'Ingosi Yeklayenti ye-B2B (Ukuthengisa ngobuningi)',
+    'product.availability.hint' => 'I-Webshop (Retail) ifaka lo mkhiqizo ohlwini lwezitolo zomphakathi/zesitolo ngentengo yayo yokuthengisa ngezansi. I-B2B Client Portal (Wholesale) iwugcina utholakala kuphela kubasebenzi kanye nama-quotes/ama-oda/ama-invoyisi e-portal yamakhasimende, ngentengo engenhla.',
+    'product.availability.webshop' => 'Isitolo sewebhu (Ukuthengisa)',
+    'product.client.association' => 'Inhlangano Yamakhasimende Omkhiqizo',
+    'product.client.association.options' => 'Izinketho Zokuhlobana Kwamakhasimende Omkhiqizo',
+    'product.client.associations.completed' => 'Izinhlangano Zamakhasimende Omkhiqizo Ziqediwe',
+    'product.country.of.origin.code' => 'I-Peppol Country of Origin Code isebenzisa ISO-3166-1:Alpha2 Country Codes',
+    'product.custom.fields' => 'Izinkambu Ezingokwezifiso Zomkhiqizo (isb.I-Peppol:I-ExpressItemProperty inkambu yokukhethwa kwenani eliningi lombala inani elimnyama)',
+    'product.description' => 'Incazelo yomkhiqizo',
+    'product.edit' => 'Hlela Umkhiqizo',
+    'product.error.summary' => 'Isifinyezo Sephutha Lomkhiqizo',
+    'product.families' => 'Imindeni yomkhiqizo',
+    'product.form.tab.category' => 'Isigaba',
+    'product.form.tab.not.required' => 'Izinkambu ezingadingeki',
+    'product.form.tab.required' => 'Izinkambu ezidingekayo',
+    'product.found' => 'Umkhiqizo utholakele',
+    'product.history' => 'Ayikwazi ukususa.Lo mkhiqizo uku-invoyisi noma ikhwothi.',
+    'product.icc.id' => 'I-ID Yekhodi Yokuhlukaniswa Kwento yakwa-Peppol isb.9873242',
+    'product.icc.listid' => 'I-id yohlu lwekhodi ye-Peppol Classificaiton - isb.I-SRV',
+    'product.icc.listversionid' => 'I-ID Yenguqulo Yohlu Lwekhodi Yezinto ze-Peppol (Ongakukhetha) - isb.Uma i-ItemClassification ihlinzekwa kubahlinzeki be-Danish,inguqulo ye-UNSPSC 19.0501 kufanele isetshenziswe.',
+    'product.id' => 'Ubunikazi bomkhiqizo',
+    'product.image' => 'Isithombe',
+    'product.item.classification.code.scheme.id.not.found' => 'I-Id Yohlelo Lokuhlukaniswa Kwento Yomkhiqizo ayitholakali',
+    'product.name' => 'Igama lomkhiqizo',
+    'product.not.found' => 'Umkhiqizo awutholakali',
+    'product.peppol.unit' => 'Iyunithi nePeppol',
+    'product.price' => 'Inani',
+    'product.price.base.quantity' => 'qty kuMkhiqizo',
+    'product.property' => ' Impahla Yomkhiqizo',
+    'product.property.add' => ' Impahla Yomkhiqizo Engeza',
+    'product.property.edit' => 'Hlela Impahla Yomkhiqizo',
+    'product.property.index' => 'Inkomba Yempahla Yomkhiqizo',
+    'product.property.name' => 'Igama',
+    'product.property.table' => 'Ithebula Lempahla Yomkhiqizo',
+    'product.property.value' => 'Inani',
+    'product.record.successfully.added' => 'Irekhodi Lomkhiqizo lengezwe ngempumelelo',
+    'product.reorder.threshold' => 'Hlela kabusha i-Threshold (i-buffer egciniwe — ingenalutho = ayikho i-buffer, inani eliphelele lesitoko liyaboniswa/lithengisiwe)',
+    'product.retail.price' => 'Intengo Yokuthengisa (isitolo sewebhu kuphela — shiya kungenalutho ukuze usebenzise Intengo engenhla)',
+    'product.sii.id' => 'I-id Yokuhlonza Into Ejwayelekile yakwa-Peppol ehlobene nohlelo olungenhla - isb.Isihlonzi esiyidijithi eziyi-14 esifakwe uziro kusizindalwazi seNombolo Yento Yohwebo Yezwe (ivela ngaphansi kwebhakhodi)',
+    'product.sii.schemeid' => 'Uhlelo Lokuhlonza Into Ejwayelekile yakwa-Peppol - isb.0160',
+    'product.sku' => 'I-SKU',
+    'product.stock.quantity' => 'Isitoko Samanje',
+    'product.stock.quantity.not.yet.available' => 'Akutholakali kuze kube yilapho lo mkhiqizo ugciniwe',
+    'product.tariff' => 'I-Tariff',
+    'product.track.stock' => 'Isitoko Sethrekhi',
+    'product.trade.min.order.quantity' => 'Inani Elincane Loku-oda Lokuhweba (akunalutho = akukho migomo yokuhweba, kufihla inkinobho Yokubiza Amanani Okuhweba yasesitolo)',
+    'product.trade.min.order.spend' => 'Imali Encane Yokuhweba Nge-oda (akunalutho = akukho migomo yokuhweba, kufihla inkinobho yentengo yokuhweba yangaphambi kwesitolo)',
+    'product.type' => 'Uhlobo Lomkhiqizo',
+    'product.unit' => 'Iyunithi Yomkhiqizo',
+    'product.unit.code.not.found' => 'Umkhiqizo awunayo Ikhodi yeyunithi ehlotshaniswa nawo.Umkhiqizo .Hlela .Iyunithi ne-Peppol.',
+    'product.units' => 'Amayunithi Omkhiqizo',
+    'product.view.tab.details' => 'Imininingwane Yomkhiqizo',
+    'product.view.tab.gallery' => 'Igalari Yomkhiqizo',
+    'product.view.tab.images' => 'Izithombe Zomkhiqizo',
+    'product.view.tab.properties' => 'Izakhiwo Zomkhiqizo',
+    'productimage.add' => 'Engeza Isithombe Somkhiqizo',
+    'productimage.deleted.from' => 'Isithombe sisuswe ngempumelelo ohlwini lwemibhalo olulandelayo:',
+    'productimage.form' => 'Ifomu lesithombe somkhiqizo',
+    'productimage.gallery' => 'Izithombe eziphathelene ne: ',
+    'productimage.index' => 'Inkomba yesithombe somkhiqizo',
+    'productimage.list' => 'Uhlu lwezithombe ezihlobene nalo mkhiqizo',
+    'productimage.no.file.uploaded' => 'Asikho isithombe esilayishiwe.Impinda engenzeka.',
+    'productimage.plural' => 'Izithombe Zomkhiqizo',
+    'productimage.possible.file.upload.attack' => 'Ukuhlaselwa kokulayisha ifayela okungenzeka:',
+    'productimage.upload' => 'Layisha Isithombe Somkhiqizo',
+    'productimage.uploaded.to' => 'Isithombe silayishwe ohlwini lwemibhalo olulandelayo: ',
+    'productimage.view' => 'Izithombe eziningi eziphathelene nomkhiqizo zingangezwa ngaphansi kokubukwa komkhiqizo',
+    'products' => 'Imikhiqizo',
+    'products.form' => 'Ifomu Lomkhiqizo',
+    'products.remaining.after.this' => 'Imikhiqizo esele ngemva kwalokhu',
+    'profile.deleted' => 'Iphrofayela isuliwe',
+    'profile.history' => 'Ayikwazi ukususa iphrofayela.Umlando ukhona',
+    'profile.new' => 'Dala iphrofayela ngekheli le-imeyili elisha,noma inombolo yeselula, yenze isebenze,bese ukhetha imininingwane yenkampani ofisa ukuyixhumanisa nayo.Lolu lwazi luzovela ngokuzenzakalelayo kumadokhumenti isb.izingcaphuno nama-invoyisi.',
+    'profile.not.deleted' => 'Iphrofayela ayisusiwe',
+    'profile.plural' => 'Amaphrofayili',
+    'profile.property.label.company' => 'Inkampani',
+    'profile.property.label.current' => 'Okwamanje',
+    'profile.property.label.description' => 'Incazelo',
+    'profile.property.label.email' => 'I-imeyili',
+    'profile.property.label.mobile' => 'Iselula',
+    'profile.singular' => 'Iphrofayela',
+    'project' => 'Iphrojekthi',
+    'project.add' => 'Faka iphrojekthi',
+    'project.name' => 'Igama lephrojekthi',
+    'projects' => 'Amaphrojekthi',
+    'projects.form' => 'Amaphrojekthi',
+    'properties' => 'Izakhiwo',
+    'provider.name' => 'Igama Lomhlinzeki',
+    'provider.response' => 'Impendulo Yomhlinzeki',
+    'purchase.entry.add' => 'Engeza okufakiwe kokuthenga',
+    'purchase.entry.csv.imported' => 'Kungeniswe okufakiwe kokuthenga okungu-{count} (imigqa engu-{skipped} yeqiwe).',
+    'purchase.entry.csv.no.file' => 'Akukho phutha lokulayisha ifayela le-CSV noma lokulayisha.',
+    'purchase.entry.delete' => 'Susa Okufakiwe Kokuthenga',
+    'purchase.entry.edit' => 'Hlela okufakiwe kokuthenga',
+    'purchase.entry.index' => 'Okufakiwe Kokuthenga',
+    'purchase.entry.tax.year.locale.applied' => 'Usuku lokuqala konyaka wentela lusetshenzisiwe. Manje usungakwazi ukuqoqa okufakiwe kokuthenga ngekota ye-VAT.',
+    'purchase.entry.tax.year.locale.invalid' => 'Inani lenyanga noma losuku elingavumelekile. Sicela ukhethe indawo evumelekile.',
+    'purchase.entry.tax.year.not.configured' => 'Ukuqoqwa kwekota ye-VAT akutholakali: Ukuqala Konyaka Wentela (unyaka, inyanga, usuku) akukahlelwa ngokugcwele. Sebenzisa izixhumanisi ze-breadcrumb ezingezansi ukuze usethe.',
+    'purchase.price' => 'Intengo yokuthenga',
+    'qr.absolute.url' => 'I-Absolute Url isetshenziselwe ukwakha ngaphezu kwekhodi ye-Qr',
+    'qr.code' => 'Ikhodi ye-QR',
+    'qr.code.1' => 'Ikhodi ye-QR 1',
+    'qr.code.details' => 'Imininingwane Yekhodi Ye-QR',
+    'qr.code.instructions' => 'Namathisela lokhu efasiteleni lakho. Kuskena noma nini lapho uthola isevisi yokunakekelwa kwasekhaya ephelele ngomnyango wakho ukuze ucele i-invoyisi yakho elandelayo ongayikhokha ngokushesha ngokwendlela yakho yokukhokha oyikhethile. Lokhu kuyasiza ekusebenziseni ukubuyisana kwebhange lethu. Ngiyabonga.',
+    'qr.code.level.1' => 'Izinga lokubhala ngekhodi liyisisekelo',
+    'qr.code.level.2' => 'Izinga lokubhala ngekhodi liphakathi',
+    'qr.code.level.3' => 'Izinga lokubhala ngekhodi Lithuthukile',
+    'qr.code.settings' => 'Izilungiselelo Zekhodi ye-QR',
+    'qr.code.settings.bic' => 'I-BIC',
+    'qr.code.settings.effect' => 'Izilungiselelo ezingenhla zinamuphi umphumela kule Khodi ye-Qr?',
+    'qr.code.settings.effect.explanation' => 'Kwikhodi yangempela .akukho.Konke okumisiwe kusetshenziswa ngoba ikhodi yangempela eyisisekelo ngenhla isetshenziswa.',
+    'qr.code.settings.enable' => 'Nika amandla Ikhodi ye-QR',
+    'qr.code.settings.enable.hint' => 'Ukunika amandla le nketho kuzofaka ikhodi ye-QR yama-invoyisi e-PDF.Kufanele ugcwalise umamukeli, i-IBAN ne-BIC ngezansi ukuze usebenze ngendlela efanele.Uma kungenjalo ikhodi ye-QR ngeke iboniswe.',
+    'qr.code.settings.iban' => 'IBAN',
+    'qr.code.settings.recipient' => 'Umamukeli',
+    'qr.code.settings.remittance.text' => 'Umbhalo Wemali Ethunyelwayo',
+    'qr.code.settings.remittance.text.tags' => 'Amathegi Ombhalo Wemali Ethunyelwayo',
+    'qr.code.source' => 'Umthombo wekhodi ye-Qr',
+    'qr.code.source.path' => 'imithombo\\ukubukwa\\invoyisi\\setting\\company.logo.and.address.php',
+    'qr.code.type' => 'Uhlobo lwekhodi ye-QR',
+    'qr.code.type.absolute.url' => 'I-Absolute (yonke) Isekelwe ku-Url',
+    'qr.code.widget.used' => 'Iwijethi esetshenzisiwe',
+    'qr.ecc.level' => 'I-QR Code Ecc Level (Okuzenzakalelayo:L)',
+    'qr.height.and.width' => 'Ikhodi ye-QR Ubude Nobubanzi (Okuzenzakalelayo:60)',
+    'qr.meaning' => 'Incazelo',
+    'qr.meaning.benefit' => 'Skena futhi ubuyele ukuze ubuke (ngaphandle kokuthayipha i-url) lapho i-invoyisi ingaphrintwa khona ngefomethi ye-pdf.Isebenza kubo bonke abasebenzisi abane-akhawunti yeklayenti esebenzayo.',
+    'qr.output.type' => 'Uhlobo Lokukhipha Ikhodi ye-QR (isb..svg, .png) (Okuzenzakalelayo:png)',
+    'qr.version' => 'Inombolo Yenguqulo Yekhodi Ye-QR (yangaphambili 0 yakamuva 40) (Okuzenzakalelayo:40)',
+    'qty' => 'Qty',
+    'quantity' => 'Ubuningi',
+    'quarter' => 'Ikota',
+    'quick.actions' => 'Izenzo Ezisheshayo',
+    'quick.pay' => 'Inkokhelo Esheshayo',
+    'quote' => 'Quote',
+    'quote.add' => 'Quote Engeza',
+    'quote.amount' => 'Quote Inani',
+    'quote.amount.add' => 'Ikhotheshini Inani Engeza',
+    'quote.amounts' => 'Quote Amanani',
+    'quote.approval.required' => 'Kudingeka ukugunyazwa kwekhwothi',
+    'quote.approve' => 'Gunyaza',
+    'quote.approved' => 'Lesi sisho sivunyiwe',
+    'quote.copied.to.invoice' => 'Ingcaphuno ikopishelwe ku-invoyisi ENTSHA',
+    'quote.copied.to.quote' => 'Ingcaphuno ikopishwe ku-Quote ENTSHA!',
+    'quote.copied.to.so' => 'Ingcaphuno Ikopishelwe ku-Oda Yokuthengisa',
+    'quote.custom' => 'Quote Custom',
+    'quote.custom.add' => 'Quote Ngokwezifiso Engeza',
+    'quote.date' => 'Usuku lokucaphuna',
+    'quote.dates' => 'Quote Izinsuku',
+    'quote.delete.not' => 'I-invoyisi ayisusiwe.',
+    'quote.delivery.location.index.button.list' => 'Izingcaphuno',
+    'quote.delivery.location.none' => 'Ayikho indawo yokulethwa exhunywe kulesi sisho.',
+    'quote.disable.flash.messages' => 'Khubaza Imilayezo ye-Quote Flash',
+    'quote.email.templates.not.configured' => 'Izifanekiso ze-imeyili azilungiselelwe.Izilungiselelo.Izingcaphuno.Izifanekiso Zecaphuna.Isifanekiso Se-imeyili Esizenzakalelayo',
+    'quote.group' => 'Quote Group',
+    'quote.id' => 'I-ID yengcaphuno ',
+    'quote.item' => 'Quote Into',
+    'quote.item.add' => 'Faka Into Yengcaphuno',
+    'quote.item.amount' => 'Quote Into Inani',
+    'quote.item.amount.add' => 'I-Quote Into Inani Lokwengeza',
+    'quote.item.cannot.delete' => 'Ayikwazi ukususa into yokucaphuna',
+    'quote.label.switch.off' => 'I-VAT Quote',
+    'quote.label.switch.on' => 'Ingcaphuno ye-VAT engeyona',
+    'quote.must.be.approved.first' => 'Ikhotheshini kufanele ivunywe ngaphambi kokuguqulwa',
+    'quote.not.copied.to.invoice' => 'I-invoyisi AYIDAKWE kusuka ku-Quote! I-invoyisi eyimpinda.Kopisha Ingcaphuno yakho kwenye ikhwothi bese ukopisha ku-invoyisi.Ikhwothi ngayinye kufanele ibe ne-invoyisi efanayo.',
+    'quote.number' => 'Inombolo ye-Quote',
+    'quote.number.status' => 'Quote Inombolo Isimo',
+    'quote.overview' => 'Quote Uhlolojikelele',
+    'quote.overview.period' => 'Quote Uhlolojikelele Period',
+    'quote.password' => 'Caphula iphasiwedi ye-PDF (uyazikhethela)',
+    'quote.pre.password' => 'Caphuna iphasiwedi ejwayelekile ye-PDF (uyazikhethela)',
+    'quote.reject' => 'Yenqaba',
+    'quote.rejected' => 'Lesi sisho sinqatshiwe',
+    'quote.sales.order.created.from.quote' => 'I-Sales Order idalwe kusuka ku-Quote futhi ufake inombolo yakho ye-oda lokuthenga!',
+    'quote.sales.order.not.created.from.quote' => 'I-oda lokuthengisa alidaliwe kusuka ku-Quote!I-oda Lokuthengisa eliyimpinda.Kopisha Ingcaphuno yakho kwenye ikhwothi bese ukopisha ku-oda lokuthengisa.Ikhwothi ngayinye kufanele ibe ne-oda lokuthengisa elifanayo.',
+    'quote.status.email.body' => 'Iklayenti %1$s ine-%2$s ikhwothi %3$sXhumanisa Ingcaphuno:%4$s',
+    'quote.status.email.subject' => 'Iklayenti %1$s %2$s icaphuna %3$s',
+    'quote.tax' => 'I-Quote Tax',
+    'quote.tax.rate' => 'I-Quote Tax Rate',
+    'quote.tax.rate.add' => 'Isilinganiso Sentela Yengcaphuno Engeza',
+    'quote.tax.rate.cannot.delete' => 'Ayikwazi ukususa Isilinganiso Sentela Yengcaphuno',
+    'quote.tax.rate.incomplete.fields' => 'Izinkambu ezingaphelele:Kufanele ufake inani lentela.Ithiphu:Faka nenani lentela elinguziro.',
+    'quote.tax.rate.saved' => 'I-Quote Tax Rate ilondoloziwe',
+    'quote.template' => 'Quote Isifanekiso',
+    'quote.templates' => 'Quote Izifanekiso',
+    'quote.to.invoice' => 'Quote ku-invoyisi',
+    'quote.to.so' => 'Ingcaphuno ku-Sales Order',
+    'quote.to.so.password' => 'Iphasiwedi ye-oda lokuthengisa',
+    'quote.vat.quote' => 'I-VAT Quote',
+    'quote.with.purchase.order.line.number' => 'Inombolo Yomugqa We-oda Lokuthenga (Imfuneko ye-Peppol) - ukuze ihambisane neNombolo Yomugqa We-oda Lokuthengisa',
+    'quote.with.purchase.order.number' => 'Inombolo ye-oda yokuthenga - izomataniswa nenombolo ye-oda lokuthengisa',
+    'quote.with.purchase.order.person' => 'Umuntu/Umnyango ofaka i-oda',
+    'quotes' => 'Izingcaphuno',
+    'quotes.expire.after' => 'Izingcaphuno Ziphelelwa Isikhathi Ngemva (Izinsuku)',
+    'quotes.requiring.approval' => 'Izingcaphuno Ezidinga Ukugunyazwa',
+    'radiolist.choice' => 'I-Radio List Choice',
+    'read.only' => 'Funda kuphela',
+    'read.this.please' => 'Sicela ufunde lokhu!',
+    'reason' => 'Isizathu',
+    'reason.accident' => 'Ingozi',
+    'reason.birthdefect' => 'Ukukhubazeka kokuzalwa',
+    'reason.disease' => 'Izifo',
+    'reason.maternity' => 'Ukubeletha',
+    'reason.prevention' => 'Ukuvimbela',
+    'reason.unknown' => 'Akwaziwa',
+    'recent.clients' => 'Amaklayenti akamuva',
+    'recent.invoices' => 'Ama-invoyisi akamuva',
+    'recent.payments' => 'Izinkokhelo zakamuva',
+    'recent.quotes' => 'Izingcaphuno zakamuva',
+    'record.successfully.created' => 'Ukurekhoda kudalwe ngempumelelo',
+    'record.successfully.created.not' => 'Irekhodi ALIDALWANGU ngempumelelo',
+    'record.successfully.deleted' => 'Ukurekhoda kususwe ngempumelelo',
+    'record.successfully.updated' => 'Ukurekhoda kubuyekezwe ngempumelelo',
+    'records.no' => 'Awekho Amarekhodi',
+    'recurring' => 'Okuphindaphindayo',
+    'recurring.add' => 'Ukungeza Okuphindaphindiwe',
+    'recurring.client' => 'Iklayenti',
+    'recurring.create' => 'Dala i-invoyisi ephindaphindayo',
+    'recurring.create.from.productclient' => 'Setha i-invoyisi ephindaphindayo kusuka ohlwini lomkhiqizo',
+    'recurring.deleted' => 'Kususiwe',
+    'recurring.frequency' => 'Imvamisa',
+    'recurring.invoices' => 'Ama-invoyisi aphindaphindayo',
+    'recurring.no.invoices.selected' => 'Awukhethanga noma yimaphi ama-invoyisi.',
+    'recurring.no.products.associated' => 'Azikho imikhiqizo ehlotshaniswa nale klayenti. Sicela usebenzise umsebenzi we-Generate Products kuqala.',
+    'recurring.original.invoice.date' => 'Idethi ye-invoyisi yoqobo: ',
+    'recurring.setup' => 'Setha Okuphindaphindayo',
+    'recurring.status.sent.only' => 'Ama-invoyisi anesimo sokuthunyelwa kuphela angenziwa aphindelela',
+    'recurring.tooltip.next' => 'Usuku olulandelayo lusethwa kusetshenziswa inkomba.',
+    'redirect.map' => 'Imephu Eqondisa Kabusha',
+    'refund' => 'Imbuyiselo',
+    'refund.confirm' => 'Uqinisekile ukuthi ufisa ukubuyisela imali yale nkokhelo nge-%s?',
+    'refund.failed' => 'Ukubuyiselwa imali nge-%s kwehlulekile. Hlola amalogi esango lokukhokha ukuthola imininingwane.',
+    'refund.no.provider.reference' => 'Akukho nkomba yokukhokha ye-%s eqoshwe ngokumelene nale nkokhelo, ngakho-ke ayikwazi ukubuyiselwa imali ngokuzenzakalelayo.',
+    'refund.recorded' => 'Kubuyiselwe imali nge-%s. Inkomba yomhlinzeki: %s',
+    'refund.successful' => 'Ukubuyiselwa kwemali nge-%s kuphumelele.',
+    'region' => 'Isifunda',
+    'reject' => 'Yenqaba',
+    'reject.this.quote' => 'Yenqaba Lesi Sicaphuno',
+    'rejected' => 'Kwaliwe',
+    'reminder' => 'Isikhumbuzi sithunyelwe',
+    'remove' => 'Susa',
+    'remove.logo' => 'Susa Ilogo',
+    'report' => 'Bika',
+    'report.aging.title' => 'Umbiko Wokuguga Ongatholwa Ama-akhawunti',
+    'report.client.statement' => 'Isitatimende se-Akhawunti Yeklayenti',
+    'report.options' => 'Bika Izinketho',
+    'report.period.from_to' => 'Isikhathi: {from_date} kuya ku-{to_date}',
+    'report.revenue.title' => 'Umbiko Wokuhlaziywa Kwemali Engenayo',
+    'report.sales.by.product' => 'Ukuthengisa ngoMkhiqizo',
+    'report.sales.by.product.info' => 'Lo mbiko unikeza inani eliphelele lokuthengiswa komkhiqizo kanye nentela yento yawo.Ayifaki intela ye-invoyisi eyengeziwe ehlobene nale mikhiqizo.',
+    'report.sales.by.task' => 'Ukuthengisa Ngomsebenzi',
+    'report.sales.by.task.info' => 'Lo mbiko unikeza inani eliphelele lokuthengiswa komsebenzi kanye nentela yento yawo.Ayifaki intela ye-invoyisi eyengeziwe ehlobene nale misebenzi.',
+    'report.test.fraud.prevention.headers.api' => 'I-Test Fraud Prevention Headers API',
+    'reports' => 'Imibiko',
+    'reset' => 'Setha kabusha',
+    'reset.column.widths' => 'Setha kabusha ububanzi bekholomu kube okuzenzakalelayo',
+    'reset.password' => 'Setha kabusha iphasiwedi',
+    'rules.peppol.en16931.001' => 'Inqubo Yebhizinisi noma I-ID Yephrofayela kufanele ihlinzekwe.Bheka ku-config/common/params.php search ProfileID',
+    'run.report' => 'Qalisa umbiko',
+    'sales' => 'Ukuthengisa',
+    'sales.by.client' => 'Ukuthengisa ngeKlayenti',
+    'sales.by.date' => 'Ukuthengisa ngedethi',
+    'sales.with.tax' => 'Ukuthengisa Ngentela',
+    'salesorder' => 'I-oda yokuthengisa',
+    'salesorder.agree.to.terms' => 'Sicela wamukele Imigomo ezothunyelwa kuwe manje',
+    'salesorder.assembled.packaged.prepared' => 'Kuhlanganisiwe/Kupakishiwe/Kulungisiwe',
+    'salesorder.cancelled' => 'I-oda Lokuthengisa Likhanseliwe',
+    'salesorder.client.confirmed.terms' => 'Imigomo Eqinisekisiwe Yekhasimende',
+    'salesorder.clients.purchase.order.number' => 'Inombolo Ye-oda Lokuthenga Kwekhasimende',
+    'salesorder.clients.purchase.order.person' => 'Umuntu We-oda Lokuthenga Leklayenti Ophethe i-oda lakhe',
+    'salesorder.copied.to.invoice' => 'I-oda lokuthengisa likopishelwe ku-invoyisi',
+    'salesorder.copied.to.invoice.not' => 'I-invoyisi AYIDALWA ku-Sales Order! I-invoyisi eyimpinda.Kopisha i-Sales Order yakho kwenye i-Sales Order bese ukopisha ku-invoyisi.I-Sales Order ngayinye kufanele ibe ne-invoyisi efanayo',
+    'salesorder.date.created' => 'Idethi yokudayiswa kwe-oda lokuthengisa',
+    'salesorder.default.group' => 'Iqembu elizenzakalelayo le-oda lokuthengisa',
+    'salesorder.goods.services.confirmed' => 'Ukulethwa Okuqinisekisiwe Kwekhasimende',
+    'salesorder.goods.services.delivered' => 'Izimpahla/Isevisi Ilethiwe',
+    'salesorder.invoice' => 'I-invoyisi',
+    'salesorder.invoice.generate' => 'Khiqiza i-invoyisi',
+    'salesorder.invoice.generated' => 'I-invoyisi Yakhiwe',
+    'salesorder.invoice.number' => 'Inombolo ye-invoyisi',
+    'salesorder.number' => 'Inombolo ye-oda yokuthengisa',
+    'salesorder.number.status' => 'Isimo se-oda No',
+    'salesorder.password' => 'Iphasiwedi ye-oda lokuthengisa',
+    'salesorder.payment.terms' => 'Imigomo Yokukhokha Ye-oda Lokuthengisa isb.Sicela ukhokhe zingakapheli izinsuku ezingama-30',
+    'salesorder.peppol.response.ab' => 'Kuyavunywa -- kwamukelwe, akukacutshungulwa',
+    'salesorder.peppol.response.acknowledge' => 'Vuma Kuphela',
+    'salesorder.peppol.response.acknowledge.description' => 'Ithumela impendulo ye-oda eliphelele ethi &quot;received, not yet processed&quot;, ngaphandle kokunquma noma yimuphi umugqa okwamanje. Sebenzisa &quot;Send Peppol Order Response&quot; esikhundleni salokho uma usukulungele ukwamukela, ukwenqaba noma ukushintsha imigqa ngayinye.',
+    'salesorder.peppol.response.ap' => 'Kwamukelwe',
+    'salesorder.peppol.response.ca' => 'Kwamukelwe ngezinguquko',
+    'salesorder.peppol.response.failed' => 'Ayikwazanga ukuthumela impendulo ye-oda le-Peppol.',
+    'salesorder.peppol.response.failed.no.client' => 'Ayikwazanga ukuthumela impendulo ye-oda le-Peppol: I-Sales Order ayinayo iKlayenti.',
+    'salesorder.peppol.response.failed.no.peppol' => 'Ayikwazanga ukuthumela impendulo ye-oda le-Peppol: Iklayenti alinawo ukubhaliswa kwe-Peppol.',
+    'salesorder.peppol.response.linestatus.accepted' => 'Kwamukelwe',
+    'salesorder.peppol.response.linestatus.added' => 'Kungeziwe',
+    'salesorder.peppol.response.linestatus.alreadydelivered' => 'Sekuvele kuthunyelwe',
+    'salesorder.peppol.response.linestatus.changed' => 'Kushintshiwe',
+    'salesorder.peppol.response.linestatus.rejected' => 'Kwenqatshiwe',
+    'salesorder.peppol.response.perline' => 'Impendulo ye-Peppol Order',
+    'salesorder.peppol.response.preview' => 'Buka kuqala i-XML',
+    'salesorder.peppol.response.re' => 'Kwenqatshiwe',
+    'salesorder.peppol.response.send' => 'Thumela Impendulo Ye-oda Le-Peppol',
+    'salesorder.peppol.response.sent' => 'Impendulo ye-oda le-Peppol ithunyelwe',
+    'salesorder.quote' => 'Isilinganiso',
+    'salesorder.recent' => 'Ama-oda Okuthengiswa Kwakamuva',
+    'salesorder.reject' => 'Ukwenqatshwa kwe-oda lokuthengisa',
+    'salesorder.rejected' => 'Umyalelo Wokuthengisa Unqatshiwe',
+    'salesorder.sent.to.customer' => 'Kudingeka Isivumelwano Semibandela',
+    'salesorder.to.invoice' => 'I-oda lokuthengisa ku-invoyisi',
+    'salesorder.vat.salesorder' => 'I-VAT Sales Order',
+    'salesorders' => 'Ama-oda okuthengisa',
+    'save' => 'Londoloza',
+    'save.item.as.lookup' => 'Londoloza into njengokubheka',
+    'script' => 'Iskripthi',
+    'search.family' => 'Sesha Umndeni',
+    'search.product' => 'Sesha umkhiqizo',
+    'security.disable.read.only.empty' => 'Isilungiselelo sokukhubaza ukufunda kuphela okwamanje asinalo inani elingu-0 noma elingu-1.Isethe ngokusemthethweni ibe ngu-0 ngokuzenzakalelayo ukuze kutholakale umsebenzi wokufunda kuphela ukuze kuvinjelwe ukususwa kwe-invoyisi.',
+    'security.disable.read.only.info' => 'Isexwayiso:Umsebenzi Wokufunda Kuphela Wokuvikela I-invoyisi Nokuvimbela Ukususwa kunikwe amandla.Khubaza i-\'disable.read.only\' ukuze uvumele ama-invoyisi athunyelwe ukuthi asethwe kabusha ukuze asalungiswa',
+    'security.disable.read.only.success' => 'Impumelelo:Umsebenzi Wokufunda Kuphela Wokuvikela I-invoyisi Nokuvimbela Ukususwa kunikwe amandla kabusha',
+    'security.disable.read.only.true.draft.check.and.mark' => 'Isexwayiso:Uhlela okusalungiswa ngesilungiselelo sokukhubaza ukufunda kuphela kokuthi iqiniso',
+    'security.disable.read.only.true.sent.check.and.mark' => 'Isexwayiso:Uhlela i-invoyisi ethunyelwe ngesilungiselelo sokukhubaza ukufunda kuphela kokuthi iqiniso',
+    'security.disable.read.only.warning' => 'Isexwayiso:Umsebenzi Wokufunda Kuphela Wokuvikela I-invoyisi Nokuvimbela Ukususwa kukhutshaziwe',
+    'select.all' => 'Khetha Konke',
+    'select.existing.client' => 'Khetha iklayenti elikhona',
+    'select.family' => 'Khetha umndeni',
+    'select.payment.method' => 'Khetha Indlela Yokukhokha',
+    'select.project' => 'Khetha iphrojekthi',
+    'select.unit' => 'Khetha iyunithi',
+    'send' => 'Thumela',
+    'send.email' => 'Thumela I-imeyili',
+    'send.telegram.invoice' => 'Thumela i-invoyisi yeTelegram',
+    'sent' => 'Ithunyelwe',
+    'set.new.password' => 'Setha iphasiwedi entsha',
+    'set.to.read.only' => 'Setha i-invoyisi ukuthi ifunde kuphela',
+    'setting' => 'Ukusetha',
+    'setting.add' => 'Ukusetha Engeza',
+    'setting.as.a.result.of ' => 'ngomphumela we',
+    'setting.assets.cleared.at' => 'Izimpahla zisulwe ngo ',
+    'setting.assets.were.not.cleared.at' => 'Izimpahla azizange zisuswe',
+    'setting.company' => 'Imininingwane Yomphakathi Yenkampani',
+    'setting.company.private' => 'Imininingwane Eyimfihlo Yenkampani',
+    'setting.company.profile' => 'Ukushintsha iphrofayili isb.iselula nekheli le-imeyili',
+    'setting.duplicate.key' => 'Ayikwazanga ukuqedela ukulondoloza.Unempinda enokhiye olandelayo:',
+    'setting.error.on.the.public.assets.folder' => 'iphutha kufolda yezimpahla zomphakathi.',
+    'setting.form' => 'Ukusetha Ifomu',
+    'setting.key' => 'Ukhiye Wokusetha',
+    'setting.section' => 'Ingxenye',
+    'setting.subsection' => 'Isigatshana',
+    'setting.translator.key' => 'Ukhiye Womhumushi',
+    'setting.value' => 'Ukusetha Inani',
+    'setting.you.have.cleared.the.cache' => 'Usule inqolobane.',
+    'setting.you.have.not.cleared.the.cache.due.to.a' => 'Awukayisuli inqolobane ku-a',
+    'settings' => 'Izilungiselelo',
+    'settings.successfully.saved' => 'Izilungiselelo zilondolozwe ngempumelelo',
+    'setup.choose.language' => 'Khetha Ulimi',
+    'setup.choose.language.message' => 'Khetha ulimi ukuze uqhubeke nokufaka.',
+    'setup.complete' => 'Ukufakwa Kuqediwe',
+    'setup.complete.message' => 'I-InvoicePlane ifakwe ngempumelelo.Ungangena manje.',
+    'setup.complete.secure.setup' => 'Uma ufuna ukuvikela ukufakwa kwakho,ungase ukhubaze ukusetha okwamanje.Ukwenza kanjalo, buyisela umugqa <code>DISABLE_SETUP=false</code> ngokuthi <code>DISABLE_SETUP=true</code> efayeleni lakho le <code>ipconfig.php</code> .',
+    'setup.complete.support.note' => 'Uma uhlangabezana nanoma yiziphi izinkinga noma udinga usizo bheka i <a href="https://wiki.invoiceplane.com">-wiki esemthethweni</a> noma <a href="https://community.invoiceplane.com/">inkundla yomphakathi</a> .',
+    'setup.create.user' => 'Dala i-Akhawunti Yomsebenzisi',
+    'setup.create.user.message' => 'Lolu ulwazi ozoludinga ukuze ungene ku-InvoicePlane.',
+    'setup.database.configured.message' => 'Isizindalwazi simiswe ngempumelelo.',
+    'setup.database.details' => 'Imininingwane Yesizindalwazi',
+    'setup.database.message' => 'Nikeza ulwazi olulandelayo ukuze uxhume kusizindalwazi sakho.',
+    'setup.db.cannot.connect' => 'Ayikwazi ukuxhuma kuseva yolwazi ngolwazi olunikeziwe lwesizindalwazi.Sicela uhlole imininingwane bese uzama futhi.',
+    'setup.db.database.info' => 'Igama lesizindalwazi osidalile se-InvoicePlane.',
+    'setup.db.hostname.info' => 'Igama lomethuleli lesizindalwazi sakho.',
+    'setup.db.password.info' => 'Iphasiwedi ehlobene nesizindalwazi.',
+    'setup.db.port.info' => 'Imbobo igama lomethuleli wakho elilalele kuyo.Okuzenzakalelayo kungu-3306.',
+    'setup.db.username.info' => 'Igama lomsebenzisi elihlotshaniswa nesizindalwazi.',
+    'setup.install.tables' => 'Faka Amathebula',
+    'setup.other.contact' => 'Omunye Othintana naye',
+    'setup.prerequisites' => 'Okudingekayo',
+    'setup.prerequisites.message' => 'Siyakwamukela ku-InvoicePlane! Noma iyiphi inkinga esohlwini olungezansi kufanele ixazululwe ngaphambi kokuthi ukufakwa kuqhubeke.',
+    'setup.tables.errors' => 'Amaphutha angezansi adinga ukuxazululwa ngaphambi kokuthi ukufakwa kuqhubeke.',
+    'setup.tables.success' => 'Amathebula esizindalwazi afakwe ngempumelelo.',
+    'setup.upgrade.message' => 'Amaphutha angezansi adinga ukuxazululwa ngaphambi kokuthi ukufakwa kuqhubeke.',
+    'setup.upgrade.success' => 'Amathebula esizindalwazi athuthukiswe ngempumelelo.',
+    'setup.upgrade.tables' => 'Thuthukisa Amathebula',
+    'setup.user.address.info' => 'Ulwazi lwekheli olufakwe ngezansi luzovela kuma-invoyisi akho.',
+    'setup.user.contact.info' => 'Lolu lwazi lokuxhumana lungaphinda luvele kuma-invoyisi akho.',
+    'setup.user.email.info' => 'Ikheli lakho le-imeyili lizosetshenziswa ukuze ungene ku-InvoicePlane.',
+    'setup.user.name.info' => 'Kungaba igama lenkampani yakho noma isibongo sakho nesibongo.',
+    'setup.user.password.info' => 'Khumbula ukusebenzisa iphasiwedi eqinile.Kunconywa inhlanganisela yezinhlamvu ezinkulu nezincane,izinombolo nezimpawu.Ubude obuncane:izinhlamvu ezingu-8',
+    'setup.user.password.verify.info' => 'Qinisekisa iphasiwedi yakho ngokunikeza iphasiwedi efanayo futhi.',
+    'setup.v120.alert' => '<strong>Qaphela!</strong><br> Kubaluleke kakhulu ukuthi ufunde <a href="https://go.invoiceplane.com/v120update" target="_blank">lesi saziso sokubuyekeza</a> mayelana nezinguquko ezibalulekile zohlelo lokusebenza lwe-InvoicePlane.',
+    'setup.v147.alert' => '<strong>Qaphela!</strong><br> Sicela uvule <code>application/config/config.php</code> futhi ushintshe umugqa <code>$config[\'sess_use_database\'] = false;</code> ku- <code>$config[\'sess_use_database\'] = true;</code> .<br> Imininingwane eyengeziwe ingatholakala <a href="https://go.invoiceplane.com/v147update" target="_blank">lapha</a>',
+    'showing.of' => 'Ibonisa %s kwezingu-%s ',
+    'signup' => 'Bhalisela',
+    'since' => 'kusukela',
+    'single.choice' => 'Ukukhetha Okukodwa',
+    'site.soletrader.about.choose' => 'Nazi izizathu ezithandekayo zokuthi usikhethe:',
+    'site.soletrader.about.competitive.rates' => 'Amanani Wokuncintisana',
+    'site.soletrader.about.contemporary' => 'Amakhono esimanje',
+    'site.soletrader.about.dissatisfaction' => 'Uma kwenzeka kuba nokunganeliseki kwenkonzo sizowenza kabusha umsebenzi mahhala.',
+    'site.soletrader.about.finished' => 'Amaphrojekthi Aphelile',
+    'site.soletrader.about.happy' => 'Amakhasimende ajabule',
+    'site.soletrader.about.quality' => 'Ngaphandle kokudela ikhwalithi',
+    'site.soletrader.about.return' => 'Buyisa Amakhasimende',
+    'site.soletrader.about.simply' => 'Vele uthathe ifoni bese sizokwenza kabusha umsebenzi.',
+    'site.soletrader.about.solved' => 'Izinkinga Zixazululiwe',
+    'site.soletrader.about.trained' => 'Iqembu lethu liqeqeshwe kahle futhi linesipiliyoni.',
+    'site.soletrader.about.we' => 'Sisebenzisa amakhono ethu ngenkuthalo ngawo wonke amandla ethu.',
+    'site.soletrader.about.willing' => 'Ukuvuma Ukubuyisela Ukusekela',
+    'site.soletrader.contact.address' => 'Ikheli',
+    'site.soletrader.contact.email' => 'I-imeyili',
+    'site.soletrader.contact.lookout' => 'Sihlale sibheke ukusebenzisana namakhasimende amasha.Uma ungathanda ukusebenza nathi, sicela usithinte ngenye yezindlela ezilandelayo.',
+    'site.soletrader.contact.phone' => 'Ucingo',
+    'site.soletrader.contact.touch' => 'Xhumana',
+    'site.soletrader.pricing.basic' => 'okuyisisekelo',
+    'site.soletrader.pricing.choosePlan' => 'Khetha Uhlelo',
+    'site.soletrader.pricing.currencyPerMonth' => 'ngenyanga',
+    'site.soletrader.pricing.explore' => 'Hlola amanani ethu aguquguqukayo ukuze uthole okulingana kahle kakhulu ukuze uqhube ibhizinisi lakho.',
+    'site.soletrader.pricing.plans' => 'Izinhlelo eziningi',
+    'site.soletrader.pricing.pricing' => ' Intengo Yethu',
+    'site.soletrader.pricing.pro' => 'Uchwepheshe',
+    'site.soletrader.pricing.proPrice' => 'pro Price',
+    'site.soletrader.pricing.special' => 'ekhethekile',
+    'site.soletrader.pricing.starter' => 'Umqali',
+    'site.soletrader.pricing.visits' => 'ukuvakasha',
+    'site.soletrader.team.assistant' => 'Umsizi',
+    'site.soletrader.team.coordinator' => 'Umxhumanisi',
+    'site.soletrader.team.we' => 'Siyiqembu labantu abakhathalelayo, abanokuhlangenwe nakho,nabakhuthele.',
+    'site.soletrader.testimonial.we' => 'Lezi yizo ubufakazi',
+    'site.soletrader.testimonial.worker1' => 'Lokhu kungubufakazi bami',
+    'site.soletrader.testimonial.worker2' => 'Lokhu kungubufakazi bami',
+    'site.soletrader.testimonial.worker3' => 'Lokhu kungubufakazi bami',
+    'site.todays.date' => 'Usuku lwanamuhla',
+    'six.months' => 'Izinyanga eziyisithupha',
+    'smtp.mail.from' => 'Ikheli Lomthumeli we-SMTP lama-imeyili esistimu',
+    'smtp.password' => 'Iphasiwedi ye-SMTP',
+    'smtp.port' => 'Imbobo ye-SMTP',
+    'smtp.requires.authentication' => 'Idinga Ukuqinisekisa',
+    'smtp.security' => 'Ezokuphepha',
+    'smtp.server.address' => 'Ikheli Leseva ye-SMTP',
+    'smtp.ssl' => 'I-SSL',
+    'smtp.tls' => 'I-TLS',
+    'smtp.username' => 'Igama lomsebenzisi le-SMTP',
+    'smtp.verify.certs' => 'Qinisekisa izitifiketi ze-SMTP',
+    'spreadsheet.import' => 'Ukungenisa ispredishithi',
+    'sql.file' => 'Ifayela le-SQL',
+    'start' => 'Qala',
+    'start.date' => 'Usuku okuqalwa ngalo',
+    'state' => 'Izwe',
+    'status' => 'Isimo',
+    'status.invoice.cancelled' => 'Kukhanseliwe',
+    'status.invoice.draft' => 'Okusalungiswa',
+    'status.invoice.overdue' => 'Sekwephuzile',
+    'status.invoice.paid' => 'Ikhokhelwe',
+    'status.invoice.partial' => 'Inkokhelo Eyingxenye',
+    'status.invoice.sent' => 'Kuthunyelwe',
+    'status.invoice.viewed' => 'Kubukiwe',
+    'stop' => 'Ima',
+    'stop.homecare.signing.up' => 'Akukho ukubhalisela ukunakekelwa kwasekhaya okudingekayo',
+    'stop.logging.in' => 'Misa ukungena',
+    'stop.signing.up' => 'Yeka ukubhalisa',
+    'storecove' => 'Isitolo sesitolo',
+    'storecove.advisory.to.developer.field.easily.missed' => 'Inkambu igejwe kalula yikhasimende',
+    'storecove.create.a.sender.legal.entity.country' => '1.1.4.Dala umthumeli - Izwe Lebhizinisi Elisemthethweni',
+    'storecove.invoice.json.encoded' => 'I-invoyisi Ebhalwe Ngekhodi YesitoloCove Json',
+    'storecove.legal' => 'Okusemthethweni',
+    'storecove.legal.entity.id.for.json' => '1.1.4.Dala umthumeli - I-Id ye-Store Cove Legal Entity ifakwe ku-invoice.json',
+    'storecove.legal.entity.identifier.id.not.found' => 'Lungiselela amapharamitha I-Id yeNkampani Yebhizinisi Ebalwa Ngomhlinzeki Wezimali ayitholakali.',
+    'storecove.no.contract.exists' => 'Ayikho inkontileka ekhona',
+    'storecove.not.available' => 'Akutholakali',
+    'storecove.purchase.order.item.id.null' => 'po-item-id-null',
+    'storecove.receiver.identifier' => 'Isikhombi Somamukeli - bona i-StoreCove 6.3',
+    'storecove.region.country.legal.tax' => 'Isifunda ---------- Izwe --------- Ezomthetho --------- Intela',
+    'storecove.salesorder.number.not.exist' => 'Inombolo ye-oda lokuthengisa ayikho',
+    'storecove.sender.identifier' => '6.2 Inkomba yomthumeli',
+    'storecove.sender.identifier.basis' => '6.2 Isisekelo Sesikhombi Somthumeli - Ezomthetho noma Zentela',
+    'storecove.supplier.contact.email.not.found' => 'I-imeyili Yokuxhumana Nomhlinzeki Ayitholakali.Bheka kuhlelo lwamapharamitha okumisa.',
+    'storecove.supplier.contact.firstname.not.found' => 'Igama Lokuthintana Nomhlinzeki Alitholakali.Bheka kuhlelo lwamapharamitha okumisa.',
+    'storecove.supplier.contact.lastname.not.found' => 'Isibongo Sokuthintana Nomhlinzeki Asitholakali.Bheka kuhlelo lwamapharamitha okumisa.',
+    'storecove.supplier.contact.name.not.found' => 'Igama Lokuthintana Nomhlinzeki Alitholakali.Bheka kuhlelo lwamapharamitha okumisa.',
+    'storecove.supplier.contact.telephone.not.found' => 'Ifoni Yokuthintana Nomhlinzeki Ayitholakali.Bheka kuhlelo lwamapharamitha okumisa.',
+    'storecove.tax' => 'Intela',
+    'storecove.tax.rate.code' => 'Ikhodi Yesilinganiso Sentela ye-Storecove',
+    'storecove.tax.scheme.identifier.id.not.found' => 'Lungiselela amapharamitha I-Id yenkampani ye-Accounting Supplier Party Tax Scheme ayitholakali.',
+    'stream' => 'Sakaza i-Pdf kusiphequluli / i-Modal',
+    'street.address' => 'Ikheli lesitaladi',
+    'street.address.2' => 'Ikheli Lomgwaqo (qhubeka.)',
+    'street.order' => 'Ukuhlanza Ukusebenza — I-Street Order',
+    'street.order.back.to.families' => 'Buyela Emindenini',
+    'street.order.drag.hint' => 'Hudula imigwaqo uyifake oda ofuna ukuyihlanza. I-oda ligcinwa ngokuzenzakalelayo uma uphonsa umugqa.',
+    'street.order.manage.link' => 'Phatha i-oda lasemgwaqweni →',
+    'street.order.position' => 'Indawo yokuhlanza:',
+    'subject' => 'Isihloko',
+    'submenu' => 'Imenyu engaphansi',
+    'submit' => 'Thumela',
+    'subtotal' => 'Isamba esingaphansi',
+    'success' => 'Impumelelo',
+    'success.create.invoice' => 'I-invoyisi #{invoyisi_number} idalwe ngempumelelo',
+    'success.payment.received' => 'Inkokhelo ye-{amount} etholiwe ye-invoyisi #{invoice_number}',
+    'success.send.invoice' => 'I-invoyisi #{invoice_number} ithunyelwe ku-{client_email}',
+    'success.update.client' => 'Iklayenti {igama_leklayenti} libuyekezwe ngempumelelo',
+    'successful' => 'Iphumelele',
+    'suggested.from.previous.selection' => 'Kuphakanyiswe kusukela ekukhetheni kwangaphambilini',
+    'sunday' => 'NgeSonto',
+    'system.settings' => 'Izilungiselelo Zesistimu',
+    'system.updates' => 'Izibuyekezo Zesistimu',
+    'system.updates.check.failed' => 'Ukuhlolwa kwenguqulo ye-PHP kwehlulekile',
+    'system.updates.check.now' => 'Hlola Manje',
+    'system.updates.current.version' => 'Inguqulo yamanje ye-PHP',
+    'system.updates.last.checked' => 'Kuhlolwe Okokugcina',
+    'system.updates.latest.version' => 'Inguqulo yakamuva ye-PHP',
+    'system.updates.never.checked' => 'Akukaze kuhlolwe',
+    'system.updates.outdated' => 'Inguqulo entsha ye-PHP iyatholakala',
+    'system.updates.security.release' => 'Ukukhishwa Kwezokuphepha',
+    'system.updates.select.platform' => 'Khetha ipulatifomu yakho ukuze ubone imiyalelo yokubuyekeza',
+    'system.updates.up.to.date' => 'I-PHP isesikhathini',
+    'system.updates.update.instructions' => 'Imiyalelo Yokubuyekeza',
+    'table' => 'Ithebula',
+    'task' => 'Umsebenzi',
+    'task.add' => 'Faka umsebenzi',
+    'task.description' => 'Incazelo yomsebenzi',
+    'task.finish.date' => 'Idethi yokuqeda',
+    'task.name' => 'Igama lomsebenzi',
+    'task.price' => 'Intengo yomsebenzi',
+    'tasks' => 'Imisebenzi',
+    'tasks.form' => 'Ifomu lomsebenzi',
+    'tax' => 'Intela',
+    'tax.code' => 'Ikhodi Yezintela',
+    'tax.code.short' => 'Ikhodi Yentela',
+    'tax.exempt.notice' => 'Lokhu kuthengiselana akukhokhiswa intela',
+    'tax.information' => 'Ulwazi Lwezintela',
+    'tax.point' => 'Iphoyinti Lentela Losuku',
+    'tax.rate' => 'Isilinganiso Sentela',
+    'tax.rate.active.not' => 'Isexwayiso:Awekho amanani entela enziwe asebenza.Yenza kusebenze okungenani isilinganiso esisodwa sentela.Izilungiselelo .Izinga Lentela',
+    'tax.rate.add' => 'Isilinganiso Sentela Engeza',
+    'tax.rate.code' => 'Ikhodi Yesilinganiso Sentela Ye-invoyisi',
+    'tax.rate.decimal.places' => 'Isilinganiso Sentela Izindawo zamadesimali',
+    'tax.rate.edit' => 'Hlela Isilinganiso Sentela',
+    'tax.rate.form' => 'Ifomu Lesilinganiso Sentela',
+    'tax.rate.history.exists' => 'Ayikwazi ukususa.Umlando usuvele uyaphuma',
+    'tax.rate.name' => 'Igama Lesilinganiso Sentela isb.Okujwayelekile',
+    'tax.rate.percent' => 'Iphesenti Lesilinganiso Sentela',
+    'tax.rate.placement' => 'Ukubekwa Kwezinga Lentela',
+    'tax.rates' => 'Izilinganiso Zentela',
+    'tax.total.amount' => 'Intela Ephelele: {inani}',
+    'tax.vat.rate' => 'Izinga le-VAT: {izinga}%',
+    'taxes' => 'Izintela',
+    'telegram' => 'I-Telegram',
+    'telegram.bot.api.chat.id' => 'ITelegramu:Okungeyona i-bot:I-akhawunti yomuntu siqu:Sawubona Umhlaba:Umlayezo Wokuhlola:Umamukeli Womlayezo:<b>I-Chat Id</b>',
+    'telegram.bot.api.chat.id.not.set' => 'I-Chat Id yomphathi we-akhawunti yetelegram yomuntu siqu engeyona ye-bot ethumele i-bot umlayezo wayo wokuqala futhi ezokwamukela umlayezo wokuhlola othi \'Sawubona\'\'Umhlaba\' awukasethwa.',
+    'telegram.bot.api.current.status' => '<b>Ukusetshenziswa kwamanje:</b> Asikho isidingo se-webhook ngoba amakhasimende awanawo ama-id engxoxo futhi awathumeli imilayezo ku-bot.',
+    'telegram.bot.api.enable' => 'Nika amandla iTelegramu',
+    'telegram.bot.api.enabled.not' => 'ITelegramu Ayivunyelwe',
+    'telegram.bot.api.future.use' => '<b>Ukusetshenziswa kwesikhathi esizayo:</b> Amaklayenti anama-id engxoxo athunyelwa i-invoyisi yocingo futhi aqinisekisa irisidi ngokubuyisela isiqinisekiso ku-webhook',
+    'telegram.bot.api.general.purpose' => '<b>I-Bot Ebhalisiwe, ekhonjwa ngethokheni, ithumela Izaziso Zokukhokha Kwekhasimende ku-Id Yengxoxo Ebhalisiwe ngezansi (imvamisa i-akhawunti yocingo yomuntu siqu engeyona ye-bot).</b>',
+    'telegram.bot.api.get.updates.failed' => 'Ukubuyekezwa kwakho kweTelegramu kuhlulekile.',
+    'telegram.bot.api.get.updates.success' => 'Ukubuyekezwa kwakho kweTelegramu kuphumelele kusetshenziswa indlela ye-api ethi GetUpdates.',
+    'telegram.bot.api.hello.world.test.message' => 'Sawubona Umhlaba kusuka kuTelegram Bot Api.Siyabonga bonjiniyela be-yiisoft!',
+    'telegram.bot.api.hello.world.test.message.sent' => 'Sawubona Umhlaba uthunyelwe.',
+    'telegram.bot.api.hello.world.test.message.sent.not' => 'Umlayezo Womhlaba Wonke awuthunyelwanga.',
+    'telegram.bot.api.hello.world.test.message.use' => 'Thumela umlayezo wokuhlola oyisisekelo othi \'Sawubona Mhlaba usuka ku-Telegram Bot Api\' uye ku-id yengxoxo yangaphandle',
+    'telegram.bot.api.payment.method.id' => 'I-ID Yendlela Yokukhokha esetshenziswa lapho kuqoshwa inkokhelo ye-Telegram ezenzakalelayo',
+    'telegram.bot.api.payment.notification.success' => 'Isaziso Senkokhelo Yocingo Siphumelele',
+    'telegram.bot.api.payment.notifications' => 'Izaziso zenkokhelo yocingo',
+    'telegram.bot.api.provider.token' => 'Ithokheni Lomhlinzeki Wezinkokhelo Ze-Telegram (kusuka ku-@BotFather → Izinkokhelo → Umugqa)',
+    'telegram.bot.api.token' => 'I-Telegram Bot Api Token',
+    'telegram.bot.api.token.not.set' => 'Ithokheni yeTelegram Bot Api Ayisethiwe',
+    'telegram.bot.api.webhook.delete' => 'Susa i-Webbhook',
+    'telegram.bot.api.webhook.deleted' => 'I-Webhook isanda kukhutshazwa ukuze kusetshenziswe i-api get method getUpdates.',
+    'telegram.bot.api.webhook.secret.token' => 'I-Webhook Secret Token ukuze uthole ukuphepha okwengeziwe (Isetshenziswa njengepharamitha kumsebenzi we-setWebhook hhayi njengombuzoParameter)',
+    'telegram.bot.api.webhook.setup' => 'I-webhook isethiwe.',
+    'telegram.bot.api.webhook.setup.already' => 'I-webhook isivele isethiwe.',
+    'telegram.bot.api.webhook.url.this.site' => 'I-Telegram Webhook Url yale sayithi esetshenziswa ku-TelegramHelper setWebhook function.',
+    'telegram.invoice.client.chat.id.not.set' => 'Iklayenti alinayo i-ID yengxoxo yeTelegram. Hlela iklayenti bese wengeza i-ID yalo yengxoxo yeTelegram.',
+    'telegram.invoice.link.created' => 'Isixhumanisi sokukhokha se-Telegram sidaliwe. Kopisha isixhumanisi esingezansi.',
+    'telegram.invoice.link.created.menu' => 'Dala Isixhumanisi Sokukhokha seTelegram',
+    'telegram.invoice.sent' => 'Irisidi ye-Telegram ithunyelwe ngempumelelo.',
+    'telegram.location.not.configured' => 'I-latitude kanye ne-longitude yenkampani akulungiselelwe. Kusethe kuzilungiselelo.',
+    'telegram.location.sent' => 'Indawo yenkampani ithunyelwe ku-Telegram ngempumelelo.',
+    'telegram.pdf.not.found' => 'Akukho PDF egciniwe etholakele yale invoyisi. Dala eyodwa kuqala ngezinketho → Landa i-PDF.',
+    'telegram.pdf.send.menu' => 'Thumela i-PDF nge-Telegram',
+    'telegram.pdf.sent' => 'I-PDF yerisidi ithunyelwe ku-Telegram ngempumelelo.',
+    'telegram.stars.no.charge.id' => 'Ayikwazi ukubuyiselwa imali: inothi lokukhokha aliqukethe i-ID yokukhokhisa ye-Telegram kanye ne-ID yomsebenzisi womthengi.',
+    'telegram.stars.refunded' => 'Inkokhelo ye-Telegram Stars ibuyiselwe ngempumelelo.',
+    'template' => 'Isifanekiso se-invoyisi',
+    'templates' => 'Izifanekiso zama-invoyisi',
+    'term' => 'Imibandela',
+    'term.1' => 'Angikayifundi imigomo nemibandela.',
+    'term.2' => 'Ngifundile futhi ngiyavumelana nemigomo nemibandela.',
+    'term.add.additional.terms.at.setting.repository' => 'Engeza Imigomo Eyengeziwe kumsebenzi we-Setting Repository getPaymentTerms.',
+    'terms' => 'Imigomo',
+    'test.data.install' => 'Faka Idatha Yokuhlola',
+    'test.data.use' => 'Sebenzisa Idatha Yokuhlola',
+    'test.remove' => 'Susa Idatha Yokuhlola',
+    'test.remove.tooltip' => 'Buka.Izilungiselelo.Okuvamile.Faka Idatha Yokuhlola.Cha bese Ubuka.Izilungiselelo.Okuvamile.Sebenzisa Idatha Yokuhlola.Cha',
+    'test.reset' => 'Setha kabusha Idatha Yokuhlola',
+    'test.reset.setting' => 'Izilungiselelo Faka kabusha',
+    'test.reset.setting.tooltip' => 'Lokhu kuzosusa zonke izilungiselelo zamanje futhi kufake kabusha izilungiselelo ezizenzakalelayo ku-InvoiceController/install.default.settings.on.first.run',
+    'test.reset.tooltip' => 'Buka.Izilungiselelo.Okuvamile.Faka Idatha Yokuhlola.Yebo bese Ubuka.Izilungiselelo.Okuvamile.Sebenzisa Idatha Yokuhlola.Yebo',
+    'text' => 'Umbhalo',
+    'textarea' => 'Indawo Yombhalo',
+    'theme' => 'Itimu',
+    'this.month' => 'Le Nyanga',
+    'this.quarter' => 'Le Quarter',
+    'this.year' => 'Kulo nyaka',
+    'thousands.separator' => 'Izinkulungwane Separator',
+    'time.created' => 'Isikhathi Esidaliwe',
+    'time.zone' => 'Indawo Yesikhathi',
+    'title' => 'Isihloko',
+    'to.date' => 'Kuze kube manje',
+    'to.email' => 'Ku-imeyili',
+    'total' => 'Ingqikithi',
+    'total.balance' => 'Ibhalansi ephelele',
+    'total.billed' => 'Isamba esikhokhisiwe',
+    'total.paid' => 'Isamba Esikhokhiwe',
+    'transaction.reference' => 'Inkomba yokwenziwe',
+    'transaction.successful' => 'Ukuthenga kuphumelele',
+    'treatment' => 'Ukwelashwa',
+    'treatment.end' => 'Ukuphela Kokwelashwa',
+    'treatment.start' => 'Ukuqala Kokwelashwa',
+    'true' => 'Iqiniso',
+    'try.again' => 'Zama futhi',
+    'two.factor.authentication' => 'Ukuqinisekiswa Kwezinto Ezimbili',
+    'two.factor.authentication.attempt.failure' => 'Ukuhluleka Kwemizamo Yokuqinisekisa Okubili',
+    'two.factor.authentication.attempt.failure.must.setup' => 'Ukwehluleka Komzamo Wokufakazela Ubuqiniso Okubili:Kumelwe usethe ikhodi entsha ye-qr eyimfihlo (+) bese ukhetha ukubhala ngaphezulu okufakile kwangaphambilini lapho uyalwa.',
+    'two.factor.authentication.attempt.success' => 'Impumelelo Yomzamo Wokufakazela Ubuqiniso Okubili',
+    'two.factor.authentication.compatible.apps' => 'Isebenza nanoma yiluphi uhlelo lokusebenza lwe-TOTP authenticator — isibonelo i-Google Authenticator, i-Microsoft Authenticator, i-Authy, i-1Password, i-Bitwarden, i-Yandex ID, noma i-Aegis. Sebenzisa noma yiluphi osunalo kakade.',
+    'two.factor.authentication.disabled' => 'I-Two Factor Authentication manje ikhutshaziwe ukuze kuvikeleke okwengeziwe.',
+    'two.factor.authentication.enable' => 'Nika amandla i-Two Factor Authentication',
+    'two.factor.authentication.enabled.badge' => 'Ukuqinisekiswa Kwezinto Ezimbili Kunikwe Amandla',
+    'two.factor.authentication.enabled.with.disabling' => 'Ukuqinisekiswa Kwezinto Ezimbili okwamanje kunikwe amandla ukuze kuvikeleke okwengeziwe futhi kuyakhutshazwa ngemva kokufakazela ubuqiniso ngempumelelo kwesendlalelo esengeziwe sokuvikela kuze kube ukungena ngemvume okulandelayo.Ukuskena okuyimpoqo kwekhodi ye-Qr, ngemva kokungena ngakunye, ukuze uthole imfihlo entsha.',
+    'two.factor.authentication.enabled.without.disabling' => 'Ukuqinisekiswa Kwezinto Ezimbili okwamanje kunikwe amandla ukuze kuvikeleke okwengeziwe futhi akukhutshazwanga ngemva kokufakazela ubuqiniso ngempumelelo Ikhodi ye-Qr ngeke iphinde ibonakale ukuze iskenwe, ngemva kokungena ngemvume,ngemva kokusetha ukuqinisekiswa kwezinto ezimbili.',
+    'two.factor.authentication.error' => 'Iphutha Lokufakazela Ubuqiniso Bezinto Ezimbili',
+    'two.factor.authentication.form.verify.login' => 'Qinisekisa Ukungena',
+    'two.factor.authentication.invalid.backup.recovery.code' => 'Ikhodi yokutakula eyisipele engamadijithi angu-8 engavumelekile',
+    'two.factor.authentication.invalid.code.format' => 'Ifomethi yekhodi engavumelekile.Sicela ufake ikhodi enamadijithi angu-6 kusukela kuhlelo lwakho lokusebenza.',
+    'two.factor.authentication.invalid.totp.code' => 'Ikhodi yokuqinisekisa yesikhathi esisodwa engavumelekile enezinhlamvu ezingu-6',
+    'two.factor.authentication.missing.code.or.secret' => 'Ikhodi yokuqinisekisa engekho noma imfihlo ye-2FA.',
+    'two.factor.authentication.new.recovery.code' => 'Sicela ufake enye yamakhodi akho okubuyisela isipele angasetshenziswanga (izinhlamvu ezingu-8) ngezansi.',
+    'two.factor.authentication.new.six.digit.code' => 'Sicela ufake ikhodi entsha yokuqinisekisa enezinhlamvu ezingu-6 (ehlukile kwikhodi yokusetha) evela kuhlelo lwakho lokusebenza.',
+    'two.factor.authentication.no.secret.generated' => 'Ayikho imfihlo eyenziwe.Sicela uqale kabusha ukusetha.',
+    'two.factor.authentication.qr.code.enter.manually' => 'Noma faka le khodi mathupha ohlelweni lokusebenza lwe-android:',
+    'two.factor.authentication.rate.limit.reached' => 'Umkhawulo Wesilinganiso ufinyelelwe.Sicela ulinde imizuzwana engu-10.',
+    'two.factor.authentication.scan' => 'Skena le khodi ye-QR ngohlelo lwakho lokusebenza lwe-Aegis:',
+    'two.factor.authentication.setup' => 'Setha Ukuqinisekiswa Kwezinto Ezimbili',
+    'type' => 'Uhlobo',
+    'ubl.version.required.2.4' => 'Inguqulo ye-UBL kumele ibe ngu-2.1, 2.2, 2.3, noma 2.4',
+    'unit' => 'Iyunithi',
+    'unit.add' => 'Iyunithi Engeza',
+    'unit.already.exists' => 'Iyunithi isivele ikhona!',
+    'unit.description.not.provided' => 'Incazelo ayinikeziwe',
+    'unit.edit' => 'Hlela Iyunithi',
+    'unit.history' => 'Ayikwazi ukususa.Umlando ukhona.',
+    'unit.name' => 'Igama leyunithi',
+    'unit.name.plrl' => 'Igama leyunithi (ifomu lobuningi)',
+    'unit.peppol' => 'Peppol',
+    'unit.peppol.add' => 'Iyunithi Peppol Engeza',
+    'unit.peppol.code' => 'Ikhodi yeyunithi ye-Peppol',
+    'unit.peppol.edit' => 'Iyunithi Peppol Hlela',
+    'unit.peppol.index' => 'Iyunithi ye-Peppol Index',
+    'units' => 'Amayunithi',
+    'unknown' => 'Akwaziwa',
+    'unpaid' => 'Okungakhokhelwa',
+    'updatecheck' => 'Buyekeza hlola',
+    'updatecheck.failed' => 'Ukuhlola isibuyekezo kuhlulekile! Hlola uxhumano lwakho lwenethiwekhi.',
+    'updates' => 'Izibuyekezo',
+    'updates.available' => 'Izibuyekezo ziyatholakala!',
+    'upload.date' => 'Idethi yokulayisha',
+    'upload.description' => 'Incazelo',
+    'upload.filename.description' => 'Incazelo Yegama Lefayela',
+    'upload.filename.new' => 'Igama Lefayela elisha',
+    'upload.filename.original' => 'Igama Lefayela Loqobo',
+    'upload.index' => 'Layisha Inkomba',
+    'upload.plural' => 'Okulayishiwe',
+    'upload.url.key' => 'Ukhiye we-Url',
+    'url' => 'I-Url',
+    'use.system.language' => 'Sebenzisa ulimi Lwesistimu',
+    'user' => 'Umsebenzisi',
+    'user.account' => 'I-akhawunti yomsebenzisi we-invoyisi',
+    'user.account.clients' => 'Amaklayenti Anama-Akhawunti Womsebenzisi',
+    'user.accounts' => 'Ama-akhawunti womsebenzisi we-invoyisi',
+    'user.all.clients' => 'Engeza wonke amakhasimende',
+    'user.all.clients.text' => '* Uma le nketho ithikhiwe,umsebenzisi uzokwazi ukubona wonke amaklayenti,kuhlanganise nalawo angezwa kamuva.',
+    'user.api.list' => 'Abasebenzisi Be-invoyisi Yangaphambili - Abasebenzisi Ababhalisiwe',
+    'user.client.active.no' => 'Awunawo amaklayenti anama-akhawunti omsebenzisi asebenzayo.Abalawuli babela amaklayenti ku-akhawunti yomsebenzisi ebhalisiwe.',
+    'user.client.count' => '#',
+    'user.client.delete.not' => 'Ayikwazi ukususa! Iklayenti linamadokhumenti akhona ngaphambilini',
+    'user.client.no.account' => 'Leli klayenti alinayo i-akhawunti yomsebenzisi ehlotshaniswa nalo ngakho le dokhumenti ayikwazi ukudalwa.',
+    'user.clients.assigned.not' => 'Lo msebenzisi akanawo amaklayenti anikezwe wona.',
+    'user.form' => 'Ifomu lomsebenzisi',
+    'user.iban' => 'IBAN',
+    'user.inv.active.not' => 'I-Akhawunti Yomsebenzisi ayisebenzi',
+    'user.inv.delete.blocked.callback' => 'Umsebenzisi onezindima ze-RBAC ezisebenzayo uzothola i-403 Forbidden ekubuyiselweni kwakhe okulandelayo kwe-OAuth callback ku-/invoice. Sebenzisa i-Revoke All Roles kuqala, bese ususa.',
+    'user.inv.delete.blocked.roles' => 'Awukwazi ukususa: umsebenzisi usaphethe indima(indima) ye-RBAC:',
+    'user.inv.list.limit' => 'Inombolo yamarekhodi asohlwini lwekhasi ngalinye (Qaphela:Ikhipha okuzenzakalelayo)',
+    'user.inv.more.than.one.assigned' => 'Ukwakhiwa Kwerisidi Akuphumelelanga:Xhumana Nezilungiselelo zakho .I-Akhawunti Yomsebenzisi.Umsebenzisi ongaphezu koyedwa unikezwe leli klayenti.',
+    'user.inv.rbac.link' => 'Isixhumanisi se-RBAC',
+    'user.inv.rbac.link.stable' => 'Isixhumanisi se-RBAC sizinzile — indima eyabelwe kanye nomugqa webhuloho ukhona',
+    'user.inv.rbac.link.sync.confirm' => 'Nika indima yombukeli (uma ingekho) bese uvumelanisa umugqa webhuloho le-RBAC kulo msebenzisi?',
+    'user.inv.rbac.link.synced' => 'Isixhumanisi se-RBAC sivumelanisiwe — indima yomqapheli inikezwe uma ingekho',
+    'user.inv.refer.to' => 'Okuzenzakalelayo kwamarekhodi ayi-10 ekhasini ngalinye kungase kucishwe ngokuchofoza lapha.',
+    'user.inv.role.accountant' => 'Umgcinimabhuku',
+    'user.inv.role.accountant.assigned' => 'Iqhaza Lokubalwa Kwezimali Kwabelwe',
+    'user.inv.role.accountant.default' => 'I-Accountant yeklayenti, ngokuzenzakalelayo, ingakwazi ukubuka ama-invoyisi, ikhokhe ama-invoyisi, ibuke izinkokhelo zama-invoyisi, futhi ihlele izinkokhelo zama-invoyisi.',
+    'user.inv.role.administrator' => 'Umlawuli',
+    'user.inv.role.administrator.already.assigned' => 'Indima yomlawuli isivele yabelwe',
+    'user.inv.role.administrator.assigned' => 'Indima yomlawuli manje isinikiwe.',
+    'user.inv.role.all.new' => 'Bonke abasebenzisi abasha ngokuzenzakalela bazothatha indima yokubuka okungukuthi.angabuka Amadokhumenti futhi angawahleli Amadokhumenti athunyelwe kubo isb.bheka noma ubheke imibhalo.',
+    'user.inv.role.observer' => 'Isibukeli',
+    'user.inv.role.observer.assigned' => 'Indima Yesibukeli Yabelwe',
+    'user.inv.role.observer.assigned.already' => 'Indima Yombukeli isivele yabelwe.',
+    'user.inv.role.revoke.all' => 'Hoxisa Zonke Izindima',
+    'user.inv.role.warning.revoke.all' => 'Uqinisekile ukuthi ufuna ukuhoxisa zonke izindima',
+    'user.inv.role.warning.role' => 'Uqinisekile ukuthi ufuna ukuthatha le ndima?',
+    'user.inv.role.worker' => 'Isisebenzi',
+    'user.inv.role.worker.assign' => 'Nika',
+    'user.inv.role.worker.assigned' => 'Indima Yesisebenzi Eyabelwe',
+    'user.inv.role.worker.none.available' => 'Awekho amarekhodi e-Worker angaxhunywanga — engeza elilodwa ngaphansi kwe-Worker kuqala.',
+    'user.inv.role.worker.unavailable' => 'Ayikwazanga ukwabela — i-Worker ekhethiwe isivele ixhunywe komunye umsebenzisi.',
+    'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' => 'Ayikwazi ukunikeza uhlobo lomqondisi olwehliswayo kongeyena umlawuli',
+    'user.inv.type.cannot.allocate.guest.type.to.administrator' => 'Asikwazi ukwabela umlawuli uhlobo lwesivakashi sokwehla',
+    'user.signup.please' => 'Sicela ubhalise!',
+    'user.subscriber.number' => 'Inombolo Yokubhalisa',
+    'user.type' => 'Uhlobo lomsebenzisi',
+    'username' => 'Igama lomsebenzisi',
+    'users' => 'Abasebenzisi',
+    'utility.assets.clear' => 'Sula Inqolobane Yempahla',
+    'validation.amount.positive' => 'Inani kumele libe ngaphezu kuka-zero',
+    'validation.client.email.format' => 'I-imeyili yeklayenti kumele ibe ikheli le-imeyili elivumelekile',
+    'validation.currency.supported' => 'Uhlobo lwemali {lwemali} alusekelwa',
+    'validation.invoice.date.invalid' => 'Sicela unikeze usuku lwe-invoyisi olusebenzayo',
+    'validation.invoice.number.required' => 'Inombolo yerisidi iyadingeka',
+    'validator.fail' => 'Ayikwazi ukucubungula inkambu %s:%s',
+    'validator.invalid.login.password' => 'Ukungena ngemvume okungavumelekile noma iphasiwedi',
+    'validator.password.change' => 'Iphasiwedi yakho ishintshiwe',
+    'validator.password.not.match' => 'Amagama-mfihlo awafani',
+    'validator.password.not.match.new' => 'Amaphasiwedi akho amasha awafani',
+    'validator.password.reset' => 'Iphasiwedi yakho isethwe kabusha',
+    'validator.user.exist' => 'Umsebenzisi onalokhu kungena ngemvume usevele ekhona',
+    'validator.user.exist.not' => 'Umsebenzisi onalokhu kungena akekho',
+    'value' => 'Inani',
+    'values' => 'Amanani',
+    'values.with.taxes' => 'Amanani anezintela',
+    'variant' => 'Okuhlukile',
+    'vat' => 'I-VAT',
+    'vat.abbreviation' => 'I-VAT',
+    'vat.break.down' => 'Isifinyezo se-VAT',
+    'vat.id' => 'I-ID ye-VAT',
+    'vat.id.short' => 'I-VAT',
+    'vat.invoice' => 'I-INVOICE YE-VAT',
+    'vat.rate' => 'I-VAT Rate',
+    'vat.reg.no' => 'I-VAT Reg No',
+    'vat.registered' => 'I-VAT Ibhalisiwe',
+    'vendor.nikic.fast-route' => 'Ukwakha Imizila Esheshayo',
+    'verify.password' => 'Qinisekisa Iphasiwedi',
+    'version.history' => 'Umlando Wenguqulo',
+    'view' => 'Buka',
+    'view.all' => 'Buka Konke',
+    'view.client' => 'Buka iKlayenti',
+    'view.clients' => 'Buka Abathengi',
+    'view.contact.form.body' => 'Umzimba',
+    'view.contact.form.email' => 'I-imeyili',
+    'view.contact.form.name' => 'Igama',
+    'view.contact.form.subject' => 'Isihloko',
+    'view.invoices' => 'Buka ama-invoyisi',
+    'view.payment.logs' => 'Buka Amalogi Okukhokha Ku-inthanethi',
+    'view.payments' => 'Buka Izinkokhelo',
+    'view.product.families' => 'Buka Imindeni Yomkhiqizo',
+    'view.product.units' => 'Buka amayunithi womkhiqizo',
+    'view.products' => 'Buka Imikhiqizo',
+    'view.projects' => 'Buka Amaphrojekthi',
+    'view.quotes' => 'Buka Izingcaphuno',
+    'view.recurring.invoices' => 'Buka Ama-invoyisi Avela Kaningi',
+    'view.tasks' => 'Buka Imisebenzi',
+    'viewed' => 'Ibukiwe',
+    'warning' => 'Isexwayiso',
+    'web' => 'Iwebhu',
+    'web.address' => 'Ikheli Lewebhu',
+    'webshop.currency.refresh.already.current' => 'Izinga lokushintshanisa imali selivele libuyekeziwe namuhla.',
+    'webshop.currency.refresh.disabled' => 'Izibuyekezo zezinga lokushintshanisa ngokuzenzakalelayo zivaliwe.',
+    'webshop.currency.refresh.failed' => 'Ayikwazanga ukuthola izinga lokushintshanisa lamanje — sicela uzame futhi maduze.',
+    'webshop.currency.refresh.updated' => 'Izinga lokushintshanisa libuyekeziwe.',
+    'welcome' => 'Siyakwamukela',
+    'whatsapp' => 'I-WhatsApp',
+    'whatsapp.business.cloud.api.access.token' => 'Ithokheni Yokufinyelela Ehlala Njalo (kusuka kumsebenzisi wesistimu kuzilungiselelo zebhizinisi)',
+    'whatsapp.business.cloud.api.business.account.id' => 'I-ID ye-Akhawunti Yebhizinisi le-WhatsApp',
+    'whatsapp.business.cloud.api.enable' => 'Nika amandla i-WhatsApp',
+    'whatsapp.business.cloud.api.enabled.not' => 'I-WhatsApp Ayisebenzi',
+    'whatsapp.business.cloud.api.general.purpose' => '<b>I-WhatsApp Business Cloud API ithumela izaziso ezilungele ama-invoyisi kumakhasimende ngethempulethi yomlayezo evunyelwe kusengaphambili, ekhonjwe yi-ID Yenombolo Yocingo kanye nethokheni yokufinyelela ngezansi.</b>',
+    'whatsapp.business.cloud.api.not.configured' => 'I-WhatsApp ayilungiselelwe ngokugcwele (i-ID Yenombolo Yocingo, i-Access Token kanye negama Lesifanekiso konke kuyadingeka).',
+    'whatsapp.business.cloud.api.phone.number.id' => 'I-ID Yenombolo Yocingo (kusuka ku-WhatsApp -&gt; Ukusethwa kwe-API — hhayi inombolo yocingo ebonakalayo)',
+    'whatsapp.business.cloud.api.template.language' => 'Ikhodi Yolimi Lwesifanekiso Somlayezo (isb. en_GB)',
+    'whatsapp.business.cloud.api.template.name' => 'Igama Lesifanekiso Somlayezo Ovunyelwe',
+    'whatsapp.business.cloud.api.test.message.sent' => 'Umlayezo wokuhlola we-WhatsApp uthunyelwe.',
+    'whatsapp.business.cloud.api.test.message.sent.not' => 'Umlayezo wokuhlola we-WhatsApp AWUTHUNYELWANGA.',
+    'whatsapp.business.cloud.api.test.recipient.not.set' => 'Inombolo Yomamukeli Wokuhlola ayikakamiswa.',
+    'whatsapp.business.cloud.api.test.recipient.number' => 'Inombolo Yomamukeli Wokuhlola (kumele iqinisekiswe kusengaphambili ku-Meta ngenkathi uhlelo lokusebenza lusemodi yokuthuthukisa)',
+    'whatsapp.business.cloud.api.webhook.current.status' => '<b>Ukusetshenziswa kwamanje:</b> Ukuxhawulana kokuqinisekiswa kwe-GET kuyasetshenziswa ukuze ukubhaliswa kwe-webhook kulondolozwe kudeshibhodi ye-Meta. Imicimbi ye-POST engenayo (izimo zokulethwa, izimpendulo) ilogwa kuphela — ayikacutshungulwa, njengoba kunjalo nange-webhook ye-Telegram namuhla.',
+    'whatsapp.business.cloud.api.webhook.future.use' => '<b>Ikusasa:</b> Ukucubungula imicimbi engenayo kungaqopha ngokuzenzakalelayo ukulethwa/ukufunda isimo noma ukuphatha izimpendulo zamakhasimende.',
+    'whatsapp.business.cloud.api.webhook.url.this.site' => 'I-WhatsApp Webhook Url yale sayithi — yifake, kanye ne-Verify Token ngezansi, ku-WhatsApp &gt; Ukucushwa &gt; Ama-Webhooks kudeshibhodi ye-Meta.',
+    'whatsapp.business.cloud.api.webhook.verify.token' => 'Ithokheni Lokuqinisekisa le-Webhook (inani olikhethayo; lifakwe kudeshibhodi ye-Meta futhi laphinde lazwakala ngesikhathi sokuxhawulana kokuqinisekisa)',
+    'worker' => 'Isisebenzi',
+    'worker.assign' => 'Nika',
+    'worker.assigned' => 'Isisebenzi Esibekiwe',
+    'worker.firstname' => 'Igama',
+    'worker.lastname' => 'Isibongo',
+    'worker.linked.login' => 'Ukungena Okuxhunyiwe',
+    'worker.unassigned' => 'Akunikeziwe',
+    'workers' => 'Abasebenzi',
+    'wrong.passwordreset.token' => 'Akekho umsebenzisi otholelwe ithokheni yokusetha kabusha enikeziwe.Uma ucabanga ukuthi leli iphutha,xhumana nomlawuli wakho.',
+    'year' => 'Unyaka',
+    'year.prefix' => 'Isiqalo Sonyaka',
+    'years' => 'Iminyaka',
+    'yes' => 'Yebo',
+    'zip' => 'Ikhodi Yeposi',
+    'zip.code' => 'Ikhodi Yeposi',
 ];
-

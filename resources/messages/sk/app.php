@@ -3,3187 +3,2311 @@
 declare(strict_types=1);
 
 return [
-'account.information' => 'Informácie o účte',
-'active' => 'Aktívne',
-'add' => 'Pridať',
-'add.invoice' => 'Pridať faktúru',
-'add.client' => 'Pridať klienta',
-'add.family' => 'Pridať rodinu',
-'add.files' => 'Pridať súbory...',
-'add.invoice.tax' => 'Pridať daň z faktúry',
-'add.new.row' => 'Pridať nový riadok',
-'add.note' => 'Pridať poznámku',
-'add.notes' => 'Pridať poznámky',
-'add.payment.provider' => 'Pridať poskytovateľa platieb',
-'add.product' => 'Pridať produkt',
-'add.quote' => 'Pridať cenovú ponuku',
-'add.quote.tax' => 'Pridať cenovú ponuku Daň',
-'add.task' => 'Pridať úlohu',
-'add.unit' => 'Pridať jednotku',
-'address' => 'Adresa',
-'administrator' => 'Správca',
-'after.amount' => 'Po sume',
-'after.amount.space' => 'Za sumou s pevnou medzerou',
-'aging' => 'Starnutie faktúry',
-'aging.1.15' => '1 – 15 dní',
-'aging.16.30' => '16 – 30 dní',
-'aging.above.30' => 'Nad 30 dní',
-'alert.no.client.assigned' => 'K tomuto projektu nie je '
-	. 'priradený žiadny klient.',
-'alert.no.tasks.found' => 'Pre tento projekt sa nenašli '
-	. 'žiadne úlohy.',
-'alert.task.delete' => 'Pozor! Chcete odstrániť úlohu, ktorá '
-	. 'bola použitá na vygenerovanie faktúry.',
-'all' => 'Všetky',
-'allowance.or.charge' => 'Príspevok alebo poplatok',
-'allowance.or.charge.add' => 'Úroveň dokumentu (t.'
-	. 'j.'
-	. 'NIE úroveň riadku faktúry) Pridanie '
-	. 'príspevku alebo poplatku',
-'allowance.or.charge.allowance' => 'Príspevok',
-'allowance.or.charge.allowance.vat' =>
-	'DPH z príspevku',
-'allowance.or.charge.amount' => 'Výška poplatku za príspevok (číselný '
-	. 'multiplikátor ako percento vynásobené základnou '
-	. 'sumou)',
-'allowance.or.charge.base.amount' =>
-	'Základná suma',
-'allowance.or.charge.charge' => 'Poplatok',
-'allowance.or.charge.charge.vat' =>
-	'DPH z ceny',
-'allowance.or.charge.edit.allowance' =>
-	'Úprava príspevku na úrovni dokumentu '
-	. '(t.'
-	. 'j.'
-	. 'NIE na úrovni riadku faktúry)',
-'allowance.or.charge.edit.charge' =>
-	'Úprava účtovania na úrovni dokumentu '
-	. '(t.'
-	. 'j.'
-	. 'NIE na úrovni riadku faktúry)',
-'allowance.or.charge.index' => 'Index príspevku alebo poplatkov vo '
-	. 'vzťahu k položke riadku',
-'allowance.or.charge.inv' => 'Príspevok alebo poplatok za faktúru',
-'allowance.or.charge.item' => 'Príplatok alebo poplatok za položku '
-	. 'faktúry',
-'allowance.or.charge.item.add' =>
-	'Príspevok/Poplatok Pridať',
-'allowance.or.charge.multiplier.factor.numeric' =>
-	'Multiplikačný faktor Číselný',
-'allowance.or.charge.reason' => 'Dôvod',
-'allowance.or.charge.reason.code' =>
-	'Kód dôvodu',
-'already.paid' => 'Táto faktúra už bola uhradená.',
-'amount' => 'Suma položky faktúry',
-'amount.add' => 'Položka faktúry Suma Pridať',
-'amount.due' => 'Dlžná suma',
-'amount.no' => 'Neexistuje žiadna suma faktúry',
-'amount.settings' => 'Nastavenia sumy',
-'amounts' => 'Sumy faktúr',
-'any.family' => 'Akákoľvek rodina',
-'apply.after.item.tax' => 'Použiť po zdanení položky',
-'apply.before.item.tax' => 'Použiť pred zdanením položky',
-'approve' => 'Schváliť',
-'approve.this.quote' => 'Schváliť túto cenovú ponuku',
-'approved' => 'Schválené',
-'archive' => 'Archivujte súbor PDF v sekcii '
-	. 'Nahrávanie/Archív',
-'assign.client' => 'Priradiť klienta',
-'assign.client.on.signup' => 'Pri registrácii priraďte klienta používateľovi.',
-'assign.client.on.signup.default.age.minimum.eighteen' =>
-	'Pri registrácii priraďte používateľovi klienta '
-	. 's predvoleným minimálnym vekom osemnásť.',
-'assign.client.on.signup.done' =>
-	'Pri registrácii bol používateľovi priradený '
-	. 'klient.',
-'assigned.clients' => 'Priradení klienti',
-'attachment.list' => 'Zoznam príloh',
-'attachments' => 'Prílohy',
-'automatic.email.on.recur' => 'Automaticky posielať opakujúce sa faktúry '
-	. 'e-mailom',
-'back' => 'Späť',
-'balance' => 'Zostatok',
-'balance.does.not.equal.zero' =>
-	'Zostatok sa nerovná nule.'
-	. 'Stav je Zaplatené =&gt; Zostatok '
-	. 'by mal byť nula.',
-'base.invoice' => 'Základná faktúra',
-'bcc' => 'Skrytá kópia',
-'bcc.mails.to.admin' => 'Odoslať všetky odchádzajúce e-maily ako '
-	. 'skrytú kópiu na administrátorský účet',
-'bcc.mails.to.admin.hint' =>
-	'Účet správcu je účet, ktorý '
-	. 'bol vytvorený pri inštalácii InvoicePlane.',
-'before.amount' => 'Pred sumou',
-'bill.to' => 'Fakturovať komu',
-'birthdate' => 'Dátum narodenia',
-'body' => 'Telo',
-'boolean' => 'Boolovská hodnota',
-'bootstrap5' => 'Bootstrap 5',
-'bootstrap5.alert.close.button.font.size' =>
-	'Veľkosť písma tlačidla Zatvoriť upozornenie',
-'bootstrap5.alert.message.font' => 'Písmo upozornenia',
-'bootstrap5.alert.message.font.size' =>
-	'Veľkosť písma upozornenia',
-'bootstrap5.layout.invoice.navbar.font' =>
-	'Rozloženie písma navigačného panela faktúr',
-'bootstrap5.layout.invoice.navbar.font.size' =>
-	'Veľkosť písma navigačného panela faktúry '
-	. 'v rozložení',
-'bootstrap5.offcanvas.enable' => 'Povoliť Offcanvas',
-'bootstrap5.offcanvas.placement' => 'Umiestnenie mimo plátna, napr.'
-	. 'hore, dole, začiatok t.'
-	. 'j.'
-	. 'vľavo, koniec t.'
-	. 'j.'
-	. 'vpravo',
-'breadcrumb.product.index' => 'Index produktov',
-'breadcrumb.product.property.index' => 'Index vlastností produktu',
-'calculate.discounts' => 'Vypočítať zľavy',
-'calendar.day.1' => '1 deň',
-'calendar.day.15' => '15 dní',
-'calendar.day.2' => '2 dni',
-'calendar.day.3' => '3 dni',
-'calendar.day.30' => '30 dní',
-'calendar.day.4' => '4 dni',
-'calendar.day.5' => '5 dní',
-'calendar.day.6' => '6 dní',
-'calendar.month.1' => '1 mesiac',
-'calendar.month.10' => '10 mesiacov',
-'calendar.month.11' => '11 mesiacov',
-'calendar.month.2' => '2 mesiace',
-'calendar.month.3' => '3 mesiace',
-'calendar.month.4' => '4 mesiace',
-'calendar.month.5' => '5 mesiacov',
-'calendar.month.6' => '6 mesiacov',
-'calendar.month.7' => '7 mesiacov',
-'calendar.month.8' => '8 mesiacov',
-'calendar.month.9' => '9 mesiacov',
-'calendar.week.1' => '1 týždeň',
-'calendar.week.2' => '2 týždne',
-'calendar.week.3' => '3 týždne',
-'calendar.week.4' => '4 týždne',
-'calendar.year.1' => '1 rok',
-'calendar.year.2' => '2 roky',
-'calendar.year.3' => '3 roky',
-'calendar.year.4' => '4 roky',
-'calendar.year.5' => '5 rokov',
-'can.be.changed' => 'Dá sa zmeniť',
-'cancel' => 'Zrušiť',
-'canceled' => 'Zrušené',
-'case.date' => 'Dátum prípadu',
-'case.number' => 'Číslo prípadu',
-'cash.discount' => 'Zľava v hotovosti',
-'category.primary' => 'Kategória Primárne',
-'category.secondary' => 'Kategória Sekundárne',
-'caution.delete.invoices' => 'Len na testovanie:'
-	. 'Odstrániť všetky faktúry a súvisiace '
-	. 'záznamy.'
-	. '(Pozri funkciu inv/flush)',
-'caution.deleted.invoices' => 'Len na testovanie:'
-	. 'Všetky faktúry a súvisiace polia '
-	. 'boli odstránené.',
-'cc' => 'Kópia',
-'change.client' => 'Zmeniť klienta',
-'change.password' => 'Zmeniť heslo',
-'checking.for.news' => 'Kontrola správ...',
-'checking.for.updates' => 'Kontrola aktualizácií...',
-'city' => 'Mesto',
-'claim' => 'Začal právny nárok',
-'cldr' => 'v',
-'client' => 'Klient',
-'client.access' => 'Prístup klienta',
-'client.add' => 'Pridanie klienta',
-'client.age' => 'Vek',
-'client.age.hint' => 'Toto pole je povinné a '
-	. 'klient by mal mať zo '
-	. 'zákona aspoň 16 rokov.',
-'client.already.exists' => 'Klient už existuje!',
-'client.birthdate.hint' => 'Ak dátum narodenia nie je '
-	. 'známy, zadajte 01.'
-	. '01.'
-	. '1901',
-'client.building.number' => 'Číslo budovy klienta',
-'client.contract.period.end' => 'Koniec obdobia',
-'client.contract.period.start' => 'Začiatok obdobia',
-'client.contract.reference' => 'Referenčné číslo zmluvy',
-'client.custom' => 'Klient na mieru',
-'client.custom.add' => 'Pridanie klienta',
-'client.delete.history.exits.no' =>
-	'Nedá sa odstrániť.'
-	. 'História klienta existuje.',
-'client.detail.changes' => 'Ak sa tento údaj zmení,'
-	. 'pošlite nám e-mail.',
-'client.error.summary' => 'Súhrn chýb',
-'client.form' => 'Klientsky formulár',
-'client.frequency' => 'Frekvencia klientov',
-'client.group' => 'Skupina klientov',
-'client.has.not.assigned' => 'Títo klienti neboli priradení k '
-	. 'používateľskému účtu.'
-	. 'Jeden alebo viac klientov na '
-	. 'používateľský účet.',
-'client.has.not.user.account' =>
-	'Tento klient nemá používateľský účet '
-	. 'alebo nie je momentálne priradený '
-	. 'k žiadnemu používateľovi.'
-	. '1.'
-	. 'Uistite sa, že klient je '
-	. 'zaregistrovaný, t.'
-	. 'j.'
-	. 'má používateľský účet, alebo priraďte '
-	. 'tohto klienta k aktuálne zaregistrovanému '
-	. 'používateľovi.'
-	. '2.'
-	. 'Nastavenia .'
-	. 'Používateľský účet pre faktúry .'
-	. 'Pridať používateľský účet 3.'
-	. 'Priraďte tohto klienta k používateľskému '
-	. 'účtu 4.'
-	. 'V tomto aktuálnom stave nebude '
-	. 'možné pre tohto klienta vytvárať '
-	. 'faktúry a cenové ponuky.',
-'client.has.user.account' => 'Používateľský účet',
-'client.import.list.blank' => 'Zoznam importovaných klientov je prázdny',
-'client.name' => 'Meno klienta',
-'client.not.allocated.to.user' =>
-	'Klient nie je pridelený používateľovi',
-'client.note' => 'Poznámka klienta',
-'client.note.add' => 'Poznámka klienta Pridať',
-'client.note.date' => 'Dátum klienta',
-'client.note.view' => 'Zobrazenie poznámky klienta',
-'client.notes' => 'Poznámky klienta',
-'client.number' => 'Číslo klienta',
-'client.peppol' => 'Detaily klienta Peppol',
-'client.peppol.accounting.cost' => 'Kód nákladov na účtovníctvo klienta '
-	. 'pre účtovníctvo',
-'client.peppol.add' => 'Pridajte údaje o Peppole pre '
-	. 'elektronickú fakturáciu',
-'client.peppol.buyer.reference.default' =>
-	'Referenčné číslo kupujúceho:'
-	. 'Ak klient neuviedol kontaktnú osobu '
-	. 'pre objednávku klienta, ide o '
-	. 'predvolené referenčné číslo kupujúceho alebo '
-	. 'objednávajúcu osobu.',
-'client.peppol.buyer.reference.example' =>
-	'napr.'
-	. 'meno osoby, ktorá si bežne '
-	. 'objednáva, číslo zamestnanca osoby, ktorá '
-	. 'si bežne objednáva, alebo kód '
-	. 'identifikujúci túto osobu alebo oddelenie/skupinu',
-'client.peppol.clientpeppols.form' => 'Formulár pre účtovného klienta/zákazníka',
-'client.peppol.edit' => 'Úprava údajov Peppol pre elektronickú '
-	. 'fakturáciu',
-'client.peppol.endpointid' => 'ID koncového bodu:'
-	. 'E-mailová adresa',
-'client.peppol.endpointid.schemeid' => 'ID koncového bodu – ID '
-	. 'schémy založené na 4-miestnom kóde '
-	. 'EAS (elektronická adresná schéma), napr.'
-	. '0192',
-'client.peppol.financial.institution.branchid' =>
-	'ID pobočky finančnej inštitúcie',
-'client.peppol.identificationid' => 'Identifikačné číslo',
-'client.peppol.identificationid.schemeid' => 'Identifikačné ID – schemeID',
-'client.peppol.legal.entity.company.legal.form' =>
-	'Právna forma právnickej osoby – '
-	. 'spoločnosť – ďalšie právne informácie '
-	. 'relevantné pre predávajúceho, napr.'
-	. 'základné imanie',
-'client.peppol.legal.entity.companyid' =>
-	'IČO právnickej osoby',
-'client.peppol.legal.entity.companyid.schemeid' =>
-	'ID právnickej osoby – schemeID',
-'client.peppol.legal.entity.registration.name' =>
-	'Názov registračného čísla právnickej osoby',
-'client.peppol.not.found' => 'Klient alebo zákazník si nenastavil '
-	. 'svoje údaje o Peppole.',
-'client.peppol.not.found.accounting.cost' =>
-	'Nenájdené:'
-	. 'Účtovné náklady alebo textová hodnota,'
-	. 'ktorá určuje, kam sa majú '
-	. 'zaúčtovať relevantné údaje do finančných '
-	. 'účtov kupujúceho.',
-'client.peppol.not.found.delivery.location' =>
-	'Miesto doručenia Názov krajiny sa '
-	. 'nenašiel',
-'client.peppol.not.found.id' =>
-	'Klient nevyplnil svoje ID účtu '
-	. 'v rámci svojich online údajov '
-	. 'o klientovi Peppol.',
-'client.peppol.not.found.id.supplier.assigned' =>
-	'ID priradeného účtu dodávateľa klienta '
-	. 'Peppol sa nenašlo',
-'client.peppol.not.found.invoice' =>
-	'Nenašla sa žiadna prepojená faktúra',
-'client.peppol.not.found.purchase.order' =>
-	'K predajnej objednávke nie je '
-	. 'priradené žiadne číslo nákupnej objednávky.',
-'client.peppol.not.found.purchase.order.item.number' =>
-	'Položka objednávky predaja nemá priradené '
-	. 'žiadne zodpovedajúce identifikačné číslo položky '
-	. 'objednávky (identifikácia položky kupujúceho).'
-	. 'Administrátor:'
-	. 'Upravte číslo položky objednávky predaja '
-	. 'faktúry.',
-'client.peppol.not.found.purchase.order.line.number' =>
-	'Číslo riadku predajnej objednávky nemá '
-	. 'priradené žiadne zodpovedajúce číslo riadku '
-	. 'nákupnej objednávky (OrderLineReference LineID).'
-	. 'Správca:'
-	. 'Upravte číslo riadku predajnej objednávky '
-	. 'faktúry.',
-'client.peppol.not.found.sales.order' =>
-	'Objednávka predaja neexistuje',
-'client.peppol.payee.financial.account.name' =>
-	'Názov finančného účtu príjemcu platby',
-'client.peppol.payee.financial.accountid' =>
-	'ID finančného účtu príjemcu platby',
-'client.peppol.record.updated.successfully' =>
-	'Záznam Peppolu bol úspešne aktualizovaný',
-'client.peppol.supplier.assigned.account.id' =>
-	'ID priradeného účtu dodávateľa',
-'client.peppol.taxschemecompanyid' => 'IČO spoločnosti v daňovom systéme',
-'client.peppol.taxschemeid' => 'ID daňovej schémy',
-'client.postaladdress' => 'Poštová adresa',
-'client.postaladdress.add' => 'Pridať poštovú adresu klienta',
-'client.postaladdress.additional.street.name' =>
-	'Názov dodatočnej ulice',
-'client.postaladdress.available' => 'Dostupné poštové adresy',
-'client.postaladdress.building.number' => 'Číslo budovy',
-'client.postaladdress.city.name' => 'Názov mesta',
-'client.postaladdress.country' => 'Krajina',
-'client.postaladdress.countrysubentity' => 'Podjednotka krajiny',
-'client.postaladdress.none' => 'Klient nemá poštovú adresu',
-'client.postaladdress.postalzone' => 'Poštová zóna',
-'client.postaladdress.street.name' => 'Názov ulice',
-'client.purchase.order.number' => 'Číslo objednávky klienta',
-'client.streets' => 'Ulice',
-'client.surname' => 'Priezvisko klienta',
-'client.surname.optional' => 'Priezvisko klienta (voliteľné)',
-'client.title' => 'Titul klienta (pán/pani/slečna/Dr.'
-	. '/profesor)',
-'client.title.doctor' => 'Dr.',
-'client.title.miss' => 'Slečna',
-'client.title.mr' => 'Pán',
-'client.title.mrs' => 'Pani',
-'client.title.professor' => 'Profesor',
-'client.view' => 'Pohľad klienta',
-'clients' => 'Klienti',
-'close' => 'Zatvoriť',
-'closed' => 'ZATVORENÉ',
-'column' => 'Stĺpec',
-'common.date.created' => 'Dátum vytvorenia',
-'common.date.modified' => 'Dátum úpravy',
-'common.name' => 'Meno',
-'company' => 'Spoločnosť',
-'company.deleted' => 'Spoločnosť bola vymazaná',
-'company.not.deleted' => 'Spoločnosť nebola odstránená, pretože k '
-	. 'nej máte pripojený firemný profil.',
-'company.private' => 'Spoločnosť Súkromná',
-'company.private.logo' => 'Logo spoločnosti',
-'company.private.logo.height' => 'Výška loga',
-'company.private.logo.margin' => 'Okraj loga',
-'company.private.logo.width' => 'Šírka loga',
-'company.private.logo.will.be.removed.from.uploads.and.public.folder' =>
-	'Logo bude odstránené z nahraných '
-	. 'súborov a verejného priečinka',
-'company.public' => 'Verejná spoločnosť',
-'complete' => 'Dokončené',
-'confirm' => 'Potvrdiť',
-'confirm.deletion' => 'Potvrdiť vymazanie',
-'contact.information' => 'Kontaktné informácie',
-'continue' => 'Pokračovať',
-'continue.with.developer.sandbox.hmrc' =>
-	'Pokračovať s Developer Gov Sandbox '
-	. 'UK',
-'continue.with.facebook' => 'Pokračovať s Facebookom',
-'continue.with.github' => 'Pokračovať s Githubom',
-'continue.with.google' => 'Pokračovať s Googlom',
-'continue.with.govuk' => 'Pokračujte s vládou Spojeného kráľovstva',
-'continue.with.linkedin' => 'Pokračovať s LinkedInom',
-'continue.with.microsoftonline' => 'Pokračujte s MicrosoftOnline',
-'continue.with.vkontakte' => 'Pokračujte s VKontakte',
-'continue.with.x' => 'Pokračovať s X',
-'continue.with.yandex' => 'Pokračujte s Yandexom',
-'contract' => 'Zmluva',
-'contract.add' => 'Pridať zmluvu',
-'contract.contracts' => 'Zmluvy',
-'contract.create' => 'Vytvorte si zmluvy cez:'
-	. 'Faktúra.'
-	. 'Zobraziť.'
-	. 'Možnosti.'
-	. 'Upraviť.'
-	. 'Zmluva bude vytvorená pre klienta,'
-	. 'ktorému je faktúra vystavená.'
-	. 'Prepojte túto zmluvu s budúcimi '
-	. 'faktúrami.',
-'contract.index.button.list' => 'Faktúry',
-'contract.name' => 'Meno',
-'contract.none' => 'Pripomienka:'
-	. 'Pre túto faktúru nebola nastavená '
-	. 'žiadna zmluva',
-'contract.period.end' => 'Koniec obdobia',
-'contract.period.start' => 'Začiatok obdobia',
-'contract.reference' => 'Referencia',
-'contracts' => 'Zmluvy',
-'copy.invoice' => 'Kópia faktúry',
-'copy.quote' => 'Kopírovať cenovú ponuku',
-'count' => 'Počet faktúr',
-'country' => 'Krajina',
-'create' => 'Vytvoriť',
-'create.credit.invoice' => 'Vytvoriť dobropisovú faktúru',
-'create.credit.invoice.alert' => 'Vytvorením dobropisnej faktúry sa aktuálna '
-	. 'faktúra stane <em>iba na čítanie,</em> '
-	. 'čo znamená, že faktúru už '
-	. 'nebudete môcť upravovať.'
-	. 'Dobropisná faktúra bude obsahovať aktuálny '
-	. 'stav so všetkými položkami, ale '
-	. 'so zápornými sumami a zostatkami.',
-'create.invoice' => 'Vytvoriť faktúru',
-'create.product' => 'Vytvoriť produkt',
-'create.project' => 'Vytvoriť projekt',
-'create.quote' => 'Vytvoriť cenovú ponuku',
-'create.recurring' => 'Vytvoriť opakujúce sa',
-'create.task' => 'Vytvoriť úlohu',
-'created' => 'Vytvorené',
-'creation.unsuccessful' => 'Vytvorenie faktúry nebolo úspešné',
-'credit.invoice' => 'Dobropisná faktúra',
-'credit.invoice.date' => 'Dátum dobropisovej faktúry',
-'credit.invoice.details' => 'Podrobnosti o kreditnej faktúre',
-'credit.invoice.for.invoice' => 'Dobropis',
-'credit.note.creation.successful' => 'Vytvorenie dobropisu bolo úspešné',
-'credit.note.creation.unsuccessful' => 'Vytvorenie dobropisu alebo dobropisu na '
-	. 'zrušenie faktúry nebolo úspešné',
-'creditcard.cvv' => 'CVV / CSC',
-'creditcard.details' => 'Údaje o kreditnej karte',
-'creditcard.expiry.month' => 'Mesiac expirácie',
-'creditcard.expiry.year' => 'Rok expirácie',
-'creditcard.number' => 'Číslo kreditnej karty',
-'cron.key' => 'CRON kľúč',
-'curl.store.cove.api.get.legal.entity.id.successful' =>
-	'Získajte úspešnú právnickú osobu',
-'curl.store.cove.api.setup.legal.entity.successful' =>
-	'Volanie API nastavenia Store Cove '
-	. '– právnická osoba úspešná',
-'curl.store.cove.api.setup.successful' =>
-	'Volanie API nastavenia obchodu Cove '
-	. 'bolo úspešné',
-'currency' => 'Mena',
-'currency.code' => 'Kód meny',
-'currency.symbol' => 'Symbol meny',
-'currency.symbol.placement' => 'Umiestnenie symbolu meny',
-'current.day' => 'Aktuálny deň',
-'current.month' => 'Aktuálny mesiac',
-'current.version' => 'Aktuálna verzia',
-'current.year' => 'Aktuálny rok',
-'current.yy' => 'Aktuálny rok (2-miestny formát)',
-'custom' => 'Faktúra na mieru',
-'custom.field' => 'Vlastné pole',
-'custom.field.add' => 'Pridať vlastné pole',
-'custom.field.form' => 'Formulár vlastného poľa',
-'custom.field.location' => 'Pozícia dokumentu',
-'custom.field.number' => 'Číslo',
-'custom.field.required' => 'Povinné',
-'custom.fields' => 'Vlastné polia',
-'custom.invoice.add' => 'Pridanie vlastnej faktúry',
-'custom.title' => 'Vlastný názov',
-'custom.value' => 'Vlastná hodnota',
-'custom.value.delete' => 'Najprv odstráňte vlastnú hodnotu',
-'custom.value.new' => 'Vlastná hodnota Nová',
-'custom.values' => 'Vlastné hodnoty',
-'custom.values.edit' => 'Upraviť vlastnú hodnotu',
-'custom.values.new' => 'Nová vlastná hodnota',
-'dashboard' => 'Prístrojová doska',
-'database' => 'Databáza',
-'database.properly.configured' => 'Databáza je správne nakonfigurovaná',
-'date' => 'Dátum faktúry',
-'date.actual.delivery' => 'Dátum skutočného doručenia',
-'date.applied' => 'Dátum použitia',
-'date.created' => 'Dátum vytvorenia',
-'date.format' => 'Formát dátumu',
-'date.issued' => 'Dátum vydania / vytvorenia',
-'date.supplied' => 'Dátum dodania',
-'dates' => 'Dátumy faktúr',
-'datetime.immutable.date.created' => 'Vytvoriť',
-'datetime.immutable.date.created.mySql.format.year.month.filter' =>
-	'Ym',
-'datetime.immutable.date.modified' => 'Proti',
-'datetime.immutable.time.created' => 'Čas',
-'days' => 'Dni',
-'debug' => 'Režim ladenia zapnutý',
-'decimal.point' => 'Desatinná čiarka',
-'default' => 'Predvolené',
-'default.country' => 'Predvolená krajina',
-'default.email.template' => 'Predvolená šablóna e-mailu',
-'default.hourly.rate' => 'Predvolená hodinová sadzba',
-'default.invoice.group' => 'Predvolená skupina faktúr',
-'default.invoice.tax.rate' => 'Predvolená sadzba dane z faktúry',
-'default.invoice.tax.rate.placement' =>
-	'Umiestnenie predvolenej sadzby dane z '
-	. 'faktúry',
-'default.item.tax.rate' => 'Predvolená sadzba dane z položky',
-'default.list.limit' => 'Počet položiek v zoznamoch',
-'default.notes' => 'Predvolené poznámky',
-'default.payment.method' => 'Predvolený spôsob platby',
-'default.pdf.template' => 'Predvolená šablóna PDF',
-'default.public.template' => 'Predvolená verejná šablóna',
-'default.quote.group' => 'Predvolená skupina cenových ponúk',
-'default.terms' => 'Predvolené podmienky',
-'delete' => 'Odstrániť',
-'delete.attachment.warning' => 'Naozaj chcete odstrániť túto prílohu?',
-'delete.client' => 'Odstrániť klienta',
-'delete.client.warning' => 'Ak vymažete tohto klienta, vymažete '
-	. 'aj všetky faktúry, cenové ponuky '
-	. 'a platby súvisiace s týmto '
-	. 'klientom.'
-	. 'Naozaj chcete natrvalo vymazať tohto '
-	. 'klienta?',
-'delete.invoice' => 'Odstrániť faktúru',
-'delete.invoice.warning' => 'Ak túto faktúru vymažete, nebudete '
-	. 'ju môcť neskôr obnoviť.'
-	. 'Naozaj chcete túto faktúru natrvalo '
-	. 'vymazať?',
-'delete.quote' => 'Odstrániť cenovú ponuku',
-'delete.quote.warning' => 'Ak túto cenovú ponuku vymažete,'
-	. 'nebudete ju môcť neskôr obnoviť.'
-	. 'Naozaj chcete túto cenovú ponuku '
-	. 'natrvalo vymazať?',
-'delete.record.warning' => 'Naozaj chcete tento záznam vymazať?',
-'delete.sent' => 'Nedá sa vymazať - faktúra '
-	. 'odoslaná',
-'delete.tax.warning' => 'Naozaj chcete odstrániť túto daň?',
-'delete.user.client.warning' => 'Naozaj chcete zrušiť priradenie tohto '
-	. 'klienta k tomuto používateľovi?',
-'deleted' => 'Odstránené',
-'deletion.forbidden' => 'Mazanie faktúr je zakázané.'
-	. 'Kontaktujte, prosím, administrátora alebo si '
-	. 'pozrite dokumentáciu.',
-'delivery' => 'Podrobnosti o doručení:'
-	. 'Začiatok/konec faktúry/dodacieho obdobia',
-'delivery.actual.delivery.date' => 'Skutočný dátum doručenia',
-'delivery.add' => 'Pridať doručenie',
-'delivery.date.created' => 'Dátum vytvorenia',
-'delivery.date.modified' => 'Dátum doručenia upravený',
-'delivery.end.date' => 'Dátum ukončenia dodania/fakturačného obdobia',
-'delivery.location' => 'Miesto doručenia',
-'delivery.location.add' => 'Pridať miesto doručenia',
-'delivery.location.add.in.invoice' =>
-	'Pridajte miesto doručenia v časti '
-	. 'Faktúra .'
-	. 'Zobraziť .'
-	. 'Možnosti .'
-	. 'Upraviť',
-'delivery.location.building.number' => 'Číslo budovy',
-'delivery.location.client' => 'Miesta doručenia klienta',
-'delivery.location.delete' => 'Miesto doručenia Odstrániť',
-'delivery.location.edit' => 'Upraviť miesto doručenia',
-'delivery.location.electronic.address.scheme' =>
-	'Schéma elektronických adries (zoznam kódov) '
-	. 'Predvolené:'
-	. '0088 Európske číslovanie artiklov (EAN) '
-	. 'Kód lokality alebo (GLN) Globálne '
-	. 'čísla lokality',
-'delivery.location.global.location.number' =>
-	'Globálne číslo lokality (13 číslic)',
-'delivery.location.id.not.found' =>
-	'Globálne číslo lokality doručenia ID '
-	. 'nebolo nájdené',
-'delivery.location.index.button.list' =>
-	'Faktúry',
-'delivery.location.none' => 'K tejto faktúre nie je '
-	. 'prepojené žiadne miesto doručenia',
-'delivery.location.peppol.output' => 'K tejto faktúre nie je '
-	. 'priradené žiadne miesto doručenia, preto '
-	. 'Peppol nemá žiadny výstup.',
-'delivery.location.plural' => 'Miesta doručenia',
-'delivery.location.view' => 'Zobrazenie miesta doručenia',
-'delivery.party' => 'Donášková párty',
-'delivery.party.add' => 'Donášková skupina Pridať',
-'delivery.party.edit' => 'Doručovacia skupina Upraviť',
-'delivery.party.name' => ' Názov doručujúcej strany',
-'delivery.party.view' => 'Pohľad na donáškovú skupinu',
-'delivery.start.date' => 'Dátum začiatku dodania/fakturačného obdobia',
-'description' => 'Popis',
-'description.document' => 'Popis dokumentu',
-'details' => 'Detaily',
-'development.progress' => 'Pokrok vo vývoji',
-'development.schema' => 'Schéma',
-'disable.flash.messages' => 'Zakázať bleskové správy faktúr',
-'disable.quickactions' => 'Zakázať rýchle akcie',
-'disable.sidebar' => 'Zakázať bočný panel',
-'discount' => 'Zľava',
-'discount.amount' => 'Výška zľavy',
-'discount.percent' => 'Percentuálna zľava',
-'discount.percentage' => 'Percentuálna zľava',
-'document.description' => 'Popis dokumentu Peppol',
-'documentation' => 'Dokumentácia',
-'download' => 'Stiahnuť',
-'download.pdf' => 'Stiahnuť PDF',
-'draft' => 'Návrh',
-'draft.guest' => 'Návrhy faktúr si klienti nemôžu '
-	. 'zobraziť.',
-'draft.number.off' => 'Nové koncepty faktúr nebudú mať '
-	. 'číslo faktúry.'
-	. 'Označte ich ako odoslané, aby '
-	. 'ste získali číslo faktúry.',
-'draft.number.on' => 'Nové návrhy faktúr budú mať '
-	. 'číslo faktúry',
-'drop.files.here' => 'Sem presuňte súbory!',
-'due.date' => 'Dve rande',
-'early.settlement.cash.discount' => 'Zľava v hotovosti pri predčasnom '
-	. 'vyrovnaní',
-'edit' => 'Upraviť',
-'elements' => 'Prvky',
-'email' => 'E-mail',
-'email.address' => 'E-mailová adresa',
-'email.date' => 'Dátum odoslania e-mailom',
-'email.default' => 'Predvolené',
-'email.default.none.set' => 'Nebola nastavená žiadna predvolená hodnota',
-'email.exception' => 'Výnimka pri odosielaní e-mailov.',
-'email.from.dropdown' => 'Rozbaľovací zoznam e-mailov odosielateľa, ktoré '
-	. 'sa majú zahrnúť do formulára '
-	. 'MailerWote a formulára MailInv',
-'email.include' => 'Zahrnúť',
-'email.invoice' => 'Faktúra e-mailom',
-'email.link.click.confirm' => 'Potvrďte svoju e-mailovú adresu kliknutím '
-	. 'na tento odkaz',
-'email.log' => 'Záznam odoslaných faktúr e-mailom',
-'email.logs' => 'Záznamy o odoslaní faktúr e-mailom',
-'email.logs.with.filter' => 'Odoslané e-mailom',
-'email.not.configured' => 'Pred odoslaním e-mailu musíte nakonfigurovať '
-	. 'nastavenia e-mailu v oblasti Nastavenia '
-	. 'systému.',
-'email.not.sent.successfully' => 'E-mail nebol úspešne odoslaný',
-'email.pdf.attachment' => 'Priložiť cenovú ponuku/faktúru k e-mailu?',
-'email.quote' => 'Cenovú ponuku e-mailom',
-'email.send.method' => 'Metóda odosielania e-mailov',
-'email.send.method.phpmail' => 'PHP Mail',
-'email.send.method.sendmail' => 'Odoslať poštu',
-'email.send.method.smtp' => 'SMTP',
-'email.settings' => 'Nastavenia e-mailu',
-'email.source.email.template' => 'Získané z nastavení .'
-	. 'Šablóna e-mailu',
-'email.source.user.account' => 'Získané z nastavení .'
-	. 'Používateľský účet pre faktúry',
-'email.successfully.sent' => 'E-mail bol úspešne odoslaný',
-'email.template' => 'Šablóna e-mailu',
-'email.template.add' => 'Pridať šablónu e-mailu',
-'email.template.already.exists' => 'Šablóna e-mailu už existuje!',
-'email.template.form' => 'Šablóna e-mailu',
-'email.template.from.email.leave.blank' =>
-	'Ak toto pole ponecháte prázdne,'
-	. 'e-mailová adresa používateľského účtu sa '
-	. 'vloží ako upraviteľná hodnota do '
-	. 'formulára e-mailu.'
-	. 'Napr.'
-	. 'E-mailová adresa servera účtovníka.'
-	. 'Najlepšie je použiť tu e-mailovú '
-	. 'adresu súvisiacu so serverom.',
-'email.template.from.source' => 'Zdroj e-mailu',
-'email.template.from.source.admin.email' =>
-	'E-mailová adresa administrátora (config/common/params)',
-'email.template.from.source.froms.email' =>
-	'Z predvolenej tabuľky (nastavenia.'
-	. 'Z rozbaľovacej ponuky e-mailových adries)',
-'email.template.from.source.sender.email' =>
-	'E-mailová adresa odosielateľa (config/common/params)',
-'email.template.not.configured' => 'Šablóny e-mailov nie sú nakonfigurované.'
-	. 'Nastavenia.'
-	. 'Faktúry.'
-	. 'Šablóny faktúr.'
-	. 'Predvolená šablóna e-mailu',
-'email.template.overdue' => 'Šablóna e-mailu s oneskoreným termínom',
-'email.template.paid' => 'Šablóna plateného e-mailu',
-'email.template.successfully.added' => 'Šablóna e-mailu bola úspešne pridaná',
-'email.template.successfully.deleted' => 'Šablóna e-mailu bola úspešne odstránená',
-'email.template.successfully.edited' => 'Šablóna e-mailu bola úspešne upravená',
-'email.template.tags' => 'Značky šablóny e-mailu',
-'email.template.tags.instructions' => 'Značky šablón je možné použiť '
-	. 'na pridanie dynamických informácií, ako '
-	. 'je meno klienta alebo číslo '
-	. 'faktúry, do šablóny e-mailu.'
-	. 'Kliknite na textové pole Telo '
-	. 'a potom vyberte značku z '
-	. 'rozbaľovacej ponuky.'
-	. 'Automaticky sa vloží do textového '
-	. 'poľa.',
-'email.template.type' => 'Typ šablóny e-mailu',
-'email.templates' => 'Šablóny e-mailov',
-'email.to.address.missing' => 'Musíte zadať e-mailovú adresu, na '
-	. 'ktorú sa má e-mail odoslať.',
-'email.warning.draft' => 'Návrhy faktúr musia byť najprv '
-	. 'označené ako odoslané, aby sa '
-	. 'zobrazili na strane klienta, a '
-	. 'potom ich možno odoslať e-mailom.',
-'enable.debug.mode' => 'Povoliť režim ladenia',
-'enable.online.payments' => 'Povoliť online platby',
-'enable.permissive.search.clients' => 'Povoliť permisívne vyhľadávanie',
-'enable.projects' => 'Povoliť modul Projekty',
-'enable.vat' => 'Povoliť DPH',
-'enable.vat.message' => 'Zobraziť správu s pripomienkou DPH '
-	. 'nad tlačidlom možností v zobrazeniach',
-'enable.vat.warning.line.1' =>
-	'1.'
-	. 'Pri povolenej DPH sú DPH '
-	. 'zdaňované iba jednotlivé položky na '
-	. 'faktúre.'
-	. 'T.'
-	. 'j.'
-	. 'Dane z cenovej ponuky/faktúry sa '
-	. 'na faktúre nezobrazia a budú '
-	. 'znížené na 0.',
-'enable.vat.warning.line.2' =>
-	'2.'
-	. 'Ak je povolená DPH, celková '
-	. 'suma dane sa nezahŕňa v '
-	. 'daňových položkách, ako je uvedené '
-	. 'vyššie.',
-'enable.vat.warning.line.3' =>
-	'3.'
-	. 'Vytvorte cenové ponuky/faktúry s DPH '
-	. 'v samostatnej databáze.',
-'enable.vat.warning.line.4' =>
-	'4.'
-	. 'Všetky nové položky riadkov faktúr '
-	. 's DPH sú označené príznakom '
-	. 'belongs_to_vat_invoice.',
-'enabled' => 'Povolené',
-'end' => 'Koniec',
-'end.date' => 'Dátum ukončenia',
-'enforcement' => 'Adresa prítomného úradníka pre vymáhanie '
-	. 'práva',
-'enter' => 'Zadajte',
-'enter.payment' => 'Zadajte platbu',
-'error.duplicate.file' => 'Chyba:'
-	. 'Duplicitný názov súboru, zmeňte ho!',
-'errors' => 'Chyby',
-'every' => 'Každý',
-'example' => 'Príklad',
-'expired' => 'Platnosť vypršala',
-'expires' => 'Platnosť vyprší',
-'extra.information' => 'Doplňujúce informácie',
-'failure' => 'Zlyhanie',
-'false' => 'Falošné',
-'families' => 'Rodiny',
-'family' => 'Rodina',
-'family.add' => 'Pridať rodinu',
-'family.already.exists' => 'Rodina už existuje!',
-'family.history' => 'Rodinná história existuje.'
-	. 'Nedá sa vymazať.',
-'family.name' => 'Priezvisko',
-'family.search' => 'Vyhľadávanie rodiny',
-'faq' => 'Často kladené otázky',
-'faq.ai.callback.session' => 'Copilot:'
-	. 'Ako môžem zahrnúť https:'
-	. '//github.'
-	. 'com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.'
-	. 'php na zlepšenie správy stavu '
-	. 'vo funkcii `callbackGithub`?',
-'faq.business.rules' => 'Aké sú obchodné pravidlá spoločnosti '
-	. 'Peppol?',
-'faq.gov.developer.sandbox.hmrc' =>
-	'Ako pripojím toto úložisko k '
-	. 'sandboxu pre vývojárov HMRC?',
-'faq.lamp.alpine' => 'Ako môžem nastaviť tento repozitár '
-	. 'na Linux Alpine, Apache2, mySql/mariadb '
-	. 'a PHP?',
-'faq.oauth2' => 'Ako nastavím poskytovateľa identity OAuth2,'
-	. 'napr.'
-	. 'registráciu a prihlásenie pomocou Facebooku?',
-'faq.payment.provider' => 'Ako si nastavím poskytovateľa online '
-	. 'platieb?',
-'faq.php.info.all' => 'Všetky',
-'faq.php.info.configuration' => 'Konfigurácia',
-'faq.php.info.credits' => 'Kredity',
-'faq.php.info.details' => 'Podrobnosti o informáciách v PHP',
-'faq.php.info.environment' => 'Životné prostredie',
-'faq.php.info.general' => 'Všeobecné',
-'faq.php.info.licence' => 'Licencia',
-'faq.php.info.modules' => 'Moduly',
-'faq.php.info.variables' => 'Premenné',
-'faq.shared.hosting' => 'Ako môžem hostiť yii3i na '
-	. 'zdieľanom hostingu?',
-'faq.taxpoint' => 'Ako určiť, čo je daňový '
-	. 'bod?',
-'faq.yii.requirement.checker' => 'Kontrola požiadaviek aplikácie Yii',
-'fax' => 'Fax',
-'fax.abbr' => 'F',
-'fax.number' => 'Faxové číslo',
-'field' => 'Pole',
-'filter.clients' => 'Filtrovať klientov',
-'filter.invoices' => 'Filtrovať faktúry',
-'filter.payments' => 'Filtrovať platby',
-'filter.quotes' => 'Filtrovať citáty',
-'first' => 'Prvý',
-'first.day.of.week' => 'Prvý deň v týždni',
-'first.reset' => 'Najprv vymažte testovacie cenové ponuky '
-	. 'a faktúry, ktoré ste vytvorili '
-	. 'na testovanie.'
-	. 'Potom je možné vymazať testovacie '
-	. 'údaje.',
-'flash.messages.appear.here' => 'Tu sa zobrazujú bleskové správy.',
-'footer' => 'Päta',
-'forgot.your.password' => 'Zabudol som heslo',
-'form.error' => 'Chyby formulára',
-'from.date' => 'Od dátumu',
-'from.default.in.dropdown' => 'Predvolená e-mailová adresa v rozbaľovacom '
-	. 'zozname',
-'from.email' => 'Z e-mailu',
-'from.email.address' => 'Z e-mailových adries:'
-	. 'Vyberte predvolenú možnosť',
-'from.include.in.dropdown' => 'Zahrnúť tento e-mail do rozbaľovacieho '
-	. 'zoznamu',
-'from.name' => 'Od mena',
-'front.page' => 'Úvodná strana',
-'gallery.caption.slide1' => 'Tento text môžete zmeniť na '
-	. 'stránke .'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide10' => 'Tento text môžete zmeniť na '
-	. 'stránke .'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide11' => 'Tento text môžete zmeniť na '
-	. 'stránke .'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide12' => 'Tento text môžete zmeniť na '
-	. 'stránke .'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide13' => 'Tento text môžete zmeniť na '
-	. 'stránke .'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide14' => 'Tento text môžete zmeniť na '
-	. 'stránke .'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide15' => 'Tento text môžete zmeniť na '
-	. 'stránke .'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide2' => 'Tento text môžete zmeniť na '
-	. 'stránke .'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide3' => 'Tento text môžete zmeniť na '
-	. 'stránke .'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide4' => 'Tento text môžete zmeniť na '
-	. 'stránke .'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide5' => 'Tento text môžete zmeniť na '
-	. 'stránke .'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide6' => 'Tento text môžete zmeniť na '
-	. 'stránke .'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide7' => 'Tento text môžete zmeniť na '
-	. 'stránke .'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide8' => 'Tento text môžete zmeniť na '
-	. 'stránke .'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gallery.caption.slide9' => 'Tento text môžete zmeniť na '
-	. 'stránke .'
-	. '/resources/messages/en/app.'
-	. 'php.',
-'gateway.online.payment' => 'Online platba',
-'gender' => 'Pohlavie',
-'gender.female' => 'Žena',
-'gender.male' => 'Muž',
-'gender.other' => 'Iné',
-'general' => 'Všeobecné',
-'general.no' => 'Nie',
-'general.settings' => 'Všeobecné nastavenia',
-'general.yes' => 'Áno',
-'generate' => 'Generovať',
-'generate.copy' => 'Vygenerovať kópiu',
-'generate.invoice.number.for.draft' =>
-	'Generovanie čísla faktúry pre návrhy '
-	. 'faktúr',
-'generate.quote.number.for.draft' =>
-	'Generovanie čísla cenovej ponuky pre '
-	. 'návrhy cenových ponúk',
-'generator' => 'Generátor',
-'generator.add' => 'Pridať generátor',
-'generator.camelcase.capital.name' => 'Názov s veľkým písmenom Camelcase '
-	. 'používaný v názvoch kontrolérov a '
-	. 'repozitárov, napr.'
-	. 'TaxRate.'
-	. 'Ak používate vyššie uvedený príklad '
-	. '„produkt“, použite „Product“.',
-'generator.camelcase.capital.name.product' =>
-	'Produkt',
-'generator.controller.and.repository' => 'Kontrolér a úložisko',
-'generator.controller.layout.directory' => 'Adresár rozloženia ovládača, napr.'
-	. 'dirname(dirname(__DIR__)), ktorý sa zobrazí hneď '
-	. 'za konštrukciou ovládača.'
-	. 'Súbor ovládača sa nachádza v '
-	. '(__DIR__) a je dva adresáre '
-	. 'pod adresárom „src“, ktorý sa '
-	. 'použije ako „základňa“ pre pripojenie '
-	. 'cesty k adresáru rozloženia.',
-'generator.controller.layout.directory.dot.path' =>
-	'Bodka cesty k adresáru rozloženia '
-	. 'ovládača, napr.'
-	. '„/views/layout/invoice.'
-	. 'php“, ktorá sa zobrazí hneď '
-	. 'za konštrukciou ovládača (okrem apostrofov) '
-	. 'a pripojí sa k vyššie '
-	. 'uvedenému umiestneniu v adresári src.',
-'generator.controller.layout.directory.dot.path.placeholder' =>
-	'Cesta k bodke adresára rozloženia '
-	. 'ovládača',
-'generator.controller.layout.directory.placeholder' =>
-	'Adresár rozloženia ovládača, napr.'
-	. 'dirname(dirname(__DIR__))',
-'generator.controller.path.layout' => 'Cesta k súboru rozloženia',
-'generator.created.at.include' => 'Zahrnúť pole created_at do entity',
-'generator.deleted.at.include' => 'Zahrnúť pole deleted_at do entity',
-'generator.external.entity' => 'Externá entita použitá v tejto '
-	. 'entite.'
-	. 'Entita nastavenia je jednoduchá indexovaná '
-	. 'databáza párov kľúč =&gt; hodnota '
-	. 's ID.',
-'generator.external.entity.default' => 'Externá entita, napr.'
-	. 'MyEntity bez cesty.'
-	. 'Cesta je zabudovaná v generátore.'
-	. 'Predvolené nastavenie:',
-'generator.external.entity.placeholder' => 'Externá entita, napr.'
-	. 'MyEntity bez cesty.'
-	. 'Cesta zabudovaná v generátore.'
-	. 'Predvolené:'
-	. 'Nastavenie.'
-	. 'Dodatočný repozitár, napr.'
-	. 'Repozitár nastavení okrem hlavného repozitára.',
-'generator.file.type.not.found' =>
-	'Typ súboru sa nenašiel.',
-'generator.flash.include' => 'Zahrnúť bleskovú správu do funkcie '
-	. 'Pridať/Upraviť/Zobraziť/Odstrániť v ovládači',
-'generator.generate' => 'Generovať',
-'generator.generated' => ' vygenerované na ',
-'generator.google.translate.any' => 'Preložiť angličtinu\\any_lang.'
-	. 'php',
-'generator.google.translate.app' => 'Preložiť English\\app_lang.'
-	. 'php',
-'generator.google.translate.common' => 'Preložiť English\\common_lang.'
-	. 'php',
-'generator.google.translate.diff' => 'Preložiť English\\diff_lang.'
-	. 'php',
-'generator.google.translate.gateway' => 'Preložiť angličtinu\\gateway_lang.'
-	. 'php',
-'generator.google.translate.ip' => 'Preložiť angličtinu\\ip_lang.'
-	. 'php',
-'generator.google.translate.latest.a' =>
-	'Preložiť English\\a_latest_lang.'
-	. 'php',
-'generator.google.translate.latest.b' =>
-	'Preložiť angličtinu\\b_latest_lang.'
-	. 'php',
-'generator.headerline.include' => 'Ak je potrebný Ajax, zahrňte '
-	. 'hlavičku',
-'generator.history' => 'Tento záznam má existujúce vzťahy '
-	. 'generátora, takže ho nemožno odstrániť.'
-	. 'Najprv tieto vzťahy odstráňte.',
-'generator.modified.at.include' => 'Zahrnúť pole modified_at do entity',
-'generator.namespace' => 'Priestor názvov',
-'generator.namespace.before.entity' => 'Priestor názvov pred cestou k '
-	. 'entite, napr.'
-	. 'App\\Invoice (NIE App\\Invoice\\Entity)',
-'generator.relation.form' => 'Formulár vzťahu generátora',
-'generator.relation.form.camelcase.name' =>
-	'Názov v camelcase bez ID '
-	. '(napr.'
-	. 'tax_rate_id &#39;cudzí kľúč/vzťah&#39; v tabuľke '
-	. 'Product zjednodušene na TaxRate A '
-	. 'je názov entity)',
-'generator.relation.form.entity.generator' =>
-	'Generátor entít',
-'generator.relation.form.lowercase.name' =>
-	'Názov malými písmenami bez ID '
-	. '(napr.'
-	. 'tax_rate_id „cudzí kľúč/vzťah“ v tabuľke '
-	. 'Produkt zjednodušene na tax.'
-	. 'rate)',
-'generator.relation.form.view.field.name' =>
-	'Názov poľa zobrazenia',
-'generator.relations' => 'Vzťahy s generátormi',
-'generator.relations.add' => 'Pridanie vzťahu generátorov',
-'generator.route.prefix' => 'Predpona trasy, napr.'
-	. 'faktúra v &#39;faktúra/produkt&#39;, ktorá sa '
-	. 'zobrazí za konštruktom kontroléra.',
-'generator.route.suffix' => 'Prípona smerovania, napr.'
-	. 'product vo „faktúre/produkte“, ktorá sa '
-	. 'zobrazí za konštruktom kontroléra.',
-'generator.small.plural.name' => 'Malý názov v množnom čísle '
-	. 'používaný v ovládači pre funkciu '
-	. 'indexového ovládača na vypísanie všetkých '
-	. 'generátorov entít.'
-	. 'Normálne je to vyššie uvedená '
-	. 'hodnota s písmenom „s“ na '
-	. 'konci.',
-'generator.small.plural.name.placeholder' =>
-	'Malé množné číslo',
-'generator.small.plural.name.products' =>
-	'produkty',
-'generator.small.singular.name' => 'Malý jednotný názov používaný v '
-	. 'ovládači na úpravu a zobrazenie '
-	. 'funkcií ovládača.'
-	. 'Zvyčajne rovnaký ako prípona trasy,'
-	. 'napr.'
-	. 'product',
-'generator.small.singular.name.placeholder' =>
-	'Malé jednotné meno',
-'generator.small.singular.name.product' =>
-	'produkt',
-'generator.table' => 'Tabuľka',
-'generator.table.used.to.generate.entity.controller.repository' =>
-	'Tabuľka použitá na generovanie entity,'
-	. 'ovládača Pridať Upraviť Odstrániť Zobrazenie,'
-	. 'Repozitár, Služba, Mapovač',
-'generator.updated.at.include' => 'Zahrnúť pole updated.'
-	. 'at do entity',
-'generators' => 'Generátory',
-'generators.relation' => 'Vzťah generátorov',
-'gln' => 'GLN',
-'gov.developer.sandbox' => 'Pieskovisko pre vývojárov',
-'gov.developer.sandbox.uk' => 'Daňový úrad (HMRC)',
-'gridview.api' => 'API',
-'gridview.create.at' => 'Vytvorené v',
-'gridview.login' => 'Prihlásenie',
-'gridview.profile' => 'Profil',
-'gridview.title' => 'Zoznam používateľov',
-'group' => 'Skupina',
-'group.add' => 'Pridať do skupiny',
-'group.document.number' => 'Číslo dokumentu nebolo vygenerované.'
-	. 'Skontrolujte skupiny.',
-'group.form' => 'Skupinový formulár',
-'group.history' => 'História skupiny existuje.'
-	. 'Nedá sa odstrániť.',
-'groups' => 'Skupiny',
-'guest.account.denied' => 'Tento účet nie je nakonfigurovaný.'
-	. 'Kontaktujte správcu systému.',
-'guest.read.only' => 'Hosť (iba na čítanie)',
-'guest.url' => 'URL adresa hosťa',
-'hide.or.unhide.columns' => 'Skryť alebo zobraziť stĺpce',
-'hint.greater.than.zero.please' =>
-	'Viac ako 0,00 prosím!',
-'hint.this.field.is.not.required' =>
-	'Toto pole nie je povinné',
-'hint.this.field.is.required' =>
-	'Toto pole je povinné',
-'home' => 'Domov',
-'home.caption.slide1' => 'Zaregistrujte sa a prihláste sa '
-	. 'ako správca.'
-	. 'Žiadny internet .'
-	. 'ignorujte chybu pripojenia e-mailu.',
-'home.caption.slide2' => 'Ako administrátor zaregistrujte používateľa.'
-	. 'E-mailový účet je platný a '
-	. 'internetové pripojenie .'
-	. 'overte.'
-	. 'Používateľ získa klientsky účet.',
-'home.caption.slide3' => 'E-mailový účet nie je platný '
-	. 'a žiadne internetové pripojenie .'
-	. 'prihlásenie administrátora a aktivácia účtu '
-	. 'používateľa pre fakturáciu v časti '
-	. 'Nastavenia.'
-	. 'Vytvorenie klientskeho účtu.'
-	. 'Priradenie k používateľovi',
-'home.caption.slides.location.debug.mode' =>
-	'Toto umiestnenie obsahu:'
-	. '/resources/views/site/index.'
-	. 'php v rámci .'
-	. '/resources/views/layout/.'
-	. '.'
-	. 'a umiestnenie prekladového slajdu .'
-	. '/resources/messages/app.'
-	. 'php',
-'hostname' => 'Názov hostiteľa',
-'id' => 'Identifikácia',
-'identifier.format' => 'Formátovanie identifikátora',
-'identifier.format.template.tags' => 'Šablónové značky pre identifikátor',
-'identifier.format.template.tags.instructions' =>
-	'Značky šablón je možné použiť '
-	. 'na pridanie dynamických informácií, ako '
-	. 'je meno klienta alebo číslo '
-	. 'faktúry, do šablóny e-mailu.'
-	. 'Kliknite na pole <b>Formátovanie identifikátora</b> '
-	. 'a potom vyberte značku z '
-	. 'rozbaľovacej ponuky.'
-	. 'Automaticky sa vloží do textového '
-	. 'poľa.',
-'identity.provider.authentication.successful' => 'Úspešne ste boli overení prostredníctvom '
-	. 'vami zvoleného poskytovateľa identity, zaregistrovaní '
-	. 'a bol vám pridelený klientsky '
-	. 'účet.'
-	. 'Kliknite sem do hodiny a '
-	. 'aktivujte svoj účet.'
-	. 'Na prvé prihlásenie máte hodinu.',
-'image.overdue' => 'Umiestnenie obrázka:'
-	. '/invoice/public/img/overdue.'
-	. 'png',
-'image.paid' => 'Umiestnenie obrázka:'
-	. '/invoice/public/img/paid.'
-	. 'png',
-'import' => 'Importovať',
-'import.data' => 'Importovať údaje',
-'import.from.csv' => 'Importovať z CSV',
-'in.progress' => 'Prebieha',
-'inactive' => 'Neaktívne',
-'index.checkbox.add.some.items.to.enable' =>
-	'Faktúra neobsahuje žiadne položky.'
-	. 'Pridajte položky, aby ste povolili '
-	. 'začiarkavacie políčko.',
-'index.footer.showing' => 'Zobrazuje sa %s z %s',
-'index.showing' => 'Zobrazuje sa %s z %s',
-'info.task.readonly' => 'Túto úlohu už nie je '
-	. 'možné zmeniť, pretože je už '
-	. 'fakturovaná.',
-'install.test.data' => 'Testovacie dáta je teraz možné '
-	. 'nainštalovať',
-'install.test.data.exists.already' =>
-	'Testovacie údaje faktúry už existujú',
-'install.test.data.goto.tab.index' =>
-	'Prejsť na Nastavenia .'
-	. 'Všeobecné .'
-	. 'Inštalovať testovacie údaje',
-'interface' => 'Rozhranie',
-'invalid.amount' => 'Neplatná suma',
-'invalid.subscriber.number' => 'Neplatné číslo predplatiteľa',
-'invoice' => 'Faktúra',
-'invoiced' => 'Fakturované',
-'invoiceplane' => 'Faktúrna rovina',
-'invoiceplane.clients' => 'Vložení klientov',
-'invoiceplane.database.name' => 'Názov databázy',
-'invoiceplane.database.password' => 'Heslo',
-'invoiceplane.database.username' => 'Používateľské meno',
-'invoiceplane.families' => 'Vložené rodiny',
-'invoiceplane.import' => 'Testovacie pripojenie',
-'invoiceplane.import.complete.connection.closed' =>
-	'Import dokončený! Pripojenie ukončené!',
-'invoiceplane.import.connected' => 'Máte spojenie!',
-'invoiceplane.import.proceed' => 'Pokračujte v procese importu',
-'invoiceplane.import.proceed.alert' => 'Naozaj chcete pokračovať?',
-'invoiceplane.imported' => 'Tabuľky boli importované',
-'invoiceplane.news' => 'Správy InvoicePlane',
-'invoiceplane.no.connection' => 'Žiadne pripojenie',
-'invoiceplane.no.username.or.password' =>
-	'Uložte si názov databázy, používateľské '
-	. 'meno a heslo pre InvoicePlane.',
-'invoiceplane.products' => 'Vložené produkty',
-'invoiceplane.tables' => 'Importujte tabuľky InvoicePlane s názvami '
-	. 'Klient, Produkt, Jednotka, Rodina a '
-	. 'Daňová sadzba do prázdnych tabuliek.'
-	. 'Pred importom by v týchto '
-	. 'tabuľkách nemali byť žiadne existujúce '
-	. 'údaje ani žiadne existujúce dokumenty,'
-	. 'napr.'
-	. 'faktúry.',
-'invoiceplane.tables.not.empty' => 'Tabuľky Klient, Produkt, Jednotka, Rodina '
-	. 'a Daňová sadzba musia byť '
-	. 'pred importom prázdne.',
-'invoiceplane.taxrates' => 'Sadzby dane vložené s povinnou '
-	. 'nulovou sadzbou dane a štandardnou '
-	. 'sadzbou dane.',
-'invoiceplane.units' => 'Vložené jednotky',
-'invoiceplane.yes.connection' => 'Áno, máte pripojenie k databáze '
-	. 'Invoiceplane!',
-'invoices' => 'Faktúry',
-'invoices.due.after' => 'Splatnosť faktúr po (dni)',
-'is.not.writable' => 'nie je zapisovateľný',
-'is.writable' => 'je zapisovateľný',
-'item' => 'Položka faktúry',
-'item.add' => 'Pridať položku faktúry',
-'item.allowance' => 'Príspevok na položku',
-'item.charge' => 'Poplatok za položku',
-'item.date' => 'Dátum položky',
-'item.discount' => 'Zľava na položku',
-'item.lookup' => 'Vyhľadávanie položiek faktúry',
-'item.lookup.form' => 'Formulár na vyhľadávanie položiek',
-'item.lookups' => 'Vyhľadávanie položiek',
-'item.name' => 'Názov položky',
-'item.tax' => 'Daň z položky',
-'item.tax.excluded' => 'Medzisúčet x Percentuálna sadzba DPH '
-	. '(daň z položky bola vylúčená)',
-'item.tax.included' => '(Medzisúčet + daň z položky) '
-	. 'x Percento dane',
-'item.tax.rate' => 'Sadzba dane z položky',
-'items' => 'Položky faktúry',
-'judgement' => 'Získaný rozsudok',
-'label' => 'Štítok',
-'label.switch.off' => 'Faktúra s DPH',
-'label.switch.on' => 'BEZ faktúry s DPH',
-'language' => 'Jazyk',
-'last' => 'Posledný',
-'last.month' => 'Minulý mesiac',
-'last.quarter' => 'Posledný štvrťrok',
-'last.year' => 'Minulý rok',
-'layout.add' => 'Pridať',
-'layout.add.post' => 'Pridať príspevok',
-'layout.add.random-content' => 'Pridajte náhodný obsah',
-'layout.add.tag' => 'Pridať značku',
-'layout.archive' => 'Archív',
-'layout.archive.for-year' => 'Archív za {rok}',
-'layout.blog' => 'Blog',
-'layout.change-language' => 'Zmeniť jazyk',
-'layout.console' => 'Konzola',
-'layout.content' => 'Obsah',
-'layout.create.new-user' => 'Vytvoriť nového používateľa',
-'layout.db.schema' => 'Schéma databázy',
-'layout.go.home' => 'Späť domov',
-'layout.login' => 'Prihlásenie',
-'layout.migrations' => 'Migrácie',
-'layout.no-records' => 'Žiadne záznamy',
-'layout.not-found' => 'Nenájdené',
-'layout.page.not-authorised' => 'Neautorizované:'
-	. 'Overovacie údaje sú nesprávne.',
-'layout.page.not-found' => 'Stránka {url} sa nenašla.',
-'layout.page.user-cancelled-oauth2' => 'Používateľ zrušil prihlásenie / registráciu '
-	. 'prostredníctvom poskytovateľa identity, napr.'
-	. 'Facebook',
-'layout.pagination-summary' => 'Zobrazuje sa {pageSize} z {total} '
-	. 'príspevkov',
-'layout.password' => 'Heslo',
-'layout.password-verify' => 'Potvrďte svoje heslo',
-'layout.password-verify.new' => 'Potvrďte svoje nové heslo',
-'layout.password.new' => 'Nové heslo',
-'layout.password.otp' => 'Jednorazové heslo',
-'layout.rbac.assign-role' => 'Priradiť používateľovi rolu RBAC',
-'layout.remember' => 'Zapamätaj si ma',
-'layout.reset' => 'Obnoviť',
-'layout.show-more' => 'zobraziť viac',
-'layout.submit' => 'Odoslať',
-'layout.title' => 'Názov',
-'layout.total.posts' => 'Celkový počet príspevkov:'
-	. '{count}',
-'left.pad' => 'Ľavý ovládač',
-'letter' => '7-dňový list pred podaním žaloby',
-'loading.error' => 'Zdá sa, že aplikácia sa '
-	. 'zasekla kvôli chybe.',
-'loading.error.help' => 'Získajte pomoc',
-'login' => 'Prihlásenie',
-'login.logo' => 'Prihlasovacie logo',
-'loginalert.credentials.incorrect' => 'Nesprávny e-mail alebo heslo.',
-'loginalert.no.password' => 'Zadajte heslo.',
-'loginalert.user.inactive' => 'Tento používateľ je označený ako '
-	. 'neaktívny.'
-	. 'Kontaktujte, prosím, správcu systému.',
-'loginalert.user.not.found' => 'S touto e-mailovou adresou nie '
-	. 'je zaregistrovaný žiadny účet.',
-'loginalert.wrong.auth.code' => 'Obnovenie hesla bolo zamietnuté.'
-	. 'Zadali ste neplatný autorizačný token.',
-'logo' => 'Logo faktúry',
-'logout' => 'Odhlásiť sa',
-'loss' => 'Odpísané',
-'mark.invoices.sent.copy' => 'Označiť faktúry ako odoslané pri '
-	. 'kopírovaní faktúry',
-'mark.invoices.sent.pdf' => 'Označiť faktúry ako odoslané pri '
-	. 'generovaní PDF súboru',
-'mark.quotes.sent.pdf' => 'Označiť cenové ponuky ako odoslané '
-	. 'pri generovaní PDF súboru',
-'mark.sent.copy.on' => 'Označiť faktúry ako odoslané pri '
-	. 'kopírovaní faktúry je zapnuté.'
-	. 'Malo by byť zapnuté iba '
-	. 'počas vývoja.',
-'mark.sent.off' => 'Označiť faktúry ako odoslané pri '
-	. 'kopírovaní faktúr .'
-	. 'je momentálne VYPNUTÉ.'
-	. 'Počas vývoja je nastavené na '
-	. 'ZAPNUTÉ iba.'
-	. 'Kliknite sem pre zapnutie.',
-'mark.sent.on' => 'Označiť faktúry ako odoslané pri '
-	. 'kopírovaní faktúr .'
-	. 'je momentálne ZAPNUTÉ.'
-	. 'Počas produkcie ho vždy nechajte '
-	. 'VYPNUTÉ.'
-	. 'Kliknite sem pre vypnutie.',
-'max' => 'Max',
-'max.quantity' => 'Maximálne množstvo',
-'menu' => 'Menu',
-'menu.about' => 'O nás',
-'menu.accreditations' => 'Akreditácie',
-'menu.blog' => 'Blog',
-'menu.comments-feed' => 'Kanál komentárov',
-'menu.contact.details' => 'Kontaktné údaje',
-'menu.contact.soon' => 'Ďakujeme, že ste nás kontaktovali,'
-	. 'ozveme sa vám čo najskôr.',
-'menu.contact.us' => 'Kontaktujte nás',
-'menu.gallery' => 'Galéria',
-'menu.language' => 'Jazyk',
-'menu.login' => 'Prihlásenie',
-'menu.logout' => 'Odhlásiť sa ({login})',
-'menu.pricing' => 'Cenník',
-'menu.privacy.policy' => 'Zásady ochrany osobných údajov',
-'menu.signup' => 'Registrácia',
-'menu.swagger' => 'Swagger',
-'menu.team' => 'Tím',
-'menu.terms.of.service' => 'Podmienky služby',
-'menu.testimonial' => 'Odporúčanie',
-'menu.users' => 'Používatelia',
-'merchant' => 'Obchodník',
-'merchant.add' => 'Pridať obchodníka',
-'merchant.driver' => 'Vodič',
-'merchant.reference' => 'Referencia',
-'merchant.response' => 'Odpoveď',
-'min.quantity' => 'Minimálne množstvo',
-'mobile' => 'Mobilné',
-'mobile.number' => 'Mobilné číslo',
-'monday' => 'pondelok',
-'monospaced.font.for.amounts' => 'Pre sumy použite písmo Monospace',
-'month' => 'Mesiac',
-'month.prefix' => 'Predpona mesiaca',
-'mpdf' => 'Mpdf',
-'mpdf.allow.charset.conversion' => 'Povoliť konverziu znakovej sady',
-'mpdf.auto.arabic' => 'Automatická arabčina',
-'mpdf.auto.language.to.font' =>
-	'Automatický jazyk na písmo',
-'mpdf.auto.script.to.lang' =>
-	'Automatické prepisovanie skriptov do jazyka',
-'mpdf.auto.vietnamese' => 'Vietnamské auto',
-'mpdf.cjk' => 'Čínske, japonské, kórejské písmo',
-'mpdf.ltr' => 'Zľava doprava',
-'mpdf.show.image.errors' => 'Zobraziť chyby obrázka',
-'mtd' => 'Digitalizácia daní',
-'mtd.fph' => 'Hlavičky o predchádzaní podvodom',
-'mtd.fph.all.valid' => 'Všetky hlavičky na predchádzanie podvodom '
-	. 'sú platné',
-'mtd.fph.generate' => 'Generovať',
-'mtd.fph.no.provided' => 'Neboli poskytnuté žiadne hlavičky na '
-	. 'predchádzanie podvodom',
-'mtd.fph.record.alert' => 'Naozaj chcete zaznamenať nové podrobnosti '
-	. 'hlavičky na predchádzanie podvodom? Predchádzajúce '
-	. 'podrobnosti budú po uložení prepísané!',
-'mtd.fph.screen.timestamp' => 'Časová pečiatka',
-'mtd.fph.some.advisories' => 'Aspoň jedna hlavička je potenciálne '
-	. 'neplatná',
-'mtd.fph.some.invalid' => 'Aspoň jedna hlavička je neplatná',
-'mtd.gov.client.browser.do.not.track' =>
-	'Hodnota, ktorá označuje, či je '
-	. 'v prehliadači zapnutá možnosť Nesledovať',
-'mtd.gov.client.browser.do.not.track.eg' =>
-	'napr.'
-	. 'nepravdivé',
-'mtd.gov.client.browser.js.user.agent' =>
-	'Gov-Client-Browser-JS-User-Agent',
-'mtd.gov.client.browser.js.user.agent.eg' =>
-	'napr.'
-	. 'Mozilla/5.'
-	. '0 (iPad; U; CPU OS '
-	. '3 2.'
-	. '1 ako Mac OS X;'
-	. 'en-us) (KHTML, ako Gecko) Mobile/7B405',
-'mtd.gov.client.browser.plugins' =>
-	'Zoznam doplnkov prehliadača na pôvodnom '
-	. 'zariadení',
-'mtd.gov.client.browser.plugins.eg' =>
-	'napr.'
-	. 'Shockwave%20F1ash Chromium%20PDF%20Prehliadač',
-'mtd.gov.client.connection.method' =>
-	'Metóda pripojenia klienta Gov',
-'mtd.gov.client.device.id' =>
-	'ID zariadenia',
-'mtd.gov.client.device.id.eg' =>
-	'napr.'
-	. 'beec798b-b366-47fa-b1f8-92cede14a1ce',
-'mtd.gov.client.local.ips' =>
-	'Lokálne IP adresy',
-'mtd.gov.client.multi.factor' =>
-	'Viacfaktorový',
-'mtd.gov.client.multi.factor.eg' =>
-	'napr.'
-	. 'typ=OTP;stav=úspech,typ=SMS;stav=neúspech,typ=Biometrický, typ=SMS; časová pečiatka=2023-04-01T12:'
-	. '34:'
-	. '56Z; jedinečná referencia=abc123xyz',
-'mtd.gov.client.multi.factor.otp' =>
-	'Jednorazové heslo (OTP):',
-'mtd.gov.client.public.ip' =>
-	'Verejná IP adresa',
-'mtd.gov.client.public.port' =>
-	'Verejný port (nie http 80 '
-	. 'a nie https 443, napr.'
-	. '57961)',
-'mtd.gov.client.screens' => 'Obrazovky klientov Gov',
-'mtd.gov.client.screens.colour.depth' =>
-	'Hĺbka farieb',
-'mtd.gov.client.screens.height' =>
-	'Výška obrazovky',
-'mtd.gov.client.screens.pixels' =>
-	'pixely',
-'mtd.gov.client.screens.scaling.factor' =>
-	'Faktor mierky',
-'mtd.gov.client.screens.scaling.factor.bits' =>
-	'bity',
-'mtd.gov.client.screens.width' =>
-	'Šírka obrazovky',
-'mtd.gov.client.timezone' => 'Časové pásmo',
-'mtd.gov.client.user.ids' =>
-	'ID používateľov',
-'mtd.gov.client.user.ids.uuid' =>
-	'uuid',
-'mtd.gov.client.window.size' =>
-	'Veľkosť okna',
-'mtd.gov.client.window.size.pixels' =>
-	'pixely',
-'mtd.gov.vendor.forwarded' => 'Zoznam s podrobnosťami o prechodoch '
-	. 'cez internet medzi službami, ktoré '
-	. 'ukončujú protokol TLS (Transport Layer '
-	. 'Security).',
-'mtd.gov.vendor.license.ids' =>
-	'Štruktúra dát kľúč-hodnota hašovaných licenčných '
-	. 'kľúčov, ktoré súvisia so softvérom '
-	. 'dodávateľa, ktorý inicioval požiadavku API '
-	. 'na pôvodnom zariadení.',
-'mtd.gov.vendor.public.ip' =>
-	'Verejná IP adresa serverov, na '
-	. 'ktoré pôvodné zariadenie odoslalo svoje '
-	. 'požiadavky',
-'mtd.gov.vendor.version' => 'Štruktúra údajov kľúč-hodnota verzií softvéru,'
-	. 'ktoré sa podieľajú na spracovaní '
-	. 'požiadavky',
-'multiple.choice' => 'Viaceré možnosti výberu',
-'name' => 'Meno',
-'new' => 'Nové',
-'new.password' => 'Nové heslo',
-'new.product' => 'Nový produkt',
-'new.task' => 'Nová úloha',
-'next' => 'Ďalej',
-'next.date' => 'Ďalší dátum',
-'next.id' => 'Ďalšie ID',
-'no' => 'Nie',
-'no.attachments' => 'Žiadne prílohy',
-'no.client' => 'Žiadny klient',
-'no.file.uploaded' => 'Žiadny súbor nebol nahraný',
-'no.overdue.invoices' => 'Žiadne oneskorené faktúry',
-'no.quotes.requiring.approval' => 'Neexistujú žiadne cenové ponuky, ktoré '
-	. 'by vyžadovali schválenie.',
-'no.records' => 'Žiadne záznamy',
-'no.updates.available' => 'Nie sú k dispozícii žiadne '
-	. 'aktualizácie.',
-'none' => 'Žiadne',
-'not.available' => 'Nie je k dispozícii',
-'not.found' => 'Faktúra sa nenašla',
-'not.set' => 'Zatiaľ nie je nastavené',
-'not.started' => 'Nezačaté',
-'note' => 'Poznámka',
-'notes' => 'Poznámky',
-'number' => '#',
-'number.format' => 'Formát čísla',
-'number.format.compact.comma' => '1000000,00 (Kompaktný formát s desatinnou '
-	. 'čiarkou)',
-'number.format.compact.point' => '1000000,00 (Kompaktný formát s desatinnou '
-	. 'čiarkou)',
-'number.format.european' => '1 000 000,00 (európsky formát)',
-'number.format.iso.80k.1' =>
-	'1 000 000,00 (ISO 80000-1)',
-'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 '
-	. 's desatinnou čiarkou)',
-'number.format.iso80k1.point' => '1 000 000,00 (ISO 80000-1 '
-	. 's desatinnou čiarkou)',
-'number.format.us.uk' => '1 000 000,00 (formát pre '
-	. 'USA/Spojené kráľovstvo)',
-'number.missing.therefore.use.invoice.id' =>
-	'chýbajúce číslo faktúry, preto ID '
-	. 'faktúry',
-'number.no' => 'Bez čísla faktúry',
-'oauth2' => 'OAuth 2.'
-	. '0',
-'oauth2.google.people.api.v1.client.id' =>
-	'ID klienta',
-'oauth2.google.people.api.v1.client.secret' =>
-	'Tajomstvo klienta',
-'online.log' => 'Online protokol',
-'online.payment' => 'Online platba',
-'online.payment.3dauth.redirect' => 'Počkajte, prosím, kým vás presmerujeme '
-	. 'na stránku vydavateľa karty na '
-	. 'overenie.',
-'online.payment.accessKey' => 'Prístupový kľúč',
-'online.payment.accessToken' => 'Prístupový token',
-'online.payment.accountId' => 'ID účtu',
-'online.payment.accountNumber' => 'Číslo účtu',
-'online.payment.apiKey' => 'Kľúč API',
-'online.payment.apiLoginId' => 'Prihlasovacie ID API',
-'online.payment.appId' => 'ID aplikácie',
-'online.payment.appSecret' => 'Tajný kód aplikácie',
-'online.payment.callbackPassword' => 'Heslo pre spätné volanie',
-'online.payment.card.invalid' => 'Táto kreditná karta je neplatná.'
-	. 'Skontrolujte, prosím, poskytnuté informácie.',
-'online.payment.clientId' => 'ID klienta',
-'online.payment.clientSecret' => 'Tajomstvo klienta',
-'online.payment.creditcard.hint' => 'Ak chcete platiť kreditnou kartou,'
-	. 'zadajte, prosím, nižšie uvedené informácie.'
-	. '<br/> Informácie o kreditnej karte '
-	. 'nie sú uložené na našich '
-	. 'serveroch a budú prenesené do '
-	. 'online platobnej brány pomocou zabezpečeného '
-	. 'pripojenia.',
-'online.payment.developerMode' => 'Režim pre vývojárov',
-'online.payment.for' => 'Online platba za',
-'online.payment.for.invoice' => 'Online platba za faktúru',
-'online.payment.installationId' => 'ID inštalácie',
-'online.payment.merchantAccessCode' => 'Prístupový kód obchodníka',
-'online.payment.merchantId' => 'ID obchodníka',
-'online.payment.merchantKey' => 'Kľúč obchodníka',
-'online.payment.method' => 'Spôsob online platby',
-'online.payment.partner' => 'Partner',
-'online.payment.partnerID' => 'ID partnera',
-'online.payment.password' => 'Heslo',
-'online.payment.payment.cancelled' => 'Platba zrušená.',
-'online.payment.payment.failed' => 'Platba zlyhala.'
-	. 'Skúste to znova.',
-'online.payment.payment.redirect' => 'Počkajte, prosím, kým vás presmerujeme '
-	. 'na platobnú stránku.',
-'online.payment.payment.successful' => 'Platba faktúry %s úspešná!',
-'online.payment.pdtKey' => 'Kľúč PDT',
-'online.payment.privateKey' => 'Súkromný kľúč',
-'online.payment.profileID' => 'ID profilu',
-'online.payment.profileId' => 'ID profilu',
-'online.payment.publicKey' => 'Verejný kľúč',
-'online.payment.publicKeyId' => 'ID verejného kľúča',
-'online.payment.publishableKey' => 'Publikovateľný kľúč',
-'online.payment.pxPostPassword' => 'Heslo pre príspevok Px',
-'online.payment.pxPostUsername' => 'Používateľské meno príspevku Px',
-'online.payment.referrerId' => 'ID sprostredkovateľa',
-'online.payment.region' => 'Región',
-'online.payment.returnUrl' => 'URL adresa návratu',
-'online.payment.sandbox' => 'Pieskovisko',
-'online.payment.sandboxId' => 'ID sandboxu',
-'online.payment.secret' => 'Tajomstvo',
-'online.payment.secretKey' => 'Tajný kľúč',
-'online.payment.secretWord' => 'Tajné slovo',
-'online.payment.secureHash' => 'Bezpečný hash',
-'online.payment.sharedSecret' => 'Zdieľaný tajný kľúč',
-'online.payment.signature' => 'Podpis',
-'online.payment.siteCode' => 'Kód lokality',
-'online.payment.siteId' => 'ID lokality',
-'online.payment.storeId' => 'ID obchodu',
-'online.payment.storePassword' => 'Heslo úložiska',
-'online.payment.subAccountId' => 'ID podúčtu',
-'online.payment.testMode' => 'Testovací režim',
-'online.payment.testOrLiveApiKey' => 'Testovací alebo živý kľúč API,'
-	. 't.'
-	. 'j.'
-	. 'začína na test_ alebo live_',
-'online.payment.transactionKey' => 'Transakčný kľúč',
-'online.payment.transactionPassword' => 'Heslo transakcie',
-'online.payment.username' => 'Používateľské meno',
-'online.payment.vendor' => 'Dodávateľ',
-'online.payment.version' => 'Verzia Omnipay (zaškrtnuté) / Kompatibilné '
-	. 's PCI (v tejto databáze '
-	. 'nie sú uložené žiadne údaje '
-	. 'o kreditnej karte) (nezaškrtnuté)',
-'online.payment.webhookId' => 'ID webhooku',
-'online.payment.websiteKey' => 'Kľúč webovej stránky',
-'online.payments' => 'Online platby',
-'open' => 'OTVORENÉ',
-'open.invoices' => 'Otvorené faktúry',
-'open.quotes' => 'Otvorené cenové ponuky',
-'open.reports.in.new.tab' =>
-	'Otvoriť prehľady na novej karte '
-	. 'prehliadača',
-'optional' => 'Voliteľné',
-'options' => 'Možnosti',
-'order' => 'Objednávka',
-'orm' => 'Orm',
-'other.settings' => 'Ďalšie nastavenia',
-'overdue' => 'Po termíne',
-'overdue.invoices' => 'Oneskorené faktúry',
-'overview' => 'Prehľad faktúr',
-'overview.period' => 'Obdobie prehľadu faktúr',
-'page' => 'Strana',
-'paid' => 'Platené',
-'password' => 'Heslo',
-'password.change' => 'Zmeniť heslo',
-'password.changed' => 'Heslo bolo úspešne zmenené',
-'password.reset' => 'Obnoviť heslo',
-'password.reset.email' => 'Požiadali ste o nové heslo '
-	. 'pre vašu inštaláciu.'
-	. 'Kliknite na odkaz v doručenej '
-	. 'pošte a heslo si obnovte.',
-'password.reset.failed' => 'Pri pokuse o odoslanie e-mailu '
-	. 'na obnovenie hesla sa vyskytla '
-	. 'chyba.'
-	. 'Skontrolujte protokoly aplikácie alebo kontaktujte '
-	. 'správcu systému.',
-'password.reset.info' => 'Dostanete e-mail s odkazom na '
-	. 'obnovenie hesla.',
-'password.reset.request.token' => 'Vyžiadať token na obnovenie hesla',
-'past.month' => 'Minulý mesiac',
-'past.quarter' => 'Minulý štvrťrok',
-'past.year' => 'Minulý rok',
-'pay.now' => 'Zaplatiť teraz',
-'payment' => 'Platba',
-'payment.add' => 'Pridanie platby',
-'payment.cannot.delete' => 'Platbu nie je možné vymazať',
-'payment.cannot.exceed.balance' => 'Suma platby nemôže presiahnuť zostatok '
-	. 'na faktúre.',
-'payment.custom' => 'Platba na mieru',
-'payment.custom.add' => 'Vlastné pridanie platby',
-'payment.date' => 'Dátum platby',
-'payment.deleted' => 'Platba odstránená',
-'payment.description' => 'Platba za faktúru %s',
-'payment.form' => 'Platobný formulár',
-'payment.gateway.default.locale' => 'Predvolené miestne nastavenie, napr.'
-	. 'en.'
-	. 'GB',
-'payment.gateway.mollie.api.key.has.been.setup' =>
-	'Bol nastavený test platobnej brány '
-	. 'Mollie alebo kľúč Live API.',
-'payment.gateway.mollie.api.key.needs.to.be.setup' =>
-	'Je potrebné nastaviť test platobnej '
-	. 'brány Mollie alebo kľúč Live '
-	. 'API.',
-'payment.gateway.mollie.api.payment.id' =>
-	'ID platby Mollie:',
-'payment.gateway.no' => 'V časti Nastavenia .'
-	. 'Zobraziť .'
-	. 'Online platba neboli nastavené žiadne '
-	. 'platobné brány.',
-'payment.history' => 'História platieb',
-'payment.information.braintree.braintree.no.omnipay.version' =>
-	'Momentálne neexistuje žiadna verzia Braintree '
-	. 'Omnipay kompatibilná s verziou Braintree '
-	. '6.'
-	. '9.'
-	. '1.'
-	. 'Zrušte začiarknutie políčka Verzia Omnipay '
-	. 'v zobrazení Nastavenia, ak chcete '
-	. 'použiť verziu kompatibilnú s PCI.',
-'payment.information.invoice.number.not.provided' =>
-	'Číslo faktúry nebolo poskytnuté',
-'payment.information.no.information.provided' =>
-	'Neboli poskytnuté žiadne informácie',
-'payment.information.none' => 'Žiadne',
-'payment.information.omnipay.driver.being.used' =>
-	'Používa sa vodič {{$d}} od '
-	. 'spoločnosti Omnipay.',
-'payment.information.payment.method.required' =>
-	'Pre túto faktúru je potrebný '
-	. 'spôsob platby.',
-'payment.information.stripe.api.key' =>
-	'Je potrebné nastaviť tajný kľúč '
-	. '/ kľúč API platobnej brány '
-	. 'Stripe.',
-'payment.logs' => 'Záznamy platieb',
-'payment.method' => 'Spôsob platby',
-'payment.method.add' => 'Pridať spôsob platby',
-'payment.method.already.exists' => 'Spôsob platby už existuje!',
-'payment.method.form' => 'Formulár spôsobu platby',
-'payment.method.history' => 'Nedá sa odstrániť.'
-	. 'História spôsobu platby existuje.',
-'payment.methods' => 'Spôsoby platby',
-'payment.no.invoice.sent' => 'Žiadne faktúry sme neodoslali ani '
-	. 'si ich zákazník neprezrel.',
-'payment.provider' => 'Poskytovateľ platieb',
-'payment.term' => 'Platobné podmienky',
-'payment.term.0.days' => 'Použite, prosím, jednu z uvedených '
-	. 'platobných metód',
-'payment.term.add.additional.terms.at.setting.repository' =>
-	'Pridajte ďalšie podmienky vo funkcii '
-	. 'getPaymentTerms v úložisku nastavení.',
-'payment.term.eom.120.days' =>
-	'EOM(120):'
-	. 'Prosím, zaplaťte do 120 dní '
-	. 'od konca mesiaca vydania',
-'payment.term.eom.15.days' =>
-	'EOM(15):'
-	. 'Prosím, zaplaťte do 15 dní '
-	. 'od konca mesiaca vydania',
-'payment.term.eom.30.days' =>
-	'EOM(30):'
-	. 'Prosím, zaplaťte do 30 dní '
-	. 'od konca mesiaca vydania',
-'payment.term.eom.60.days' =>
-	'EOM(60):'
-	. 'Prosím, zaplaťte do 60 dní '
-	. 'od konca mesiaca vydania',
-'payment.term.eom.90.days' =>
-	'EOM(90):'
-	. 'Prosím, zaplaťte do 90 dní '
-	. 'od konca mesiaca vydania',
-'payment.term.general' => 'Platba splatná do 30 dní',
-'payment.term.mfi.15' => 'MFI(15):'
-	. 'Prosím, plaťte 15.'
-	. 'dňa v mesiaci nasledujúcom po '
-	. 'mesiaci vydania',
-'payment.term.net.120.days' =>
-	'Čistá suma (120):'
-	. 'Prosím, zaplaťte do 120 dní '
-	. 'od dátumu vydania',
-'payment.term.net.15.days' =>
-	'Netto(15):'
-	. 'Prosím, zaplaťte do 15 dní '
-	. 'od dátumu vystavenia.',
-'payment.term.net.30.days' =>
-	'Čistá suma (30):'
-	. 'Prosím, zaplaťte do 30 dní '
-	. 'od dátumu vystavenia',
-'payment.term.net.60.days' =>
-	'Čistá suma (60):'
-	. 'Prosím, zaplaťte do 60 dní '
-	. 'od dátumu vydania',
-'payment.term.net.90.days' =>
-	'Čistá suma (90):'
-	. 'Prosím, zaplaťte do 90 dní '
-	. 'od dátumu vydania',
-'payment.term.pia' => 'Platba je vyžadovaná vopred (PIA)',
-'payment.term.polite' => 'Ďakujeme za Vašu priazeň.'
-	. 'Prosím, pošlite platbu do 30 '
-	. 'dní od prijatia tejto faktúry.',
-'payment.terms.default' => 'Platba do 14 dní',
-'paymentpeppol' => 'Platby uskutočnené prostredníctvom Peppolu',
-'paymentpeppol.reference.plural' => 'Platobné referencie pomocou Peppolu',
-'payments' => 'Platby',
-'paymentterm' => 'Platobná lehota',
-'pdf' => 'PDF',
-'pdf.archived.no' => 'PDF NIE JE archivovaný v '
-	. 'priečinku Nahrávanie/Archív/Faktúra',
-'pdf.archived.yes' => 'PDF archivované v priečinku Nahrávanie/Archív/Faktúra',
-'pdf.include.zugferd' => 'Zahrnúť ZUGFeRD',
-'pdf.include.zugferd.help' => 'Povolením tejto možnosti sa do '
-	. 'PDF súborov faktúr zahrnie aj '
-	. 'ZUGFeRD XML, čo je štandard '
-	. 'XML pre faktúry.'
-	. '<a href="https:'
-	. '//www.'
-	. 'ferd-net.'
-	. 'de/">Viac informácií</a>',
-'pdf.invoice.footer' => 'Päta PDF',
-'pdf.invoice.footer.hint' => 'Sem môžete zadať ľubovoľný HTML '
-	. 'kód, ktorý sa zobrazí v '
-	. 'dolnej časti vašich PDF faktúr.',
-'pdf.modal' => 'Modálne PDF',
-'pdf.quote.footer' => 'Päta citátu',
-'pdf.quote.footer.hint' => 'Sem môžete zadať ľubovoľný HTML '
-	. 'kód, ktorý sa zobrazí v '
-	. 'dolnej časti vašich cenových ponúk '
-	. 'vo formáte PDF.',
-'pdf.settings' => 'Nastavenia PDF',
-'pdf.template' => 'Šablóna PDF',
-'pdf.template.overdue' => 'Šablóna PDF s oneskoreným termínom',
-'pdf.template.paid' => 'Platená šablóna PDF',
-'pdf.watermark' => 'Povoliť vodoznaky PDF',
-'peppol' => 'Faktúra Peppol Universal Business Language '
-	. '(UBL) 2.'
-	. '1 – overená spoločnosťou Ecosio',
-'peppol.abbreviation' => 'Peppol',
-'peppol.allowance.or.charge.inherit' =>
-	'Poplatky za úpravu faktúry a '
-	. 'poplatky za úpravu položiek faktúry '
-	. 'dedia z vyplnenej úpravy na '
-	. 'úrovni dokumentu Peppol',
-'peppol.client.check' => 'Údaje o Peppole týkajúce sa '
-	. 'tohto klienta sú nedostatočné.'
-	. 'Chýba aspoň jeden.'
-	. 'Pozrite si Zobraziť .'
-	. 'Klient .'
-	. 'Možnosti .'
-	. 'Upraviť údaje o Peppole pre '
-	. 'elektronickú fakturáciu.',
-'peppol.client.defaults' => 'Vyplňte formulár klienta Peppol s '
-	. 'predvolenými nastaveniami OpenPeppol na testovanie.',
-'peppol.currency.code.from' => 'Z meny, t.'
-	. 'j.'
-	. 'Krajina pôvodu Mena dane (Zmenu '
-	. 'nájdete v súbore config/common/params.'
-	. 'php TaxCurrencyCode)',
-'peppol.currency.code.to' => 'Do meny, t.'
-	. 'j.'
-	. 'mena dokumentu:'
-	. 'pozri funkciu get.'
-	. 'setting(&#39;currency.'
-	. 'code.'
-	. 'to&#39;)',
-'peppol.currency.from.to' => 'Jeden z From Currency dnes '
-	. 'prevedie na tento z To '
-	. 'Currency',
-'peppol.currency.to.from' => 'Jedna z mien To dnes '
-	. 'prepočítava na túto z mien '
-	. 'From',
-'peppol.document.reference.null' => 'číslo-inv-null-inv-id',
-'peppol.ecosio.validator' => 'Validátor Ecosio pre faktúru OpenPeppol '
-	. 'UBL (3.'
-	. '15.'
-	. '0) (známy aj ako fakturácia '
-	. 'BIS 3.'
-	. '0.'
-	. '14)',
-'peppol.electronic.invoicing' => 'Elektronická fakturácia Peppol',
-'peppol.enable' => 'Povoľte Peppol pomocou Universal Business '
-	. 'Language (UBL) 2.'
-	. '1',
-'peppol.include.delivery.period' => 'Zahrnúť dodacie lehoty',
-'peppol.invoice.note.not.found' =>
-	'Faktúra sa nenašla',
-'peppol.label.switch.off' => 'Predvolené nastavenia Peppolu povolené',
-'peppol.label.switch.on' => 'Predvolené nastavenia Peppolu sú zakázané',
-'peppol.mandatory' => ' (Povinné)',
-'peppol.optional' => ' (Voliteľné)',
-'peppol.stand.in.code' => 'Kód popisu – označuje, aký '
-	. 'základ sa použije pre budúci '
-	. 'dátum zdaňovania pri dodaní/zaplatení tovaru.'
-	. 'Ak je možné určiť dátum '
-	. 'zdaňovania, kód popisu sa vo '
-	. 'fakturačnom období vzájomne vylučuje.',
-'peppol.store.cove.1.1.1' =>
-	'Zaregistrujte sa pre prístup k '
-	. 'API na webovej stránke Store '
-	. 'Cove',
-'peppol.store.cove.1.1.2' =>
-	'Vytvorte si svoj API kľúč '
-	. 'z webovej stránky Store Cove '
-	. 'a uložte ho v časti '
-	. 'Nastavenia.'
-	. 'Zobraziť.'
-	. 'Online platba.'
-	. 'Store Cove.'
-	. 'API kľúč',
-'peppol.store.cove.1.1.3' =>
-	'Vykonajte prvé volanie API, aby '
-	. 'ste získali odpoveď JSON.',
-'peppol.store.cove.1.1.4' =>
-	'Odošlite svoju prvú testovaciu faktúru '
-	. 'vo formáte JSON, ktorú ste '
-	. 'získali kliknutím na zelené tlačidlo '
-	. 'World=&gt;DE',
-'peppol.stream.toggle' => 'Peppol – prepínacie tlačidlo „Streamovať“ '
-	. 'alebo „Uložiť do súboru“',
-'peppol.tax.category.not.found' =>
-	'Chýba kód daňovej kategórie Peppol '
-	. '(https:'
-	. '//docs.'
-	. 'peppol.'
-	. 'eu/poacc/billing/3.'
-	. '0/codelist/UNCL5305/).',
-'peppol.tax.category.percent.not.found' =>
-	'Chýba percentuálna sadzba daňovej kategórie '
-	. 'Peppol (https:'
-	. '//docs.'
-	. 'peppol.'
-	. 'eu/poacc/billing/3.'
-	. '0/codelist/UNCL5305/).',
-'peppol.tax.rate.code' => 'Daňový kód Peppol',
-'peppol.trying.to.send.non.pdf.file' =>
-	'S faktúrami Peppol sa momentálne '
-	. 'odosielajú iba súbory PDF.',
-'peppol.unit' => 'Klasifikácia jednotiek pomocou Peppolu',
-'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' =>
-	'Zdroj:'
-	. 'src/Invoice/Ubl/Invoice:'
-	. 'Chýba popis dokumentu - Ecosio:'
-	. 'Dokument NESMIE obsahovať prázdne prvky.'
-	. 'Riešenie:'
-	. 'V zobrazení faktúry:'
-	. 'Možnosti .'
-	. 'Upraviť .'
-	. 'Popis dokumentu',
-'peppol.validator.Invoice.cac.Note' =>
-	'Zdroj:'
-	. 'src/Invoice/Ubl/Invoice:'
-	. 'Chýba poznámka k faktúre - '
-	. 'Ecosio:'
-	. 'Dokument NESMIE obsahovať prázdne prvky.',
-'peppol.validator.Invoice.cac.Party.cbc.EndPointID' =>
-	'src/Invoice/Ubl/Party:'
-	. 'Chýbajúca e-mailová adresa - Ecosio:'
-	. 'Elektronická adresa MUSÍ byť poskytnutá.'
-	. 'Riešenie:'
-	. 'Klient .'
-	. 'Zobraziť .'
-	. 'Možnosti .'
-	. 'Upraviť údaje Peppol pre elektronickú '
-	. 'fakturáciu .'
-	. 'EndPointID',
-'peppol.version' => 'Verzia Peppol',
-'peppol.xml.stream' => 'Streamovať, t.'
-	. 'j.'
-	. 'zobrazovať na obrazovke v prehliadači '
-	. 'namiesto priečinka so stiahnutými súbormi.',
-'per.item' => 'za položku',
-'per.page.total' => 'na stránku.'
-	. 'Celkom',
-'performance' => 'Výkon',
-'performance.label.switch.off' => 'Rýchlejší režim čítania a zápisu '
-	. '- pozri config/common/params.'
-	. 'php, vyhľadajte &#39;mode&#39;',
-'performance.label.switch.on' => 'Pomalší režim iba zápisu - '
-	. 'pozri config/common/params.'
-	. 'php vyhľadajte &#39;mode&#39;',
-'period' => 'Obdobie',
-'permission' => 'Nemáte požadované povolenie.',
-'personal.information' => 'Osobné informácie',
-'phone' => 'Telefón',
-'phone.abbr' => 'P',
-'phone.number' => 'Telefónne číslo',
-'php.timezone.fail' => 'Zdá sa, že nie je '
-	. 'nakonfigurované žiadne časové pásmo.'
-	. 'Skontrolujte, prosím, date.'
-	. 'timezone v konfigurácii PHP.'
-	. 'V opačnom prípade bude vybraté '
-	. '<strong>%s</strong> .',
-'php.timezone.success' => 'Je nakonfigurované platné časové pásmo.',
-'php.version.fail' => 'Je nainštalovaná verzia PHP %s,'
-	. 'ale InvoicePlane vyžaduje verziu PHP '
-	. '%s alebo vyššiu',
-'php.version.success' => 'Zdá sa, že PHP spĺňa '
-	. 'požiadavky na inštaláciu',
-'platform' => 'Platforma',
-'platform.PhpMyAdmin' => 'Verzia PhpMyAdmin',
-'platform.PhpSupport' => 'Podpora PHP',
-'platform.PhpVersion' => 'Verzia PHP',
-'platform.csrf' => 'Ochrana pred falzifikátmi naprieč stránkami',
-'platform.editor' => 'Redaktor',
-'platform.mySqlVersion' => 'Verzia mySQL',
-'platform.netbeans.UTF-8' => 'Kódovanie Netbeans UTF-8',
-'platform.server' => 'Server',
-'platform.sqlPath' => 'Cesta SQL',
-'platform.update' => 'Súbory a doplnky WampServera',
-'platform.windowsVersion' => 'Windows 11 Home Edition',
-'platform.xdebug' => 'Rozšírenie Xdebug',
-'please.enable.js' => 'Pre použitie InvoicePlane povoľte Javascript.',
-'po.group' => 'Skupina objednávok',
-'port' => 'Prístav',
-'position' => 'Pozícia',
-'possible.file.upload.attack' => 'Možný útok na nahrávanie súborov: ',
-'pre.password' => 'Štandardné heslo pre PDF faktúru '
-	. '(voliteľné)',
-'prefix' => 'Predpona',
-'prev' => 'Predchádzajúce',
-'preview' => 'Náhľad',
-'price' => 'Cena',
-'product' => 'Produkt',
-'product.add' => 'Pridať produkt',
-'product.additional.item.property.name' =>
-	'Názov položky dodatočnej vlastnosti Peppol,'
-	. 'napr.'
-	. 'farba',
-'product.additional.item.property.value' =>
-	'Hodnota položky dodatočnej vlastnosti Peppol,'
-	. 'napr.'
-	. 'Black',
-'product.country.of.origin.code' =>
-	'Kód krajiny pôvodu Peppol pomocou '
-	. 'kódov krajín ISO-3166-1:'
-	. 'Alpha2',
-'product.custom.fields' => 'Vlastné polia produktu (napr.'
-	. 'Peppol:'
-	. 'pole s výberom z viacerých '
-	. 'možností, farba, hodnota, čierna)',
-'product.description' => 'Popis produktu',
-'product.edit' => 'Upraviť produkt',
-'product.error.summary' => 'Súhrn chýb produktu',
-'product.families' => 'Produktové rady',
-'product.form.tab.category' => 'Kategória',
-'product.form.tab.not.required' =>
-	'Nepovinné polia',
-'product.form.tab.required' => 'Povinné polia',
-'product.found' => 'Nájdený produkt',
-'product.history' => 'Nedá sa odstrániť.'
-	. 'Tento produkt je na faktúre '
-	. 'alebo v cenovej ponuke.',
-'product.icc.id' => 'ID kódu klasifikácie položky Peppol,'
-	. 'napr.'
-	. '9873242',
-'product.icc.listid' => 'ID zoznamu kódov klasifikácie položiek '
-	. 'Peppol – napr.'
-	. 'SRV',
-'product.icc.listversionid' => 'ID verzie zoznamu kódov klasifikácie '
-	. 'položiek Peppol (voliteľné) – napr.'
-	. 'ak klasifikáciu položiek poskytujú dánski '
-	. 'dodávatelia, mala by sa použiť '
-	. 'verzia UNSPSC 19.'
-	. '0501.',
-'product.id' => 'ID produktu',
-'product.image' => 'Obrázok',
-'product.item.classification.code.scheme.id.not.found' =>
-	'ID schémy klasifikácie položiek produktu '
-	. 'sa nenašlo',
-'product.name' => 'Názov produktu',
-'product.not.found' => 'Produkt sa nenašiel',
-'product.peppol.unit' => 'Jednotka s Peppolom',
-'product.price' => 'Cena',
-'product.price.base.quantity' => 'množstvo v produkte',
-'product.property' => ' Vlastnosť produktu',
-'product.property.add' => ' Pridať vlastnosť produktu',
-'product.property.edit' => 'Úprava vlastnosti produktu',
-'product.property.index' => 'Index vlastností produktu',
-'product.property.name' => 'Meno',
-'product.property.table' => 'Tabuľka vlastností produktu',
-'product.property.value' => 'Hodnota',
-'product.record.successfully.added' => 'Záznam o produkte bol úspešne '
-	. 'pridaný',
-'product.sii.id' => 'Štandardné identifikačné číslo položky Peppol '
-	. 'spojené s vyššie uvedenou schémou '
-	. '– napr.'
-	. '14-miestny identifikátor doplnený nulami v '
-	. 'databáze globálnych obchodných čísel položiek '
-	. '(zobrazuje sa pod čiarovým kódom)',
-'product.sii.schemeid' => 'Štandardná identifikácia položky Peppol schemeid '
-	. '– napr.'
-	. '0160',
-'product.sku' => 'SKU',
-'product.tariff' => 'Tarifa',
-'product.unit' => 'Jednotka produktu',
-'product.unit.code.not.found' =>
-	'Produkt nemá priradený kód jednotky.'
-	. 'Produkt .'
-	. 'Upraviť .'
-	. 'Jednotka s Peppolom.',
-'product.units' => 'Jednotky produktu',
-'product.view.tab.details' => 'Detaily produktu',
-'product.view.tab.gallery' => 'Galéria produktov',
-'product.view.tab.images' => 'Obrázky produktov',
-'product.view.tab.properties' => 'Vlastnosti produktu',
-'productimage.add' => 'Pridať obrázok produktu',
-'productimage.deleted.from' => 'Obrázok bol úspešne odstránený z '
-	. 'nasledujúceho adresára:',
-'productimage.form' => 'Formulár s obrázkom produktu',
-'productimage.gallery' => 'Obrázky súvisiace s: ',
-'productimage.index' => 'Index obrázkov produktu',
-'productimage.list' => 'Zoznam obrázkov spojených s týmto '
-	. 'produktom',
-'productimage.no.file.uploaded' => 'Nebol nahraný žiadny obrázok.'
-	. 'Možný duplikát.',
-'productimage.plural' => 'Obrázky produktov',
-'productimage.possible.file.upload.attack' =>
-	'Možný útok na nahrávanie súborov:',
-'productimage.upload' => 'Nahrať obrázok produktu',
-'productimage.uploaded.to' => 'Obrázok bol nahraný do nasledujúceho '
-	. 'adresára:',
-'productimage.view' => 'V časti Zobrazenie produktu je '
-	. 'možné pridať viacero obrázkov týkajúcich '
-	. 'sa produktu.',
-'products' => 'Produkty',
-'products.form' => 'Formulár produktu',
-'profile.deleted' => 'Profil bol odstránený',
-'profile.history' => 'Profil sa nedá odstrániť.'
-	. 'História existuje.',
-'profile.new' => 'Vytvorte si profil s novou '
-	. 'e-mailovou adresou alebo mobilným číslom,'
-	. 'aktivujte ho a vyberte údaje '
-	. 'o spoločnosti, s ktorými ho '
-	. 'chcete prepojiť.'
-	. 'Tieto informácie sa automaticky zobrazia '
-	. 'v dokumentácii, napr.'
-	. 'v cenových ponukách a faktúrach.',
-'profile.not.deleted' => 'Profil nebol odstránený',
-'profile.plural' => 'Profily',
-'profile.property.label.company' => 'Spoločnosť',
-'profile.property.label.current' => 'Súčasný',
-'profile.property.label.description' => 'Popis',
-'profile.property.label.email' => 'E-mail',
-'profile.property.label.mobile' => 'Mobilné',
-'profile.singular' => 'Profil',
-'project' => 'Projekt',
-'project.add' => 'Pridať projekt',
-'project.name' => 'Názov projektu',
-'projects' => 'Projekty',
-'projects.form' => 'Projekty',
-'properties' => 'Nehnuteľnosti',
-'provider.name' => 'Názov poskytovateľa',
-'provider.response' => 'Odpoveď poskytovateľa',
-'purchase.price' => 'Kúpna cena',
-'Q1' => '1.'
-	. 'štvrťrok',
-'Q2' => '2.'
-	. 'štvrťrok',
-'Q3' => '3.'
-	. 'štvrťrok',
-'Q4' => '4.'
-	. 'štvrťrok',
-'qr.absolute.url' => 'Absolútna URL adresa použitá na '
-	. 'zostavenie nad QR kódom',
-'qr.code' => 'QR kód',
-'qr.code.1' => 'QR kód 1',
-'qr.code.details' => 'Podrobnosti o QR kóde',
-'qr.code.level.1' => 'Úroveň kódovania je základná',
-'qr.code.level.2' => 'Úroveň kódovania je stredná',
-'qr.code.level.3' => 'Úroveň kódovania je pokročilá',
-'qr.code.settings' => 'Nastavenia QR kódu',
-'qr.code.settings.bic' => 'BIC',
-'qr.code.settings.effect' => 'Aký vplyv majú vyššie uvedené '
-	. 'nastavenia na tento QR kód?',
-'qr.code.settings.effect.explanation' =>
-	'V skutočnom kóde .'
-	. 'žiadne.'
-	. 'Používajú sa všetky predvolené hodnoty,'
-	. 'pretože sa používa úplne základný '
-	. 'kód uvedený vyššie.',
-'qr.code.settings.enable' => 'Povoliť QR kód',
-'qr.code.settings.enable.hint' =>
-	'Povolením tejto možnosti sa zobrazí '
-	. 'QR kód pre PDF súbory '
-	. 'faktúr.'
-	. 'Pre správne fungovanie je potrebné '
-	. 'vyplniť nižšie uvedené údaje príjemcu,'
-	. 'IBAN a BIC.'
-	. 'V opačnom prípade sa QR '
-	. 'kód nezobrazí.',
-'qr.code.settings.iban' => 'IBAN',
-'qr.code.settings.recipient' => 'Príjemca',
-'qr.code.settings.remittance.text' =>
-	'Text prevodu peňazí',
-'qr.code.settings.remittance.text.tags' =>
-	'Značky textu pre prevod peňazí',
-'qr.code.source' => 'Zdroj QR kódu',
-'qr.code.source.path' => 'zdroje\\zobrazenia\\faktúra\\nastavenie\\logo.'
-	. 'spoločnosti.'
-	. 'a.'
-	. 'adresa.'
-	. 'php',
-'qr.code.type' => 'Typ QR kódu',
-'qr.code.type.absolute.url' =>
-	'Absolútna (celá) URL adresa',
-'qr.code.widget.used' => 'Použitý widget',
-'qr.ecc.level' => 'Úroveň QR kódu ECC (predvolené:'
-	. 'L)',
-'qr.height.and.width' => 'Výška a šírka QR kódu '
-	. '(predvolené:'
-	. '60)',
-'qr.meaning' => 'Význam',
-'qr.meaning.benefit' => 'Naskenujte a vráťte sa na '
-	. 'zobrazenie (bez zadávania adresy URL),'
-	. 'kde je možné faktúru vytlačiť '
-	. 'vo formáte PDF.'
-	. 'Platí pre všetkých používateľov s '
-	. 'aktívnym klientskym účtom.',
-'qr.output.type' => 'Typ výstupu QR kódu (napr.'
-	. '.'
-	. 'svg, .'
-	. 'png) (Predvolené:'
-	. 'png)',
-'qr.version' => 'Číslo verzie QR kódu (najstaršia '
-	. '0 najnovšia 40) (Predvolené:'
-	. '40)',
-'qty' => 'Množstvo',
-'quantity' => 'Množstvo',
-'quarter' => 'Štvrťrok',
-'quick.actions' => 'Rýchle akcie',
-'quote' => 'Citát',
-'quote.add' => 'Pridať cenovú ponuku',
-'quote.amount' => 'Suma cenovej ponuky',
-'quote.amount.add' => 'Pridať sumu cenovej ponuky',
-'quote.amounts' => 'Cenové sumy',
-'quote.approve' => 'Schváliť',
-'quote.approved' => 'Táto cenová ponuka bola schválená',
-'quote.copied.to.invoice' => 'Cenová ponuka skopírovaná do NOVEJ '
-	. 'faktúry',
-'quote.copied.to.quote' => 'Citát skopírovaný do NOVÉHO citátu!',
-'quote.copied.to.so' => 'Cenová ponuka skopírovaná do predajnej '
-	. 'objednávky',
-'quote.custom' => 'Vlastná cenová ponuka',
-'quote.custom.add' => 'Pridať vlastnú cenovú ponuku',
-'quote.date' => 'Dátum cenovej ponuky',
-'quote.dates' => 'Dátumy cenových ponúk',
-'quote.delete.not' => 'Faktúra nebola vymazaná.',
-'quote.delivery.location.index.button.list' =>
-	'Citáty',
-'quote.delivery.location.none' => 'K tejto cenovej ponuke nie '
-	. 'je priradené žiadne miesto doručenia.',
-'quote.disable.flash.messages' => 'Zakázať bleskové správy s citátmi',
-'quote.email.templates.not.configured' =>
-	'Šablóny e-mailov nie sú nakonfigurované.'
-	. 'Nastavenia.'
-	. 'Cenové ponuky.'
-	. 'Šablóny cenových ponúk.'
-	. 'Predvolená šablóna e-mailu',
-'quote.group' => 'Skupina cenových ponúk',
-'quote.id' => 'ID cenovej ponuky ',
-'quote.item' => 'Položka cenovej ponuky',
-'quote.item.add' => 'Pridať položku cenovej ponuky',
-'quote.item.amount' => 'Položka cenovej ponuky Suma',
-'quote.item.amount.add' => 'Ponuka Položka Suma Pridať',
-'quote.item.cannot.delete' => 'Položku cenovej ponuky nie je '
-	. 'možné odstrániť',
-'quote.label.switch.off' => 'DPH cenová ponuka',
-'quote.label.switch.on' => 'Cenová ponuka BEZ DPH',
-'quote.not.copied.to.invoice' =>
-	'Faktúra NIE JE vytvorená z '
-	. 'cenovej ponuky! Duplicitná faktúra.'
-	. 'Skopírujte cenovú ponuku do inej '
-	. 'cenovej ponuky a potom ju '
-	. 'skopírujte do faktúry.'
-	. 'Každá cenová ponuka musí mať '
-	. 'zodpovedajúcu faktúru.',
-'quote.number' => 'Číslo cenovej ponuky',
-'quote.number.status' => 'Stav čísla cenovej ponuky',
-'quote.overview' => 'Prehľad cenovej ponuky',
-'quote.overview.period' => 'Prehľad cenovej ponuky Obdobie',
-'quote.password' => 'Heslo k citovanému PDF dokumentu '
-	. '(voliteľné)',
-'quote.pre.password' => 'Uveďte štandardné heslo pre PDF '
-	. '(voliteľné)',
-'quote.reject' => 'Odmietnuť',
-'quote.rejected' => 'Táto cenová ponuka bola zamietnutá',
-'quote.sales.order.created.from.quote' =>
-	'Objednávka predaja bola vytvorená z '
-	. 'cenovej ponuky a zadali ste '
-	. 'číslo objednávky!',
-'quote.sales.order.not.created.from.quote' =>
-	'Objednávka predaja nebola vytvorená z '
-	. 'cenovej ponuky! Duplicitná objednávka predaja.'
-	. 'Skopírujte cenovú ponuku do inej '
-	. 'cenovej ponuky a potom ju '
-	. 'skopírujte do objednávky predaja.'
-	. 'Každá cenová ponuka musí mať '
-	. 'zodpovedajúcu objednávku predaja.',
-'quote.status.email.body' => 'Klient %1$s má %2$s cenovú '
-	. 'ponuku %3$sOdkaz na cenovú ponuku:'
-	. '%4$s',
-'quote.status.email.subject' => 'Klient %1$s %2$s cenová ponuka '
-	. '%3$s',
-'quote.tax' => 'Daň z cenovej ponuky',
-'quote.tax.rate' => 'Sadzba dane z cenovej ponuky',
-'quote.tax.rate.add' => 'Pridať daňovú sadzbu',
-'quote.tax.rate.cannot.delete' =>
-	'Nie je možné odstrániť cenovú '
-	. 'ponuku sadzby dane',
-'quote.tax.rate.incomplete.fields' =>
-	'Neúplné polia:'
-	. 'Musíte uviesť sadzbu dane.'
-	. 'Tip:'
-	. 'Uveďte nulovú sadzbu dane.',
-'quote.tax.rate.saved' => 'Sadzba dane z ponuky bola '
-	. 'uložená',
-'quote.template' => 'Šablóna cenovej ponuky',
-'quote.templates' => 'Šablóny cenových ponúk',
-'quote.to.invoice' => 'Cenová ponuka k faktúre',
-'quote.to.so' => 'Cenová ponuka k predajnej objednávke',
-'quote.to.so.password' => 'Heslo predajnej objednávky',
-'quote.vat.quote' => 'DPH cenová ponuka',
-'quote.with.purchase.order.line.number' =>
-	'Číslo riadku objednávky (požiadavka Peppol) '
-	. '– má sa spárovať s '
-	. 'číslom riadku predajnej objednávky',
-'quote.with.purchase.order.number' =>
-	'Číslo objednávky – má sa '
-	. 'spárovať s číslom objednávky predaja',
-'quote.with.purchase.order.person' =>
-	'Osoba/oddelenie, ktoré zadáva objednávku',
-'quotes' => 'Citáty',
-'quotes.expire.after' => 'Platnosť cenových ponúk vyprší po '
-	. '(dni)',
-'quotes.requiring.approval' => 'Citáty vyžadujúce schválenie',
-'read.only' => 'Iba na čítanie',
-'read.this.please' => 'Prečítaj si to, prosím!',
-'reason' => 'Dôvod',
-'reason.accident' => 'Nehoda',
-'reason.birthdefect' => 'Vrodená chyba',
-'reason.disease' => 'Choroba',
-'reason.maternity' => 'Materstvo',
-'reason.prevention' => 'Prevencia',
-'reason.unknown' => 'Neznámy',
-'recent.clients' => 'Nedávni klienti',
-'recent.invoices' => 'Nedávne faktúry',
-'recent.payments' => 'Nedávne platby',
-'recent.quotes' => 'Nedávne citáty',
-'record.successfully.created' => 'Záznam bol úspešne vytvorený',
-'record.successfully.deleted' => 'Záznam bol úspešne odstránený',
-'record.successfully.updated' => 'Záznam bol úspešne aktualizovaný',
-'records.no' => 'Žiadne záznamy',
-'recurring' => 'Opakujúce sa',
-'recurring.add' => 'Opakujúce sa pridanie',
-'recurring.deleted' => 'Odstránené',
-'recurring.frequency' => 'Frekvencia',
-'recurring.invoices' => 'Opakujúce sa faktúry',
-'recurring.no.invoices.selected' => 'Nevybrali ste žiadne faktúry.',
-'recurring.original.invoice.date' => 'Dátum pôvodnej faktúry: ',
-'recurring.status.sent.only' => 'Iba faktúry so stavom odoslané '
-	. 'je možné nastaviť ako opakované',
-'recurring.tooltip.next' => 'Ďalší dátum sa stanoví pomocou '
-	. 'indexu.',
-'reject' => 'Odmietnuť',
-'reject.this.quote' => 'Odmietnuť túto cenovú ponuku',
-'rejected' => 'Zamietnuté',
-'reminder' => 'Pripomienka odoslaná',
-'remove' => 'Odstrániť',
-'remove.logo' => 'Odstrániť logo',
-'report' => 'Správa',
-'report.options' => 'Možnosti prehľadu',
-'report.sales.by.product' => 'Predaj podľa produktu',
-'report.sales.by.product.info' =>
-	'Táto správa uvádza celkovú sumu '
-	. 'predaja produktov spolu s daňou '
-	. 'z položky.'
-	. 'Nezahŕňa dodatočnú daň z faktúry '
-	. 'súvisiacu s týmito produktmi.',
-'report.sales.by.task' => 'Predaj podľa úlohy',
-'report.sales.by.task.info' =>
-	'Táto správa uvádza celkovú sumu '
-	. 'predaja úlohy spolu s daňou '
-	. 'z položky.'
-	. 'Nezahŕňa dodatočnú daň z faktúry '
-	. 'súvisiacu s týmito úlohami.',
-'report.test.fraud.prevention.headers.api' =>
-	'Testovacie rozhranie API pre hlavičky '
-	. 'na prevenciu podvodov',
-'reports' => 'Správy',
-'reset' => 'Obnoviť',
-'reset.password' => 'Obnoviť heslo',
-'rules.peppol.en16931.001' => 'Musí byť zadaný obchodný proces '
-	. 'alebo ID profilu.'
-	. 'Pozrite si súbor config/common/params.'
-	. 'php a vyhľadajte ProfileID.',
-'run.report' => 'Spustiť správu',
-'sales' => 'Predaj',
-'sales.by.client' => 'Predaj podľa klienta',
-'sales.by.date' => 'Predaj podľa dátumu',
-'sales.with.tax' => 'Predaj s daňou',
-'salesorder' => 'Objednávka predaja',
-'salesorder.agree.to.terms' => 'Súhlasím s Podmienkami, ktoré vám '
-	. 'teraz budú zaslané.',
-'salesorder.assembled.packaged.prepared' => 'Zmontované/Zabalené/Pripravené',
-'salesorder.cancelled' => 'Objednávka predaja zrušená',
-'salesorder.client.confirmed.terms' => 'Podmienky potvrdené klientom',
-'salesorder.clients.purchase.order.number' =>
-	'Číslo objednávky klienta',
-'salesorder.clients.purchase.order.person' =>
-	'Objednávka klienta Osoba spracovávajúca jeho '
-	. 'objednávku',
-'salesorder.copied.to.invoice' => 'Objednávka predaja skopírovaná do faktúry',
-'salesorder.copied.to.invoice.not' =>
-	'Faktúra NIE JE vytvorená z '
-	. 'predajnej objednávky! Duplikát faktúry.'
-	. 'Skopírujte svoju predajnú objednávku do '
-	. 'inej predajnej objednávky a potom '
-	. 'ju skopírujte do faktúry.'
-	. 'Každá predajná objednávka musí mať '
-	. 'zodpovedajúcu faktúru.',
-'salesorder.date.created' => 'Dátum vytvorenia predajnej objednávky',
-'salesorder.default.group' => 'Predvolená skupina predajných objednávok',
-'salesorder.goods.services.confirmed' => 'Doručenie potvrdené klientom',
-'salesorder.goods.services.delivered' => 'Dodaný tovar/služba',
-'salesorder.invoice' => 'Faktúra',
-'salesorder.invoice.generate' => 'Generovanie faktúry',
-'salesorder.invoice.generated' => 'Vygenerovaná faktúra',
-'salesorder.invoice.number' => 'Číslo faktúry',
-'salesorder.number' => 'Číslo predajnej objednávky',
-'salesorder.number.status' => 'Stav čísla predajnej objednávky',
-'salesorder.password' => 'Heslo predajnej objednávky',
-'salesorder.payment.terms' => 'Platobné podmienky predajnej objednávky, napr.'
-	. 'Prosím, zaplaťte do 30 dní',
-'salesorder.recent' => 'Nedávne predajné objednávky',
-'salesorder.reject' => 'Zamietnutie predajnej objednávky',
-'salesorder.rejected' => 'Objednávka predaja zamietnutá',
-'salesorder.sent.to.customer' => 'Vyžaduje sa dohoda o podmienkach',
-'salesorder.to.invoice' => 'Objednávka predaja na faktúru',
-'salesorder.vat.salesorder' => 'Objednávka s DPH',
-'salesorders' => 'Objednávky predaja',
-'save' => 'Uložiť',
-'save.item.as.lookup' => 'Uložiť položku ako vyhľadávanie',
-'search.family' => 'Vyhľadať rodinu',
-'search.product' => 'Vyhľadať produkt',
-'security.disable.read.only.empty' =>
-	'Nastavenie zakázať iba na čítanie '
-	. 'momentálne nemá hodnotu 0 ani '
-	. '1.'
-	. 'Predvolene ho nastavte na 0,'
-	. 'aby bola k dispozícii funkcia '
-	. 'iba na čítanie, ktorá zabráni '
-	. 'vymazaniu faktúry.',
-'security.disable.read.only.info' =>
-	'Upozornenie:'
-	. 'Je povolená funkcia ochrany faktúr '
-	. 'a prevencie vymazania iba na '
-	. 'čítanie.'
-	. 'Vypnite funkciu „disable.'
-	. 'read.'
-	. 'only“, aby sa odoslané faktúry '
-	. 'mohli obnoviť do stavu koncept.',
-'security.disable.read.only.success' =>
-	'Úspech:'
-	. 'Funkcia ochrany faktúr a zabránenia '
-	. 'vymazaniu iba na čítanie bola '
-	. 'znova povolená.',
-'security.disable.read.only.true.draft.check.and.mark' =>
-	'Upozornenie:'
-	. 'Upravujete koncept s nastavením zakázať '
-	. 'iba na čítanie na hodnotu '
-	. 'true',
-'security.disable.read.only.true.sent.check.and.mark' =>
-	'Upozornenie:'
-	. 'Upravujete odoslanú faktúru s nastavením '
-	. 'zakázať iba na čítanie na '
-	. 'hodnotu true.',
-'security.disable.read.only.warning' =>
-	'Upozornenie:'
-	. 'Funkcia ochrany faktúr a ochrany '
-	. 'pred vymazaním iba na čítanie '
-	. 'bola deaktivovaná.',
-'select.family' => 'Vyberte rodinu',
-'select.payment.method' => 'Vyberte spôsob platby',
-'select.project' => 'Vyberte projekt',
-'select.unit' => 'Vyberte jednotku',
-'send' => 'Odoslať',
-'send.email' => 'Odoslať e-mail',
-'sent' => 'Odoslané',
-'set.new.password' => 'Nastaviť nové heslo',
-'set.to.read.only' => 'Nastaviť faktúru len na čítanie',
-'setting' => 'Nastavenie',
-'setting.add' => 'Pridať nastavenie',
-'setting.as.a.result.of ' =>
-	'v dôsledku',
-'setting.assets.cleared.at' => 'Majetok zúčtovaný v ',
-'setting.assets.were.not.cleared.at' =>
-	'Majetok nebol zúčtovaný v',
-'setting.company' => 'Verejné údaje o spoločnosti',
-'setting.company.private' => 'Súkromné ​​údaje spoločnosti',
-'setting.company.profile' => 'Zmena profilu, napr.'
-	. 'mobilného telefónu a e-mailovej adresy',
-'setting.duplicate.key' => 'Uloženie sa nepodarilo dokončiť.'
-	. 'Máte duplikát s nasledujúcim kľúčom:',
-'setting.error.on.the.public.assets.folder' =>
-	'chyba v priečinku verejných aktív.',
-'setting.form' => 'Nastavenie formulára',
-'setting.key' => 'Kľúč nastavenia',
-'setting.section' => 'Sekcia',
-'setting.subsection' => 'Podsekcia',
-'setting.translator.key' => 'Kľúč prekladača',
-'setting.value' => 'Nastavenie hodnoty',
-'setting.you.have.cleared.the.cache' =>
-	'Vymazali ste vyrovnávaciu pamäť.',
-'setting.you.have.not.cleared.the.cache.due.to.a' =>
-	'Nevymazali ste vyrovnávaciu pamäť',
-'settings' => 'Nastavenia',
-'settings.successfully.saved' => 'Nastavenia boli úspešne uložené',
-'setup.choose.language' => 'Vyberte jazyk',
-'setup.choose.language.message' => 'Vyberte jazyk pre pokračovanie inštalácie.',
-'setup.complete' => 'Inštalácia dokončená',
-'setup.complete.message' => 'InvoicePlane bol úspešne nainštalovaný.'
-	. 'Teraz sa môžete prihlásiť.',
-'setup.complete.secure.setup' => 'Ak chcete zabezpečiť svoju inštaláciu,'
-	. 'môžete inštaláciu zatiaľ zakázať.'
-	. 'Ak to chcete urobiť, nahraďte '
-	. 'riadok <code>DISABLE_SETUP=false</code> riadkom <code>DISABLE_SETUP=true</code> vo '
-	. 'vašom súbore <code>ipconfig.'
-	. 'php</code> .',
-'setup.complete.support.note' => 'Ak narazíte na nejaké problémy '
-	. 'alebo potrebujete pomoc, pozrite si '
-	. '<a href="https:'
-	. '//wiki.'
-	. 'invoiceplane.'
-	. 'com">oficiálnu wiki</a> alebo <a href="https:'
-	. '//community.'
-	. 'invoiceplane.'
-	. 'com/">komunitné fórum</a> .',
-'setup.create.user' => 'Vytvoriť používateľský účet',
-'setup.create.user.message' => 'Toto sú informácie, ktoré budete '
-	. 'potrebovať na prihlásenie do InvoicePlane.',
-'setup.database.configured.message' => 'Databáza je úspešne nakonfigurovaná.',
-'setup.database.details' => 'Podrobnosti o databáze',
-'setup.database.message' => 'Pre pripojenie k databáze zadajte '
-	. 'nasledujúce informácie.',
-'setup.db.cannot.connect' => 'Nepodarilo sa pripojiť k databázovému '
-	. 'serveru s poskytnutými informáciami o '
-	. 'databáze.'
-	. 'Skontrolujte prihlasovacie údaje a skúste '
-	. 'to znova.',
-'setup.db.database.info' => 'Názov databázy, ktorú ste vytvorili '
-	. 'pre InvoicePlane.',
-'setup.db.hostname.info' => 'Názov hostiteľa pre vašu databázu.',
-'setup.db.password.info' => 'Heslo spojené s databázou.',
-'setup.db.port.info' => 'Port, na ktorom počúva váš '
-	. 'hostiteľský názov.'
-	. 'Predvolená hodnota je 3306.',
-'setup.db.username.info' => 'Používateľské meno priradené k databáze.',
-'setup.install.tables' => 'Inštalácia tabuliek',
-'setup.other.contact' => 'Iný kontakt',
-'setup.prerequisites' => 'Predpoklady',
-'setup.prerequisites.message' => 'Vitajte v InvoicePlane! Pred pokračovaním '
-	. 'v inštalácii je potrebné vyriešiť '
-	. 'všetky problémy uvedené nižšie.',
-'setup.tables.errors' => 'Pred pokračovaním v inštalácii je '
-	. 'potrebné vyriešiť nižšie uvedené chyby.',
-'setup.tables.success' => 'Tabuľky databázy boli úspešne nainštalované.',
-'setup.upgrade.message' => 'Pred pokračovaním v inštalácii je '
-	. 'potrebné vyriešiť nižšie uvedené chyby.',
-'setup.upgrade.success' => 'Tabuľky databázy boli úspešne aktualizované.',
-'setup.upgrade.tables' => 'Vylepšiť tabuľky',
-'setup.user.address.info' => 'Adresa zadaná nižšie sa zobrazí '
-	. 'na vašich faktúrach.',
-'setup.user.contact.info' => 'Tieto kontaktné informácie sa môžu '
-	. 'zobraziť aj na vašich faktúrach.',
-'setup.user.email.info' => 'Vaša e-mailová adresa bude použitá '
-	. 'na prihlásenie do InvoicePlane.',
-'setup.user.name.info' => 'Buď názov vašej spoločnosti, alebo '
-	. 'vaše krstné meno a priezvisko.',
-'setup.user.password.info' => 'Nezabudnite použiť silné heslo.'
-	. 'Odporúča sa kombinácia veľkých a '
-	. 'malých písmen, číslic a symbolov.'
-	. 'Minimálna dĺžka:'
-	. '8 znakov',
-'setup.user.password.verify.info' =>
-	'Overte svoje heslo opätovným zadaním '
-	. 'rovnakého hesla.',
-'setup.v120.alert' => '<strong>Pozor!</strong><br> Je veľmi dôležité, aby '
-	. 'ste si prečítali <a href="https:'
-	. '//go.'
-	. 'invoiceplane.'
-	. 'com/v120update" target="_blank">toto aktualizačné oznámenie</a> o '
-	. 'niektorých významných zmenách aplikácie InvoicePlane.',
-'setup.v147.alert' => '<strong>Pozor!</strong><br> Otvorte súbor <code>application/config/config.'
-	. 'php</code> a zmeňte riadok <code>$config[&#39;sess_use_database&#39;] '
-	. '= false;</code> na <code>$config[&#39;sess_use_database&#39;] = '
-	. 'true;</code> .'
-	. '<br> Viac podrobností nájdete <a '
-	. 'href="https:'
-	. '//go.'
-	. 'invoiceplane.'
-	. 'com/v147update" target="_blank">tu</a>',
-'showing.of' => 'Zobrazuje sa %s z %s ',
-'signup' => 'Registrácia',
-'single.choice' => 'Jedna voľba',
-'site.soletrader.about.choose' => 'Tu je niekoľko lákavých dôvodov,'
-	. 'prečo si vybrať práve nás:',
-'site.soletrader.about.competitive.rates' =>
-	'Konkurenčné ceny',
-'site.soletrader.about.contemporary' => 'Súčasné zručnosti',
-'site.soletrader.about.dissatisfaction' => 'V prípade nespokojnosti so službami '
-	. 'prácu bezplatne prerobíme.',
-'site.soletrader.about.finished' => 'Dokončené projekty',
-'site.soletrader.about.happy' => 'Spokojní zákazníci',
-'site.soletrader.about.quality' => 'Bez obetovania kvality',
-'site.soletrader.about.return' => 'Vracajúci sa zákazníci',
-'site.soletrader.about.simply' => 'Stačí zdvihnúť telefón a my '
-	. 'prácu prerobíme.',
-'site.soletrader.about.solved' => 'Vyriešené problémy',
-'site.soletrader.about.trained' => 'Náš tím je dobre vyškolený '
-	. 'a skúsený.',
-'site.soletrader.about.we' => 'Usilovne používame svoje zručnosti podľa '
-	. 'našich najlepších schopností.',
-'site.soletrader.about.willing' => 'Podpora ochotného návratu',
-'site.soletrader.contact.address' => 'Adresa',
-'site.soletrader.contact.email' => 'E-mail',
-'site.soletrader.contact.lookout' => 'Vždy hľadáme nových klientov.'
-	. 'Ak máte záujem o spoluprácu '
-	. 's nami, kontaktujte nás jedným '
-	. 'z nasledujúcich spôsobov.',
-'site.soletrader.contact.phone' => 'Telefón',
-'site.soletrader.contact.touch' => 'Kontaktujte nás',
-'site.soletrader.pricing.basic' => 'základné',
-'site.soletrader.pricing.choosePlan' => 'Vyberte si plán',
-'site.soletrader.pricing.currencyPerMonth' => 'mesačne',
-'site.soletrader.pricing.explore' => 'Preskúmajte naše flexibilné ceny a '
-	. 'nájdite si skvelú ponuku pre '
-	. 'vaše podnikanie.',
-'site.soletrader.pricing.plans' => 'Viac plánov',
-'site.soletrader.pricing.pricing' => ' Naše ceny',
-'site.soletrader.pricing.pro' => 'Profesionálny',
-'site.soletrader.pricing.proPrice' => 'profesionálna cena',
-'site.soletrader.pricing.special' => 'špeciálny',
-'site.soletrader.pricing.starter' => 'Štartér',
-'site.soletrader.pricing.visits' => 'návštevy',
-'site.soletrader.team.assistant' => 'Asistent',
-'site.soletrader.team.coordinator' => 'Koordinátor',
-'site.soletrader.team.we' => 'Sme skupina starostlivých, skúsených a '
-	. 'usilovných ľudí.',
-'site.soletrader.testimonial.we' => 'Toto sú referencie',
-'site.soletrader.testimonial.worker1' => 'Toto je moje svedectvo',
-'site.soletrader.testimonial.worker2' => 'Toto je moje svedectvo',
-'site.soletrader.testimonial.worker3' => 'Toto je moje svedectvo',
-'site.todays.date' => 'Dnešný dátum',
-'six.months' => 'Šesť mesiacov',
-'smtp.mail.from' => 'Adresa odosielateľa SMTP pre systémové '
-	. 'e-maily',
-'smtp.password' => 'Heslo SMTP',
-'smtp.port' => 'SMTP port',
-'smtp.requires.authentication' => 'Vyžaduje overenie',
-'smtp.security' => 'Bezpečnosť',
-'smtp.server.address' => 'Adresa SMTP servera',
-'smtp.ssl' => 'SSL',
-'smtp.tls' => 'TLS',
-'smtp.username' => 'Používateľské meno SMTP',
-'smtp.verify.certs' => 'Overenie certifikátov SMTP',
-'sql.file' => 'Súbor SQL',
-'start' => 'Štart',
-'start.date' => 'Dátum začiatku',
-'state' => 'Štát',
-'status' => 'Stav',
-'stop' => 'Zastaviť',
-'stop.logging.in' => 'Zastaviť prihlasovanie',
-'stop.signing.up' => 'Zastaviť registráciu',
-'storecove' => 'Storecove',
-'storecove.advisory.to.developer.field.easily.missed' =>
-	'Zákazník ľahko prehliadne pole',
-'storecove.create.a.sender.legal.entity.country' =>
-	'1.'
-	. '1.'
-	. '4.'
-	. 'Vytvorenie odosielateľa – krajina právnickej '
-	. 'osoby',
-'storecove.invoice.json.encoded' => 'Faktúra kódovaná v JSON v '
-	. 'StoreCove',
-'storecove.legal' => 'Právne',
-'storecove.legal.entity.id.for.json' =>
-	'1.'
-	. '1.'
-	. '4.'
-	. 'Vytvorenie odosielateľa – ID právnickej '
-	. 'osoby Store Cove vložené do '
-	. 'súboru invoice.'
-	. 'json',
-'storecove.legal.entity.identifier.id.not.found' =>
-	'Konfiguračné parametre Účtovníctvo Dodávateľ Strana '
-	. 'Právnická osoba ID spoločnosti sa '
-	. 'nenašlo.',
-'storecove.no.contract.exists' => 'Neexistuje žiadna zmluva',
-'storecove.not.available' => 'Nie je k dispozícii',
-'storecove.purchase.order.item.id.null' =>
-	'po-item-id-null',
-'storecove.receiver.identifier' => 'Identifikátor príjemcu – pozri StoreCove '
-	. '6.'
-	. '3',
-'storecove.region.country.legal.tax' =>
-	'Región ---------- Krajina --------- Právne '
-	. 'informácie --------- Daň',
-'storecove.salesorder.number.not.exist' =>
-	'Číslo predajnej objednávky neexistuje',
-'storecove.sender.identifier' => '6.'
-	. '2 Identifikátor odosielateľa',
-'storecove.sender.identifier.basis' => '6.'
-	. '2 Základ identifikácie odosielateľa – '
-	. 'právny alebo daňový',
-'storecove.supplier.contact.email.not.found' =>
-	'E-mailová adresa kontaktu dodávateľa sa '
-	. 'nenašla.'
-	. 'Pozrite si pole konfiguračných parametrov.',
-'storecove.supplier.contact.firstname.not.found' =>
-	'Meno kontaktnej osoby dodávateľa sa '
-	. 'nenašlo.'
-	. '​​Pozrite si pole konfiguračných parametrov.',
-'storecove.supplier.contact.lastname.not.found' =>
-	'Priezvisko kontaktnej osoby dodávateľa sa '
-	. 'nenašlo.'
-	. '​​Pozrite si pole konfiguračných parametrov.',
-'storecove.supplier.contact.name.not.found' =>
-	'Meno kontaktnej osoby dodávateľa sa '
-	. 'nenašlo.'
-	. '​​Pozrite si pole konfiguračných parametrov.',
-'storecove.supplier.contact.telephone.not.found' =>
-	'Telefónne číslo kontaktu dodávateľa sa '
-	. 'nenašlo.'
-	. '​​Pozrite si pole konfiguračných parametrov.',
-'storecove.tax' => 'Daň',
-'storecove.tax.rate.code' => 'Daňový kód Storecove',
-'storecove.tax.scheme.identifier.id.not.found' =>
-	'Konfiguračné parametre Účtovníctvo Dodávateľ Strana '
-	. 'Daňový systém ID spoločnosti sa '
-	. 'nenašlo.',
-'stream' => 'Streamovanie PDF v prehliadači / '
-	. 'modálnom okne',
-'street.address' => 'Adresa ulice',
-'street.address.2' => 'Adresa ulice (pokračovanie)',
-'subject' => 'Predmet',
-'submenu' => 'Podmenu',
-'submit' => 'Odoslať',
-'subtotal' => 'Medzisúčet',
-'success' => 'Úspech',
-'successful' => 'Úspešné',
-'sunday' => 'Nedeľa',
-'system.settings' => 'Nastavenia systému',
-'table' => 'Tabuľka',
-'task' => 'Úloha',
-'task.add' => 'Pridať úlohu',
-'task.description' => 'Popis úlohy',
-'task.finish.date' => 'Dátum ukončenia',
-'task.name' => 'Názov úlohy',
-'task.price' => 'Cena úlohy',
-'tasks' => 'Úlohy',
-'tasks.form' => 'Formulár úlohy',
-'tax' => 'Daň',
-'tax.code' => 'Daňový kódex',
-'tax.code.short' => 'Daňový kódex',
-'tax.information' => 'Informácie o daniach',
-'tax.point' => 'Dátum daňového bodu',
-'tax.rate' => 'Sadzba dane',
-'tax.rate.add' => 'Pridať daňovú sadzbu',
-'tax.rate.code' => 'Kód sadzby dane z faktúry',
-'tax.rate.decimal.places' => 'Desatinné miesta daňovej sadzby',
-'tax.rate.edit' => 'Upraviť daňovú sadzbu',
-'tax.rate.form' => 'Formulár daňovej sadzby',
-'tax.rate.history.exists' => 'Nedá sa vymazať.'
-	. 'História už existuje.',
-'tax.rate.name' => 'Názov daňovej sadzby, napr.'
-	. 'štandard',
-'tax.rate.percent' => 'Percentuálna sadzba dane',
-'tax.rate.placement' => 'Umiestnenie daňovej sadzby',
-'tax.rates' => 'Daňové sadzby',
-'taxes' => 'Dane',
-'telegram' => 'Telegram',
-'telegram.bot.api.chat.id' =>
-	'Telegram:'
-	. 'Bez bota:'
-	. 'Osobný účet:'
-	. 'Ahoj svet:'
-	. 'Testovacia správa:'
-	. 'Príjemca správy:'
-	. '<b>ID chatu</b>',
-'telegram.bot.api.chat.id.not.set' =>
-	'ID chatu držiteľa osobného telegramového '
-	. 'účtu, ktorý nie je bot '
-	. 'a odoslal botu prvú správu '
-	. 'a má dostať testovaciu správu '
-	. '„Ahoj“ „Svet“, nebolo nastavené.',
-'telegram.bot.api.current.status' =>
-	'<b>Aktuálne použitie:'
-	. '</b> Webhook nie je potrebný,'
-	. 'pretože klienti nemajú ID chatu '
-	. 'a neposielajú správy botu.',
-'telegram.bot.api.enable' => 'Povoliť Telegram',
-'telegram.bot.api.enabled.not' =>
-	'Telegram nie je povolený',
-'telegram.bot.api.future.use' =>
-	'<b>Budúce použitie:'
-	. '</b> Klientom s chatovacími ID '
-	. 'sa pošle faktúra v telegrame '
-	. 'a potvrdenie potvrdenia zašlú späť '
-	. 'do webhooku.',
-'telegram.bot.api.general.purpose' =>
-	'<b>Registrovaný bot, identifikovaný tokenom, posiela '
-	. 'oznámenia o platbách zákazníkov na '
-	. 'nižšie uvedené registrované ID chatu '
-	. '(zvyčajne na osobný telegramový účet '
-	. 'administrátora, ktorý nie je bot).'
-	. '</b>',
-'telegram.bot.api.get.updates.failed' =>
-	'Aktualizácie Telegramu zlyhali.',
-'telegram.bot.api.get.updates.success' =>
-	'Vaše aktualizácie Telegramu boli úspešné '
-	. 'pomocou metódy API getUpdates.',
-'telegram.bot.api.hello.world.test.message' =>
-	'Ahoj svet od Telegram Bot '
-	. 'Api.'
-	. 'Ďakujeme vývojárom yiisoftu!',
-'telegram.bot.api.hello.world.test.message.sent' =>
-	'Správa Ahoj svet bola odoslaná.',
-'telegram.bot.api.hello.world.test.message.sent.not' =>
-	'Správa Ahoj svet NEBOLA odoslaná.',
-'telegram.bot.api.hello.world.test.message.use' =>
-	'Odošlite základnú testovaciu správu „Ahoj '
-	. 'svet z rozhrania Telegram Bot '
-	. 'Api“ na externé ID chatu',
-'telegram.bot.api.payment.notification.success' =>
-	'Oznámenie o platbe v Telegrame '
-	. 'bolo úspešné',
-'telegram.bot.api.payment.notifications' =>
-	'Upozornenia na platby v Telegrame',
-'telegram.bot.api.token' => 'Token API bota Telegramu',
-'telegram.bot.api.token.not.set' =>
-	'Token API bota Telegramu nie '
-	. 'je nastavený',
-'telegram.bot.api.webhook.delete' =>
-	'Odstrániť webhook',
-'telegram.bot.api.webhook.deleted' =>
-	'Webhook bol práve deaktivovaný, aby '
-	. 'bolo možné použiť manuálnu metódu '
-	. 'API getUpdates.',
-'telegram.bot.api.webhook.secret.token' =>
-	'Tajný token webhooku pre dodatočné '
-	. 'zabezpečenie (používa sa ako parameter '
-	. 'vo funkcii setWebhook a nie '
-	. 'ako parameter dotazu)',
-'telegram.bot.api.webhook.setup' =>
-	'Webhook je nastavený.',
-'telegram.bot.api.webhook.setup.already' =>
-	'Webhook už bol nastavený.',
-'telegram.bot.api.webhook.url.this.site' =>
-	'URL adresa webhooku Telegramu tejto '
-	. 'stránky použitá vo funkcii setWebhook '
-	. 'v TelegramHelper.',
-'template' => 'Šablóna faktúry',
-'templates' => 'Šablóny faktúr',
-'term' => 'Zmluvné podmienky',
-'term.1' => 'Nečítal/a som zmluvné podmienky.',
-'term.2' => 'Prečítal(a) som si a súhlasím '
-	. 'so zmluvnými podmienkami.',
-'term.add.additional.terms.at.setting.repository' =>
-	'Pridajte ďalšie podmienky vo funkcii '
-	. 'getPaymentTerms v úložisku nastavení.',
-'terms' => 'Podmienky',
-'test.data.install' => 'Inštalácia testovacích údajov',
-'test.data.use' => 'Použiť testovacie údaje',
-'test.remove' => 'Odstrániť testovacie údaje',
-'test.remove.tooltip' => 'Zobraziť.'
-	. 'Nastavenia.'
-	. 'Všeobecné.'
-	. 'Inštalovať testovacie údaje.'
-	. 'Nie a Zobraziť.'
-	. 'Nastavenia.'
-	. 'Všeobecné.'
-	. 'Použiť testovacie údaje.'
-	. 'Nie',
-'test.reset' => 'Obnoviť testovacie údaje',
-'test.reset.setting' => 'Preinštalovanie nastavení',
-'test.reset.setting.tooltip' => 'Týmto sa odstránia všetky aktuálne '
-	. 'nastavenia a znova sa nainštalujú '
-	. 'predvolené nastavenia v súbore InvoiceController/install.'
-	. 'default.'
-	. 'settings.'
-	. 'on.'
-	. 'first.'
-	. 'run',
-'test.reset.tooltip' => 'Zobraziť.'
-	. 'Nastavenia.'
-	. 'Všeobecné.'
-	. 'Inštalovať testovacie údaje.'
-	. 'Áno a Zobraziť.'
-	. 'Nastavenia.'
-	. 'Všeobecné.'
-	. 'Použiť testovacie údaje.'
-	. 'Áno',
-'text' => 'Text',
-'theme' => 'Téma',
-'this.month' => 'Tento mesiac',
-'this.quarter' => 'Tento štvrťrok',
-'this.year' => 'Tento rok',
-'thousands.separator' => 'Oddeľovač tisícov',
-'time.created' => 'Čas vytvorenia',
-'time.zone' => 'Časové pásmo',
-'title' => 'Názov',
-'to.date' => 'Doteraz',
-'to.email' => 'Do e-mailu',
-'total' => 'Celkom',
-'total.balance' => 'Celkový zostatok',
-'total.billed' => 'Celková fakturovaná suma',
-'total.paid' => 'Celkom zaplatené',
-'transaction.reference' => 'Referenčné číslo transakcie',
-'transaction.successful' => 'Transakcia úspešná',
-'treatment' => 'Liečba',
-'treatment.end' => 'Koniec liečby',
-'treatment.start' => 'Začiatok liečby',
-'true' => 'Pravda',
-'try.again' => 'Skúste to znova',
-'two.factor.authentication' => 'Dvojfaktorové overenie',
-'two.factor.authentication.attempt.failure' =>
-	'Zlyhanie pokusu o dvojfaktorové overenie',
-'two.factor.authentication.attempt.failure.must.setup' =>
-	'Zlyhanie pokusu o dvojfaktorové overenie:'
-	. 'Musíte nastaviť nový QR kód '
-	. 's tajným kódom (+) a '
-	. 'po zobrazení výzvy zvoliť prepísanie '
-	. 'predchádzajúceho záznamu.',
-'two.factor.authentication.attempt.success' =>
-	'Úspešný pokus o dvojfaktorové overenie',
-'two.factor.authentication.disabled' => 'Dvojfaktorové overenie bolo teraz pre '
-	. 'zvýšenie bezpečnosti vypnuté.',
-'two.factor.authentication.enable' => 'Povoliť dvojfaktorové overenie',
-'two.factor.authentication.enabled.with.disabling' =>
-	'Dvojfaktorové overenie je momentálne povolené '
-	. 'pre dodatočnú bezpečnosť a po '
-	. 'úspešnom overení je vypnuté pre '
-	. 'ďalšiu vrstvu zabezpečenia až do '
-	. 'ďalšieho prihlásenia.'
-	. 'Povinné skenovanie QR kódu po '
-	. 'každom prihlásení pre nový tajný '
-	. 'kľúč.',
-'two.factor.authentication.enabled.without.disabling' =>
-	'Dvojfaktorové overenie je momentálne povolené '
-	. 'pre dodatočné zabezpečenie a po '
-	. 'úspešnom overení sa nezakáže.'
-	. 'QR kód sa po prihlásení '
-	. 'a nastavení dvojfaktorového overenia už '
-	. 'nezobrazí na skenovanie.',
-'two.factor.authentication.error' => 'Chyba dvojfaktorového overenia',
-'two.factor.authentication.form.verify.login' =>
-	'Overiť prihlásenie',
-'two.factor.authentication.invalid.code.format' =>
-	'Neplatný formát kódu.'
-	. 'Zadajte 6-miestny kód z vašej '
-	. 'aplikácie.',
-'two.factor.authentication.missing.code.or.secret' =>
-	'Chýbajúci overovací kód alebo tajný '
-	. 'kód 2FA.',
-'two.factor.authentication.new.six.digit.code' =>
-	'Zadajte nový 6-miestny overovací kód '
-	. '(iný ako nastavovací kód) z '
-	. 'vašej aplikácie.',
-'two.factor.authentication.no.secret.generated' =>
-	'Žiadny tajný kód nebol vygenerovaný.'
-	. 'Reštartujte nastavenie.',
-'two.factor.authentication.qr.code.enter.manually' =>
-	'Alebo zadajte tento kód do '
-	. 'aplikácie pre Android manuálne:',
-'two.factor.authentication.scan' => 'Naskenujte tento QR kód pomocou '
-	. 'aplikácie Aegis:',
-'two.factor.authentication.setup' => 'Nastavenie dvojfaktorového overenia',
-'type' => 'Typ',
-'unit' => 'Jednotka',
-'unit.add' => 'Pridať jednotku',
-'unit.already.exists' => 'Jednotka už existuje!',
-'unit.description.not.provided' => 'Popis nebol poskytnutý',
-'unit.edit' => 'Upraviť jednotku',
-'unit.history' => 'Nedá sa vymazať.'
-	. 'História existuje.',
-'unit.name' => 'Názov jednotky',
-'unit.name.plrl' => 'Názov jednotky (množné číslo)',
-'unit.peppol' => 'Peppol',
-'unit.peppol.add' => 'Jednotka Peppol Pridať',
-'unit.peppol.code' => 'Kód jednotky Peppol',
-'unit.peppol.edit' => 'Jednotka Peppol Upraviť',
-'unit.peppol.index' => 'Jednotkový index Peppol',
-'units' => 'Jednotky',
-'unknown' => 'Neznámy',
-'unpaid' => 'Nezaplatené',
-'updatecheck' => 'Kontrola aktualizácií',
-'updatecheck.failed' => 'Kontrola aktualizácií zlyhala! Skontrolujte sieťové '
-	. 'pripojenie.',
-'updates' => 'Aktualizácie',
-'updates.available' => 'Aktualizácie k dispozícii!',
-'upload.date' => 'Dátum nahrania',
-'upload.description' => 'Popis',
-'upload.filename.description' => 'Názov súboru Popis',
-'upload.filename.new' => 'Nový názov súboru',
-'upload.filename.original' => 'Pôvodný názov súboru',
-'upload.index' => 'Nahrať index',
-'upload.plural' => 'Nahrané súbory',
-'upload.url.key' => 'Kľúč URL',
-'use.system.language' => 'Použiť systémový jazyk',
-'user' => 'Používateľ',
-'user.account' => 'Používateľský účet pre faktúry',
-'user.account.clients' => 'Klienti s používateľskými účtami',
-'user.accounts' => 'Používateľské účty pre fakturáciu',
-'user.all.clients' => 'Pridať všetkých zákazníkov',
-'user.all.clients.text' => '* Ak je táto možnosť '
-	. 'zaškrtnutá, používateľ uvidí všetkých klientov '
-	. 'vrátane tých, ktorí budú pridaní '
-	. 'neskôr.',
-'user.api.list' => 'Používatelia predfakturácie – registrovaní používatelia',
-'user.client.active.no' => 'Nemáte žiadnych klientov s aktívnymi '
-	. 'používateľskými účtami.'
-	. 'Administrátori priraďujú klienta(ov) k zaregistrovanému '
-	. 'používateľskému účtu.',
-'user.client.count' => '#',
-'user.client.no.account' => 'Tento klient nemá priradený žiadny '
-	. 'používateľský účet, a preto tento '
-	. 'dokument nie je možné vytvoriť.',
-'user.clients.assigned.not' => 'Tento používateľ nemá priradených žiadnych '
-	. 'klientov.',
-'user.form' => 'Používateľský formulár',
-'user.iban' => 'IBAN',
-'user.inv.active.not' => 'Používateľský účet nie je aktívny',
-'user.inv.list.limit' => 'Počet záznamov uvedených na stránke '
-	. '(Poznámka:'
-	. 'Prepíše predvolené nastavenie)',
-'user.inv.more.than.one.assigned' =>
-	'Vytvorenie faktúry sa nepodarilo:'
-	. 'Pozrite si nastavenia .'
-	. 'Používateľský účet.'
-	. 'K tomuto klientovi je priradených '
-	. 'viacero používateľov.',
-'user.inv.refer.to' => 'Predvolenú hodnotu 10 záznamov na '
-	. 'stránku je možné prepísať kliknutím '
-	. 'sem.',
-'user.inv.role.accountant' => 'Účtovník',
-'user.inv.role.accountant.assigned' =>
-	'Pridelená úloha účtovníka',
-'user.inv.role.accountant.default' =>
-	'Účtovník klienta si môže štandardne '
-	. 'prezerať faktúry, platiť faktúry, prezerať '
-	. 'si platby faktúr a upravovať '
-	. 'platby faktúr.',
-'user.inv.role.administrator' => 'Správca',
-'user.inv.role.administrator.already.assigned' =>
-	'Rola správcu už bola priradená',
-'user.inv.role.administrator.assigned' =>
-	'Rola správcu bola teraz priradená.',
-'user.inv.role.all.new' =>
-	'Všetci noví používatelia štandardne prevezmú '
-	. 'rolu pozorovateľa, t.'
-	. 'j.'
-	. 'môžu si prezerať dokumentáciu, ale '
-	. 'nemôžu ju upravovať, t.'
-	. 'j.'
-	. 'môžu si dokumentáciu prezerať alebo '
-	. 'si ju prezerať.',
-'user.inv.role.observer' => 'Pozorovateľ',
-'user.inv.role.observer.assigned' =>
-	'Priradená úloha pozorovateľa',
-'user.inv.role.observer.assigned.already' =>
-	'Úloha pozorovateľa už bola pridelená.',
-'user.inv.role.revoke.all' =>
-	'Zrušiť všetky roly',
-'user.inv.role.warning.revoke.all' =>
-	'Naozaj chcete zrušiť všetky role?',
-'user.inv.role.warning.role' =>
-	'Ste si istý/á, že chcete '
-	. 'prijať túto rolu?',
-'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' =>
-	'Typ administrátora rozbaľovacej ponuky nie '
-	. 'je možné priradiť používateľovi, ktorý '
-	. 'nie je administrátorom',
-'user.inv.type.cannot.allocate.guest.type.to.administrator' =>
-	'Nie je možné priradiť typ '
-	. 'hosťa z rozbaľovacej ponuky správcovi',
-'user.signup.please' => 'Prosím, zaregistrujte sa!',
-'user.subscriber.number' => 'Číslo predplatiteľa',
-'user.type' => 'Typ používateľa',
-'username' => 'Používateľské meno',
-'users' => 'Používatelia',
-'utility.assets.clear' => 'Vymazať vyrovnávaciu pamäť aktív',
-'validator.fail' => 'Nepodarilo sa spracovať pole %s:'
-	. '%s',
-'validator.invalid.login.password' => 'Neplatné prihlasovacie meno alebo heslo',
-'validator.password.change' => 'Vaše heslo bolo zmenené',
-'validator.password.not.match' => 'Heslá sa nezhodujú',
-'validator.password.not.match.new' =>
-	'Vaše nové heslá sa nezhodujú',
-'validator.password.reset' => 'Vaše heslo bolo obnovené',
-'validator.user.exist' => 'Používateľ s týmto prihlasovacím menom '
-	. 'už existuje',
-'validator.user.exist.not' => 'Používateľ s týmto prihlasovacím menom '
-	. 'neexistuje',
-'value' => 'Hodnota',
-'values' => 'Hodnoty',
-'values.with.taxes' => 'Hodnoty s daňami',
-'vat' => 'DPH',
-'vat.abbreviation' => 'DPH',
-'vat.break.down' => 'Súhrn DPH',
-'vat.id' => 'IČ DPH',
-'vat.id.short' => 'DPH',
-'vat.invoice' => 'FAKTÚRA S DPH',
-'vat.rate' => 'Sadzba DPH',
-'vat.reg.no' => 'IČ DPH',
-'vat.registered' => 'Registrovaný DPH',
-'vendor.nikic.fast-route' => 'Budovanie rýchlejších trás',
-'verify.password' => 'Overiť heslo',
-'version.history' => 'História verzií',
-'view' => 'Zobraziť',
-'view.all' => 'Zobraziť všetko',
-'view.client' => 'Zobraziť klienta',
-'view.clients' => 'Zobraziť klientov',
-'view.contact.form.body' => 'Telo',
-'view.contact.form.email' => 'E-mail',
-'view.contact.form.name' => 'Meno',
-'view.contact.form.subject' => 'Predmet',
-'view.invoices' => 'Zobraziť faktúry',
-'view.payment.logs' => 'Zobraziť záznamy o online platbách',
-'view.payments' => 'Zobraziť platby',
-'view.product.families' => 'Zobraziť rady produktov',
-'view.product.units' => 'Zobraziť jednotky produktu',
-'view.products' => 'Zobraziť produkty',
-'view.projects' => 'Zobraziť projekty',
-'view.quotes' => 'Zobraziť cenové ponuky',
-'view.recurring.invoices' => 'Zobraziť opakujúce sa faktúry',
-'view.tasks' => 'Zobraziť úlohy',
-'viewed' => 'Zobrazené',
-'warning' => 'POZOR',
-'web' => 'Web',
-'web.address' => 'Webová adresa',
-'welcome' => 'Vitajte',
-'wrong.passwordreset.token' => 'Pre zadaný resetovací token sa '
-	. 'nenašiel žiadny používateľ.'
-	. 'Ak si myslíte, že ide '
-	. 'o chybu, kontaktujte svojho správcu.',
-'year' => 'Rok',
-'year.prefix' => 'Predpona roka',
-'years' => 'Roky',
-'yes' => 'Áno',
-'zip' => 'PSČ',
-'zip.code' => 'PSČ',
-    
-'allowance.or.charge.allowance.tax' =>
-	'Daň z príspevku',
-'allowance.or.charge.charge.tax' =>
-	'Daň z poplatku',
-'allowance.or.charge.inv.add' =>
-	'Pridať fakturačnú úľavu alebo poplatok',
-'allowance.or.charge.level' => 'Úroveň (⬅ ️Celkovo, Položka riadku '
-	. '➡)',
-'allowance.or.charge.shipping.handling.packaging' =>
-	'Doprava/Manipulácia/Balenie',
-'allowance.or.charge.shipping.handling.packaging.vat' =>
-	'DPH z prepravy/balenia/balenia',
-'allowance.or.charge.shipping.handling.packaging.tax' =>
-	'Daň z dopravy/balenia/balenia',
-'amount.payment' => 'Platba Suma, ktorá sa má '
-	. 'uhradiť v plnej výške',
-'calendar' => 'Kalendár',
-'continue.with.developersandboxhmrc' => 'Pokračovať s Developer Gov Sandbox '
-	. 'UK',
-'continue.with.oidc' => 'Pokračujte s Open Id Connect',
-'continue.with.openbanking' => 'Pokračujte v otvorenom bankovníctve',
-'converted.to.invoice' => 'Prevedené na faktúru',
-'converted.to.so' => 'Konvertované na predajnú objednávku',
-'custom.field.edit' => 'Úprava vlastného poľa',
-'delete.quote.single' => 'Túto cenovú ponuku je možné '
-	. 'odstrániť, pretože k nej nie '
-	. 'je priradená žiadna predajná objednávka '
-	. 'ani faktúra.',
-'delete.quote.derived' => 'K tejto cenovej ponuke je '
-	. 'prepojená buď predajná objednávka, alebo '
-	. 'faktúra, a preto ju nemožno '
-	. 'odstrániť.',
-'extended' => 'Rozšírené',
-'extended.language' => 'Rozšírený jazyk',
-'file' => 'Súbor',
-'grand.fathered' => 'Veľký otec',
-'layout.password.otp.6' => 'Jednorazové heslo (6 číslic)',
-'layout.password.otp.6.8' =>
-	'Jednorazové heslo (6 číslic) / '
-	. 'Záložné kódy na obnovenie (8 '
-	. 'číslic)',
-'oauth2.account.locked' => 'Účet uzamknutý',
-'oauth2.backup.recovery.codes' => 'Zálohujte kódy na obnovenie.'
-	. 'Uschovajte si na bezpečnom mieste.',
-'oauth2.backup.recovery.codes.regenerate' =>
-	'Obnoviť kódy na obnovenie zálohy',
-'oauth2.consent.required' => 'Vyžaduje sa súhlas',
-'oauth2.default' => 'Používa sa predvolená konfigurácia oauth2.'
-	. '0',
-'oauth2.invalid.request' => 'Neplatná žiadosť',
-'oauth2.invalid.client' => 'Neplatný klient',
-'oauth2.invalid.grant' => 'Neplatný grant',
-'oauth2.login.required' => 'Vyžaduje sa prihlásenie',
-'oauth2.missing.authentication.code.or.state.parameter' =>
-	'Chýba autentifikačný kód alebo parameter '
-	. 'stavu.',
-'oauth2.missing.state.parameter.possible.csrf.attack' =>
-	'Chýba parameter stavu.'
-	. 'Možný útok csrf.',
-'oauth2.server.error' => 'Chyba servera',
-'oauth2.temporarily.unavailable' => 'Dočasne nedostupné',
-'oauth2.test.user.creation.not.allowed.prod.env' =>
-	'Vytvorenie testovacieho používateľa nie je '
-	. 'v produkčnom prostredí povolené.',
-'oauth2.unauthorized.client' => 'Neoprávnený klient',
-'oauth2.unsupported.response.type' => 'Nepodporovaný typ odpovede',
-'oauth2.unsupported.grant.type' => 'Nepodporovaný typ grantu',
-'online.payment.apiToken' => 'Token API',
-'online.payment.thirdPartyProvider' => 'Poskytovateľ tretej strany, napr.'
-	. 'Wonderful',
-'open.banking.pay.with' => 'Platba cez Open Banking: ',
-'open.banking.not.configured' => 'Open Banking nie je nakonfigurovaný.'
-	. 'Kontaktujte podporu.',
-'radiolist.choice' => 'Výber zoznamu rádií',
-'region' => 'Región',
-'script' => 'Skript',
-'tax.rate.active.not' => 'Upozornenie:'
-	. 'Neboli aktivované žiadne daňové sadzby.'
-	. 'Aktivujte aspoň jednu daňovú sadzbu.'
-	. 'Nastavenia .'
-	. 'Sadzba dane',
-'textarea' => 'Textová oblasť',
-'two.factor.authentication.invalid.backup.recovery.code' =>
-	'Neplatný 8-miestny záložný kód na '
-	. 'obnovenie',
-'two.factor.authentication.invalid.totp.code' =>
-	'Neplatný 6-miestny jednorazový overovací kód '
-	. 's časovým obmedzením',
-'two.factor.authentication.rate.limit.reached' =>
-	'Dosiahnutý limit rýchlosti.'
-	. 'Počkajte 10 sekúnd.',
-'url' => 'URL',
-'variant' => 'Variant',
-'approval.required' => 'Vyžaduje sa schválenie',
-'quote.approval.required' => 'Vyžaduje sa schválenie cenovej ponuky',
-'quote.must.be.approved.first' =>
-	'Pred konverziou musí byť schválená '
-	. 'cenová ponuka',    
+    'PEPPOL.COMMON.R040' => 'GLN musí mať platný formát podľa pravidiel GS1',
+    'PEPPOL.COMMON.R041' => 'Číslo nórskej organizácie MUSÍ byť uvedené v správnom formáte',
+    'PEPPOL.COMMON.R042' => 'Dánske číslo CVR MUSÍ byť uvedené v správnom formáte',
+    'PEPPOL.COMMON.R043' => 'Belgické podnikové číslo MUSÍ byť uvedené v správnom formáte',
+    'PEPPOL.COMMON.R044' => 'Kód IPA (jedinečný kód organizačnej jednotky) musí byť uvedený v správnom formáte',
+    'PEPPOL.COMMON.R045' => 'Daňový kód (Codice Fiscale) musí byť uvedený v správnom formáte',
+    'PEPPOL.COMMON.R046' => 'Daňový kód (Codice Fiscale) pre národný systém MUSÍ byť uvedený v správnom formáte',
+    'PEPPOL.COMMON.R047' => 'Taliansky kód DPH (Partita Iva) musí byť uvedený v správnom formáte',
+    'PEPPOL.COMMON.R049' => 'Číslo švédskej organizácie MUSÍ byť uvedené v správnom formáte',
+    'PEPPOL.COMMON.R050' => 'Austrálske obchodné číslo (ABN) MUSÍ byť uvedené v správnom formáte',
+    'PEPPOL.COMMON.R052' => 'Číslo dánskej obchodnej komory MUSÍ byť uvedené v správnom formáte',
+    'PEPPOL.COMMON.R053' => 'Dánske číslo ERSTORG MUSÍ byť uvedené v správnom formáte.',
+    'PEPPOL.EN16931.R001' => 'Obchodný proces MUSÍ byť poskytnutý',
+    'PEPPOL.EN16931.R002' => 'Povolená je maximálne jedna poznámka, pokiaľ nie sú obe strany DE',
+    'PEPPOL.EN16931.R003' => 'Vyžaduje sa referenčné číslo kupujúceho alebo referenčné číslo objednávky',
+    'PEPPOL.EN16931.R004.INVALID' => 'Neplatný formát identifikátora špecifikácie',
+    'PEPPOL.EN16931.R004.REQUIRED' => 'Vyžaduje sa identifikátor špecifikácie',
+    'PEPPOL.EN16931.R005' => 'Mena dane sa musí líšiť od meny dokumentu',
+    'PEPPOL.EN16931.R007' => 'Obchodný proces MUSÍ byť vo formáte ',
+    'PEPPOL.EN16931.R008' => 'Prázdny prvok: ',
+    'PEPPOL.EN16931.R010' => 'Vyžaduje sa elektronická adresa kupujúceho',
+    'PEPPOL.EN16931.R020' => 'Vyžaduje sa elektronická adresa predajcu',
+    'PEPPOL.EN16931.R040' => 'Suma sa musí rovnať základu * percentuálnemu podielu / 100',
+    'PEPPOL.EN16931.R041' => 'Základná suma požadovaná pri poskytnutí percenta',
+    'PEPPOL.EN16931.R042' => 'Požadované percento pri poskytovaní základnej sumy',
+    'PEPPOL.EN16931.R043' => 'Indikátor nabíjania musí byť „true“ alebo „false“',
+    'PEPPOL.EN16931.R044' => 'Poplatok za cenovú hladinu nie je povolený',
+    'PEPPOL.EN16931.R046' => 'Chyba vo výpočte čistej ceny položky',
+    'PEPPOL.EN16931.R051' => 'Všetky sumy musia byť uvedené v mene dokumentu',
+    'PEPPOL.EN16931.R053' => 'Vyžaduje sa jedna celková suma dane s medzisúčtami',
+    'PEPPOL.EN16931.R054' => 'Neplatná celková suma dane bez počtu medzisúčtov',
+    'PEPPOL.EN16931.R055' => 'Sumy dane musia mať rovnaké znamienko',
+    'PEPPOL.EN16931.R061' => 'Pre inkaso je potrebné referenčné číslo mandátu',
+    'PEPPOL.EN16931.R080' => 'Povolený maximálne jeden odkaz na projekt',
+    'Q1' => '1.štvrťrok',
+    'Q2' => '2.štvrťrok',
+    'Q3' => '3.štvrťrok',
+    'Q4' => '4.štvrťrok',
+    'account.information' => 'Informácie o účte',
+    'active' => 'Aktívne',
+    'active.not' => 'Neaktívne',
+    'add' => 'Pridať',
+    'add.client' => 'Pridať klienta',
+    'add.family' => 'Pridať rodinu',
+    'add.files' => 'Pridať súbory...',
+    'add.invoice' => 'Pridať faktúru',
+    'add.invoice.tax' => 'Pridať daň z faktúry',
+    'add.new.row' => 'Pridať nový riadok',
+    'add.note' => 'Pridať poznámku',
+    'add.notes' => 'Pridať poznámky',
+    'add.payment.provider' => 'Pridať poskytovateľa platieb',
+    'add.product' => 'Pridať produkt',
+    'add.quote' => 'Pridať cenovú ponuku',
+    'add.quote.tax' => 'Pridať cenovú ponuku Daň',
+    'add.task' => 'Pridať úlohu',
+    'add.unit' => 'Pridať jednotku',
+    'address' => 'Adresa',
+    'administrator' => 'Správca',
+    'after.amount' => 'Po sume',
+    'after.amount.space' => 'Za sumou s pevnou medzerou',
+    'aging' => 'Starnutie faktúry',
+    'aging.1.15' => '1 – 15 dní',
+    'aging.16.30' => '16 – 30 dní',
+    'aging.above.30' => 'Nad 30 dní',
+    'alert.no.client.assigned' => 'K tomuto projektu nie je priradený žiadny klient.',
+    'alert.no.tasks.found' => 'Pre tento projekt sa nenašli žiadne úlohy.',
+    'alert.task.delete' => 'Pozor! Chcete odstrániť úlohu, ktorá bola použitá na vygenerovanie faktúry.',
+    'all' => 'Všetky',
+    'allowance.or.charge' => 'Príspevok alebo poplatok',
+    'allowance.or.charge.add' => 'Úroveň dokumentu (t.j.NIE úroveň riadku faktúry) Pridanie príspevku alebo poplatku',
+    'allowance.or.charge.allowance' => 'Príspevok',
+    'allowance.or.charge.allowance.tax' => 'Daň z príspevku',
+    'allowance.or.charge.allowance.vat' => 'DPH z príspevku',
+    'allowance.or.charge.amount' => 'Výška poplatku za príspevok (číselný multiplikátor ako percento vynásobené základnou sumou)',
+    'allowance.or.charge.amount.fixed.must.be.positive' => 'Fixná suma musí byť väčšia ako 0.',
+    'allowance.or.charge.base.amount' => 'Základná suma',
+    'allowance.or.charge.base.amount.required.when.mfn.set' => 'Základná suma musí byť väčšia ako 0, keď je nastavený multiplikačný faktor.',
+    'allowance.or.charge.charge' => 'Poplatok',
+    'allowance.or.charge.charge.tax' => 'Daň z poplatku',
+    'allowance.or.charge.charge.vat' => 'DPH z ceny',
+    'allowance.or.charge.edit.allowance' => 'Úprava príspevku na úrovni dokumentu (t.j.NIE na úrovni riadku faktúry)',
+    'allowance.or.charge.edit.charge' => 'Úprava účtovania na úrovni dokumentu (t.j.NIE na úrovni riadku faktúry)',
+    'allowance.or.charge.index' => 'Index príspevku alebo poplatkov vo vzťahu k položke riadku',
+    'allowance.or.charge.inv' => 'Príspevok alebo poplatok za faktúru',
+    'allowance.or.charge.inv.add' => 'Pridať fakturačnú úľavu alebo poplatok',
+    'allowance.or.charge.item' => 'Príplatok alebo poplatok za položku faktúry',
+    'allowance.or.charge.item.add' => 'Príspevok/Poplatok Pridať',
+    'allowance.or.charge.item.invoice' => 'Príplatok alebo poplatok za položku faktúry',
+    'allowance.or.charge.item.quote' => 'Príplatok alebo poplatok za položku cenovej ponuky',
+    'allowance.or.charge.level' => 'Úroveň (⬅ ️Celkovo, Položka riadku ➡)',
+    'allowance.or.charge.multiplier.factor.numeric' => 'Multiplikačný faktor Číselný',
+    'allowance.or.charge.quote' => 'Príspevok alebo poplatok za cenovú ponuku',
+    'allowance.or.charge.quote.add' => 'Pridať cenovú ponuku alebo poplatok',
+    'allowance.or.charge.reason' => 'Dôvod',
+    'allowance.or.charge.reason.code' => 'Kód dôvodu',
+    'allowance.or.charge.shipping.handling.packaging' => 'Doprava/Manipulácia/Balenie',
+    'allowance.or.charge.shipping.handling.packaging.tax' => 'Daň z dopravy/balenia/balenia',
+    'allowance.or.charge.shipping.handling.packaging.vat' => 'DPH z prepravy/balenia/balenia',
+    'already.paid' => 'Táto faktúra už bola uhradená.',
+    'amount' => 'Suma položky faktúry',
+    'amount.add' => 'Položka faktúry Suma Pridať',
+    'amount.due' => 'Dlžná suma',
+    'amount.inv.item' => 'Suma položky faktúry',
+    'amount.no' => 'Neexistuje žiadna suma faktúry',
+    'amount.payment' => 'Platba Suma, ktorá sa má uhradiť v plnej výške',
+    'amount.quote.item' => 'Položka cenovej ponuky Suma',
+    'amount.settings' => 'Nastavenia sumy',
+    'amounts' => 'Sumy faktúr',
+    'any.family' => 'Akákoľvek rodina',
+    'api.error.forbidden' => 'Nemáte povolenie na prístup k tomuto zdroju',
+    'api.error.not_found' => 'Požadovaný {resource} sa nenašiel',
+    'api.error.unauthorized' => 'Na prístup k tomuto zdroju je potrebné overenie',
+    'api.error.validation_failed' => 'Overenie zlyhalo. Skontrolujte, prosím, svoj vstup.',
+    'api.success.created' => '{zdroj} bol úspešne vytvorený',
+    'api.success.deleted' => '{zdroj} bol úspešne odstránený',
+    'api.success.updated' => '{zdroj} bol úspešne aktualizovaný',
+    'app.cdn.not.node.module' => 'Použite AppCdnAsset (nie AppNodeModulesAsset)',
+    'apply.after.item.tax' => 'Použiť po zdanení položky',
+    'apply.before.item.tax' => 'Použiť pred zdanením položky',
+    'approval.required' => 'Vyžaduje sa schválenie',
+    'approve' => 'Schváliť',
+    'approve.this.quote' => 'Schváliť túto cenovú ponuku',
+    'approved' => 'Schválené',
+    'archive' => 'Archivujte súbor PDF v sekcii Nahrávanie/Archív',
+    'assign.client' => 'Priradiť klienta',
+    'assign.client.on.signup' => 'Pri registrácii priraďte klienta používateľovi.',
+    'assign.client.on.signup.default.age.minimum.eighteen' => 'Pri registrácii priraďte používateľovi klienta s predvoleným minimálnym vekom osemnásť.',
+    'assign.client.on.signup.done' => 'Pri registrácii bol používateľovi priradený klient.',
+    'assigned.clients' => 'Priradení klienti',
+    'attachment.list' => 'Zoznam príloh',
+    'attachments' => 'Prílohy',
+    'autofit.columns' => 'Automatické prispôsobenie šírky stĺpcov obsahu',
+    'automatic.email.on.recur' => 'Automaticky posielať opakujúce sa faktúry e-mailom',
+    'back' => 'Späť',
+    'backup' => 'Záloha',
+    'backup.database' => 'Zálohovanie databázy',
+    'backup.database.description' => 'Stiahnite si komprimovanú kópiu celej databázy – každej tabuľky, štruktúry a údajov – ako jeden súbor .sql.gz. Uschovajte si ho na bezpečnom mieste mimo tohto servera.',
+    'backup.database.download' => 'Stiahnutie zálohy databázy',
+    'backup.download.failed' => 'Zálohovanie databázy zlyhalo',
+    'bacs.account.number' => 'Číslo účtu',
+    'bacs.bank.details' => 'Bankové údaje',
+    'bacs.copy' => 'Kopírovať do schránky',
+    'bacs.mobile.tip' => 'V mobilnom zariadení klepnite na ikony kopírovania vedľa každého poľa a vložte údaje priamo do svojej bankovej aplikácie.',
+    'bacs.no.outstanding.invoices' => 'Momentálne nie sú žiadne neuhradené faktúry.',
+    'bacs.no.outstanding.invoices.hint' => 'Váš zostatok je čistý – momentálne nemáte čo platiť.',
+    'bacs.not.yet.configured' => 'Údaje o bankovom prevode ešte nie sú k dispozícii.',
+    'bacs.not.yet.configured.hint' => 'Pre podrobnosti o platbe nás prosím kontaktujte priamo.',
+    'bacs.outstanding.invoices' => 'Neuhradené faktúry',
+    'bacs.pay.by.bank.transfer' => 'Platba bankovým prevodom',
+    'bacs.payee' => 'Príjemca platby',
+    'bacs.payment.instructions' => 'Pri bankovom prevode použite vyššie uvedený triediaci kód, číslo účtu a referenčné číslo. Referenčné číslo nám pomôže priradiť vašu platbu k vášmu účtu.',
+    'bacs.quick.pay' => 'Platba bankovým prevodom (BACS / Rýchlejšie platby)',
+    'bacs.reference' => 'Vaša referencia',
+    'bacs.scan.qr.hint' => 'Vaša banková aplikácia sa otvorí s predvyplneným menom príjemcu platby, triediacim kódom, číslom účtu a sumou – nie je potrebné písať.',
+    'bacs.scan.to.pay' => 'Naskenujte pre zobrazenie platobných údajov',
+    'bacs.sort.code' => 'Triediaci kód',
+    'balance' => 'Zostatok',
+    'balance.does.not.equal.zero' => 'Zostatok sa nerovná nule.Stav je Zaplatené =&gt; Zostatok by mal byť nula.',
+    'bank.ref' => 'Referenčné číslo banky',
+    'base.invoice' => 'Základná faktúra',
+    'bcc' => 'Skrytá kópia',
+    'bcc.mails.to.admin' => 'Odoslať všetky odchádzajúce e-maily ako skrytú kópiu na administrátorský účet',
+    'bcc.mails.to.admin.hint' => 'Účet správcu je účet, ktorý bol vytvorený pri inštalácii InvoicePlane.',
+    'before.amount' => 'Pred sumou',
+    'bill.to' => 'Fakturovať komu',
+    'birthdate' => 'Dátum narodenia',
+    'body' => 'Telo',
+    'boolean' => 'Boolovská hodnota',
+    'bootstrap5' => 'Bootstrap 5',
+    'bootstrap5.alert.close.button.font.size' => 'Veľkosť písma tlačidla Zatvoriť upozornenie',
+    'bootstrap5.alert.message.font' => 'Písmo upozornenia',
+    'bootstrap5.alert.message.font.size' => 'Veľkosť písma upozornenia',
+    'bootstrap5.cdn.not.node.module' => 'Bootstrap5 Cdn (nie modul uzla)',
+    'bootstrap5.form.font.size' => 'Veľkosť písma formulára (px)',
+    'bootstrap5.form.input.height' => 'Výška vstupu formulára (px)',
+    'bootstrap5.layout.guest.navbar.font' => 'Písmo navigačného panela pre hostí v rozložení',
+    'bootstrap5.layout.guest.navbar.font.size' => 'Veľkosť písma navigačného panela hosťa v rozložení',
+    'bootstrap5.layout.invoice.navbar.font' => 'Rozloženie písma navigačného panela faktúr',
+    'bootstrap5.layout.invoice.navbar.font.size' => 'Veľkosť písma navigačného panela faktúry v rozložení',
+    'bootstrap5.layout.main.navbar.font' => 'Rozloženie písma hlavného navigačného panela',
+    'bootstrap5.layout.main.navbar.font.size' => 'Veľkosť písma hlavného navigačného panela rozloženia',
+    'bootstrap5.offcanvas.enable' => 'Povoliť Offcanvas',
+    'bootstrap5.offcanvas.placement' => 'Umiestnenie mimo plátna, napr.hore, dole, začiatok t.j.vľavo, koniec t.j.vpravo',
+    'bootstrap5.sidebar.background' => 'Farba pozadia bočného panela',
+    'bootstrap5.sidebar.guest.background' => 'Farba pozadia bočného panela hosťa',
+    'breadcrumb.product.index' => 'Index produktov',
+    'breadcrumb.product.property.index' => 'Index vlastností produktu',
+    'business.error.client.credit_limit' => 'Klient {client_name} prekročil kreditný limit {limit}',
+    'business.error.insufficient_stock' => 'Nedostatočné zásoby pre produkt {product_name}. Dostupné: {available}, Požadované: {required}',
+    'business.error.invoice.already_paid' => 'Faktúra č. {invoice_number} je už označená ako zaplatená',
+    'business.error.payment.gateway_failed' => 'Spracovanie platby zlyhalo: {error_message}',
+    'calculate.discounts' => 'Vypočítať zľavy',
+    'calendar' => 'Kalendár',
+    'calendar.day.1' => '1 deň',
+    'calendar.day.15' => '15 dní',
+    'calendar.day.2' => '2 dni',
+    'calendar.day.3' => '3 dni',
+    'calendar.day.30' => '30 dní',
+    'calendar.day.4' => '4 dni',
+    'calendar.day.5' => '5 dní',
+    'calendar.day.6' => '6 dní',
+    'calendar.month.1' => '1 mesiac',
+    'calendar.month.10' => '10 mesiacov',
+    'calendar.month.11' => '11 mesiacov',
+    'calendar.month.2' => '2 mesiace',
+    'calendar.month.3' => '3 mesiace',
+    'calendar.month.4' => '4 mesiace',
+    'calendar.month.5' => '5 mesiacov',
+    'calendar.month.6' => '6 mesiacov',
+    'calendar.month.7' => '7 mesiacov',
+    'calendar.month.8' => '8 mesiacov',
+    'calendar.month.9' => '9 mesiacov',
+    'calendar.week.1' => '1 týždeň',
+    'calendar.week.2' => '2 týždne',
+    'calendar.week.3' => '3 týždne',
+    'calendar.week.4' => '4 týždne',
+    'calendar.year.1' => '1 rok',
+    'calendar.year.2' => '2 roky',
+    'calendar.year.3' => '3 roky',
+    'calendar.year.4' => '4 roky',
+    'calendar.year.5' => '5 rokov',
+    'can.be.changed' => 'Dá sa zmeniť',
+    'cancel' => 'Zrušiť',
+    'canceled' => 'Zrušené',
+    'cannot.delete' => 'Nedá sa odstrániť. Najprv odstráňte súvisiace záznamy.',
+    'capture.gps.on.send' => 'Zachytiť polohu GPS pri uvoľnení na odoslanie',
+    'capture.gps.on.send.description' => 'Rezervované pre budúci pracovný postup stavu pracovníka/manažéra (stavy začaté/dokončené medzi konceptom a odoslaním, s rolou „pracovník“ obmedzenou iba na pridelené úlohy) – zatiaľ nie je vytvorené, takže zapnutie tejto možnosti momentálne nemá žiadny účinok.',
+    'cart.insufficient.stock' => 'Mali sme na sklade len toľko, aby sme doň pridali časť vašej požiadavky – váš košík bol aktualizovaný na najväčšie aktuálne dostupné množstvo.',
+    'case.date' => 'Dátum prípadu',
+    'case.number' => 'Číslo prípadu',
+    'cash.discount' => 'Zľava v hotovosti',
+    'category.primary' => 'Kategória Primárne',
+    'category.secondary' => 'Kategória Sekundárne',
+    'caution.delete.invoices' => 'Len na testovanie:Odstrániť všetky faktúry a súvisiace záznamy.(Pozri funkciu inv/flush)',
+    'caution.deleted.invoices' => 'Len na testovanie:Všetky faktúry a súvisiace polia boli odstránené.',
+    'cc' => 'Kópia',
+    'change.client' => 'Zmeniť klienta',
+    'change.password' => 'Zmeniť heslo',
+    'checking.for.news' => 'Kontrola správ...',
+    'checking.for.updates' => 'Kontrola aktualizácií...',
+    'checkout' => 'Pokladňa',
+    'checkout.failed' => 'Prepáčte, vašu objednávku sa nám nepodarilo zadať. Skúste to znova.',
+    'city' => 'Mesto',
+    'claim' => 'Začal právny nárok',
+    'cldr' => 'v',
+    'client' => 'Klient',
+    'client.access' => 'Prístup klienta',
+    'client.add' => 'Pridanie klienta',
+    'client.age' => 'Vek',
+    'client.age.hint' => 'Toto pole je povinné a klient by mal mať zo zákona aspoň 16 rokov.',
+    'client.already.exists' => 'Klient už existuje!',
+    'client.birthdate.hint' => 'Ak dátum narodenia nie je známy, zadajte 01.01.1901',
+    'client.building.number' => 'Číslo budovy klienta',
+    'client.contract.period.end' => 'Koniec obdobia',
+    'client.contract.period.start' => 'Začiatok obdobia',
+    'client.contract.reference' => 'Referenčné číslo zmluvy',
+    'client.custom' => 'Klient na mieru',
+    'client.custom.add' => 'Pridanie klienta',
+    'client.deactivate.warning' => 'Upozornenie: Faktúry a súvisiaca zdrojová dokumentácia nebudú viditeľné, ak klient nie je aktívny.',
+    'client.delete.history.exits.no' => 'Nedá sa odstrániť.História klienta existuje.',
+    'client.detail.changes' => 'Ak sa tento údaj zmení,pošlite nám e-mail.',
+    'client.error.summary' => 'Súhrn chýb',
+    'client.form' => 'Klientsky formulár',
+    'client.frequency' => 'Frekvencia klientov',
+    'client.group' => 'Skupina klientov',
+    'client.has.not.assigned' => 'Títo klienti neboli priradení k používateľskému účtu.Jeden alebo viac klientov na používateľský účet.',
+    'client.has.not.user.account' => 'Tento klient nemá používateľský účet alebo nie je momentálne priradený k žiadnemu používateľovi.1.Uistite sa, že klient je zaregistrovaný, t.j.má používateľský účet, alebo priraďte tohto klienta k aktuálne zaregistrovanému používateľovi.2.Nastavenia .Používateľský účet pre faktúry .Pridať používateľský účet 3.Priraďte tohto klienta k používateľskému účtu 4.V tomto aktuálnom stave nebude možné pre tohto klienta vytvárať faktúry a cenové ponuky.',
+    'client.has.user.account' => 'Používateľský účet',
+    'client.import.list.blank' => 'Zoznam importovaných klientov je prázdny',
+    'client.name' => 'Meno klienta',
+    'client.not.allocated.to.user' => 'Klient nie je pridelený používateľovi',
+    'client.not.found' => 'Klient sa nenašiel',
+    'client.note' => 'Poznámka klienta',
+    'client.note.add' => 'Poznámka klienta Pridať',
+    'client.note.date' => 'Dátum klienta',
+    'client.note.view' => 'Zobrazenie poznámky klienta',
+    'client.notes' => 'Poznámky klienta',
+    'client.number' => 'Číslo klienta',
+    'client.peppol' => 'Detaily klienta Peppol',
+    'client.peppol.accounting.cost' => 'Kód nákladov na účtovníctvo klienta pre účtovníctvo',
+    'client.peppol.add' => 'Pridajte údaje o Peppole pre elektronickú fakturáciu',
+    'client.peppol.buyer.reference.default' => 'Referenčné číslo kupujúceho:Ak klient neuviedol kontaktnú osobu pre objednávku klienta, ide o predvolené referenčné číslo kupujúceho alebo objednávajúcu osobu.',
+    'client.peppol.buyer.reference.example' => 'napr.meno osoby, ktorá si bežne objednáva, číslo zamestnanca osoby, ktorá si bežne objednáva, alebo kód identifikujúci túto osobu alebo oddelenie/skupinu',
+    'client.peppol.clientpeppols.form' => 'Formulár pre účtovného klienta/zákazníka',
+    'client.peppol.edit' => 'Úprava údajov Peppol pre elektronickú fakturáciu',
+    'client.peppol.endpointid' => 'ID koncového bodu:E-mailová adresa',
+    'client.peppol.endpointid.schemeid' => 'ID koncového bodu – ID schémy založené na 4-miestnom kóde EAS (elektronická adresná schéma), napr.0192',
+    'client.peppol.financial.institution.branchid' => 'ID pobočky finančnej inštitúcie',
+    'client.peppol.identificationid' => 'Identifikačné číslo',
+    'client.peppol.identificationid.schemeid' => 'Identifikačné ID – schemeID',
+    'client.peppol.legal.entity.company.legal.form' => 'Právna forma právnickej osoby – spoločnosť – ďalšie právne informácie relevantné pre predávajúceho, napr.základné imanie',
+    'client.peppol.legal.entity.companyid' => 'IČO právnickej osoby',
+    'client.peppol.legal.entity.companyid.schemeid' => 'ID právnickej osoby – schemeID',
+    'client.peppol.legal.entity.registration.name' => 'Názov registračného čísla právnickej osoby',
+    'client.peppol.not.found' => 'Klient alebo zákazník si nenastavil svoje údaje o Peppole.',
+    'client.peppol.not.found.accounting.cost' => 'Nenájdené:Účtovné náklady alebo textová hodnota,ktorá určuje, kam sa majú zaúčtovať relevantné údaje do finančných účtov kupujúceho.',
+    'client.peppol.not.found.delivery.location' => 'Miesto doručenia Názov krajiny sa nenašiel',
+    'client.peppol.not.found.id' => 'Klient nevyplnil svoje ID účtu v rámci svojich online údajov o klientovi Peppol.',
+    'client.peppol.not.found.id.supplier.assigned' => 'ID priradeného účtu dodávateľa klienta Peppol sa nenašlo',
+    'client.peppol.not.found.invoice' => 'Nenašla sa žiadna prepojená faktúra',
+    'client.peppol.not.found.purchase.order' => 'K predajnej objednávke nie je priradené žiadne číslo nákupnej objednávky.',
+    'client.peppol.not.found.purchase.order.item.number' => 'Položka objednávky predaja nemá priradené žiadne zodpovedajúce identifikačné číslo položky objednávky (identifikácia položky kupujúceho).Administrátor:Upravte číslo položky objednávky predaja faktúry.',
+    'client.peppol.not.found.purchase.order.line.number' => 'Číslo riadku predajnej objednávky nemá priradené žiadne zodpovedajúce číslo riadku nákupnej objednávky (OrderLineReference LineID).Správca:Upravte číslo riadku predajnej objednávky faktúry.',
+    'client.peppol.not.found.sales.order' => 'Objednávka predaja neexistuje',
+    'client.peppol.payee.financial.account.name' => 'Názov finančného účtu príjemcu platby',
+    'client.peppol.payee.financial.accountid' => 'ID finančného účtu príjemcu platby',
+    'client.peppol.po.item.id' => 'ID položky objednávky Peppol',
+    'client.peppol.po.line.id' => 'ID linky Peppol PO',
+    'client.peppol.record.updated.successfully' => 'Záznam Peppolu bol úspešne aktualizovaný',
+    'client.peppol.supplier.assigned.account.id' => 'ID priradeného účtu dodávateľa',
+    'client.peppol.taxschemecompanyid' => 'IČO spoločnosti v daňovom systéme',
+    'client.peppol.taxschemeid' => 'ID daňovej schémy',
+    'client.po.number' => 'Číslo objednávky zákazníka',
+    'client.po.person' => 'Kontakt na objednávku zákazníka',
+    'client.postaladdress' => 'Poštová adresa',
+    'client.postaladdress.add' => 'Pridať poštovú adresu klienta',
+    'client.postaladdress.additional.street.name' => 'Názov dodatočnej ulice',
+    'client.postaladdress.available' => 'Dostupné poštové adresy',
+    'client.postaladdress.building.number' => 'Číslo budovy',
+    'client.postaladdress.city.name' => 'Názov mesta',
+    'client.postaladdress.country' => 'Krajina',
+    'client.postaladdress.countrysubentity' => 'Podjednotka krajiny',
+    'client.postaladdress.none' => 'Klient nemá poštovú adresu',
+    'client.postaladdress.postalzone' => 'Poštová zóna',
+    'client.postaladdress.street.name' => 'Názov ulice',
+    'client.purchase.order.number' => 'Číslo objednávky klienta',
+    'client.streets' => 'Ulice',
+    'client.surname' => 'Priezvisko klienta',
+    'client.surname.optional' => 'Priezvisko klienta (voliteľné)',
+    'client.telegram.chat.id' => 'ID chatu v Telegrame',
+    'client.title' => 'Titul klienta (pán/pani/slečna/Dr./profesor)',
+    'client.title.doctor' => 'Dr.',
+    'client.title.miss' => 'Slečna',
+    'client.title.mr' => 'Pán',
+    'client.title.mrs' => 'Pani',
+    'client.title.professor' => 'Profesor',
+    'client.view' => 'Pohľad klienta',
+    'clients' => 'Klienti',
+    'close' => 'Zatvoriť',
+    'closed' => 'ZATVORENÉ',
+    'column' => 'Stĺpec',
+    'common.date.created' => 'Dátum vytvorenia',
+    'common.date.modified' => 'Dátum úpravy',
+    'common.name' => 'Meno',
+    'company' => 'Spoločnosť',
+    'company.deleted' => 'Spoločnosť bola vymazaná',
+    'company.not.deleted' => 'Spoločnosť nebola odstránená, pretože k nej máte pripojený firemný profil.',
+    'company.private' => 'Spoločnosť Súkromná',
+    'company.private.logo' => 'Logo spoločnosti',
+    'company.private.logo.height' => 'Výška loga',
+    'company.private.logo.margin' => 'Okraj loga',
+    'company.private.logo.width' => 'Šírka loga',
+    'company.private.logo.will.be.removed.from.uploads.and.public.folder' => 'Logo bude odstránené z nahraných súborov a verejného priečinka',
+    'company.public' => 'Verejná spoločnosť',
+    'company.seo' => 'Popis optimalizácie pre vyhľadávače (SEO)',
+    'complete' => 'Dokončené',
+    'confirm' => 'Potvrdiť',
+    'confirm.deletion' => 'Potvrdiť vymazanie',
+    'consent.periodic.invoice' => 'Mesačná/týždenná fakturácia predplatného cez Telegram ',
+    'consent.telegram.chat.id' => 'ID chatu v Telegrame (vyžaduje sa pre upozornenia na platby – pošlite správu @userinfobot v Telegrame, aby ste ho našli)',
+    'consent.telegram.outstanding' => 'Súhlasím s tým, aby som bol prostredníctvom Telegramu upozornený na neuhradenú platbu.',
+    'contact.information' => 'Kontaktné informácie',
+    'continue' => 'Pokračovať',
+    'continue.with.developer.sandbox.hmrc' => 'Pokračovať s Developer Gov Sandbox UK',
+    'continue.with.developersandboxhmrc' => 'Pokračovať s Developer Gov Sandbox UK',
+    'continue.with.facebook' => 'Pokračovať s Facebookom',
+    'continue.with.github' => 'Pokračovať s Githubom',
+    'continue.with.google' => 'Pokračovať s Googlom',
+    'continue.with.govuk' => 'Pokračujte s vládou Spojeného kráľovstva',
+    'continue.with.linkedin' => 'Pokračovať s LinkedInom',
+    'continue.with.microsoftonline' => 'Pokračujte s MicrosoftOnline',
+    'continue.with.oidc' => 'Pokračujte s Open Id Connect',
+    'continue.with.openbanking' => 'Pokračujte v otvorenom bankovníctve',
+    'continue.with.vkontakte' => 'Pokračujte s VKontakte',
+    'continue.with.x' => 'Pokračovať s X',
+    'continue.with.yandex' => 'Pokračujte s Yandexom',
+    'contract' => 'Zmluva',
+    'contract.add' => 'Pridať zmluvu',
+    'contract.contracts' => 'Zmluvy',
+    'contract.create' => 'Vytvorte si zmluvy cez:Faktúra.Zobraziť.Možnosti.Upraviť.Zmluva bude vytvorená pre klienta,ktorému je faktúra vystavená.Prepojte túto zmluvu s budúcimi faktúrami.',
+    'contract.index.button.list' => 'Faktúry',
+    'contract.name' => 'Meno',
+    'contract.none' => 'Pripomienka:Pre túto faktúru nebola nastavená žiadna zmluva',
+    'contract.period.end' => 'Koniec obdobia',
+    'contract.period.start' => 'Začiatok obdobia',
+    'contract.reference' => 'Referencia',
+    'contracts' => 'Zmluvy',
+    'converted.to.invoice' => 'Prevedené na faktúru',
+    'converted.to.so' => 'Konvertované na predajnú objednávku',
+    'copied' => 'Skopírované!',
+    'copy' => 'Kopírovať',
+    'copy.all.to.date' => 'Kopírovať všetko do dátumu',
+    'copy.all.to.date.new.date' => 'Nový dátum',
+    'copy.all.to.date.warning' => 'Týmto sa skopírujú všetky faktúry aktuálne zobrazené vašimi filtrami vyššie do dátumu uvedeného nižšie, pričom každá zostane u vlastného klienta.',
+    'copy.invoice' => 'Kópia faktúry',
+    'copy.quote' => 'Kopírovať cenovú ponuku',
+    'count' => 'Počet faktúr',
+    'country' => 'Krajina',
+    'create' => 'Vytvoriť',
+    'create.credit.invoice' => 'Vytvoriť dobropisovú faktúru',
+    'create.credit.invoice.alert' => 'Vytvorením dobropisnej faktúry sa aktuálna faktúra stane <em>iba na čítanie,</em> čo znamená, že faktúru už nebudete môcť upravovať.Dobropisná faktúra bude obsahovať aktuálny stav so všetkými položkami, ale so zápornými sumami a zostatkami.',
+    'create.invoice' => 'Vytvoriť faktúru',
+    'create.new.client' => 'Vytvoriť nového klienta',
+    'create.product' => 'Vytvoriť produkt',
+    'create.project' => 'Vytvoriť projekt',
+    'create.quote' => 'Vytvoriť cenovú ponuku',
+    'create.recurring' => 'Vytvoriť opakujúce sa',
+    'create.task' => 'Vytvoriť úlohu',
+    'created' => 'Vytvorené',
+    'creation.unsuccessful' => 'Vytvorenie faktúry nebolo úspešné',
+    'credit.invoice' => 'Dobropisná faktúra',
+    'credit.invoice.date' => 'Dátum dobropisovej faktúry',
+    'credit.invoice.details' => 'Podrobnosti o kreditnej faktúre',
+    'credit.invoice.for.invoice' => 'Dobropis',
+    'credit.note.creation.successful' => 'Vytvorenie dobropisu bolo úspešné',
+    'credit.note.creation.unsuccessful' => 'Vytvorenie dobropisu alebo dobropisu na zrušenie faktúry nebolo úspešné',
+    'creditcard.cvv' => 'CVV / CSC',
+    'creditcard.details' => 'Údaje o kreditnej karte',
+    'creditcard.expiry.month' => 'Mesiac expirácie',
+    'creditcard.expiry.year' => 'Rok expirácie',
+    'creditcard.number' => 'Číslo kreditnej karty',
+    'cron.key' => 'CRON kľúč',
+    'curl.store.cove.api.get.legal.entity.id.successful' => 'Získajte úspešnú právnickú osobu',
+    'curl.store.cove.api.setup.legal.entity.successful' => 'Volanie API nastavenia Store Cove – právnická osoba úspešná',
+    'curl.store.cove.api.setup.successful' => 'Volanie API nastavenia obchodu Cove bolo úspešné',
+    'currency' => 'Mena',
+    'currency.and.number.settings' => 'Nastavenia meny a čísla',
+    'currency.code' => 'Kód meny',
+    'currency.name.EUR' => 'Eurá',
+    'currency.name.GBP' => 'Britské libry',
+    'currency.name.USD' => 'Americké doláre',
+    'currency.symbol' => 'Symbol meny',
+    'currency.symbol.EUR' => '€',
+    'currency.symbol.GBP' => '£',
+    'currency.symbol.USD' => '$',
+    'currency.symbol.placement' => 'Umiestnenie symbolu meny',
+    'current.day' => 'Aktuálny deň',
+    'current.month' => 'Aktuálny mesiac',
+    'current.version' => 'Aktuálna verzia',
+    'current.year' => 'Aktuálny rok',
+    'current.yy' => 'Aktuálny rok (2-miestny formát)',
+    'custom' => 'Faktúra na mieru',
+    'custom.field' => 'Vlastné pole',
+    'custom.field.add' => 'Pridať vlastné pole',
+    'custom.field.edit' => 'Úprava vlastného poľa',
+    'custom.field.form' => 'Formulár vlastného poľa',
+    'custom.field.location' => 'Pozícia dokumentu',
+    'custom.field.number' => 'Číslo',
+    'custom.field.required' => 'Povinné',
+    'custom.fields' => 'Vlastné polia',
+    'custom.invoice.add' => 'Pridanie vlastnej faktúry',
+    'custom.title' => 'Vlastný názov',
+    'custom.value' => 'Vlastná hodnota',
+    'custom.value.delete' => 'Najprv odstráňte vlastnú hodnotu',
+    'custom.value.new' => 'Vlastná hodnota Nová',
+    'custom.values' => 'Vlastné hodnoty',
+    'custom.values.edit' => 'Upraviť vlastnú hodnotu',
+    'custom.values.new' => 'Nová vlastná hodnota',
+    'dashboard' => 'Prístrojová doska',
+    'dashboard.outstanding_invoices' => 'Neuhradené faktúry',
+    'dashboard.overdue_amount' => 'Po splatnosti suma',
+    'dashboard.overview.title' => 'Finančný prehľad',
+    'dashboard.recent_payments' => 'Nedávne platby',
+    'dashboard.total_revenue' => 'Celkové príjmy za tento mesiac',
+    'database' => 'Databáza',
+    'database.properly.configured' => 'Databáza je správne nakonfigurovaná',
+    'date' => 'Dátum faktúry',
+    'date.actual.delivery' => 'Dátum skutočného doručenia',
+    'date.applied' => 'Dátum použitia',
+    'date.created' => 'Dátum vytvorenia',
+    'date.format' => 'Formát dátumu',
+    'date.issued' => 'Dátum vydania / vytvorenia',
+    'date.supplied' => 'Dátum dodania',
+    'dates' => 'Dátumy faktúr',
+    'datetime.immutable.date.created' => 'Vytvoriť',
+    'datetime.immutable.date.created.mySql.format.year.month.filter' => 'Ym',
+    'datetime.immutable.date.modified' => 'Proti',
+    'datetime.immutable.time.created' => 'Čas',
+    'days' => 'Dni',
+    'debug' => 'Režim ladenia zapnutý',
+    'decimal.point' => 'Desatinná čiarka',
+    'default' => 'Predvolené',
+    'default.country' => 'Predvolená krajina',
+    'default.email.template' => 'Predvolená šablóna e-mailu',
+    'default.hourly.rate' => 'Predvolená hodinová sadzba',
+    'default.invoice.group' => 'Predvolená skupina faktúr',
+    'default.invoice.tax.rate' => 'Predvolená sadzba dane z faktúry',
+    'default.invoice.tax.rate.placement' => 'Umiestnenie predvolenej sadzby dane z faktúry',
+    'default.item.tax.rate' => 'Predvolená sadzba dane z položky',
+    'default.list.limit' => 'Počet položiek v zoznamoch',
+    'default.list.limit.hint' => 'Nastavuje, koľko riadkov sa zobrazí na stránkach zoznamu. Okamžite sa uloží – efekt sa zobrazí pri návšteve zoznamu.',
+    'default.notes' => 'Predvolené poznámky',
+    'default.payment.method' => 'Predvolený spôsob platby',
+    'default.pdf.template' => 'Predvolená šablóna PDF',
+    'default.public.template' => 'Predvolená verejná šablóna',
+    'default.quote.group' => 'Predvolená skupina cenových ponúk',
+    'default.terms' => 'Predvolené podmienky',
+    'delete' => 'Odstrániť',
+    'delete.attachment.warning' => 'Naozaj chcete odstrániť túto prílohu?',
+    'delete.client' => 'Odstrániť klienta',
+    'delete.client.warning' => 'Ak vymažete tohto klienta, vymažete aj všetky faktúry, cenové ponuky a platby súvisiace s týmto klientom.Naozaj chcete natrvalo vymazať tohto klienta?',
+    'delete.invoice' => 'Odstrániť faktúru',
+    'delete.invoice.action' => 'Akcia odstránenia faktúry',
+    'delete.invoice.archive' => 'Archivovať faktúru',
+    'delete.invoice.date.soft.deleted' => 'Obmedzené odstránenie (obnoviteľné podrobnosti)',
+    'delete.invoice.restore' => 'Obnoviť',
+    'delete.invoice.restore.warning' => 'Naozaj chcete obnoviť túto faktúru?',
+    'delete.invoice.restored' => 'Faktúra bola úspešne obnovená.',
+    'delete.invoice.trash' => 'Kôš faktúr',
+    'delete.invoice.trash.empty' => 'Žiadne archivované faktúry.',
+    'delete.invoice.warning' => 'Ak túto faktúru vymažete, nebudete ju môcť neskôr obnoviť.Naozaj chcete túto faktúru natrvalo vymazať?',
+    'delete.quote' => 'Odstrániť cenovú ponuku',
+    'delete.quote.derived' => 'K tejto cenovej ponuke je prepojená buď predajná objednávka, alebo faktúra, a preto ju nemožno odstrániť.',
+    'delete.quote.single' => 'Túto cenovú ponuku je možné odstrániť, pretože k nej nie je priradená žiadna predajná objednávka ani faktúra.',
+    'delete.quote.warning' => 'Ak túto cenovú ponuku vymažete,nebudete ju môcť neskôr obnoviť.Naozaj chcete túto cenovú ponuku natrvalo vymazať?',
+    'delete.record.warning' => 'Naozaj chcete tento záznam vymazať?',
+    'delete.sent' => 'Nedá sa vymazať - faktúra odoslaná',
+    'delete.tax.warning' => 'Naozaj chcete odstrániť túto daň?',
+    'delete.user.client.warning' => 'Naozaj chcete zrušiť priradenie tohto klienta k tomuto používateľovi?',
+    'deleted' => 'Odstránené',
+    'deletion.forbidden' => 'Mazanie faktúr je zakázané.Kontaktujte, prosím, administrátora alebo si pozrite dokumentáciu.',
+    'delivery' => 'Podrobnosti o doručení:Začiatok/konec faktúry/dodacieho obdobia',
+    'delivery.actual.delivery.date' => 'Skutočný dátum doručenia',
+    'delivery.add' => 'Pridať doručenie',
+    'delivery.date.created' => 'Dátum vytvorenia',
+    'delivery.date.modified' => 'Dátum doručenia upravený',
+    'delivery.end.date' => 'Dátum ukončenia dodania/fakturačného obdobia',
+    'delivery.location' => 'Miesto doručenia',
+    'delivery.location.add' => 'Pridať miesto doručenia',
+    'delivery.location.add.in.invoice' => 'Pridajte miesto doručenia v časti Faktúra .Zobraziť .Možnosti .Upraviť',
+    'delivery.location.building.number' => 'Číslo budovy',
+    'delivery.location.client' => 'Miesta doručenia klienta',
+    'delivery.location.delete' => 'Miesto doručenia Odstrániť',
+    'delivery.location.edit' => 'Upraviť miesto doručenia',
+    'delivery.location.electronic.address.scheme' => 'Schéma elektronických adries (zoznam kódov) Predvolené:0088 Európske číslovanie artiklov (EAN) Kód lokality alebo (GLN) Globálne čísla lokality',
+    'delivery.location.global.location.number' => 'Globálne číslo lokality (13 číslic)',
+    'delivery.location.id.not.found' => 'Globálne číslo lokality doručenia ID nebolo nájdené',
+    'delivery.location.index.button.list' => 'Faktúry',
+    'delivery.location.none' => 'K tejto faktúre nie je prepojené žiadne miesto doručenia',
+    'delivery.location.peppol.output' => 'K tejto faktúre nie je priradené žiadne miesto doručenia, preto Peppol nemá žiadny výstup.',
+    'delivery.location.plural' => 'Miesta doručenia',
+    'delivery.location.view' => 'Zobrazenie miesta doručenia',
+    'delivery.party' => 'Donášková párty',
+    'delivery.party.add' => 'Donášková skupina Pridať',
+    'delivery.party.edit' => 'Doručovacia skupina Upraviť',
+    'delivery.party.name' => ' Názov doručujúcej strany',
+    'delivery.party.view' => 'Pohľad na donáškovú skupinu',
+    'delivery.start.date' => 'Dátum začiatku dodania/fakturačného obdobia',
+    'demographics' => 'Demografické údaje',
+    'description' => 'Popis',
+    'description.document' => 'Popis dokumentu',
+    'details' => 'Detaily',
+    'development.progress' => 'Pokrok vo vývoji',
+    'development.schema' => 'Schéma',
+    'disable.flash.messages' => 'Zakázať bleskové správy faktúr',
+    'disable.quickactions' => 'Zakázať rýchle akcie',
+    'disable.sidebar' => 'Zakázať bočný panel',
+    'discount' => 'Zľava',
+    'discount.amount' => 'Výška zľavy',
+    'discount.percent' => 'Percentuálna zľava',
+    'discount.percentage' => 'Percentuálna zľava',
+    'do.not.send' => 'Neodosielať',
+    'do.not.send.blocksBulkSent' => 'Faktúra(y) nie je označená ako odoslaná – nastavený je príznak Neodoslať.',
+    'do.not.send.blocksEmail' => 'Táto faktúra je označená ako Neodosielať a nemožno ju odoslať zákazníkovi e-mailom.',
+    'do.not.send.flashCleared' => 'Príznak „Neodosielať“ bol zrušený.',
+    'do.not.send.flashSet' => 'Nastavený je príznak Neodoslať – túto faktúru nemožno označiť ako odoslanú, kým nie je vyrovnaná.',
+    'do.not.send.not.set' => 'Nie je nastavené',
+    'do.not.send.reason.customer_dispute' => 'Spor so zákazníkom',
+    'do.not.send.reason.damage_occurred' => 'Vzniklo poškodenie',
+    'do.not.send.reason.job_incomplete' => 'Úloha nie je dokončená',
+    'do.not.send.reason.other' => 'Iné',
+    'do.not.send.reason.property_inaccessible' => 'Nehnuteľnosť neprístupná',
+    'do.not.send.reason.safety_concern' => 'Bezpečnostné obavy',
+    'document.description' => 'Popis dokumentu Peppol',
+    'documentation' => 'Dokumentácia',
+    'download' => 'Stiahnuť',
+    'download.pdf' => 'Stiahnuť PDF',
+    'download.template' => 'Stiahnuť šablónu',
+    'draft' => 'Návrh',
+    'draft.guest' => 'Návrhy faktúr si klienti nemôžu zobraziť.',
+    'draft.number.off' => 'Nové koncepty faktúr nebudú mať číslo faktúry.Označte ich ako odoslané, aby ste získali číslo faktúry.',
+    'draft.number.on' => 'Nové návrhy faktúr budú mať číslo faktúry',
+    'drop.files.here' => 'Sem presuňte súbory!',
+    'due.date' => 'Dve rande',
+    'dwelling' => 'Obydlie',
+    'dwelling.add' => 'Pridať obydlie',
+    'dwelling.edit' => 'Upraviť obydlie',
+    'dwelling.family' => 'Ulica',
+    'dwelling.flat.unit' => 'Byt / Jednotka',
+    'dwelling.house.number' => 'Číslo domu',
+    'dwelling.house.number.suffix' => 'Prípona čísla domu',
+    'dwelling.latitude' => 'Zemepisná šírka',
+    'dwelling.longitude' => 'Zemepisná dĺžka',
+    'dwelling.plural' => 'Obydlia',
+    'dwelling.postcode' => 'PSČ',
+    'dwelling.source' => 'Zdroj',
+    'dwelling.view' => 'Zobraziť obydlie',
+    'early.settlement.cash.discount' => 'Zľava v hotovosti pri predčasnom vyrovnaní',
+    'edit' => 'Upraviť',
+    'elements' => 'Prvky',
+    'email' => 'E-mail',
+    'email.address' => 'E-mailová adresa',
+    'email.client' => 'E-mailový klient',
+    'email.date' => 'Dátum odoslania e-mailom',
+    'email.default' => 'Predvolené',
+    'email.default.none.set' => 'Nebola nastavená žiadna predvolená hodnota',
+    'email.exception' => 'Výnimka pri odosielaní e-mailov.',
+    'email.from.dropdown' => 'Rozbaľovací zoznam e-mailov odosielateľa, ktoré sa majú zahrnúť do formulára MailerWote a formulára MailInv',
+    'email.include' => 'Zahrnúť',
+    'email.invoice' => 'Faktúra e-mailom',
+    'email.invoice.created.body' => '
+        <h2>Vážený/á {client_name},</h2><p> Vytvorili sme pre vás novú faktúru:</p><ul><li> <strong>Číslo faktúry:</strong> #{invoice_number}</li><li> <strong>Dátum:</strong> {invoice_date}</li><li> <strong>Dátum splatnosti:</strong> {due_date}</li><li> <strong>Suma:</strong> {suma}</li></ul><p> <a href="{view_link}">Zobraziť faktúru</a> | <a href="{payment_link}">Zaplatiť teraz</a></p><p> Platobné podmienky: {payment_terms}</p><p> S pozdravom,<br> {názov_spoločnosti}</p>
+    ',
+    'email.invoice.created.subject' => 'Nová faktúra č. {invoice_number} od spoločnosti {company_name}',
+    'email.invoice.overdue.subject' => 'PO DLŽNOSTI: Faktúra č. {invoice_number} – Vyžaduje sa okamžitá pozornosť',
+    'email.invoice.reminder.subject' => 'Pripomienka platby - Faktúra č. {invoice_number}',
+    'email.link.click.confirm' => 'Potvrďte svoju e-mailovú adresu kliknutím na tento odkaz',
+    'email.log' => 'Záznam odoslaných faktúr e-mailom',
+    'email.logs' => 'Záznamy o odoslaní faktúr e-mailom',
+    'email.logs.table' => 'Tabuľka e-mailových protokolov špecifických pre túto faktúru',
+    'email.logs.with.filter' => 'Odoslané e-mailom',
+    'email.not.configured' => 'Pred odoslaním e-mailu musíte nakonfigurovať nastavenia e-mailu v oblasti Nastavenia systému.',
+    'email.not.sent.successfully' => 'E-mail nebol úspešne odoslaný',
+    'email.pdf.attachment' => 'Priložiť cenovú ponuku/faktúru k e-mailu?',
+    'email.placeholder' => 'meno@example.com',
+    'email.quote' => 'Cenovú ponuku e-mailom',
+    'email.send.method' => 'Metóda odosielania e-mailov',
+    'email.send.method.phpmail' => 'PHP Mail',
+    'email.send.method.sendmail' => 'Odoslať poštu',
+    'email.send.method.smtp' => 'SMTP',
+    'email.settings' => 'Nastavenia e-mailu',
+    'email.source.email.template' => 'Získané z nastavení .Šablóna e-mailu',
+    'email.source.user.account' => 'Získané z nastavení .Používateľský účet pre faktúry',
+    'email.successfully.sent' => 'E-mail bol úspešne odoslaný',
+    'email.template' => 'Šablóna e-mailu',
+    'email.template.add' => 'Pridať šablónu e-mailu',
+    'email.template.already.exists' => 'Šablóna e-mailu už existuje!',
+    'email.template.form' => 'Šablóna e-mailu',
+    'email.template.from.email.leave.blank' => 'Ak toto pole ponecháte prázdne,e-mailová adresa používateľského účtu sa vloží ako upraviteľná hodnota do formulára e-mailu.Napr.E-mailová adresa servera účtovníka.Najlepšie je použiť tu e-mailovú adresu súvisiacu so serverom.',
+    'email.template.from.source' => 'Zdroj e-mailu',
+    'email.template.from.source.admin.email' => 'E-mailová adresa administrátora (config/common/params)',
+    'email.template.from.source.froms.email' => 'Z predvolenej tabuľky (nastavenia.Z rozbaľovacej ponuky e-mailových adries)',
+    'email.template.from.source.sender.email' => 'E-mailová adresa odosielateľa (config/common/params)',
+    'email.template.not.configured' => 'Šablóny e-mailov nie sú nakonfigurované.Nastavenia.Faktúry.Šablóny faktúr.Predvolená šablóna e-mailu',
+    'email.template.overdue' => 'Šablóna e-mailu s oneskoreným termínom',
+    'email.template.paid' => 'Šablóna plateného e-mailu',
+    'email.template.successfully.added' => 'Šablóna e-mailu bola úspešne pridaná',
+    'email.template.successfully.deleted' => 'Šablóna e-mailu bola úspešne odstránená',
+    'email.template.successfully.edited' => 'Šablóna e-mailu bola úspešne upravená',
+    'email.template.tags' => 'Značky šablóny e-mailu',
+    'email.template.tags.instructions' => 'Značky šablón je možné použiť na pridanie dynamických informácií, ako je meno klienta alebo číslo faktúry, do šablóny e-mailu.Kliknite na textové pole Telo a potom vyberte značku z rozbaľovacej ponuky.Automaticky sa vloží do textového poľa.',
+    'email.template.type' => 'Typ šablóny e-mailu',
+    'email.templates' => 'Šablóny e-mailov',
+    'email.to.address.missing' => 'Musíte zadať e-mailovú adresu, na ktorú sa má e-mail odoslať.',
+    'email.warning.draft' => 'Návrhy faktúr musia byť najprv označené ako odoslané, aby sa zobrazili na strane klienta, a potom ich možno odoslať e-mailom.',
+    'enable.debug.mode' => 'Povoliť režim ladenia',
+    'enable.online.payments' => 'Povoliť online platby',
+    'enable.permissive.search.clients' => 'Povoliť permisívne vyhľadávanie',
+    'enable.projects' => 'Povoliť modul Projekty',
+    'enable.vat' => 'Povoliť DPH',
+    'enable.vat.message' => 'Zobraziť správu s pripomienkou DPH nad tlačidlom možností v zobrazeniach',
+    'enable.vat.warning.line.1' => '1.Pri povolenej DPH sú DPH zdaňované iba jednotlivé položky na faktúre.T.j.Dane z cenovej ponuky/faktúry sa na faktúre nezobrazia a budú znížené na 0.',
+    'enable.vat.warning.line.2' => '2.Ak je povolená DPH, celková suma dane sa nezahŕňa v daňových položkách, ako je uvedené vyššie.',
+    'enable.vat.warning.line.3' => '3.Vytvorte cenové ponuky/faktúry s DPH v samostatnej databáze.',
+    'enable.vat.warning.line.4' => '4.Všetky nové položky riadkov faktúr s DPH sú označené príznakom belongs_to_vat_invoice.',
+    'enabled' => 'Povolené',
+    'end' => 'Koniec',
+    'end.date' => 'Dátum ukončenia',
+    'enforcement' => 'Adresa prítomného úradníka pre vymáhanie práva',
+    'enter' => 'Zadajte',
+    'enter.payment' => 'Zadajte platbu',
+    'error.duplicate.file' => 'Chyba:Duplicitný názov súboru, zmeňte ho!',
+    'error.summary' => 'Súhrn chýb',
+    'errors' => 'Chyby',
+    'every' => 'Každý',
+    'example' => 'Príklad',
+    'expired' => 'Platnosť vypršala',
+    'expires' => 'Platnosť vyprší',
+    'extended' => 'Rozšírené',
+    'extended.language' => 'Rozšírený jazyk',
+    'extra.information' => 'Doplňujúce informácie',
+    'failure' => 'Zlyhanie',
+    'false' => 'Falošné',
+    'families' => 'Rodiny',
+    'family' => 'Rodina',
+    'family.add' => 'Pridať rodinu',
+    'family.already.exists' => 'Rodina už existuje!',
+    'family.comma.list' => 'Zoznam čísel produktov, napr. 1, 2, 5, 7 pre generátor produktov',
+    'family.history' => 'Rodinná história existuje.Nedá sa vymazať.',
+    'family.name' => 'Priezvisko',
+    'family.product.prefix' => 'Predpona zoznamu čísel produktov, napr. dom',
+    'family.product.prefix.required.when.commalist.filled' => 'Ak je uvedený zoznam oddelený čiarkou, je potrebný predponový kód produktu.',
+    'family.search' => 'Vyhľadávanie rodiny',
+    'faq' => 'Často kladené otázky',
+    'faq.ai.callback.session' => 'Copilot:Ako môžem zahrnúť https://github.com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.php na zlepšenie správy stavu vo funkcii `callbackGithub`?',
+    'faq.answer' => 'Odpoveď',
+    'faq.business.rules' => 'Aké sú obchodné pravidlá spoločnosti Peppol?',
+    'faq.gov.developer.sandbox.hmrc' => 'Ako pripojím toto úložisko k sandboxu pre vývojárov HMRC?',
+    'faq.homecare.auto.invoice' => 'Čo je to automatická faktúra za upratovanie v domácnosti?',
+    'faq.lamp.alpine' => 'Ako môžem nastaviť tento repozitár na Linux Alpine, Apache2, mySql/mariadb a PHP?',
+    'faq.oauth2' => 'Ako nastavím poskytovateľa identity OAuth2,napr.registráciu a prihlásenie pomocou Facebooku?',
+    'faq.payment.provider' => 'Ako si nastavím poskytovateľa online platieb?',
+    'faq.php.info.all' => 'Všetky',
+    'faq.php.info.configuration' => 'Konfigurácia',
+    'faq.php.info.credits' => 'Kredity',
+    'faq.php.info.details' => 'Podrobnosti o informáciách v PHP',
+    'faq.php.info.environment' => 'Životné prostredie',
+    'faq.php.info.general' => 'Všeobecné',
+    'faq.php.info.licence' => 'Licencia',
+    'faq.php.info.modules' => 'Moduly',
+    'faq.php.info.variables' => 'Premenné',
+    'faq.question' => 'Otázka',
+    'faq.shared.hosting' => 'Ako môžem hostiť yii3i na zdieľanom hostingu?',
+    'faq.sort.order' => 'Poradie zoradenia',
+    'faq.taxpoint' => 'Ako určiť, čo je daňový bod?',
+    'faq.wsl.to.alpine' => 'Ako aktualizujem stránku hostovanú v Alpine pomocou WSL (podsystém Windows pre Linux) vo Windowse 11?',
+    'faq.yii.requirement.checker' => 'Kontrola požiadaviek aplikácie Yii',
+    'fax' => 'Fax',
+    'fax.abbr' => 'F',
+    'fax.number' => 'Faxové číslo',
+    'field' => 'Pole',
+    'file' => 'Súbor',
+    'filter.clients' => 'Filtrovať klientov',
+    'filter.invoices' => 'Filtrovať faktúry',
+    'filter.payments' => 'Filtrovať platby',
+    'filter.quotes' => 'Filtrovať citáty',
+    'first' => 'Prvý',
+    'first.day.of.week' => 'Prvý deň v týždni',
+    'first.reset' => 'Najprv vymažte testovacie cenové ponuky a faktúry, ktoré ste vytvorili na testovanie.Potom je možné vymazať testovacie údaje.',
+    'flash.messages.appear.here' => 'Tu sa zobrazujú bleskové správy.',
+    'footer' => 'Päta',
+    'forgot.your.password' => 'Zabudol som heslo',
+    'form.error' => 'Chyby formulára',
+    'from.date' => 'Od dátumu',
+    'from.default.in.dropdown' => 'Predvolená e-mailová adresa v rozbaľovacom zozname',
+    'from.email' => 'Z e-mailu',
+    'from.email.address' => 'Z e-mailových adries:Vyberte predvolenú možnosť',
+    'from.include.in.dropdown' => 'Zahrnúť tento e-mail do rozbaľovacieho zoznamu',
+    'from.name' => 'Od mena',
+    'front.page' => 'Úvodná strana',
+    'gallery.caption.slide1' => 'Tento text môžete zmeniť na stránke ./resources/messages/en/app.php.',
+    'gallery.caption.slide10' => 'Tento text môžete zmeniť na stránke ./resources/messages/en/app.php.',
+    'gallery.caption.slide11' => 'Tento text môžete zmeniť na stránke ./resources/messages/en/app.php.',
+    'gallery.caption.slide12' => 'Tento text môžete zmeniť na stránke ./resources/messages/en/app.php.',
+    'gallery.caption.slide13' => 'Tento text môžete zmeniť na stránke ./resources/messages/en/app.php.',
+    'gallery.caption.slide14' => 'Tento text môžete zmeniť na stránke ./resources/messages/en/app.php.',
+    'gallery.caption.slide15' => 'Tento text môžete zmeniť na stránke ./resources/messages/en/app.php.',
+    'gallery.caption.slide2' => 'Tento text môžete zmeniť na stránke ./resources/messages/en/app.php.',
+    'gallery.caption.slide3' => 'Tento text môžete zmeniť na stránke ./resources/messages/en/app.php.',
+    'gallery.caption.slide4' => 'Tento text môžete zmeniť na stránke ./resources/messages/en/app.php.',
+    'gallery.caption.slide5' => 'Tento text môžete zmeniť na stránke ./resources/messages/en/app.php.',
+    'gallery.caption.slide6' => 'Tento text môžete zmeniť na stránke ./resources/messages/en/app.php.',
+    'gallery.caption.slide7' => 'Tento text môžete zmeniť na stránke ./resources/messages/en/app.php.',
+    'gallery.caption.slide8' => 'Tento text môžete zmeniť na stránke ./resources/messages/en/app.php.',
+    'gallery.caption.slide9' => 'Tento text môžete zmeniť na stránke ./resources/messages/en/app.php.',
+    'gateway.online.payment' => 'Online platba',
+    'gateway.status.page.summary' => 'Strana %d z %d',
+    'gender' => 'Pohlavie',
+    'gender.female' => 'Žena',
+    'gender.male' => 'Muž',
+    'gender.other' => 'Iné',
+    'general' => 'Všeobecné',
+    'general.no' => 'Nie',
+    'general.settings' => 'Všeobecné nastavenia',
+    'general.yes' => 'Áno',
+    'generate' => 'Generovať',
+    'generate.copy' => 'Vygenerovať kópiu',
+    'generate.invoice.number.for.draft' => 'Generovanie čísla faktúry pre návrhy faktúr',
+    'generate.quote.number.for.draft' => 'Generovanie čísla cenovej ponuky pre návrhy cenových ponúk',
+    'generator' => 'Generátor',
+    'generator.add' => 'Pridať generátor',
+    'generator.camelcase.capital.name' => 'Názov s veľkým písmenom Camelcase používaný v názvoch kontrolérov a repozitárov, napr.TaxRate.Ak používate vyššie uvedený príklad „produkt“, použite „Product“.',
+    'generator.camelcase.capital.name.product' => 'Produkt',
+    'generator.controller.and.repository' => 'Kontrolér a úložisko',
+    'generator.controller.layout.directory' => 'Adresár rozloženia ovládača, napr.dirname(dirname(__DIR__)), ktorý sa zobrazí hneď za konštrukciou ovládača.Súbor ovládača sa nachádza v (__DIR__) a je dva adresáre pod adresárom „src“, ktorý sa použije ako „základňa“ pre pripojenie cesty k adresáru rozloženia.',
+    'generator.controller.layout.directory.dot.path' => 'Bodka cesty k adresáru rozloženia ovládača, napr.„/views/layout/invoice.php“, ktorá sa zobrazí hneď za konštrukciou ovládača (okrem apostrofov) a pripojí sa k vyššie uvedenému umiestneniu v adresári src.',
+    'generator.controller.layout.directory.dot.path.placeholder' => 'Cesta k bodke adresára rozloženia ovládača',
+    'generator.controller.layout.directory.placeholder' => 'Adresár rozloženia ovládača, napr.dirname(dirname(__DIR__))',
+    'generator.controller.path.layout' => 'Cesta k súboru rozloženia',
+    'generator.created.at.include' => 'Zahrnúť pole created_at do entity',
+    'generator.deleted.at.include' => 'Zahrnúť pole deleted_at do entity',
+    'generator.external.entity' => 'Externá entita použitá v tejto entite.Entita nastavenia je jednoduchá indexovaná databáza párov kľúč =&gt; hodnota s ID.',
+    'generator.external.entity.default' => 'Externá entita, napr.MyEntity bez cesty.Cesta je zabudovaná v generátore.Predvolené nastavenie:',
+    'generator.external.entity.placeholder' => 'Externá entita, napr.MyEntity bez cesty.Cesta zabudovaná v generátore.Predvolené:Nastavenie.Dodatočný repozitár, napr.Repozitár nastavení okrem hlavného repozitára.',
+    'generator.file.type.not.found' => 'Typ súboru sa nenašiel.',
+    'generator.flash.include' => 'Zahrnúť bleskovú správu do funkcie Pridať/Upraviť/Zobraziť/Odstrániť v ovládači',
+    'generator.generate' => 'Generovať',
+    'generator.generated' => ' vygenerované na ',
+    'generator.google.translate.all.locales' => 'Všetky lokály v Prekladači Google (rozdiel)',
+    'generator.google.translate.any' => 'Preložiť angličtinu\\any_lang.php',
+    'generator.google.translate.app' => 'Preložiť English\\app_lang.php',
+    'generator.google.translate.common' => 'Preložiť English\\common_lang.php',
+    'generator.google.translate.diff' => 'Preložiť English\\diff_lang.php',
+    'generator.google.translate.gateway' => 'Preložiť angličtinu\\gateway_lang.php',
+    'generator.google.translate.info' => 'Preložiť dokumentáciu k informáciám (invoice.php)',
+    'generator.google.translate.ip' => 'Preložiť angličtinu\\ip_lang.php',
+    'generator.google.translate.latest.a' => 'Preložiť English\\a_latest_lang.php',
+    'generator.google.translate.latest.b' => 'Preložiť angličtinu\\b_latest_lang.php',
+    'generator.headerline.include' => 'Ak je potrebný Ajax, zahrňte hlavičku',
+    'generator.history' => 'Tento záznam má existujúce vzťahy generátora, takže ho nemožno odstrániť.Najprv tieto vzťahy odstráňte.',
+    'generator.modified.at.include' => 'Zahrnúť pole modified_at do entity',
+    'generator.namespace' => 'Priestor názvov',
+    'generator.namespace.before.entity' => 'Priestor názvov pred cestou k entite, napr.App\\Invoice (NIE App\\Invoice\\Entity)',
+    'generator.relation.form' => 'Formulár vzťahu generátora',
+    'generator.relation.form.camelcase.name' => 'Názov v camelcase bez ID (napr.tax_rate_id &#39;cudzí kľúč/vzťah&#39; v tabuľke Product zjednodušene na TaxRate A je názov entity)',
+    'generator.relation.form.entity.generator' => 'Generátor entít',
+    'generator.relation.form.lowercase.name' => 'Názov malými písmenami bez ID (napr.tax_rate_id „cudzí kľúč/vzťah“ v tabuľke Produkt zjednodušene na tax.rate)',
+    'generator.relation.form.view.field.name' => 'Názov poľa zobrazenia',
+    'generator.relations' => 'Vzťahy s generátormi',
+    'generator.relations.add' => 'Pridanie vzťahu generátorov',
+    'generator.route.prefix' => 'Predpona trasy, napr.faktúra v &#39;faktúra/produkt&#39;, ktorá sa zobrazí za konštruktom kontroléra.',
+    'generator.route.suffix' => 'Prípona smerovania, napr.product vo „faktúre/produkte“, ktorá sa zobrazí za konštruktom kontroléra.',
+    'generator.small.plural.name' => 'Malý názov v množnom čísle používaný v ovládači pre funkciu indexového ovládača na vypísanie všetkých generátorov entít.Normálne je to vyššie uvedená hodnota s písmenom „s“ na konci.',
+    'generator.small.plural.name.placeholder' => 'Malé množné číslo',
+    'generator.small.plural.name.products' => 'produkty',
+    'generator.small.singular.name' => 'Malý jednotný názov používaný v ovládači na úpravu a zobrazenie funkcií ovládača.Zvyčajne rovnaký ako prípona trasy,napr.product',
+    'generator.small.singular.name.placeholder' => 'Malé jednotné meno',
+    'generator.small.singular.name.product' => 'produkt',
+    'generator.table' => 'Tabuľka',
+    'generator.table.used.to.generate.entity.controller.repository' => 'Tabuľka použitá na generovanie entity,ovládača Pridať Upraviť Odstrániť Zobrazenie,Repozitár, Služba, Mapovač',
+    'generator.updated.at.include' => 'Zahrnúť pole updated.at do entity',
+    'generators' => 'Generátory',
+    'generators.relation' => 'Vzťah generátorov',
+    'gln' => 'GLN',
+    'gocardless.direct.debit.collection.scheduled.for' => 'Vaše inkaso prostredníctvom inkasa je naplánované na %s.',
+    'gov.developer.sandbox' => 'Pieskovisko pre vývojárov',
+    'gov.developer.sandbox.uk' => 'Daňový úrad (HMRC)',
+    'grand.fathered' => 'Veľký otec',
+    'gridview.api' => 'API',
+    'gridview.create.at' => 'Vytvorené v',
+    'gridview.login' => 'Prihlásenie',
+    'gridview.profile' => 'Profil',
+    'gridview.title' => 'Zoznam používateľov',
+    'group' => 'Skupina',
+    'group.add' => 'Pridať do skupiny',
+    'group.by' => 'Zoskupiť podľa',
+    'group.document.number' => 'Číslo dokumentu nebolo vygenerované.Skontrolujte skupiny.',
+    'group.form' => 'Skupinový formulár',
+    'group.history' => 'História skupiny existuje.Nedá sa odstrániť.',
+    'grouping' => 'Zoskupovanie',
+    'grouping.none' => 'Žiadne zoskupovanie',
+    'groups' => 'Skupiny',
+    'guest.account.denied' => 'Tento účet nie je nakonfigurovaný.Kontaktujte správcu systému.',
+    'guest.read.only' => 'Hosť (iba na čítanie)',
+    'guest.url' => 'URL adresa hosťa',
+    'hide.or.unhide.columns' => 'Skryť alebo zobraziť stĺpce',
+    'hint.greater.than.zero.please' => 'Viac ako 0,00 prosím!',
+    'hint.this.field.is.not.required' => 'Toto pole nie je povinné',
+    'hint.this.field.is.required' => 'Toto pole je povinné',
+    'home' => 'Domov',
+    'home.caption.slide1' => 'Zaregistrujte sa a prihláste sa ako správca.Žiadny internet .ignorujte chybu pripojenia e-mailu.',
+    'home.caption.slide2' => 'Ako administrátor zaregistrujte používateľa.E-mailový účet je platný a internetové pripojenie .overte.Používateľ získa klientsky účet.',
+    'home.caption.slide3' => 'E-mailový účet nie je platný a žiadne internetové pripojenie .prihlásenie administrátora a aktivácia účtu používateľa pre fakturáciu v časti Nastavenia.Vytvorenie klientskeho účtu.Priradenie k používateľovi',
+    'home.caption.slides.location.debug.mode' => 'Toto umiestnenie obsahu:/resources/views/site/index.php v rámci ./resources/views/layout/..a umiestnenie prekladového slajdu ./resources/messages/app.php',
+    'homecare' => 'Domáca starostlivosť',
+    'homecare.auto.invoice.enabled' => 'Povoliť automatickú faktúru QR kódu pre domácu starostlivosť',
+    'homecare.column.client.active' => 'Klient aktívny',
+    'homecare.column.delivery.add' => 'Pridať doručenie',
+    'homecare.column.pdf.email' => 'Akcie PDF / e-mailu',
+    'homecare.column.quick.pay' => 'Rýchla platba',
+    'homecare.column.workflow.type' => 'Typ pracovného postupu',
+    'homecare.column.year.month' => 'Rok-mesiac',
+    'homecare.current.run' => 'Aktuálny beh',
+    'homecare.current.run.category.secondary' => 'Aktuálny beh – oblasť',
+    'homecare.current.run.last.run.date' => 'Aktuálny beh – Dátum posledného behu',
+    'homecare.hidden.columns' => 'Stĺpce inv/index – režim domácej starostlivosti',
+    'homecare.hidden.columns.description' => 'Skryte tieto stĺpce na faktúre/indexe, keď je zapnutá automatická faktúra QR kódu domácej starostlivosti, aby manažéri videli kratšiu a použiteľnejšiu mriežku v telefóne. Položky Pracovník, Suma a Neodosielať zostanú vždy viditeľné. Všeobecná mriežka zostáva nezmenená, keď je automatická faktúra QR kódu domácej starostlivosti vypnutá.',
+    'homecare.hidden.columns.guest' => 'Stĺpce pre inv/guest – režim domácej starostlivosti',
+    'homecare.hidden.columns.guest.description' => 'Skryte tieto stĺpce v mriežke faktúr pre hosťov (faktúra/hosť), keď je zapnutá automatická faktúra QR kódu pre domáce potreby. Číslo, súbory PDF na stiahnutie a stav zostanú vždy viditeľné. Všeobecná mriežka pre hosťov nie je ovplyvnená, keď je automatická faktúra QR kódu pre domáce potreby vypnutá.',
+    'homecare.mobile.rotate.tip.body' => 'Ak sa vám inv/index v režime na výšku zdá stiesnený, skúste režim na šírku. Potiahnutím prstom nadol z pravého horného rohu zobrazíte Rýchle nastavenia a potom ich ďalším potiahnutím nadol rozbalíte – ikona uzamknutia otočenia sa nachádza v rozbalenom paneli.',
+    'homecare.mobile.rotate.tip.title' => 'Tip pre Android:',
+    'homecare.offline.download.button' => '📥 Stiahnuť pre offline použitie',
+    'homecare.offline.download.failed' => 'Nepodarilo sa stiahnuť faktúry na použitie offline – skúste to znova, keď ste pripojení.',
+    'homecare.offline.download.success' => 'Stiahnutých %s faktúr na použitie offline.',
+    'homecare.offline.downloaded.at' => 'Stiahnuté',
+    'homecare.offline.empty' => 'Zatiaľ neboli stiahnuté žiadne faktúry. Pripojte sa na internet a najprv v zozname faktúr klepnite na možnosť „Stiahnuť pre offline“.',
+    'homecare.offline.install.button' => '📲 Nainštalujte si aplikáciu',
+    'homecare.offline.install.generic.message' => 'Nainštalujte si túto aplikáciu pre offline prístup, ktorý vydrží dlhšie ako niekoľko dní.',
+    'homecare.offline.install.ios.message' => 'Pre offline prístup, ktorý vydrží viac ako niekoľko dní bez návštevy, klepnite na Zdieľať a potom na „Pridať na domovskú obrazovku“.',
+    'homecare.offline.title' => 'Moje offline faktúry',
+    'homecare.offline.view.button' => '📱 Zobraziť offline kópiu',
+    'homecare.scan.contact.us' => 'Túto skenovaciu úlohu sme nemohli spracovať. Kontaktujte nás priamo.',
+    'homecare.scan.not.eligible' => 'Momentálne nie je potrebná žiadna nová faktúra. Ak si myslíte, že ide o chybu, kontaktujte nás.',
+    'homecare.scan.thanks' => 'Ďakujeme – vaša faktúra bola vygenerovaná a pripravená na zobrazenie vo vašom účte.',
+    'homecare.scan.title' => 'Domáca starostlivosť',
+    'homecare.signup.category.new.area' => 'Moja oblasť nie je uvedená – toto je nová oblasť',
+    'homecare.signup.confirmed.expired' => 'Platnosť tohto potvrdzovacieho odkazu vypršala alebo už bol použitý. Zaregistrujte sa znova.',
+    'homecare.signup.confirmed.paid' => 'Ďakujeme – váš účet je nastavený a vaša prvá faktúra je označená ako zaplatená. Váš QR kód je pripravený nižšie: nalepte ho na viditeľné miesto a naskenujte ho po každej ďalšej návšteve, aby ste si automaticky vyžiadali ďalšiu faktúru.',
+    'homecare.signup.confirmed.setup.incomplete' => 'Nepodarilo sa nám dokončiť nastavenie vášho účtu. Kontaktujte nás priamo.',
+    'homecare.signup.confirmed.unpaid' => 'Ďakujeme – váš účet je nastavený a vaša prvá faktúra bola odoslaná. Váš QR kód je pripravený na tlač nižšie, ale automatické skenovanie do faktúry začne fungovať až po označení faktúry ako zaplatenej.',
+    'homecare.signup.payment.have.paid.cash' => 'Už som zaplatil v hotovosti',
+    'homecare.signup.payment.will.pay.today' => 'Zaplatím dnes',
+    'homecare.signup.street.name' => 'Názov ulice',
+    'homecare.signup.title' => 'Registrácia do domácej starostlivosti',
+    'homecare.visit.log.description' => 'Každý pokus o skenovanie QR kódu pre domáce čistenie a jeho výsledok, len pre viditeľnosť zamestnancov – stránka s výsledkami skenovania pre zákazníkov je zámerne všeobecná a nikdy nezobrazuje túto úroveň detailov.',
+    'homecare.visit.log.invoice' => 'Faktúra',
+    'homecare.visit.log.outcome' => 'Výsledok',
+    'homecare.visit.log.reason' => 'Dôvod (iba pre zamestnancov)',
+    'homecare.visit.log.sent.status' => 'Stav odoslania',
+    'homecare.visit.log.sent.status.tooltip' => 'Automatické faktúry HomeCare sa vždy vytvárajú so stavom „Odoslané“, bez ohľadu na nastavenie „Označiť faktúru ako odoslanú pri kopírovaní faktúry“ – toto nastavenie sa vzťahuje iba na ostatné nástroje na kopírovanie faktúr. Kliknutím ho otvoríte.',
+    'homecare.visit.log.title' => 'Záznam skenovania QR kódov HomeCare',
+    'homecare.visit.log.visited.at' => 'Navštívené',
+    'hostname' => 'Názov hostiteľa',
+    'id' => 'Identifikácia',
+    'identifier.format' => 'Formátovanie identifikátora',
+    'identifier.format.template.tags' => 'Šablónové značky pre identifikátor',
+    'identifier.format.template.tags.instructions' => 'Značky šablón je možné použiť na pridanie dynamických informácií, ako je meno klienta alebo číslo faktúry, do šablóny e-mailu.Kliknite na pole <b>Formátovanie identifikátora</b> a potom vyberte značku z rozbaľovacej ponuky.Automaticky sa vloží do textového poľa.',
+    'identity.provider.authentication.successful' => 'Úspešne ste boli overení prostredníctvom vami zvoleného poskytovateľa identity, zaregistrovaní a bol vám pridelený klientsky účet.Kliknite sem do hodiny a aktivujte svoj účet.Na prvé prihlásenie máte hodinu.',
+    'image.overdue' => 'Umiestnenie obrázka:/invoice/public/img/overdue.png',
+    'image.paid' => 'Umiestnenie obrázka:/invoice/public/img/paid.png',
+    'import' => 'Importovať',
+    'import.data' => 'Importovať údaje',
+    'import.from.csv' => 'Importovať z CSV',
+    'import.spreadsheet' => 'Importovať tabuľku',
+    'in.progress' => 'Prebieha',
+    'inactive' => 'Neaktívne',
+    'index.checkbox.add.some.items.to.enable' => 'Faktúra neobsahuje žiadne položky.Pridajte položky, aby ste povolili začiarkavacie políčko.',
+    'index.footer.showing' => 'Zobrazuje sa %s z %s',
+    'index.showing' => 'Zobrazuje sa %s z %s',
+    'info.task.readonly' => 'Túto úlohu už nie je možné zmeniť, pretože je už fakturovaná.',
+    'install.pdf.viewer.extension' => 'Nainštalujte rozšírenie prehliadača PDF',
+    'install.test.data' => 'Testovacie dáta je teraz možné nainštalovať',
+    'install.test.data.exists.already' => 'Testovacie údaje faktúry už existujú',
+    'install.test.data.goto.tab.index' => 'Prejsť na Nastavenia .Všeobecné .Inštalovať testovacie údaje',
+    'interface' => 'Rozhranie',
+    'inv.cdn.not.node.module' => 'Použite InvoiceCdnAsset (nie InvoiceNodeModulesAsset)',
+    'invalid.amount' => 'Neplatná suma',
+    'invalid.subscriber.number' => 'Neplatné číslo predplatiteľa',
+    'invoice' => 'Faktúra',
+    'invoice.created.from.quote' => 'Faktúra vytvorená z cenovej ponuky',
+    'invoice.needs.to.be.sent' => 'Ak chcete zobraziť tlačidlá platby, zmeňte ich stav na odoslané.',
+    'invoice.origin' => 'Pôvod',
+    'invoice.to.html' => 'Faktúra do HTML',
+    'invoice.trash' => 'Kôš faktúr',
+    'invoice.validation.errors' => 'Chyby pri overovaní faktúr',
+    'invoiced' => 'Fakturované',
+    'invoiceplane' => 'Faktúrna rovina',
+    'invoiceplane.clients' => 'Vložení klientov',
+    'invoiceplane.database.name' => 'Názov databázy',
+    'invoiceplane.database.password' => 'Heslo',
+    'invoiceplane.database.username' => 'Používateľské meno',
+    'invoiceplane.families' => 'Vložené rodiny',
+    'invoiceplane.import' => 'Testovacie pripojenie',
+    'invoiceplane.import.complete.connection.closed' => 'Import dokončený! Pripojenie ukončené!',
+    'invoiceplane.import.connected' => 'Máte spojenie!',
+    'invoiceplane.import.proceed' => 'Pokračujte v procese importu',
+    'invoiceplane.import.proceed.alert' => 'Naozaj chcete pokračovať?',
+    'invoiceplane.imported' => 'Tabuľky boli importované',
+    'invoiceplane.news' => 'Správy InvoicePlane',
+    'invoiceplane.no.connection' => 'Žiadne pripojenie',
+    'invoiceplane.no.username.or.password' => 'Uložte si názov databázy, používateľské meno a heslo pre InvoicePlane.',
+    'invoiceplane.products' => 'Vložené produkty',
+    'invoiceplane.tables' => 'Importujte tabuľky InvoicePlane s názvami Klient, Produkt, Jednotka, Rodina a Daňová sadzba do prázdnych tabuliek.Pred importom by v týchto tabuľkách nemali byť žiadne existujúce údaje ani žiadne existujúce dokumenty,napr.faktúry.',
+    'invoiceplane.tables.not.empty' => 'Tabuľky Klient, Produkt, Jednotka, Rodina a Daňová sadzba musia byť pred importom prázdne.',
+    'invoiceplane.taxrates' => 'Sadzby dane vložené s povinnou nulovou sadzbou dane a štandardnou sadzbou dane.',
+    'invoiceplane.units' => 'Vložené jednotky',
+    'invoiceplane.yes.connection' => 'Áno, máte pripojenie k databáze Invoiceplane!',
+    'invoices' => 'Faktúry',
+    'invoices.due.after' => 'Splatnosť faktúr po (dni)',
+    'is.not.writable' => 'nie je zapisovateľný',
+    'is.writable' => 'je zapisovateľný',
+    'item' => 'Položka faktúry',
+    'item.add' => 'Pridať položku faktúry',
+    'item.allowance' => 'Príspevok na položku',
+    'item.charge' => 'Poplatok za položku',
+    'item.date' => 'Dátum položky',
+    'item.discount' => 'Zľava na položku',
+    'item.lookup' => 'Vyhľadávanie položiek faktúry',
+    'item.lookup.form' => 'Formulár na vyhľadávanie položiek',
+    'item.lookups' => 'Vyhľadávanie položiek',
+    'item.name' => 'Názov položky',
+    'item.tax' => 'Daň z položky',
+    'item.tax.excluded' => 'Medzisúčet x Percentuálna sadzba DPH (daň z položky bola vylúčená)',
+    'item.tax.included' => '(Medzisúčet + daň z položky) x Percento dane',
+    'item.tax.rate' => 'Sadzba dane z položky',
+    'items' => 'Položky faktúry',
+    'judgement' => 'Získaný rozsudok',
+    'label' => 'Štítok',
+    'label.switch.off' => 'Faktúra s DPH',
+    'label.switch.on' => 'BEZ faktúry s DPH',
+    'language' => 'Jazyk',
+    'last' => 'Posledný',
+    'last.month' => 'Minulý mesiac',
+    'last.quarter' => 'Posledný štvrťrok',
+    'last.year' => 'Minulý rok',
+    'layout.add' => 'Pridať',
+    'layout.add.post' => 'Pridať príspevok',
+    'layout.add.random-content' => 'Pridajte náhodný obsah',
+    'layout.add.tag' => 'Pridať značku',
+    'layout.archive' => 'Archív',
+    'layout.archive.for-year' => 'Archív za {rok}',
+    'layout.blog' => 'Blog',
+    'layout.change-language' => 'Zmeniť jazyk',
+    'layout.console' => 'Konzola',
+    'layout.content' => 'Obsah',
+    'layout.create.new-user' => 'Vytvoriť nového používateľa',
+    'layout.db.schema' => 'Schéma databázy',
+    'layout.go.home' => 'Späť domov',
+    'layout.login' => 'Prihlásenie',
+    'layout.migrations' => 'Migrácie',
+    'layout.no-records' => 'Žiadne záznamy',
+    'layout.not-found' => 'Nenájdené',
+    'layout.page.not-authorised' => 'Neautorizované:Overovacie údaje sú nesprávne.',
+    'layout.page.not-found' => 'Stránka {url} sa nenašla.',
+    'layout.page.user-cancelled-oauth2' => 'Používateľ zrušil prihlásenie / registráciu prostredníctvom poskytovateľa identity, napr.Facebook',
+    'layout.pagination-summary' => 'Zobrazuje sa {pageSize} z {total} príspevkov',
+    'layout.password' => 'Heslo',
+    'layout.password-verify' => 'Potvrďte svoje heslo',
+    'layout.password-verify.new' => 'Potvrďte svoje nové heslo',
+    'layout.password.new' => 'Nové heslo',
+    'layout.password.otp' => 'Jednorazové heslo',
+    'layout.password.otp.6' => 'Jednorazové heslo (6 číslic)',
+    'layout.password.otp.6.8' => 'Jednorazové heslo (6 číslic) / Záložné kódy na obnovenie (8 číslic)',
+    'layout.password.otp.6.first' => 'Zadajte 6-miestny kód z vašej overovacej aplikácie',
+    'layout.password.otp.recovery.8' => 'Zadajte svoj záložný kód na obnovenie (8 znakov)',
+    'layout.password.otp.use.6.digit.code' => 'Použite radšej svoj 6-miestny kód',
+    'layout.password.otp.use.recovery.code' => 'Použite namiesto toho kód na obnovenie',
+    'layout.password.otp.verify.6' => 'Zadajte druhé odlišné heslo OTP vygenerované službou Aegis (6 číslic)',
+    'layout.rbac.assign-role' => 'Priradiť používateľovi rolu RBAC',
+    'layout.remember' => 'Zapamätaj si ma',
+    'layout.reset' => 'Obnoviť',
+    'layout.show-more' => 'zobraziť viac',
+    'layout.submit' => 'Odoslať',
+    'layout.title' => 'Názov',
+    'layout.total.posts' => 'Celkový počet príspevkov:{count}',
+    'left.pad' => 'Ľavý ovládač',
+    'letter' => '7-dňový list pred podaním žaloby',
+    'loading.error' => 'Zdá sa, že aplikácia sa zasekla kvôli chybe.',
+    'loading.error.help' => 'Získajte pomoc',
+    'location' => 'Poloha',
+    'location.accuracy' => 'Presnosť',
+    'location.latitude' => 'Zemepisná šírka',
+    'location.longitude' => 'Zemepisná dĺžka',
+    'location.test.button' => 'Otestovať moju polohu',
+    'location.tester' => 'Otestujte polohu svojho zariadenia',
+    'location.tester.description' => 'Používa povolenie vášho prehliadača na prístup k polohe na zobrazenie aktuálnych súradníc GPS tohto zariadenia. Nič sa neukladá – toto slúži len na overenie funkčnosti geolokácie na tomto zariadení predtým, ako sa na ňu spoľahnete inde. Vyžaduje sa HTTPS a výzva na povolenie polohy, ktorú odsúhlasíte.',
+    'login' => 'Prihlásenie',
+    'login.logo' => 'Prihlasovacie logo',
+    'loginalert.credentials.incorrect' => 'Nesprávny e-mail alebo heslo.',
+    'loginalert.no.password' => 'Zadajte heslo.',
+    'loginalert.user.emailnotverified' => 'Prístup zamietnutý: Kliknite na overovací odkaz odoslaný na vašu e-mailovú adresu.',
+    'loginalert.user.inactive' => 'Tento používateľ je označený ako neaktívny.Kontaktujte, prosím, správcu systému.',
+    'loginalert.user.not.found' => 'S touto e-mailovou adresou nie je zaregistrovaný žiadny účet.',
+    'loginalert.wrong.auth.code' => 'Obnovenie hesla bolo zamietnuté.Zadali ste neplatný autorizačný token.',
+    'logo' => 'Logo faktúry',
+    'logout' => 'Odhlásiť sa',
+    'loss' => 'Odpísané',
+    'mark.invoices.sent.copy' => 'Označiť faktúry ako odoslané pri kopírovaní faktúry',
+    'mark.invoices.sent.pdf' => 'Označiť faktúry ako odoslané pri generovaní PDF súboru',
+    'mark.quotes.sent.pdf' => 'Označiť cenové ponuky ako odoslané pri generovaní PDF súboru',
+    'mark.sent.copy.on' => 'Označiť faktúry ako odoslané pri kopírovaní faktúry je zapnuté.Malo by byť zapnuté iba počas vývoja.',
+    'mark.sent.off' => 'Označiť faktúry ako odoslané pri kopírovaní faktúr .je momentálne VYPNUTÉ.Počas vývoja je nastavené na ZAPNUTÉ iba.Kliknite sem pre zapnutie.',
+    'mark.sent.on' => 'Označiť faktúry ako odoslané pri kopírovaní faktúr .je momentálne ZAPNUTÉ.Počas produkcie ho vždy nechajte VYPNUTÉ.Kliknite sem pre vypnutie.',
+    'max' => 'Max',
+    'max.quantity' => 'Maximálne množstvo',
+    'menu' => 'Menu',
+    'menu.about' => 'O nás',
+    'menu.accreditations' => 'Akreditácie',
+    'menu.blog' => 'Blog',
+    'menu.comments-feed' => 'Kanál komentárov',
+    'menu.contact.details' => 'Kontaktné údaje',
+    'menu.contact.interest' => 'Obchodná cenová ponuka / kontaktný formulár',
+    'menu.contact.soon' => 'Ďakujeme, že ste nás kontaktovali,ozveme sa vám čo najskôr.',
+    'menu.contact.us' => 'Kontaktujte nás',
+    'menu.gallery' => 'Galéria',
+    'menu.gateway.status' => 'Stav platobnej brány',
+    'menu.language' => 'Jazyk',
+    'menu.login' => 'Prihlásenie',
+    'menu.logout' => 'Odhlásiť sa ({login})',
+    'menu.pricing' => 'Cenník',
+    'menu.privacy.policy' => 'Zásady ochrany osobných údajov',
+    'menu.signup' => 'Registrácia',
+    'menu.swagger' => 'Swagger',
+    'menu.team' => 'Tím',
+    'menu.terms.of.service' => 'Podmienky služby',
+    'menu.testimonial' => 'Odporúčanie',
+    'menu.users' => 'Používatelia',
+    'menu.webshop' => 'Internetový obchod',
+    'merchant' => 'Obchodník',
+    'merchant.add' => 'Pridať obchodníka',
+    'merchant.driver' => 'Vodič',
+    'merchant.reference' => 'Referencia',
+    'merchant.response' => 'Odpoveď',
+    'min.quantity' => 'Minimálne množstvo',
+    'mobile' => 'Mobilné',
+    'mobile.hint' => 'napr. +447700900000',
+    'mobile.number' => 'Mobilné číslo',
+    'mobile.placeholder' => '+447700900000',
+    'monday' => 'pondelok',
+    'monitoring.health.cache' => 'Systém vyrovnávacej pamäte',
+    'monitoring.health.database' => 'Pripojenie k databáze',
+    'monitoring.health.storage' => 'Ukladanie súborov',
+    'monitoring.metrics.errors' => 'Miera chybovosti',
+    'monitoring.metrics.requests' => 'Celkový počet žiadostí',
+    'monitoring.metrics.response_time' => 'Priemerný čas odozvy',
+    'monospaced.font.for.amounts' => 'Pre sumy použite písmo Monospace',
+    'month' => 'Mesiac',
+    'month.prefix' => 'Predpona mesiaca',
+    'mpdf' => 'Mpdf',
+    'mpdf.allow.charset.conversion' => 'Povoliť konverziu znakovej sady',
+    'mpdf.auto.arabic' => 'Automatická arabčina',
+    'mpdf.auto.language.to.font' => 'Automatický jazyk na písmo',
+    'mpdf.auto.script.to.lang' => 'Automatické prepisovanie skriptov do jazyka',
+    'mpdf.auto.vietnamese' => 'Vietnamské auto',
+    'mpdf.cjk' => 'Čínske, japonské, kórejské písmo',
+    'mpdf.ltr' => 'Zľava doprava',
+    'mpdf.show.image.errors' => 'Zobraziť chyby obrázka',
+    'mtd' => 'Digitalizácia daní',
+    'mtd.fph' => 'Hlavičky o predchádzaní podvodom',
+    'mtd.fph.all.valid' => 'Všetky hlavičky na predchádzanie podvodom sú platné',
+    'mtd.fph.generate' => 'Generovať',
+    'mtd.fph.no.provided' => 'Neboli poskytnuté žiadne hlavičky na predchádzanie podvodom',
+    'mtd.fph.record.alert' => 'Naozaj chcete zaznamenať nové podrobnosti hlavičky na predchádzanie podvodom? Predchádzajúce podrobnosti budú po uložení prepísané!',
+    'mtd.fph.screen.timestamp' => 'Časová pečiatka',
+    'mtd.fph.some.advisories' => 'Aspoň jedna hlavička je potenciálne neplatná',
+    'mtd.fph.some.invalid' => 'Aspoň jedna hlavička je neplatná',
+    'mtd.gov.client.browser.do.not.track' => 'Hodnota, ktorá označuje, či je v prehliadači zapnutá možnosť Nesledovať',
+    'mtd.gov.client.browser.do.not.track.eg' => 'napr.nepravdivé',
+    'mtd.gov.client.browser.js.user.agent' => 'Gov-Client-Browser-JS-User-Agent',
+    'mtd.gov.client.browser.js.user.agent.eg' => 'napr.Mozilla/5.0 (iPad; U; CPU OS 3 2.1 ako Mac OS X;en-us) (KHTML, ako Gecko) Mobile/7B405',
+    'mtd.gov.client.browser.plugins' => 'Zoznam doplnkov prehliadača na pôvodnom zariadení',
+    'mtd.gov.client.browser.plugins.eg' => 'napr.Shockwave%20F1ash Chromium%20PDF%20Prehliadač',
+    'mtd.gov.client.connection.method' => 'Metóda pripojenia klienta Gov',
+    'mtd.gov.client.device.id' => 'ID zariadenia',
+    'mtd.gov.client.device.id.eg' => 'napr.beec798b-b366-47fa-b1f8-92cede14a1ce',
+    'mtd.gov.client.local.ips' => 'Lokálne IP adresy',
+    'mtd.gov.client.multi.factor' => 'Viacfaktorový',
+    'mtd.gov.client.multi.factor.eg' => 'napr.typ=OTP;stav=úspech,typ=SMS;stav=neúspech,typ=Biometrický, typ=SMS; časová pečiatka=2023-04-01T12:34:56Z; jedinečná referencia=abc123xyz',
+    'mtd.gov.client.multi.factor.otp' => 'Jednorazové heslo (OTP):',
+    'mtd.gov.client.public.ip' => 'Verejná IP adresa',
+    'mtd.gov.client.public.port' => 'Verejný port (nie http 80 a nie https 443, napr.57961)',
+    'mtd.gov.client.screens' => 'Obrazovky klientov Gov',
+    'mtd.gov.client.screens.colour.depth' => 'Hĺbka farieb',
+    'mtd.gov.client.screens.height' => 'Výška obrazovky',
+    'mtd.gov.client.screens.pixels' => 'pixely',
+    'mtd.gov.client.screens.scaling.factor' => 'Faktor mierky',
+    'mtd.gov.client.screens.scaling.factor.bits' => 'bity',
+    'mtd.gov.client.screens.width' => 'Šírka obrazovky',
+    'mtd.gov.client.timezone' => 'Časové pásmo',
+    'mtd.gov.client.user.ids' => 'ID používateľov',
+    'mtd.gov.client.user.ids.uuid' => 'uuid',
+    'mtd.gov.client.window.size' => 'Veľkosť okna',
+    'mtd.gov.client.window.size.pixels' => 'pixely',
+    'mtd.gov.vendor.forwarded' => 'Zoznam s podrobnosťami o prechodoch cez internet medzi službami, ktoré ukončujú protokol TLS (Transport Layer Security).',
+    'mtd.gov.vendor.license.ids' => 'Štruktúra dát kľúč-hodnota hašovaných licenčných kľúčov, ktoré súvisia so softvérom dodávateľa, ktorý inicioval požiadavku API na pôvodnom zariadení.',
+    'mtd.gov.vendor.public.ip' => 'Verejná IP adresa serverov, na ktoré pôvodné zariadenie odoslalo svoje požiadavky',
+    'mtd.gov.vendor.version' => 'Štruktúra údajov kľúč-hodnota verzií softvéru,ktoré sa podieľajú na spracovaní požiadavky',
+    'mtd.hmrc' => 'HMRC digitálne daňové priznanie',
+    'mtd.vat.obligations' => 'Povinnosti týkajúce sa DPH',
+    'mtd.vat.obligations.missing.vrn.or.token' => 'IČ DPH alebo prístupový token HMRC nie je nastavený',
+    'mtd.vat.registration.number' => 'IČ DPH (IČ DPH)',
+    'mtd.vat.registration.number.hint' => '9-miestne číslo na vašom osvedčení o registrácii pre DPH',
+    'mtd.vat.return.submit' => 'Podať daňové priznanie k DPH',
+    'multiple.choice' => 'Viaceré možnosti výberu',
+    'name' => 'Meno',
+    'new' => 'Nové',
+    'new.password' => 'Nové heslo',
+    'new.product' => 'Nový produkt',
+    'new.task' => 'Nová úloha',
+    'next' => 'Ďalej',
+    'next.date' => 'Ďalší dátum',
+    'next.id' => 'Ďalšie ID',
+    'no' => 'Nie',
+    'no.attachments' => 'Žiadne prílohy',
+    'no.client' => 'Žiadny klient',
+    'no.file.uploaded' => 'Žiadny súbor nebol nahraný',
+    'no.overdue.invoices' => 'Žiadne oneskorené faktúry',
+    'no.quotes.requiring.approval' => 'Neexistujú žiadne cenové ponuky, ktoré by vyžadovali schválenie.',
+    'no.records' => 'Žiadne záznamy',
+    'no.updates.available' => 'Nie sú k dispozícii žiadne aktualizácie.',
+    'none' => 'Žiadne',
+    'not.available' => 'Nie je k dispozícii',
+    'not.found' => 'Faktúra sa nenašla',
+    'not.set' => 'Zatiaľ nie je nastavené',
+    'not.started' => 'Nezačaté',
+    'note' => 'Poznámka',
+    'notes' => 'Poznámky',
+    'number' => '#',
+    'number.format' => 'Formát čísla',
+    'number.format.compact.comma' => '1000000,00 (Kompaktný formát s desatinnou čiarkou)',
+    'number.format.compact.point' => '1000000,00 (Kompaktný formát s desatinnou čiarkou)',
+    'number.format.european' => '1 000 000,00 (európsky formát)',
+    'number.format.iso.80k.1' => '1 000 000,00 (ISO 80000-1)',
+    'number.format.iso80k1.comma' => '1 000 000,00 (ISO 80000-1 s desatinnou čiarkou)',
+    'number.format.iso80k1.point' => '1 000 000,00 (ISO 80000-1 s desatinnou čiarkou)',
+    'number.format.us.uk' => '1 000 000,00 (formát pre USA/Spojené kráľovstvo)',
+    'number.missing.therefore.use.invoice.id' => 'chýbajúce číslo faktúry, preto ID faktúry',
+    'number.no' => 'Bez čísla faktúry',
+    'oauth2' => 'OAuth 2.0',
+    'oauth2.account.locked' => 'Účet uzamknutý',
+    'oauth2.backup.recovery.codes' => 'Zálohujte kódy na obnovenie.Uschovajte si na bezpečnom mieste.',
+    'oauth2.backup.recovery.codes.regenerate' => 'Obnoviť kódy na obnovenie zálohy',
+    'oauth2.consent.required' => 'Vyžaduje sa súhlas',
+    'oauth2.default' => 'Používa sa predvolená konfigurácia oauth2.0',
+    'oauth2.google.people.api.v1.client.id' => 'ID klienta',
+    'oauth2.google.people.api.v1.client.secret' => 'Tajomstvo klienta',
+    'oauth2.invalid.client' => 'Neplatný klient',
+    'oauth2.invalid.grant' => 'Neplatný grant',
+    'oauth2.invalid.request' => 'Neplatná žiadosť',
+    'oauth2.login.required' => 'Vyžaduje sa prihlásenie',
+    'oauth2.missing.authentication.code.or.state.parameter' => 'Chýba autentifikačný kód alebo parameter stavu.',
+    'oauth2.missing.state.parameter.possible.csrf.attack' => 'Chýba parameter stavu.Možný útok csrf.',
+    'oauth2.server.error' => 'Chyba servera',
+    'oauth2.temporarily.unavailable' => 'Dočasne nedostupné',
+    'oauth2.test.user.creation.not.allowed.prod.env' => 'Vytvorenie testovacieho používateľa nie je v produkčnom prostredí povolené.',
+    'oauth2.unauthorized.client' => 'Neoprávnený klient',
+    'oauth2.unsupported.grant.type' => 'Nepodporovaný typ grantu',
+    'oauth2.unsupported.response.type' => 'Nepodporovaný typ odpovede',
+    'online.log' => 'Online protokol',
+    'online.payment' => 'Online platba',
+    'online.payment.3dauth.redirect' => 'Počkajte, prosím, kým vás presmerujeme na stránku vydavateľa karty na overenie.',
+    'online.payment.accessKey' => 'Prístupový kľúč',
+    'online.payment.accessToken' => 'Prístupový token',
+    'online.payment.accountId' => 'ID účtu',
+    'online.payment.accountNumber' => 'Číslo účtu',
+    'online.payment.adyen.hmac.kcv.hint' => 'Adyen zobrazuje hodnotu nového kľúča HMAC iba raz – jeho kopírovanie nie je to isté ako uloženie vlastnej konfiguračnej stránky webhooku. Predtým, ako sa naň spoľahnete, overte a porovnajte tu zobrazený KCV s KCV v Zákazníckej zóne Adyenu pre tento webhook.',
+    'online.payment.adyen.hmac.kcv.not.configured' => 'Nie je nakonfigurovaný žiadny HMAC kľúč webhooku Adyen alebo nie je platný hexadecimálny.',
+    'online.payment.adyen.hmac.kcv.result' => 'KCV tohto kľúča je %s – porovnajte ho s KCV zobrazeným v Zákazníckej zóne Adyenu pre tento webhook. Ak sa nezhodujú, kľúč bol pravdepodobne skopírovaný, ale nikdy nebol uložený na strane Adyenu – vytvorte ho znovu a nezabudnite tentoraz kliknúť na Uložiť.',
+    'online.payment.adyen.hmac.kcv.verify' => 'Overiť kľúč HMAC (zobraziť KCV)',
+    'online.payment.apiKey' => 'Kľúč API',
+    'online.payment.apiLoginId' => 'Prihlasovacie ID API',
+    'online.payment.apiToken' => 'Token API',
+    'online.payment.appId' => 'ID aplikácie',
+    'online.payment.appSecret' => 'Tajný kód aplikácie',
+    'online.payment.callbackPassword' => 'Heslo pre spätné volanie',
+    'online.payment.card.invalid' => 'Táto kreditná karta je neplatná.Skontrolujte, prosím, poskytnuté informácie.',
+    'online.payment.checkout_com.environmentSubdomain' => 'Poddoména prostredia',
+    'online.payment.checkout_com.processingChannelId' => 'ID kanála spracovania',
+    'online.payment.checkout_com.publicKey' => 'Verejný kľúč API',
+    'online.payment.checkout_com.secretKey' => 'Tajný kľúč API',
+    'online.payment.checkout_com.webhookSecret' => 'Podpisový kľúč webhooku',
+    'online.payment.clientId' => 'ID klienta',
+    'online.payment.clientKey' => 'Klientsky kľúč',
+    'online.payment.clientSecret' => 'Tajomstvo klienta',
+    'online.payment.creditcard.hint' => 'Ak chcete platiť kreditnou kartou,zadajte, prosím, nižšie uvedené informácie.<br/> Informácie o kreditnej karte nie sú uložené na našich serveroch a budú prenesené do online platobnej brány pomocou zabezpečeného pripojenia.',
+    'online.payment.developerMode' => 'Režim pre vývojárov',
+    'online.payment.find.here' => 'Nájdete to tu →',
+    'online.payment.for' => 'Online platba za',
+    'online.payment.for.invoice' => 'Online platba za faktúru',
+    'online.payment.get.credentials' => 'Získať prihlasovacie údaje →',
+    'online.payment.installationId' => 'ID inštalácie',
+    'online.payment.keyId' => 'ID kľúča',
+    'online.payment.keySecret' => 'Tajný kľúč',
+    'online.payment.locationId' => 'ID lokality',
+    'online.payment.login' => 'Prihlásenie obchodníka',
+    'online.payment.merchantAccessCode' => 'Prístupový kód obchodníka',
+    'online.payment.merchantAccount' => 'Obchodný účet',
+    'online.payment.merchantId' => 'ID obchodníka',
+    'online.payment.merchantKey' => 'Kľúč obchodníka',
+    'online.payment.method' => 'Spôsob online platby',
+    'online.payment.partner' => 'Partner',
+    'online.payment.partnerID' => 'ID partnera',
+    'online.payment.password' => 'Heslo',
+    'online.payment.password1' => 'Heslo č. 1',
+    'online.payment.password2' => 'Heslo č. 2',
+    'online.payment.password3' => 'Heslo č. 3 (API pre vrátenie peňazí, voliteľné)',
+    'online.payment.payment.cancelled' => 'Platba zrušená.',
+    'online.payment.payment.failed' => 'Platba zlyhala.Skúste to znova.',
+    'online.payment.payment.processing' => 'Platba za faktúru %s sa stále spracováva. Pre potvrdenie sa vráťte neskôr.',
+    'online.payment.payment.redirect' => 'Počkajte, prosím, kým vás presmerujeme na platobnú stránku.',
+    'online.payment.payment.successful' => 'Platba faktúry %s úspešná!',
+    'online.payment.pdtKey' => 'Kľúč PDT',
+    'online.payment.privateKey' => 'Súkromný kľúč',
+    'online.payment.profileID' => 'ID profilu',
+    'online.payment.profileId' => 'ID profilu',
+    'online.payment.publicKey' => 'Verejný kľúč',
+    'online.payment.publicKeyId' => 'ID verejného kľúča',
+    'online.payment.publishableKey' => 'Publikovateľný kľúč',
+    'online.payment.pxPostPassword' => 'Heslo pre príspevok Px',
+    'online.payment.pxPostUsername' => 'Používateľské meno príspevku Px',
+    'online.payment.referrerId' => 'ID sprostredkovateľa',
+    'online.payment.region' => 'Región',
+    'online.payment.returnUrl' => 'URL adresa návratu',
+    'online.payment.sandbox' => 'Pieskovisko',
+    'online.payment.sandboxId' => 'ID sandboxu',
+    'online.payment.secret' => 'Tajomstvo',
+    'online.payment.secretKey' => 'Tajný kľúč',
+    'online.payment.secretWord' => 'Tajné slovo',
+    'online.payment.secureHash' => 'Bezpečný hash',
+    'online.payment.sharedSecret' => 'Zdieľaný tajný kľúč',
+    'online.payment.shopId' => 'ID obchodu',
+    'online.payment.signature' => 'Podpis',
+    'online.payment.signingKid' => 'ID podpisového kľúča (detské)',
+    'online.payment.siteCode' => 'Kód lokality',
+    'online.payment.siteId' => 'ID lokality',
+    'online.payment.storeId' => 'ID obchodu',
+    'online.payment.storePassword' => 'Heslo úložiska',
+    'online.payment.subAccountId' => 'ID podúčtu',
+    'online.payment.testMode' => 'Testovací režim',
+    'online.payment.testOrLiveApiKey' => 'Testovací alebo živý kľúč API,t.j.začína na test_ alebo live_',
+    'online.payment.thirdPartyProvider' => 'Poskytovateľ tretej strany, napr.Wonderful',
+    'online.payment.transactionKey' => 'Transakčný kľúč',
+    'online.payment.transactionPassword' => 'Heslo transakcie',
+    'online.payment.username' => 'Používateľské meno',
+    'online.payment.vendor' => 'Dodávateľ',
+    'online.payment.version' => 'Verzia Omnipay (zaškrtnuté) / Kompatibilné s PCI (v tejto databáze nie sú uložené žiadne údaje o kreditnej karte) (nezaškrtnuté)',
+    'online.payment.webhookHmacKey' => 'Kľúč Hmac pre webhook',
+    'online.payment.webhookId' => 'ID webhooku',
+    'online.payment.webhookSecret' => 'Tajný kód webhooku',
+    'online.payment.websiteKey' => 'Kľúč webovej stránky',
+    'online.payments' => 'Online platby',
+    'open' => 'OTVORENÉ',
+    'open.banking.not.configured' => 'Open Banking nie je nakonfigurovaný.Kontaktujte podporu.',
+    'open.banking.pay.with' => 'Platba cez Open Banking: ',
+    'open.invoices' => 'Otvorené faktúry',
+    'open.quotes' => 'Otvorené cenové ponuky',
+    'open.reports.in.new.tab' => 'Otvoriť prehľady na novej karte prehliadača',
+    'optional' => 'Voliteľné',
+    'options' => 'Možnosti',
+    'order' => 'Objednávka',
+    'orm' => 'Orm',
+    'other.settings' => 'Ďalšie nastavenia',
+    'overdue' => 'Po termíne',
+    'overdue.invoices' => 'Oneskorené faktúry',
+    'overview' => 'Prehľad faktúr',
+    'overview.period' => 'Obdobie prehľadu faktúr',
+    'page' => 'Strana',
+    'paid' => 'Platené',
+    'password' => 'Heslo',
+    'password.change' => 'Zmeniť heslo',
+    'password.changed' => 'Heslo bolo úspešne zmenené',
+    'password.reset' => 'Obnoviť heslo',
+    'password.reset.email' => 'Požiadali ste o nové heslo pre vašu inštaláciu.Kliknite na odkaz v doručenej pošte a heslo si obnovte.',
+    'password.reset.failed' => 'Pri pokuse o odoslanie e-mailu na obnovenie hesla sa vyskytla chyba.Skontrolujte protokoly aplikácie alebo kontaktujte správcu systému.',
+    'password.reset.info' => 'Dostanete e-mail s odkazom na obnovenie hesla.',
+    'password.reset.request.token' => 'Vyžiadať token na obnovenie hesla',
+    'past.month' => 'Minulý mesiac',
+    'past.quarter' => 'Minulý štvrťrok',
+    'past.year' => 'Minulý rok',
+    'pay.now' => 'Zaplatiť teraz',
+    'payment' => 'Platba',
+    'payment.add' => 'Pridanie platby',
+    'payment.cannot.delete' => 'Platbu nie je možné vymazať',
+    'payment.cannot.exceed.balance' => 'Suma platby nemôže presiahnuť zostatok na faktúre.',
+    'payment.custom' => 'Platba na mieru',
+    'payment.custom.add' => 'Vlastné pridanie platby',
+    'payment.date' => 'Dátum platby',
+    'payment.deleted' => 'Platba odstránená',
+    'payment.description' => 'Platba za faktúru %s',
+    'payment.form' => 'Platobný formulár',
+    'payment.gateway.default.locale' => 'Predvolené miestne nastavenie, napr.en.GB',
+    'payment.gateway.mollie.api.key.has.been.setup' => 'Bol nastavený test platobnej brány Mollie alebo kľúč Live API.',
+    'payment.gateway.mollie.api.key.needs.to.be.setup' => 'Je potrebné nastaviť test platobnej brány Mollie alebo kľúč Live API.',
+    'payment.gateway.mollie.api.payment.id' => 'ID platby Mollie:',
+    'payment.gateway.no' => 'V časti Nastavenia .Zobraziť .Online platba neboli nastavené žiadne platobné brány.',
+    'payment.history' => 'História platieb',
+    'payment.information.braintree.braintree.no.omnipay.version' => 'Momentálne neexistuje žiadna verzia Braintree Omnipay kompatibilná s verziou Braintree 6.9.1.Zrušte začiarknutie políčka Verzia Omnipay v zobrazení Nastavenia, ak chcete použiť verziu kompatibilnú s PCI.',
+    'payment.information.invoice.number.not.provided' => 'Číslo faktúry nebolo poskytnuté',
+    'payment.information.no.information.provided' => 'Neboli poskytnuté žiadne informácie',
+    'payment.information.none' => 'Žiadne',
+    'payment.information.omnipay.driver.being.used' => 'Používa sa vodič {{$d}} od spoločnosti Omnipay.',
+    'payment.information.payment.method.required' => 'Pre túto faktúru je potrebný spôsob platby.',
+    'payment.information.stripe.api.key' => 'Je potrebné nastaviť tajný kľúč / kľúč API platobnej brány Stripe.',
+    'payment.logs' => 'Záznamy platieb',
+    'payment.method' => 'Spôsob platby',
+    'payment.method.add' => 'Pridať spôsob platby',
+    'payment.method.already.exists' => 'Spôsob platby už existuje!',
+    'payment.method.form' => 'Formulár spôsobu platby',
+    'payment.method.history' => 'Nedá sa odstrániť.História spôsobu platby existuje.',
+    'payment.methods' => 'Spôsoby platby',
+    'payment.no.invoice.sent' => 'Žiadne faktúry sme neodoslali ani si ich zákazník neprezrel.',
+    'payment.option' => 'Ako chcete platiť?',
+    'payment.provider' => 'Poskytovateľ platieb',
+    'payment.term' => 'Platobné podmienky',
+    'payment.term.0.days' => 'Použite, prosím, jednu z uvedených platobných metód',
+    'payment.term.add.additional.terms.at.setting.repository' => 'Pridajte ďalšie podmienky vo funkcii getPaymentTerms v úložisku nastavení.',
+    'payment.term.eom.120.days' => 'EOM(120):Prosím, zaplaťte do 120 dní od konca mesiaca vydania',
+    'payment.term.eom.15.days' => 'EOM(15):Prosím, zaplaťte do 15 dní od konca mesiaca vydania',
+    'payment.term.eom.30.days' => 'EOM(30):Prosím, zaplaťte do 30 dní od konca mesiaca vydania',
+    'payment.term.eom.60.days' => 'EOM(60):Prosím, zaplaťte do 60 dní od konca mesiaca vydania',
+    'payment.term.eom.90.days' => 'EOM(90):Prosím, zaplaťte do 90 dní od konca mesiaca vydania',
+    'payment.term.general' => 'Platba splatná do 30 dní',
+    'payment.term.mfi.15' => 'MFI(15):Prosím, plaťte 15.dňa v mesiaci nasledujúcom po mesiaci vydania',
+    'payment.term.net.120.days' => 'Čistá suma (120):Prosím, zaplaťte do 120 dní od dátumu vydania',
+    'payment.term.net.15.days' => 'Netto(15):Prosím, zaplaťte do 15 dní od dátumu vystavenia.',
+    'payment.term.net.30.days' => 'Čistá suma (30):Prosím, zaplaťte do 30 dní od dátumu vystavenia',
+    'payment.term.net.60.days' => 'Čistá suma (60):Prosím, zaplaťte do 60 dní od dátumu vydania',
+    'payment.term.net.90.days' => 'Čistá suma (90):Prosím, zaplaťte do 90 dní od dátumu vydania',
+    'payment.term.pia' => 'Platba je vyžadovaná vopred (PIA)',
+    'payment.term.polite' => 'Ďakujeme za Vašu priazeň.Prosím, pošlite platbu do 30 dní od prijatia tejto faktúry.',
+    'payment.terms.default' => 'Platba do 14 dní',
+    'payment.terms.immediate' => 'Platba splatná ihneď',
+    'payment.terms.net15' => 'Platba splatná do 15 dní',
+    'payment.terms.net30' => 'Platba splatná do 30 dní',
+    'payment.terms.net60' => 'Platba splatná do 60 dní',
+    'paymentpeppol' => 'Platby uskutočnené prostredníctvom Peppolu',
+    'paymentpeppol.reference.plural' => 'Platobné referencie pomocou Peppolu',
+    'payments' => 'Platby',
+    'paymentterm' => 'Platobná lehota',
+    'pdf' => 'PDF',
+    'pdf.archived.no' => 'PDF NIE JE archivovaný v priečinku Nahrávanie/Archív/Faktúra',
+    'pdf.archived.yes' => 'PDF archivované v priečinku Nahrávanie/Archív/Faktúra',
+    'pdf.include.zugferd' => 'Zahrnúť ZUGFeRD',
+    'pdf.include.zugferd.help' => 'Povolením tejto možnosti sa do PDF súborov faktúr zahrnie aj ZUGFeRD XML, čo je štandard XML pre faktúry.<a href="https://www.ferd-net.de/">Viac informácií</a>',
+    'pdf.invoice.footer' => 'Päta PDF',
+    'pdf.invoice.footer.hint' => 'Sem môžete zadať ľubovoľný HTML kód, ktorý sa zobrazí v dolnej časti vašich PDF faktúr.',
+    'pdf.modal' => 'Modálne PDF',
+    'pdf.playwright' => 'Chromium PDF (Dramatik)',
+    'pdf.quote.footer' => 'Päta citátu',
+    'pdf.quote.footer.hint' => 'Sem môžete zadať ľubovoľný HTML kód, ktorý sa zobrazí v dolnej časti vašich cenových ponúk vo formáte PDF.',
+    'pdf.render.playwright.failed' => 'Nepodarilo sa vykresliť PDF cez Playwriter',
+    'pdf.render.playwright.failed.solution' => 'Skúste to znova. Ak to pretrváva, skontrolujte, či bol spustený príkaz `npm run build:playwright` a či sa môže prihlásiť nakonfigurovaný renderovací účet (PLAYWRIGHT_TEST_EMAIL v .env).',
+    'pdf.settings' => 'Nastavenia PDF',
+    'pdf.template' => 'Šablóna PDF',
+    'pdf.template.overdue' => 'Šablóna PDF s oneskoreným termínom',
+    'pdf.template.paid' => 'Platená šablóna PDF',
+    'pdf.watermark' => 'Povoliť vodoznaky PDF',
+    'peppol' => 'Faktúra Peppol Universal Business Language (UBL) 2.1 – overená spoločnosťou Ecosio',
+    'peppol.abbreviation' => 'Peppol',
+    'peppol.allowance.or.charge.inherit' => 'Poplatky za úpravu faktúry a poplatky za úpravu položiek faktúry dedia z vyplnenej úpravy na úrovni dokumentu Peppol',
+    'peppol.allowance.or.charge.inherit.inv' => 'Poplatky za úpravu faktúry a poplatky za úpravu položiek faktúry dedia z dokončeného poplatku za úpravu na úrovni dokumentu Peppol',
+    'peppol.allowance.or.charge.inherit.quote' => 'Poplatky za príplatok za cenovú ponuku a poplatky za príplatok za položku cenovej ponuky dedia z vyplnenej príplatky za dokument Peppol',
+    'peppol.auto.update.exchange.rate' => 'Denná automatická aktualizácia výmenného kurzu (kurz Európskej centrálnej banky, žiadne manuálne vyhľadávanie na xe.com)',
+    'peppol.client.check' => 'Údaje o Peppole týkajúce sa tohto klienta sú nedostatočné.Chýba aspoň jeden.Pozrite si Zobraziť .Klient .Možnosti .Upraviť údaje o Peppole pre elektronickú fakturáciu.',
+    'peppol.client.defaults' => 'Vyplňte formulár klienta Peppol s predvolenými nastaveniami OpenPeppol na testovanie.',
+    'peppol.currency.code.from' => 'Z meny, t.j.Krajina pôvodu Mena dane (Zmenu nájdete v súbore config/common/params.php TaxCurrencyCode)',
+    'peppol.currency.code.to' => 'Do meny, t.j.mena dokumentu:pozri funkciu get.setting(&#39;currency.code.to&#39;)',
+    'peppol.currency.from.to' => 'Jeden z From Currency dnes prevedie na tento z To Currency',
+    'peppol.currency.rate.last.updated' => 'Posledná aktualizácia: {dátum}',
+    'peppol.currency.to.from' => 'Jedna z mien To dnes prepočítava na túto z mien From',
+    'peppol.debug.with.emojis' => 'Ladenie elektronických faktúr pomocou emoji',
+    'peppol.debug.with.internal.validator' => 'Ladenie elektronických faktúr pomocou interného validátora',
+    'peppol.doc.currency.toggle' => 'Peppol Prepínanie Doc Mena',
+    'peppol.document.currency' => 'Mena dokumentu Peppol – prepnúť na zobrazenie',
+    'peppol.document.reference.null' => 'číslo-inv-null-inv-id',
+    'peppol.ecosio.validator' => 'Validátor Ecosio pre faktúru OpenPeppol UBL (3.15.0) (známy aj ako fakturácia BIS 3.0.14)',
+    'peppol.electronic.invoicing' => 'Elektronická fakturácia Peppol',
+    'peppol.enable' => 'Povoľte Peppol pomocou Universal Business Language (UBL) 2.1',
+    'peppol.include.delivery.period' => 'Zahrnúť dodacie lehoty',
+    'peppol.invoice.note.not.found' => 'Faktúra sa nenašla',
+    'peppol.label.switch.off' => 'Predvolené nastavenia Peppolu povolené',
+    'peppol.label.switch.on' => 'Predvolené nastavenia Peppolu sú zakázané',
+    'peppol.mandatory' => ' (Povinné)',
+    'peppol.optional' => ' (Voliteľné)',
+    'peppol.send.via.oxalis' => 'Odoslať cez Peppol (Oxalis)',
+    'peppol.stand.in.code' => 'Kód popisu – označuje, aký základ sa použije pre budúci dátum zdaňovania pri dodaní/zaplatení tovaru.Ak je možné určiť dátum zdaňovania, kód popisu sa vo fakturačnom období vzájomne vylučuje.',
+    'peppol.store.cove.1.1.1' => 'Zaregistrujte sa pre prístup k API na webovej stránke Store Cove',
+    'peppol.store.cove.1.1.2' => 'Vytvorte si svoj API kľúč z webovej stránky Store Cove a uložte ho v časti Nastavenia.Zobraziť.Online platba.Store Cove.API kľúč',
+    'peppol.store.cove.1.1.3' => 'Vykonajte prvé volanie API, aby ste získali odpoveď JSON.',
+    'peppol.store.cove.1.1.4' => 'Odošlite svoju prvú testovaciu faktúru vo formáte JSON, ktorú ste získali kliknutím na zelené tlačidlo World=&gt;DE',
+    'peppol.stream.toggle' => 'Peppol – prepínacie tlačidlo „Streamovať“ alebo „Uložiť do súboru“',
+    'peppol.tax.category.not.found' => 'Chýba kód daňovej kategórie Peppol (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/).',
+    'peppol.tax.category.percent.not.found' => 'Chýba percentuálna sadzba daňovej kategórie Peppol (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/).',
+    'peppol.tax.rate.code' => 'Daňový kód Peppol',
+    'peppol.trying.to.send.non.pdf.file' => 'S faktúrami Peppol sa momentálne odosielajú iba súbory PDF.',
+    'peppol.unit' => 'Klasifikácia jednotiek pomocou Peppolu',
+    'peppol.unknown.document.type' => 'Neznámy typ dokumentu',
+    'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' => 'Zdroj:src/Invoice/Ubl/Invoice:Chýba popis dokumentu - Ecosio:Dokument NESMIE obsahovať prázdne prvky.Riešenie:V zobrazení faktúry:Možnosti .Upraviť .Popis dokumentu',
+    'peppol.validator.Invoice.cac.Note' => 'Zdroj:src/Invoice/Ubl/Invoice:Chýba poznámka k faktúre - Ecosio:Dokument NESMIE obsahovať prázdne prvky.',
+    'peppol.validator.Invoice.cac.Party.cbc.EndPointID' => 'src/Invoice/Ubl/Party:Chýbajúca e-mailová adresa - Ecosio:Elektronická adresa MUSÍ byť poskytnutá.Riešenie:Klient .Zobraziť .Možnosti .Upraviť údaje Peppol pre elektronickú fakturáciu .EndPointID',
+    'peppol.version' => 'Verzia Peppol',
+    'peppol.xml.stream' => 'Streamovať, t.j.zobrazovať na obrazovke v prehliadači namiesto priečinka so stiahnutými súbormi.',
+    'per.item' => 'za položku',
+    'per.page.total' => 'na stránku.Celkom',
+    'performance' => 'Výkon',
+    'performance.label.switch.off' => 'Rýchlejší režim čítania a zápisu - pozri config/common/params.php, vyhľadajte &#39;mode&#39;',
+    'performance.label.switch.on' => 'Pomalší režim iba zápisu - pozri config/common/params.php vyhľadajte &#39;mode&#39;',
+    'period' => 'Obdobie',
+    'permission' => 'Nemáte požadované povolenie.',
+    'personal.information' => 'Osobné informácie',
+    'phone' => 'Telefón',
+    'phone.abbr' => 'P',
+    'phone.number' => 'Telefónne číslo',
+    'php.timezone.fail' => 'Zdá sa, že nie je nakonfigurované žiadne časové pásmo.Skontrolujte, prosím, date.timezone v konfigurácii PHP.V opačnom prípade bude vybraté <strong>%s</strong> .',
+    'php.timezone.success' => 'Je nakonfigurované platné časové pásmo.',
+    'php.version.fail' => 'Je nainštalovaná verzia PHP %s,ale InvoicePlane vyžaduje verziu PHP %s alebo vyššiu',
+    'php.version.success' => 'Zdá sa, že PHP spĺňa požiadavky na inštaláciu',
+    'platform' => 'Platforma',
+    'platform.PhpMyAdmin' => 'Verzia PhpMyAdmin',
+    'platform.PhpSupport' => 'Podpora PHP',
+    'platform.PhpVersion' => 'Verzia PHP',
+    'platform.csrf' => 'Ochrana pred falzifikátmi naprieč stránkami',
+    'platform.editor' => 'Redaktor',
+    'platform.mySqlVersion' => 'Verzia mySQL',
+    'platform.netbeans.UTF-8' => 'Kódovanie Netbeans UTF-8',
+    'platform.server' => 'Server',
+    'platform.sqlPath' => 'Cesta SQL',
+    'platform.update' => 'Súbory a doplnky WampServera',
+    'platform.windowsVersion' => 'Windows 11 Home Edition',
+    'platform.xdebug' => 'Rozšírenie Xdebug',
+    'please.enable.js' => 'Pre použitie InvoicePlane povoľte Javascript.',
+    'po.group' => 'Skupina objednávok',
+    'port' => 'Prístav',
+    'position' => 'Pozícia',
+    'possible.file.upload.attack' => 'Možný útok na nahrávanie súborov: ',
+    'pre.password' => 'Štandardné heslo pre PDF faktúru (voliteľné)',
+    'prefix' => 'Predpona',
+    'prev' => 'Predchádzajúce',
+    'preview' => 'Náhľad',
+    'price' => 'Cena',
+    'print' => 'Tlačiť',
+    'print.qr.code' => 'Vytlačiť QR kód',
+    'product' => 'Produkt',
+    'product.add' => 'Pridať produkt',
+    'product.additional.item.property.name' => 'Názov položky dodatočnej vlastnosti Peppol,napr.farba',
+    'product.additional.item.property.value' => 'Hodnota položky dodatočnej vlastnosti Peppol,napr.Black',
+    'product.availability' => 'Dostupnosť',
+    'product.availability.b2b' => 'B2B klientsky portál (veľkoobchod)',
+    'product.availability.hint' => 'Internetový obchod (maloobchod) uvádza tento produkt na verejnom/obchodnom výklade za nižšie uvedenú maloobchodnú cenu. Klientsky portál B2B (veľkoobchod) ho sprístupňuje iba zamestnancom a klientskym portálom pre cenové ponuky/objednávky/faktúry za vyššie uvedenú cenu.',
+    'product.availability.webshop' => 'Internetový obchod (maloobchod)',
+    'product.client.association' => 'Asociácia klientov produktov',
+    'product.client.association.options' => 'Možnosti priradenia klienta produktu',
+    'product.client.associations.completed' => 'Priradenia klientov produktu boli dokončené',
+    'product.country.of.origin.code' => 'Kód krajiny pôvodu Peppol pomocou kódov krajín ISO-3166-1:Alpha2',
+    'product.custom.fields' => 'Vlastné polia produktu (napr.Peppol:pole s výberom z viacerých možností, farba, hodnota, čierna)',
+    'product.description' => 'Popis produktu',
+    'product.edit' => 'Upraviť produkt',
+    'product.error.summary' => 'Súhrn chýb produktu',
+    'product.families' => 'Produktové rady',
+    'product.form.tab.category' => 'Kategória',
+    'product.form.tab.not.required' => 'Nepovinné polia',
+    'product.form.tab.required' => 'Povinné polia',
+    'product.found' => 'Nájdený produkt',
+    'product.history' => 'Nedá sa odstrániť.Tento produkt je na faktúre alebo v cenovej ponuke.',
+    'product.icc.id' => 'ID kódu klasifikácie položky Peppol,napr.9873242',
+    'product.icc.listid' => 'ID zoznamu kódov klasifikácie položiek Peppol – napr.SRV',
+    'product.icc.listversionid' => 'ID verzie zoznamu kódov klasifikácie položiek Peppol (voliteľné) – napr.ak klasifikáciu položiek poskytujú dánski dodávatelia, mala by sa použiť verzia UNSPSC 19.0501.',
+    'product.id' => 'ID produktu',
+    'product.image' => 'Obrázok',
+    'product.item.classification.code.scheme.id.not.found' => 'ID schémy klasifikácie položiek produktu sa nenašlo',
+    'product.name' => 'Názov produktu',
+    'product.not.found' => 'Produkt sa nenašiel',
+    'product.peppol.unit' => 'Jednotka s Peppolom',
+    'product.price' => 'Cena',
+    'product.price.base.quantity' => 'množstvo v produkte',
+    'product.property' => ' Vlastnosť produktu',
+    'product.property.add' => ' Pridať vlastnosť produktu',
+    'product.property.edit' => 'Úprava vlastnosti produktu',
+    'product.property.index' => 'Index vlastností produktu',
+    'product.property.name' => 'Meno',
+    'product.property.table' => 'Tabuľka vlastností produktu',
+    'product.property.value' => 'Hodnota',
+    'product.record.successfully.added' => 'Záznam o produkte bol úspešne pridaný',
+    'product.reorder.threshold' => 'Prahová hodnota pre opätovnú objednávku (rezervovaná medzipamäte – prázdne = žiadna medzipamäte, zobrazuje sa/predá sa celé množstvo na sklade)',
+    'product.retail.price' => 'Maloobchodná cena (iba internetový obchod – nechajte prázdne, ak chcete použiť cenu uvedenú vyššie)',
+    'product.sii.id' => 'Štandardné identifikačné číslo položky Peppol spojené s vyššie uvedenou schémou – napr.14-miestny identifikátor doplnený nulami v databáze globálnych obchodných čísel položiek (zobrazuje sa pod čiarovým kódom)',
+    'product.sii.schemeid' => 'Štandardná identifikácia položky Peppol schemeid – napr.0160',
+    'product.sku' => 'SKU',
+    'product.stock.quantity' => 'Aktuálne zásoby',
+    'product.stock.quantity.not.yet.available' => 'Nie je k dispozícii, kým nie je tento produkt uložený',
+    'product.tariff' => 'Tarifa',
+    'product.track.stock' => 'Sledovať zásoby',
+    'product.trade.min.order.quantity' => 'Minimálne objednané množstvo pre obchod (prázdne = žiadne obchodné podmienky, skryje tlačidlo pre obchodnú cenu)',
+    'product.trade.min.order.spend' => 'Minimálna výdavková suma objednávky pre obchod (prázdne = žiadne obchodné podmienky, skryje tlačidlo pre obchodné ceny)',
+    'product.type' => 'Typ produktu',
+    'product.unit' => 'Jednotka produktu',
+    'product.unit.code.not.found' => 'Produkt nemá priradený kód jednotky.Produkt .Upraviť .Jednotka s Peppolom.',
+    'product.units' => 'Jednotky produktu',
+    'product.view.tab.details' => 'Detaily produktu',
+    'product.view.tab.gallery' => 'Galéria produktov',
+    'product.view.tab.images' => 'Obrázky produktov',
+    'product.view.tab.properties' => 'Vlastnosti produktu',
+    'productimage.add' => 'Pridať obrázok produktu',
+    'productimage.deleted.from' => 'Obrázok bol úspešne odstránený z nasledujúceho adresára:',
+    'productimage.form' => 'Formulár s obrázkom produktu',
+    'productimage.gallery' => 'Obrázky súvisiace s: ',
+    'productimage.index' => 'Index obrázkov produktu',
+    'productimage.list' => 'Zoznam obrázkov spojených s týmto produktom',
+    'productimage.no.file.uploaded' => 'Nebol nahraný žiadny obrázok.Možný duplikát.',
+    'productimage.plural' => 'Obrázky produktov',
+    'productimage.possible.file.upload.attack' => 'Možný útok na nahrávanie súborov:',
+    'productimage.upload' => 'Nahrať obrázok produktu',
+    'productimage.uploaded.to' => 'Obrázok bol nahraný do nasledujúceho adresára:',
+    'productimage.view' => 'V časti Zobrazenie produktu je možné pridať viacero obrázkov týkajúcich sa produktu.',
+    'products' => 'Produkty',
+    'products.form' => 'Formulár produktu',
+    'products.remaining.after.this' => 'Produkty zostávajúce po tomto',
+    'profile.deleted' => 'Profil bol odstránený',
+    'profile.history' => 'Profil sa nedá odstrániť.História existuje.',
+    'profile.new' => 'Vytvorte si profil s novou e-mailovou adresou alebo mobilným číslom,aktivujte ho a vyberte údaje o spoločnosti, s ktorými ho chcete prepojiť.Tieto informácie sa automaticky zobrazia v dokumentácii, napr.v cenových ponukách a faktúrach.',
+    'profile.not.deleted' => 'Profil nebol odstránený',
+    'profile.plural' => 'Profily',
+    'profile.property.label.company' => 'Spoločnosť',
+    'profile.property.label.current' => 'Súčasný',
+    'profile.property.label.description' => 'Popis',
+    'profile.property.label.email' => 'E-mail',
+    'profile.property.label.mobile' => 'Mobilné',
+    'profile.singular' => 'Profil',
+    'project' => 'Projekt',
+    'project.add' => 'Pridať projekt',
+    'project.name' => 'Názov projektu',
+    'projects' => 'Projekty',
+    'projects.form' => 'Projekty',
+    'properties' => 'Nehnuteľnosti',
+    'provider.name' => 'Názov poskytovateľa',
+    'provider.response' => 'Odpoveď poskytovateľa',
+    'purchase.entry.add' => 'Pridať položku nákupu',
+    'purchase.entry.csv.imported' => 'Importované položky nákupov: {count} (preskočené riadky: {skipped}).',
+    'purchase.entry.csv.no.file' => 'Nenahral sa súbor CSV alebo došlo k chybe pri nahrávaní.',
+    'purchase.entry.delete' => 'Odstrániť položku nákupu',
+    'purchase.entry.edit' => 'Upraviť položku nákupu',
+    'purchase.entry.index' => 'Položky nákupu',
+    'purchase.entry.tax.year.locale.applied' => 'Použil sa dátum začiatku zdaňovacieho obdobia. Teraz môžete zoskupovať položky nákupov podľa štvrťroka DPH.',
+    'purchase.entry.tax.year.locale.invalid' => 'Neplatná hodnota mesiaca alebo dňa. Vyberte platné miestne nastavenie.',
+    'purchase.entry.tax.year.not.configured' => 'Štvrťročné zoskupenie DPH nie je k dispozícii: Začiatok daňového roka (rok, mesiac, deň) nie je úplne nakonfigurovaný. Na jeho nastavenie použite nižšie uvedené odkazy navigácie.',
+    'purchase.price' => 'Kúpna cena',
+    'qr.absolute.url' => 'Absolútna URL adresa použitá na zostavenie nad QR kódom',
+    'qr.code' => 'QR kód',
+    'qr.code.1' => 'QR kód 1',
+    'qr.code.details' => 'Podrobnosti o QR kóde',
+    'qr.code.instructions' => 'Nalepte si to na okno. Naskenujte to vždy, keď dostanete dokončenú domácu opatrovateľskú službu cez dvere, aby ste si mohli vyžiadať ďalšiu faktúru, ktorú potom môžete okamžite uhradiť podľa zvoleného spôsobu platby. Pomôže to pri našich bankových zúčtovaniach. Ďakujeme.',
+    'qr.code.level.1' => 'Úroveň kódovania je základná',
+    'qr.code.level.2' => 'Úroveň kódovania je stredná',
+    'qr.code.level.3' => 'Úroveň kódovania je pokročilá',
+    'qr.code.settings' => 'Nastavenia QR kódu',
+    'qr.code.settings.bic' => 'BIC',
+    'qr.code.settings.effect' => 'Aký vplyv majú vyššie uvedené nastavenia na tento QR kód?',
+    'qr.code.settings.effect.explanation' => 'V skutočnom kóde .žiadne.Používajú sa všetky predvolené hodnoty,pretože sa používa úplne základný kód uvedený vyššie.',
+    'qr.code.settings.enable' => 'Povoliť QR kód',
+    'qr.code.settings.enable.hint' => 'Povolením tejto možnosti sa zobrazí QR kód pre PDF súbory faktúr.Pre správne fungovanie je potrebné vyplniť nižšie uvedené údaje príjemcu,IBAN a BIC.V opačnom prípade sa QR kód nezobrazí.',
+    'qr.code.settings.iban' => 'IBAN',
+    'qr.code.settings.recipient' => 'Príjemca',
+    'qr.code.settings.remittance.text' => 'Text prevodu peňazí',
+    'qr.code.settings.remittance.text.tags' => 'Značky textu pre prevod peňazí',
+    'qr.code.source' => 'Zdroj QR kódu',
+    'qr.code.source.path' => 'zdroje\\zobrazenia\\faktúra\\nastavenie\\logo.spoločnosti.a.adresa.php',
+    'qr.code.type' => 'Typ QR kódu',
+    'qr.code.type.absolute.url' => 'Absolútna (celá) URL adresa',
+    'qr.code.widget.used' => 'Použitý widget',
+    'qr.ecc.level' => 'Úroveň QR kódu ECC (predvolené:L)',
+    'qr.height.and.width' => 'Výška a šírka QR kódu (predvolené:60)',
+    'qr.meaning' => 'Význam',
+    'qr.meaning.benefit' => 'Naskenujte a vráťte sa na zobrazenie (bez zadávania adresy URL),kde je možné faktúru vytlačiť vo formáte PDF.Platí pre všetkých používateľov s aktívnym klientskym účtom.',
+    'qr.output.type' => 'Typ výstupu QR kódu (napr..svg, .png) (Predvolené:png)',
+    'qr.version' => 'Číslo verzie QR kódu (najstaršia 0 najnovšia 40) (Predvolené:40)',
+    'qty' => 'Množstvo',
+    'quantity' => 'Množstvo',
+    'quarter' => 'Štvrťrok',
+    'quick.actions' => 'Rýchle akcie',
+    'quick.pay' => 'Rýchla platba',
+    'quote' => 'Citát',
+    'quote.add' => 'Pridať cenovú ponuku',
+    'quote.amount' => 'Suma cenovej ponuky',
+    'quote.amount.add' => 'Pridať sumu cenovej ponuky',
+    'quote.amounts' => 'Cenové sumy',
+    'quote.approval.required' => 'Vyžaduje sa schválenie cenovej ponuky',
+    'quote.approve' => 'Schváliť',
+    'quote.approved' => 'Táto cenová ponuka bola schválená',
+    'quote.copied.to.invoice' => 'Cenová ponuka skopírovaná do NOVEJ faktúry',
+    'quote.copied.to.quote' => 'Citát skopírovaný do NOVÉHO citátu!',
+    'quote.copied.to.so' => 'Cenová ponuka skopírovaná do predajnej objednávky',
+    'quote.custom' => 'Vlastná cenová ponuka',
+    'quote.custom.add' => 'Pridať vlastnú cenovú ponuku',
+    'quote.date' => 'Dátum cenovej ponuky',
+    'quote.dates' => 'Dátumy cenových ponúk',
+    'quote.delete.not' => 'Faktúra nebola vymazaná.',
+    'quote.delivery.location.index.button.list' => 'Citáty',
+    'quote.delivery.location.none' => 'K tejto cenovej ponuke nie je priradené žiadne miesto doručenia.',
+    'quote.disable.flash.messages' => 'Zakázať bleskové správy s citátmi',
+    'quote.email.templates.not.configured' => 'Šablóny e-mailov nie sú nakonfigurované.Nastavenia.Cenové ponuky.Šablóny cenových ponúk.Predvolená šablóna e-mailu',
+    'quote.group' => 'Skupina cenových ponúk',
+    'quote.id' => 'ID cenovej ponuky ',
+    'quote.item' => 'Položka cenovej ponuky',
+    'quote.item.add' => 'Pridať položku cenovej ponuky',
+    'quote.item.amount' => 'Položka cenovej ponuky Suma',
+    'quote.item.amount.add' => 'Ponuka Položka Suma Pridať',
+    'quote.item.cannot.delete' => 'Položku cenovej ponuky nie je možné odstrániť',
+    'quote.label.switch.off' => 'DPH cenová ponuka',
+    'quote.label.switch.on' => 'Cenová ponuka BEZ DPH',
+    'quote.must.be.approved.first' => 'Pred konverziou musí byť schválená cenová ponuka',
+    'quote.not.copied.to.invoice' => 'Faktúra NIE JE vytvorená z cenovej ponuky! Duplicitná faktúra.Skopírujte cenovú ponuku do inej cenovej ponuky a potom ju skopírujte do faktúry.Každá cenová ponuka musí mať zodpovedajúcu faktúru.',
+    'quote.number' => 'Číslo cenovej ponuky',
+    'quote.number.status' => 'Stav čísla cenovej ponuky',
+    'quote.overview' => 'Prehľad cenovej ponuky',
+    'quote.overview.period' => 'Prehľad cenovej ponuky Obdobie',
+    'quote.password' => 'Heslo k citovanému PDF dokumentu (voliteľné)',
+    'quote.pre.password' => 'Uveďte štandardné heslo pre PDF (voliteľné)',
+    'quote.reject' => 'Odmietnuť',
+    'quote.rejected' => 'Táto cenová ponuka bola zamietnutá',
+    'quote.sales.order.created.from.quote' => 'Objednávka predaja bola vytvorená z cenovej ponuky a zadali ste číslo objednávky!',
+    'quote.sales.order.not.created.from.quote' => 'Objednávka predaja nebola vytvorená z cenovej ponuky! Duplicitná objednávka predaja.Skopírujte cenovú ponuku do inej cenovej ponuky a potom ju skopírujte do objednávky predaja.Každá cenová ponuka musí mať zodpovedajúcu objednávku predaja.',
+    'quote.status.email.body' => 'Klient %1$s má %2$s cenovú ponuku %3$sOdkaz na cenovú ponuku:%4$s',
+    'quote.status.email.subject' => 'Klient %1$s %2$s cenová ponuka %3$s',
+    'quote.tax' => 'Daň z cenovej ponuky',
+    'quote.tax.rate' => 'Sadzba dane z cenovej ponuky',
+    'quote.tax.rate.add' => 'Pridať daňovú sadzbu',
+    'quote.tax.rate.cannot.delete' => 'Nie je možné odstrániť cenovú ponuku sadzby dane',
+    'quote.tax.rate.incomplete.fields' => 'Neúplné polia:Musíte uviesť sadzbu dane.Tip:Uveďte nulovú sadzbu dane.',
+    'quote.tax.rate.saved' => 'Sadzba dane z ponuky bola uložená',
+    'quote.template' => 'Šablóna cenovej ponuky',
+    'quote.templates' => 'Šablóny cenových ponúk',
+    'quote.to.invoice' => 'Cenová ponuka k faktúre',
+    'quote.to.so' => 'Cenová ponuka k predajnej objednávke',
+    'quote.to.so.password' => 'Heslo predajnej objednávky',
+    'quote.vat.quote' => 'DPH cenová ponuka',
+    'quote.with.purchase.order.line.number' => 'Číslo riadku objednávky (požiadavka Peppol) – má sa spárovať s číslom riadku predajnej objednávky',
+    'quote.with.purchase.order.number' => 'Číslo objednávky – má sa spárovať s číslom objednávky predaja',
+    'quote.with.purchase.order.person' => 'Osoba/oddelenie, ktoré zadáva objednávku',
+    'quotes' => 'Citáty',
+    'quotes.expire.after' => 'Platnosť cenových ponúk vyprší po (dni)',
+    'quotes.requiring.approval' => 'Citáty vyžadujúce schválenie',
+    'radiolist.choice' => 'Výber zoznamu rádií',
+    'read.only' => 'Iba na čítanie',
+    'read.this.please' => 'Prečítaj si to, prosím!',
+    'reason' => 'Dôvod',
+    'reason.accident' => 'Nehoda',
+    'reason.birthdefect' => 'Vrodená chyba',
+    'reason.disease' => 'Choroba',
+    'reason.maternity' => 'Materstvo',
+    'reason.prevention' => 'Prevencia',
+    'reason.unknown' => 'Neznámy',
+    'recent.clients' => 'Nedávni klienti',
+    'recent.invoices' => 'Nedávne faktúry',
+    'recent.payments' => 'Nedávne platby',
+    'recent.quotes' => 'Nedávne citáty',
+    'record.successfully.created' => 'Záznam bol úspešne vytvorený',
+    'record.successfully.created.not' => 'Záznam NEBOL úspešne vytvorený',
+    'record.successfully.deleted' => 'Záznam bol úspešne odstránený',
+    'record.successfully.updated' => 'Záznam bol úspešne aktualizovaný',
+    'records.no' => 'Žiadne záznamy',
+    'recurring' => 'Opakujúce sa',
+    'recurring.add' => 'Opakujúce sa pridanie',
+    'recurring.client' => 'Klient',
+    'recurring.create' => 'Vytvoriť opakujúcu sa faktúru',
+    'recurring.create.from.productclient' => 'Nastavenie opakovanej faktúry zo zoznamu produktov',
+    'recurring.deleted' => 'Odstránené',
+    'recurring.frequency' => 'Frekvencia',
+    'recurring.invoices' => 'Opakujúce sa faktúry',
+    'recurring.no.invoices.selected' => 'Nevybrali ste žiadne faktúry.',
+    'recurring.no.products.associated' => 'K tomuto klientovi nie sú priradené žiadne produkty. Najprv použite funkciu Generovať produkty.',
+    'recurring.original.invoice.date' => 'Dátum pôvodnej faktúry: ',
+    'recurring.setup' => 'Nastaviť opakované',
+    'recurring.status.sent.only' => 'Iba faktúry so stavom odoslané je možné nastaviť ako opakované',
+    'recurring.tooltip.next' => 'Ďalší dátum sa stanoví pomocou indexu.',
+    'redirect.map' => 'Mapa presmerovania',
+    'refund' => 'Vrátenie peňazí',
+    'refund.confirm' => 'Naozaj chcete vrátiť túto platbu prostredníctvom %s?',
+    'refund.failed' => 'Vrátenie platby cez %s zlyhalo. Podrobnosti nájdete v protokoloch platobnej brány.',
+    'refund.no.provider.reference' => 'K tejto platbe nebola zaznamenaná žiadna referenčná hodnota platby %s, takže ju nemožno automaticky vrátiť.',
+    'refund.recorded' => 'Vrátené prostredníctvom %s. Referenčné číslo poskytovateľa: %s',
+    'refund.successful' => 'Vrátenie platby prostredníctvom %s bolo úspešné.',
+    'region' => 'Región',
+    'reject' => 'Odmietnuť',
+    'reject.this.quote' => 'Odmietnuť túto cenovú ponuku',
+    'rejected' => 'Zamietnuté',
+    'reminder' => 'Pripomienka odoslaná',
+    'remove' => 'Odstrániť',
+    'remove.logo' => 'Odstrániť logo',
+    'report' => 'Správa',
+    'report.aging.title' => 'Správa o starnutí pohľadávok',
+    'report.client.statement' => 'Výpis z účtu klienta',
+    'report.options' => 'Možnosti prehľadu',
+    'report.period.from_to' => 'Obdobie: {from_date} do {to_date}',
+    'report.revenue.title' => 'Správa o analýze výnosov',
+    'report.sales.by.product' => 'Predaj podľa produktu',
+    'report.sales.by.product.info' => 'Táto správa uvádza celkovú sumu predaja produktov spolu s daňou z položky.Nezahŕňa dodatočnú daň z faktúry súvisiacu s týmito produktmi.',
+    'report.sales.by.task' => 'Predaj podľa úlohy',
+    'report.sales.by.task.info' => 'Táto správa uvádza celkovú sumu predaja úlohy spolu s daňou z položky.Nezahŕňa dodatočnú daň z faktúry súvisiacu s týmito úlohami.',
+    'report.test.fraud.prevention.headers.api' => 'Testovacie rozhranie API pre hlavičky na prevenciu podvodov',
+    'reports' => 'Správy',
+    'reset' => 'Obnoviť',
+    'reset.column.widths' => 'Obnoviť šírku stĺpcov na predvolené hodnoty',
+    'reset.password' => 'Obnoviť heslo',
+    'rules.peppol.en16931.001' => 'Musí byť zadaný obchodný proces alebo ID profilu.Pozrite si súbor config/common/params.php a vyhľadajte ProfileID.',
+    'run.report' => 'Spustiť správu',
+    'sales' => 'Predaj',
+    'sales.by.client' => 'Predaj podľa klienta',
+    'sales.by.date' => 'Predaj podľa dátumu',
+    'sales.with.tax' => 'Predaj s daňou',
+    'salesorder' => 'Objednávka predaja',
+    'salesorder.agree.to.terms' => 'Súhlasím s Podmienkami, ktoré vám teraz budú zaslané.',
+    'salesorder.assembled.packaged.prepared' => 'Zmontované/Zabalené/Pripravené',
+    'salesorder.cancelled' => 'Objednávka predaja zrušená',
+    'salesorder.client.confirmed.terms' => 'Podmienky potvrdené klientom',
+    'salesorder.clients.purchase.order.number' => 'Číslo objednávky klienta',
+    'salesorder.clients.purchase.order.person' => 'Objednávka klienta Osoba spracovávajúca jeho objednávku',
+    'salesorder.copied.to.invoice' => 'Objednávka predaja skopírovaná do faktúry',
+    'salesorder.copied.to.invoice.not' => 'Faktúra NIE JE vytvorená z predajnej objednávky! Duplikát faktúry.Skopírujte svoju predajnú objednávku do inej predajnej objednávky a potom ju skopírujte do faktúry.Každá predajná objednávka musí mať zodpovedajúcu faktúru.',
+    'salesorder.date.created' => 'Dátum vytvorenia predajnej objednávky',
+    'salesorder.default.group' => 'Predvolená skupina predajných objednávok',
+    'salesorder.goods.services.confirmed' => 'Doručenie potvrdené klientom',
+    'salesorder.goods.services.delivered' => 'Dodaný tovar/služba',
+    'salesorder.invoice' => 'Faktúra',
+    'salesorder.invoice.generate' => 'Generovanie faktúry',
+    'salesorder.invoice.generated' => 'Vygenerovaná faktúra',
+    'salesorder.invoice.number' => 'Číslo faktúry',
+    'salesorder.number' => 'Číslo predajnej objednávky',
+    'salesorder.number.status' => 'Stav čísla predajnej objednávky',
+    'salesorder.password' => 'Heslo predajnej objednávky',
+    'salesorder.payment.terms' => 'Platobné podmienky predajnej objednávky, napr.Prosím, zaplaťte do 30 dní',
+    'salesorder.peppol.response.ab' => 'Potvrdené -- prijaté, zatiaľ nespracované',
+    'salesorder.peppol.response.acknowledge' => 'Iba potvrdiť',
+    'salesorder.peppol.response.acknowledge.description' => 'Odošle odpoveď „prijatá, ešte nespracovaná“ pre celú objednávku bez toho, aby sa zatiaľ rozhodol o akomkoľvek riadku. Keď budete pripravení prijať, odmietnuť alebo zmeniť jednotlivé riadky, použite namiesto toho možnosť „Odoslať odpoveď na objednávku Peppol“.',
+    'salesorder.peppol.response.ap' => 'Prijaté',
+    'salesorder.peppol.response.ca' => 'Prijaté so zmenami',
+    'salesorder.peppol.response.failed' => 'Nepodarilo sa odoslať odpoveď na objednávku Peppol.',
+    'salesorder.peppol.response.failed.no.client' => 'Nepodarilo sa odoslať odpoveď na objednávku Peppol: Objednávka predaja nemá klienta.',
+    'salesorder.peppol.response.failed.no.peppol' => 'Nepodarilo sa odoslať odpoveď na objednávku Peppol: Klient nie je registrovaný v Peppol.',
+    'salesorder.peppol.response.linestatus.accepted' => 'Prijaté',
+    'salesorder.peppol.response.linestatus.added' => 'Pridané',
+    'salesorder.peppol.response.linestatus.alreadydelivered' => 'Už doručené',
+    'salesorder.peppol.response.linestatus.changed' => 'Zmenené',
+    'salesorder.peppol.response.linestatus.rejected' => 'Zamietnuté',
+    'salesorder.peppol.response.perline' => 'Odpoveď na objednávku od Peppolu',
+    'salesorder.peppol.response.preview' => 'Ukážka XML',
+    'salesorder.peppol.response.re' => 'Zamietnuté',
+    'salesorder.peppol.response.send' => 'Odoslať odpoveď na objednávku od Peppolu',
+    'salesorder.peppol.response.sent' => 'Odpoveď na objednávku od Peppolu bola odoslaná',
+    'salesorder.quote' => 'Citát',
+    'salesorder.recent' => 'Nedávne predajné objednávky',
+    'salesorder.reject' => 'Zamietnutie predajnej objednávky',
+    'salesorder.rejected' => 'Objednávka predaja zamietnutá',
+    'salesorder.sent.to.customer' => 'Vyžaduje sa dohoda o podmienkach',
+    'salesorder.to.invoice' => 'Objednávka predaja na faktúru',
+    'salesorder.vat.salesorder' => 'Objednávka s DPH',
+    'salesorders' => 'Objednávky predaja',
+    'save' => 'Uložiť',
+    'save.item.as.lookup' => 'Uložiť položku ako vyhľadávanie',
+    'script' => 'Skript',
+    'search.family' => 'Vyhľadať rodinu',
+    'search.product' => 'Vyhľadať produkt',
+    'security.disable.read.only.empty' => 'Nastavenie zakázať iba na čítanie momentálne nemá hodnotu 0 ani 1.Predvolene ho nastavte na 0,aby bola k dispozícii funkcia iba na čítanie, ktorá zabráni vymazaniu faktúry.',
+    'security.disable.read.only.info' => 'Upozornenie:Je povolená funkcia ochrany faktúr a prevencie vymazania iba na čítanie.Vypnite funkciu „disable.read.only“, aby sa odoslané faktúry mohli obnoviť do stavu koncept.',
+    'security.disable.read.only.success' => 'Úspech:Funkcia ochrany faktúr a zabránenia vymazaniu iba na čítanie bola znova povolená.',
+    'security.disable.read.only.true.draft.check.and.mark' => 'Upozornenie:Upravujete koncept s nastavením zakázať iba na čítanie na hodnotu true',
+    'security.disable.read.only.true.sent.check.and.mark' => 'Upozornenie:Upravujete odoslanú faktúru s nastavením zakázať iba na čítanie na hodnotu true.',
+    'security.disable.read.only.warning' => 'Upozornenie:Funkcia ochrany faktúr a ochrany pred vymazaním iba na čítanie bola deaktivovaná.',
+    'select.all' => 'Vybrať všetko',
+    'select.existing.client' => 'Vyberte existujúceho klienta',
+    'select.family' => 'Vyberte rodinu',
+    'select.payment.method' => 'Vyberte spôsob platby',
+    'select.project' => 'Vyberte projekt',
+    'select.unit' => 'Vyberte jednotku',
+    'send' => 'Odoslať',
+    'send.email' => 'Odoslať e-mail',
+    'send.telegram.invoice' => 'Odoslať faktúru cez Telegram',
+    'sent' => 'Odoslané',
+    'set.new.password' => 'Nastaviť nové heslo',
+    'set.to.read.only' => 'Nastaviť faktúru len na čítanie',
+    'setting' => 'Nastavenie',
+    'setting.add' => 'Pridať nastavenie',
+    'setting.as.a.result.of ' => 'v dôsledku',
+    'setting.assets.cleared.at' => 'Majetok zúčtovaný v ',
+    'setting.assets.were.not.cleared.at' => 'Majetok nebol zúčtovaný v',
+    'setting.company' => 'Verejné údaje o spoločnosti',
+    'setting.company.private' => 'Súkromné ​​údaje spoločnosti',
+    'setting.company.profile' => 'Zmena profilu, napr.mobilného telefónu a e-mailovej adresy',
+    'setting.duplicate.key' => 'Uloženie sa nepodarilo dokončiť.Máte duplikát s nasledujúcim kľúčom:',
+    'setting.error.on.the.public.assets.folder' => 'chyba v priečinku verejných aktív.',
+    'setting.form' => 'Nastavenie formulára',
+    'setting.key' => 'Kľúč nastavenia',
+    'setting.section' => 'Sekcia',
+    'setting.subsection' => 'Podsekcia',
+    'setting.translator.key' => 'Kľúč prekladača',
+    'setting.value' => 'Nastavenie hodnoty',
+    'setting.you.have.cleared.the.cache' => 'Vymazali ste vyrovnávaciu pamäť.',
+    'setting.you.have.not.cleared.the.cache.due.to.a' => 'Nevymazali ste vyrovnávaciu pamäť',
+    'settings' => 'Nastavenia',
+    'settings.successfully.saved' => 'Nastavenia boli úspešne uložené',
+    'setup.choose.language' => 'Vyberte jazyk',
+    'setup.choose.language.message' => 'Vyberte jazyk pre pokračovanie inštalácie.',
+    'setup.complete' => 'Inštalácia dokončená',
+    'setup.complete.message' => 'InvoicePlane bol úspešne nainštalovaný.Teraz sa môžete prihlásiť.',
+    'setup.complete.secure.setup' => 'Ak chcete zabezpečiť svoju inštaláciu,môžete inštaláciu zatiaľ zakázať.Ak to chcete urobiť, nahraďte riadok <code>DISABLE_SETUP=false</code> riadkom <code>DISABLE_SETUP=true</code> vo vašom súbore <code>ipconfig.php</code> .',
+    'setup.complete.support.note' => 'Ak narazíte na nejaké problémy alebo potrebujete pomoc, pozrite si <a href="https://wiki.invoiceplane.com">oficiálnu wiki</a> alebo <a href="https://community.invoiceplane.com/">komunitné fórum</a> .',
+    'setup.create.user' => 'Vytvoriť používateľský účet',
+    'setup.create.user.message' => 'Toto sú informácie, ktoré budete potrebovať na prihlásenie do InvoicePlane.',
+    'setup.database.configured.message' => 'Databáza je úspešne nakonfigurovaná.',
+    'setup.database.details' => 'Podrobnosti o databáze',
+    'setup.database.message' => 'Pre pripojenie k databáze zadajte nasledujúce informácie.',
+    'setup.db.cannot.connect' => 'Nepodarilo sa pripojiť k databázovému serveru s poskytnutými informáciami o databáze.Skontrolujte prihlasovacie údaje a skúste to znova.',
+    'setup.db.database.info' => 'Názov databázy, ktorú ste vytvorili pre InvoicePlane.',
+    'setup.db.hostname.info' => 'Názov hostiteľa pre vašu databázu.',
+    'setup.db.password.info' => 'Heslo spojené s databázou.',
+    'setup.db.port.info' => 'Port, na ktorom počúva váš hostiteľský názov.Predvolená hodnota je 3306.',
+    'setup.db.username.info' => 'Používateľské meno priradené k databáze.',
+    'setup.install.tables' => 'Inštalácia tabuliek',
+    'setup.other.contact' => 'Iný kontakt',
+    'setup.prerequisites' => 'Predpoklady',
+    'setup.prerequisites.message' => 'Vitajte v InvoicePlane! Pred pokračovaním v inštalácii je potrebné vyriešiť všetky problémy uvedené nižšie.',
+    'setup.tables.errors' => 'Pred pokračovaním v inštalácii je potrebné vyriešiť nižšie uvedené chyby.',
+    'setup.tables.success' => 'Tabuľky databázy boli úspešne nainštalované.',
+    'setup.upgrade.message' => 'Pred pokračovaním v inštalácii je potrebné vyriešiť nižšie uvedené chyby.',
+    'setup.upgrade.success' => 'Tabuľky databázy boli úspešne aktualizované.',
+    'setup.upgrade.tables' => 'Vylepšiť tabuľky',
+    'setup.user.address.info' => 'Adresa zadaná nižšie sa zobrazí na vašich faktúrach.',
+    'setup.user.contact.info' => 'Tieto kontaktné informácie sa môžu zobraziť aj na vašich faktúrach.',
+    'setup.user.email.info' => 'Vaša e-mailová adresa bude použitá na prihlásenie do InvoicePlane.',
+    'setup.user.name.info' => 'Buď názov vašej spoločnosti, alebo vaše krstné meno a priezvisko.',
+    'setup.user.password.info' => 'Nezabudnite použiť silné heslo.Odporúča sa kombinácia veľkých a malých písmen, číslic a symbolov.Minimálna dĺžka:8 znakov',
+    'setup.user.password.verify.info' => 'Overte svoje heslo opätovným zadaním rovnakého hesla.',
+    'setup.v120.alert' => '<strong>Pozor!</strong><br> Je veľmi dôležité, aby ste si prečítali <a href="https://go.invoiceplane.com/v120update" target="_blank">toto aktualizačné oznámenie</a> o niektorých významných zmenách aplikácie InvoicePlane.',
+    'setup.v147.alert' => '<strong>Pozor!</strong><br> Otvorte súbor <code>application/config/config.php</code> a zmeňte riadok <code>$config[&#39;sess_use_database&#39;] = false;</code> na <code>$config[&#39;sess_use_database&#39;] = true;</code> .<br> Viac podrobností nájdete <a href="https://go.invoiceplane.com/v147update" target="_blank">tu</a>',
+    'showing.of' => 'Zobrazuje sa %s z %s ',
+    'signup' => 'Registrácia',
+    'since' => 'odkedy',
+    'single.choice' => 'Jedna voľba',
+    'site.soletrader.about.choose' => 'Tu je niekoľko lákavých dôvodov,prečo si vybrať práve nás:',
+    'site.soletrader.about.competitive.rates' => 'Konkurenčné ceny',
+    'site.soletrader.about.contemporary' => 'Súčasné zručnosti',
+    'site.soletrader.about.dissatisfaction' => 'V prípade nespokojnosti so službami prácu bezplatne prerobíme.',
+    'site.soletrader.about.finished' => 'Dokončené projekty',
+    'site.soletrader.about.happy' => 'Spokojní zákazníci',
+    'site.soletrader.about.quality' => 'Bez obetovania kvality',
+    'site.soletrader.about.return' => 'Vracajúci sa zákazníci',
+    'site.soletrader.about.simply' => 'Stačí zdvihnúť telefón a my prácu prerobíme.',
+    'site.soletrader.about.solved' => 'Vyriešené problémy',
+    'site.soletrader.about.trained' => 'Náš tím je dobre vyškolený a skúsený.',
+    'site.soletrader.about.we' => 'Usilovne používame svoje zručnosti podľa našich najlepších schopností.',
+    'site.soletrader.about.willing' => 'Podpora ochotného návratu',
+    'site.soletrader.contact.address' => 'Adresa',
+    'site.soletrader.contact.email' => 'E-mail',
+    'site.soletrader.contact.lookout' => 'Vždy hľadáme nových klientov.Ak máte záujem o spoluprácu s nami, kontaktujte nás jedným z nasledujúcich spôsobov.',
+    'site.soletrader.contact.phone' => 'Telefón',
+    'site.soletrader.contact.touch' => 'Kontaktujte nás',
+    'site.soletrader.pricing.basic' => 'základné',
+    'site.soletrader.pricing.choosePlan' => 'Vyberte si plán',
+    'site.soletrader.pricing.currencyPerMonth' => 'mesačne',
+    'site.soletrader.pricing.explore' => 'Preskúmajte naše flexibilné ceny a nájdite si skvelú ponuku pre vaše podnikanie.',
+    'site.soletrader.pricing.plans' => 'Viac plánov',
+    'site.soletrader.pricing.pricing' => ' Naše ceny',
+    'site.soletrader.pricing.pro' => 'Profesionálny',
+    'site.soletrader.pricing.proPrice' => 'profesionálna cena',
+    'site.soletrader.pricing.special' => 'špeciálny',
+    'site.soletrader.pricing.starter' => 'Štartér',
+    'site.soletrader.pricing.visits' => 'návštevy',
+    'site.soletrader.team.assistant' => 'Asistent',
+    'site.soletrader.team.coordinator' => 'Koordinátor',
+    'site.soletrader.team.we' => 'Sme skupina starostlivých, skúsených a usilovných ľudí.',
+    'site.soletrader.testimonial.we' => 'Toto sú referencie',
+    'site.soletrader.testimonial.worker1' => 'Toto je moje svedectvo',
+    'site.soletrader.testimonial.worker2' => 'Toto je moje svedectvo',
+    'site.soletrader.testimonial.worker3' => 'Toto je moje svedectvo',
+    'site.todays.date' => 'Dnešný dátum',
+    'six.months' => 'Šesť mesiacov',
+    'smtp.mail.from' => 'Adresa odosielateľa SMTP pre systémové e-maily',
+    'smtp.password' => 'Heslo SMTP',
+    'smtp.port' => 'SMTP port',
+    'smtp.requires.authentication' => 'Vyžaduje overenie',
+    'smtp.security' => 'Bezpečnosť',
+    'smtp.server.address' => 'Adresa SMTP servera',
+    'smtp.ssl' => 'SSL',
+    'smtp.tls' => 'TLS',
+    'smtp.username' => 'Používateľské meno SMTP',
+    'smtp.verify.certs' => 'Overenie certifikátov SMTP',
+    'spreadsheet.import' => 'Import tabuľky',
+    'sql.file' => 'Súbor SQL',
+    'start' => 'Štart',
+    'start.date' => 'Dátum začiatku',
+    'state' => 'Štát',
+    'status' => 'Stav',
+    'status.invoice.cancelled' => 'Zrušené',
+    'status.invoice.draft' => 'Návrh',
+    'status.invoice.overdue' => 'Po termíne',
+    'status.invoice.paid' => 'Platené',
+    'status.invoice.partial' => 'Čiastočne zaplatené',
+    'status.invoice.sent' => 'Odoslané',
+    'status.invoice.viewed' => 'Zobrazené',
+    'stop' => 'Zastaviť',
+    'stop.homecare.signing.up' => 'Nie je potrebná registrácia do domácej starostlivosti',
+    'stop.logging.in' => 'Zastaviť prihlasovanie',
+    'stop.signing.up' => 'Zastaviť registráciu',
+    'storecove' => 'Storecove',
+    'storecove.advisory.to.developer.field.easily.missed' => 'Zákazník ľahko prehliadne pole',
+    'storecove.create.a.sender.legal.entity.country' => '1.1.4.Vytvorenie odosielateľa – krajina právnickej osoby',
+    'storecove.invoice.json.encoded' => 'Faktúra kódovaná v JSON v StoreCove',
+    'storecove.legal' => 'Právne',
+    'storecove.legal.entity.id.for.json' => '1.1.4.Vytvorenie odosielateľa – ID právnickej osoby Store Cove vložené do súboru invoice.json',
+    'storecove.legal.entity.identifier.id.not.found' => 'Konfiguračné parametre Účtovníctvo Dodávateľ Strana Právnická osoba ID spoločnosti sa nenašlo.',
+    'storecove.no.contract.exists' => 'Neexistuje žiadna zmluva',
+    'storecove.not.available' => 'Nie je k dispozícii',
+    'storecove.purchase.order.item.id.null' => 'po-item-id-null',
+    'storecove.receiver.identifier' => 'Identifikátor príjemcu – pozri StoreCove 6.3',
+    'storecove.region.country.legal.tax' => 'Región ---------- Krajina --------- Právne informácie --------- Daň',
+    'storecove.salesorder.number.not.exist' => 'Číslo predajnej objednávky neexistuje',
+    'storecove.sender.identifier' => '6.2 Identifikátor odosielateľa',
+    'storecove.sender.identifier.basis' => '6.2 Základ identifikácie odosielateľa – právny alebo daňový',
+    'storecove.supplier.contact.email.not.found' => 'E-mailová adresa kontaktu dodávateľa sa nenašla.Pozrite si pole konfiguračných parametrov.',
+    'storecove.supplier.contact.firstname.not.found' => 'Meno kontaktnej osoby dodávateľa sa nenašlo.​​Pozrite si pole konfiguračných parametrov.',
+    'storecove.supplier.contact.lastname.not.found' => 'Priezvisko kontaktnej osoby dodávateľa sa nenašlo.​​Pozrite si pole konfiguračných parametrov.',
+    'storecove.supplier.contact.name.not.found' => 'Meno kontaktnej osoby dodávateľa sa nenašlo.​​Pozrite si pole konfiguračných parametrov.',
+    'storecove.supplier.contact.telephone.not.found' => 'Telefónne číslo kontaktu dodávateľa sa nenašlo.​​Pozrite si pole konfiguračných parametrov.',
+    'storecove.tax' => 'Daň',
+    'storecove.tax.rate.code' => 'Daňový kód Storecove',
+    'storecove.tax.scheme.identifier.id.not.found' => 'Konfiguračné parametre Účtovníctvo Dodávateľ Strana Daňový systém ID spoločnosti sa nenašlo.',
+    'stream' => 'Streamovanie PDF v prehliadači / modálnom okne',
+    'street.address' => 'Adresa ulice',
+    'street.address.2' => 'Adresa ulice (pokračovanie)',
+    'street.order' => 'Čistiaci beh – poriadok na ulici',
+    'street.order.back.to.families' => 'Späť k rodinám',
+    'street.order.drag.hint' => 'Potiahnite ulice do poradia, v akom ich chcete vyčistiť. Poradie sa automaticky uloží po odstránení riadku.',
+    'street.order.manage.link' => 'Spravovať poriadok na ulici →',
+    'street.order.position' => 'Poloha čistiaceho chodu:',
+    'subject' => 'Predmet',
+    'submenu' => 'Podmenu',
+    'submit' => 'Odoslať',
+    'subtotal' => 'Medzisúčet',
+    'success' => 'Úspech',
+    'success.create.invoice' => 'Faktúra č. {invoice_number} bola úspešne vytvorená',
+    'success.payment.received' => 'Platba vo výške {amount} prijatá za faktúru č. {invoice_number}',
+    'success.send.invoice' => 'Faktúra č. {invoice_number} odoslaná na adresu {client_email}',
+    'success.update.client' => 'Klient {client_name} bol úspešne aktualizovaný',
+    'successful' => 'Úspešné',
+    'suggested.from.previous.selection' => 'Navrhnuté z predchádzajúceho výberu',
+    'sunday' => 'Nedeľa',
+    'system.settings' => 'Nastavenia systému',
+    'system.updates' => 'Aktualizácie systému',
+    'system.updates.check.failed' => 'Kontrola verzie PHP zlyhala',
+    'system.updates.check.now' => 'Skontrolovať teraz',
+    'system.updates.current.version' => 'Aktuálna verzia PHP',
+    'system.updates.last.checked' => 'Naposledy skontrolované',
+    'system.updates.latest.version' => 'Najnovšia verzia PHP',
+    'system.updates.never.checked' => 'Nikdy som nekontroloval/a',
+    'system.updates.outdated' => 'K dispozícii je novšia verzia PHP',
+    'system.updates.security.release' => 'Bezpečnostné uvoľnenie',
+    'system.updates.select.platform' => 'Vyberte si platformu a zobrazte si pokyny na aktualizáciu',
+    'system.updates.up.to.date' => 'PHP je aktuálne',
+    'system.updates.update.instructions' => 'Pokyny na aktualizáciu',
+    'table' => 'Tabuľka',
+    'task' => 'Úloha',
+    'task.add' => 'Pridať úlohu',
+    'task.description' => 'Popis úlohy',
+    'task.finish.date' => 'Dátum ukončenia',
+    'task.name' => 'Názov úlohy',
+    'task.price' => 'Cena úlohy',
+    'tasks' => 'Úlohy',
+    'tasks.form' => 'Formulár úlohy',
+    'tax' => 'Daň',
+    'tax.code' => 'Daňový kódex',
+    'tax.code.short' => 'Daňový kódex',
+    'tax.exempt.notice' => 'Táto transakcia je oslobodená od dane',
+    'tax.information' => 'Informácie o daniach',
+    'tax.point' => 'Dátum daňového bodu',
+    'tax.rate' => 'Sadzba dane',
+    'tax.rate.active.not' => 'Upozornenie:Neboli aktivované žiadne daňové sadzby.Aktivujte aspoň jednu daňovú sadzbu.Nastavenia .Sadzba dane',
+    'tax.rate.add' => 'Pridať daňovú sadzbu',
+    'tax.rate.code' => 'Kód sadzby dane z faktúry',
+    'tax.rate.decimal.places' => 'Desatinné miesta daňovej sadzby',
+    'tax.rate.edit' => 'Upraviť daňovú sadzbu',
+    'tax.rate.form' => 'Formulár daňovej sadzby',
+    'tax.rate.history.exists' => 'Nedá sa vymazať.História už existuje.',
+    'tax.rate.name' => 'Názov daňovej sadzby, napr.štandard',
+    'tax.rate.percent' => 'Percentuálna sadzba dane',
+    'tax.rate.placement' => 'Umiestnenie daňovej sadzby',
+    'tax.rates' => 'Daňové sadzby',
+    'tax.total.amount' => 'Celková daň: {suma}',
+    'tax.vat.rate' => 'Sadzba DPH: {rate}%',
+    'taxes' => 'Dane',
+    'telegram' => 'Telegram',
+    'telegram.bot.api.chat.id' => 'Telegram:Bez bota:Osobný účet:Ahoj svet:Testovacia správa:Príjemca správy:<b>ID chatu</b>',
+    'telegram.bot.api.chat.id.not.set' => 'ID chatu držiteľa osobného telegramového účtu, ktorý nie je bot a odoslal botu prvú správu a má dostať testovaciu správu „Ahoj“ „Svet“, nebolo nastavené.',
+    'telegram.bot.api.current.status' => '<b>Aktuálne použitie:</b> Webhook nie je potrebný,pretože klienti nemajú ID chatu a neposielajú správy botu.',
+    'telegram.bot.api.enable' => 'Povoliť Telegram',
+    'telegram.bot.api.enabled.not' => 'Telegram nie je povolený',
+    'telegram.bot.api.future.use' => '<b>Budúce použitie:</b> Klientom s chatovacími ID sa pošle faktúra v telegrame a potvrdenie potvrdenia zašlú späť do webhooku.',
+    'telegram.bot.api.general.purpose' => '<b>Registrovaný bot, identifikovaný tokenom, posiela oznámenia o platbách zákazníkov na nižšie uvedené registrované ID chatu (zvyčajne na osobný telegramový účet administrátora, ktorý nie je bot).</b>',
+    'telegram.bot.api.get.updates.failed' => 'Aktualizácie Telegramu zlyhali.',
+    'telegram.bot.api.get.updates.success' => 'Vaše aktualizácie Telegramu boli úspešné pomocou metódy API getUpdates.',
+    'telegram.bot.api.hello.world.test.message' => 'Ahoj svet od Telegram Bot Api.Ďakujeme vývojárom yiisoftu!',
+    'telegram.bot.api.hello.world.test.message.sent' => 'Správa Ahoj svet bola odoslaná.',
+    'telegram.bot.api.hello.world.test.message.sent.not' => 'Správa Ahoj svet NEBOLA odoslaná.',
+    'telegram.bot.api.hello.world.test.message.use' => 'Odošlite základnú testovaciu správu „Ahoj svet z rozhrania Telegram Bot Api“ na externé ID chatu',
+    'telegram.bot.api.payment.method.id' => 'ID spôsobu platby použité pri zaznamenávaní automatickej platby v Telegrame',
+    'telegram.bot.api.payment.notification.success' => 'Oznámenie o platbe v Telegrame bolo úspešné',
+    'telegram.bot.api.payment.notifications' => 'Upozornenia na platby v Telegrame',
+    'telegram.bot.api.provider.token' => 'Token poskytovateľa platieb v Telegrame (z @BotFather → Platby → Stripe)',
+    'telegram.bot.api.token' => 'Token API bota Telegramu',
+    'telegram.bot.api.token.not.set' => 'Token API bota Telegramu nie je nastavený',
+    'telegram.bot.api.webhook.delete' => 'Odstrániť webhook',
+    'telegram.bot.api.webhook.deleted' => 'Webhook bol práve deaktivovaný, aby bolo možné použiť manuálnu metódu API getUpdates.',
+    'telegram.bot.api.webhook.secret.token' => 'Tajný token webhooku pre dodatočné zabezpečenie (používa sa ako parameter vo funkcii setWebhook a nie ako parameter dotazu)',
+    'telegram.bot.api.webhook.setup' => 'Webhook je nastavený.',
+    'telegram.bot.api.webhook.setup.already' => 'Webhook už bol nastavený.',
+    'telegram.bot.api.webhook.url.this.site' => 'URL adresa webhooku Telegramu tejto stránky použitá vo funkcii setWebhook v TelegramHelper.',
+    'telegram.invoice.client.chat.id.not.set' => 'Klient nemá ID chatu v Telegrame. Upravte klienta a pridajte jeho ID chatu v Telegrame.',
+    'telegram.invoice.link.created' => 'Platobný odkaz v Telegrame bol vytvorený. Skopírujte odkaz nižšie.',
+    'telegram.invoice.link.created.menu' => 'Vytvoriť platobný odkaz v Telegrame',
+    'telegram.invoice.sent' => 'Faktúra z Telegramu bola úspešne odoslaná.',
+    'telegram.location.not.configured' => 'Zemepisná šírka a dĺžka spoločnosti nie sú nakonfigurované. Nastavte ich v nastaveniach.',
+    'telegram.location.sent' => 'Adresa spoločnosti bola úspešne odoslaná do Telegramu.',
+    'telegram.pdf.not.found' => 'Pre túto faktúru sa nenašiel žiadny archivovaný súbor PDF. Najprv ho vygenerujte cez Možnosti → Stiahnuť PDF.',
+    'telegram.pdf.send.menu' => 'Odoslať PDF cez Telegram',
+    'telegram.pdf.sent' => 'PDF faktúry bol úspešne odoslaný do Telegramu.',
+    'telegram.stars.no.charge.id' => 'Nemožno vrátiť peniaze: platobný doklad neobsahuje ID platby v Telegrame a ID používateľa kupujúceho.',
+    'telegram.stars.refunded' => 'Platba za Telegram Stars bola úspešne vrátená.',
+    'template' => 'Šablóna faktúry',
+    'templates' => 'Šablóny faktúr',
+    'term' => 'Zmluvné podmienky',
+    'term.1' => 'Nečítal/a som zmluvné podmienky.',
+    'term.2' => 'Prečítal(a) som si a súhlasím so zmluvnými podmienkami.',
+    'term.add.additional.terms.at.setting.repository' => 'Pridajte ďalšie podmienky vo funkcii getPaymentTerms v úložisku nastavení.',
+    'terms' => 'Podmienky',
+    'test.data.install' => 'Inštalácia testovacích údajov',
+    'test.data.use' => 'Použiť testovacie údaje',
+    'test.remove' => 'Odstrániť testovacie údaje',
+    'test.remove.tooltip' => 'Zobraziť.Nastavenia.Všeobecné.Inštalovať testovacie údaje.Nie a Zobraziť.Nastavenia.Všeobecné.Použiť testovacie údaje.Nie',
+    'test.reset' => 'Obnoviť testovacie údaje',
+    'test.reset.setting' => 'Preinštalovanie nastavení',
+    'test.reset.setting.tooltip' => 'Týmto sa odstránia všetky aktuálne nastavenia a znova sa nainštalujú predvolené nastavenia v súbore InvoiceController/install.default.settings.on.first.run',
+    'test.reset.tooltip' => 'Zobraziť.Nastavenia.Všeobecné.Inštalovať testovacie údaje.Áno a Zobraziť.Nastavenia.Všeobecné.Použiť testovacie údaje.Áno',
+    'text' => 'Text',
+    'textarea' => 'Textová oblasť',
+    'theme' => 'Téma',
+    'this.month' => 'Tento mesiac',
+    'this.quarter' => 'Tento štvrťrok',
+    'this.year' => 'Tento rok',
+    'thousands.separator' => 'Oddeľovač tisícov',
+    'time.created' => 'Čas vytvorenia',
+    'time.zone' => 'Časové pásmo',
+    'title' => 'Názov',
+    'to.date' => 'Doteraz',
+    'to.email' => 'Do e-mailu',
+    'total' => 'Celkom',
+    'total.balance' => 'Celkový zostatok',
+    'total.billed' => 'Celková fakturovaná suma',
+    'total.paid' => 'Celkom zaplatené',
+    'transaction.reference' => 'Referenčné číslo transakcie',
+    'transaction.successful' => 'Transakcia úspešná',
+    'treatment' => 'Liečba',
+    'treatment.end' => 'Koniec liečby',
+    'treatment.start' => 'Začiatok liečby',
+    'true' => 'Pravda',
+    'try.again' => 'Skúste to znova',
+    'two.factor.authentication' => 'Dvojfaktorové overenie',
+    'two.factor.authentication.attempt.failure' => 'Zlyhanie pokusu o dvojfaktorové overenie',
+    'two.factor.authentication.attempt.failure.must.setup' => 'Zlyhanie pokusu o dvojfaktorové overenie:Musíte nastaviť nový QR kód s tajným kódom (+) a po zobrazení výzvy zvoliť prepísanie predchádzajúceho záznamu.',
+    'two.factor.authentication.attempt.success' => 'Úspešný pokus o dvojfaktorové overenie',
+    'two.factor.authentication.compatible.apps' => 'Funguje s akoukoľvek aplikáciou na overenie totožnosti TOTP – napríklad Google Authenticator, Microsoft Authenticator, Authy, 1Password, Bitwarden, Yandex ID alebo Aegis. Použite tú, ktorú už máte.',
+    'two.factor.authentication.disabled' => 'Dvojfaktorové overenie bolo teraz pre zvýšenie bezpečnosti vypnuté.',
+    'two.factor.authentication.enable' => 'Povoliť dvojfaktorové overenie',
+    'two.factor.authentication.enabled.badge' => 'Dvojfaktorové overenie povolené',
+    'two.factor.authentication.enabled.with.disabling' => 'Dvojfaktorové overenie je momentálne povolené pre dodatočnú bezpečnosť a po úspešnom overení je vypnuté pre ďalšiu vrstvu zabezpečenia až do ďalšieho prihlásenia.Povinné skenovanie QR kódu po každom prihlásení pre nový tajný kľúč.',
+    'two.factor.authentication.enabled.without.disabling' => 'Dvojfaktorové overenie je momentálne povolené pre dodatočné zabezpečenie a po úspešnom overení sa nezakáže.QR kód sa po prihlásení a nastavení dvojfaktorového overenia už nezobrazí na skenovanie.',
+    'two.factor.authentication.error' => 'Chyba dvojfaktorového overenia',
+    'two.factor.authentication.form.verify.login' => 'Overiť prihlásenie',
+    'two.factor.authentication.invalid.backup.recovery.code' => 'Neplatný 8-miestny záložný kód na obnovenie',
+    'two.factor.authentication.invalid.code.format' => 'Neplatný formát kódu.Zadajte 6-miestny kód z vašej aplikácie.',
+    'two.factor.authentication.invalid.totp.code' => 'Neplatný 6-miestny jednorazový overovací kód s časovým obmedzením',
+    'two.factor.authentication.missing.code.or.secret' => 'Chýbajúci overovací kód alebo tajný kód 2FA.',
+    'two.factor.authentication.new.recovery.code' => 'Zadajte nižšie jeden z vašich nepoužitých záložných obnovovacích kódov (8 znakov).',
+    'two.factor.authentication.new.six.digit.code' => 'Zadajte nový 6-miestny overovací kód (iný ako nastavovací kód) z vašej aplikácie.',
+    'two.factor.authentication.no.secret.generated' => 'Žiadny tajný kód nebol vygenerovaný.Reštartujte nastavenie.',
+    'two.factor.authentication.qr.code.enter.manually' => 'Alebo zadajte tento kód do aplikácie pre Android manuálne:',
+    'two.factor.authentication.rate.limit.reached' => 'Dosiahnutý limit rýchlosti.Počkajte 10 sekúnd.',
+    'two.factor.authentication.scan' => 'Naskenujte tento QR kód pomocou aplikácie Aegis:',
+    'two.factor.authentication.setup' => 'Nastavenie dvojfaktorového overenia',
+    'type' => 'Typ',
+    'ubl.version.required.2.4' => 'Verzia UBL musí byť 2.1, 2.2, 2.3 alebo 2.4',
+    'unit' => 'Jednotka',
+    'unit.add' => 'Pridať jednotku',
+    'unit.already.exists' => 'Jednotka už existuje!',
+    'unit.description.not.provided' => 'Popis nebol poskytnutý',
+    'unit.edit' => 'Upraviť jednotku',
+    'unit.history' => 'Nedá sa vymazať.História existuje.',
+    'unit.name' => 'Názov jednotky',
+    'unit.name.plrl' => 'Názov jednotky (množné číslo)',
+    'unit.peppol' => 'Peppol',
+    'unit.peppol.add' => 'Jednotka Peppol Pridať',
+    'unit.peppol.code' => 'Kód jednotky Peppol',
+    'unit.peppol.edit' => 'Jednotka Peppol Upraviť',
+    'unit.peppol.index' => 'Jednotkový index Peppol',
+    'units' => 'Jednotky',
+    'unknown' => 'Neznámy',
+    'unpaid' => 'Nezaplatené',
+    'updatecheck' => 'Kontrola aktualizácií',
+    'updatecheck.failed' => 'Kontrola aktualizácií zlyhala! Skontrolujte sieťové pripojenie.',
+    'updates' => 'Aktualizácie',
+    'updates.available' => 'Aktualizácie k dispozícii!',
+    'upload.date' => 'Dátum nahrania',
+    'upload.description' => 'Popis',
+    'upload.filename.description' => 'Názov súboru Popis',
+    'upload.filename.new' => 'Nový názov súboru',
+    'upload.filename.original' => 'Pôvodný názov súboru',
+    'upload.index' => 'Nahrať index',
+    'upload.plural' => 'Nahrané súbory',
+    'upload.url.key' => 'Kľúč URL',
+    'url' => 'URL',
+    'use.system.language' => 'Použiť systémový jazyk',
+    'user' => 'Používateľ',
+    'user.account' => 'Používateľský účet pre faktúry',
+    'user.account.clients' => 'Klienti s používateľskými účtami',
+    'user.accounts' => 'Používateľské účty pre fakturáciu',
+    'user.all.clients' => 'Pridať všetkých zákazníkov',
+    'user.all.clients.text' => '* Ak je táto možnosť zaškrtnutá, používateľ uvidí všetkých klientov vrátane tých, ktorí budú pridaní neskôr.',
+    'user.api.list' => 'Používatelia predfakturácie – registrovaní používatelia',
+    'user.client.active.no' => 'Nemáte žiadnych klientov s aktívnymi používateľskými účtami.Administrátori priraďujú klienta(ov) k zaregistrovanému používateľskému účtu.',
+    'user.client.count' => '#',
+    'user.client.delete.not' => 'Nedá sa odstrániť! Klient má už existujúce dokumenty.',
+    'user.client.no.account' => 'Tento klient nemá priradený žiadny používateľský účet, a preto tento dokument nie je možné vytvoriť.',
+    'user.clients.assigned.not' => 'Tento používateľ nemá priradených žiadnych klientov.',
+    'user.form' => 'Používateľský formulár',
+    'user.iban' => 'IBAN',
+    'user.inv.active.not' => 'Používateľský účet nie je aktívny',
+    'user.inv.delete.blocked.callback' => 'Používateľ s aktívnymi rolami RBAC dostane pri ďalšom spätnom volaní OAuth na /invoice chybu 403 Forbidden (Zakázané). Najprv použite príkaz Zrušiť všetky role a potom ich vymažte.',
+    'user.inv.delete.blocked.roles' => 'Nemožno odstrániť: používateľ má stále rolu(y) RBAC:',
+    'user.inv.list.limit' => 'Počet záznamov uvedených na stránke (Poznámka:Prepíše predvolené nastavenie)',
+    'user.inv.more.than.one.assigned' => 'Vytvorenie faktúry sa nepodarilo:Pozrite si nastavenia .Používateľský účet.K tomuto klientovi je priradených viacero používateľov.',
+    'user.inv.rbac.link' => 'Odkaz RBAC',
+    'user.inv.rbac.link.stable' => 'Stabilné prepojenie RBAC – priradená rola a riadok mosta je k dispozícii',
+    'user.inv.rbac.link.sync.confirm' => 'Priradiť rolu pozorovateľa (ak chýba) a synchronizovať riadok mosta RBAC pre tohto používateľa?',
+    'user.inv.rbac.link.synced' => 'Synchronizované prepojenie RBAC – priradená rola pozorovateľa, ak chýbala',
+    'user.inv.refer.to' => 'Predvolenú hodnotu 10 záznamov na stránku je možné prepísať kliknutím sem.',
+    'user.inv.role.accountant' => 'Účtovník',
+    'user.inv.role.accountant.assigned' => 'Pridelená úloha účtovníka',
+    'user.inv.role.accountant.default' => 'Účtovník klienta si môže štandardne prezerať faktúry, platiť faktúry, prezerať si platby faktúr a upravovať platby faktúr.',
+    'user.inv.role.administrator' => 'Správca',
+    'user.inv.role.administrator.already.assigned' => 'Rola správcu už bola priradená',
+    'user.inv.role.administrator.assigned' => 'Rola správcu bola teraz priradená.',
+    'user.inv.role.all.new' => 'Všetci noví používatelia štandardne prevezmú rolu pozorovateľa, t.j.môžu si prezerať dokumentáciu, ale nemôžu ju upravovať, t.j.môžu si dokumentáciu prezerať alebo si ju prezerať.',
+    'user.inv.role.observer' => 'Pozorovateľ',
+    'user.inv.role.observer.assigned' => 'Priradená úloha pozorovateľa',
+    'user.inv.role.observer.assigned.already' => 'Úloha pozorovateľa už bola pridelená.',
+    'user.inv.role.revoke.all' => 'Zrušiť všetky roly',
+    'user.inv.role.warning.revoke.all' => 'Naozaj chcete zrušiť všetky role?',
+    'user.inv.role.warning.role' => 'Ste si istý/á, že chcete prijať túto rolu?',
+    'user.inv.role.worker' => 'Pracovník',
+    'user.inv.role.worker.assign' => 'Priradiť',
+    'user.inv.role.worker.assigned' => 'Priradená rola pracovníka',
+    'user.inv.role.worker.none.available' => 'Žiadne neprepojené záznamy pracovníkov – najprv jeden pridajte v časti pracovník.',
+    'user.inv.role.worker.unavailable' => 'Nepodarilo sa priradiť – vybraný pracovník je už prepojený s iným používateľom.',
+    'user.inv.type.cannot.allocate.administrator.type.to.non.administrator' => 'Typ administrátora rozbaľovacej ponuky nie je možné priradiť používateľovi, ktorý nie je administrátorom',
+    'user.inv.type.cannot.allocate.guest.type.to.administrator' => 'Nie je možné priradiť typ hosťa z rozbaľovacej ponuky správcovi',
+    'user.signup.please' => 'Prosím, zaregistrujte sa!',
+    'user.subscriber.number' => 'Číslo predplatiteľa',
+    'user.type' => 'Typ používateľa',
+    'username' => 'Používateľské meno',
+    'users' => 'Používatelia',
+    'utility.assets.clear' => 'Vymazať vyrovnávaciu pamäť aktív',
+    'validation.amount.positive' => 'Suma musí byť väčšia ako nula',
+    'validation.client.email.format' => 'E-mailová adresa klienta musí byť platná e-mailová adresa',
+    'validation.currency.supported' => 'Mena {currency} nie je podporovaná',
+    'validation.invoice.date.invalid' => 'Uveďte platný dátum faktúry',
+    'validation.invoice.number.required' => 'Číslo faktúry je povinné',
+    'validator.fail' => 'Nepodarilo sa spracovať pole %s:%s',
+    'validator.invalid.login.password' => 'Neplatné prihlasovacie meno alebo heslo',
+    'validator.password.change' => 'Vaše heslo bolo zmenené',
+    'validator.password.not.match' => 'Heslá sa nezhodujú',
+    'validator.password.not.match.new' => 'Vaše nové heslá sa nezhodujú',
+    'validator.password.reset' => 'Vaše heslo bolo obnovené',
+    'validator.user.exist' => 'Používateľ s týmto prihlasovacím menom už existuje',
+    'validator.user.exist.not' => 'Používateľ s týmto prihlasovacím menom neexistuje',
+    'value' => 'Hodnota',
+    'values' => 'Hodnoty',
+    'values.with.taxes' => 'Hodnoty s daňami',
+    'variant' => 'Variant',
+    'vat' => 'DPH',
+    'vat.abbreviation' => 'DPH',
+    'vat.break.down' => 'Súhrn DPH',
+    'vat.id' => 'IČ DPH',
+    'vat.id.short' => 'DPH',
+    'vat.invoice' => 'FAKTÚRA S DPH',
+    'vat.rate' => 'Sadzba DPH',
+    'vat.reg.no' => 'IČ DPH',
+    'vat.registered' => 'Registrovaný DPH',
+    'vendor.nikic.fast-route' => 'Budovanie rýchlejších trás',
+    'verify.password' => 'Overiť heslo',
+    'version.history' => 'História verzií',
+    'view' => 'Zobraziť',
+    'view.all' => 'Zobraziť všetko',
+    'view.client' => 'Zobraziť klienta',
+    'view.clients' => 'Zobraziť klientov',
+    'view.contact.form.body' => 'Telo',
+    'view.contact.form.email' => 'E-mail',
+    'view.contact.form.name' => 'Meno',
+    'view.contact.form.subject' => 'Predmet',
+    'view.invoices' => 'Zobraziť faktúry',
+    'view.payment.logs' => 'Zobraziť záznamy o online platbách',
+    'view.payments' => 'Zobraziť platby',
+    'view.product.families' => 'Zobraziť rady produktov',
+    'view.product.units' => 'Zobraziť jednotky produktu',
+    'view.products' => 'Zobraziť produkty',
+    'view.projects' => 'Zobraziť projekty',
+    'view.quotes' => 'Zobraziť cenové ponuky',
+    'view.recurring.invoices' => 'Zobraziť opakujúce sa faktúry',
+    'view.tasks' => 'Zobraziť úlohy',
+    'viewed' => 'Zobrazené',
+    'warning' => 'POZOR',
+    'web' => 'Web',
+    'web.address' => 'Webová adresa',
+    'webshop.currency.refresh.already.current' => 'Výmenný kurz je už aktuálny na dnes.',
+    'webshop.currency.refresh.disabled' => 'Automatické aktualizácie výmenných kurzov sú vypnuté.',
+    'webshop.currency.refresh.failed' => 'Nepodarilo sa načítať aktuálny výmenný kurz – skúste to znova neskôr.',
+    'webshop.currency.refresh.updated' => 'Výmenný kurz aktualizovaný.',
+    'welcome' => 'Vitajte',
+    'whatsapp' => 'WhatsApp',
+    'whatsapp.business.cloud.api.access.token' => 'Trvalý prístupový token (od používateľa systému v nastaveniach pre firmy)',
+    'whatsapp.business.cloud.api.business.account.id' => 'ID firemného účtu WhatsApp',
+    'whatsapp.business.cloud.api.enable' => 'Povoliť WhatsApp',
+    'whatsapp.business.cloud.api.enabled.not' => 'WhatsApp nie je povolený',
+    'whatsapp.business.cloud.api.general.purpose' => '<b>WhatsApp Business Cloud API odosiela klientom oznámenia o pripravenosti faktúry prostredníctvom vopred schválenej šablóny správy, ktorá je identifikovaná nižšie uvedeným ID telefónneho čísla a prístupovým tokenom.</b>',
+    'whatsapp.business.cloud.api.not.configured' => 'WhatsApp nie je úplne nakonfigurovaný (vyžaduje sa ID telefónneho čísla, prístupový token a názov šablóny).',
+    'whatsapp.business.cloud.api.phone.number.id' => 'ID telefónneho čísla (z WhatsApp -&gt; Nastavenie API – nie viditeľné telefónne číslo)',
+    'whatsapp.business.cloud.api.template.language' => 'Kód jazyka šablóny správy (napr. en_GB)',
+    'whatsapp.business.cloud.api.template.name' => 'Názov schválenej šablóny správy',
+    'whatsapp.business.cloud.api.test.message.sent' => 'Testovacia správa WhatsApp bola odoslaná.',
+    'whatsapp.business.cloud.api.test.message.sent.not' => 'Testovacia správa WhatsApp NEBOLA odoslaná.',
+    'whatsapp.business.cloud.api.test.recipient.not.set' => 'Testovacie číslo príjemcu nebolo nastavené.',
+    'whatsapp.business.cloud.api.test.recipient.number' => 'Testovacie číslo príjemcu (musí byť vopred overené v Meta, kým je aplikácia vo vývojovom režime)',
+    'whatsapp.business.cloud.api.webhook.current.status' => '<b>Aktuálne použitie:</b> Je implementovaný overovací handshake GET, takže odber webhooku je možné uložiť v Meta dashboarde. Prichádzajúce udalosti POST (stavy doručenia, odpovede) sa iba zaznamenávajú – ešte nie sú spracované, rovnako ako webhook v Telegrame dnes.',
+    'whatsapp.business.cloud.api.webhook.future.use' => '<b>Budúcnosť:</b> Spracovanie prichádzajúcich udalostí by mohlo automaticky zaznamenávať stav doručenia/čítania alebo spracovávať odpovede zákazníkov.',
+    'whatsapp.business.cloud.api.webhook.url.this.site' => 'URL adresa webhooku WhatsApp tejto stránky – zadajte ju a overovací token nižšie v časti WhatsApp &gt; Konfigurácia &gt; Webhooky na paneli Meta.',
+    'whatsapp.business.cloud.api.webhook.verify.token' => 'Overovací token webhooku (hodnota, ktorú si vyberiete; zadaná do meta panela a odoslaná späť počas overovacieho handshake)',
+    'worker' => 'Pracovník',
+    'worker.assign' => 'Priradiť',
+    'worker.assigned' => 'Pridelený pracovník',
+    'worker.firstname' => 'Krstné meno',
+    'worker.lastname' => 'Priezvisko',
+    'worker.linked.login' => 'Prepojené prihlásenie',
+    'worker.unassigned' => 'Nepriradené',
+    'workers' => 'Pracovníci',
+    'wrong.passwordreset.token' => 'Pre zadaný resetovací token sa nenašiel žiadny používateľ.Ak si myslíte, že ide o chybu, kontaktujte svojho správcu.',
+    'year' => 'Rok',
+    'year.prefix' => 'Predpona roka',
+    'years' => 'Roky',
+    'yes' => 'Áno',
+    'zip' => 'PSČ',
+    'zip.code' => 'PSČ',
 ];
-
