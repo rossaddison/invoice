@@ -31,11 +31,15 @@ echo H::openTag('div', ['class' => 'table-responsive']); //1
    echo H::openTag('th', ['class' => 'text-end']); //4
     echo H::encode($translator->translate('product.price') . '> 0.00');
    echo H::closeTag('th'); //4
+   echo H::openTag('th', ['class' => 'text-end']); //4
+    echo H::encode($translator->translate('product.available.stock'));
+   echo H::closeTag('th'); //4
   echo H::closeTag('tr'); //3
   /**
    * @var App\Infrastructure\Persistence\Product\Product $product
    */
   foreach ($products as $product) {
+   $availableStock = $product->availableStock();
    echo H::openTag('tr', ['class' => 'product']); //3
     echo H::openTag('td', ['class' => 'text-start']); //4
      echo H::openTag('input', [
@@ -64,6 +68,11 @@ echo H::openTag('div', ['class' => 'table-responsive']); //1
     echo H::closeTag('td'); //4
     echo H::openTag('td', ['class' => 'text-end']); //4
      echo $numberHelper->formatCurrency($product->getProductPrice());
+    echo H::closeTag('td'); //4
+    echo H::openTag('td', ['class' => 'text-end' . (
+        null !== $availableStock && $availableStock <= 0 ? ' text-danger' : ''
+    )]); //4
+     echo null === $availableStock ? '—' : H::encode((string) $availableStock);
     echo H::closeTag('td'); //4
    echo H::closeTag('tr'); //3
   }

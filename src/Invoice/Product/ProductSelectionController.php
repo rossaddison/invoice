@@ -119,12 +119,20 @@ final class ProductSelectionController extends BaseController
         $products     = $pR->findinProducts($product_ids);
         $numberHelper = new NumberHelper($this->sR);
         $order        = 1;
+        $insufficientStockProducts = [];
 
         /** @var Product $product */
         foreach ($products as $product) {
             $product->setProductPrice(
                 (float) $numberHelper->formatAmount($product->getProductPrice())
             );
+            $availableStock = $product->availableStock();
+            $requestedQuantity = self::defaultQuantityFor($product);
+            if (null !== $availableStock && $requestedQuantity > $availableStock) {
+                $insufficientStockProducts[] = ($product->getProductName() ?? '')
+                    . ' (' . $this->translator->translate('product.available.stock')
+                    . ': ' . $availableStock . ')';
+            }
             $this->saveProductLookupItemInv(
                 $order, $product, (int) $inv_id,
                 new ProductLookupInvDeps($pR, $trR, $uR, $iiaR, $iiR),
@@ -134,7 +142,29 @@ final class ProductSelectionController extends BaseController
         }
 
         $this->invRecalculator->recalculate((int) $inv_id);
+
+        if ([] !== $insufficientStockProducts) {
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('product.added.despite.insufficient.stock')
+                . ' ' . implode(', ', $insufficientStockProducts)
+            );
+        }
+
         return $this->responseFactory->createResponse(Json::encode($products));
+    }
+
+    /**
+     * The default quantity a modal-added product line starts at: the
+     * product's own price-base quantity when set, otherwise 1 — shared by
+     * the quote/inv ajax payloads and the insufficient-stock check in
+     * selectionInv() so the two never drift apart.
+     */
+    private static function defaultQuantityFor(Product $product): float
+    {
+        return $product->getProductPriceBaseQuantity() > 0
+            ? $product->getProductPriceBaseQuantity()
+            : (float) 1;
     }
 
     private function saveProductLookupItemQuote(
@@ -153,9 +183,7 @@ final class ProductSelectionController extends BaseController
             'product_id'   => $product->reqId(),
             'date_added'   => new \DateTimeImmutable(),
             'description'  => $product->getProductDescription(),
-            'quantity'     => $product->getProductPriceBaseQuantity() > 0
-                ? $product->getProductPriceBaseQuantity()
-                : (float) 1,
+            'quantity'     => self::defaultQuantityFor($product),
             'price'           => $product->getProductPrice(),
             'discount_amount' => (float) 0,
             'order'           => $order,
@@ -188,9 +216,7 @@ final class ProductSelectionController extends BaseController
             'product_id'   => $product->reqId(),
             'task_id'      => null,
             'description'  => $product->getProductDescription(),
-            'quantity'     => $product->getProductPriceBaseQuantity() > 0
-                ? $product->getProductPriceBaseQuantity()
-                : (float) 1,
+            'quantity'     => self::defaultQuantityFor($product),
             'price'           => $product->getProductPrice(),
             'discount_amount' => (float) 0,
             'order'           => $order,

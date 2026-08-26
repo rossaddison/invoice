@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Bootstrap5\Alert;
+use Yiisoft\Bootstrap5\AlertVariant;
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\A;
 
@@ -32,10 +34,20 @@ use Yiisoft\Html\Tag\A;
  * @var string $csrf
  * @var string $included
  * @var string $excluded
+ * @var string|null $stockWarning
  */
 
 $vat = $s->getSetting('enable_vat_registration');
 $formControlAmount = 'form-control text-end';
+
+if (null !== $stockWarning) {
+    echo Alert::widget()
+        ->variant(AlertVariant::WARNING)
+        ->body(H::encode($stockWarning), false)
+        ->dismissable(true)
+        ->render();
+}
+
 echo H::openTag('div', ['class' => 'table-responsive']);
  echo H::openTag('table', [
      'id' => 'item_table',

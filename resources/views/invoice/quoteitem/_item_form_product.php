@@ -86,7 +86,10 @@ foreach ($products as $product) {
     $productId = $product->reqId();
     $productName = $product->getProductName() ?? '';
     if (!empty($productId) && strlen($productName) > 0) {
-        $optionsDataProduct[$productId] = $productName;
+        $availableStock = $product->availableStock();
+        $optionsDataProduct[$productId] = $productName . (null === $availableStock ? '' : (
+            ' (' . $translator->translate('product.available.stock') . ': ' . $availableStock . ')'
+        ));
     }
 }
 ?>

@@ -473,6 +473,7 @@ trait View
                     (int) $this->session->get('inv_id')),
                 'taxRates' => $service->meta->trR->findAllPreloaded(),
                 'units' => $service->meta->unR->findAllPreloaded(),
+                'stockWarning' => null,
             ]);
         }
         return '';
