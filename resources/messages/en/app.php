@@ -2012,6 +2012,8 @@ prior to importing and no existing documents e.g. Invoices.',
   'price' => 'Price',
   'product' => 'Product',
   'product.add' => 'Product Add',
+  'product.added.despite.insufficient.stock' =>
+    'Added despite insufficient stock:',
   'product.additional.item.property.name' =>
     'Peppol Additional Property Item Name eg. Colour',
   'product.additional.item.property.value' =>
@@ -2051,6 +2053,7 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' Portal (Wholesale) keeps it available only to staff and'
     . ' client-portal quotes/sales orders/invoices, at the Price above.',
   'product.availability.webshop' => 'Webshop (Retail)',
+  'product.available.stock' => 'Available Stock',
   'product.id' => 'Product Id',
   'product.image' => 'Image',
   'product.item.classification.code.scheme.id.not.found' =>

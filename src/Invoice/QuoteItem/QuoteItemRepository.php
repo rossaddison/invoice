@@ -115,6 +115,20 @@ final class QuoteItemRepository extends Select\Repository
         return $this->repoQuoteItemIdquery($quote_id);
     }
 
+    /**
+     * The existing line for this product on this quote, if one already
+     * exists — used to merge a repeat "add product" action into the
+     * existing line's quantity instead of creating a second one.
+     *
+     * @psalm-return TEntity|null
+     */
+    public function repoQuoteProductquery(int $quote_id, int $product_id): ?QuoteItem
+    {
+        $query = $this->select()
+                      ->where(['quote_id' => $quote_id, 'product_id' => $product_id]);
+        return $query->fetchOne() ?: null;
+    }
+
     public function repoCount(int $quote_id): int
     {
         return $this->select()

@@ -121,6 +121,23 @@ final class InvItemRepository extends Select\Repository implements InvItemReposi
     }
 
     /**
+     * The existing line for this product on this invoice, if one already
+     * exists — used to merge a repeat "add product" action into the
+     * existing line's quantity instead of creating a second one.
+     *
+     * @param int $inv_id
+     * @param int $product_id
+     * @return InvItem|null
+     * @psalm-return TEntity|null
+     */
+    public function repoInvProductquery(int $inv_id, int $product_id): ?InvItem
+    {
+        $query = $this->select()
+                      ->where(['inv_id' => $inv_id, 'product_id' => $product_id]);
+        return $query->fetchOne() ?: null;
+    }
+
+    /**
      * @param int $inv_id
      * @return int
      */

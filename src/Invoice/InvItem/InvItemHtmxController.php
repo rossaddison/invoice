@@ -10,6 +10,7 @@ use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Invoice\Helpers\CalcInvDeps;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\InvItemAmount\InvItemAmountService as IIAS;
+use App\Invoice\Product\ProductRepository as PR;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -59,11 +60,13 @@ final class InvItemHtmxController extends BaseController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
+                    $stockWarning = $this->stockWarningFor($body, $d->pR);
                     $this->invItemService->addInvItemProduct(
                         new InvItem(), $body, (string) $inv_id,
                         new IiAddProductDeps($d->pR, $d->trR, new IIAS($d->iiaR, $d->iiR), $d->iiaR, $this->sR, $d->uR),
+                        mergeIfExists: true,
                     );
-                    return $this->renderPartial($inv_id, $d);
+                    return $this->renderPartial($inv_id, $d, $stockWarning);
                 }
             }
             return $this->htmlResponseFactory->createResponse('', 422);
@@ -72,6 +75,31 @@ final class InvItemHtmxController extends BaseController
         return $this->webService->getRedirectResponse(
             'inv/view', ['id' => (string) $inv_id]
         );
+    }
+
+    /**
+     * Staff-facing, informational only — mirrors the modal picker's check
+     * (ProductSelectionController::selectionInv()) for the manual
+     * add-product-line form. The item is still added either way; this
+     * only surfaces a warning in the swapped partial so staff can see it
+     * without a full page reload (a session flash wouldn't show up until
+     * one, since this response only ever replaces
+     * #partial_item_table_parameters).
+     *
+     * @param array<array-key, mixed> $body
+     */
+    private function stockWarningFor(array $body, PR $pR): ?string
+    {
+        $productId = (int) ($body['product_id'] ?? 0);
+        $product = $productId > 0 ? $pR->repoProductquery($productId) : null;
+        $availableStock = $product?->availableStock();
+        $requestedQuantity = (float) ($body['quantity'] ?? 0);
+        if (null === $product || null === $availableStock || $requestedQuantity <= $availableStock) {
+            return null;
+        }
+        return $this->translator->translate('product.added.despite.insufficient.stock')
+            . ' ' . ($product->getProductName() ?? '')
+            . ' (' . $this->translator->translate('product.available.stock') . ': ' . $availableStock . ')';
     }
 
     public function addTask(
@@ -106,7 +134,7 @@ final class InvItemHtmxController extends BaseController
         );
     }
 
-    private function renderPartial(int $inv_id, InvItemHtmxDependencies $d): Response
+    private function renderPartial(int $inv_id, InvItemHtmxDependencies $d, ?string $stockWarning = null): Response
     {
         $numberHelper = new NumberHelper($this->sR);
         $numberHelper->calculateInv(
@@ -154,6 +182,7 @@ final class InvItemHtmxController extends BaseController
                 'taxRates'            => $d->trR->findAllPreloaded(),
                 'units'               => $d->uR->findAllPreloaded(),
                 'numberHelper'        => $numberHelper,
+                'stockWarning'        => $stockWarning,
             ],
         );
         return $this->htmlResponseFactory->createResponse($html);

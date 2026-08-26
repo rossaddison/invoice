@@ -302,6 +302,181 @@ final class InvItemServiceTest
         Assert::null($model->getInv());
     }
 
+    /**
+     * mergeIfExists: true (the "Choose Items" modal / manual add-product
+     * form path) and a line for the same product already exists on this
+     * invoice — the new quantity is added onto that existing line instead
+     * of a second line being created. None of the normal build-a-new-item
+     * relations (Inv/Product/Task lookups) should even be touched.
+     */
+    public function addInvItemProductWithMergeIfExistsMergesQuantityIntoExistingLine(): void
+    {
+        $model = new InvItem();
+        $existing = new InvItem(id: 55, quantity: 1.0, price: 10.0, discount_amount: 1.0);
+        $existing->setTaxRateId(3);
+
+        /** @var InvItemRepository&m\MockInterface $repository */
+        $repository = m::mock(InvItemRepository::class);
+        $e = $repository->shouldReceive('repoInvProductquery');
+        $e->once()->with(100, 7)->andReturn($existing);
+        $e2 = $repository->shouldReceive('save');
+        $e2->once()->with($existing);
+
+        /** @var InvRepository&m\MockInterface $iR */
+        $iR = m::mock(InvRepository::class);
+        $iR->shouldNotReceive('repoInvUnLoadedquery');
+
+        /** @var ProductRepository&m\MockInterface $pR */
+        $pR = m::mock(ProductRepository::class);
+        $pR->shouldNotReceive('repoProductquery');
+
+        /** @var TaskRepository&m\MockInterface $taskR */
+        $taskR = m::mock(TaskRepository::class);
+        $taskR->shouldNotReceive('repoTaskquery');
+
+        /** @var InvItemAllowanceChargeRepository&m\MockInterface $aciiR */
+        $aciiR = m::mock(InvItemAllowanceChargeRepository::class);
+        $e3 = $aciiR->shouldReceive('repoInvItemquery');
+        $e3->once()->with(55)->andReturn($this->readerYielding([]));
+
+        $service = $this->makeService($aciiR, $repository, $iR, null, $pR, $taskR);
+
+        /** @var TaxRate&m\MockInterface $depsTaxRate */
+        $depsTaxRate = m::mock(TaxRate::class);
+        $e4 = $depsTaxRate->shouldReceive('getTaxRatePercent');
+        $e4->once()->andReturn(20.0);
+
+        /** @var TaxRateRepository&m\MockInterface $depsTRR */
+        $depsTRR = m::mock(TaxRateRepository::class);
+        $e5 = $depsTRR->shouldReceive('repoTaxRatequery');
+        $e5->once()->with(3)->andReturn($depsTaxRate);
+
+        /** @var ProductRepository&m\MockInterface $depsPR */
+        $depsPR = m::mock(ProductRepository::class);
+        $depsPR->shouldNotReceive('repoProductquery');
+
+        /** @var SettingRepository&m\MockInterface $depsSR */
+        $depsSR = m::mock(SettingRepository::class);
+        $depsSR->shouldNotReceive('getSetting');
+
+        /** @var UnitRepository&m\MockInterface $depsUNR */
+        $depsUNR = m::mock(UnitRepository::class);
+        $depsUNR->shouldNotReceive('repoUnitquery');
+
+        /** @var InvItemAmountRepository&m\MockInterface $depsIIAR */
+        $depsIIAR = m::mock(InvItemAmountRepository::class);
+        $e6 = $depsIIAR->shouldReceive('repoInvItemAmountquery');
+        $e6->once()->with(55)->andReturn(null);
+        $e7 = $depsIIAR->shouldReceive('repoCount');
+        $e7->once()->with(55)->andReturn(0);
+
+        // Merged quantity = existing 1.0 + newly-requested 2.0 = 3.0.
+        /** @var InvItemAmountService&m\MockInterface $depsIIAS */
+        $depsIIAS = m::mock(InvItemAmountService::class);
+        $e8 = $depsIIAS->shouldReceive('saveInvItemAmountNoForm');
+        $e8->once()->with(m::type(InvItemAmount::class), m::on(
+            static function (array $arr): bool {
+                return $arr['inv_item_id'] === 55
+                    && $arr['subtotal'] === 30.0
+                    && $arr['discount'] === 3.0
+                    && $arr['taxtotal'] === (30.0 - 3.0) * (20.0 / 100.00)
+                    && $arr['total'] === 30.0 - 3.0 + (30.0 - 3.0) * (20.0 / 100.00);
+            }
+        ));
+
+        $deps = new IiAddProductDeps($depsPR, $depsTRR, $depsIIAS, $depsIIAR, $depsSR, $depsUNR);
+
+        $result = $service->addInvItemProduct(
+            $model, ['product_id' => '7', 'quantity' => '2'], '100', $deps, mergeIfExists: true,
+        );
+
+        Assert::same(55, $result);
+        Assert::same(3.0, $existing->getQuantity());
+    }
+
+    /**
+     * mergeIfExists: true but no existing line for this product yet —
+     * falls back to the normal create-a-new-line behaviour exactly as if
+     * mergeIfExists were false.
+     */
+    public function addInvItemProductWithMergeIfExistsButNoExistingLineCreatesNewLine(): void
+    {
+        $model = new InvItem();
+
+        /** @var InvItemRepository&m\MockInterface $repository */
+        $repository = m::mock(InvItemRepository::class);
+        $e = $repository->shouldReceive('repoInvProductquery');
+        $e->once()->with(100, 7)->andReturn(null);
+        $e2 = $repository->shouldReceive('save');
+        $e2->once()->with(m::type(InvItem::class))->andReturnUsing(
+            static function (InvItem $item): void {
+                $item->setId(56);
+            }
+        );
+
+        /** @var InvItemAllowanceChargeRepository&m\MockInterface $aciiR */
+        $aciiR = m::mock(InvItemAllowanceChargeRepository::class);
+        $aciiR->shouldNotReceive('repoInvItemquery');
+
+        /** @var InvRepository&m\MockInterface $iR */
+        $iR = m::mock(InvRepository::class);
+        $e3b = $iR->shouldReceive('repoInvUnLoadedquery');
+        $e3b->once()->with(100)->andReturn(null);
+
+        /** @var TaxRateRepository&m\MockInterface $trR */
+        $trR = m::mock(TaxRateRepository::class);
+        $trR->shouldNotReceive('repoTaxRatequery');
+
+        /** @var ProductRepository&m\MockInterface $pR */
+        $pR = m::mock(ProductRepository::class);
+        $e3c = $pR->shouldReceive('repoProductquery');
+        $e3c->once()->with(7)->andReturn(null);
+
+        /** @var TaskRepository&m\MockInterface $taskR */
+        $taskR = m::mock(TaskRepository::class);
+        $taskR->shouldNotReceive('repoTaskquery');
+
+        $service = $this->makeService($aciiR, $repository, $iR, $trR, $pR, $taskR);
+
+        /** @var ProductRepository&m\MockInterface $depsPR */
+        $depsPR = m::mock(ProductRepository::class);
+        $depsPR->shouldReceive('repoProductquery')->andReturn(null);
+        $depsPR->shouldReceive('repoCount')->andReturn(0);
+
+        /** @var TaxRateRepository&m\MockInterface $depsTRR */
+        $depsTRR = m::mock(TaxRateRepository::class);
+        $depsTRR->shouldReceive('repoTaxRatequery')->andReturn(null);
+
+        /** @var UnitRepository&m\MockInterface $depsUNR */
+        $depsUNR = m::mock(UnitRepository::class);
+        $depsUNR->shouldReceive('repoUnitquery')->andReturn(null);
+
+        /** @var SettingRepository&m\MockInterface $depsSR */
+        $depsSR = m::mock(SettingRepository::class);
+        $depsSR->shouldReceive('getSetting')->andReturn('0');
+
+        /** @var InvItemAmountService&m\MockInterface $depsIIAS */
+        $depsIIAS = m::mock(InvItemAmountService::class);
+        $depsIIAS->shouldNotReceive('saveInvItemAmountNoForm');
+
+        /** @var InvItemAmountRepository&m\MockInterface $depsIIAR */
+        $depsIIAR = m::mock(InvItemAmountRepository::class);
+        $depsIIAR->shouldNotReceive('repoInvItemAmountquery');
+
+        $deps = new IiAddProductDeps($depsPR, $depsTRR, $depsIIAS, $depsIIAR, $depsSR, $depsUNR);
+
+        $result = $service->addInvItemProduct(
+            $model,
+            ['product_id' => '7', 'quantity' => '2', 'product_unit_id' => '0'],
+            '100',
+            $deps,
+            mergeIfExists: true,
+        );
+
+        Assert::same(56, $result);
+        Assert::same(7, $model->getProductId());
+    }
+
     public function accumulativeChargeTotalSumsOnlyChargeEntries(): void
     {
         /** @var AllowanceCharge&m\MockInterface $chargeType */

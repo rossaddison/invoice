@@ -24,7 +24,7 @@ echo H::openTag('div', [
     'id' => 'modal-choose-items',
     'class' => 'modal',
     'tabindex' => '-1']); //1
- echo H::openTag('div', ['class' => 'modal-dialog']); //2
+ echo H::openTag('div', ['class' => 'modal-dialog modal-xl']); //2
   echo H::openTag('div', ['class' => 'modal-content']); //3
    echo H::openTag('div', ['class' => 'modal-header']); //4
     echo H::openTag('button', [
