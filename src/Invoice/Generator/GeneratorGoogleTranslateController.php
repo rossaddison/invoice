@@ -108,9 +108,18 @@ final class GeneratorGoogleTranslateController extends BaseController
             $keys = array_keys($content);
             $values = array_values($content);
             $numItems = count($content);
-            $result_array = [];
-            for ($i = 0; $i < $numItems; $i += $batchSize) {
-                $batchValues = array_slice($values, $i, $batchSize);
+            // Translate each distinct string once, not once per key --
+            // this message file genuinely has keys that share the exact
+            // same English text (e.g. several *.save keys all reading
+            // "Save"), and the Cloud Translation API bills every
+            // character sent, including repeats. Mapping the API's
+            // response back onto every original key afterward keeps this
+            // fully behavior-preserving.
+            $uniqueValues = $this->uniqueTranslatableValues($content);
+            $numUnique = count($uniqueValues);
+            $translatedUnique = [];
+            for ($i = 0; $i < $numUnique; $i += $batchSize) {
+                $batchValues = array_slice($uniqueValues, $i, $batchSize);
                 $request = new TranslateTextRequest();
                 $request->setParent('projects/' . $projectId);
                 $request->setContents($batchValues);
@@ -126,13 +135,14 @@ final class GeneratorGoogleTranslateController extends BaseController
                  * @var \Google\Cloud\Translate\V3\Translation $translation
                  */
                 foreach ($response_get_translations as $translation) {
-                    $result_array[] = $translation->getTranslatedText();
+                    $translatedUnique[] = $translation->getTranslatedText();
                 }
             }
-            if (count($result_array) !== $numItems) {
+            if (count($translatedUnique) !== $numUnique) {
                 throw new GeneratorException('Total translation count mismatch.');
             }
-            $combined_array = array_combine($keys, $result_array);
+            $valueTranslationMap = array_combine($uniqueValues, $translatedUnique);
+            $combined_array = $this->combineKeysWithTranslatedValues($keys, $values, $valueTranslationMap);
             $templateFile = $this->googleTranslateGetFileFromType($type);
             $path = $this->aliases->get('@generated');
             $file_content = $this->webViewRenderer->renderPartialAsString(
@@ -142,7 +152,15 @@ final class GeneratorGoogleTranslateController extends BaseController
             $prefix = $targetLanguage . '_' . $type . '_' . (string) time();
             $this->flashMessage(
                 'success',
-                sprintf('%s: %d keys translated in batches of %d. Output: %s/%s', $templateFile, $numItems, $batchSize, $path, $prefix),
+                sprintf(
+                    '%s: %d keys (%d unique strings sent to the API) translated in batches of %d. Output: %s/%s',
+                    $templateFile,
+                    $numItems,
+                    $numUnique,
+                    $batchSize,
+                    $path,
+                    $prefix,
+                ),
             );
             $build_file = new GenerateCodeFileHelper("$path/$prefix$templateFile", $file_content);
             $build_file->save();
@@ -236,6 +254,40 @@ final class GeneratorGoogleTranslateController extends BaseController
             $this->flashMessage('danger', 'Translation error: ' . $e->getMessage());
         }
         return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+    }
+
+    /**
+     * The distinct strings actually worth sending to the Translation
+     * API — duplicate keys sharing the exact same English text (e.g.
+     * several `*.save` keys all reading "Save") only need translating
+     * once; the API bills every character sent, including repeats.
+     *
+     * @param array<array-key, string> $content
+     * @return list<string>
+     */
+    private function uniqueTranslatableValues(array $content): array
+    {
+        return array_values(array_unique(array_values($content)));
+    }
+
+    /**
+     * Reconstructs the per-key translated array by mapping each
+     * original value through its (already deduplicated) translation —
+     * every key that shared the same original value gets the same
+     * translated value back.
+     *
+     * @param list<array-key> $keys
+     * @param list<string> $values
+     * @param array<string, string> $valueTranslationMap
+     * @return array<array-key, string>
+     */
+    private function combineKeysWithTranslatedValues(array $keys, array $values, array $valueTranslationMap): array
+    {
+        $translatedValues = array_map(
+            static fn (string $value): string => $valueTranslationMap[$value],
+            $values,
+        );
+        return array_combine($keys, $translatedValues);
     }
 
     /** @return list<string> */
