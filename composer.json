@@ -66,7 +66,7 @@
         "php-http/guzzle7-adapter": "^1.1",
         "php-standard-library/php-standard-library": "^6.2.1",
         "phpseclib/phpseclib": ">=4",
-        "phptg/bot-api": ">=0.21.2",
+        "phptg/bot-api": ">=0.22.0",
         "promphp/prometheus_client_php": ">=2.15.1",
         "psalm/plugin-symfony": "^5.3.0",
         "psr/container": "^2.0.2",
@@ -138,7 +138,7 @@
         "yiisoft/router": "^4.0.2",
         "yiisoft/router-fastroute": "^4.0.3",
         "yiisoft/security": "^1.2.0",
-        "yiisoft/session": "^3.0.1",
+        "yiisoft/session": "^3.0.2",
         "yiisoft/strings": "^2.7",
         "yiisoft/translator": "^3.2.1",
         "yiisoft/translator-message-php": "^1.1.2",
@@ -155,7 +155,7 @@
         "yiisoft/yii-runner-console": "^2.2.1",
         "yiisoft/yii-runner-http": "^3.2.1",
         "yiisoft/yii-view-renderer": "^7.4.1",
-        "zircote/swagger-php": ">=6.5.3"
+        "zircote/swagger-php": ">=6.7.0"
     },
     "require-dev": {
         "codeception/c3": "^2.9",
@@ -180,7 +180,7 @@
         "squizlabs/php_codesniffer": "^4.0.4",
         "testo/bridge-mockery": "^0.1.2",
         "testo/facade": ">=0.1.1",
-        "testo/testo": "^0.10.41",
+        "testo/testo": "^0.10.43",
         "vimeo/psalm": ">=6.16.1"
     },
     "autoload": {
