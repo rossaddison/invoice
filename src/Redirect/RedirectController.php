@@ -152,14 +152,28 @@ final class RedirectController
 
     /**
      * Builds a plain CSS `<style>` body (no `<style>` tags themselves —
-     * the view wraps it) with one `#{country_code} { fill: ...; }` rule
-     * per country that has at least one recorded click, plus a default
-     * fill for every other country path. Colors are a linear
-     * interpolation between a pale and a deep blue based on each
-     * country's share of the highest single count — a continuous
-     * gradient rather than fixed buckets, since the number of distinct
-     * countries here is small enough that discrete quantile buckets
-     * wouldn't have enough members each to look meaningful.
+     * the view wraps it) with one `#{country_code}, #{country_code}
+     * path { fill: ...; }` rule per country that has at least one
+     * recorded click, plus a default fill for every other country path.
+     * Colors are a linear interpolation between a pale and a deep blue
+     * based on each country's share of the highest single count — a
+     * continuous gradient rather than fixed buckets, since the number of
+     * distinct countries here is small enough that discrete quantile
+     * buckets wouldn't have enough members each to look meaningful.
+     *
+     * The trailing `#{code} path` half matters: in
+     * `resources/redirect-map/world-map.svg`, a country with outlying
+     * territory (the US's mainland+Alaska+Hawaii, the UK's mainland
+     * +islands, and 35 others — anything with its own `<g id="...">`
+     * wrapping multiple `<path>` children rather than one `<path
+     * id="...">` directly) never rendered any color at all under a
+     * `#{code} { fill: ...; }`-only rule: SVG doesn't let a fill set on
+     * an ancestor `<g>` override the base `path { fill: #e5e5e5; }` rule
+     * above, which matches every `<path>` directly and always wins over
+     * an inherited value from a less-specific ancestor match. Selecting
+     * `#{code} path` too reaches those children directly, at higher
+     * specificity than the base rule, so multi-path countries color
+     * correctly alongside single-path ones.
      *
      * @param array<string, int> $counts
      */
@@ -187,7 +201,7 @@ final class RedirectController
             if ($safeCode === '') {
                 continue;
             }
-            $css .= "#{$safeCode} { fill: {$hex}; }\n";
+            $css .= "#{$safeCode}, #{$safeCode} path { fill: {$hex}; }\n";
         }
 
         return $css;
