@@ -36,11 +36,25 @@ final readonly class InvItemService
     ) {
     }
 
+    /**
+     * @param bool $mergeIfExists When true, a product already present as a
+     *     line on this invoice has the new quantity added onto its
+     *     existing line instead of creating a second line for the same
+     *     product — the behaviour a user adding the same product twice via
+     *     the "Choose Items" modal or the manual add-product form expects.
+     *     Left false (default) for every other caller of this method —
+     *     copying an existing invoice/quote's items onto a new invoice
+     *     (duplicate, quote-to-invoice, recurring generation) must
+     *     preserve each original line exactly, including two originally-
+     *     distinct lines for the same product with different price/
+     *     discount/description.
+     */
     public function addInvItemProduct(
         InvItem $model,
         array $array,
         string $inv_id,
         IiAddProductDeps $deps,
+        bool $mergeIfExists = false,
     ): ?int {
         $pr = $deps->pR;
         $trr = $deps->trR;
@@ -48,6 +62,13 @@ final readonly class InvItemService
         $iiar = $deps->iiaR;
         $s = $deps->sR;
         $unR = $deps->uR;
+        $product_id = (int) ($array['product_id'] ?? 0);
+        if ($mergeIfExists && $product_id > 0) {
+            $existing = $this->repository->repoInvProductquery((int) $inv_id, $product_id);
+            if (null !== $existing) {
+                return $this->mergeQuantityIntoExistingInvItem($existing, $array, $deps);
+            }
+        }
         $invEntity = $this->iR->repoInvUnLoadedquery((int) $inv_id);
         if ($invEntity) {
             $model->setInv($invEntity);
@@ -72,7 +93,6 @@ final readonly class InvItemService
         $model->setInvId((int) $inv_id);
         $model->setSoItemId((int) ($array['so_item_id'] ?? 0));
         $this->applyPeppolIds($model, $array);
-        $product_id = (int) ($array['product_id'] ?? 0);
         $model->setProductId($product_id);
         $product = $pr->repoProductquery($product_id);
         if (null !== $product) {
@@ -99,6 +119,37 @@ final readonly class InvItemService
             }
         }
         return $model->reqId();
+    }
+
+    /**
+     * Adds the newly-requested quantity onto an already-existing line for
+     * the same product rather than creating a second line. Price, discount,
+     * tax rate, description, etc. are left exactly as they were on the
+     * existing line — only the quantity (and, via saveInvItemAmount(), the
+     * derived InvItemAmount) changes.
+     */
+    private function mergeQuantityIntoExistingInvItem(
+        InvItem $existing,
+        array $array,
+        IiAddProductDeps $deps,
+    ): int {
+        $newQuantity = ($existing->getQuantity() ?? 0.0) + (float) ($array['quantity'] ?? 0);
+        $existing->setQuantity($newQuantity);
+        $this->repository->save($existing);
+
+        $tax_rate_percentage = $this->taxratePercentage($existing->reqTaxRateId(), $deps->trR);
+        if (null !== $tax_rate_percentage) {
+            $this->saveInvItemAmount(
+                $existing->reqId(),
+                $newQuantity,
+                $existing->getPrice() ?? 0.0,
+                $existing->getDiscountAmount() ?? 0.0,
+                $tax_rate_percentage,
+                $deps->iias,
+                $deps->iiaR,
+            );
+        }
+        return $existing->reqId();
     }
 
     public function accumulativeChargeTotal(int $iiId, ACIIR $aciiR): float

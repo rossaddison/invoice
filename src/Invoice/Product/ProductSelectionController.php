@@ -195,7 +195,8 @@ final class ProductSelectionController extends BaseController
                 $quoteItem, $ajax_content, (string) $quote_id,
                 new QiAddProductDeps(
                     $deps->pR, $deps->qiaR, $deps->qiaS, $deps->uR, $deps->trR, $this->translator
-                )
+                ),
+                mergeIfExists: true,
             );
         }
     }
@@ -230,7 +231,8 @@ final class ProductSelectionController extends BaseController
                     $deps->pR, $deps->trR,
                     new iiaS($deps->iiaR, $deps->iiR),
                     $deps->iiaR, $this->sR, $deps->uR
-                )
+                ),
+                mergeIfExists: true,
             );
         }
     }

@@ -62,6 +62,7 @@ final class QuoteItemHtmxController extends BaseController
                     $this->quoteItemService->addQuoteItemProduct(
                         new QuoteItem(), $body, (string) $quote_id,
                         new QiAddProductDeps($d->pR, $d->qiar, new QIAS($d->qiar, $d->qiR), $d->uR, $d->trR, $this->translator),
+                        mergeIfExists: true,
                     );
                     return $this->renderPartial($quote_id, $d);
                 }

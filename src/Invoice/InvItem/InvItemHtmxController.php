@@ -64,6 +64,7 @@ final class InvItemHtmxController extends BaseController
                     $this->invItemService->addInvItemProduct(
                         new InvItem(), $body, (string) $inv_id,
                         new IiAddProductDeps($d->pR, $d->trR, new IIAS($d->iiaR, $d->iiR), $d->iiaR, $this->sR, $d->uR),
+                        mergeIfExists: true,
                     );
                     return $this->renderPartial($inv_id, $d, $stockWarning);
                 }

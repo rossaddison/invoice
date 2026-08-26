@@ -121,17 +121,33 @@ final readonly class QuoteItemService
         }
     }
 
+    /**
+     * @param bool $mergeIfExists When true, a product already present as a
+     *     line on this quote has the new quantity added onto its existing
+     *     line instead of creating a second line for the same product —
+     *     see InvItemService::addInvItemProduct()'s matching docblock for
+     *     why every other caller (quote-to-invoice, etc.) must leave this
+     *     false.
+     */
     // Used in product/saveProductLookupItemQuote when adding a quote via the modal
     public function addQuoteItemProduct(
         QuoteItem $model,
         array $array,
         string $quote_id,
-        QiAddProductDeps $deps
+        QiAddProductDeps $deps,
+        bool $mergeIfExists = false,
     ): void {
+        $product_id = (int) ($array['product_id'] ?? '');
+        if ($mergeIfExists && $product_id > 0) {
+            $existing = $this->repository->repoQuoteProductquery((int) $quote_id, $product_id);
+            if (null !== $existing) {
+                $this->mergeQuantityIntoExistingQuoteItem($existing, $array, $deps);
+                return;
+            }
+        }
         $this->persist($array, $model);
         $tax_rate_id = isset($array['tax_rate_id']) ? (int) $array['tax_rate_id'] : '';
         $model->setTaxRateId((int) $tax_rate_id);
-        $product_id = (int) ($array['product_id'] ?? '');
         $model->setProductId($product_id);
         $model->setQuoteId((int) $quote_id);
         $product = $deps->pr->repoProductquery($product_id);
@@ -160,6 +176,35 @@ final readonly class QuoteItemService
         }
     }
 
+    /**
+     * Adds the newly-requested quantity onto an already-existing line for
+     * the same product rather than creating a second line. Price,
+     * discount, tax rate, description, etc. are left exactly as they were
+     * on the existing line — only the quantity (and, via
+     * saveQuoteItemAmount(), the derived QuoteItemAmount) changes.
+     */
+    private function mergeQuantityIntoExistingQuoteItem(
+        QuoteItem $existing,
+        array $array,
+        QiAddProductDeps $deps,
+    ): void {
+        $newQuantity = ($existing->getQuantity() ?? 0.0) + (float) ($array['quantity'] ?? 0);
+        $existing->setQuantity($newQuantity);
+        $this->repository->save($existing);
+
+        $tax_rate_percentage = $this->taxratePercentage($existing->reqTaxRateId(), $deps->trr);
+        if (null !== $tax_rate_percentage) {
+            $this->saveQuoteItemAmount(
+                $existing->reqId(),
+                $newQuantity,
+                $existing->getPrice() ?? 0.0,
+                $existing->getDiscountAmount() ?? 0.0,
+                $tax_rate_percentage,
+                $deps->qiar,
+                $deps->qias,
+            );
+        }
+    }
 
     /**
      * @param QuoteItem $model
