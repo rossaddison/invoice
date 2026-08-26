@@ -493,6 +493,22 @@ if ((null !== $currentPath) && !$isGuest) {
                         . 'invoice.php',
                             'hidden' => !$debugMode],
                 ),
+                // One sweep: diffs every locale's own
+                // resources/messages/{locale}/app.php against en/app.php,
+                // translates only the missing keys, merges + sorts +
+                // writes each file back in place. No output_overwrite
+                // copy/merge step, no google_translate_locale setting --
+                // every locale folder's own name is the target language.
+                DropdownItem::link(
+                    $t->translate('generator.google.translate.all.locales'),
+                    $urlGenerator->generate('generator/googleTranslateAllLocalesDiff'),
+                    false,
+                    itemAttributes: $itemFontArray +
+                    ['data-bs-toggle' => 'tooltip',
+                        'title' => 'Diff + translate + merge + sort every '
+                        . 'locale\'s app.php against en/app.php in one sweep.',
+                            'hidden' => !$debugMode],
+                ),
                 DropdownItem::link(
                     $t->translate('test.reset.setting'),
                     $urlGenerator->generate('invoice/settingReset'),

@@ -86,6 +86,42 @@ final class GeneratorGoogleTranslateController extends BaseController
     }
 
     /**
+     * One sweep across every locale that already has its own
+     * resources/messages/{locale}/app.php: diffs it against en/app.php,
+     * translates only the missing keys, merges them into the existing
+     * array, sorts the result by key, and writes the file back in
+     * place -- replacing the manual output_overwrite -> copy -> merge
+     * -> sort cycle entirely. Unlike googleTranslateLang(), this
+     * ignores the single google_translate_locale setting -- every
+     * locale directory's own name is used directly as the Google
+     * target language code, the same assumption the existing single-
+     * locale dropdown already relies on (its values are the locale
+     * folder names themselves).
+     *
+     * @throws CaCertFileNotFoundException
+     * @throws GoogleTranslateJsonFileNotFoundException
+     */
+    public function googleTranslateAllLocalesDiff(): Response
+    {
+        $curlcertificate = \ini_get('curl.cainfo');
+        if ($curlcertificate === false || strlen($curlcertificate) === 0) {
+            throw new CaCertFileNotFoundException();
+        }
+        $aliases = $this->sR->getGoogleTranslateJsonFileAliases();
+        $targetPath = $aliases->get('@google_translate_json_file_folder');
+        $path_and_filename = $targetPath . DIRECTORY_SEPARATOR . $this->sR->getSetting('google_translate_json_filename');
+        if (strlen($this->sR->getSetting('google_translate_json_filename')) == 0 || !$this->ensureJsonExtension($path_and_filename)) {
+            throw new GoogleTranslateJsonFileNotFoundException();
+        }
+        $data = file_get_contents(FileHelper::normalizePath($path_and_filename));
+        if ($data === false) {
+            $this->flashMessage('danger', 'Failed to read Google Translate JSON credentials file.');
+            return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+        }
+        return $this->performAllLocalesTranslation($data, $path_and_filename);
+    }
+
+    /**
      * @throws GoogleTranslateLocaleSettingNotFoundException
      */
     private function performGoogleTranslation(string $data, string $type, string $pathAndFilename): Response
@@ -104,45 +140,9 @@ final class GeneratorGoogleTranslateController extends BaseController
             if (empty($targetLanguage)) {
                 throw new GoogleTranslateLocaleSettingNotFoundException();
             }
-            $batchSize = 100;
-            $keys = array_keys($content);
-            $values = array_values($content);
             $numItems = count($content);
-            // Translate each distinct string once, not once per key --
-            // this message file genuinely has keys that share the exact
-            // same English text (e.g. several *.save keys all reading
-            // "Save"), and the Cloud Translation API bills every
-            // character sent, including repeats. Mapping the API's
-            // response back onto every original key afterward keeps this
-            // fully behavior-preserving.
-            $uniqueValues = $this->uniqueTranslatableValues($content);
-            $numUnique = count($uniqueValues);
-            $translatedUnique = [];
-            for ($i = 0; $i < $numUnique; $i += $batchSize) {
-                $batchValues = array_slice($uniqueValues, $i, $batchSize);
-                $request = new TranslateTextRequest();
-                $request->setParent('projects/' . $projectId);
-                $request->setContents($batchValues);
-                $request->setTargetLanguageCode($targetLanguage);
-                $response = $translationClient->translateText($request);
-                /**
-                 * @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations
-                 * @psalm-suppress DeprecatedClass
-                 */
-                $response_get_translations = $response->getTranslations();
-                /**
-                 * @psalm-suppress RawObjectIteration $response_get_translations
-                 * @var \Google\Cloud\Translate\V3\Translation $translation
-                 */
-                foreach ($response_get_translations as $translation) {
-                    $translatedUnique[] = $translation->getTranslatedText();
-                }
-            }
-            if (count($translatedUnique) !== $numUnique) {
-                throw new GeneratorException('Total translation count mismatch.');
-            }
-            $valueTranslationMap = array_combine($uniqueValues, $translatedUnique);
-            $combined_array = $this->combineKeysWithTranslatedValues($keys, $values, $valueTranslationMap);
+            $numUnique = count($this->uniqueTranslatableValues($content));
+            $combined_array = $this->translateContentBatch($translationClient, $projectId, $content, $targetLanguage);
             $templateFile = $this->googleTranslateGetFileFromType($type);
             $path = $this->aliases->get('@generated');
             $file_content = $this->webViewRenderer->renderPartialAsString(
@@ -153,11 +153,10 @@ final class GeneratorGoogleTranslateController extends BaseController
             $this->flashMessage(
                 'success',
                 sprintf(
-                    '%s: %d keys (%d unique strings sent to the API) translated in batches of %d. Output: %s/%s',
+                    '%s: %d keys (%d unique strings sent to the API) translated in batches of 100. Output: %s/%s',
                     $templateFile,
                     $numItems,
                     $numUnique,
-                    $batchSize,
                     $path,
                     $prefix,
                 ),
@@ -168,6 +167,137 @@ final class GeneratorGoogleTranslateController extends BaseController
             $this->flashMessage('danger', $e->getMessage());
         }
         return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+    }
+
+    /**
+     * Orchestrates the sweep: loads en/app.php once, finds every real
+     * locale message folder, and hands each one to
+     * translateOneLocaleDiff(). One locale's translation failure is
+     * caught inside translateOneLocaleDiff() itself and reported in the
+     * summary rather than aborting the rest of the sweep -- only a
+     * failure to even construct the client, or to read en/app.php at
+     * all, stops the whole run early.
+     */
+    private function performAllLocalesTranslation(string $data, string $pathAndFilename): Response
+    {
+        /** @var array $json */
+        $json = Json::decode($data, true);
+        $projectId = (string) $json['project_id'];
+        putenv("GOOGLE_APPLICATION_CREDENTIALS=$pathAndFilename");
+
+        $enAppPath = $this->aliases->get('@en') . DIRECTORY_SEPARATOR . 'app.php';
+        if (!file_exists($enAppPath)) {
+            $this->flashMessage('danger', "English source file not found: $enAppPath");
+            return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+        }
+        /**
+         * @var array<string, string> $enContent
+         * @psalm-suppress MixedAssignment
+         */
+        $enContent = include $enAppPath; // NOSONAR — data file returns an array; include_once returns true on second call
+
+        $messagesPath = $this->aliases->get('@messages');
+        $globResult = glob($messagesPath . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
+        $localeDirs = $globResult === false ? [] : $globResult;
+
+        $summary = [];
+        try {
+            $translationClient = new TranslationServiceClient([]);
+            foreach ($localeDirs as $localeDir) {
+                $line = $this->translateOneLocaleDiff($translationClient, $projectId, $enContent, $localeDir);
+                if ($line !== null) {
+                    $summary[] = $line;
+                }
+            }
+        } catch (\Exception $e) {
+            $this->flashMessage('danger', 'Translation error: ' . $e->getMessage());
+            return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+        }
+        $this->flashMessage(
+            $summary === [] ? 'info' : 'success',
+            $summary === [] ? 'No locale folders found under resources/messages.' : implode(' | ', $summary),
+        );
+        return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+    }
+
+    /**
+     * One locale's diff -> translate -> merge -> sort -> write, in
+     * place of the manual output_overwrite copy/merge/sort step. A
+     * locale with no missing keys is reported as up to date and left
+     * untouched; a translation failure for this one locale is caught
+     * here and reported, without affecting any other locale in the
+     * same sweep.
+     *
+     * @param array<string, string> $enContent
+     * @return string|null a summary line for the flash message, or
+     *     null when $localeDir isn't a real locale message folder (no
+     *     app.php at all -- e.g. 'en' itself) and nothing was done.
+     * @psalm-suppress MixedAssignment
+     */
+    private function translateOneLocaleDiff(
+        TranslationServiceClient $translationClient,
+        string $projectId,
+        array $enContent,
+        string $localeDir
+    ): ?string {
+        $locale = basename($localeDir);
+        $targetAppPath = $localeDir . DIRECTORY_SEPARATOR . 'app.php';
+        if ($locale === 'en' || !file_exists($targetAppPath)) {
+            return null;
+        }
+        $existing = $this->includeMessageArray($targetAppPath);
+        $missing = array_diff_key($enContent, $existing);
+        if ($missing === []) {
+            return "{$locale}: already up to date";
+        }
+        try {
+            /** @var array<string, string> $translated */
+            $translated = $this->translateContentBatch($translationClient, $projectId, $missing, $locale);
+        } catch (\Exception $e) {
+            return "{$locale}: FAILED — " . $e->getMessage();
+        }
+        $merged = $existing + $translated;
+        ksort($merged, SORT_STRING);
+        $this->writeLocaleAppPhp($targetAppPath, $merged);
+        return sprintf('%s: +%d new keys (%d total)', $locale, count($missing), count($merged));
+    }
+
+    /**
+     * Includes a resources/messages/{locale}/app.php-shaped data file
+     * from a path only known at runtime (glob()-discovered, one per
+     * locale) -- isolated into its own method since Psalm cannot trace
+     * a dynamic include's target back to a literal file path.
+     *
+     * @return array<string, string>
+     * @psalm-suppress UnresolvableInclude
+     */
+    private function includeMessageArray(string $path): array
+    {
+        /** @var array<string, string> */
+        return include $path; // NOSONAR — data file returns an array; include_once returns true on second call
+    }
+
+    /**
+     * Writes a full, sorted resources/messages/{locale}/app.php in
+     * place. Uses var_export() per key/value pair rather than the raw
+     * string concatenation templates_protected/_app.php and
+     * _diff_lang.php use, since several genuine en/app.php values
+     * contain an apostrophe (e.g. "Administrator's Email Address") --
+     * raw concatenation turns into broken PHP syntax the moment a
+     * translated value contains one too, which var_export() escapes
+     * correctly regardless of what the string contains.
+     *
+     * @param array<string, string> $content already sorted by the caller
+     */
+    private function writeLocaleAppPhp(string $path, array $content): void
+    {
+        $lines = ['<?php', '', 'declare(strict_types=1);', '', 'return ['];
+        foreach ($content as $key => $value) {
+            $lines[] = '    ' . var_export($key, true) . ' => ' . var_export($value, true) . ',';
+        }
+        $lines[] = '];';
+        $lines[] = '';
+        file_put_contents($path, implode("\n", $lines));
     }
 
     /**
@@ -288,6 +418,58 @@ final class GeneratorGoogleTranslateController extends BaseController
             $values,
         );
         return array_combine($keys, $translatedValues);
+    }
+
+    /**
+     * Translates every value in $content into $targetLanguage --
+     * deduplicated before sending (uniqueTranslatableValues()) and
+     * reconstructed back onto every original key afterward
+     * (combineKeysWithTranslatedValues()). Shared by the single-locale
+     * flow (performGoogleTranslation()) and the all-locales diff sweep
+     * (translateOneLocaleDiff()), so both pay the same reduced API cost.
+     *
+     * @param array<array-key, string> $content
+     * @return array<array-key, string>
+     * @throws GeneratorException when the API returns a different
+     *     number of translations than were requested.
+     */
+    private function translateContentBatch(
+        TranslationServiceClient $translationClient,
+        string $projectId,
+        array $content,
+        string $targetLanguage
+    ): array {
+        $batchSize = 100;
+        $keys = array_keys($content);
+        $values = array_values($content);
+        $uniqueValues = $this->uniqueTranslatableValues($content);
+        $numUnique = count($uniqueValues);
+        $translatedUnique = [];
+        for ($i = 0; $i < $numUnique; $i += $batchSize) {
+            $batchValues = array_slice($uniqueValues, $i, $batchSize);
+            $request = new TranslateTextRequest();
+            $request->setParent('projects/' . $projectId);
+            $request->setContents($batchValues);
+            $request->setTargetLanguageCode($targetLanguage);
+            $response = $translationClient->translateText($request);
+            /**
+             * @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations
+             * @psalm-suppress DeprecatedClass
+             */
+            $response_get_translations = $response->getTranslations();
+            /**
+             * @psalm-suppress RawObjectIteration $response_get_translations
+             * @var \Google\Cloud\Translate\V3\Translation $translation
+             */
+            foreach ($response_get_translations as $translation) {
+                $translatedUnique[] = $translation->getTranslatedText();
+            }
+        }
+        if (count($translatedUnique) !== $numUnique) {
+            throw new GeneratorException("Translation count mismatch for target language '{$targetLanguage}'.");
+        }
+        $valueTranslationMap = array_combine($uniqueValues, $translatedUnique);
+        return $this->combineKeysWithTranslatedValues($keys, $values, $valueTranslationMap);
     }
 
     /** @return list<string> */

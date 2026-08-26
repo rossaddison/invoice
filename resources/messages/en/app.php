@@ -978,6 +978,8 @@ return [
     . ' in Controller',
   'generator.generate' => 'Generate',
   'generator.generated' => ' generated at ',
+  'generator.google.translate.all.locales' =>
+    'Google Translate All Locales (Diff)',
   'generator.google.translate.any' =>
     'Translate English\\any_lang.php',
   'generator.google.translate.app' =>
