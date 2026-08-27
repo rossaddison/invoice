@@ -1076,6 +1076,10 @@ return [
   'hint.this.field.is.not.required' => 'This field is not required',
   'hint.this.field.is.required' => 'This field is required',
   'home' => 'Home',
+  'home.admin.setup.walkthrough' => 'Admin Setup Walkthrough',
+  'home.built.on.yii3' => 'Built on the {yii3_link} PHP framework.'
+    . ' The Yii 3 sign shown above is {yii_software_link} own'
+    . ' official mark, used unmodified under their {license_link}.',
   'home.caption.slide1' => 'Signup and Login'
     . ' as administrator. No internet ...'
     . ' ignore email error connection.',
@@ -1092,6 +1096,31 @@ return [
     'This location of content: ./resources/views/site/index.php'
     . ' within ./resources/views/layout/.  ... and'
     . ' translation slide location ./resources/messages/app.php',
+  'home.description' => 'A self-hosted, open-source invoicing platform'
+    . ' built in PHP on the Yii3 framework. It produces Peppol/UBL 2.4-'
+    . 'compliant electronic invoices (including AS4 transmission),'
+    . ' accepts online payment through 17 integrated payment gateways'
+    . ' spanning Europe, North and South America, Asia, Africa and'
+    . ' Oceania, and includes a HomeCare module for automating recurring'
+    . ' service invoicing — cleaning-run scheduling, worker allocation,'
+    . ' and an offline-capable PWA for field staff. Scheduled console'
+    . ' commands handle automated backups and recurring billing.',
+  'home.github.click.tracking.explanation' => 'Clicking through to'
+    . ' GitHub records which country it came from (nothing more'
+    . ' identifying than that) — it directly helps decide which payment'
+    . ' gateways get prioritized next, since regions we see real'
+    . ' interest from are the ones worth building for.',
+  'home.oauth2.client.description' => 'A separate, related development'
+    . ' project — an OAuth 2.0 client library for the Yii3 framework.',
+  'home.oauth2.client.heading' => 'Also on this site: OAuth2.0 Client'
+    . ' Development',
+  'home.open.source.license' => 'Open source under the BSD-3-Clause'
+    . ' license.',
+  'home.payment.gateway.coverage' => 'Payment gateway coverage ➡️',
+  'home.title' => 'Yii3-i — Open Source Invoicing &amp; E-Invoicing'
+    . ' System',
+  'home.view.source.github' => '⭐ View the source on GitHub —'
+    . ' github.com/rossaddison/invoice',
   'hostname' => 'Hostname',
   'id' => 'ID',
   'identifier.format' => 'Identifier formatting',
