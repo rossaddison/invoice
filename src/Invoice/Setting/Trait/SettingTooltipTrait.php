@@ -508,6 +508,15 @@ trait SettingTooltipTrait
                 . ' effect while homecare_auto_invoice_enabled is on.',
                 'where' => 'resources/views/invoice/inv/guest.php.',
             ],
+            'homecare_vision_api_key' => [
+                'why' => 'Anthropic API key used to read a scanned/photographed'
+                . ' HomeCare run sheet\'s hand-written annotations (worker,'
+                . ' completion, do-not-send reason) via Claude Haiku 4.5'
+                . ' structured-output vision. Leave blank to disable Upload &'
+                . ' Read on the run-sheet review screen — it fails with a flash'
+                . ' message rather than a crash when unset.',
+                'where' => 'src/Invoice/HomeCareRunSheet/HomeCareRunSheetVisionService.php.',
+            ],
             'stop_homecare_signing_up' => [
                 'why' => 'Blocks the public HomeCare signup form'
                 . ' (/homecare-signup) at the controller, redirecting away'

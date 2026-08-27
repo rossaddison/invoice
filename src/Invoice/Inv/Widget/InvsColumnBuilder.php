@@ -17,6 +17,7 @@ use App\Invoice\Inv\Widget\Trait\InvsColumnVisibilityTrait;
 use App\Invoice\Inv\Widget\Trait\InvsDoNotSendColumnTrait;
 use App\Invoice\Inv\Widget\Trait\InvsDwellingHouseNumberColumnTrait;
 use App\Invoice\Inv\Widget\Trait\InvsWorkerColumnTrait;
+use App\Widget\NoOpFilterFactory;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Widget\GridComponents;
 use Yiisoft\Html\Html;
@@ -124,6 +125,7 @@ final class InvsColumnBuilder
                         'aria-label' => 'Filter by client',
                         'title' => $t->translate('client')])
                     ->optionsData($this->filterOptions->clients),
+                filterFactory: new NoOpFilterFactory(),
                 withSorting: false,
                 visible: !$isHidden('client'),
             ),
@@ -146,6 +148,7 @@ final class InvsColumnBuilder
                     'aria-label' => 'Filter by street address',
                     'title' => $t->translate('street.address'),
                     'placeholder' => $t->translate('street.address')]),
+                filterFactory: new NoOpFilterFactory(),
                 visible: !$isHidden('client_address_1')),
 
             new DataColumn('client_address_2',
@@ -166,6 +169,7 @@ final class InvsColumnBuilder
                         'aria-label' => 'Filter by client group',
                         'title' => $t->translate('client.group')])
                     ->optionsData($this->filterOptions->clientGroup),
+                filterFactory: new NoOpFilterFactory(),
                 withSorting: false,
                 visible: !$isHidden('client_group'),
             ),
@@ -314,6 +318,7 @@ final class InvsColumnBuilder
                     'aria-label' => 'Filter by total amount',
                     'title' => $t->translate('total'),
                     'placeholder' => $t->translate('total')]),
+                filterFactory: new NoOpFilterFactory(),
                 withSorting: false,
                 footer: (new Span())->addClass('inv-footer-amount')
                     ->addAttributes(['style' => self::AMOUNT_FILTER_STYLE])
@@ -359,6 +364,7 @@ final class InvsColumnBuilder
                     'aria-label' => 'Filter by paid amount',
                     'title' => $t->translate('paid'),
                     'placeholder' => $t->translate('paid')]),
+                filterFactory: new NoOpFilterFactory(),
                 withSorting: false,
                 footer: (new Span())->addClass('inv-footer-amount')
                     ->addAttributes(['style' => self::AMOUNT_FILTER_STYLE])
@@ -386,6 +392,7 @@ final class InvsColumnBuilder
                     'aria-label' => 'Filter by balance amount',
                     'title' => $t->translate('balance'),
                     'placeholder' => $t->translate('balance')]),
+                filterFactory: new NoOpFilterFactory(),
                 withSorting: false,
                 footer: (new Span())->addClass('inv-footer-amount')
                     ->addAttributes(['style' => self::AMOUNT_FILTER_STYLE])
@@ -587,6 +594,7 @@ final class InvsColumnBuilder
                     'aria-label' => 'Filter by family name',
                     'title' => $t->translate('family.name')])
                 ->optionsData($this->filterOptions->familyName),
+            filterFactory: new NoOpFilterFactory(),
             withSorting: false,
             visible: $visible,
         );
@@ -608,6 +616,7 @@ final class InvsColumnBuilder
                     'aria-label' => 'Filter by year-month',
                     'title' => $header])
                 ->optionsData($this->filterOptions->yearMonth),
+            filterFactory: new NoOpFilterFactory(),
             withSorting: false,
             visible: $this->visible && $visible,
         );
@@ -853,6 +862,7 @@ final class InvsColumnBuilder
                     'aria-label' => 'Filter by invoice number',
                     'title' => $t->translate('number')])
                 ->optionsData($this->filterOptions->invNumber),
+            filterFactory: new NoOpFilterFactory(),
             withSorting: false,
         );
     }
@@ -909,6 +919,7 @@ final class InvsColumnBuilder
                     'aria-label' => 'Filter by status',
                     'title' => $t->translate('status')])
                 ->optionsData($this->filterOptions->status),
+            filterFactory: new NoOpFilterFactory(),
             encodeContent: false,
             withSorting: false,
             visible: $this->visible,
@@ -946,6 +957,7 @@ final class InvsColumnBuilder
                     'aria-label' => 'Filter by credit note parent invoice',
                     'title' => $t->translate('credit.invoice.for.invoice')])
                 ->optionsData($this->filterOptions->creditInvNumber),
+            filterFactory: new NoOpFilterFactory(),
             withSorting: false,
             visible: $this->visible && $visible,
         );

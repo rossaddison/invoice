@@ -280,17 +280,7 @@ final class ProductController extends BaseController
         /** @psalm-suppress MixedAssignment */
         $sortString = isset($q['sort']) ? (string) $q['sort'] : '-id';
 
-        $products = $pR->findAllPreloaded();
-        if (!empty($q['family_id'])) {
-            $products = $pR->filterFamilyId((int) $q['family_id']);
-        }
-        if (!empty($q['product_sku']) && !empty($q['product_price'])) {
-            $products = $pR->filterProductSkuPrice((string) $q['product_price'], (string) $q['product_sku']);
-        } elseif (!empty($q['product_sku'])) {
-            $products = $pR->filterProductSku((string) $q['product_sku']);
-        } elseif (!empty($q['product_price'])) {
-            $products = $pR->filterProductPrice((string) $q['product_price']);
-        }
+        $products = $pR->filterCombined($q);
 
         $sort = Sort::only([
             'id', 'family_id', 'unit_id', 'tax_rate_id',

@@ -9,6 +9,7 @@ use App\Invoice\Inv\InvRepository as InvRepo;
 use App\Invoice\SalesOrder\SalesOrderRepository as SoR;
 use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as SoAR;
 use App\Invoice\Setting\SettingRepository as SR;
+use App\Widget\NoOpFilterFactory;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Input\Checkbox;
@@ -178,6 +179,7 @@ final class SalesOrdersColumnBuilder
             filter: DropdownFilter::widget()
                 ->addAttributes(['name' => 'client_id', 'class' => 'native-reset'])
                 ->optionsData($opts),
+            filterFactory: new NoOpFilterFactory(),
             withSorting: false,
         );
     }

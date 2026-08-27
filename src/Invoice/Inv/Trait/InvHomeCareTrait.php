@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Infrastructure\Persistence\Inv\Inv;
+use DateTimeImmutable;
 
 trait InvHomeCareTrait
 {
@@ -48,5 +49,33 @@ trait InvHomeCareTrait
                       ->orderBy('id', 'DESC')
                       ->limit(50)
                       ->fetchAll();
+    }
+
+    /**
+     * Every non-deleted invoice for one HomeCare run: created on $date and
+     * whose first item's category_secondary matches — the same two-part
+     * query HomeCareRunContext's category_secondary_id + date pair already
+     * drives on inv/index, used here as the source set for a
+     * HomeCareRunSheet export. Filtered in PHP, not SQL, the same way
+     * InvCombinedFilterTrait::collectFamilyAndRunIds() already does for the
+     * grid's own run filter: category_secondary_id isn't a direct column,
+     * it's derived through InvItem → Product → Family.
+     *
+     * @return array<int, Inv>
+     */
+    #[\Override]
+    public function repoForHomeCareRunquery(int $categorySecondaryId, DateTimeImmutable $date): array
+    {
+        $day = $date->format('Y-m-d');
+        $matches = [];
+        /** @var Inv $inv */
+        foreach ($this->select()->where('deleted_at', null)->fetchAll() as $inv) {
+            if ($inv->getFirstItemCategorySecondaryId() === $categorySecondaryId
+                && $inv->getDateCreated()->format('Y-m-d') === $day
+            ) {
+                $matches[] = $inv;
+            }
+        }
+        return $matches;
     }
 }

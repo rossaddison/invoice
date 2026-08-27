@@ -6,6 +6,7 @@ namespace App\Invoice\Inv\Widget\Trait;
 
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\CategorySecondary\CategorySecondaryRepository as CSR;
+use App\Widget\NoOpFilterFactory;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
@@ -42,6 +43,7 @@ trait InvsCategorySecondaryRunColumnTrait
                     'aria-label' => 'Filter by HomeCare current run',
                     'title' => $t->translate('homecare.current.run')])
                 ->optionsData($this->filterOptions->categorySecondaryRun),
+            filterFactory: new NoOpFilterFactory(),
             withSorting: false,
             visible: $homeCareEnabled,
         );

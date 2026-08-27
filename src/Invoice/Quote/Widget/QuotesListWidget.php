@@ -19,6 +19,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Pagination\PaginationWidgetInterface;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
+use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
 
 /**
  * Renders the paginated quote grid.
@@ -211,6 +212,7 @@ final class QuotesListWidget extends Widget
             ->columnGrouping(true)
             ->dataReader($this->paginator)
             ->urlCreator($urlCreator)
+            ->urlParameterProvider(new UrlParameterProvider($this->currentRoute))
             ->paginationWidget($pagination)
             ->sortableLinkAttributes(['hx-boost' => 'true', ...$htmxAttrs])
             ->filterFormAttributes(['hx-boost' => 'true', ...$htmxAttrs])

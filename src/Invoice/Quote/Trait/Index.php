@@ -84,8 +84,7 @@ trait Index
                 && !empty($filter->filterStatus) ?
                     $filter->filterStatus : $status;
             /** @var DRI<array-key, array<array-key, mixed>|object> $quotes */
-            $quotes = $this->quotesStatusWithSort($d->quoteRepo, (int) $effectiveStatus, $sort);
-            $quotes = $this->indexApplyFilters($query_params, $filter, $d->quoteRepo, $quotes);
+            $quotes = $d->quoteRepo->filterCombined($filter, $query_params, (int) $effectiveStatus);
             $paginator = (new DataOffsetPaginator($quotes))
             ->withPageSize($this->sR->positiveListLimit())
             ->withCurrentPage($currentPageNeverZero)
@@ -224,19 +223,6 @@ trait Index
     }
 
     /**
-     * @param QR $quoteRepo
-     * @param int $status
-     * @param Sort $sort
-     * @return \Yiisoft\Data\Reader\SortableDataInterface
-     */
-    private function quotesStatusWithSort(QR $quoteRepo, int $status,
-        Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
-    {
-        return $quoteRepo->findAllWithStatus($status)
-                            ->withSort($sort);
-    }
-
-    /**
      * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
@@ -245,30 +231,5 @@ trait Index
         \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $quoteRepo->findAllWithStatus($status);
-    }
-
-    /** @param array<array-key, mixed> $query_params */
-    private function indexApplyFilters(
-        array $query_params,
-        QuoteIndexFilter $filter,
-        QR $quoteRepo,
-        DRI $quotes,
-    ): DRI {
-        if (isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) {
-            $quotes = $quoteRepo->filterQuoteNumber((string) $query_params['filterQuoteNumber']);
-        }
-        if (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal'])) {
-            $quotes = $quoteRepo->filterQuoteAmountTotal((string) $query_params['filterQuoteAmountTotal']);
-        }
-        if (isset($filter->filterClient) && !empty($filter->filterClient)) {
-            $quotes = $quoteRepo->filterClient($filter->filterClient);
-        }
-        if ((isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber']))
-            && (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal']))) {
-            $quotes = $quoteRepo->filterQuoteNumberAndQuoteAmountTotal(
-                (string) $query_params['filterQuoteNumber'],
-                (float) $query_params['filterQuoteAmountTotal']);
-        }
-        return $quotes;
     }
 }

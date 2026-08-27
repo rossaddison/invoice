@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\H6;
+use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Option;
 
 /**
@@ -156,12 +157,48 @@ echo H::openTag('div', ['class' => 'row']); //1
    echo H::closeTag('div'); //4
   echo H::closeTag('div'); //current-run-card
 
+  echo H::openTag('div', ['class' => 'card mb-3']); //vision-api-key-card
+   echo H::openTag('div', ['class' => 'card-header']); //4
+    echo new H6()->content($translator->translate('homecare.vision.api.key.title'));
+   echo H::closeTag('div'); //4
+   echo H::openTag('div', ['class' => 'card-body']); //4
+    echo H::tag('p', $translator->translate('homecare.vision.api.key.description'),
+        ['class' => 'text-muted']);
+
+    echo H::openTag('div', ['class' => 'mb-3']); //5
+     $hvak = 'settings[homecare_vision_api_key]';
+     echo H::openTag('label', [
+      'for' => $hvak
+     ]);
+      echo $translator->translate('homecare.vision.api.key');
+      echo $s->infoIcon('homecare_vision_api_key');
+     echo H::closeTag('label');
+     echo H::openTag('a', [
+      'href' => 'https://console.anthropic.com/settings/keys',
+      'target' => '_blank',
+      'rel' => 'noopener noreferrer',
+      'class' => 'small ms-2',
+     ]);
+      echo $translator->translate('homecare.vision.api.key.get');
+     echo H::closeTag('a');
+
+     $body[$hvak] = $s->getSetting('homecare_vision_api_key');
+     echo new Input()
+          ->type('password')
+          ->class('form-control')
+          ->id($hvak)
+          ->name($hvak)
+          ->value(H::encode($body[$hvak]));
+    echo H::closeTag('div'); //5
+   echo H::closeTag('div'); //4
+  echo H::closeTag('div'); //vision-api-key-card
+
   echo H::openTag('div', ['class' => 'card']); //3
    echo H::openTag('div', ['class' => 'card-header']); //4
     echo new H6()->content($translator->translate('homecare.hidden.columns'));
    echo H::closeTag('div'); //4
    echo H::openTag('div', ['class' => 'card-body']); //4
-    echo H::tag('p', H::encode($translator->translate('homecare.hidden.columns.description')),
+    echo H::tag('p', $translator->translate('homecare.hidden.columns.description'),
         ['class' => 'text-muted']);
     echo $s->infoIcon('homecare_hidden_inv_columns');
 
@@ -198,7 +235,7 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo new H6()->content($translator->translate('homecare.hidden.columns.guest'));
    echo H::closeTag('div'); //4
    echo H::openTag('div', ['class' => 'card-body']); //4
-    echo H::tag('p', H::encode($translator->translate('homecare.hidden.columns.guest.description')),
+    echo H::tag('p', $translator->translate('homecare.hidden.columns.guest.description'),
         ['class' => 'text-muted']);
     echo $s->infoIcon('homecare_hidden_inv_guest_columns');
 

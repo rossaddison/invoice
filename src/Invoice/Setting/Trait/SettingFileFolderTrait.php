@@ -186,6 +186,17 @@ trait SettingFileFolderTrait
     /**
      * @return Aliases
      */
+    public function getHomeCareRunSheetsFolderAliases(): Aliases
+    {
+        return new Aliases(['@base' => dirname(__DIR__, 4),
+            '@homecare_run_sheets' => '@base/src/Invoice/Uploads'
+            . self::getHomeCareRunSheetsRelativeUrl(),
+        ]);
+    }
+
+    /**
+     * @return Aliases
+     */
     public function getGoogleTranslateJsonFileAliases(): Aliases
     {
         return new Aliases(['@base' => dirname(__DIR__, 4),

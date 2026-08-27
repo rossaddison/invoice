@@ -149,6 +149,47 @@ final class ProductRepository extends Select\Repository implements ProductReposi
     }
 
     /**
+     * Combines every product/index filter into a single Cycle query — the
+     * same fix already applied to inv/index and quote/index (see
+     * project_inv_index_filter_combining_fix memory). Before this,
+     * ProductController::index() reassigned $products to whatever
+     * filterFamilyId()/filterProductSku()/filterProductPrice()/
+     * filterProductSkuPrice() returned, and each of those calls
+     * $this->select() to start a completely fresh query — so filtering by
+     * family_id and then sku (or price) silently discarded the family_id
+     * condition. The existing filterProductSkuPrice() two-way special case
+     * was the same tell it was for Inv and Quote: someone had already
+     * half-noticed. filterFamilyId()/filterProductSku()/filterProductPrice()/
+     * filterProductSkuPrice() are left in place (still exercised directly by
+     * their own callers if any exist today) rather than removed, matching
+     * the same non-destructive precedent as InvFilterTrait/QuoteFilterTrait.
+     *
+     * Also fixes a byproduct of the same bug: none of those individual
+     * filterXxx() methods preloaded family/tax_rate/unit the way
+     * findAllPreloaded() (the old no-filter path) did, so applying any
+     * filter silently dropped eager-loading too. This always preloads them.
+     *
+     * @param array<array-key, mixed> $queryParams
+     */
+    public function filterCombined(array $queryParams): EntityReader
+    {
+        $query = $this->select()
+            ->load('family')
+            ->load('tax_rate')
+            ->load('unit');
+        if (!empty($queryParams['family_id'])) {
+            $query = $query->andWhere(['family_id' => (int) $queryParams['family_id']]);
+        }
+        if (!empty($queryParams['product_sku'])) {
+            $query = $query->andWhere(['product_sku' => trim((string) $queryParams['product_sku'])]);
+        }
+        if (!empty($queryParams['product_price'])) {
+            $query = $query->andWhere(['product_price' => trim((string) $queryParams['product_price'])]);
+        }
+        return $this->prepareDataReader($query);
+    }
+
+    /**
      * @param int $product_id
      *
      * @return Product|null

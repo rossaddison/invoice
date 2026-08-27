@@ -7,6 +7,7 @@ namespace App\Invoice\Quote;
 use App\Infrastructure\Persistence\Quote\Quote;
 use App\Invoice\Group\GroupRepository as GR;
 use App\Invoice\Quote\Trait\QuoteClientTrait;
+use App\Invoice\Quote\Trait\QuoteCombinedFilterTrait;
 use App\Invoice\Quote\Trait\QuoteFilterTrait;
 use App\Invoice\Quote\Trait\QuoteGuestTrait;
 use App\Invoice\Quote\Trait\QuoteStatusSelectTrait;
@@ -25,6 +26,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
 final class QuoteRepository extends Select\Repository
 {
     use QuoteClientTrait;
+    use QuoteCombinedFilterTrait;
     use QuoteFilterTrait;
     use QuoteGuestTrait;
     use QuoteStatusSelectTrait;
