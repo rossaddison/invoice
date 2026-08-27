@@ -6,6 +6,7 @@ namespace Tests\Testo\Invoice\HomeCareRunSheet;
 
 use Anthropic\Messages\Base64ImageSource\MediaType;
 use App\Infrastructure\Persistence\HomeCareRunSheetItem\HomeCareRunSheetItem;
+use App\Invoice\HomeCareRunSheet\Exception\VisionApiKeyNotConfiguredException;
 use App\Invoice\HomeCareRunSheetItem\HomeCareRunSheetItemRepository as RSIR;
 use App\Invoice\HomeCareRunSheet\HomeCareRunSheetVisionService;
 use App\Invoice\Setting\SettingRepository as SR;
@@ -47,7 +48,7 @@ final class HomeCareRunSheetVisionServiceTest
         $service->readScan([], 'not-real-image-bytes', MediaType::IMAGE_JPEG);
     }
 
-    #[ExpectException(\RuntimeException::class)]
+    #[ExpectException(VisionApiKeyNotConfiguredException::class)]
     public function throwsWhenNoVisionApiKeyIsConfigured(): void
     {
         /** @var RSIR&m\MockInterface $rsiR */

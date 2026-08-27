@@ -11,10 +11,10 @@ use Anthropic\Messages\TextBlock;
 use App\Infrastructure\Persistence\HomeCareRunSheetItem\HomeCareRunSheetItem;
 use App\Infrastructure\Persistence\Worker\Worker;
 use App\Invoice\Enum\DoNotSendReason;
+use App\Invoice\HomeCareRunSheet\Exception\VisionApiKeyNotConfiguredException;
 use App\Invoice\HomeCareRunSheetItem\HomeCareRunSheetItemRepository as RSIR;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\Worker\WorkerRepository as WR;
-use RuntimeException;
 
 /**
  * Step 3b of the run-sheet reconciliation (see project_homecare_run_signoff_design
@@ -57,7 +57,7 @@ final readonly class HomeCareRunSheetVisionService
         }
         $apiKey = $this->sR->getSetting('homecare_vision_api_key');
         if ($apiKey === '') {
-            throw new RuntimeException(
+            throw new VisionApiKeyNotConfiguredException(
                 'homecare_vision_api_key is not configured — see Settings.',
             );
         }

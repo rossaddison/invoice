@@ -9,6 +9,7 @@ use App\Infrastructure\Persistence\HomeCareRunSheetItem\HomeCareRunSheetItem;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Dwelling\DwellingRepository as DwR;
 use App\Invoice\Enum\DoNotSendReason;
+use App\Invoice\HomeCareRunSheet\Exception\RunSheetCsvWriteException;
 use App\Invoice\HomeCareRunSheetItem\HomeCareRunSheetItemRepository as RSIR;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\Setting\SettingRepository as SR;
@@ -92,7 +93,7 @@ final readonly class HomeCareRunSheetExportService
     {
         $handle = fopen('php://temp', 'r+');
         if ($handle === false) {
-            throw new \RuntimeException('Could not open a temp stream for the run sheet CSV');
+            throw new RunSheetCsvWriteException('Could not open a temp stream for the run sheet CSV');
         }
         fputcsv($handle, ['seq', 'invoice_id', 'client', 'house_no', 'assigned_worker',
             'actual_worker', 'completed_y_n', 'reason_code']);
