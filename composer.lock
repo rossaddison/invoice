@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d16d2bfdbdc697271d1996ccce150d3e",
+    "content-hash": "b1e83446079900540b4d2d05c0ef74dc",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -27051,21 +27051,21 @@
         },
         {
             "name": "testo/assert",
-            "version": "0.1.13",
+            "version": "0.1.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/assert.git",
-                "reference": "bca697d656c19d9cd4e7f34f5eacf90f59dee4b9"
+                "reference": "5f0ae9b80057e9c81655f3355c6f4820b5a4d830"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/assert/zipball/bca697d656c19d9cd4e7f34f5eacf90f59dee4b9",
-                "reference": "bca697d656c19d9cd4e7f34f5eacf90f59dee4b9",
+                "url": "https://api.github.com/repos/php-testo/assert/zipball/5f0ae9b80057e9c81655f3355c6f4820b5a4d830",
+                "reference": "5f0ae9b80057e9c81655f3355c6f4820b5a4d830",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
-                "testo/testo": "0.10.42 - 1"
+                "testo/testo": "0.10.44 - 1"
             },
             "type": "library",
             "extra": {
@@ -27098,7 +27098,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/assert/tree/0.1.13"
+                "source": "https://github.com/php-testo/assert/tree/0.1.14"
             },
             "funding": [
                 {
@@ -27106,31 +27106,31 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-08-18T05:56:30+00:00"
+            "time": "2026-08-27T22:11:20+00:00"
         },
         {
             "name": "testo/bench",
-            "version": "0.1.9",
+            "version": "0.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/bench.git",
-                "reference": "246990f1ab524b4f8cbcbca88e6653858446473c"
+                "reference": "d5b54de9ecfeb18e2cf4dbc3a33a6f886bd26f6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/bench/zipball/246990f1ab524b4f8cbcbca88e6653858446473c",
-                "reference": "246990f1ab524b4f8cbcbca88e6653858446473c",
+                "url": "https://api.github.com/repos/php-testo/bench/zipball/d5b54de9ecfeb18e2cf4dbc3a33a6f886bd26f6a",
+                "reference": "d5b54de9ecfeb18e2cf4dbc3a33a6f886bd26f6a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
-                "testo/data": "^0.1.8",
+                "testo/data": "^0.1.9",
                 "testo/filter": "^0.1.6",
                 "testo/inline": "^0.1.8",
-                "testo/testo": "0.10.43 - 1"
+                "testo/testo": "0.10.44 - 1"
             },
             "require-dev": {
-                "testo/assert": "^0.1.13"
+                "testo/assert": "^0.1.14"
             },
             "suggest": {
                 "testo/assert": "Enables the benchmark verdict as an assertion: current must be the fastest within tolerance, otherwise the test fails."
@@ -27165,7 +27165,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/bench/tree/0.1.9"
+                "source": "https://github.com/php-testo/bench/tree/0.1.10"
             },
             "funding": [
                 {
@@ -27173,7 +27173,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-08-25T15:46:47+00:00"
+            "time": "2026-08-27T22:11:46+00:00"
         },
         {
             "name": "testo/bridge-mockery",
@@ -27300,24 +27300,24 @@
         },
         {
             "name": "testo/codecov",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/codecov.git",
-                "reference": "1e3a49f2d3d38700ae7fec815e8131541d628c9e"
+                "reference": "dbb028f5e2c65b9ef6227bb9d67460bc10be37b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/codecov/zipball/1e3a49f2d3d38700ae7fec815e8131541d628c9e",
-                "reference": "1e3a49f2d3d38700ae7fec815e8131541d628c9e",
+                "url": "https://api.github.com/repos/php-testo/codecov/zipball/dbb028f5e2c65b9ef6227bb9d67460bc10be37b8",
+                "reference": "dbb028f5e2c65b9ef6227bb9d67460bc10be37b8",
                 "shasum": ""
             },
             "require": {
                 "ext-xmlwriter": "*",
                 "php": ">=8.2",
-                "testo/data": "^0.1.8",
+                "testo/data": "^0.1.9",
                 "testo/inline": "^0.1.8",
-                "testo/testo": "0.10.41 - 1"
+                "testo/testo": "0.10.44 - 1"
             },
             "type": "library",
             "extra": {
@@ -27346,7 +27346,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/codecov/tree/0.2.0"
+                "source": "https://github.com/php-testo/codecov/tree/0.2.1"
             },
             "funding": [
                 {
@@ -27354,7 +27354,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-08-17T12:59:29+00:00"
+            "time": "2026-08-27T22:11:28+00:00"
         },
         {
             "name": "testo/convention",
@@ -27413,22 +27413,22 @@
         },
         {
             "name": "testo/data",
-            "version": "0.1.8",
+            "version": "0.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/data.git",
-                "reference": "2221906f39297c114f5eaa7a177d03fbe47dc7e0"
+                "reference": "411748b7eb0b7a190d6744e802da6e4473223e5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/data/zipball/2221906f39297c114f5eaa7a177d03fbe47dc7e0",
-                "reference": "2221906f39297c114f5eaa7a177d03fbe47dc7e0",
+                "url": "https://api.github.com/repos/php-testo/data/zipball/411748b7eb0b7a190d6744e802da6e4473223e5b",
+                "reference": "411748b7eb0b7a190d6744e802da6e4473223e5b",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
                 "testo/filter": "^0.1.6",
-                "testo/testo": "0.10.41 - 1"
+                "testo/testo": "0.10.44 - 1"
             },
             "type": "library",
             "extra": {
@@ -27457,7 +27457,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/data/tree/0.1.8"
+                "source": "https://github.com/php-testo/data/tree/0.1.9"
             },
             "funding": [
                 {
@@ -27465,7 +27465,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-08-17T12:59:30+00:00"
+            "time": "2026-08-27T22:11:20+00:00"
         },
         {
             "name": "testo/facade",
@@ -27932,16 +27932,16 @@
         },
         {
             "name": "testo/testo",
-            "version": "0.10.43",
+            "version": "0.10.44",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/testo.git",
-                "reference": "8a0d612dab896f26978ab9cb84705c226515d4c7"
+                "reference": "c361b92cb4e3a025076e86cc8ae6ad060104678c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/testo/zipball/8a0d612dab896f26978ab9cb84705c226515d4c7",
-                "reference": "8a0d612dab896f26978ab9cb84705c226515d4c7",
+                "url": "https://api.github.com/repos/php-testo/testo/zipball/c361b92cb4e3a025076e86cc8ae6ad060104678c",
+                "reference": "c361b92cb4e3a025076e86cc8ae6ad060104678c",
                 "shasum": ""
             },
             "require": {
@@ -27954,12 +27954,12 @@
                 "psr/log": "^2.0 || ^3.0",
                 "symfony/console": "^6.4 || ^7 || ^8.0",
                 "symfony/finder": "^6.4 || ^7 || ^8.0",
-                "testo/assert": "^0.1.13",
-                "testo/bench": "^0.1.9",
+                "testo/assert": "^0.1.14",
+                "testo/bench": "^0.1.10",
                 "testo/bridge-symfony-console": "^0.1.10",
-                "testo/codecov": "^0.2.0",
+                "testo/codecov": "^0.2.1",
                 "testo/convention": "^0.1.4",
-                "testo/data": "^0.1.8",
+                "testo/data": "^0.1.9",
                 "testo/fiber": "^0.1.3",
                 "testo/filter": "^0.1.6",
                 "testo/inline": "^0.1.8",
@@ -27979,11 +27979,11 @@
                 "internal/dload": "^1.6",
                 "llm/skills": "^1.3",
                 "php-vcr/php-vcr": "^1.6",
-                "rector/rector": "^2.5.2",
+                "rector/rector": "^2.6.4",
                 "roxblnfk/unpoly": "1.8.2",
                 "testo/bridge-infection": "^0.1.8",
                 "testo/bridge-mockery": "^0.1.2",
-                "testo/bridge-rector": "^0.2.4",
+                "testo/bridge-rector": "^0.2.5",
                 "testo/bridge-revolt": "^0.1.2",
                 "testo/bridge-vcr": "^0.1.1",
                 "testo/facade": "^0.1.1"
@@ -28040,7 +28040,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-08-25T15:45:36+00:00"
+            "time": "2026-08-27T22:09:59+00:00"
         },
         {
             "name": "thecodingmachine/safe",
