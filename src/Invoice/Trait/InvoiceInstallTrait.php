@@ -99,7 +99,10 @@ trait InvoiceInstallTrait
             'enable_peppol_client_defaults' => 1,
             'enable_telegram' => 0,
             'enable_vat_registration' => 0,
-            'enable_tfa' => 0,
+            // Compulsory — Settings tab "tfa" locks this to always-on (a
+            // decorative, disabled checkbox, no way to submit 0 through the
+            // form). Default here matches, for a fresh install.
+            'enable_tfa' => 1,
             // Qr code is always shown
             // Placeholder for a not-yet-built worker/manager status
             // workflow — see Settings tab "Location" and
@@ -139,6 +142,11 @@ trait InvoiceInstallTrait
             // staff-only HomeCare columns (workflow_type, family_name,
             // etc.) at all. Also a no-op while HomeCare is off.
             'homecare_hidden_inv_guest_columns' => '',
+            // Anthropic API key for the HomeCare run-sheet vision-read step
+            // (Upload & Read on the run-sheet review screen). '' = disabled,
+            // fails with a flash message rather than a crash. See Settings
+            // tab "homecare" and HomeCareRunSheetVisionService.
+            'homecare_vision_api_key' => '',
             'install_test_data' => 0,
             'inv_cdn_not_node_module' => 1,
             //1=>None, 2=>Cash, 3=>Cheque, 4=>Card/Direct Debit-Succeeded

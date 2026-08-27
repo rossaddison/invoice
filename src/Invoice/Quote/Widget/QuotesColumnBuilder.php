@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\Quote\Quote;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\Setting\SettingRepository as SR;
+use App\Widget\NoOpFilterFactory;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Input\Checkbox;
@@ -195,6 +196,7 @@ final class QuotesColumnBuilder
             filter: DropdownFilter::widget()
                 ->addAttributes(['name' => 'status', 'class' => 'native-reset'])
                 ->optionsData($this->optionsDataStatusDropDownFilter),
+            filterFactory: new NoOpFilterFactory(),
             encodeContent: false,
             withSorting: true,
             visible: true,
@@ -253,6 +255,7 @@ final class QuotesColumnBuilder
                 ),
             encodeContent: false,
             filter: TextInputFilter::widget()->addAttributes(['style' => 'max-width: 80px']),
+            filterFactory: new NoOpFilterFactory(),
         );
     }
 
@@ -274,6 +277,7 @@ final class QuotesColumnBuilder
             filter: DropdownFilter::widget()
                 ->addAttributes(['name' => 'filterClient', 'class' => 'native-reset'])
                 ->optionsData($this->optionsDataClientsDropdownFilter),
+            filterFactory: new NoOpFilterFactory(),
             withSorting: false,
         );
     }
@@ -303,6 +307,7 @@ final class QuotesColumnBuilder
             encodeContent: false,
             filter: TextInputFilter::widget()
                 ->addAttributes(['style' => 'max-width: 50px', 'class' => 'native-reset']),
+            filterFactory: new NoOpFilterFactory(),
             withSorting: false,
             footer: (new Span())
                 ->addAttributes(['style' =>

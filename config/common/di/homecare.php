@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Client\ClientRepositoryInterface;
+use App\Invoice\HomeCareRunSheet\HomeCareRunSheetRepository;
+use App\Invoice\HomeCareRunSheet\HomeCareRunSheetRepositoryInterface;
+use App\Invoice\HomeCareRunSheetItem\HomeCareRunSheetItemRepository;
+use App\Invoice\HomeCareRunSheetItem\HomeCareRunSheetItemRepositoryInterface;
 use App\Invoice\HomeCareVisit\HomeCareVisitRepository;
 use App\Invoice\HomeCareVisit\HomeCareVisitRepositoryInterface;
 use App\Invoice\Inv\InvRepository;
@@ -34,4 +38,6 @@ return [
     SettingRepositoryInterface::class => SettingRepository::class,
     HomeCareVisitRepositoryInterface::class => HomeCareVisitRepository::class,
     ClientRepositoryInterface::class => ClientRepository::class,
+    HomeCareRunSheetRepositoryInterface::class => HomeCareRunSheetRepository::class,
+    HomeCareRunSheetItemRepositoryInterface::class => HomeCareRunSheetItemRepository::class,
 ];

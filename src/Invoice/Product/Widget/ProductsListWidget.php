@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\Product\Product;
 use App\Invoice\ProductClient\ProductClientRepository as PcR;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Widget\GridComponents;
+use App\Widget\NoOpFilterFactory;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Html\Html;
@@ -28,6 +29,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Pagination\PaginationWidgetInterface;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
+use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
 
 final class ProductsListWidget extends Widget
 {
@@ -166,6 +168,7 @@ final class ProductsListWidget extends Widget
             ->columnGrouping(true)
             ->dataReader($this->paginator)
             ->urlCreator($urlCreator)
+            ->urlParameterProvider(new UrlParameterProvider($this->currentRoute))
             ->paginationWidget($pagination)
             ->sortableLinkAttributes(['hx-boost' => 'true', ...$htmxAttrs])
             ->filterFormAttributes(['hx-boost' => 'true', ...$htmxAttrs])
@@ -336,6 +339,7 @@ final class ProductsListWidget extends Widget
             filter: DropdownFilter::widget()
                 ->addAttributes(['name' => 'family_id', 'class' => 'native-reset'])
                 ->optionsData($optionsFam),
+            filterFactory: new NoOpFilterFactory(),
             visible: true,
             withSorting: true,
         );
@@ -403,6 +407,7 @@ final class ProductsListWidget extends Widget
             filter: DropdownFilter::widget()
                 ->addAttributes(['name' => 'product_sku', 'class' => 'native-reset'])
                 ->optionsData($optionsProd),
+            filterFactory: new NoOpFilterFactory(),
             visible: true,
             withSorting: false,
         );
@@ -417,6 +422,7 @@ final class ProductsListWidget extends Widget
                 Html::encode((string) $m->getProductPrice()),
             filter: TextInputFilter::widget()
                 ->addAttributes(['style' => 'max-width: 50px', 'class' => 'native-reset']),
+            filterFactory: new NoOpFilterFactory(),
             visible: true,
             withSorting: false,
         );

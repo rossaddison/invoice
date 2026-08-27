@@ -33,6 +33,12 @@ trait SettingStaticPathsTrait
         return DIRECTORY_SEPARATOR . 'Company_private_logos';
     }
 
+    // Append to uploads folder
+    public static function getHomeCareRunSheetsRelativeUrl(): string
+    {
+        return DIRECTORY_SEPARATOR . 'HomeCare_run_sheets';
+    }
+
     public static function getTempPeppolfolderRelativeUrl(): string
     {
         return DIRECTORY_SEPARATOR . 'Temp' . DIRECTORY_SEPARATOR . 'Peppol'

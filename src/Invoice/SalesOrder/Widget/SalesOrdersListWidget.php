@@ -28,6 +28,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Pagination\PaginationWidgetInterface;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
+use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
 
 final class SalesOrdersListWidget extends Widget
 {
@@ -200,6 +201,7 @@ final class SalesOrdersListWidget extends Widget
             ->columnGrouping(true)
             ->dataReader($this->paginator)
             ->urlCreator($urlCreator)
+            ->urlParameterProvider(new UrlParameterProvider($this->currentRoute))
             ->paginationWidget($pagination)
             ->sortableLinkAttributes($htmxBoostAttrs)
             ->filterFormAttributes($htmxBoostAttrs)

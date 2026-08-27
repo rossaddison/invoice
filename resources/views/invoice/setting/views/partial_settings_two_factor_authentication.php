@@ -22,20 +22,22 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
       echo H::openTag('div', ['class' => 'mb-3']); //7
        echo H::openTag('div', ['class' => 'form-check']); //8
-        $body['settings[enable_tfa]'] = $s->getSetting('enable_tfa');
+        // Compulsory — always submitted as '1' regardless of the checkbox
+        // below, which is now decorative only (no name, disabled, always
+        // checked) so it can't be unticked. The hidden input is the sole
+        // source of truth on submit.
         echo H::hiddenInput(
           'settings[enable_tfa]',
-          '0'
+          '1'
          );
          echo H::checkbox(
-          'settings[enable_tfa]',
+          null,
           '1',
           [
           'class' => 'form-check-input',
           'id' => 'enable_tfa',
-          'checked' => ($body['settings[enable_tfa]'] == 1)
-          ? 'checked'
-          : null
+          'checked' => 'checked',
+          'disabled' => true,
          ]
          );
          echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'enable_tfa']);
