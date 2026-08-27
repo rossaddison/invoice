@@ -6,9 +6,11 @@ namespace App\Invoice\HomeCareRunSheet;
 
 use Anthropic\Core\Exceptions\AnthropicException;
 use Anthropic\Messages\Base64ImageSource\MediaType;
+use App\Infrastructure\Persistence\HomeCareRunSheet\HomeCareRunSheet;
 use App\Infrastructure\Persistence\User\User;
 use App\Invoice\BaseController;
 use App\Invoice\CategorySecondary\CategorySecondaryRepository as CSR;
+use App\Invoice\HomeCareRunSheet\Exception\VisionApiKeyNotConfiguredException;
 use App\Invoice\HomeCareRunSheetItem\HomeCareRunSheetItemRepositoryInterface;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\Setting\SettingRepository as sR;
@@ -22,7 +24,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileInterface;
-use RuntimeException;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
@@ -161,11 +162,23 @@ final class HomeCareRunSheetController extends BaseController
             return $this->webService->getRedirectResponse('homecarerunsheet/review', ['id' => $id]);
         }
 
+        return $this->performScan($runSheet, $file, $mediaType, $id);
+    }
+
+    /**
+     * Split out of uploadScan() purely to keep its own return count within
+     * SonarQube's limit (php:S1142) — the not-found/invalid-upload guard
+     * clauses above both happen before the scan itself runs, so this only
+     * needs to cover the scan's own three outcomes (success, no vision key
+     * configured, any other Anthropic API failure).
+     */
+    private function performScan(HomeCareRunSheet $runSheet, UploadedFileInterface $file, MediaType $mediaType, string $id): Response
+    {
         $user = $this->userService->getUser();
         $userId = $user instanceof User ? $user->reqId() : 0;
         try {
             $this->scanService->scan($runSheet, $file->getStream()->getContents(), $mediaType, $userId);
-        } catch (RuntimeException) {
+        } catch (VisionApiKeyNotConfiguredException) {
             $this->flashMessage('danger', $this->translator->translate('homecare.runsheet.review.upload.not.configured'));
             return $this->webService->getRedirectResponse('homecarerunsheet/review', ['id' => $id]);
         } catch (AnthropicException) {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Product;
 
 use App\Infrastructure\Persistence\Product\Product;
+use App\Invoice\Product\Trait\ProductLegacyFilterTrait;
 use App\Invoice\Product\Trait\ProductWebshopQueryTrait;
 use Cycle\ORM\Select;
 use Throwable;
@@ -21,6 +22,7 @@ use Yiisoft\Data\Cycle\Writer\EntityWriter;
  */
 final class ProductRepository extends Select\Repository implements ProductRepositoryInterface
 {
+    use ProductLegacyFilterTrait;
     use ProductWebshopQueryTrait;
 
     /**
@@ -116,36 +118,6 @@ final class ProductRepository extends Select\Repository implements ProductReposi
                     'product_description' => 'desc',
                 ]),
         );
-    }
-
-    public function filterFamilyId(int $family_id): EntityReader
-    {
-        $select = $this->select();
-        $query = $select->where(['family_id' => $family_id]);
-        return $this->prepareDataReader($query);
-    }
-
-    public function filterProductSku(string $product_sku): EntityReader
-    {
-        $select = $this->select();
-        $query = $select->where(['product_sku' => ltrim(rtrim($product_sku))]);
-        return $this->prepareDataReader($query);
-    }
-
-    public function filterProductPrice(string $product_price): EntityReader
-    {
-        $select = $this->select();
-        $query = $select->where(['product_price' => ltrim(rtrim($product_price))]);
-        return $this->prepareDataReader($query);
-    }
-
-    public function filterProductSkuPrice(string $product_price,
-            string $product_sku): EntityReader
-    {
-        $select = $this->select();
-        $query = $select->where(['product_price' => ltrim(rtrim($product_price))])
-                        ->andWhere(['product_sku' => ltrim(rtrim($product_sku))]);
-        return $this->prepareDataReader($query);
     }
 
     /**
