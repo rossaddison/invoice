@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "73131f1f29d4bc99a3038cef851c3166",
+    "content-hash": "c75656dfbd7bb55396fd683eae92e513",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -8818,10 +8818,16 @@
         {
             "name": "rossaddison/storecove-client",
             "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rossaddison/storecove-client.git",
+                "reference": "35a138302fbb8732e5cc5515400fdf2d7c91186f"
+            },
             "dist": {
-                "type": "path",
-                "url": "../storecove-client",
-                "reference": "c3b56b20f5b1db6c51f792d9c32606662d33d564"
+                "type": "zip",
+                "url": "https://api.github.com/repos/rossaddison/storecove-client/zipball/35a138302fbb8732e5cc5515400fdf2d7c91186f",
+                "reference": "35a138302fbb8732e5cc5515400fdf2d7c91186f",
+                "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
@@ -8836,6 +8842,7 @@
                 "phpunit/phpunit": ">=13.1.4",
                 "vimeo/psalm": ">=6.16.1"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -8856,7 +8863,7 @@
                     "homepage": "https://github.com/rossaddison"
                 }
             ],
-            "description": "Generated PHP client for the Storecove API (v2), for use by rossaddison/invoice",
+            "description": "Hand-written PHP client for the Storecove API (v2), for use by rossaddison/invoice",
             "homepage": "https://github.com/rossaddison/storecove-client",
             "keywords": [
                 "api",
@@ -8870,9 +8877,7 @@
                 "source": "https://github.com/rossaddison/storecove-client",
                 "issues": "https://github.com/rossaddison/storecove-client/issues"
             },
-            "transport-options": {
-                "relative": true
-            }
+            "time": "2026-08-28T18:24:10+00:00"
         },
         {
             "name": "rossaddison/yii-auth-client",

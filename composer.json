@@ -260,8 +260,8 @@
             "url": "https://github.com/rossaddison/openbanking-client"
         },
         {
-            "type": "path",
-            "url": "../storecove-client"
+            "type": "vcs",
+            "url": "https://github.com/rossaddison/storecove-client"
         },
         {
             "type": "vcs",
