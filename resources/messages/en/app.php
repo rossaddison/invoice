@@ -1938,8 +1938,7 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' from the Store Cove website'
     . ' and store in Settings'
     . '...View'
-    . '...Online Payment'
-    . '...Store Cove'
+    . '...Storecove'
     . '...Api key',
   'peppol.store.cove.1.1.3' => 'Make your first API call'
     . ' to get JSON response',
