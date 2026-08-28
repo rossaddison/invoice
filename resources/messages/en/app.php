@@ -479,6 +479,7 @@ return [
   'converted.to.so' => 'Converted to Sales Order',
   'copied' => 'Copied!',
   'copy' => 'Copy',
+  'copy.to.clipboard' => 'Copy to clipboard',
   'copy.all.to.date' => 'Copy All to Date',
   'copy.all.to.date.new.date' => 'New Date',
   'copy.all.to.date.warning' =>

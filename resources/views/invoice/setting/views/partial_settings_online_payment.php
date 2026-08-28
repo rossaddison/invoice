@@ -337,24 +337,51 @@ echo H::openTag('div', $row); //1
       ],
      );
      } elseif ($setting['type'] == 'password') {
-     // Reveal toggle: wrapped in a position-relative container so the
-     // eye icon can sit inside the input itself. Wired up generically in
-     // settings.ts via the .password-reveal-toggle class + data-target,
-     // not an inline onclick — see feedback_no_raw_script_tags.
+     // Reveal toggle + copy-to-clipboard, both wrapped in a
+     // position-relative container so they sit inside the input itself.
+     // Wired up generically, not an inline onclick — see
+     // feedback_no_raw_script_tags:
+     //  - password-reveal-toggle: settings.ts, class + data-target,
+     //    resolved via getElementById (not a CSS selector — this field's
+     //    id contains literal [ ] characters that would break
+     //    querySelector('#' . $id)).
+     //  - copy-to-clipboard: data-actions.ts, data-action +
+     //    data-copy-target-id, same getElementById reasoning, extended to
+     //    read an <input>'s .value (source.textContent is empty for a
+     //    real input — the pre-existing copy-to-clipboard in
+     //    partial_settings_system_updates.php only ever targeted a <pre>).
+     // The copy button is positioned to the left of the (already
+     // live-verified, untouched here) reveal-eye button via an explicit
+     // inline offset rather than another Bootstrap utility class, so its
+     // fixed pixel width doesn't depend on guessing at the eye button's
+     // own rendered size.
+     $fieldId = $pfxGateway . $d . '_' . $key . ']';
      echo H::openTag('div', ['class' => 'position-relative']);
       echo H::openTag('input', [
        'type' => $setting['type'],
-       'class' => 'form-control pe-5',
-       'name' => $pfxGateway . $d . '_' .
-       $key . ']',
-       'id' => $pfxGateway . $d . '_' .
-       $key . ']',
+       'class' => 'form-control',
+       'style' => 'padding-right: 5rem',
+       'name' => $fieldId,
+       'id' => $fieldId,
        'value' => $inputValue
       ]);
       echo H::openTag('button', [
        'type' => 'button',
+       'class' => 'btn btn-link p-1 copy-to-clipboard-toggle',
+       'style' => 'position: absolute; top: 50%; right: 2.75rem; transform: translateY(-50%);',
+       'data-action' => 'copy-to-clipboard',
+       'data-copy-target-id' => $fieldId,
+       'data-copied-label' => $translator->translate('copied'),
+       'aria-label' => $translator->translate('copy.to.clipboard'),
+       'title' => $translator->translate('copy.to.clipboard'),
+       'tabindex' => '-1',
+      ]);
+       echo H::tag('i', '', ['class' => 'bi bi-clipboard']);
+      echo H::closeTag('button');
+      echo H::openTag('button', [
+       'type' => 'button',
        'class' => 'btn btn-link position-absolute top-50 end-0 translate-middle-y password-reveal-toggle',
-       'data-target' => $pfxGateway . $d . '_' . $key . ']',
+       'data-target' => $fieldId,
        'aria-label' => 'Show password',
        'tabindex' => '-1',
       ]);
