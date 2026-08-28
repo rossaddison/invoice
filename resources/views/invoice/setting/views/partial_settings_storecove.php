@@ -28,6 +28,44 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::openTag('div', ['class' => $col]); //6
       echo H::openTag('div', ['class' => 'mb-3']); //7
        echo H::openTag('label', [
+        'for' => 'settings[peppol_access_point_provider]'
+       ]);
+        echo $translator->translate(
+         'peppol.access.point.provider'
+        );
+        echo $s->infoIcon('peppol_access_point_provider');
+       echo H::closeTag('label');
+       $body['settings[peppol_access_point_provider]'] =
+       $s->getSetting('peppol_access_point_provider');
+       echo H::openTag('select', [
+        'name' => 'settings[peppol_access_point_provider]',
+        'id' => 'settings[peppol_access_point_provider]',
+        'class' => 'form-select',
+       ]);
+        echo  new Option()
+         ->value('storecove')
+         ->selected(
+          'storecove' ==
+          $body['settings[peppol_access_point_provider]']
+         )
+         ->content(
+          $translator->translate('storecove')
+         );
+        echo  new Option()
+         ->value('oxalis')
+         ->selected(
+          'oxalis' ==
+          $body['settings[peppol_access_point_provider]']
+         )
+         ->content(
+          $translator->translate('oxalis')
+         );
+       echo H::closeTag('select');
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+     echo H::openTag('div', ['class' => $col]); //6
+      echo H::openTag('div', ['class' => 'mb-3']); //7
+       echo H::openTag('label', [
         'for' => 'settings[storecove_api_key]'
        ]);
         echo H::a(

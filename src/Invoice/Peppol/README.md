@@ -1,5 +1,14 @@
 # src/Invoice/Peppol — Network Transport Layer
 
+> **Note:** as of the Storecove integration, `PeppolSendServiceInterface` has
+> two implementations — `OxalisPeppolSendService` (this guide) and
+> `StorecovePeppolSendService`. Which one actually sends is chosen by
+> `PeppolSendServiceRouter` reading the `peppol_access_point_provider`
+> setting, defaulting to `storecove` — Oxalis has never actually been live
+> in this deployment (see `PeppolSendServiceRouter`'s own docblock). Set
+> `peppol_access_point_provider` to `oxalis` in Settings before following
+> Step 6 below, or nothing in this guide will actually reach Oxalis.
+
 ## Connecting to an Oxalis Access Point — Step-by-Step
 
 ### Step 1 — Install and start Oxalis
@@ -38,7 +47,7 @@ PEPPOL_SMP_BASE_URL=
 ```
 
 `config/common/di/peppol.php` reads these vars and wires them into
-`PeppolSendService` and `SmpResolver` automatically via Yii3 DI.
+`OxalisPeppolSendService` and `SmpResolver` automatically via Yii3 DI.
 
 ---
 
@@ -84,13 +93,15 @@ sent over Peppol as long as the client has Peppol details.
 Open the invoice view (`inv/view/{id}`) and click the **Peppol Send** button
 (only visible when `enable_peppol = 1`).
 
-This hits route `inv/peppolSend/{id}` → `InvController::peppolSend()` → `PeppolSendService::send()`.
+This hits route `inv/peppolSend/{id}` → `InvController::peppolSend()` →
+`PeppolSendServiceRouter::send()` → (per `peppol_access_point_provider`) →
+`OxalisPeppolSendService::send()`.
 
-What happens internally:
+What happens internally, once routed to Oxalis:
 
 ```
 1. SmpResolver looks up recipient's AS4 endpoint via SML DNS + SMP HTTP
-2. PeppolSendService persists a PeppolMessage with status QUEUED
+2. OxalisPeppolSendService persists a PeppolMessage with status QUEUED
 3. POST multipart/form-data to {OXALIS_BASE_URL}/outbound/send
 4. On success  → status updated to SENT
    On failure  → status FAILED (retryable via console command below)
@@ -151,7 +162,10 @@ XML structure, validation, or code lists — those live in
 
 | File | Role |
 |------|------|
-| `PeppolSendService.php` | Sends a UBL 2.4 XML document to Oxalis via its REST API. Persists a `PeppolMessage` record *before* the HTTP call so a crash leaves a recoverable audit trail. |
+| `PeppolSendServiceInterface.php` | Provider-agnostic contract: `send()` + `retry()`, both returning a `PeppolMessage`. |
+| `PeppolSendServiceRouter.php` | Chooses which implementation actually sends, per the `peppol_access_point_provider` setting — read fresh per call. |
+| `OxalisPeppolSendService.php` | Sends a UBL 2.4 XML document to Oxalis via its REST API. Persists a `PeppolMessage` record *before* the HTTP call so a crash leaves a recoverable audit trail. |
+| `StorecovePeppolSendService.php` | Same contract, via Storecove's managed Access Point API (`POST /document_submissions`) instead of a self-hosted Oxalis gateway. |
 | `PeppolInboundController.php` | Receives delivery callbacks from Oxalis (`POST /peppol/inbound/delivery`). Marks the matching `PeppolMessage` as DELIVERED. Not user-facing — Oxalis calls it directly. |
 | `PeppolMessageRepository.php` | Cycle ORM repository for `PeppolMessage` persistence (`save`, `repoByMessageId`, `repoByStatus`). |
 | `PeppolMessageRepositoryInterface.php` | Interface for the repository — allows swapping in a test double. |

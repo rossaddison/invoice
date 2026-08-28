@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b1e83446079900540b4d2d05c0ef74dc",
+    "content-hash": "c75656dfbd7bb55396fd683eae92e513",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -8814,6 +8814,70 @@
                 }
             ],
             "time": "2026-07-30T08:19:05+00:00"
+        },
+        {
+            "name": "rossaddison/storecove-client",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rossaddison/storecove-client.git",
+                "reference": "35a138302fbb8732e5cc5515400fdf2d7c91186f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rossaddison/storecove-client/zipball/35a138302fbb8732e5cc5515400fdf2d7c91186f",
+                "reference": "35a138302fbb8732e5cc5515400fdf2d7c91186f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "guzzlehttp/guzzle": ">=7.15.5",
+                "guzzlehttp/psr7": ">=2.13.1",
+                "php": "8.4 - 9.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.95.23",
+                "phpunit/phpunit": ">=13.1.4",
+                "vimeo/psalm": ">=6.16.1"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RossAddison\\StorecoveClient\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "RossAddison\\StorecoveClient\\Test\\": "test/"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ross Addison",
+                    "homepage": "https://github.com/rossaddison"
+                }
+            ],
+            "description": "Hand-written PHP client for the Storecove API (v2), for use by rossaddison/invoice",
+            "homepage": "https://github.com/rossaddison/storecove-client",
+            "keywords": [
+                "api",
+                "e-invoicing",
+                "peppol",
+                "sdk",
+                "storecove",
+                "ubl"
+            ],
+            "support": {
+                "source": "https://github.com/rossaddison/storecove-client",
+                "issues": "https://github.com/rossaddison/storecove-client/issues"
+            },
+            "time": "2026-08-28T18:24:10+00:00"
         },
         {
             "name": "rossaddison/yii-auth-client",
@@ -28243,6 +28307,7 @@
         "roave/security-advisories": 20,
         "rossaddison/openbanking-client": 20,
         "rossaddison/requirements": 20,
+        "rossaddison/storecove-client": 20,
         "rossaddison/translator-extractor": 20,
         "rossaddison/yii-auth-client": 20,
         "rossaddison/yii-cycle-1": 20,

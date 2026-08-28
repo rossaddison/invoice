@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Peppol\OxalisPeppolSendService;
 use App\Invoice\Peppol\PeppolMessageRepository;
 use App\Invoice\Peppol\PeppolMessageRepositoryInterface;
-use App\Invoice\Peppol\PeppolSendService;
+use App\Invoice\Peppol\PeppolSendServiceInterface;
+use App\Invoice\Peppol\PeppolSendServiceRouter;
 use App\Invoice\Peppol\SmpResolver;
 use App\Invoice\Peppol\SmpResolverInterface;
 
@@ -47,11 +49,21 @@ return [
         ],
     ],
 
-    PeppolSendService::class => [
-        'class' => PeppolSendService::class,
+    OxalisPeppolSendService::class => [
+        'class' => OxalisPeppolSendService::class,
         '__construct()' => [
             'oxalisBaseUrl'       => $oxalisBaseUrl,
             'senderParticipantId' => $senderParticipantId,
         ],
     ],
+
+    // StorecovePeppolSendService has no scalar constructor params (just
+    // PeppolMessageRepositoryInterface + SettingRepository, both already
+    // autowirable), so it needs no entry of its own here.
+
+    // Which one actually sends is decided per-call by
+    // PeppolSendServiceRouter reading peppol_access_point_provider — see
+    // that class's own docblock for why this isn't a static choice made
+    // once here at container-build time.
+    PeppolSendServiceInterface::class => PeppolSendServiceRouter::class,
 ];

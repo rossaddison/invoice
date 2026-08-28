@@ -28,7 +28,7 @@ use Psr\Http\Message\RequestFactoryInterface;
  *   ProcessTypeId  — cenbii-procid-ubl::<processId>
  *   SenderId      — iso6523-actorid-upis::<senderParticipantId>  (optional)
  */
-final class PeppolSendService
+final class OxalisPeppolSendService implements PeppolSendServiceInterface
 {
     public function __construct(
         private readonly ClientInterface $httpClient,
@@ -47,6 +47,7 @@ final class PeppolSendService
      * @param string $documentTypeId  Peppol document type URN (defaults to BIS Billing 3.0 Invoice)
      * @param string $processId       Peppol process URN (defaults to BIS Billing 3.0)
      */
+    #[\Override]
     public function send(
         int $invId,
         string $ublXml,
@@ -119,6 +120,7 @@ final class PeppolSendService
      * Increment retry count and re-attempt a previously FAILED message.
      * The caller is responsible for re-supplying the original UBL XML.
      */
+    #[\Override]
     public function retry(
         PeppolMessage $message,
         string $ublXml,

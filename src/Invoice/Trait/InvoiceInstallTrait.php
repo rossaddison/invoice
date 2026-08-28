@@ -49,6 +49,12 @@ trait InvoiceInstallTrait
             // for why this moved and how an already-installed instance's
             // existing gateway_storecove_apiKey value gets carried over.
             'storecove_api_key' => '',
+            // Which PeppolSendServiceInterface implementation actually
+            // sends — 'storecove' or 'oxalis'. Defaults to storecove:
+            // Oxalis has never actually been live in this deployment (see
+            // PeppolSendServiceRouter's own docblock). Read fresh per call,
+            // not baked into DI config, so this takes effect immediately.
+            'peppol_access_point_provider' => 'storecove',
             'app_cdn_not_node_module' => 1,
             'bootstrap5_cdn_not_node_module' => 1,
             'bootstrap5_offcanvas_enable' => 0,
