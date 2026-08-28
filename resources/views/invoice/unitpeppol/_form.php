@@ -51,11 +51,6 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::hidden($form, 'id')
-        ->hideLabel(true)
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::select($form, 'unit_id')
     ->label($translator->translate('id'))
     ->optionsData($optionsDataUnits)
