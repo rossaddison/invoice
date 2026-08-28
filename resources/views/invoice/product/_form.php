@@ -143,8 +143,6 @@ use Yiisoft\Html\Tag\Form;
         <?= $formFields->productPriceField(
             $form, 'product_price_base_quantity', 'product.price.base.quantity', true); ?>
         <?= Html::tag('br'); ?>
-        <?= $formFields->productPriceField(
-            $form, 'product_tariff', 'product.tariff', true); ?>
 
         <?= '-----------------------------------------------'; ?>
         <?= $formFields->productTextField(
