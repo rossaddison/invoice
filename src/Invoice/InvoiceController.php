@@ -58,6 +58,9 @@ final class InvoiceController extends BaseController
             'tp' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/taxpoint',
                             ['fontSize' => $fontSize]),
+            'filter_combining' => $this->webViewRenderer->renderPartialAsString(
+                        '//invoice/info/filter_combining',
+                            ['fontSize' => $fontSize]),
             'shared' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/shared_hosting',
                             ['fontSize' => $fontSize]),
