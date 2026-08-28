@@ -71,6 +71,13 @@ use Yiisoft\Html\Tag\Option;
 
 $settingTabIndex = 'setting/tabIndex';
 $peppolEnabled = $s->getSetting('enable_peppol') == '1';
+// Which PeppolSendServiceInterface implementation inv/peppolSend actually
+// routes to — see PeppolSendServiceRouter's own docblock for the same
+// default-to-storecove fallback mirrored here, so this label can't drift
+// from what a click on it actually does.
+$peppolProvider = $s->getSetting('peppol_access_point_provider');
+$peppolProviderLabel = $translator->translate(
+    $peppolProvider === 'oxalis' ? 'oxalis' : 'storecove');
 
 // Resolve invoice group name from ID
 $defaultInvGroupName = $translator->translate('not.set');
@@ -1002,7 +1009,9 @@ if ($peppolEnabled) {
       echo ' ' . H::encode($translator->translate('storecove.invoice.json.encoded'));
      echo H::closeTag('a');
     echo H::closeTag('li');
-// Options ... Send via Peppol (Oxalis) — only available for non-draft invoices
+// Options ... Send via Peppol (<active provider>) — only available for
+// non-draft invoices. Label reflects peppol_access_point_provider, not a
+// fixed provider name — see $peppolProviderLabel above.
 if ($peppolEnabled && $inv->reqStatusId() !== 1) {
     echo H::openTag('li');
      echo H::openTag('a', [
@@ -1011,7 +1020,8 @@ if ($peppolEnabled && $inv->reqStatusId() !== 1) {
      ]);
       echo H::openTag('i', ['class' => 'bi bi-send-fill']);
       echo H::closeTag('i');
-      echo ' ' . H::encode($translator->translate('peppol.send.via.oxalis'));
+      echo ' ' . H::encode($translator->translate('peppol.send.via'))
+          . ' (' . H::encode($peppolProviderLabel) . ')';
      echo H::closeTag('a');
     echo H::closeTag('li');
 }
