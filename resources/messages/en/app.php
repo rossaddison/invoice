@@ -2640,6 +2640,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'storecove.invoice.json.encoded' =>
     'StoreCove Json Encoded Invoice',
   'peppol.send.via.oxalis' => 'Send via Peppol (Oxalis)',
+  'peppol.send.via' => 'Send via Peppol',
   'oxalis' => 'Oxalis',
   'storecove.legal' => 'Legal',
   'storecove.legal.entity.id.for.json' =>
