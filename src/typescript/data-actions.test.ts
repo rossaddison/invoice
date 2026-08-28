@@ -118,6 +118,65 @@ describe('initDataActions', () => {
         ).not.toThrow();
     });
 
+    it('copies an <input> value (not its empty textContent) via data-copy-target-id', async () => {
+        document.body.innerHTML =
+            '<input id="secret" value="sk_live_12345">' +
+            '<button data-action="copy-to-clipboard" data-copy-target-id="secret" ' +
+            'data-copied-label="Copied!"><i class="bi bi-clipboard"></i></button>';
+        const writeText = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+
+        document.querySelector('button')!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        await Promise.resolve();
+        await Promise.resolve();
+
+        expect(writeText).toHaveBeenCalledWith('sk_live_12345');
+    });
+
+    it('flashes the icon and aria-label/title, then restores them, for an icon-only copy button', async () => {
+        document.body.innerHTML =
+            '<input id="secret" value="sk_live_12345">' +
+            '<button data-action="copy-to-clipboard" data-copy-target-id="secret" ' +
+            'data-copied-label="Copied!" aria-label="Copy to clipboard" title="Copy to clipboard">' +
+            '<i class="bi bi-clipboard"></i></button>';
+        const writeText = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+        vi.useFakeTimers();
+
+        const button = document.querySelector('button')!;
+        const icon = document.querySelector('i')!;
+        button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(icon.className).toBe('bi bi-clipboard-check');
+        expect(button.getAttribute('aria-label')).toBe('Copied!');
+        expect(button.getAttribute('title')).toBe('Copied!');
+
+        await vi.advanceTimersByTimeAsync(2000);
+
+        expect(icon.className).toBe('bi bi-clipboard');
+        expect(button.getAttribute('aria-label')).toBe('Copy to clipboard');
+        expect(button.getAttribute('title')).toBe('Copy to clipboard');
+
+        vi.useRealTimers();
+    });
+
+    it('resolves data-copy-target-id over data-copy-target when both are present', async () => {
+        document.body.innerHTML =
+            '<pre id="wrong">wrong value</pre>' +
+            '<input id="right" value="right value">' +
+            '<button data-action="copy-to-clipboard" data-copy-target="#wrong" ' +
+            'data-copy-target-id="right">Copy</button>';
+        const writeText = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+
+        document.querySelector('button')!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        await Promise.resolve();
+        await Promise.resolve();
+
+        expect(writeText).toHaveBeenCalledWith('right value');
+    });
+
     it('prevents default when data-confirm dialog is cancelled', () => {
         document.body.innerHTML = '<a href="/delete" data-confirm="Are you sure?">Delete</a>';
         vi.spyOn(globalThis, 'confirm').mockReturnValue(false);
