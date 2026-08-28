@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Peppol\Console;
 
 use App\Invoice\Peppol\PeppolMessageRepositoryInterface;
-use App\Invoice\Peppol\PeppolSendService;
+use App\Invoice\Peppol\PeppolSendServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,7 +33,7 @@ final class RetryFailedCommand extends Command
 
     public function __construct(
         private readonly PeppolMessageRepositoryInterface $pmR,
-        private readonly PeppolSendService $sendService,
+        private readonly PeppolSendServiceInterface $sendService,
         private readonly LoggerInterface $logger,
     ) {
         parent::__construct();

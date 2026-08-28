@@ -16,7 +16,7 @@ use Yiisoft\Json\Json;
  * Thin wrapper around Meta's WhatsApp Business Cloud API — there's no
  * official (or widely-used third-party) PHP SDK for it, unlike Telegram's
  * phptg/bot-api, so this talks to the REST API directly via a PSR-18
- * client, the same pattern PeppolSendService already uses for Oxalis.
+ * client, the same pattern OxalisPeppolSendService already uses for Oxalis.
  *
  * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/get-started
  */

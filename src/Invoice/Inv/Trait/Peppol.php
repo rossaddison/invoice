@@ -23,7 +23,7 @@ use App\Invoice\Helpers\Peppol\{
     PeppolHelperNetDeps,
     PeppolValidator,
 };
-use App\Invoice\Peppol\PeppolSendService;
+use App\Invoice\Peppol\PeppolSendServiceInterface;
 use Yiisoft\{Html\Html, Router\HydratorAttribute\RouteArgument, User\CurrentUser
 };
 use Psr\Http\Message\ResponseInterface as Response;
@@ -297,7 +297,7 @@ trait Peppol
         InvPeppolNetworkDeps $net,
         InvPeppolChargeDeps $charge,
         InvPeppolInvDeps $inv,
-        PeppolSendService $peppolSendService,
+        PeppolSendServiceInterface $peppolSendService,
     ): Response {
         $invoice = $id ? $core->invRepo->repoInvLoadInvAmountquery($id) : null;
         if ($currentUser->isGuest() || null === $invoice) {
@@ -331,7 +331,7 @@ trait Peppol
         InvPeppolNetworkDeps $net,
         InvPeppolChargeDeps $charge,
         InvPeppolInvDeps $inv,
-        PeppolSendService $peppolSendService,
+        PeppolSendServiceInterface $peppolSendService,
     ): void {
         $peppolhelper = new PeppolHelper(
             $this->sR, $net->delRepo, $invoice->getInvAmount(), $delloc, $this->translator, $core->gR);

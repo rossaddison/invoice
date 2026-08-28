@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b1e83446079900540b4d2d05c0ef74dc",
+    "content-hash": "73131f1f29d4bc99a3038cef851c3166",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -8814,6 +8814,65 @@
                 }
             ],
             "time": "2026-07-30T08:19:05+00:00"
+        },
+        {
+            "name": "rossaddison/storecove-client",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "../storecove-client",
+                "reference": "c3b56b20f5b1db6c51f792d9c32606662d33d564"
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "guzzlehttp/guzzle": ">=7.15.5",
+                "guzzlehttp/psr7": ">=2.13.1",
+                "php": "8.4 - 9.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.95.23",
+                "phpunit/phpunit": ">=13.1.4",
+                "vimeo/psalm": ">=6.16.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RossAddison\\StorecoveClient\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "RossAddison\\StorecoveClient\\Test\\": "test/"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ross Addison",
+                    "homepage": "https://github.com/rossaddison"
+                }
+            ],
+            "description": "Generated PHP client for the Storecove API (v2), for use by rossaddison/invoice",
+            "homepage": "https://github.com/rossaddison/storecove-client",
+            "keywords": [
+                "api",
+                "e-invoicing",
+                "peppol",
+                "sdk",
+                "storecove",
+                "ubl"
+            ],
+            "support": {
+                "source": "https://github.com/rossaddison/storecove-client",
+                "issues": "https://github.com/rossaddison/storecove-client/issues"
+            },
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "rossaddison/yii-auth-client",
@@ -28243,6 +28302,7 @@
         "roave/security-advisories": 20,
         "rossaddison/openbanking-client": 20,
         "rossaddison/requirements": 20,
+        "rossaddison/storecove-client": 20,
         "rossaddison/translator-extractor": 20,
         "rossaddison/yii-auth-client": 20,
         "rossaddison/yii-cycle-1": 20,

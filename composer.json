@@ -81,6 +81,7 @@
         "robrichards/xmlseclibs": "^3.1.5",
         "rossaddison/openbanking-client": "dev-main",
         "rossaddison/requirements": "dev-master",
+        "rossaddison/storecove-client": "dev-master",
         "rossaddison/yii-auth-client": "dev-invoice",
         "rossaddison/yii-cycle-1": "dev-master",
         "rossaddison/yii-gii": "*",
@@ -257,6 +258,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/rossaddison/openbanking-client"
+        },
+        {
+            "type": "path",
+            "url": "../storecove-client"
         },
         {
             "type": "vcs",

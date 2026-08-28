@@ -710,6 +710,15 @@ trait SettingTooltipTrait
     private function tooltipArrayD2(): array
     {
         return [
+            'peppol_access_point_provider' => [
+                'why' => 'Which Access Point actually transmits Peppol'
+                . ' documents — Storecove\'s managed API, or a self-hosted'
+                . ' Oxalis AS4 gateway. Read fresh on every send, so'
+                . ' switching here takes effect immediately, without a'
+                . ' restart or redeploy. Defaults to Storecove: Oxalis has'
+                . ' never actually been live in this deployment.',
+                'where' => 'App\\Invoice\\Peppol\\PeppolSendServiceRouter',
+            ],
             'peppol_document_currency' => [
                 'why' => 'UBL Invoice can be in either the Supplier\'s currency'
                 . ' or the Buyer\'s currency',

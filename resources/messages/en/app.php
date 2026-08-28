@@ -1830,6 +1830,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'peppol' => 'Peppol Universal Business Language'
     . ' (UBL) 2.4 Invoice - Ecosio Validated',
   'peppol.abbreviation' => 'Peppol',
+  'peppol.access.point.provider' => 'Access Point Provider',
   'peppol.allowance.or.charge.inherit.inv' =>
     'Invoice Allowance Charges and Invoice'
     . ' Item Allowance Charges inherit from a'
@@ -2639,6 +2640,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'storecove.invoice.json.encoded' =>
     'StoreCove Json Encoded Invoice',
   'peppol.send.via.oxalis' => 'Send via Peppol (Oxalis)',
+  'oxalis' => 'Oxalis',
   'storecove.legal' => 'Legal',
   'storecove.legal.entity.id.for.json' =>
     '1.1.4. Create a sender '
