@@ -80,6 +80,20 @@ final class CheckGatewaySecretsCommand extends Command
             }
         }
 
+        // Storecove isn't a payment gateway, so its API key lives outside
+        // activePaymentGateways() entirely — its own storecove_api_key
+        // setting on the Storecove tab, not a gateway_{driver}_{field} one.
+        // Checked explicitly here so removing it from that generic list
+        // (see project_storecove_client_openapi_pivot memory) didn't
+        // silently drop it from this command's coverage.
+        $storecoveResult = $this->checkNonGatewaySecret('Storecove.apiKey', 'storecove_api_key', $io);
+        if ($storecoveResult !== null) {
+            $checked++;
+            if ($storecoveResult !== '') {
+                $corrupted[] = $storecoveResult;
+            }
+        }
+
         return $this->reportResults($io, $checked, $corrupted);
     }
 
@@ -105,6 +119,24 @@ final class CheckGatewaySecretsCommand extends Command
             return null; // never configured — not this regression's concern
         }
         return $this->decodeAndReportSecret("{$driver}.{$key}", $stored, $io);
+    }
+
+    /**
+     * Same shape as checkGatewaySecret(), for a stored secret that isn't
+     * part of activePaymentGateways() at all — currently just Storecove's
+     * own storecove_api_key.
+     *
+     * @return string|null null when never configured (skipped, not
+     *   counted); '' when checked and fine; the corrupted label when
+     *   checked and corrupted.
+     */
+    private function checkNonGatewaySecret(string $label, string $settingKey, SymfonyStyle $io): ?string
+    {
+        $stored = $this->sR->getSetting($settingKey);
+        if ($stored === '') {
+            return null;
+        }
+        return $this->decodeAndReportSecret($label, $stored, $io);
     }
 
     /**

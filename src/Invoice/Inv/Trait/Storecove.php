@@ -23,8 +23,10 @@ trait Storecove
 {
     /**
      * Related logic: see https://www.storecove.com/docs#_json_object
-     * Related logic: see StoreCove API key stored under Online Payment keys
-     * under Settings...View...Online Payment
+     * Related logic: see StoreCove API key stored under Settings > Storecove
+     * (storecove_api_key) — moved off the generic Online Payment
+     * gateway-credentials mechanism, since Storecove isn't a payment
+     * gateway; see project_storecove_client_openapi_pivot memory.
      */
     public function storecove(
         #[RouteArgument('id')]

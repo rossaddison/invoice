@@ -29,6 +29,7 @@ use App\Invoice\PaymentInformation\GatewayStatus\Console\RebuildGatewayStatusCom
 use App\Invoice\Peppol\Console\RetryFailedCommand;
 use App\Invoice\Setting\Console\BackupDatabaseCommand;
 use App\Invoice\Setting\Console\CheckGatewaySecretsCommand;
+use App\Invoice\Setting\Console\MigrateStorecoveApiKeySettingCommand;
 use App\Invoice\System\Console\CheckPhpVersionCommand;
 use App\User\Console\CreateCommand;
 use App\User\Console\AssignRoleCommand;
@@ -54,6 +55,7 @@ return [
             'invrecurring/process' => ProcessRecurringInvoicesCommand::class,
             'setting/backup-database' => BackupDatabaseCommand::class,
             'setting/check-gateway-secrets' => CheckGatewaySecretsCommand::class,
+            'setting/migrate-storecove-api-key' => MigrateStorecoveApiKeySettingCommand::class,
             'gateway-status/rebuild' => RebuildGatewayStatusCommand::class,
             'gateway-status/check-sandboxes' => CheckGatewaySandboxesCommand::class,
             'user/create' => CreateCommand::class,

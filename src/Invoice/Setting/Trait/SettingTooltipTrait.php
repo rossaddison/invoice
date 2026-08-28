@@ -779,6 +779,19 @@ trait SettingTooltipTrait
     private function tooltipArrayE(): array
     {
         return [
+            'storecove_api_key' => [
+                'why' => 'Your Storecove account\'s API key — created from'
+                . ' the "Create New API Key" button after logging in at'
+                . ' app.storecove.com. A sandbox account\'s key only talks'
+                . ' to Storecove\'s test networks (OpenPeppol test network,'
+                . ' DBNAlliance, and simulated rails for several'
+                . ' non-Peppol jurisdictions); a production account\'s key'
+                . ' talks to the real network. Storecove uses the same API'
+                . ' host for both — which one this key is for depends only'
+                . ' on which account it was created under.',
+                'where' => 'RossAddison\\StorecoveClient\\StorecoveClient'
+                . ' (rossaddison/storecove-client)',
+            ],
             'storecove_country' => [
                 'why' => 'The first step in sending an invoice is to create'
                 . ' a sender. This sender is called'

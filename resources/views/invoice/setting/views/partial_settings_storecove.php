@@ -28,6 +28,54 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::openTag('div', ['class' => $col]); //6
       echo H::openTag('div', ['class' => 'mb-3']); //7
        echo H::openTag('label', [
+        'for' => 'settings[storecove_api_key]'
+       ]);
+        echo H::a(
+         $translator->translate('storecove.api.key'),
+         'https://app.storecove.com/users/sign_in',
+         ['class' => 'text-decoration-none', 'target' => '_blank']
+        );
+        echo $s->infoIcon('storecove_api_key');
+       echo H::closeTag('label');
+       // Decrypted the same way partial_settings_online_payment.php
+       // decrypts a stored password-type gateway secret — failing safe
+       // to an empty field on CryptorException, rather than crashing
+       // this whole settings tab over one corrupted value.
+       try {
+        $storecoveApiKeyValue = (string) (strlen($s->getSetting('storecove_api_key')) > 0
+         ? $s->decode($s->getSetting('storecove_api_key'))
+         : '');
+       } catch (\App\Invoice\Libraries\CryptorException) {
+        $storecoveApiKeyValue = '';
+       }
+       echo H::openTag('div', ['class' => 'position-relative']);
+        echo H::openTag('input', [
+         'type' => 'password',
+         'name' => 'settings[storecove_api_key]',
+         'id' => 'settings[storecove_api_key]',
+         'class' => 'form-control pe-5',
+         'value' => $storecoveApiKeyValue,
+        ]);
+        echo H::openTag('button', [
+         'type' => 'button',
+         'class' => 'btn btn-link position-absolute top-50 end-0 translate-middle-y password-reveal-toggle',
+         'data-target' => 'settings[storecove_api_key]',
+         'aria-label' => 'Show password',
+         'tabindex' => '-1',
+        ]);
+         echo H::tag('i', '', ['class' => 'bi bi-eye']);
+        echo H::closeTag('button');
+       echo H::closeTag('div');
+       echo H::openTag('input', [
+        'type' => 'hidden',
+        'value' => '1',
+        'name' => 'settings[storecove_api_key_field_is_password]',
+       ]);
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+     echo H::openTag('div', ['class' => $col]); //6
+      echo H::openTag('div', ['class' => 'mb-3']); //7
+       echo H::openTag('label', [
         'for' => 'settings[storecove_country]'
        ]);
         echo H::a(

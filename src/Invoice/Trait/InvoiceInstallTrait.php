@@ -42,6 +42,13 @@ trait InvoiceInstallTrait
  */
 
             'active_only' => 0,
+            // Own field on the Storecove settings tab, not the generic
+            // Online Payment gateway-credentials slot — see
+            // project_storecove_client_openapi_pivot memory and
+            // src/Invoice/Setting/Console/MigrateStorecoveApiKeySettingCommand.php
+            // for why this moved and how an already-installed instance's
+            // existing gateway_storecove_apiKey value gets carried over.
+            'storecove_api_key' => '',
             'app_cdn_not_node_module' => 1,
             'bootstrap5_cdn_not_node_module' => 1,
             'bootstrap5_offcanvas_enable' => 0,

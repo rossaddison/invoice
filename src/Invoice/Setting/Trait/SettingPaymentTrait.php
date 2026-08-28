@@ -33,7 +33,6 @@ trait SettingPaymentTrait
             'Mercado_Pago' => $this->mercadoPagoGatewayFields(),
             'Paypal' => $this->paypalGatewayFields(),
             'Square' => $this->squareGatewayFields(),
-            'StoreCove' => $this->storeCoveGatewayFields(),
             'Stripe' => $this->stripeGatewayFields(),
             'TrueLayer' => $this->trueLayerGatewayFields(),
         ];
@@ -471,16 +470,6 @@ trait SettingPaymentTrait
             'sandbox' => [
                 'type' => 'checkbox',
                 'label' => 'Sandbox (uses connect.squareupsandbox.com)',
-            ],
-        ];
-    }
-
-    private function storeCoveGatewayFields(): array
-    {
-        return [
-            'apiKey' => [
-                'type' => 'password',
-                'label' => AppConstants::LABEL_API_KEY,
             ],
         ];
     }

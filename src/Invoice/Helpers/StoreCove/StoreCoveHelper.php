@@ -693,7 +693,7 @@ final readonly class StoreCoveHelper
          * @var mixed $api_key_here
          */
         $api_key_here =
-            $this->s->decode($this->s->getSetting('gateway_storecove_apiKey'));
+            $this->s->decode($this->s->getSetting('storecove_api_key'));
         $country_code_identifier = $this->s->getSetting('storecove_country');
         $site = curl_init();
         if ($site) {

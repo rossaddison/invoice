@@ -2631,6 +2631,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'stop.logging.in' => 'Stop logging in',
   'stop.signing.up' => 'Stop signing up',
   'storecove' => 'Storecove',
+  'storecove.api.key' => 'API Key',
   'storecove.advisory.to.developer.field.easily.missed'
     => 'Field easily missed by customer',
   'storecove.create.a.sender.legal.entity.country'

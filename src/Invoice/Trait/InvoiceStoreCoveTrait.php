@@ -30,7 +30,7 @@ trait InvoiceStoreCoveTrait
          * @var mixed $api_key_here
          */
         $api_key_here = $this->sR->decode($this->sR->getSetting(
-                                                'gateway_storecove_apiKey'));
+                                                'storecove_api_key'));
         $site = curl_init();
         if ($site) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
@@ -81,7 +81,7 @@ trait InvoiceStoreCoveTrait
          * @var mixed $api_key_here
          */
         $api_key_here = $this->sR->decode($this->sR->getSetting(
-            'gateway_storecove_apiKey'));
+            'storecove_api_key'));
         $site = curl_init();
         if ($site) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
@@ -133,7 +133,7 @@ trait InvoiceStoreCoveTrait
          * @var mixed $api_key_here
          */
         $api_key_here = $this->sR->decode(
-                            $this->sR->getSetting('gateway_storecove_apiKey'));
+                            $this->sR->getSetting('storecove_api_key'));
         $parameters = [
             'result' => '',
             'message' => '',
@@ -181,7 +181,7 @@ trait InvoiceStoreCoveTrait
          * @var mixed $api_key_here
          */
         $api_key_here = $this->sR->decode($this->sR->getSetting(
-                                                    'gateway_storecove_apiKey'));
+                                                    'storecove_api_key'));
         $parameters = [
             'result' => '',
             'message' => '',
@@ -287,7 +287,7 @@ trait InvoiceStoreCoveTrait
          * @var mixed $api_key_here
          */
         $api_key_here = $this->sR->decode($this->sR->getSetting(
-                                                'gateway_storecove_apiKey'));
+                                                'storecove_api_key'));
         $parameters = [
             'result' => '',
             'message' => '',
