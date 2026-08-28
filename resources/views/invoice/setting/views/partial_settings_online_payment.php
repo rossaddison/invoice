@@ -344,7 +344,7 @@ echo H::openTag('div', $row); //1
      echo H::openTag('div', ['class' => 'position-relative']);
       echo H::openTag('input', [
        'type' => $setting['type'],
-       'class' => 'form-select pe-5',
+       'class' => 'form-control pe-5',
        'name' => $pfxGateway . $d . '_' .
        $key . ']',
        'id' => $pfxGateway . $d . '_' .
@@ -364,7 +364,7 @@ echo H::openTag('div', $row); //1
      } else {
      echo H::openTag('input', [
       'type' => $setting['type'],
-      'class' => 'form-select',
+      'class' => 'form-control',
       'name' => $pfxGateway . $d . '_' .
       $key . ']',
       'id' => $pfxGateway . $d . '_' .
