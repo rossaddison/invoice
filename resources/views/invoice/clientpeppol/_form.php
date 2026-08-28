@@ -198,6 +198,41 @@ use Yiisoft\VarDumper\VarDumper;
                   ?>
                 <?= Html::closeTag('div'); ?>
 
+                <?php
+                // Built via foreach, not array_map(fn, array_keys($x), $x) —
+                // that form always re-indexes its result 0,1,2,..., so the
+                // <option value="..."> submitted was this array's *position*
+                // in the list, not a real Peppol tax scheme code. Confirmed
+                // live: picking the first-listed row (the -1 legend entry
+                // below, itself never meant to be selectable) posted
+                // taxschemeid=0, which OrderResponseAdvancedService.php then
+                // writes straight into UBL's cac:TaxScheme/cbc:ID with no
+                // lookup step in between — unlike storecove_sender_identifier
+                // (Settings > Storecove), which deliberately stores this same
+                // array's raw key because StoreCoveHelper.php looks it back
+                // up before use. No such lookup exists for this field, so it
+                // has to store the real code (row's 'tax' value) directly.
+                // Rows with no tax scheme at all ('tax' => '') are excluded
+                // rather than offered as "N/A" — selecting one would submit
+                // that literal placeholder text as if it were a real code.
+                $taxSchemeOptions = [];
+                foreach ($receiver_identifier_array as $rowKey => $row) {
+                    if ($rowKey === -1 || !isset($row['tax']) || $row['tax'] === '') {
+                        continue;
+                    }
+                    $taxSchemeOptions[$row['tax']] = ucfirst(
+                        $row['region'] .
+                        str_repeat(" ", 2) .
+                        str_repeat("-", 10) .
+                        str_repeat(" ", 2) .
+                        $row['country'] .
+                        str_repeat(" ", 2) .
+                        str_repeat("-", 10) .
+                        str_repeat(" ", 2) .
+                        $row['tax']
+                    );
+                }
+                ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Html::tag('small',
                       'StoreCoveArrays::storeCoveReceiverIdentifierArray()',
@@ -212,28 +247,7 @@ use Yiisoft\VarDumper\VarDumper;
                             && $form->getTaxschemeid() !== null ?
                             $form->getTaxschemeid() :
                                 ($defaults ? $pep['taxschemeid']['eg'] : ''))
-                    ->optionsData(array_map(
-                        /**
-                         * @param array{region: string, country: string, tax?: string} $value
-                         */
-                        function($key, $value) use ($translator) {
-                            return ucfirst(
-                                $value['region'] .
-                                str_repeat(" ", 2) .
-                                str_repeat("-", 10) .
-                                str_repeat(" ", 2) .
-                                $value['country'] .
-                                str_repeat(" ", 2) .
-                                str_repeat("-", 10) .
-                                str_repeat(" ", 2) .
-                                (isset($value['tax']) && $value['tax'] !== '' ?
-                                        $value['tax'] : $translator->translate(
-                                                'storecove.not.available'))
-                            );
-                        },
-                        array_keys($receiver_identifier_array),
-                        $receiver_identifier_array
-                    ))
+                    ->optionsData($taxSchemeOptions)
                     ->required(true)
                     ->hint($translator->translate('hint.this.field.is.required'))
                   ?>
