@@ -52,8 +52,6 @@ use Yiisoft\Html\Tag\Form;
 <?= Field::errorSummary($form)
     ->errors($errors)
     ->header($translator->translate('product.error.summary'))
-    ->onlyProperties(...['product_sku','tax_rate_id','product_price'])
-    ->onlyCommonErrors()
 ?>
 
 <?= Html::openTag('ul', ['id' => 'product-tabs', 'class' => 'nav nav-tabs']); ?>
