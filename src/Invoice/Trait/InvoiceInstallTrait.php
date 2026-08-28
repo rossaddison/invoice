@@ -109,7 +109,18 @@ trait InvoiceInstallTrait
             // Invoice deletion by Law is not allowed. Invoices have to be
             // cancelled with a credit invoice/note.
             'enable_invoice_deletion' => true,
-            'enable_peppol_client_defaults' => 1,
+            // Turns on the "Fill Client Peppol Form with OpenPeppol
+            // defaults for testing" checkbox (Settings tab "peppol") by
+            // default on a fresh install — pre-fills every ClientPeppol
+            // field with a valid example value (see
+            // ClientPeppolController::pep()) so the Add form isn't a wall
+            // of blank required fields with no hint of expected format.
+            // Key name must match exactly what ClientPeppolController
+            // reads ('enable_client_peppol_defaults', client-then-peppol)
+            // — this previously seeded the word-swapped
+            // 'enable_peppol_client_defaults' instead, silently never
+            // turning the feature on for any fresh install.
+            'enable_client_peppol_defaults' => 1,
             'enable_telegram' => 0,
             'enable_vat_registration' => 0,
             // Compulsory — Settings tab "tfa" locks this to always-on (a
