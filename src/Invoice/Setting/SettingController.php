@@ -401,19 +401,49 @@ final class SettingController extends BaseController
     // This procedure is used in the above procedure to ensure that all
     //  settings are being captured.
     /**
+     * Creates the row for a submitted setting key that doesn't have one yet
+     * (saveSubmittedSettings()'s repoCount($key) == 0 branch — a brand-new
+     * setting key being saved for the first time, e.g. a password-type
+     * setting whose default_settings seed was only ever added after this
+     * instance's original install). Despite the name, this was never
+     * actually gated by real debug mode — the one caller always passes
+     * true — but it WAS, until now, missing saveOneSetting()'s
+     * password/amount handling entirely: a first-time save of any
+     * password-type setting went in as plain, unencrypted text, silently
+     * corrupting every later decode() call on it. Confirmed live: this is
+     * exactly how storecove_api_key ended up producing a garbled
+     * "Bearer ..." header — its first save predated its default_settings
+     * row existing, so it never went through saveOneSetting()'s encode()
+     * at all. Mirrors saveOneSetting()'s three branches exactly so a
+     * field's first save and every save after it are encrypted the same
+     * way.
+     *
      * @param bool $bool
      * @param string $key
      * @param string $value
+     * @param array $settings
+     * @param NumberHelper $numberhelper
      */
     public function tabIndexDebugModeEnsureAllSettingsIncluded(bool $bool,
-            string $key, string $value): void
+            string $key, string $value, array $settings,
+            NumberHelper $numberhelper): void
     {
-        if ($bool) {
-            $setting = new Setting();
-            $setting->setSettingKey($key);
-            $setting->setSettingValue($value);
-            $this->sR->save($setting);
+        if (!$bool) {
+            return;
         }
+        if (isset($settings[$key . '_field_is_password']) && $value === '') {
+            return;
+        }
+        $setting = new Setting();
+        $setting->setSettingKey($key);
+        if (isset($settings[$key . '_field_is_password']) && $value !== '') {
+            $setting->setSettingValue((string) $this->sR->encode(trim($value)));
+        } elseif (isset($settings[$key . '_field_is_amount'])) {
+            $setting->setSettingValue((string) $numberhelper->standardizeAmount($value));
+        } else {
+            $setting->setSettingValue($value);
+        }
+        $this->sR->save($setting);
     }
 
     /**
@@ -598,7 +628,7 @@ final class SettingController extends BaseController
                 }
                 $this->saveOneSetting($key, $value, $settings, $numberhelper);
             } else {
-                $this->tabIndexDebugModeEnsureAllSettingsIncluded(true, $key, $value);
+                $this->tabIndexDebugModeEnsureAllSettingsIncluded(true, $key, $value, $settings, $numberhelper);
             }
         }
         return null;
