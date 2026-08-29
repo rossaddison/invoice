@@ -19,6 +19,7 @@ use Yiisoft\Html\Html;
  *     sandbox_tested_at: string|null,
  *     notes: string,
  * }> $rows
+ * @var list<array{name: string, regions: string, notes: string}> $referenceProviders
  */
 
 $statusBadge = static function (string $status): string {
@@ -70,5 +71,40 @@ $statusBadge = static function (string $status): string {
                 <?= Html::closeTag('tbody'); ?>
             <?= Html::closeTag('table'); ?>
         <?= Html::closeTag('div'); ?>
+
+        <?php if ($referenceProviders !== []): ?>
+            <?= Html::tag('h2', 'Other providers surveyed for future regional coverage',
+                ['class' => 'h4 fw-bold mt-5 mb-2'])->render(); ?>
+            <?= Html::tag(
+                'p',
+                'Not integrated into this app — no send capability exists for these yet, so'
+                    . ' there\'s nothing here for this app itself to have tested. Listed because a real,'
+                    . ' no-sales-call sandbox was confirmed directly against the provider\'s own site.',
+                ['class' => 'text-muted small mb-3'],
+            )->render(); ?>
+            <?= Html::openTag('div', ['class' => 'table-responsive']); ?>
+                <?= Html::openTag('table', ['class' => 'table table-sm']); ?>
+                    <?= Html::openTag('thead'); ?>
+                        <?= Html::openTag('tr'); ?>
+                            <?php foreach (['Provider', 'Regions', 'Notes'] as $col): ?>
+                                <?= Html::tag('th', $col)->render(); ?>
+                            <?php endforeach; ?>
+                        <?= Html::closeTag('tr'); ?>
+                    <?= Html::closeTag('thead'); ?>
+                    <?= Html::openTag('tbody'); ?>
+                        <?php foreach ($referenceProviders as $provider): ?>
+                            <?= Html::openTag('tr'); ?>
+                                <?= Html::tag('td', $provider['name'],
+                                    ['data-label' => 'Provider'])->render(); ?>
+                                <?= Html::tag('td', $provider['regions'],
+                                    ['data-label' => 'Regions'])->render(); ?>
+                                <?= Html::tag('td', $provider['notes'],
+                                    ['class' => 'small text-muted', 'data-label' => 'Notes'])->render(); ?>
+                            <?= Html::closeTag('tr'); ?>
+                        <?php endforeach; ?>
+                    <?= Html::closeTag('tbody'); ?>
+                <?= Html::closeTag('table'); ?>
+            <?= Html::closeTag('div'); ?>
+        <?php endif; ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('section'); ?>

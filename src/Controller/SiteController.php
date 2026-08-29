@@ -296,7 +296,52 @@ final class SiteController
 
         return $this->webViewRenderer->render('peppol-status', [
             'rows' => $rows,
+            'referenceProviders' => $this->surveyedAccessPointProviders(),
         ]);
+    }
+
+    /**
+     * Other Peppol Access Point providers surveyed for future regional
+     * coverage — deliberately not wired into PeppolSendServiceRouter or
+     * the Access Point Provider settings dropdown, so this app never
+     * offers a choice with nothing real behind it (the exact class of bug
+     * this session spent several PRs fixing for the two providers that
+     * ARE wired up). None of this app's own message-send history applies
+     * to these, so they get their own section on the page rather than
+     * reusing $rows' "sandbox tested ✓" badge, which specifically means
+     * this app sent a real message through that provider — not true here.
+     *
+     * Research, 2026-08-29: Storecove (already integrated) is accredited
+     * across all four original Peppol territories (EU, Australia, New
+     * Zealand, Singapore) plus expanding into Malaysia and CTC-clearance
+     * countries (Italy, Poland, Romania, India) — most realistic regional
+     * ground is already covered by the one integration this app has.
+     * Checked against a real, no-sales-call sandbox before including
+     * anything else: Tradeshift's sandbox is only documented in their own
+     * support knowledgebase, with no self-serve signup path found on
+     * their own site; Basware's requires going through their support team
+     * to provision; Pagero's current ownership is genuinely unclear as of
+     * this writing (a 2023-24 Vertex acquisition bid was withdrawn after
+     * competing Thomson Reuters/Avalara offers) — all three excluded
+     * rather than guessed at. PeppolSoft is the one that held up: a
+     * complimentary sandbox with no sales gate (their own site: "Sandbox
+     * environment free"), transparent $0.10/invoice pricing with no
+     * subscription or minimum, and explicit UK coverage "launching soon,
+     * ahead of the 2029 mandate" — directly relevant to the HMRC timeline
+     * this project already tracks (see project_uk_einvoicing_2029 memory).
+     *
+     * @return list<array{name: string, regions: string, notes: string}>
+     */
+    private function surveyedAccessPointProviders(): array
+    {
+        return [
+            [
+                'name' => 'PeppolSoft',
+                'regions' => 'US (DBNAlliance), EU, UK (launching, ahead of the 2029 mandate)',
+                'notes' => 'Free complimentary sandbox, no sales call required. Pay-per-transaction'
+                    . ' ($0.10/invoice), no subscription or minimum. Not yet integrated into this app.',
+            ],
+        ];
     }
 
     /**
