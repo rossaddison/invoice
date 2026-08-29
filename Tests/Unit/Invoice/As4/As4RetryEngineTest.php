@@ -18,7 +18,6 @@ use App\Invoice\As4\As4ReceiptParserInterface;
 use App\Invoice\As4\As4ReceiptSignal;
 use App\Invoice\As4\As4RetryEngine;
 use App\Invoice\As4\As4SenderInterface;
-use DateTime;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -92,9 +91,9 @@ class As4RetryEngineTest extends TestCase
         $message = $this->makeMessage();
         $message->markSent();
         (new \ReflectionProperty(As4RetryState::class, 'lastAttemptAt'))
-            ->setValue($message->getRetryState(), new DateTime('-1 hour'));
+            ->setValue($message->getRetryState(), new DateTimeImmutable('-1 hour'));
         (new \ReflectionProperty(As4RetryState::class, 'firstSentAt'))
-            ->setValue($message->getRetryState(), new DateTime('-1 hour'));
+            ->setValue($message->getRetryState(), new DateTimeImmutable('-1 hour'));
         return $message;
     }
 
@@ -173,7 +172,7 @@ class As4RetryEngineTest extends TestCase
         $message->markSent();
         // Backdate firstSentAt 1 hour so the 20-min deadline is already past
         (new \ReflectionProperty(As4RetryState::class, 'firstSentAt'))
-            ->setValue($message->getRetryState(), new DateTime('-1 hour'));
+            ->setValue($message->getRetryState(), new DateTimeImmutable('-1 hour'));
         $f->repository->method('findAwaitingReceipts')->willReturn([$message]);
         $f->repository->expects($this->once())->method('save');
 
@@ -369,9 +368,9 @@ class As4RetryEngineTest extends TestCase
         $message = $this->makeMessage('<truncated');
         $message->markSent();
         (new \ReflectionProperty(As4RetryState::class, 'lastAttemptAt'))
-            ->setValue($message->getRetryState(), new DateTime('-1 hour'));
+            ->setValue($message->getRetryState(), new DateTimeImmutable('-1 hour'));
         (new \ReflectionProperty(As4RetryState::class, 'firstSentAt'))
-            ->setValue($message->getRetryState(), new DateTime('-1 hour'));
+            ->setValue($message->getRetryState(), new DateTimeImmutable('-1 hour'));
 
         $f->repository->method('findPendingRetries')->willReturn([$message]);
         $f->sender->expects($this->never())->method('send');

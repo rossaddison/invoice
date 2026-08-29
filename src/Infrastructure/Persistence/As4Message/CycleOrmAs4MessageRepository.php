@@ -77,6 +77,20 @@ final class CycleOrmAs4MessageRepository extends Select\Repository implements As
     }
 
     /**
+     * Same shape as PeppolMessageRepository::mostRecentByStatus() — used by
+     * SiteController::peppolStatus() to show a real "AS4 Bilateral" sandbox
+     * status derived from actual send history, not a synthetic ping.
+     */
+    public function mostRecentByState(As4MessageState $state): ?As4Message
+    {
+        /** @var As4Message|null */
+        return $this->select()
+            ->where('state', $state->value)
+            ->orderBy('id', 'DESC')
+            ->fetchOne() ?: null;
+    }
+
+    /**
      * Atomically claim this message for retry.
      *
      * Issues a single UPDATE with a compound WHERE that matches only when the
