@@ -67,7 +67,7 @@ Fill in at minimum:
 
 | Field | Example | Source |
 |-------|---------|--------|
-| Endpoint ID | `ross@example.com` | Recipient's Peppol email / GLN |
+| Endpoint ID | `4001234500126` | Format depends on the scheme below — here a GLN, checksum-valid per `ChecksumValidator::checkGLN()`. Not an email address; most schemes are numeric. |
 | Endpoint Scheme ID | `0088` | EAS dropdown — `DownloadedXml/eas.xml` |
 | Legal entity company ID | `0088` | ISO 6523 ICD dropdown — `DownloadedXml/icd.xml` |
 | Tax scheme ID | region/country row | `StoreCoveArrays::storeCoveReceiverIdentifierArray()` |
