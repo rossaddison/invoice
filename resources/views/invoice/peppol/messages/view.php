@@ -98,13 +98,19 @@ echo H::openTag('div', ['class' => 'container-fluid py-3']);
   echo H::openTag('div', ['class' => 'card mb-3']);
    echo H::openTag('div', ['class' => 'card-header fw-bold d-flex justify-content-between align-items-center']);
     echo H::encode('UBL XML');
-    echo H::tag('button', H::encode('Copy'),
+    // data-action wiring, not a raw onclick — see
+    // partial_settings_system_updates.php for the established
+    // data-actions.ts copy-to-clipboard convention this matches; a raw
+    // inline event handler here would be exactly the CSP unsafe-inline
+    // pattern project_csp_unsafe_inline_fix already eliminated elsewhere.
+    echo H::tag('button', 'Copy',
      [
       'type'  => 'button',
       'class' => 'btn btn-outline-secondary btn-sm',
-      'onclick' => 'navigator.clipboard.writeText(document.getElementById("ubl-xml-pre").textContent)',
+      'data-action' => 'copy-to-clipboard',
+      'data-copy-target' => '#ubl-xml-pre',
      ]
-    )->encode(false)->render();
+    );
    echo H::closeTag('div');
    echo H::openTag('div', ['class' => 'card-body p-0']);
     echo H::tag('pre', H::encode($ublXml),

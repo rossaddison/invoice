@@ -130,6 +130,39 @@ final class CycleOrmAs4MessageRepository extends Select\Repository implements As
         return $this->prepareDataReader($this->select());
     }
 
+    /**
+     * Same filterCombined(array $queryParams) shape as
+     * ProductRepository::filterCombined() and
+     * PeppolMessageRepository::filterCombined() — one Select, one andWhere
+     * per non-empty query param, straight from $request->getQueryParams().
+     * Column names are the embeddables' real DB columns (sender_party_id,
+     * receiver_party_id — Cycle flattens As4Routing's embedded properties
+     * onto as4_messages directly, no embeddable-name prefix), confirmed
+     * against the live schema rather than assumed.
+     *
+     * @param array<array-key, mixed> $queryParams
+     */
+    public function filterCombined(array $queryParams): EntityReader
+    {
+        $query = $this->select();
+        if (!empty($queryParams['state'])) {
+            $query = $query->andWhere(['state' => trim((string) $queryParams['state'])]);
+        }
+        if (!empty($queryParams['message_id'])) {
+            $query = $query->andWhere('message_id', 'like',
+                '%' . trim((string) $queryParams['message_id']) . '%');
+        }
+        if (!empty($queryParams['sender_party_id'])) {
+            $query = $query->andWhere('sender_party_id', 'like',
+                '%' . trim((string) $queryParams['sender_party_id']) . '%');
+        }
+        if (!empty($queryParams['receiver_party_id'])) {
+            $query = $query->andWhere('receiver_party_id', 'like',
+                '%' . trim((string) $queryParams['receiver_party_id']) . '%');
+        }
+        return $this->prepareDataReader($query);
+    }
+
     public function repoFind(int $id): ?As4Message
     {
         /** @var As4Message|null */

@@ -13,7 +13,12 @@ use Yiisoft\Translator\TranslatorInterface;
  * @var EntityReader $messages
  * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
+ * @var array<array-key, mixed> $queryParams
  */
+
+$q = static function (string $key) use ($queryParams): string {
+    return isset($queryParams[$key]) && is_string($queryParams[$key]) ? $queryParams[$key] : '';
+};
 
 $stateBadge = static function (As4MessageState $state): string {
     $class = match ($state) {
@@ -38,6 +43,37 @@ echo H::openTag('div', ['class' => 'container-fluid py-3']);
    ['class' => 'btn btn-outline-secondary btn-sm']
   )->encode(false)->render();
  echo H::closeTag('div');
+
+ // Same plain-GET-form approach as peppol/messages/index.php — see that
+ // file's comment for why there's no GridView/DataColumn filter here.
+ echo H::openTag('form', ['method' => 'get',
+  'action' => $urlGenerator->generate('as4message/index'),
+  'class' => 'row row-cols-lg-auto g-2 align-items-center mb-3']);
+  foreach ([
+   'state' => 'Search State',
+   'message_id' => 'Search Message ID',
+   'sender_party_id' => 'Search Sender',
+   'receiver_party_id' => 'Search Receiver',
+  ] as $name => $placeholder) {
+   echo H::openTag('div', ['class' => 'col-12']);
+    echo H::openTag('input', [
+     'type' => 'text',
+     'name' => $name,
+     'value' => $q($name),
+     'class' => 'form-control form-control-sm',
+     'placeholder' => $placeholder,
+    ]);
+   echo H::closeTag('div');
+  }
+  echo H::openTag('div', ['class' => 'col-12']);
+   echo H::tag('button', 'Filter',
+    ['type' => 'submit', 'class' => 'btn btn-primary btn-sm']);
+  echo H::closeTag('div');
+  echo H::openTag('div', ['class' => 'col-12']);
+   echo H::a('Clear', $urlGenerator->generate('as4message/index'),
+    ['class' => 'btn btn-outline-secondary btn-sm'])->render();
+  echo H::closeTag('div');
+ echo H::closeTag('form');
 
  echo H::openTag('div', ['class' => 'table-responsive']);
   echo H::openTag('table', ['class' => 'table table-hover table-sm align-middle']);
