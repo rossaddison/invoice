@@ -8,7 +8,7 @@ use App\Infrastructure\Persistence\As4Message\As4Message;
 use App\Infrastructure\Persistence\As4Message\As4MessageParams;
 use App\Invoice\As4\As4MessageState;
 use PHPUnit\Framework\TestCase;
-use DateTime;
+use DateTimeImmutable;
 
 class As4MessageEntityTest extends TestCase
 {
@@ -133,8 +133,8 @@ class As4MessageEntityTest extends TestCase
 
         $this->assertSame(As4MessageState::sent, $msg->getState());
         $this->assertSame(1, $msg->getRetryState()->getAttemptCount());
-        $this->assertInstanceOf(DateTime::class, $msg->getRetryState()->getLastAttemptAt());
-        $this->assertInstanceOf(DateTime::class, $msg->getRetryState()->getFirstSentAt());
+        $this->assertInstanceOf(DateTimeImmutable::class, $msg->getRetryState()->getLastAttemptAt());
+        $this->assertInstanceOf(DateTimeImmutable::class, $msg->getRetryState()->getFirstSentAt());
     }
 
     public function testMarkSentIncrementsTwice(): void
@@ -159,7 +159,7 @@ class As4MessageEntityTest extends TestCase
         $msg->recordAttempt();
 
         $this->assertSame(1, $msg->getRetryState()->getAttemptCount());
-        $this->assertInstanceOf(DateTime::class, $msg->getRetryState()->getLastAttemptAt());
+        $this->assertInstanceOf(DateTimeImmutable::class, $msg->getRetryState()->getLastAttemptAt());
     }
 
     public function testRecordAttemptDoesNotChangeState(): void
@@ -187,7 +187,7 @@ class As4MessageEntityTest extends TestCase
         $this->assertSame(As4MessageState::receiptReceived, $msg->getState());
         $this->assertSame('receipt-msg-001', $msg->getReceiptInfo()->getReceiptMessageId());
         $this->assertSame('abc123digest==', $msg->getReceiptInfo()->getReceiptDigest());
-        $this->assertInstanceOf(DateTime::class, $msg->getReceiptInfo()->getReceiptReceivedAt());
+        $this->assertInstanceOf(DateTimeImmutable::class, $msg->getReceiptInfo()->getReceiptReceivedAt());
     }
 
     public function testMarkFailed(): void
@@ -226,9 +226,9 @@ class As4MessageEntityTest extends TestCase
 
     public function testCreatedAtAndUpdatedAtSetOnConstruction(): void
     {
-        $before = new DateTime();
+        $before = new DateTimeImmutable();
         $msg = $this->makeMessage();
-        $after = new DateTime();
+        $after = new DateTimeImmutable();
 
         $this->assertGreaterThanOrEqual($before, $msg->getTimestamps()->getCreatedAt());
         $this->assertLessThanOrEqual($after, $msg->getTimestamps()->getCreatedAt());
@@ -256,7 +256,7 @@ class As4MessageEntityTest extends TestCase
         $this->assertIsInt($msg->getRetryState()->getAttemptCount());
         $this->assertIsInt($msg->getRetryState()->getMaxAttempts());
         $this->assertIsInt($msg->getRetryState()->getRetryIntervalSeconds());
-        $this->assertInstanceOf(DateTime::class, $msg->getTimestamps()->getCreatedAt());
-        $this->assertInstanceOf(DateTime::class, $msg->getTimestamps()->getUpdatedAt());
+        $this->assertInstanceOf(DateTimeImmutable::class, $msg->getTimestamps()->getCreatedAt());
+        $this->assertInstanceOf(DateTimeImmutable::class, $msg->getTimestamps()->getUpdatedAt());
     }
 }

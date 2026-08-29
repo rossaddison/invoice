@@ -7,7 +7,7 @@ namespace Tests\Unit\Invoice\Peppol;
 use App\Infrastructure\Persistence\PeppolMessage\PeppolMessage;
 use App\Invoice\Peppol\Console\RetryFailedCommand;
 use App\Invoice\Peppol\PeppolMessageRepositoryInterface;
-use App\Invoice\Peppol\PeppolSendService;
+use App\Invoice\Peppol\OxalisPeppolSendService;
 use GuzzleHttp\Psr7\HttpFactory;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
@@ -65,9 +65,9 @@ class RetryFailedCommandTest extends TestCase
         $this->httpClient = $this->createStub(ClientInterface::class);
     }
 
-    private function buildService(RetrySpyRepository $repo): PeppolSendService
+    private function buildService(RetrySpyRepository $repo): OxalisPeppolSendService
     {
-        return new PeppolSendService(
+        return new OxalisPeppolSendService(
             httpClient:          $this->httpClient,
             requestFactory:      new HttpFactory(),
             pmR:                 $repo,
@@ -78,7 +78,7 @@ class RetryFailedCommandTest extends TestCase
 
     private function buildCommand(
         RetrySpyRepository $repo,
-        PeppolSendService $service,
+        OxalisPeppolSendService $service,
     ): CommandTester {
         $command = new RetryFailedCommand($repo, $service, new NullLogger());
         return new CommandTester($command);

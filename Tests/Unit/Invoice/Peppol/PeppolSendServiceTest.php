@@ -6,7 +6,7 @@ namespace Tests\Unit\Invoice\Peppol;
 
 use App\Infrastructure\Persistence\PeppolMessage\PeppolMessage;
 use App\Invoice\Peppol\PeppolMessageRepositoryInterface;
-use App\Invoice\Peppol\PeppolSendService;
+use App\Invoice\Peppol\OxalisPeppolSendService;
 use GuzzleHttp\Psr7\HttpFactory;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
@@ -49,7 +49,7 @@ class PeppolSendServiceTest extends TestCase
     /** @psalm-suppress PropertyNotSetInConstructor */
     private SpyPeppolMessageRepository $pmR;
     /** @psalm-suppress PropertyNotSetInConstructor */
-    private PeppolSendService $service;
+    private OxalisPeppolSendService $service;
 
     #[\Override]
     protected function setUp(): void
@@ -57,7 +57,7 @@ class PeppolSendServiceTest extends TestCase
         $this->httpClient = $this->createStub(ClientInterface::class);
         $this->pmR        = new SpyPeppolMessageRepository();
 
-        $this->service = new PeppolSendService(
+        $this->service = new OxalisPeppolSendService(
             httpClient:          $this->httpClient,
             requestFactory:      new HttpFactory(),
             pmR:                 $this->pmR,
@@ -205,7 +205,7 @@ class PeppolSendServiceTest extends TestCase
 
     public function testSendOmitsSenderIdWhenNotConfigured(): void
     {
-        $service = new PeppolSendService(
+        $service = new OxalisPeppolSendService(
             httpClient:          $this->httpClient,
             requestFactory:      new HttpFactory(),
             pmR:                 $this->pmR,
