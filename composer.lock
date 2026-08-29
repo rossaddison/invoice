@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "611420f8693f949b4dd49bd72b1b740e",
+    "content-hash": "5d11f75fbba861071ea2589bb8e59769",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -19753,16 +19753,16 @@
         },
         {
             "name": "yiisoft/yii-dataview",
-            "version": "dev-fix/csp-dropdownfilter-onchange",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/rossaddison/yii-dataview.git",
-                "reference": "f546ef28faa637ff45ac4b4daf071bce5d040da3"
+                "url": "https://github.com/yiisoft/yii-dataview.git",
+                "reference": "832f14490a021d240b7c7d0ed476063548176cf0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-dataview/zipball/f546ef28faa637ff45ac4b4daf071bce5d040da3",
-                "reference": "f546ef28faa637ff45ac4b4daf071bce5d040da3",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/832f14490a021d240b7c7d0ed476063548176cf0",
+                "reference": "832f14490a021d240b7c7d0ed476063548176cf0",
                 "shasum": ""
             },
             "require": {
@@ -19796,13 +19796,13 @@
             },
             "type": "library",
             "extra": {
+                "config-plugin": {
+                    "di": "di.php",
+                    "params": "params.php",
+                    "widgets-themes": "widgets-themes.php"
+                },
                 "config-plugin-options": {
                     "source-directory": "config"
-                },
-                "config-plugin": {
-                    "params": "params.php",
-                    "di": "di.php",
-                    "widgets-themes": "widgets-themes.php"
                 }
             },
             "autoload": {
@@ -19810,22 +19810,7 @@
                     "Yiisoft\\Yii\\DataView\\": "src"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Yiisoft\\Yii\\DataView\\Tests\\": "tests"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "phpunit --testdox --no-interaction"
-                ],
-                "test-watch": [
-                    "phpunit-watcher watch"
-                ],
-                "cs-fix": [
-                    "php-cs-fixer fix"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -19840,24 +19825,24 @@
                 "yii"
             ],
             "support": {
+                "chat": "https://t.me/yii3en",
+                "forum": "https://www.yiiframework.com/forum/",
+                "irc": "ircs://irc.libera.chat:6697/yii",
                 "issues": "https://github.com/yiisoft/yii-dataview/issues?state=open",
                 "source": "https://github.com/yiisoft/yii-dataview",
-                "forum": "https://www.yiiframework.com/forum/",
-                "wiki": "https://www.yiiframework.com/wiki/",
-                "irc": "ircs://irc.libera.chat:6697/yii",
-                "chat": "https://t.me/yii3en"
+                "wiki": "https://www.yiiframework.com/wiki/"
             },
             "funding": [
                 {
-                    "type": "opencollective",
-                    "url": "https://opencollective.com/yiisoft"
+                    "url": "https://github.com/sponsors/yiisoft",
+                    "type": "github"
                 },
                 {
-                    "type": "github",
-                    "url": "https://github.com/sponsors/yiisoft"
+                    "url": "https://opencollective.com/yiisoft",
+                    "type": "opencollective"
                 }
             ],
-            "time": "2026-07-18T04:56:52+00:00"
+            "time": "2026-03-21T14:40:58+00:00"
         },
         {
             "name": "yiisoft/yii-event",
@@ -24279,12 +24264,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "0de4cd39951f4d88f6083e1e18e0c661ed983a10"
+                "reference": "5ca495882179464e540e873757759e1ac532b828"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0de4cd39951f4d88f6083e1e18e0c661ed983a10",
-                "reference": "0de4cd39951f4d88f6083e1e18e0c661ed983a10",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5ca495882179464e540e873757759e1ac532b828",
+                "reference": "5ca495882179464e540e873757759e1ac532b828",
                 "shasum": ""
             },
             "conflict": {
@@ -24949,7 +24934,7 @@
                 "phppgadmin/phppgadmin": "<=7.13",
                 "phpseclib/phpseclib": "<=2.0.54|>=3,<=3.0.53",
                 "phpservermon/phpservermon": "<3.6",
-                "phpsysinfo/phpsysinfo": "<3.4.3",
+                "phpsysinfo/phpsysinfo": "<=3.4.5",
                 "phpunit/phpunit": "<8.5.52|>=9,<9.6.33|>=10,<10.5.62|>=11,<11.5.50|>=12,<12.5.8|>=12.5.21,<12.5.22|>=13.1.5,<13.1.6",
                 "phpwhois/phpwhois": "<=4.2.5",
                 "phpxmlrpc/extras": "<0.6.1",
@@ -24963,7 +24948,8 @@
                 "pimcore/demo": "<10.3",
                 "pimcore/ecommerce-framework-bundle": "<1.0.10",
                 "pimcore/perspective-editor": "<1.5.1",
-                "pimcore/pimcore": "<12.3.9|>=2026.1,<=2026.1.4",
+                "pimcore/pimcore": "<=12.3.9|>=2026.1,<=2026.1.5",
+                "pimcore/studio-backend-bundle": "<2025.4.6|>=2026.1,<2026.1.6",
                 "pimcore/web2print-tools-bundle": "<=5.2.1|>=6.0.0.0-RC1-dev,<=6.1",
                 "piwik/piwik": "<1.11",
                 "pixelfed/pixelfed": "<0.12.5",
@@ -24987,7 +24973,7 @@
                 "prestashop/ps_emailsubscription": "<2.6.1",
                 "prestashop/ps_facetedsearch": "<4.0.4",
                 "prestashop/ps_linklist": "<3.1",
-                "privatebin/privatebin": "<1.4|>=1.5,<1.7.4|>=1.7.7,<2.0.3",
+                "privatebin/privatebin": "<=2.0.4",
                 "processwire/processwire": "<=3.0.255",
                 "propel/propel": ">=2.0.0.0-alpha1,<2.0.0.0-alpha8",
                 "propel/propel1": ">=1,<1.7.2",
@@ -25413,7 +25399,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-28T09:46:03+00:00"
+            "time": "2026-08-28T21:06:51+00:00"
         },
         {
             "name": "rossaddison/translator-extractor",
@@ -28313,8 +28299,7 @@
         "rossaddison/yii-auth-client": 20,
         "rossaddison/yii-cycle-1": 20,
         "yiisoft/data-cycle": 20,
-        "yiisoft/rate-limiter": 20,
-        "yiisoft/yii-dataview": 20
+        "yiisoft/rate-limiter": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
