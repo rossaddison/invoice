@@ -332,7 +332,7 @@ return [
   'client.peppol.clientpeppols.form' =>
     'Accounting Client/Customer Party Form',
   'client.peppol.edit' => 'Edit Peppol details for e-Invoicing',
-  'client.peppol.endpointid' => 'End Point ID: Email Address',
+  'client.peppol.endpointid' => 'End Point ID',
   'client.peppol.endpointid.schemeid' =>
     'End Point ID -  schemeID based on '
     . 'EAS (Electonric Address Scheme) 4 digit code eg. 0192',

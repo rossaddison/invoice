@@ -113,7 +113,14 @@ final class ClientPeppolController extends BaseController
     {
         return [
             'endpointid' => [
-                'eg' => 'joe.bloggs@web.com',
+                // Must be a valid identifier under whichever scheme
+                // 'endpointid_schemeid' below selects. '923609016' is a
+                // real, Mod11 checksum-valid Norwegian organisation number
+                // matching scheme 0192 below — Storecove rejects
+                // 0192:<anything not ^\d{9}$>, so this pair must stay
+                // consistent (the old 'joe.bloggs@web.com' example paired
+                // with 0192 failed every real send with a Storecove 422).
+                'eg' => '923609016',
                 'url' => 'cac-AccountingSupplierParty/cac-Party/cbc-EndpointID/',
             ],
             'endpointid_schemeid' => [

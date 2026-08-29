@@ -7,7 +7,6 @@ namespace App\Invoice\ClientPeppol;
 use App\Infrastructure\Persistence\ClientPeppol\ClientPeppol;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
-use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\Required;
 
 final class ClientPeppolForm extends FormModel
@@ -20,7 +19,13 @@ final class ClientPeppolForm extends FormModel
     #[Required, Length(min: 0, max: 20)]
     private ?string $buyer_reference = '';
 
-    #[Required, Email, Length(min: 0, max: 100)]
+    /**
+     * cbc:EndpointID — format is dictated by whichever scheme
+     * $endpointid_schemeid selects (e.g. an ISO 6523 GLN or a Norwegian
+     * organisation number under 0192), not a fixed email address, so no
+     * Email rule here.
+     */
+    #[Required, Length(min: 0, max: 100)]
     private ?string $endpointid = '';
 
     #[Required, Length(min: 0, max: 4)]

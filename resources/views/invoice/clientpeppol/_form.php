@@ -93,7 +93,7 @@ use Yiisoft\VarDumper\VarDumper;
                                 ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                  <?= Field::email($form, 'endpointid')
+                  <?= Field::text($form, 'endpointid')
                     ->label($translator->translate('client.peppol.endpointid'))
                     ->addInputAttributes([
                         'class' => 'form-control form-control-lg',
