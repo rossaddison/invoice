@@ -34,6 +34,35 @@ final class PeppolMessageRepository extends Select\Repository implements PeppolM
     }
 
     /**
+     * Same filterCombined(array $queryParams) shape as
+     * ProductRepository::filterCombined() — one Select, one andWhere per
+     * non-empty query param, straight from $request->getQueryParams().
+     * Powers the Peppol Messages screen's search fields.
+     *
+     * @param array<array-key, mixed> $queryParams
+     * @psalm-return EntityReader
+     */
+    public function filterCombined(array $queryParams): EntityReader
+    {
+        $query = $this->select();
+        if (!empty($queryParams['status'])) {
+            $query = $query->andWhere(['status' => trim((string) $queryParams['status'])]);
+        }
+        if (!empty($queryParams['message_id'])) {
+            $query = $query->andWhere('message_id', 'like',
+                '%' . trim((string) $queryParams['message_id']) . '%');
+        }
+        if (!empty($queryParams['recipient_id'])) {
+            $query = $query->andWhere('recipient_id', 'like',
+                '%' . trim((string) $queryParams['recipient_id']) . '%');
+        }
+        if (!empty($queryParams['inv_id'])) {
+            $query = $query->andWhere(['inv_id' => (int) $queryParams['inv_id']]);
+        }
+        return $this->prepareDataReader($query);
+    }
+
+    /**
      * @throws Throwable
      */
     #[\Override]

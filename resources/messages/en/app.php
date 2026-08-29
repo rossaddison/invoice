@@ -117,6 +117,7 @@ return [
   'approve.this.quote' => 'Approve This Quote',
   'approved' => 'Approved',
   'archive' => 'Archive the pdf at Uploads/Archive',
+  'as4.messages.log' => 'AS4 Messages',
   'assign.client' => 'Assign Client',
   'assign.client.on.signup' => 'Assign a client to'
     . ' user upon signing up.',
@@ -1833,6 +1834,7 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' (UBL) 2.4 Invoice - Ecosio Validated',
   'peppol.abbreviation' => 'Peppol',
   'peppol.access.point.provider' => 'Access Point Provider',
+  'peppol.messages.log' => 'Peppol Messages',
   'peppol.allowance.or.charge.inherit.inv' =>
     'Invoice Allowance Charges and Invoice'
     . ' Item Allowance Charges inherit from a'

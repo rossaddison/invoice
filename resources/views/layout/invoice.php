@@ -1123,6 +1123,14 @@ if ((null !== $currentPath) && !$isGuest) {
                 $urlGenerator->generate('invoice/storeCoveSendTestJsonInvoice'),
                 itemAttributes: $itemFontArray
             ),
+            // Both message logs previously had no nav link at all — only
+            // reachable by typing the URL directly.
+            DropdownItem::link($t->translate('peppol.messages.log'),
+                $urlGenerator->generate('peppol/messages/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('as4.messages.log'),
+                $urlGenerator->generate('as4message/index'),
+                itemAttributes: $itemFontArray),
         ),
         // Client
         Dropdown::widget()
