@@ -1848,6 +1848,13 @@ prior to importing and no existing documents e.g. Invoices.',
     'This client has no Peppol details set up at all.',
   'peppol.client.check.no.client' =>
     'This invoice has no client attached — Peppol cannot be sent without one.',
+  'peppol.endpointid.looks.like.email' =>
+    'This looks like an email address, but no real Peppol scheme uses'
+    . ' one as the identifier — enter the business identifier'
+    . ' (registration number, VAT number, GLN, etc.) that matches the'
+    . ' selected scheme instead.',
+  'peppol.endpointid.checksum.invalid' =>
+    'This value fails the checksum required by scheme',
   'peppol.client.defaults' =>
     'Fill Client Peppol Form'
     . ' with OpenPeppol defaults for testing.',
