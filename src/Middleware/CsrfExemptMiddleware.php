@@ -34,6 +34,14 @@ final class CsrfExemptMiddleware implements MiddlewareInterface
         '/paymentinformation/trueLayerWebhook',
         '/whatsapp/webhook',
         '/telegram/webhook',
+        // Bilateral/Peppol AS4 trading partners POST directly to this
+        // route with no app session at all (see routes-as4-receive.php's
+        // own docblock) — same "external caller, no token" shape as the
+        // webhooks above. Confirmed missing live 2026-08-29: a real
+        // As4TestSendCommand send to production returned HTTP 422
+        // "Unprocessable entity" from this very middleware before ever
+        // reaching As4ReceiveController.
+        '/as4/receive',
     ];
 
     public function __construct(
