@@ -7,10 +7,12 @@ namespace App\Controller;
 use App\Infrastructure\Persistence\GatewayStatus\GatewayStatus;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusRepository;
 use App\Invoice\PaymentInformation\GatewayStatus\Widget\GatewayStatusListWidget;
+use App\Invoice\Peppol\PeppolMessageRepository;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Yiisoft\Aliases\Aliases;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
@@ -226,5 +228,105 @@ final class SiteController
             'regionOptions' => $regionOptions,
             'selectedRegion' => $selectedRegion,
         ]);
+    }
+
+    /**
+     * Public Peppol Access Point status page — same idea as
+     * gatewayStatus() above (which of this app's payment gateways have
+     * passed a real sandbox check), scoped down for the two Access Point
+     * providers PeppolSendServiceRouter can resolve to. Deliberately not
+     * built on gateway-status's full machinery (a second Cycle-managed
+     * SQLite database, a JSON source of truth, two console commands, a
+     * weekly CI workflow) — that pipeline earns its keep tracking 8+
+     * gateways' SDK versions and sandbox pings automatically; for exactly
+     * two rows, both derivable live from data this app already has, it
+     * would be pure overhead. Storecove's "sandbox tested" status comes
+     * from real send history (a genuine SENT PeppolMessage), not a
+     * synthetic ping — neither provider exposes a side-effect-free
+     * health-check call the way a payment gateway's balance/methods-list
+     * endpoint does.
+     *
+     * Gated by no_front_peppol_status_page the same way
+     * no_front_gateway_status_page gates gatewayStatus() above: this
+     * 404s the route itself rather than only hiding a nav link, since
+     * (like gateway-status) it can expose which provider is actually
+     * configured.
+     */
+    public function peppolStatus(
+        PeppolMessageRepository $peppolMessageRepository,
+        Aliases $aliases,
+        sR $sR,
+        WebControllerService $webService,
+    ): Response {
+        if ($sR->getSetting('no_front_peppol_status_page') == '1') {
+            return $webService->getNotFoundResponse();
+        }
+
+        $currentProvider = $sR->getSetting('peppol_access_point_provider') ?: 'storecove';
+        $lastSent = $peppolMessageRepository->mostRecentByStatus('SENT');
+
+        // PeppolMessage has no column recording which provider actually
+        // sent it -- StorecovePeppolSendService and OxalisPeppolSendService
+        // both write to the same table. Attributing an existing SENT row
+        // to "whichever provider is currently configured" is the best
+        // available signal without a schema change, and holds for the
+        // common case (providers aren't switched often) -- noted here
+        // rather than silently assumed.
+        $storecoveTested = $currentProvider === 'storecove' && $lastSent !== null;
+        $sentAt = $lastSent?->getSentAt();
+
+        $rows = [
+            [
+                'name' => 'Storecove',
+                'sdk_version' => $this->storecoveClientVersion($aliases),
+                'sandbox_status' => $storecoveTested ? 'pass' : 'untested',
+                'sandbox_tested_at' => $storecoveTested && $sentAt !== null
+                    ? $sentAt->format('Y-m-d') : null,
+                'notes' => 'Managed Access Point API — the default provider.',
+            ],
+            [
+                'name' => 'Oxalis',
+                'sdk_version' => null,
+                'sandbox_status' => 'untested',
+                'sandbox_tested_at' => null,
+                'notes' => 'Self-hosted AS4 gateway — not yet used for a'
+                    . ' real send in this deployment.',
+            ],
+        ];
+
+        return $this->webViewRenderer->render('peppol-status', [
+            'rows' => $rows,
+        ]);
+    }
+
+    /**
+     * rossaddison/storecove-client is a VCS (git) dependency, not a tagged
+     * release -- composer.lock's 'version' field for it is literally the
+     * branch name ('dev-master'), the same simple field gateway-status
+     * reads for every gateway package. Shown as-is rather than resolved
+     * to a commit hash, for consistency with how every row on this page
+     * (and gateway-status's own rows) sources its version the same way.
+     */
+    private function storecoveClientVersion(Aliases $aliases): ?string
+    {
+        $path = $aliases->get('@root') . '/composer.lock';
+        if (!is_file($path)) {
+            return null;
+        }
+        $contents = file_get_contents($path);
+        if ($contents === false) {
+            return null;
+        }
+        /** @var array{packages?: list<array{name?: string, version?: string}>}|null $decoded */
+        $decoded = json_decode($contents, true);
+        if (!is_array($decoded)) {
+            return null;
+        }
+        foreach ($decoded['packages'] ?? [] as $package) {
+            if (($package['name'] ?? null) === 'rossaddison/storecove-client') {
+                return $package['version'] ?? null;
+            }
+        }
+        return null;
     }
 }
