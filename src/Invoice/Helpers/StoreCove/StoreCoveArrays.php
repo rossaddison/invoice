@@ -410,13 +410,19 @@ final class StoreCoveArrays
                 'tax' => 'Tax',
                 'routing' => 'Routing',
             ],
+            // Was split across 3 columns by the html-to-json conversion —
+            // 'DUNS, GLN, LEI' is a single comma-separated Legal cell
+            // (matches storeCoveSenderIdentifierArray()'s row 0 'Legal'),
+            // not a real Tax scheme; the ' GLN' fragment left in 'tax'
+            // would otherwise be submitted as a literal cac:TaxScheme/
+            // cbc:ID value if this row were ever selected.
             0 => [
                 'region' => 'Americas',
                 'country' => 'US',
                 'b2x' => 'B',
-                'legal' => 'DUNS',
-                'tax' => ' GLN',
-                'routing' => ' LEI',
+                'legal' => 'DUNS, GLN, LEI',
+                'tax' => '',
+                'routing' => 'DUNS, GLN, LEI',
             ],
             1 => [
                 'region' => 'Americas',
@@ -860,13 +866,18 @@ final class StoreCoveArrays
                 'tax' => 'IN:GSTIN',
                 'routing' => 'Email',
             ],
+            // Same conversion bug as row 0: the comma inside the Legal
+            // cell's parenthetical ('JP:SST (alias: JP:LIN, use is
+            // discouraged)') split it in two, pushing the real Tax value
+            // (confirmed against storeCoveSenderIdentifierArray()'s row 52
+            // 'Tax' => 'JP:IIN (deprecated: JP:TIN)') into 'routing' instead.
             54 => [
                 'region' => 'JP',
                 'country' => 'JP',
                 'b2x' => 'B',
-                'legal' => 'JP:SST (alias: JP:LIN',
-                'tax' => ' use is discouraged)',
-                'routing' => 'JP:IIN (deprecated: JP:TIN)',
+                'legal' => 'JP:SST (alias: JP:LIN, use is discouraged)',
+                'tax' => 'JP:IIN (deprecated: JP:TIN)',
+                'routing' => 'JP:SST (alias: JP:LIN, use is discouraged)',
             ],
             55 => [
                 'region' => 'SG',
@@ -900,13 +911,14 @@ final class StoreCoveArrays
                 'tax' => 'SA:TIN',
                 'routing' => 'Email',
             ],
+            // Same conversion bug as row 0 (identical source cell).
             59 => [
                 'region' => 'World',
                 'country' => 'Other',
                 'b2x' => 'B',
-                'legal' => 'DUNS',
-                'tax' => ' GLN',
-                'routing' => ' LEI',
+                'legal' => 'DUNS, GLN, LEI',
+                'tax' => '',
+                'routing' => 'DUNS, GLN, LEI',
             ],
         ];
     }
