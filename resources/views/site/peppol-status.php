@@ -20,6 +20,7 @@ use Yiisoft\Html\Html;
  *     notes: string,
  * }> $rows
  * @var list<array{name: string, regions: string, notes: string}> $referenceProviders
+ * @var array{tested: bool, tested_at: string|null, peer_party_id: string|null} $as4Bilateral
  */
 
 $statusBadge = static function (string $status): string {
@@ -68,6 +69,38 @@ $statusBadge = static function (string $status): string {
                                 ['class' => 'small text-muted', 'data-label' => 'Notes'])->render(); ?>
                         <?= Html::closeTag('tr'); ?>
                     <?php endforeach; ?>
+                <?= Html::closeTag('tbody'); ?>
+            <?= Html::closeTag('table'); ?>
+        <?= Html::closeTag('div'); ?>
+
+        <?= Html::tag('h2', 'AS4 Bilateral (self-hosted)',
+            ['class' => 'h4 fw-bold mt-5 mb-2'])->render(); ?>
+        <?= Html::tag(
+            'p',
+            'A separate, self-hosted AS4 stack for point-to-point delivery without Peppol PKI or SMP'
+                . ' lookup — used for BIS Advanced Ordering and bilateral connectivity testing. Not'
+                . ' selected via the Access Point Provider setting above; independent of it.',
+            ['class' => 'text-muted small mb-3'],
+        )->render(); ?>
+        <?= Html::openTag('div', ['class' => 'table-responsive mb-4']); ?>
+            <?= Html::openTag('table', ['class' => 'table table-sm']); ?>
+                <?= Html::openTag('tbody'); ?>
+                    <?= Html::openTag('tr'); ?>
+                        <?= Html::tag('td', 'Bilateral send tested', ['class' => 'fw-semibold'])->render(); ?>
+                        <?= Html::tag('td',
+                            $statusBadge($as4Bilateral['tested'] ? 'pass' : 'untested')
+                            . ($as4Bilateral['tested_at'] !== null
+                                ? Html::tag('div', $as4Bilateral['tested_at'],
+                                    ['class' => 'small text-muted'])->render()
+                                : ''))
+                            ->encode(false)->render(); ?>
+                    <?= Html::closeTag('tr'); ?>
+                    <?php if ($as4Bilateral['peer_party_id'] !== null): ?>
+                        <?= Html::openTag('tr'); ?>
+                            <?= Html::tag('td', 'Last confirmed peer', ['class' => 'fw-semibold'])->render(); ?>
+                            <?= Html::tag('td', $as4Bilateral['peer_party_id'])->render(); ?>
+                        <?= Html::closeTag('tr'); ?>
+                    <?php endif; ?>
                 <?= Html::closeTag('tbody'); ?>
             <?= Html::closeTag('table'); ?>
         <?= Html::closeTag('div'); ?>

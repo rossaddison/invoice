@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Infrastructure\Persistence\As4Message\CycleOrmAs4MessageRepository;
 use App\Infrastructure\Persistence\GatewayStatus\GatewayStatus;
+use App\Invoice\As4\As4MessageState;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusRepository;
 use App\Invoice\PaymentInformation\GatewayStatus\Widget\GatewayStatusListWidget;
 use App\Invoice\Peppol\PeppolMessageRepository;
@@ -254,6 +256,7 @@ final class SiteController
      */
     public function peppolStatus(
         PeppolMessageRepository $peppolMessageRepository,
+        CycleOrmAs4MessageRepository $as4MessageRepository,
         Aliases $aliases,
         sR $sR,
         WebControllerService $webService,
@@ -297,7 +300,33 @@ final class SiteController
         return $this->webViewRenderer->render('peppol-status', [
             'rows' => $rows,
             'referenceProviders' => $this->surveyedAccessPointProviders(),
+            'as4Bilateral' => $this->as4BilateralStatus($as4MessageRepository),
         ]);
+    }
+
+    /**
+     * AS4 Bilateral is a separate, self-hosted AS4 stack (src\Invoice\As4)
+     * used for BIS Advanced Ordering and point-to-point testing — it is
+     * never selected via the Peppol Access Point Provider setting the
+     * $rows above cover, so it gets its own section on the page rather
+     * than a third row that would misrepresent it as a selectable
+     * provider. Status comes from a real As4Message row this app actually
+     * sent and got a receipt back for (As4MessageDispatcher persists one
+     * per send — see docs\AS4_BILATERAL_ROADMAP.md), not a synthetic ping.
+     *
+     * @return array{tested: bool, tested_at: string|null, peer_party_id: string|null}
+     */
+    private function as4BilateralStatus(CycleOrmAs4MessageRepository $as4MessageRepository): array
+    {
+        $lastReceipt = $as4MessageRepository->mostRecentByState(As4MessageState::receiptReceived);
+        $receivedAt = $lastReceipt?->getReceiptInfo()->getReceiptReceivedAt();
+
+        return [
+            'tested' => $lastReceipt !== null,
+            'tested_at' => $receivedAt !== null
+                ? $receivedAt->format('Y-m-d') : null,
+            'peer_party_id' => $lastReceipt?->getRouting()->getReceiverPartyId(),
+        ];
     }
 
     /**

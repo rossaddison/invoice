@@ -5,28 +5,28 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\As4Message;
 
 use Cycle\Annotated\Annotation as Cycle;
-use DateTime;
+use DateTimeImmutable;
 
 #[Cycle\Embeddable]
 class As4Timestamps
 {
     #[Cycle\Column(type: 'datetime')]
-    private DateTime $createdAt;
+    private DateTimeImmutable $createdAt;
 
     #[Cycle\Column(type: 'datetime')]
-    private DateTime $updatedAt;
+    private DateTimeImmutable $updatedAt;
 
     public function __construct()
     {
-        $this->createdAt = new DateTime();
-        $this->updatedAt = new DateTime();
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
     }
 
-    public function getCreatedAt(): DateTime { return $this->createdAt; }
-    public function getUpdatedAt(): DateTime { return $this->updatedAt; }
+    public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
+    public function getUpdatedAt(): DateTimeImmutable { return $this->updatedAt; }
 
     public function touch(): void
     {
-        $this->updatedAt = new DateTime();
+        $this->updatedAt = new DateTimeImmutable();
     }
 }
