@@ -300,6 +300,20 @@ final class ProductsListWidget extends Widget
                 visible: true,
             ),
             new DataColumn(
+                property: 'unit_peppol_id',
+                header: $t->translate('product.peppol.unit'),
+                // Same "surface it before send-time, not after" treatment
+                // as taxrate/index's peppol_tax_rate_code column —
+                // PeppolHelperInvoiceLineTrait::validateInvItem() throws
+                // the moment this product is used on a Peppol send if
+                // unset, despite the form marking it optional.
+                content: static fn(Product $m): string =>
+                    $m->getUnitPeppolId() > 0
+                        ? Html::encode((string) $m->getUnitPeppolId())
+                        : '⚠️ ' . $t->translate('product.peppol.unit.missing'),
+                visible: $visible,
+            ),
+            new DataColumn(
                 property: 'tax_rate_id',
                 header: $t->translate('tax.rate'),
                 content: static fn(Product $m): string =>

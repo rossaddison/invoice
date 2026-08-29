@@ -288,14 +288,22 @@ final readonly class ProductFormFields
     }
 
     /**
-     * Unit Peppol selection dropdown field for products
+     * Unit Peppol selection dropdown field for products. Deliberately
+     * not made $required=true — like Tax Rate Code
+     * (taxrate.peppol.tax.rate.code.hint), the requirement is
+     * conditional (only products actually sent on a Peppol invoice need
+     * it), not universal. The generic hint.this.field.is.not.required
+     * text used to sit here regardless, which was actively misleading
+     * given PeppolHelperInvoiceLineTrait::validateInvItem() throws the
+     * moment this product is used on a Peppol send — a dedicated hint
+     * says so plainly instead.
      * @param array<array-key, array<array-key, string>|string> $unitPeppolsData
      */
     public function unitPeppolSelect(ProductForm $form, array $unitPeppolsData,
             bool $required = false): string
     {
         $hintKey = $required ? 'hint.this.field.is.required' :
-                'hint.this.field.is.not.required';
+                'product.peppol.unit.hint';
         $cssClass = $required ? self::REQUIRED_FIELD_CLASS :
                 self::OPTIONAL_FIELD_CLASS;
 
