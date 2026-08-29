@@ -195,7 +195,7 @@ final readonly class StoreCoveInvoiceLineBuilder
             $tax_category = $taxRate->getPeppolTaxRateCode();
             $tax_percent = $taxRate->getTaxRatePercent();
             if (null == $tax_category) {
-                throw new PeppolTaxCategoryCodeNotFoundException($this->t);
+                throw new PeppolTaxCategoryCodeNotFoundException($this->t, $id);
             }
             if (null === $tax_percent) {
                 throw new PeppolTaxCategoryPercentNotFoundException($this->t);

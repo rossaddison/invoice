@@ -666,6 +666,7 @@ return [
   'delivery.location.peppol.output' => 'There is no'
     . ' delivery location associated'
     . ' with this invoice. Therefore no Peppol output',
+  'delivery.location.peppol.output.fix' => 'Set one now',
   'delivery.location.plural' => 'Delivery Locations',
   'delivery.location.view' => 'Delivery Location View',
   'delivery.party' => 'Delivery Party',
@@ -1842,13 +1843,11 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' Item Allowance Charges inherit from a'
     . ' completed '
     . 'Peppol Document Level Allowance Charge',
-  'peppol.client.check' => 'Peppol details'
-    . ' relating to this client are insufficient.'
-    . ' At least one is missing.'
-    . ' Refer to View '
-    . '... Client '
-    . '... Options '
-    . '... Edit Peppol details for e-invoicing',
+  'peppol.client.check' => 'Peppol setup is incomplete for this client — click a field below to fix it:',
+  'peppol.client.check.missing' =>
+    'This client has no Peppol details set up at all.',
+  'peppol.client.check.no.client' =>
+    'This invoice has no client attached — Peppol cannot be sent without one.',
   'peppol.client.defaults' =>
     'Fill Client Peppol Form'
     . ' with OpenPeppol defaults for testing.',
@@ -1952,6 +1951,7 @@ prior to importing and no existing documents e.g. Invoices.',
     'Peppol Tax Category code'
     . ' (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/)'
     . ' missing.',
+  'peppol.tax.category.not.found.fix' => 'Set it now',
   'peppol.tax.category.percent.not.found' =>
     'Peppol Tax Category percent'
     . ' (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/)'

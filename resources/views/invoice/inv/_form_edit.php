@@ -122,7 +122,10 @@ if ($vat) {
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'delivery_location_id')
             ->label($translator->translate('delivery.location'))
-            ->addInputAttributes(['class' => 'form-control form-control-lg',])
+            ->addInputAttributes([
+                'class' => 'form-control form-control-lg',
+                'id' => 'delivery_location_id',
+            ])
             ->value($form->delivery_location_id)
             ->prompt($translator->translate('none'))
             ->disabled(false)

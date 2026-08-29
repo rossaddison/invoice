@@ -23,6 +23,7 @@ use App\Invoice\Helpers\Peppol\{
     PeppolHelperNetDeps,
     PeppolValidator,
 };
+use App\Invoice\Helpers\Peppol\Exception\PeppolTaxCategoryCodeNotFoundException;
 use App\Invoice\Peppol\PeppolSendServiceInterface;
 use Yiisoft\{Html\Html, Router\HydratorAttribute\RouteArgument, User\CurrentUser
 };
@@ -57,31 +58,48 @@ trait Peppol
             : null;
         if (null === $delloc) {
             if ($fullySetup) {
-                $this->flashMessage('warning',
-                    $this->translator->translate('delivery.location.peppol.output'));
+                // Setup itself is fine — the only problem is the missing
+                // delivery location, so that's the only message needed.
+                $this->flashDeliveryLocationMissing($id);
+            } elseif ($core->cpR->repoClientCount($client_id) == 0) {
+                // No ClientPeppol record at all — peppolClientFullySetup()
+                // returned false without validateClientPeppolSetup() ever
+                // running, so nothing else has flashed a message yet.
+                $this->flashClientPeppolMissing($client_id);
             }
-            $this->flashMessage('warning', 'Peppol has not been setup for this client');
+            // else: peppolClientFullySetup() already flashed a detailed,
+            // deep-linked message via validateClientPeppolSetup() — no
+            // need to also flash a generic "not set up" message on top.
             return $this->webService->getRedirectResponse('client/index');
         }
         // Load the inv's HASONE relation 'invAmount'
         $peppolhelper = new PeppolHelper(
             $this->sR, $net->delRepo, $invoice->getInvAmount(), $delloc, $this->translator, $core->gR);
-        $uploads_temp_peppol_absolute_path_dot_xml =
-            $peppolhelper->generateInvoicePeppolUblXmlTempFile(
-                $invoice,
-                new PeppolHelperInvDeps(
-                    $core->soR, $inv->iaR, $core->iiaR,
-                    $inv->iiR, $core->paR, $core->cpR,
-                ),
-                new PeppolHelperNetDeps(
-                    $net->contractRepo, $net->delRepo,
-                    $net->delPartyRepo, $net->unpR, $net->upR,
-                ),
-                new PeppolHelperChargeDeps(
-                    $charge->aciR, $charge->aciiR,
-                    $charge->soiR, $charge->trR,
-                ),
-            );
+        try {
+            $uploads_temp_peppol_absolute_path_dot_xml =
+                $peppolhelper->generateInvoicePeppolUblXmlTempFile(
+                    $invoice,
+                    new PeppolHelperInvDeps(
+                        $core->soR, $inv->iaR, $core->iiaR,
+                        $inv->iiR, $core->paR, $core->cpR,
+                    ),
+                    new PeppolHelperNetDeps(
+                        $net->contractRepo, $net->delRepo,
+                        $net->delPartyRepo, $net->unpR, $net->upR,
+                    ),
+                    new PeppolHelperChargeDeps(
+                        $charge->aciR, $charge->aciiR,
+                        $charge->soiR, $charge->trR,
+                    ),
+                );
+        } catch (\Throwable $e) {
+            // Same reasoning as transmitPeppolDocument()'s catch: without
+            // this, any failure here (e.g. a tax rate missing its Peppol
+            // Tax Category code) skipped straight past a flash message to
+            // Yii3's generic error page whenever YII_DEBUG wasn't on.
+            $this->flashMessage('warning', $this->friendlyPeppolExceptionMessage($e));
+            return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
+        }
         $xml = $this->peppolOutput($net->upR, $uploads_temp_peppol_absolute_path_dot_xml);
         return $this->peppolRespond($id, $xml,
             $uploads_temp_peppol_absolute_path_dot_xml, new PeppolValidator($this->translator));
@@ -191,60 +209,116 @@ trait Peppol
         return false;
     }
 
+    /**
+     * Flashes a link straight to `clientpeppol/add/{client_id}` — for the
+     * "no ClientPeppol record exists at all yet" case, which
+     * `validateClientPeppolSetup()` never runs for (there's no record to
+     * inspect field-by-field), so nothing else flashes a message here on
+     * its own.
+     */
+    private function flashClientPeppolMissing(int $client_id): void
+    {
+        $url = $this->webService->generateUrl(
+            'clientpeppol/add', ['client_id' => $client_id]);
+        $this->flashMessage('warning',
+            $this->translator->translate('peppol.client.check.missing')
+            . ' ' . Html::a(
+                $this->translator->translate('client.peppol.add'),
+                $url)->render());
+    }
+
+    /**
+     * Flashes a link straight to the invoice's own Delivery Location
+     * field (`inv/edit/{id}#delivery_location_id`) instead of just saying
+     * one is needed and leaving the user to find that field themselves.
+     */
+    private function flashDeliveryLocationMissing(int $invId): void
+    {
+        $url = $this->webService->generateUrl(
+            'inv/edit', ['id' => $invId], [], 'delivery_location_id');
+        $this->flashMessage('warning',
+            $this->translator->translate('delivery.location.peppol.output')
+            . ' ' . Html::a(
+                $this->translator->translate('delivery.location.peppol.output.fix'),
+                $url)->render());
+    }
+
+    /**
+     * Every required ClientPeppol field, keyed by the property name — which
+     * is also that field's HTML id in resources/views/invoice/clientpeppol/
+     * _form.php (both add and edit share the one template), so it doubles
+     * as the URL fragment that scrolls straight to it.
+     *
+     * @return array<string, string> property => translation key for its label
+     */
+    private function clientPeppolRequiredFields(): array
+    {
+        return [
+            'endpointid' => 'client.peppol.endpointid',
+            'endpointid_schemeid' => 'client.peppol.endpointid.schemeid',
+            'identificationid' => 'client.peppol.identificationid',
+            'identificationid_schemeid' => 'client.peppol.identificationid.schemeid',
+            'taxschemecompanyid' => 'client.peppol.taxschemecompanyid',
+            'taxschemeid' => 'client.peppol.taxschemeid',
+            'legal_entity_registration_name' => 'client.peppol.legal.entity.registration.name',
+            'legal_entity_companyid' => 'client.peppol.legal.entity.companyid',
+            'legal_entity_companyid_schemeid' => 'client.peppol.legal.entity.companyid.schemeid',
+            'legal_entity_company_legal_form' => 'client.peppol.legal.entity.company.legal.form',
+            'financial_institution_branchid' => 'client.peppol.financial.institution.branchid',
+            'accounting_cost' => 'client.peppol.accounting.cost',
+            'supplier_assigned_accountid' => 'client.peppol.supplier.assigned.account.id',
+        ];
+    }
+
+    /**
+     * Instead of a wall of raw `$cp->getX() ` debug flashes (or a single
+     * "something's missing, go look" message) — one flash with a bullet
+     * list naming exactly which fields are empty, each linking straight to
+     * that field on the client's Peppol edit form via a URL fragment. No
+     * more hunting through Client > Options > Edit Peppol details by hand.
+     */
     private function validateClientPeppolSetup(ClientPeppol $cp): bool
     {
-        if (empty($cp->getEndpointid())) {
-            $this->flashMessage('warning', '$cp->getEndpointid() ' . $cp->getEndpointid());
+        /** @var array<string, string|null> $values property => current value */
+        $values = [
+            'endpointid' => $cp->getEndpointid(),
+            'endpointid_schemeid' => $cp->getEndpointidSchemeid(),
+            'identificationid' => $cp->getIdentificationid(),
+            'identificationid_schemeid' => $cp->getIdentificationidSchemeid(),
+            'taxschemecompanyid' => $cp->getTaxschemecompanyid(),
+            'taxschemeid' => $cp->getTaxschemeid(),
+            'legal_entity_registration_name' => $cp->getLegalEntityRegistrationName(),
+            'legal_entity_companyid' => $cp->getLegalEntityCompanyid(),
+            'legal_entity_companyid_schemeid' => $cp->getLegalEntityCompanyidSchemeid(),
+            'legal_entity_company_legal_form' => $cp->getLegalEntityCompanyLegalForm(),
+            'financial_institution_branchid' => $cp->getFinancialInstitutionBranchid(),
+            'accounting_cost' => $cp->getAccountingCost(),
+            'supplier_assigned_accountid' => $cp->getSupplierAssignedAccountId(),
+        ];
+
+        $missingLinks = [];
+        foreach ($this->clientPeppolRequiredFields() as $property => $labelKey) {
+            $value = $values[$property];
+            if (null !== $value && $value !== '') {
+                continue;
+            }
+            $url = $this->webService->generateUrl(
+                'clientpeppol/edit',
+                ['client_id' => $cp->reqClientId()],
+                [],
+                $property,
+            );
+            $missingLinks[] = Html::li(
+                Html::a($this->translator->translate($labelKey), $url));
         }
-        if (empty($cp->getEndpointidSchemeid())) {
-            $this->flashMessage('warning', '$cp->getEndpointidSchemeid() ' . $cp->getEndpointidSchemeid());
-        }
-        if (empty($cp->getIdentificationid())) {
-            $this->flashMessage('warning', '$cp->getIdentificationid() ' . $cp->getIdentificationid());
-        }
-        if (empty($cp->getTaxschemecompanyid())) {
-            $this->flashMessage('warning', '$cp->getTaxschemecompanyid() ' . $cp->getTaxschemecompanyid());
-        }
-        if (empty($cp->getTaxschemeid())) {
-            $this->flashMessage('warning', '$cp->getTaxschemeid() ' . $cp->getTaxschemeid());
-        }
-        if (empty($cp->getLegalEntityRegistrationName())) {
-            $this->flashMessage('warning', '$cp->getLegalEntityRegistrationName() ' . $cp->getLegalEntityRegistrationName());
-        }
-        if (empty($cp->getLegalEntityCompanyid())) {
-            $this->flashMessage('warning', '$cp->getLegalEntityCompanyid() ' . $cp->getLegalEntityCompanyid());
-        }
-        if (empty($cp->getLegalEntityCompanyidSchemeid())) {
-            $this->flashMessage('warning', '$cp->getLegalEntityCompanyidSchemeid() ' . $cp->getLegalEntityCompanyidSchemeid());
-        }
-        if (empty($cp->getLegalEntityCompanyLegalForm())) {
-            $this->flashMessage('warning', '$cp->getLegalEntityCompanyLegalForm() ' . $cp->getLegalEntityCompanyLegalForm());
-        }
-        if (empty($cp->getFinancialInstitutionBranchid())) {
-            $this->flashMessage('warning', '$cp->getFinancialInstitutionBranchid() ' . $cp->getFinancialInstitutionBranchid());
-        }
-        if (empty($cp->getAccountingCost())) {
-            $this->flashMessage('warning', '$cp->getAccountingCost() ' . $cp->getAccountingCost());
-        }
-        if (empty($cp->getSupplierAssignedAccountId())) {
-            $this->flashMessage('warning', '$cp->getSupplierAssignedAccountId() ' . $cp->getSupplierAssignedAccountId());
-        }
-        if ($cp->getEndpointid()
-          && $cp->getEndpointidSchemeid()
-          && $cp->getIdentificationid()
-          && $cp->getIdentificationidSchemeid()
-          && $cp->getTaxschemecompanyid()
-          && $cp->getTaxschemeid()
-          && $cp->getLegalEntityRegistrationName()
-          && $cp->getLegalEntityCompanyid()
-          && $cp->getLegalEntityCompanyidSchemeid()
-          && $cp->getLegalEntityCompanyLegalForm()
-          && $cp->getFinancialInstitutionBranchid()
-          && $cp->getAccountingCost()
-          && $cp->getSupplierAssignedAccountId()) {
+
+        if ($missingLinks === []) {
             return true;
         }
-        $this->flashMessage('warning', $this->translator->translate('peppol.client.check'));
+
+        $this->flashMessage('warning',
+            $this->translator->translate('peppol.client.check')
+            . Html::ul()->items(...$missingLinks)->render());
         return false;
     }
 
@@ -309,13 +383,12 @@ trait Peppol
 
         if ($client_id <= 0) {
             $this->flashMessage('warning',
-                $this->translator->translate('peppol.client.check'));
+                $this->translator->translate('peppol.client.check.no.client'));
         } elseif ($this->peppolClientFullySetup($client_id, $core->cpR)) {
             $delLocId = $invoice->getDeliveryLocationId();
             $delloc   = $core->dlR->repoDeliveryLocationquery((int) $delLocId);
             if (null === $delloc) {
-                $this->flashMessage('warning',
-                    $this->translator->translate('delivery.location.peppol.output'));
+                $this->flashDeliveryLocationMissing($id);
             } else {
                 $this->transmitPeppolDocument($invoice, $delloc, $core, $net, $charge, $inv, $peppolSendService);
             }
@@ -359,8 +432,7 @@ trait Peppol
                 $client_id = $invoice->getClient()?->reqId() ?? 0;
                 $cp = $core->cpR->repoClientPeppolLoadedquery($client_id);
                 if (null === $cp) {
-                    $this->flashMessage('warning',
-                        $this->translator->translate('peppol.client.check'));
+                    $this->flashClientPeppolMissing($client_id);
                 } else {
                     $recipientId = $cp->getEndpointidSchemeid() . ':' . $cp->getEndpointid();
                     $message = $peppolSendService->send($invoice->reqId(), $ublXml, $recipientId);
@@ -376,12 +448,44 @@ trait Peppol
                     }
                 }
             }
-        } catch (\RuntimeException $e) {
-            $msg = $e instanceof \Yiisoft\FriendlyException\FriendlyExceptionInterface
-                ? $e->getName()
-                : $e->getMessage();
-            $this->flashMessage('warning', $msg);
+        } catch (\Throwable $e) {
+            // Catch everything here, not just RuntimeException — anything
+            // that escapes this block instead hits Yii3's global error
+            // handler, which (outside YII_DEBUG=true) shows a generic "an
+            // error has occurred" page with no indication of what actually
+            // went wrong or how to fix it. Full detail still goes to the
+            // server log either way, so real bugs stay diagnosable.
+            $this->flashMessage('warning', $this->friendlyPeppolExceptionMessage($e));
         }
+    }
+
+    /**
+     * Turns any exception from Peppol UBL generation into a message worth
+     * showing the user — the translated {@see FriendlyExceptionInterface}
+     * name where available, plus a deep link to the exact field to fix for
+     * the exception types that know one. Always logs the full exception
+     * server-side first, since a friendly one-liner in a flash message is
+     * not enough to diagnose an unexpected failure later.
+     */
+    private function friendlyPeppolExceptionMessage(\Throwable $e): string
+    {
+        error_log((string) $e);
+        $msg = $e instanceof \Yiisoft\FriendlyException\FriendlyExceptionInterface
+            ? $e->getName()
+            : $e->getMessage();
+        if ($e instanceof PeppolTaxCategoryCodeNotFoundException
+                && null !== $e->taxRateId) {
+            $url = $this->webService->generateUrl(
+                'taxrate/edit',
+                ['tax_rate_id' => $e->taxRateId],
+                [],
+                'peppol_tax_rate_code',
+            );
+            $msg .= ' ' . Html::a(
+                $this->translator->translate('peppol.tax.category.not.found.fix'),
+                $url)->render();
+        }
+        return $msg;
     }
 
     private function peppolOutput(UPR $upR,

@@ -33,6 +33,19 @@ final readonly class WebControllerService
     }
 
     /**
+     * Same route/arguments/hash as `getRedirectResponse()`, but returns the
+     * URL string itself instead of a redirect — for embedding a deep link
+     * (e.g. straight to the specific field an error is about, via `$hash`
+     * matching that field's HTML id) inside a flash message body rather
+     * than navigating there immediately.
+     */
+    /** @psalm-suppress MixedArgumentTypeCoercion $arguments **/
+    public function generateUrl(string $url, array $arguments = [], array $queryParameters = [], ?string $hash = null): string
+    {
+        return $this->urlGenerator->generate($url, $arguments, $queryParameters, $hash);
+    }
+
+    /**
      * Redirects to a raw path rather than a named route — for the rare
      * case (`App\Webshop\Delivery\DeliveryController::update()`,
      * `App\Webshop\Currency\CurrencyController::update()`) where the
