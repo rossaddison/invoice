@@ -157,10 +157,22 @@ final readonly class ProductFormFields
                     $numericValue >= 0.00 ? $numericValue : 0.00);
         }
 
+        // Field::text()->value() strictly requires string|null (confirmed
+        // live: InvalidArgumentException "Text field requires a string or
+        // null value", trade_min_order_qty on a product whose DB row has
+        // it NULL — so this was a POST-redisplay hydrating a blank ?int
+        // field as 0, not null). '?? ""' only substitutes for a genuine
+        // null; every ?int/?float property routed through this method
+        // (trade_min_order_qty, trade_min_order_spend, reorder_threshold
+        // when not $isPrice) can otherwise reach here as a real int/float,
+        // which the field then rejects outright. Stringify anything left
+        // over that isn't already null.
+        $stringValue = $value === null ? null : (string) $value;
+
         $field = Field::text($form, $fieldName)
             ->label($this->translator->translate($labelKey))
             ->addInputAttributes(['class' => $cssClass])
-            ->value($value ?? '')
+            ->value($stringValue ?? '')
             ->placeholder($this->translator->translate($labelKey))
             ->hint($this->translator->translate($hintKey));
 
