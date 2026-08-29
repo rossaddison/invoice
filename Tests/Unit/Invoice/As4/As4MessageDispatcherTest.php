@@ -14,6 +14,7 @@ use App\Invoice\As4\As4ErrorSignal;
 use App\Invoice\As4\As4HttpResponse;
 use App\Invoice\As4\As4HttpTransportInterface;
 use App\Invoice\As4\As4MessageDispatcher;
+use App\Invoice\As4\As4MessageRepositoryInterface;
 use App\Invoice\As4\As4MimePart;
 use App\Invoice\As4\As4ReceiptParserInterface;
 use App\Invoice\As4\As4ReceiptSignal;
@@ -182,6 +183,18 @@ class As4MessageDispatcherTest extends TestCase
         return $stub;
     }
 
+    /**
+     * Pure stub: findByMessageId()/findPendingRetries()/etc. all return
+     * PHPUnit's automatic type-appropriate default (null/[]) since nothing
+     * here asserts against repository calls — that's As4MessageDispatcherTest's
+     * whole point (dispatcher persistence is exercised via real DB queries
+     * in Tests/Unit/Invoice/As4/As4RetryEngineTest.php instead).
+     */
+    private function repositoryStub(): As4MessageRepositoryInterface
+    {
+        return $this->createStub(As4MessageRepositoryInterface::class);
+    }
+
     private function dispatcher(
         ?As4SmpResolverInterface $smpResolver = null,
         ?As4EnvelopeBuilderInterface $envelopeBuilder = null,
@@ -198,6 +211,7 @@ class As4MessageDispatcherTest extends TestCase
             $signer          ?? $this->signerReturning($doc),
             $httpTransport   ?? $this->transportReturning(new As4HttpResponse($httpStatus, '')),
             $receiptParser   ?? $this->parserReturning(null),
+            $this->repositoryStub(),
             $senderPartyId,
             $this->nullLogger(),
         );
