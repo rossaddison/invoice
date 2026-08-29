@@ -107,6 +107,9 @@ return [
     Route::methods([$mG, $mP], '/gateway-status')
         ->action([SiteController::class, 'gatewayStatus'])
         ->name('site/gateway-status'),
+    Route::methods([$mG, $mP], '/peppol-status')
+        ->action([SiteController::class, 'peppolStatus'])
+        ->name('site/peppol-status'),
     Route::methods([$mG, $mP], '/testimonial')
         ->action([SiteController::class, 'testimonial'])
         ->name('site/testimonial'),

@@ -277,6 +277,27 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::closeTag('div'); //6
 
      echo H::openTag('div', ['class' => 'form-check']); //6
+      $snfpsp = 'settings[no_front_peppol_status_page]';
+      $body[$snfpsp] = $s->getSetting('no_front_peppol_status_page');
+      echo H::openTag('input', [
+       'type' => 'hidden',
+       'name' => $snfpsp,
+       'value' => '0'
+      ]);
+      echo H::openTag('input', [
+       'type' => 'checkbox',
+       'class' => 'form-check-input',
+       'id' => 'no_front_peppol_status_page',
+       'name' => $snfpsp,
+       'value' => '1',
+       'checked' => ($body[$snfpsp] == 1) ? 'checked' : null
+      ]);
+      echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'no_front_peppol_status_page']);
+       echo $translator->translate('menu.peppol.status');
+      echo H::closeTag('label');
+     echo H::closeTag('div'); //6
+
+     echo H::openTag('div', ['class' => 'form-check']); //6
       $snfwsp = 'settings[no_front_webshop_page]';
       $body[$snfwsp] = $s->getSetting('no_front_webshop_page');
       echo H::openTag('input', [

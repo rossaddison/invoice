@@ -84,6 +84,23 @@ final class PeppolMessageRepository extends Select\Repository implements PeppolM
         return $this->select()->where(['id' => $id])->fetchOne() ?: null;
     }
 
+    /**
+     * Most recent message in the given status, by id (auto-increment, so
+     * this is also most-recent-by-time without needing a second orderBy).
+     * Used by the public Peppol Access Point status page to derive a real
+     * "last confirmed send" date from actual message history, instead of
+     * a synthetic sandbox ping the way gateway-status pings a payment
+     * gateway's own sandbox API — Storecove/Oxalis don't have an
+     * equivalent side-effect-free health check to call.
+     */
+    public function mostRecentByStatus(string $status): ?PeppolMessage
+    {
+        return $this->select()
+            ->where(['status' => $status])
+            ->orderBy('id', 'DESC')
+            ->fetchOne() ?: null;
+    }
+
     /** @psalm-return EntityReader */
     public function repoInvMessages(int $inv_id): EntityReader
     {

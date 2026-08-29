@@ -205,6 +205,16 @@ trait InvoiceInstallTrait
             'no_front_team_page' => 1,
             'no_front_testimonial_page' => 1,
             'no_front_webshop_page' => 1,
+            // Unlike every no_front_*_page above (all default 1 — hidden
+            // until the installer fills in real content), this one is a
+            // functional status page with nothing to configure first, so
+            // it defaults to visible (0) — matching gatewayStatus()'s own
+            // intended default, which was never actually seeded here and
+            // so silently relied on getSetting() returning '' on a fresh
+            // install (true for the navbar's != '1' check, but false for
+            // site/index.php's exact == '0' homepage-link check — an
+            // inconsistency this explicit seed avoids for the new toggle).
+            'no_front_peppol_status_page' => 0,
             'no_facebook_continue_button' => 1,
             'no_github_continue_button' => 1,
             'no_google_continue_button' => 1,
