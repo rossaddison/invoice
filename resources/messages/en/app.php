@@ -2644,21 +2644,32 @@ prior to importing and no existing documents e.g. Invoices.',
   'stop.homecare.signing.up' => 'No home care signup needed',
   'stop.logging.in' => 'Stop logging in',
   'stop.signing.up' => 'Stop signing up',
+  'peppol.access.point' => 'Peppol Access Point',
+  'peppol.access.point.hint' =>
+    'Choose which Access Point actually transmits your Peppol'
+    . ' documents, then fill in that provider\'s details below —'
+    . ' only the selected provider\'s card is used when sending.',
+  'peppol.access.point.get.credentials' => 'Get credentials →',
+  'oxalis.env.only.note' =>
+    'Oxalis is configured via .env variables, not here — shown below'
+    . ' read-only. See src/Invoice/Peppol/README.md for setup steps.'
+    . ' Oxalis has not yet been used for a real send in this'
+    . ' deployment.',
+  'oxalis.env.not.set' => 'Not set',
+  'oxalis.setup.guide' => 'Oxalis setup guide →',
   'storecove' => 'Storecove',
   'storecove.api.key' => 'API Key',
   'storecove.advisory.to.developer.field.easily.missed'
     => 'Field easily missed by customer',
   'storecove.create.a.sender.legal.entity.country'
-    => '1.1.4. Create a sender - Legal Entity Country',
+    => 'Legal Entity Country',
   'storecove.invoice.json.encoded' =>
     'StoreCove Json Encoded Invoice',
   'peppol.send.via.oxalis' => 'Send via Peppol (Oxalis)',
   'peppol.send.via' => 'Send via Peppol',
   'oxalis' => 'Oxalis',
   'storecove.legal' => 'Legal',
-  'storecove.legal.entity.id.for.json' =>
-    '1.1.4. Create a sender '
-    . '- Store Cove Legal Entity Id inserted into invoice.json',
+  'storecove.legal.entity.id.for.json' => 'Legal Entity ID',
   'storecove.legal.entity.identifier.id.not.found' =>
     'Config params'
     . ' Accounting Supplier'
@@ -2672,9 +2683,9 @@ prior to importing and no existing documents e.g. Invoices.',
     'Region ---------- Country --------- Legal --------- Tax',
   'storecove.salesorder.number.not.exist' =>
     'Sales Order Number does not exist',
-  'storecove.sender.identifier' => '6.2 Sender Identifier',
+  'storecove.sender.identifier' => 'Sender Identifier',
   'storecove.sender.identifier.basis' =>
-    '6.2 Sender Identifier Basis - Legal or Tax',
+    'Sender Identifier Basis (Legal or Tax)',
   'storecove.supplier.contact.email.not.found' =>
     'Supplier Contact Email Not Found.'
     . $referToConfigParamsArray,

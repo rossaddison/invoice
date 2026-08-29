@@ -244,7 +244,7 @@ final class SettingController extends BaseController
                 // They cannot both exist at the same time.
                 'stand_in_codes' => $peppol_arrays->getUncl2005subset(),
             ]),
-            'storecove' => $this->webViewRenderer->renderPartialAsString($p . 'storecove', [
+            'peppol_access_point' => $this->webViewRenderer->renderPartialAsString($p . 'peppol_access_point', [
                 'countries' => $countries->getCountryList((string) $this->session->get('_language')),
                 'sender_identifier_array' => StoreCoveArrays::storeCoveSenderIdentifierArray(),
             ]),

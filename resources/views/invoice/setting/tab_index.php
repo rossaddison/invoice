@@ -28,7 +28,7 @@ use Yiisoft\Html\Html as H;
  * @var string $mtd
  * @var string $oauth2
  * @var string $peppol_electronic_invoicing
- * @var string $storecove
+ * @var string $peppol_access_point
  * @var string $invoiceplane
  * @var string $qrcode
  * @var string $active
@@ -167,13 +167,13 @@ $tabs = [
      'role'  => true,
      'content' => $peppol_electronic_invoicing
  ],
- 'storecove' => [
-     'label' => $translator->translate('storecove'),
+ 'peppol_access_point' => [
+     'label' => $translator->translate('peppol.access.point'),
      'icon'  => 'bi bi-cloud-upload',
      'color' => '#0dcaf0',
-     'aria'  => 'settings-storecove',
+     'aria'  => 'settings-peppol-access-point',
      'role'  => true,
-     'content' => $storecove
+     'content' => $peppol_access_point
  ],
  'invoiceplane' => [
      'label' => $translator->translate('invoiceplane'),
