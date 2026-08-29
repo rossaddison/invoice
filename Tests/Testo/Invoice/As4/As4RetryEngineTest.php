@@ -10,7 +10,7 @@ use App\Invoice\As4\As4MessageRepositoryInterface;
 use App\Invoice\As4\As4ReceiptParserInterface;
 use App\Invoice\As4\As4RetryEngine;
 use App\Invoice\As4\As4SenderInterface;
-use DateTime;
+use DateTimeImmutable;
 use Mockery as m;
 use Psr\Log\LoggerInterface;
 use Testo\Assert;
@@ -78,7 +78,7 @@ final class As4RetryEngineTest
         /** @var As4RetryState&m\MockInterface $retryState */
         $retryState = m::mock(As4RetryState::class);
         $e = $retryState->shouldReceive('getFirstSentAt');
-        $e->andReturn(new DateTime('2000-01-01'));
+        $e->andReturn(new DateTimeImmutable('2000-01-01'));
         $e2 = $retryState->shouldReceive('getMaxAttempts');
         $e2->andReturn(3);
         $e3 = $retryState->shouldReceive('getRetryIntervalSeconds');
