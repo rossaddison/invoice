@@ -1114,7 +1114,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('peppol.store.cove.1.1.2'),
                 $urlGenerator->generate('setting/tabIndex',
-                    [], ['active' => 'storecove'], 'settings[storecove_api_key]'),
+                    [], ['active' => 'peppol_access_point'], 'settings[storecove_api_key]'),
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('peppol.store.cove.1.1.3'),
                 $urlGenerator->generate('invoice/storeCoveCallApi'),

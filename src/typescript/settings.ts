@@ -102,6 +102,23 @@ export class SettingsHandler {
         // Run online payment handler once to ensure initial state
         this.handleOnlinePaymentSelectChange();
 
+        // Peppol Access Point provider select (see
+        // partial_settings_peppol_access_point.php) — same show/hide idea
+        // as the online payment select above, except exactly one provider
+        // is ever shown at a time rather than every enabled gateway
+        // staying visible, since there's no per-provider enable toggle
+        // here, only this one exclusive choice.
+        const peppolProviderSelect = document.getElementById(
+            'settings[peppol_access_point_provider]'
+        ) as HTMLSelectElement;
+        if (peppolProviderSelect) {
+            peppolProviderSelect.addEventListener(
+                'change',
+                this.handlePeppolProviderSelectChange.bind(this)
+            );
+        }
+        this.handlePeppolProviderSelectChange();
+
         // Reveal-toggle eye icon on every gateway credential password field
         this.initPasswordRevealToggles();
     }
@@ -373,6 +390,40 @@ export class SettingsHandler {
         if (target) {
             target.classList.remove('hidden');
             target.classList.add('active-gateway');
+        }
+    }
+
+    /**
+     * Peppol Access Point provider select change handler (show/hide the
+     * matching provider's card in partial_settings_peppol_access_point.php).
+     * Unlike the online payment gateways above, providers here are
+     * mutually exclusive — exactly one is ever shown, so this always
+     * hides every '.peppol-access-point-settings' card unconditionally
+     * before revealing the selected one, with no '.active-gateway'-style
+     * exception for an independently-enabled one.
+     */
+    private handlePeppolProviderSelectChange(): void {
+        const select = document.getElementById(
+            'settings[peppol_access_point_provider]'
+        ) as HTMLSelectElement;
+        if (!select) return;
+
+        const provider = select.value;
+
+        const providerSettings = document.querySelectorAll(
+            '.peppol-access-point-settings'
+        ) as NodeListOf<HTMLElement>;
+        providerSettings.forEach(element => {
+            element.classList.add('hidden');
+            element.classList.remove('active-provider');
+        });
+
+        const target = document.getElementById(
+            `peppol-access-point-settings-${provider}`
+        ) as HTMLElement;
+        if (target) {
+            target.classList.remove('hidden');
+            target.classList.add('active-provider');
         }
     }
 }
