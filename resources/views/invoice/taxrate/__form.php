@@ -81,6 +81,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::select($form, 'peppol_tax_rate_code')
     ->label($translator->translate('peppol.tax.rate.code'))
+    ->addInputAttributes(['id' => 'peppol_tax_rate_code'])
     ->optionsData($optionsDataPeppolTaxRateCode)
     ->value(Html::encode($form->getPeppolTaxRateCode() ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));

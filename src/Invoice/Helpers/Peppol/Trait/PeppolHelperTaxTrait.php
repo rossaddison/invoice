@@ -137,7 +137,7 @@ trait PeppolHelperTaxTrait
                 $tax_category = $taxRate->getPeppolTaxRateCode();
                 $tax_percent = $taxRate->getTaxRatePercent();
                 if (null === $tax_category) {
-                    throw new TCCNf($this->t);
+                    throw new TCCNf($this->t, $id);
                 }
                 if (null === $tax_percent) {
                     throw new TCPNf($this->t);
