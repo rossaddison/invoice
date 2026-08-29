@@ -1964,6 +1964,12 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/)'
     . ' missing.',
   'peppol.tax.rate.code' => 'Peppol Tax Rate Code',
+  'taxrate.peppol.tax.rate.code.hint' =>
+    'Not required to save this tax rate, but required (UNCL5305 code,'
+    . ' e.g. S/Z/E/AE) the moment an invoice using this tax rate is'
+    . ' sent via Peppol — set it now if this rate will ever be used on'
+    . ' a Peppol invoice.',
+  'taxrate.peppol.tax.rate.code.missing' => 'Not set',
   'peppol.trying.to.send.non.pdf.file' =>
     'Only pdf files are currently'
     . ' being sent with Peppol Invoices',
