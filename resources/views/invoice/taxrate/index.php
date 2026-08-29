@@ -65,8 +65,12 @@ $columns = [
     new DataColumn(
         'peppol_tax_rate_code',
         header: $translator->translate('peppol.tax.rate.code'),
-        content: static fn (TaxRate $model) => Html::encode(
-            $model->getPeppolTaxRateCode()),
+        content: static function (TaxRate $model) use ($translator): string {
+            $code = $model->getPeppolTaxRateCode();
+            return (null === $code || $code === '')
+                ? '⚠️ ' . $translator->translate('taxrate.peppol.tax.rate.code.missing')
+                : Html::encode($code);
+        },
     ),
     new DataColumn(
         'storecove_tax_type',
