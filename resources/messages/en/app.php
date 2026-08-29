@@ -2108,6 +2108,13 @@ prior to importing and no existing documents e.g. Invoices.',
   'product.name' => 'Product name',
   'product.not.found' => 'Product not found',
   'product.peppol.unit' => 'Unit with Peppol',
+  'product.peppol.unit.hint' =>
+    'Not required to save this product, but required the moment an'
+    . ' invoice using this product is sent via Peppol — this must be a'
+    . ' UnitPeppol record for the same Unit selected above, not just'
+    . ' any UnitPeppol record. Set it now if this product will ever be'
+    . ' used on a Peppol invoice.',
+  'product.peppol.unit.missing' => 'Not set',
   'product.price' => 'Price',
   'product.price.base.quantity' => 'qty in Product',
   'product.trade.min.order.quantity' => 'Trade Minimum Order Quantity'
