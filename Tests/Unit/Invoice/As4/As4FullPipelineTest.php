@@ -9,6 +9,7 @@ use App\Invoice\As4\As4DispatchRequest;
 use App\Invoice\As4\As4EnvelopeSignerInterface;
 use App\Invoice\As4\As4HttpClient;
 use App\Invoice\As4\As4MessageDispatcher;
+use App\Invoice\As4\As4MessageRepositoryInterface;
 use App\Invoice\As4\As4ReceiptParser;
 use App\Invoice\As4\As4ReceiptSignal;
 use App\Invoice\As4\As4SmpEndpoint;
@@ -141,6 +142,7 @@ class As4FullPipelineTest extends TestCase
             $signer,
             new As4HttpClient($httpClient, $psr17, $psr17),
             new As4ReceiptParser(),
+            $this->createStub(As4MessageRepositoryInterface::class),
             self::SENDER_ID,
             $logger,
         );
