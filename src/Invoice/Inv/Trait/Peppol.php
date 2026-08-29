@@ -24,6 +24,7 @@ use App\Invoice\Helpers\Peppol\{
     PeppolValidator,
 };
 use App\Invoice\Helpers\Peppol\Exception\PeppolTaxCategoryCodeNotFoundException;
+use App\Invoice\Helpers\Peppol\Validator\ChecksumValidator;
 use App\Invoice\Peppol\PeppolSendServiceInterface;
 use Yiisoft\{Html\Html, Router\HydratorAttribute\RouteArgument, User\CurrentUser
 };
@@ -296,30 +297,94 @@ trait Peppol
             'supplier_assigned_accountid' => $cp->getSupplierAssignedAccountId(),
         ];
 
-        $missingLinks = [];
+        $problemLinks = [];
         foreach ($this->clientPeppolRequiredFields() as $property => $labelKey) {
             $value = $values[$property];
             if (null !== $value && $value !== '') {
                 continue;
             }
-            $url = $this->webService->generateUrl(
-                'clientpeppol/edit',
-                ['client_id' => $cp->reqClientId()],
-                [],
-                $property,
-            );
-            $missingLinks[] = Html::li(
-                Html::a($this->translator->translate($labelKey), $url));
+            $problemLinks[] = $this->clientPeppolFieldLink(
+                $cp, $property, $this->translator->translate($labelKey));
         }
 
-        if ($missingLinks === []) {
+        $endpointFormatProblem = $this->endpointidFormatProblem(
+            $values['endpointid'], $values['endpointid_schemeid']);
+        if (null !== $endpointFormatProblem) {
+            $problemLinks[] = $this->clientPeppolFieldLink(
+                $cp, 'endpointid',
+                $this->translator->translate('client.peppol.endpointid')
+                . ' — ' . $endpointFormatProblem);
+        }
+
+        if ($problemLinks === []) {
             return true;
         }
 
         $this->flashMessage('warning',
             $this->translator->translate('peppol.client.check')
-            . Html::ul()->items(...$missingLinks)->render());
+            . Html::ul()->items(...$problemLinks)->render());
         return false;
+    }
+
+    private function clientPeppolFieldLink(ClientPeppol $cp, string $property, string $label): \Yiisoft\Html\Tag\Li
+    {
+        $url = $this->webService->generateUrl(
+            'clientpeppol/edit',
+            ['client_id' => $cp->reqClientId()],
+            [],
+            $property,
+        );
+        return Html::li(Html::a($label, $url));
+    }
+
+    /**
+     * Checksum function per scheme, for the schemes
+     * App\Invoice\Helpers\Peppol\Validator\EndpointSchemeValidator already
+     * enforces as fatal UBL business rules (PEPPOL-COMMON-R040/R041/R043/
+     * R049/R050) — kept in sync with that class's own scheme list
+     * deliberately, rather than duplicating its DOM-based logic here.
+     *
+     * @return array<string, callable(string): bool>
+     */
+    private function endpointSchemeChecksums(): array
+    {
+        return [
+            '0088' => ChecksumValidator::checkGLN(...),
+            '0192' => ChecksumValidator::checkMod11(...),
+            '0208' => ChecksumValidator::checkMod97BE(...),
+            '0007' => ChecksumValidator::checkSEOrgnr(...),
+            '0151' => ChecksumValidator::checkABN(...),
+        ];
+    }
+
+    /**
+     * Catches the exact bug class this session kept hitting live: an
+     * Endpoint ID copy-pasted from a sample/demo file (almost always an
+     * email address, e.g. 'joe.bloggs@web.com') paired with a scheme that
+     * requires a numeric business identifier — Storecove then rejects it
+     * with a raw regex-mismatch 422 (e.g. scheme 0106 KVK needs ^\d{6,9}$,
+     * scheme 0192 Norway org number needs ^\d{9}$). No real Peppol EAS/ICD
+     * scheme in DownloadedXml/eas.xml uses an email-address format, so an
+     * '@' is flagged regardless of which scheme is selected; the 5 schemes
+     * with a known checksum get that stronger check on top.
+     *
+     * @return string|null A translated problem description, or null if fine.
+     */
+    private function endpointidFormatProblem(?string $endpointId, ?string $schemeId): ?string
+    {
+        if (null === $endpointId || $endpointId === ''
+                || null === $schemeId || $schemeId === '') {
+            return null;
+        }
+        if (str_contains($endpointId, '@')) {
+            return $this->translator->translate('peppol.endpointid.looks.like.email');
+        }
+        $checksums = $this->endpointSchemeChecksums();
+        if (isset($checksums[$schemeId]) && !$checksums[$schemeId]($endpointId)) {
+            return $this->translator->translate('peppol.endpointid.checksum.invalid')
+                . ' (' . $schemeId . ')';
+        }
+        return null;
     }
 
     private function peppolStreamOutput(string $xml, PeppolValidator $pVal): Response
