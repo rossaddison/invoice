@@ -60,7 +60,12 @@ final class ProductForm extends FormModel
 
     // Never required — omitting it means "fall back to product_price for
     // the webshop too" (see Product::$retail_price's own docblock).
-    #[Number(min: 0, max: 999999999999999999)]
+    // skipOnEmpty: a blank field submits as null, and Number otherwise
+    // rejects null outright ("The allowed types ... are integer, float and
+    // string. null given.") even though the property itself is nullable —
+    // found submitting the product/add form with this field left blank as
+    // its own placeholder invites, 2026-08-30.
+    #[Number(min: 0, max: 999999999999999999, skipOnEmpty: true)]
     public ?float  $retail_price = 0.00;
 
     public bool $available_on_webshop = false;
@@ -68,18 +73,19 @@ final class ProductForm extends FormModel
     // Trade-terms pair — both optional; leaving either blank means "this
     // product has no trade terms", which hides the storefront's "Trade
     // Pricing" button entirely (see Product::$trade_min_order_qty).
-    #[Number(min: 1, max: 999999999999999999)]
+    // skipOnEmpty for the same reason as $retail_price above.
+    #[Number(min: 1, max: 999999999999999999, skipOnEmpty: true)]
     public ?int $trade_min_order_qty = null;
 
-    #[Number(min: 0, max: 999999999999999999)]
+    #[Number(min: 0, max: 999999999999999999, skipOnEmpty: true)]
     public ?float $trade_min_order_spend = null;
 
     public bool $track_stock = true;
 
     // Blank means "no reserved buffer" — the webshop then sees the full
     // stock_quantity as available (see Product::$reorder_threshold's own
-    // docblock).
-    #[Number(min: 0, max: 999999999999999999)]
+    // docblock). skipOnEmpty for the same reason as $retail_price above.
+    #[Number(min: 0, max: 999999999999999999, skipOnEmpty: true)]
     public ?float $reorder_threshold = null;
 
     #[Length(min: 0, max: 255, skipOnEmpty: true)]

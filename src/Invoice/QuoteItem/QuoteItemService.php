@@ -469,6 +469,15 @@ final readonly class QuoteItemService
 
     private function applyProductUnit(QuoteItem $model, array $array, UR $uR): void
     {
+        // product_unit_id is optional (not #[Required] on QuoteItemForm) --
+        // normally auto-filled by quote.js when a product is picked, but a
+        // submission that omits it (e.g. a product with no unit assigned)
+        // must not crash the whole request. Found 2026-08-30 alongside the
+        // isset()-guarded applyQuantityPriceDiscountOrder() just above,
+        // which this now matches.
+        if (!isset($array['product_unit_id'])) {
+            return;
+        }
         $unit = $uR->repoUnitquery((int) $array['product_unit_id']);
         if ($unit) {
             $model->setProductUnit($unit->getUnitName());
