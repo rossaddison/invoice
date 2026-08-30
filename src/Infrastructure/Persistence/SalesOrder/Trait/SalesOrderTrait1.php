@@ -85,9 +85,18 @@ trait SalesOrderTrait1
         $this->user_id = $user_id;
     }
 
+    // Unlike reqUserId() above, quote_id and inv_id are genuinely optional
+    // on a SalesOrder -- a direct SO has no originating quote, and a fresh
+    // one has no invoice yet. requireId()'s throw-on-null was wrong here:
+    // every real call site (SalesOrderController's already-converted
+    // checks, SalesOrdersColumnBuilder's hasLinkedInvoice() guard, ...)
+    // already treats 0 as "not set", so the throw could only ever crash
+    // a legitimate call. Found 2026-08-30 converting a fresh Sales Order
+    // to an Invoice -- reqInvId() threw "Inv not persisted" on the very
+    // check meant to confirm the SO hadn't already been converted.
     public function reqQuoteId(): int
     {
-        return $this->requireId($this->quote_id, 'Quote');
+        return $this->quote_id ?? 0;
     }
 
     public function setQuoteId(?int $quote_id): void
@@ -97,6 +106,6 @@ trait SalesOrderTrait1
 
     public function reqInvId(): int
     {
-        return $this->requireId($this->inv_id, 'Inv');
+        return $this->inv_id ?? 0;
     }
 }

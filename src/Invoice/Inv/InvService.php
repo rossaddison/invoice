@@ -12,7 +12,6 @@ use App\Infrastructure\Persistence\User\User;
 use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\Group\GroupRepository as GR;
 use App\Invoice\Setting\SettingRepository as SR;
-use App\User\UserRepository as UR;
 // Helpers
 use App\Invoice\Helpers\DateHelper;
 // Ancillary
@@ -28,7 +27,6 @@ final readonly class InvService
         private Translator $translator,
         private CR $cR,
         private GR $gR,
-        private UR $uR,
         private DatabaseManager $dbal,
     ) {
     }
@@ -46,7 +44,7 @@ final readonly class InvService
         SR $s,
         GR $gR
     ): Inv {
-        $this->persist($model, $array);
+        $this->persist($model, $array, $user);
         /**
          * Give a legitimate invoice number to an invoice that currently:
          * 1. Exists
@@ -205,7 +203,7 @@ final readonly class InvService
         }
     }
 
-    private function persist(Inv $model, array $array): void
+    private function persist(Inv $model, array $array, User $user): void
     {
         $client = 'client_id';
         if (isset($array[$client])) {
@@ -216,11 +214,17 @@ final readonly class InvService
             $model->setGroup(
                 $this->gR->repoGroupQuery((int) $array[$group]));
         }
-        $user = 'user_id';
-        if (isset($array[$user])) {
-            $userEntity = $this->uR->findById((int) $array[$user]);
-            $model->setUser($userEntity);
-        }
+        // Inv::$user is a BelongsTo(nullable: false) relation -- Cycle's
+        // writer needs the actual related object, not just the user_id
+        // scalar InvService::initNewInvFields() sets below. Previously this
+        // was only set when $array['user_id'] happened to be present, which
+        // several real callers (e.g. SalesOrderController::soToInvoiceConfirm())
+        // never populate -- Cycle then silently produced no INSERT at all
+        // for the entity (no exception), leaving $model->reqId() to throw
+        // "Inv not persisted" the moment the caller tried to read the new
+        // id back. saveInv() always receives a concrete $user already, so
+        // just use it directly instead of relying on the array key.
+        $model->setUser($user);
     }
 
     public function copyInv(User $user, Inv $model, array $array, SR $s): Inv
