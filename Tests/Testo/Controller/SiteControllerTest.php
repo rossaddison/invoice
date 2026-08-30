@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Testo\Controller;
 
 use App\Controller\SiteController;
+use App\Invoice\Peppol\PeppolStatusPageBuilder;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use Mockery as m;
@@ -175,5 +176,78 @@ final class SiteControllerTest
             'contact',
             static fn ($c, $s, $w) => $c->contact($s, $w),
         );
+    }
+
+    /**
+     * peppolStatus() -- unlike the nine "lonely page" actions above -- 404s
+     * outright rather than just hiding a nav link (see the method's own
+     * docblock for why), and reads a second setting
+     * (peppol_access_point_provider) to pass through to
+     * PeppolStatusPageBuilder::build(), so it needs its own setup rather
+     * than the shared settingRepository()/assert*() helpers above (those
+     * assume exactly one getSetting() key).
+     */
+    public function peppolStatusIsGatedByNoFrontPeppolStatusPage(): void
+    {
+        /** @var sR&m\MockInterface $sR */
+        $sR = m::mock(sR::class);
+        $sR->shouldReceive('getSetting')->with('no_front_peppol_status_page')->andReturn('1');
+
+        /** @var PeppolStatusPageBuilder&m\MockInterface $builder */
+        $builder = m::mock(PeppolStatusPageBuilder::class);
+        $builder->shouldNotReceive('build');
+
+        $controller = new SiteController($this->webViewRenderer());
+        $result = $controller->peppolStatus($builder, $sR, $this->webService());
+
+        Assert::same($result->getStatusCode(), Status::NOT_FOUND);
+    }
+
+    public function peppolStatusRendersWithBuilderDataWhenEnabled(): void
+    {
+        /** @var sR&m\MockInterface $sR */
+        $sR = m::mock(sR::class);
+        $sR->shouldReceive('getSetting')->with('no_front_peppol_status_page')->andReturn('0');
+        $sR->shouldReceive('getSetting')->with('peppol_access_point_provider')->andReturn('storecove');
+
+        /** @var PeppolStatusPageBuilder&m\MockInterface $builder */
+        $builder = m::mock(PeppolStatusPageBuilder::class);
+        $builder->shouldReceive('build')->with('storecove')->andReturn([
+            'rows' => [],
+            'referenceProviders' => [],
+            'as4Bilateral' => ['tested' => false, 'tested_at' => null, 'peer_party_id' => null],
+        ]);
+
+        $controller = new SiteController($this->webViewRenderer());
+        $result = $controller->peppolStatus($builder, $sR, $this->webService());
+
+        Assert::same($result->getStatusCode(), Status::OK);
+        Assert::same($result->getHeaderLine(self::RENDERED_VIEW_HEADER), 'peppol-status');
+    }
+
+    /**
+     * peppol_access_point_provider defaults to 'storecove' when unset --
+     * mirrors PeppolSendServiceRouter's own default, see that class's
+     * docblock for why (Storecove has actually been live, Oxalis hasn't).
+     */
+    public function peppolStatusDefaultsProviderToStorecoveWhenSettingIsEmpty(): void
+    {
+        /** @var sR&m\MockInterface $sR */
+        $sR = m::mock(sR::class);
+        $sR->shouldReceive('getSetting')->with('no_front_peppol_status_page')->andReturn('0');
+        $sR->shouldReceive('getSetting')->with('peppol_access_point_provider')->andReturn('');
+
+        /** @var PeppolStatusPageBuilder&m\MockInterface $builder */
+        $builder = m::mock(PeppolStatusPageBuilder::class);
+        $builder->shouldReceive('build')->with('storecove')->andReturn([
+            'rows' => [],
+            'referenceProviders' => [],
+            'as4Bilateral' => ['tested' => false, 'tested_at' => null, 'peer_party_id' => null],
+        ]);
+
+        $controller = new SiteController($this->webViewRenderer());
+        $result = $controller->peppolStatus($builder, $sR, $this->webService());
+
+        Assert::same($result->getStatusCode(), Status::OK);
     }
 }

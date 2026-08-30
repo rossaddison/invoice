@@ -6,6 +6,7 @@ namespace App\Invoice\As4;
 
 use App\Infrastructure\Persistence\As4Message\As4Message;
 use App\Infrastructure\Persistence\As4Message\As4MessageFactory;
+use App\Infrastructure\Persistence\As4Message\As4OutboundMessageParams;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -76,7 +77,7 @@ final class As4MessageDispatcher
         $rawXml  = $signed->saveXML();
         $soapXml = $rawXml === false ? '' : $rawXml;
 
-        $entity = As4MessageFactory::fromOutbound(
+        $entity = As4MessageFactory::fromOutbound(new As4OutboundMessageParams(
             messageId:        $messageId,
             conversationId:   $conversationId,
             senderPartyId:    $this->senderPartyId,
@@ -85,7 +86,7 @@ final class As4MessageDispatcher
             action:           $request->documentTypeId,
             receiverEndpoint: $endpoint->endpointUrl,
             soapMessage:      $soapXml,
-        );
+        ));
         $entity->recordAttempt();
         $this->repository->save($entity);
 
