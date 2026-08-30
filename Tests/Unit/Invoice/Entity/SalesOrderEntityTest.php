@@ -198,11 +198,14 @@ class SalesOrderEntityTest extends TestCase
         $this->assertSame(1, $so->reqGroupId());
     }
 
-    public function testReqQuoteIdThrowsWhenNull(): void
+    // quote_id is genuinely optional on a SalesOrder (a direct SO has no
+    // originating quote), so reqQuoteId() returns 0 rather than throwing --
+    // matching every real call site, which already treats 0 as "not set"
+    // (see SalesOrderTrait1::reqQuoteId()'s own docblock).
+    public function testReqQuoteIdReturnsZeroWhenNull(): void
     {
         $so = new SalesOrder();
-        $this->expectException(\LogicException::class);
-        $so->reqQuoteId();
+        self::assertSame(0, $so->reqQuoteId());
     }
 
     public function testSetAndReqQuoteId(): void
@@ -212,11 +215,13 @@ class SalesOrderEntityTest extends TestCase
         $this->assertSame(5, $so->reqQuoteId());
     }
 
-    public function testReqInvIdThrowsWhenNull(): void
+    // inv_id is genuinely optional on a SalesOrder (a fresh one has no
+    // invoice yet), so reqInvId() returns 0 rather than throwing -- see
+    // testReqQuoteIdReturnsZeroWhenNull() above for the same reasoning.
+    public function testReqInvIdReturnsZeroWhenNull(): void
     {
         $so = new SalesOrder();
-        $this->expectException(\LogicException::class);
-        $so->reqInvId();
+        self::assertSame(0, $so->reqInvId());
     }
 
     public function testSetAndReqInvId(): void

@@ -67,7 +67,18 @@ $_SERVER['SESSION_COOKIE_SECURE'] = $_ENV['SESSION_COOKIE_SECURE'];
 /**
  * Building the database takes longer than usual and the .env $_ENV['BUILD_DATABASE'] should be set to false afterwards
  * https://stackoverflow.com/questions/3829403/how-to-increase-the-execution-timeout-in-php
+ *
+ * 360 (the original value here) is not consistently enough on a truly
+ * fresh install: this same request also has to build and cache Cycle
+ * ORM's schema (runtime/schema.php) for the very first time -- ~93
+ * tables' full metadata via individual introspection queries against
+ * MySQL -- and that alone has been measured taking anywhere from ~170s
+ * to over 360s on the same machine, run to run, with no code change in
+ * between. A request that exceeds the limit fails with a fatal error and
+ * no partial schema.php, so the next request pays the same cost again
+ * from scratch. 900 gives real headroom without meaningfully lengthening
+ * a failure's user-facing wait when something else is actually wrong.
  */
 if ($_SERVER['BUILD_DATABASE']) {
-    ini_set('max_execution_time', '360');
+    ini_set('max_execution_time', '900');
 }

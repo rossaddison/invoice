@@ -13,7 +13,6 @@ use App\Invoice\Group\GroupRepository;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\Inv\InvService;
 use App\Invoice\Setting\SettingRepository;
-use App\User\UserRepository;
 use Cycle\Database\DatabaseInterface;
 use Cycle\Database\DatabaseManager;
 use DateTimeImmutable;
@@ -36,7 +35,6 @@ final class InvServiceTest
         ?TranslatorInterface $translator = null,
         ?ClientRepository $cR = null,
         ?GroupRepository $gR = null,
-        ?UserRepository $uR = null,
         ?DatabaseManager $dbal = null,
     ): InvService {
         /** @var TranslatorInterface&m\MockInterface $translator */
@@ -45,11 +43,9 @@ final class InvServiceTest
         $cR = $cR ?? m::mock(ClientRepository::class);
         /** @var GroupRepository&m\MockInterface $gR */
         $gR = $gR ?? m::mock(GroupRepository::class);
-        /** @var UserRepository&m\MockInterface $uR */
-        $uR = $uR ?? m::mock(UserRepository::class);
         /** @var DatabaseManager&m\MockInterface $dbal */
         $dbal = $dbal ?? m::mock(DatabaseManager::class);
-        return new InvService($repository, $translator, $cR, $gR, $uR, $dbal);
+        return new InvService($repository, $translator, $cR, $gR, $dbal);
     }
 
     /**
@@ -115,7 +111,7 @@ final class InvServiceTest
 
         /** @var InvRepository&m\MockInterface $repo */
         $repo = m::mock(InvRepository::class);
-        $service = $this->makeService($repo, null, null, null, null, $dbal);
+        $service = $this->makeService($repo, null, null, null, $dbal);
 
         $service->withTransaction($callback);
     }
@@ -459,7 +455,7 @@ final class InvServiceTest
         Assert::same('', $model->getTerms());
     }
 
-    public function saveInvPersistsClientGroupAndUserWhenIdsProvidedInArray(): void
+    public function saveInvPersistsClientAndGroupFromArrayAndUserFromParameter(): void
     {
         $model = new Inv();
         /** @var User&m\MockInterface $user */
@@ -469,8 +465,6 @@ final class InvServiceTest
 
         $client = new Client();
         $group = new Group();
-        /** @var User&m\MockInterface $fetchedUser */
-        $fetchedUser = m::mock(User::class);
 
         /** @var ClientRepository&m\MockInterface $cR */
         $cR = m::mock(ClientRepository::class);
@@ -483,11 +477,6 @@ final class InvServiceTest
         $e3->once()->with(5)->andReturn($group);
         $gR->shouldNotReceive('generateNumber');
 
-        /** @var UserRepository&m\MockInterface $uR */
-        $uR = m::mock(UserRepository::class);
-        $e4 = $uR->shouldReceive('findById');
-        $e4->once()->with(9)->andReturn($fetchedUser);
-
         $s = $this->makeSettingRepo();
 
         /** @var InvRepository&m\MockInterface $repo */
@@ -495,18 +484,21 @@ final class InvServiceTest
         $e5 = $repo->shouldReceive('save');
         $e5->once()->with($model);
 
-        $service = $this->makeService($repo, null, $cR, $gR, $uR);
+        $service = $this->makeService($repo, null, $cR, $gR);
         $service->saveInv(
             $user,
             $model,
-            ['client_id' => 3, 'group_id' => 5, 'user_id' => 9, 'terms' => 'Net 30'],
+            ['client_id' => 3, 'group_id' => 5, 'terms' => 'Net 30'],
             $s,
             $gR,
         );
 
         Assert::same($client, $model->getClient());
         Assert::same($group, $model->getGroup());
-        Assert::same($fetchedUser, $model->getUser());
+        // The related User object always comes from saveInv()'s own $user
+        // parameter (see InvService::persist()) -- not looked up again via
+        // an array key, so it's the same instance passed in above.
+        Assert::same($user, $model->getUser());
         Assert::same(20, $model->reqUserId());
     }
 
