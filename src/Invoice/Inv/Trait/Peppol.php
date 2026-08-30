@@ -6,6 +6,7 @@ namespace App\Invoice\Inv\Trait;
 
 use App\Infrastructure\Persistence\ClientPeppol\ClientPeppol;
 use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\Setting\Setting;
 
 use App\Invoice\{
@@ -47,32 +48,12 @@ trait Peppol
         InvPeppolChargeDeps $charge,
         InvPeppolInvDeps $inv,
     ): Response {
-        $invoice = $id ? $core->invRepo->repoInvLoadInvAmountquery($id) : null;
-        $client_id = $invoice?->getClient()?->reqId() ?? 0;
-        if ($currentUser->isGuest() || null === $invoice || $client_id <= 0) {
-            return $this->webService->getNotFoundResponse();
+        $resolved = $this->resolveInvoiceAndDeliveryLocation($id, $currentUser, $core);
+        if ($resolved instanceof Response) {
+            return $resolved;
         }
-        $delLocId = $invoice->getDeliveryLocationId();
-        $fullySetup = $this->peppolClientFullySetup($client_id, $core->cpR);
-        $delloc = $fullySetup
-            ? $core->dlR->repoDeliveryLocationquery((int) $delLocId)
-            : null;
-        if (null === $delloc) {
-            if ($fullySetup) {
-                // Setup itself is fine — the only problem is the missing
-                // delivery location, so that's the only message needed.
-                $this->flashDeliveryLocationMissing($id);
-            } elseif ($core->cpR->repoClientCount($client_id) == 0) {
-                // No ClientPeppol record at all — peppolClientFullySetup()
-                // returned false without validateClientPeppolSetup() ever
-                // running, so nothing else has flashed a message yet.
-                $this->flashClientPeppolMissing($client_id);
-            }
-            // else: peppolClientFullySetup() already flashed a detailed,
-            // deep-linked message via validateClientPeppolSetup() — no
-            // need to also flash a generic "not set up" message on top.
-            return $this->webService->getRedirectResponse('client/index');
-        }
+        [$invoice, $delloc] = $resolved;
+
         // Load the inv's HASONE relation 'invAmount'
         $peppolhelper = new PeppolHelper(
             $this->sR, $net->delRepo, $invoice->getInvAmount(), $delloc, $this->translator, $core->gR);
@@ -104,6 +85,49 @@ trait Peppol
         $xml = $this->peppolOutput($net->upR, $uploads_temp_peppol_absolute_path_dot_xml);
         return $this->peppolRespond($id, $xml,
             $uploads_temp_peppol_absolute_path_dot_xml, new PeppolValidator($this->translator));
+    }
+
+    /**
+     * Resolves the invoice + delivery location peppol() needs, or produces
+     * the Response peppol() should return immediately when either can't
+     * be resolved — split out so peppol() itself doesn't carry these two
+     * guard-clause returns on top of its own catch/success returns
+     * (Sonar S1142: max 3 returns per method).
+     *
+     * @return Response|array{0: Inv, 1: DeliveryLocation}
+     */
+    private function resolveInvoiceAndDeliveryLocation(
+        int $id,
+        CurrentUser $currentUser,
+        InvPeppolCoreDeps $core,
+    ): Response|array {
+        $invoice = $id ? $core->invRepo->repoInvLoadInvAmountquery($id) : null;
+        $client_id = $invoice?->getClient()?->reqId() ?? 0;
+        if ($currentUser->isGuest() || null === $invoice || $client_id <= 0) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $delLocId = $invoice->getDeliveryLocationId();
+        $fullySetup = $this->peppolClientFullySetup($client_id, $core->cpR);
+        $delloc = $fullySetup
+            ? $core->dlR->repoDeliveryLocationquery((int) $delLocId)
+            : null;
+        if (null === $delloc) {
+            if ($fullySetup) {
+                // Setup itself is fine — the only problem is the missing
+                // delivery location, so that's the only message needed.
+                $this->flashDeliveryLocationMissing($id);
+            } elseif ($core->cpR->repoClientCount($client_id) == 0) {
+                // No ClientPeppol record at all — peppolClientFullySetup()
+                // returned false without validateClientPeppolSetup() ever
+                // running, so nothing else has flashed a message yet.
+                $this->flashClientPeppolMissing($client_id);
+            }
+            // else: peppolClientFullySetup() already flashed a detailed,
+            // deep-linked message via validateClientPeppolSetup() — no
+            // need to also flash a generic "not set up" message on top.
+            return $this->webService->getRedirectResponse('client/index');
+        }
+        return [$invoice, $delloc];
     }
 
     /**
@@ -376,15 +400,14 @@ trait Peppol
                 || null === $schemeId || $schemeId === '') {
             return null;
         }
-        if (str_contains($endpointId, '@')) {
-            return $this->translator->translate('peppol.endpointid.looks.like.email');
-        }
         $checksums = $this->endpointSchemeChecksums();
-        if (isset($checksums[$schemeId]) && !$checksums[$schemeId]($endpointId)) {
-            return $this->translator->translate('peppol.endpointid.checksum.invalid')
-                . ' (' . $schemeId . ')';
-        }
-        return null;
+        return match (true) {
+            str_contains($endpointId, '@') =>
+                $this->translator->translate('peppol.endpointid.looks.like.email'),
+            isset($checksums[$schemeId]) && !$checksums[$schemeId]($endpointId) =>
+                $this->translator->translate('peppol.endpointid.checksum.invalid') . ' (' . $schemeId . ')',
+            default => null,
+        };
     }
 
     private function peppolStreamOutput(string $xml, PeppolValidator $pVal): Response

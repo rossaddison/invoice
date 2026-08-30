@@ -32,27 +32,19 @@ final class As4MessageFactory
      * recordAttempt()/markSent()/markReceiptReceived()/markFailed()
      * themselves — this only assembles the initial routing/payload snapshot.
      */
-    public static function fromOutbound(
-        string $messageId,
-        string $conversationId,
-        string $senderPartyId,
-        string $receiverPartyId,
-        string $service,
-        string $action,
-        string $receiverEndpoint,
-        string $soapMessage,
-    ): As4Message {
+    public static function fromOutbound(As4OutboundMessageParams $params): As4Message
+    {
         return new As4Message(new As4MessageParams(
-            messageId:        $messageId,
-            conversationId:   $conversationId,
-            senderPartyId:    $senderPartyId,
+            messageId:        $params->messageId,
+            conversationId:   $params->conversationId,
+            senderPartyId:    $params->senderPartyId,
             senderRole:       As4Constants::ROLE_INITIATOR,
-            receiverPartyId:  $receiverPartyId,
+            receiverPartyId:  $params->receiverPartyId,
             receiverRole:     As4Constants::ROLE_RESPONDER,
-            service:          $service,
-            action:           $action,
-            receiverEndpoint: $receiverEndpoint,
-            soapMessage:      $soapMessage,
+            service:          $params->service,
+            action:           $params->action,
+            receiverEndpoint: $params->receiverEndpoint,
+            soapMessage:      $params->soapMessage,
         ));
     }
 }

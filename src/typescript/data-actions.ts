@@ -15,11 +15,12 @@ function copyToClipboard(actionEl: HTMLElement): void {
     // which would break querySelector('#' + id) without manual escaping.
     const targetId = actionEl.dataset['copyTargetId'];
     const selector = actionEl.dataset['copyTarget'];
-    const source = targetId
-        ? document.getElementById(targetId)
-        : selector
-            ? document.querySelector<HTMLElement>(selector)
-            : null;
+    let source: HTMLElement | null = null;
+    if (targetId) {
+        source = document.getElementById(targetId);
+    } else if (selector) {
+        source = document.querySelector<HTMLElement>(selector);
+    }
     if (!source || !navigator.clipboard?.writeText) {
         return;
     }
