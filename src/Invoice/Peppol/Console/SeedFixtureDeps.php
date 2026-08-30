@@ -24,6 +24,7 @@ use App\Invoice\SalesOrderItem\SalesOrderItemRepository;
 use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\UnitPeppol\UnitPeppolRepository;
 use App\Invoice\Upload\UploadRepository;
+use App\User\UserRepository;
 
 /**
  * Repository bundle for SeedPeppolHappyPathFixtureCommand -- kept out of
@@ -54,5 +55,6 @@ final class SeedFixtureDeps
         public readonly InvItemAllowanceChargeRepository $aciiR,
         public readonly SalesOrderItemRepository $soiR,
         public readonly SalesOrderRepository $soR,
+        public readonly UserRepository $uR,
     ) {}
 }

@@ -45,13 +45,13 @@ use Yiisoft\Yii\Console\ExitCode;
  * reference data (TaxRate, UnitPeppol, Group) rather than creating more
  * of it -- this fixture only owns rows it created itself.
  *
- * The seed() step itself is verified correct: --generate-existing against
- * a real, long-lived, pre-existing invoice produces valid UBL XML through
- * this exact machinery. --generate-only/--generate-existing against a
- * freshly-seeded row currently fail with "not found" -- see the KNOWN
- * ISSUE comment on tryGenerate() for what's been ruled out. Unresolved as
- * of 2026-08-30; do not rely on those two flags (or an Acceptance Cest
- * built on this fixture) until that's root-caused.
+ * The fixture's Client is created active (see seed()'s own comment):
+ * InvRepository's base query deliberately hides every invoice belonging to
+ * an inactive client -- a data-protection control, not a Cycle bug -- and
+ * that filter applies to every lookup on the repository, including by id.
+ * A prior version of this fixture left the client inactive (the entity's
+ * own default) and mistook the resulting "not found" for a genuine Cycle
+ * staleness bug; root-caused and fixed 2026-08-31.
  */
 final class SeedPeppolHappyPathFixtureCommand extends Command
 {
@@ -112,6 +112,17 @@ final class SeedPeppolHappyPathFixtureCommand extends Command
     private function seed(SymfonyStyle $io): int
     {
         $client = new Client(client_name: self::MARKER . ' Client');
+        // Active by design, not an oversight: InvRepository's base query
+        // (see its constructor) deliberately hides every invoice belonging
+        // to an inactive client -- a data-protection control, not a bug.
+        // client_active defaults to false, so an inactive fixture client's
+        // invoice is invisible to InvRepository's own lookups (including
+        // by id) exactly as intended elsewhere in the app. This fixture's
+        // happy-path test isn't exercising that lockout, so make the
+        // client active. Root-caused 2026-08-31, resolving this file's own
+        // former "freshly-created Inv unqueryable" KNOWN ISSUE below --
+        // it was never a Cycle staleness bug.
+        $client->setClientActive(true);
         $this->deps->clientRepo->save($client);
         $clientId = $client->reqId();
 
@@ -155,6 +166,10 @@ final class SeedPeppolHappyPathFixtureCommand extends Command
         $deliveryLocation->setState('Test County');
         $deliveryLocation->setZip('AB1 2CD');
         $deliveryLocation->setCountry('GB');
+        // Required by PeppolHelper::buildDeliveryLocationIDScheme() --
+        // throws PeppolDeliveryLocationIDNotFoundException without a GLN.
+        $deliveryLocation->setGlobalLocationNumber('9999999999999');
+        $deliveryLocation->setElectronicAddressScheme('0088');
         $this->deps->dlR->save($deliveryLocation);
         $deliveryLocationId = $deliveryLocation->reqId();
 
@@ -181,6 +196,19 @@ final class SeedPeppolHappyPathFixtureCommand extends Command
             client_po_number: self::MARKER . '-PO-1',
             client_po_person: self::MARKER . ' PO Person',
         );
+        // client_id/user_id/group_id above only set Inv's raw scalar
+        // columns -- Inv::$client/$user/$group are separate
+        // BelongsTo(nullable: false) relations that Cycle actually persists
+        // from, and constructor args never touch them. Found 2026-08-30
+        // fixing the identical shape blocking SalesOrder -> Invoice
+        // conversion (see InvService::persist(), PR #1149): without the
+        // object set, Cycle silently wrote no row at all for $inv here too
+        // -- the leading suspect for this file's own still-parked
+        // "freshly-created Inv unqueryable" mystery (see the KNOWN ISSUE
+        // comment on tryGenerate() below).
+        $inv->setClient($client);
+        $inv->setGroup($this->deps->gR->repoGroupquery(self::GROUP_ID));
+        $inv->setUser($this->deps->uR->findById(1));
         $this->deps->invRepo->save($inv);
         $invId = $inv->reqId();
 
@@ -218,24 +246,21 @@ final class SeedPeppolHappyPathFixtureCommand extends Command
 
     private function tryGenerate(int $invId, SymfonyStyle $io): void
     {
-        // KNOWN ISSUE (found 2026-08-30, unresolved): repoInvLoadInvAmountquery()
-        // -- and even a bare select()->where(['id' => $invId])->fetchOne(), no
-        // loads, no other filters -- returns null for an Inv row created
-        // moments earlier in a *separate* process, despite the row
-        // demonstrably existing and matching every WHERE condition when
-        // queried directly via PDO against the same database. Reproduced
-        // both via this command and via the real authenticated HTTP route
-        // (InvController::peppol() 404s the same way). A pre-existing,
-        // long-lived Inv row (not created by this fixture) loads correctly
-        // through the identical code path. Root cause not yet found --
-        // ruled out so far: deleted_at mismatch, missing FK targets,
-        // eager-load joins (fails even without any load()). Needs its own
-        // dedicated investigation before this command's --generate-only/
-        // --generate-existing paths -- or any Acceptance Cest built on top
-        // of this fixture -- can be relied on.
+        // Root-caused 2026-08-31 (was logged here as an unresolved "row
+        // exists but every query returns null" mystery): InvRepository's
+        // constructor bakes an INNER JOIN client ... WHERE
+        // client.client_active = 1 into the repository's own base query,
+        // so every method on it -- including a bare
+        // select()->where(['id' => $id]) -- silently excludes any invoice
+        // whose client isn't active. That's a deliberate data-protection
+        // control (deactivating a client locks down their invoices), not a
+        // Cycle bug -- confirmed with the repo owner. seed() now creates
+        // its Client active so this path is exercised normally; a
+        // still-inactive Inv id here (e.g. --generate-existing against one)
+        // is expected to 404, not a regression.
         $inv = $this->deps->invRepo->repoInvLoadInvAmountquery($invId);
         if ($inv === null) {
-            $io->error("Inv #{$invId} not found -- see KNOWN ISSUE comment above this line.");
+            $io->error("Inv #{$invId} not found -- its client may be inactive (see comment above), or the id doesn't exist.");
             return;
         }
         $delloc = $this->deps->dlR->repoDeliveryLocationquery((int) $inv->getDeliveryLocationId());
@@ -297,6 +322,15 @@ final class SeedPeppolHappyPathFixtureCommand extends Command
         $deliveryLocationId = $inv->getDeliveryLocationId();
 
         $this->deleteItemsAndProducts($inv);
+        // Inv has a HasOne InvAmount child (outerKey inv_id) -- unlike
+        // InvItem/InvItemAmount above, it was never deleted here, so Cycle
+        // couldn't resolve deleting the parent while a required child still
+        // pointed at it ("Transaction can't be finished ... Pool has gone
+        // into an infinite loop"). Found & fixed 2026-08-31.
+        $invAmount = $this->deps->iaR->repoInvquery($invId);
+        if ($invAmount !== null) {
+            $this->deps->iaR->delete($invAmount);
+        }
         $this->deps->invRepo->delete($inv);
         $this->deleteDeliveryLocation($deliveryLocationId);
         $this->deleteClient($clientId);
