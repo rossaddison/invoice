@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d11f75fbba861071ea2589bb8e59769",
+    "content-hash": "a21008c1efd1c2c3e2a88822bb614f91",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -10669,20 +10669,20 @@
         },
         {
             "name": "spomky-labs/pki-framework",
-            "version": "1.6.0",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Spomky-Labs/pki-framework.git",
-                "reference": "80778a25426288acd2e3a7cde2def41a3d59cddf"
+                "reference": "5d630ec371652229ad568337519f16e539e5f79d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Spomky-Labs/pki-framework/zipball/80778a25426288acd2e3a7cde2def41a3d59cddf",
-                "reference": "80778a25426288acd2e3a7cde2def41a3d59cddf",
+                "url": "https://api.github.com/repos/Spomky-Labs/pki-framework/zipball/5d630ec371652229ad568337519f16e539e5f79d",
+                "reference": "5d630ec371652229ad568337519f16e539e5f79d",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "^0.10|^0.11|^0.12|^0.13|^0.14|^0.15|^0.16|^0.17|^0.18|^0.19",
+                "brick/math": "^0.10|^0.11|^0.12|^0.13|^0.14|^0.15|^0.16|^0.17|^0.18|^0.19|^0.20",
                 "ext-mbstring": "*",
                 "php": ">=8.1"
             },
@@ -10762,7 +10762,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Spomky-Labs/pki-framework/issues",
-                "source": "https://github.com/Spomky-Labs/pki-framework/tree/1.6.0"
+                "source": "https://github.com/Spomky-Labs/pki-framework/tree/1.6.1"
             },
             "funding": [
                 {
@@ -10774,7 +10774,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-08-06T16:21:11+00:00"
+            "time": "2026-08-30T13:53:49+00:00"
         },
         {
             "name": "standard-webhooks/standard-webhooks",
@@ -14728,20 +14728,20 @@
         },
         {
             "name": "web-token/jwt-framework",
-            "version": "4.2.1",
+            "version": "4.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-framework.git",
-                "reference": "949247b7bdc699872faa8d6f23b3f20c98761126"
+                "reference": "e5b5ee2be1dcb7a279875aade11ffe8dfae2368d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-token/jwt-framework/zipball/949247b7bdc699872faa8d6f23b3f20c98761126",
-                "reference": "949247b7bdc699872faa8d6f23b3f20c98761126",
+                "url": "https://api.github.com/repos/web-token/jwt-framework/zipball/e5b5ee2be1dcb7a279875aade11ffe8dfae2368d",
+                "reference": "e5b5ee2be1dcb7a279875aade11ffe8dfae2368d",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "^0.12|^0.13|^0.14|^0.15|^0.16|^0.17|^0.18|^0.19",
+                "brick/math": "^0.12|^0.13|^0.14|^0.15|^0.16|^0.17|^0.18|^0.19|^0.20",
                 "ext-openssl": "*",
                 "php": ">=8.2",
                 "psr/clock": "^1.0",
@@ -14830,7 +14830,7 @@
             ],
             "support": {
                 "issues": "https://github.com/web-token/jwt-framework/issues",
-                "source": "https://github.com/web-token/jwt-framework/tree/4.2.1"
+                "source": "https://github.com/web-token/jwt-framework/tree/4.2.2"
             },
             "funding": [
                 {
@@ -14842,7 +14842,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-08-28T12:44:34+00:00"
+            "time": "2026-08-30T13:53:36+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -20420,16 +20420,16 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "6.7.0",
+            "version": "6.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "af0a8de6c4b6780e8e07d06ee0c7da538b5f1e46"
+                "reference": "fc4c4288623406cd1b4679409cd6aefdbd774827"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/af0a8de6c4b6780e8e07d06ee0c7da538b5f1e46",
-                "reference": "af0a8de6c4b6780e8e07d06ee0c7da538b5f1e46",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/fc4c4288623406cd1b4679409cd6aefdbd774827",
+                "reference": "fc4c4288623406cd1b4679409cd6aefdbd774827",
                 "shasum": ""
             },
             "require": {
@@ -20497,7 +20497,7 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/6.7.0"
+                "source": "https://github.com/zircote/swagger-php/tree/6.7.1"
             },
             "funding": [
                 {
@@ -20505,7 +20505,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-24T21:55:54+00:00"
+            "time": "2026-08-30T07:08:23+00:00"
         }
     ],
     "packages-dev": [
@@ -22931,11 +22931,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.2.9",
+            "version": "2.2.10",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/13d6b4f347bad222da436580c8304fa6f83e6bd0",
-                "reference": "13d6b4f347bad222da436580c8304fa6f83e6bd0",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/36d1509c998b0602811824143526b4a9ee2774e7",
+                "reference": "36d1509c998b0602811824143526b4a9ee2774e7",
                 "shasum": ""
             },
             "require": {
@@ -22991,7 +22991,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-22T07:38:16+00:00"
+            "time": "2026-08-30T12:46:16+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
