@@ -67,7 +67,18 @@ final readonly class ClientService
         isset($body['client_title']) ? $model->setClientTitle((string) $body['client_title']) : '';
         isset($body['client_name']) ? $model->setClientName((string) $body['client_name']) : '';
         isset($body['client_surname']) ? $model->setClientSurname((string) $body['client_surname']) : '';
-        $model->setClientFullName((string) $body['client_name'] . ' ' . (string) $body['client_surname']);
+        // A real browser always submits every text input on the form, blank
+        // or not, so client_name/client_surname are normally both present
+        // (see the isset() guards just above). But a partial POST -- an
+        // incomplete API call, or a future htmx/fetch submission that only
+        // sends a subset of fields -- previously crashed here with
+        // "Undefined array key client_surname" reading it unguarded, unlike
+        // every other field in this class. Found & fixed 2026-08-30 as a
+        // follow-up to the fresh-install workflow test (see
+        // project_fresh_install_workflow_test_and_fixes memory).
+        $client_name = isset($body['client_name']) ? (string) $body['client_name'] : '';
+        $client_surname = isset($body['client_surname']) ? (string) $body['client_surname'] : '';
+        $model->setClientFullName($client_name . ' ' . $client_surname);
         isset($body['client_frequency']) ? $model->setClientFrequency((string) $body['client_frequency']) : '';
         isset($body['client_group']) ? $model->setClientGroup((string) $body['client_group']) : '';
         isset($body['client_number']) ? $model->setClientNumber((string) $body['client_number']) : '';
