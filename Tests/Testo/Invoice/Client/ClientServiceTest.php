@@ -156,6 +156,46 @@ final class ClientServiceTest
         Assert::null($client->getClientTelegramChatId());
     }
 
+    // A real browser always submits client_surname (even blank, since
+    // every visible text input on the form is included) -- but a partial
+    // POST that omits it entirely previously crashed applyClientIdentityFields()
+    // with "Undefined array key client_surname" reading it unguarded.
+    public function saveClientDoesNotCrashWhenClientSurnameIsMissingFromBody(): void
+    {
+        $client = new Client();
+        $body = ['client_name' => 'Jane', 'client_active' => '1'];
+
+        /** @var ClientRepository&m\MockInterface $repo */
+        $repo = m::mock(ClientRepository::class);
+        $e = $repo->expects('save');
+        $e->once()->with($client);
+
+        $service = new ClientService($repo);
+        $service->saveClient($client, $body);
+
+        Assert::same('Jane', $client->getClientName());
+        Assert::same('', $client->getClientSurname());
+        Assert::same('Jane ', $client->getClientFullName());
+    }
+
+    public function saveClientDoesNotCrashWhenClientNameAndSurnameAreBothMissingFromBody(): void
+    {
+        $client = new Client();
+        $body = ['client_active' => '1'];
+
+        /** @var ClientRepository&m\MockInterface $repo */
+        $repo = m::mock(ClientRepository::class);
+        $e = $repo->expects('save');
+        $e->once()->with($client);
+
+        $service = new ClientService($repo);
+        $service->saveClient($client, $body);
+
+        Assert::same('', $client->getClientName());
+        Assert::same('', $client->getClientSurname());
+        Assert::same(' ', $client->getClientFullName());
+    }
+
     public function saveClientForcesActiveAndResetsPostalAddressAndReturnsIdWhenModelHasIdentity(): void
     {
         $client = new Client();
