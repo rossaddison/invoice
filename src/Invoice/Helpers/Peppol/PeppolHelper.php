@@ -367,7 +367,17 @@ class PeppolHelper
         );
         $peppolPayment = new PeppolPaymentData(
             new PaymentMeans($payeeFinancialAccount, $paymentId),
-            new PaymentTerms($payment_terms),
+            // Omit the whole PaymentTerms object (not just its Note) when
+            // there's no real terms text; Inv::$terms defaults to ''
+            // (non-nullable string), so a blank one was slipping through
+            // as an empty <cbc:Note></cbc:Note>, and even after guarding
+            // just the Note, a still-constructed-but-noteless PaymentTerms
+            // serialized as an empty <cac:PaymentTerms></cac:PaymentTerms>
+            // wrapper -- both rejected by real Peppol validation
+            // (PEPPOL-EN16931-R008, found 2026-08-31 via the real HTTP
+            // Peppol route's validator, not just the console XML-generation
+            // check).
+            $payment_terms !== '' ? new PaymentTerms($payment_terms) : null,
         );
         $peppolFinancial = new PeppolFinancialData(
             $allowanceCharges,
@@ -454,7 +464,13 @@ class PeppolHelper
         $url_key = $invoice->getUrlKey();
         $invoice_number = $this->t->translate('peppol.document.reference.null')
             . ($invoice->reqId() ?: 'Not Found');
-        if (null !== $invoice->getNumber()) {
+        // Inv::$number defaults to '' (non-nullable string), not null --
+        // a "!== null" guard here never actually caught the no-number
+        // case, so a blank number silently overwrote the translated
+        // fallback above with an empty string, emitting an empty
+        // <cbc:ID></cbc:ID> -- rejected by real Peppol validation
+        // (PEPPOL-EN16931-R008, found 2026-08-31).
+        if ($invoice->getNumber() !== null && $invoice->getNumber() !== '') {
             $invoice_number = $invoice->getNumber();
         }
         $inv_attachments = $upR->repoUploadUrlClientquery(
@@ -498,6 +514,21 @@ class PeppolHelper
             $invoice_number ?? $this->t->translate(
                 'peppol.document.reference.null') . ($invoice_id ?: 'Not Found'),
             '130',
+            // NOT normalizing '' -> null here like the sibling fields in
+            // this file (found 2026-08-31, deliberately left as-is): unlike
+            // xmlSerialize()'s treatment of documentDescription (omits it
+            // when null), AdditionalDocumentReference::validate() THROWS
+            // when documentDescription === null -- so doing the same '' ->
+            // null normalization here would turn "blank field emits an
+            // empty (invalid) element" into "blank field always throws",
+            // since Inv::$document_description defaults to '' and is
+            // essentially never true null in practice today, meaning this
+            // would newly reject the vast majority of invoices instead of
+            // just this one field's element. That class's own
+            // validate()/xmlSerialize() pair look internally inconsistent
+            // about whether this field is actually optional per the UBL
+            // spec (it's cardinality 0..1) -- needs its own fix, not a
+            // side effect of this one.
             $invoice->getDocumentDescription(),
             $attachments,
 
