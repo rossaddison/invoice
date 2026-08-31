@@ -88,7 +88,7 @@ trait PeppolHelperCustomerTrait
                 throw new BuyerPostAddNf();
             }
             if ($postaladdress_id) {
-                $postaladdress = $paR->repoClient($postaladdress_id);
+                $postaladdress = $paR->repoPostalAddressLoadedquery($postaladdress_id);
                 $accounting_customer_party = [];
                 $country_helper = new CountryHelper();
                 if ($postaladdress && $client_peppol) {

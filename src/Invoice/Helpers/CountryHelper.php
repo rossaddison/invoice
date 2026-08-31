@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers;
 
+use League\ISO3166\Exception\ISO3166Exception;
 use League\ISO3166\ISO3166;
 use Yiisoft\Aliases\Aliases;
 
@@ -78,6 +79,19 @@ class CountryHelper
 
     /**
      * Related logic: see PeppolHelper ubl_delivery_location function
+     *
+     * Accepts either a 2-letter alpha2 code (e.g. "GB" -- what
+     * PostalAddress::country/DeliveryLocation::country actually hold, since
+     * both are plain free-text fields with no format guidance) or a full
+     * country name (e.g. "United Kingdom" -- what Client::client_country
+     * holds, since its own form field is a proper locale-aware dropdown of
+     * country names). Tries alpha2 first since it's the cheaper, more
+     * specific match, falling back to name; a value matching neither format
+     * (a typo, "UK", an unrecognised name) still returns ''. Previously
+     * only tried name(), which threw for every alpha2 caller -- found
+     * 2026-08-31 seeding a Peppol test fixture with a real DeliveryLocation
+     * country of "GB".
+     *
      * @param string $name
      * @return string
      */
@@ -85,7 +99,16 @@ class CountryHelper
         string $name): string
     {
         //https://github.com/thephpleague/iso3166
-        $data =  new ISO3166()->name($name);
+        $iso3166 = new ISO3166();
+        try {
+            $data = $iso3166->alpha2($name);
+        } catch (ISO3166Exception) {
+            try {
+                $data = $iso3166->name($name);
+            } catch (ISO3166Exception) {
+                return '';
+            }
+        }
         // return the 2-letter country code
         /** @var string $data['alpha2'] */
         return !empty($data['alpha2']) ? $data['alpha2'] : '';
