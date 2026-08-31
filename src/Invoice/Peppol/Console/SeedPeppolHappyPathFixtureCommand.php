@@ -137,6 +137,13 @@ final class SeedPeppolHappyPathFixtureCommand extends Command
             country: 'GB',
         );
         $this->deps->paR->save($postalAddress);
+        // buildPeppolAccountingCustomerPartyArray() (the AccountingCustomerParty
+        // builder) looks up the buyer's postal address via
+        // Client::getPostaladdressId(), not by client_id -- so the Client
+        // row itself has to point back at this PostalAddress, or it throws
+        // PeppolBuyerPostalAddressNotFoundException. Found 2026-08-31.
+        $client->setPostaladdressId($postalAddress->reqId());
+        $this->deps->clientRepo->save($client);
 
         $clientPeppol = new ClientPeppol(
             client_id: $clientId,
@@ -181,6 +188,11 @@ final class SeedPeppolHappyPathFixtureCommand extends Command
         $product->setFamilyId(self::FAMILY_ID);
         $product->setTaxRateId(self::TAX_RATE_ID);
         $product->setUnitId(self::UNIT_ID);
+        // Required by PeppolHelperInvoiceLineTrait::validateInvItem() --
+        // throws PeppolProductItemClassificationCodeSchemeIdNotFoundException
+        // without a listid.
+        $product->setProductIccListid('SRV');
+        $product->setProductIccId('9999999');
         $this->deps->productRepo->save($product);
         $productId = $product->reqId();
 
@@ -222,6 +234,12 @@ final class SeedPeppolHappyPathFixtureCommand extends Command
             tax_rate_id: self::TAX_RATE_ID,
         );
         $invItem->setProductId($productId);
+        // Same shape as Inv::$client/$user/$group above: InvItem::$product
+        // is a BelongsTo relation Cycle actually reads from -- without the
+        // object set, PeppolHelperInvoiceLineTrait::buildInvoiceLinesArray()
+        // sees $item->getProduct() === null and silently `continue`s past
+        // this item, leaving invoiceLines empty ("Missing invoice lines").
+        $invItem->setProduct($product);
         $this->deps->iiR->save($invItem);
         $invItemId = $invItem->reqId();
 
