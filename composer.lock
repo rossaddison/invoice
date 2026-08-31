@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a21008c1efd1c2c3e2a88822bb614f91",
+    "content-hash": "f17684fcda0eca8e69c36ad4eec8ceaa",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -27291,22 +27291,22 @@
         },
         {
             "name": "testo/bridge-symfony-console",
-            "version": "0.1.10",
+            "version": "0.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/bridge-symfony-console.git",
-                "reference": "e05c4b3622591c154a7b7b0900c99f39104b5574"
+                "reference": "f4f7911a571bc5484f0148f71edd7b29889d62a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/bridge-symfony-console/zipball/e05c4b3622591c154a7b7b0900c99f39104b5574",
-                "reference": "e05c4b3622591c154a7b7b0900c99f39104b5574",
+                "url": "https://api.github.com/repos/php-testo/bridge-symfony-console/zipball/f4f7911a571bc5484f0148f71edd7b29889d62a2",
+                "reference": "f4f7911a571bc5484f0148f71edd7b29889d62a2",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
                 "symfony/console": "^6.4 || ^7 || ^8.0",
-                "testo/testo": "0.10.43 - 1"
+                "testo/testo": "0.10.45 - 1"
             },
             "bin": [
                 "bin/testo"
@@ -27339,7 +27339,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/bridge-symfony-console/tree/0.1.10"
+                "source": "https://github.com/php-testo/bridge-symfony-console/tree/0.1.11"
             },
             "funding": [
                 {
@@ -27347,7 +27347,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-08-25T15:46:56+00:00"
+            "time": "2026-08-30T18:23:56+00:00"
         },
         {
             "name": "testo/codecov",
@@ -27983,16 +27983,16 @@
         },
         {
             "name": "testo/testo",
-            "version": "0.10.44",
+            "version": "0.10.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/testo.git",
-                "reference": "c361b92cb4e3a025076e86cc8ae6ad060104678c"
+                "reference": "d67b3ba43ac30fe0ffa4e69d08782aba466d249c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/testo/zipball/c361b92cb4e3a025076e86cc8ae6ad060104678c",
-                "reference": "c361b92cb4e3a025076e86cc8ae6ad060104678c",
+                "url": "https://api.github.com/repos/php-testo/testo/zipball/d67b3ba43ac30fe0ffa4e69d08782aba466d249c",
+                "reference": "d67b3ba43ac30fe0ffa4e69d08782aba466d249c",
                 "shasum": ""
             },
             "require": {
@@ -28007,7 +28007,7 @@
                 "symfony/finder": "^6.4 || ^7 || ^8.0",
                 "testo/assert": "^0.1.14",
                 "testo/bench": "^0.1.10",
-                "testo/bridge-symfony-console": "^0.1.10",
+                "testo/bridge-symfony-console": "^0.1.11",
                 "testo/codecov": "^0.2.1",
                 "testo/convention": "^0.1.4",
                 "testo/data": "^0.1.9",
@@ -28091,7 +28091,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-08-27T22:09:59+00:00"
+            "time": "2026-08-30T18:23:09+00:00"
         },
         {
             "name": "thecodingmachine/safe",
