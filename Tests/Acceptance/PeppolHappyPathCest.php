@@ -56,6 +56,12 @@ final class PeppolHappyPathCest
     private function seedFixture(AcceptanceTester $I): int
     {
         $I->runShellCommand($this->yiiCommand() . ' peppol/seed-happy-path-fixture');
+        // grabShellOutput() is declared `: string` on the generated
+        // AcceptanceTesterActions trait, but Psalm can't resolve that
+        // through the actor's full inheritance chain and falls back to
+        // mixed -- annotate explicitly at this boundary rather than chase
+        // the deeper cross-trait resolution.
+        /** @var string $output */
         $output = $I->grabShellOutput();
         if (preg_match('/INV_ID=(\d+)/', $output, $m) !== 1) {
             throw new \RuntimeException('Failed to seed Peppol fixture -- console output: ' . $output);
