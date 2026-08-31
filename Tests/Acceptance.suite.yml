@@ -10,6 +10,11 @@ modules:
     enabled:
         - PhpBrowser:
             url: http://invoice.myhost
+        # Enables the fixture-seeding console commands used by
+        # PeppolHappyPathCest -- runShellCommand()/grabShellOutput(), not
+        # raw shell_exec (forbidden by this project's own Psalm security
+        # rules).
+        - Cli
 # Add Codeception\Step\Retry trait to AcceptanceTester to enable retries
 step_decorators:
     - Codeception\Step\ConditionalAssertion

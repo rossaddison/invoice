@@ -357,11 +357,37 @@ final class SeedPeppolHappyPathFixtureCommand extends Command
         if ($invAmount !== null) {
             $this->deps->iaR->delete($invAmount);
         }
-        $this->deps->invRepo->delete($inv);
+        $this->deleteInv($inv, $invId);
         $this->deleteDeliveryLocation($deliveryLocationId);
         $this->deleteClient($clientId);
 
         $io->success("Cleaned up fixture for Inv #{$invId}.");
+    }
+
+    /**
+     * $this->deps->invRepo->delete($inv) alone throws
+     * Cycle\ORM\Exception\TransactionException ("Pool has gone into an
+     * infinite loop") -- reproduced even with every child row already
+     * gone. Inv has #[Behavior\SoftDelete] (delete becomes an UPDATE
+     * setting deleted_at, per Cycle\ORM\Entity\Behavior\Listener\SoftDelete),
+     * but its client/user/group BelongsTo relations are nullable: false;
+     * the UnitOfWork still appears to try resolving those relations while
+     * processing the delete-turned-update, and can't when only the scalar
+     * *_id columns (not the relation objects) are hydrated on an entity
+     * loaded via a plain query. Root cause not fully chased down -- worth
+     * its own investigation if any other code path ever hard-deletes an
+     * Inv -- but for this fixture's own teardown, a raw DELETE via the
+     * app's own configured DatabaseManager (not a shell/mysql-cli
+     * dependency) sidesteps the ORM relation-resolution step entirely.
+     * Found & worked around 2026-08-31.
+     */
+    private function deleteInv(Inv $inv, int $invId): void
+    {
+        try {
+            $this->deps->invRepo->delete($inv);
+        } catch (\Throwable) {
+            $this->deps->dbal->database()->delete('inv', ['id' => $invId])->run();
+        }
     }
 
     private function deleteItemsAndProducts(Inv $inv): void
