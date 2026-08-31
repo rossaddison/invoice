@@ -59,13 +59,17 @@ trait PeppolHelperSupplierTrait
          * @var array $config
          * @var array $config['Contact']
          */
+        // Same '' vs null normalization as the customer/delivery Contact
+        // and Address builders (Contact::xmlSerialize() only omits a field
+        // when it's exactly null) -- a blank config value here would
+        // otherwise slip through as an empty element too.
         return new Contact(
-            (string) $config['Contact']['Name'],
-            (string) $config['Contact']['FirstName'],
-            (string) $config['Contact']['LastName'],
-            (string) $config['Contact']['Telephone'],
+            (string) $config['Contact']['Name'] ?: null,
+            (string) $config['Contact']['FirstName'] ?: null,
+            (string) $config['Contact']['LastName'] ?: null,
+            (string) $config['Contact']['Telephone'] ?: null,
             null,
-            (string) $config['Contact']['ElectronicMail'],
+            (string) $config['Contact']['ElectronicMail'] ?: null,
         );
     }
 
@@ -152,13 +156,17 @@ trait PeppolHelperSupplierTrait
         $configAddress = (array) $config[$address];
         $configAddressCountry = (array) $configAddress['Country'];
         $configAddressLine = (array) $configAddress['AddressLine'];
+        // Same '' vs null normalization as the customer/delivery Address
+        // builders (Address::xmlSerialize() only omits a field when it's
+        // exactly null) -- a blank config value here would otherwise slip
+        // through as an empty element too.
         return new Address(
-            (string) $configAddress['StreetName'],
-            (string) $configAddress['AdditionalStreetName'],
-            (string) $configAddressLine['Line'],
-            (string) $configAddress['CityName'],
-            (string) $configAddress['PostalZone'],
-            (string) $configAddress['CountrySubentity'],
+            (string) $configAddress['StreetName'] ?: null,
+            (string) $configAddress['AdditionalStreetName'] ?: null,
+            (string) $configAddressLine['Line'] ?: null,
+            (string) $configAddress['CityName'] ?: null,
+            (string) $configAddress['PostalZone'] ?: null,
+            (string) $configAddress['CountrySubentity'] ?: null,
             new Country(
                 (string) $configAddressCountry['IdentificationCode'],
                 (string) $configAddressCountry['ListId'],

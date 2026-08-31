@@ -226,26 +226,32 @@ $country_helper->getCountryIdentificationCodeWithLeague(
          */
         $contact = $party['Party']['Contact'];
 
+        // Normalized to null (not '') when absent/blank: Contact::xmlSerialize()
+        // only omits Telefax/ElectronicMail when the value is exactly null
+        // (Telephone already double-checks !== ''), so a blank string here
+        // was slipping through as an empty <cbc:ElectronicMail></cbc:ElectronicMail>
+        // -- rejected by real Peppol validation (PEPPOL-EN16931-R008, found
+        // 2026-08-31 via the real HTTP Peppol route's validator).
         /**
          * @var string $contact['Name']
          */
-        $name = $contact['Name'] ?? '';
+        $name = ($contact['Name'] ?? '') ?: null;
         /**
          * @var string $contact['FirstName']
          */
-        $firstName = $contact['FirstName'] ?? '';
+        $firstName = ($contact['FirstName'] ?? '') ?: null;
         /**
          * @var string $contact['LastName']
          */
-        $lastName = $contact['LastName'] ?? '';
+        $lastName = ($contact['LastName'] ?? '') ?: null;
         /**
          * @var string $contact['Telephone']
          */
-        $telephone = $contact['Telephone'] ?? '';
+        $telephone = ($contact['Telephone'] ?? '') ?: null;
         /**
          * @var string $contact['ElectronicMail']
          */
-        $electronicMail = $contact['ElectronicMail'] ?? '';
+        $electronicMail = ($contact['ElectronicMail'] ?? '') ?: null;
         return new Contact(
             $name,
             $firstName,
@@ -332,14 +338,20 @@ $country_helper->getCountryIdentificationCodeWithLeague(
          * @var array $party['Party']['PostalAddress']
          */
         $postal_address = $party['Party']['PostalAddress'] ?? [];
+        // Normalized to null (not '') when absent/blank: Address::xmlSerialize()
+        // consistently only omits each element when its value is exactly
+        // null, so a blank string here was slipping through as an empty
+        // element (e.g. <cbc:AdditionalStreetName></cbc:AdditionalStreetName>)
+        // -- rejected by real Peppol validation (PEPPOL-EN16931-R008, found
+        // 2026-08-31 via the real HTTP Peppol route's validator).
         /**
          * @var string $postal_address['StreetName']
          */
-        $street_name = $postal_address['StreetName'] ?? '';
+        $street_name = ($postal_address['StreetName'] ?? '') ?: null;
         /**
          * @var string $postal_address['AdditionalStreetName']
          */
-        $additional_street_name = $postal_address['AdditionalStreetName'] ?? '';
+        $additional_street_name = ($postal_address['AdditionalStreetName'] ?? '') ?: null;
         /**
          * @var array $postal_address['AddressLine']
          */
@@ -347,19 +359,19 @@ $country_helper->getCountryIdentificationCodeWithLeague(
         /**
          * @var string $address_line['Line']
          */
-        $line = $address_line['Line'] ?? '';
+        $line = ($address_line['Line'] ?? '') ?: null;
         /**
          * @var string $postal_address['CityName']
          */
-        $city_name = $postal_address['CityName'] ?? '';
+        $city_name = ($postal_address['CityName'] ?? '') ?: null;
         /**
          * @var string $postal_address['PostalZone']
          */
-        $postal_zone = $postal_address['PostalZone'] ?? '';
+        $postal_zone = ($postal_address['PostalZone'] ?? '') ?: null;
         /**
          * @var string $postal_address['CountrySubentity']
          */
-        $country_sub_entity = $postal_address['CountrySubentity'] ?? '';
+        $country_sub_entity = ($postal_address['CountrySubentity'] ?? '') ?: null;
         /**
          * @var array $postal_address['Country']
          */
