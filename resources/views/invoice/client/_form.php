@@ -62,10 +62,21 @@ use Yiisoft\Html\Tag\Form;
 <?=
     $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 ?>
+<?php /**
+ * Previously restricted via ->onlyProperties(...) to just
+ * client_name/client_surname/client_email/client_age -- an incomplete
+ * whitelist against the form's real validated fields (client_mobile's
+ * E.164 Regex rule among them). A validation failure on any field
+ * outside that list silently showed no error anywhere, with no visual
+ * cue why the save appeared to do nothing. Found 2026-08-31 via a real
+ * client whose stored client_mobile ('07726232648', no leading '+')
+ * blocked every save of that client -- including unrelated fields like
+ * postaladdress_id -- with zero indication why. Removed the
+ * restriction so any validated field's error is visible.
+ */ ?>
 <?= Field::errorSummary($form)
     ->errors($errors)
     ->header($translator->translate('client.error.summary'))
-    ->onlyProperties(...['client_name', 'client_surname', 'client_email', 'client_age'])
     ->onlyCommonErrors()
 ?>
 
