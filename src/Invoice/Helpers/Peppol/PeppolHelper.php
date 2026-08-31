@@ -510,26 +510,19 @@ class PeppolHelper
         }
         $invoice_id = $invoice->reqId();
         return new additionalDocumentReference(
-            $this->t,
             $invoice_number ?? $this->t->translate(
                 'peppol.document.reference.null') . ($invoice_id ?: 'Not Found'),
             '130',
-            // NOT normalizing '' -> null here like the sibling fields in
-            // this file (found 2026-08-31, deliberately left as-is): unlike
-            // xmlSerialize()'s treatment of documentDescription (omits it
-            // when null), AdditionalDocumentReference::validate() THROWS
-            // when documentDescription === null -- so doing the same '' ->
-            // null normalization here would turn "blank field emits an
-            // empty (invalid) element" into "blank field always throws",
-            // since Inv::$document_description defaults to '' and is
-            // essentially never true null in practice today, meaning this
-            // would newly reject the vast majority of invoices instead of
-            // just this one field's element. That class's own
-            // validate()/xmlSerialize() pair look internally inconsistent
-            // about whether this field is actually optional per the UBL
-            // spec (it's cardinality 0..1) -- needs its own fix, not a
-            // side effect of this one.
-            $invoice->getDocumentDescription(),
+            // Same '' vs null normalization as $invoice_number above --
+            // Inv::$document_description defaults to '' (see class
+            // constructor), and now that AdditionalDocumentReference no
+            // longer has a validate() requiring this to be non-null (see
+            // that class's own docblock), it's safe to omit a blank one
+            // the same way as everywhere else instead of emitting an empty
+            // <cbc:DocumentDescription></cbc:DocumentDescription> --
+            // rejected by real Peppol validation (PEPPOL-EN16931-R008,
+            // found 2026-08-31 via the real HTTP Peppol route's validator).
+            $invoice->getDocumentDescription() !== '' ? $invoice->getDocumentDescription() : null,
             $attachments,
 
             /*

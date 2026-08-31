@@ -110,7 +110,7 @@ final class PeppolUblXmlCreditNoteTest extends TestCase
         );
 
         $additionalDocumentReference = new AdditionalDocumentReference(
-            $this->translator(), 'INV123', null, 'Invoice PDF', [],
+            'INV123', null, 'Invoice PDF', [],
         );
 
         $delivery = new Delivery(null, [], null, null);
