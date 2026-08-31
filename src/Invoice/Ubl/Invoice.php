@@ -278,14 +278,46 @@ class Invoice implements XmlSerializable
         /** @var string $tst['supp_tax_cc'] */
         $suppCc = $tst['supp_tax_cc'] ?? '';
 
+        // Peppol requires two separate <cac:TaxTotal> elements when the
+        // supplementary/accounting tax currency differs from the document
+        // currency -- only the document-currency one carries TaxSubtotal
+        // (https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/),
+        // and BR-CO-16 requires its own direct TaxAmount to equal the sum
+        // of its TaxSubtotal amounts, in that same currency. Previously
+        // both currencies were written as direct/nested children of ONE
+        // <cac:TaxTotal>, using the supplementary currency for the direct
+        // TaxAmount -- rejected by real Peppol validation
+        // (PEPPOL-EN16931-R051, found 2026-08-31 via the real HTTP Peppol
+        // route's validator, not just the console XML-generation check).
+        if ($suppCc !== '' && $suppCc !== $this->documentCurrencyCode) {
+            $writer->write([
+                [
+                    'name'  => Schema::CAC . 'TaxTotal',
+                    'value' => [
+                        [
+                            'name'       => Schema::CBC . 'TaxAmount',
+                            'value'      => number_format($suppTaxAmount, 2, '.', ''),
+                            'attributes' => ['currencyID' => $suppCc],
+                        ],
+                    ],
+                ],
+            ]);
+        }
+
+        $docTaxAmount = 0.00;
+        /** @var array $subtotal */
+        foreach ($this->taxSubTotal as $subtotal) {
+            /** @var float $subtotal['TaxAmount'] */
+            $docTaxAmount += $subtotal['TaxAmount'] ?: 0.00;
+        }
         $writer->write([
             [
                 'name'  => Schema::CAC . 'TaxTotal',
                 'value' => [
                     [
                         'name'       => Schema::CBC . 'TaxAmount',
-                        'value'      => number_format($suppTaxAmount, 2, '.', ''),
-                        'attributes' => ['currencyID' => $suppCc],
+                        'value'      => number_format($docTaxAmount, 2, '.', ''),
+                        'attributes' => ['currencyID' => $this->documentCurrencyCode],
                     ],
                     [$this->buildTaxSubTotalsArray()],
                 ],

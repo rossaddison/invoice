@@ -247,6 +247,14 @@ final class SeedPeppolHappyPathFixtureCommand extends Command
             inv_item_id: $invItemId,
             subtotal: 100.0,
             tax_total: 0.0,
+            // Required by NumberHelper::invCalculateTotalsofItemTotals() --
+            // it sums getTotal(), a separate field from subtotal/tax_total,
+            // to build LegalMonetaryTotal/PayableAmount. Left at its 0.00
+            // default here, PayableAmount stayed 0.00 regardless of the
+            // real invoice total -- rejected by real Peppol validation
+            // (BR-CO-14, found 2026-08-31 via the real HTTP Peppol route's
+            // validator).
+            total: 100.0,
         );
         $this->deps->iiaR->save($invItemAmount);
 
