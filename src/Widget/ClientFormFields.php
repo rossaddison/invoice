@@ -96,12 +96,30 @@ final readonly class ClientFormFields
         };
 
         $placeholderKey = $fieldName === 'client_mobile' ? 'mobile.placeholder' : $labelKey;
+        // client_mobile is the only one of these three with a
+        // #[Regex('/^\+[1-9]\d{1,14}$/')] rule (ClientForm.php) -- E.164,
+        // leading '+' required. A genuinely blank field already shows the
+        // "+447700900000" placeholder correctly (an empty `value` doesn't
+        // hide it) -- but a legacy local-format number already stored
+        // without one (e.g. '07726232648') is non-empty, so the
+        // placeholder never shows and the raw, already-invalid value is
+        // all the user sees, with no visual cue why saving keeps failing.
+        // Prepending '+' here doesn't fix the number (it's still not
+        // valid E.164 -- that needs an actual country code, which this
+        // method has no way to infer), but at least surfaces the missing
+        // '+' visually so the user can see what to fix, rather than a
+        // silent validation failure on an unrelated field elsewhere on
+        // the form. Found 2026-08-31 via a real client's blocked save.
+        $displayValue = $value ?? '';
+        if ($fieldName === 'client_mobile' && $displayValue !== '' && !str_starts_with($displayValue, '+')) {
+            $displayValue = '+' . $displayValue;
+        }
 
         $field = Field::telephone($form, $fieldName)
             ->label($this->translator->translate($labelKey))
             ->addInputAttributes([
                 'placeholder' => $this->translator->translate($placeholderKey),
-                'value' => $value ?? '',
+                'value' => $displayValue,
                 'class' => 'form-control form-control-lg',
                 'id' => $fieldName,
                 ...$extraAttributes,

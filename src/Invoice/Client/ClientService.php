@@ -54,7 +54,19 @@ final readonly class ClientService
         $this->applyClientAddressFields($model, $body);
         $this->applyClientContactFields($model, $body);
         $this->applyClientSpecialFields($model, $body);
-        if ($model->hasIdentity()) {
+        // Defaults for a brand-new client only -- a fresh Client has no
+        // postal address yet and should start active. This used to read
+        // `if ($model->isNewRecord())` (correct); the entity migration to
+        // Cycle ORM (0cfd7508, "Remove Nullable Client Id Leakage") swapped
+        // it for `isPersisted()`/`hasIdentity()` without inverting the
+        // condition, silently reversing it to fire on every EXISTING
+        // client's save instead -- wiping out whatever client_active and
+        // postaladdress_id the form just submitted right after
+        // applyClientSpecialFields() set them correctly, on every single
+        // edit. Found 2026-08-31: a client's postaladdress_id could never
+        // actually be changed via the edit form once the client already
+        // existed, and client_active could never be turned off either.
+        if (!$model->hasIdentity()) {
             $model->setClientActive(true);
             $model->setPostaladdressId(0);
         }

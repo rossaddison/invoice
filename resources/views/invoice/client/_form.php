@@ -62,10 +62,21 @@ use Yiisoft\Html\Tag\Form;
 <?=
     $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 ?>
+<?php /**
+ * Previously restricted via ->onlyProperties(...) to just
+ * client_name/client_surname/client_email/client_age -- an incomplete
+ * whitelist against the form's real validated fields (client_mobile's
+ * E.164 Regex rule among them). A validation failure on any field
+ * outside that list silently showed no error anywhere, with no visual
+ * cue why the save appeared to do nothing. Found 2026-08-31 via a real
+ * client whose stored client_mobile ('07726232648', no leading '+')
+ * blocked every save of that client -- including unrelated fields like
+ * postaladdress_id -- with zero indication why. Removed the
+ * restriction so any validated field's error is visible.
+ */ ?>
 <?= Field::errorSummary($form)
     ->errors($errors)
     ->header($translator->translate('client.error.summary'))
-    ->onlyProperties(...['client_name', 'client_surname', 'client_email', 'client_age'])
     ->onlyCommonErrors()
 ?>
 
@@ -204,9 +215,28 @@ use Yiisoft\Html\Tag\Form;
       ->required(false)
       ->hint($translator->translate('hint.this.field.is.not.required')); ?>
   <?= $formFields->clientUrlField($form); ?>
-  <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+  <?= /**
+       * Anchor for the "fix it now" link Inv\Trait\Peppol's
+       * friendlyPeppolExceptionMessage() appends to
+       * PeppolBuyerPostalAddressNotFoundException's flash message
+       * (client/edit/{id}#postaladdress_field) -- a distinct id from
+       * whatever Field::select() below auto-generates for the
+       * 'postaladdress_id' attribute itself, so the two never collide.
+       */
+      Html::openTag('div', ['class' => 'mb-3', 'id' => 'postaladdress_field']); ?>
    <?= Html::label($translator->translate('client.postaladdress.available') . ': ', 'postaladdress_id'); ?>
-   <?php if ($postal_address_count > 0 && $origin == 'edit'): ?>
+   <?php /**
+    * $origin used to gate both branches here (`&& $origin == 'edit'`), so
+    * reaching this same edit page via any other link -- most notably
+    * postaladdress/index's own "No Postal address" link and the invoice
+    * list's client-active icon, both of which pass origin=inv -- silently
+    * hid this entire section, dropdown/add-button and all, with no
+    * indication why. $origin has no other use in this file (only ever
+    * read here). Found 2026-08-31: the two most direct paths to fixing a
+    * missing postal address landed on a page where the fix control itself
+    * was invisible.
+    */ ?>
+   <?php if ($postal_address_count > 0): ?>
     <?= Field::select($form, 'postaladdress_id')
         ->label($translator->translate('client.postaladdress.available'))
         ->required(false)
@@ -216,7 +246,7 @@ use Yiisoft\Html\Tag\Form;
         ])
         ->optionsData($optionsDataPostalAddresses); ?>
    <?php endif; ?>
-   <?php if ($postal_address_count === 0 && $origin == 'edit'): ?>
+   <?php if ($postal_address_count === 0): ?>
     <?= Html::a($translator->translate('client.postaladdress.add'),
         $urlGenerator->generate('postaladdress/add', ['client_id' => $client->reqId(), 'origin' => 'client']),
         ['class' => 'btn btn-warning btn-lg mt-3']); ?>

@@ -49,7 +49,7 @@ final readonly class StoreCoveCustomerPartyParser
             $postaladdress_id = $client->getPostaladdressId();
             $client_peppol = $cpR->repoClientPeppolLoadedquery($client->reqId());
             if (null == $postaladdress_id) {
-                throw new PeppolBuyerPostalAddressNotFoundException();
+                throw new PeppolBuyerPostalAddressNotFoundException($client->reqId());
             }
             if ($postaladdress_id) {
                 $postaladdress = $paR->repoClient($postaladdress_id);
