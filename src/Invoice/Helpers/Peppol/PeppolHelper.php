@@ -451,6 +451,32 @@ class PeppolHelper
     }
 
     /**
+     * The invoice's own number if it has one, otherwise a translated
+     * "reference unavailable" fallback naming its internal id. Shared by
+     * additionalDocumentReference() (the invoice's own self-reference)
+     * and PeppolHelperInvoiceLineTrait::buildInvoiceLinesArray() (each
+     * line's DocumentReference back to this same invoice) -- both need
+     * the exact same id. Inv::$number defaults to '' (non-nullable
+     * string), not null, so a plain "?? " coalesce or a "!== null" guard
+     * alone never actually catches the no-number case -- a blank number
+     * previously overwrote the translated fallback with an empty string,
+     * emitting an empty <cbc:ID></cbc:ID> -- rejected by real Peppol
+     * validation (PEPPOL-EN16931-R008, found 2026-08-31). Extracted
+     * 2026-08-31 to remove the resulting duplicated logic and the nested
+     * ternary this had grown into at the InvoiceLine call site
+     * (SonarQube php:S3358/S3776).
+     */
+    private function invoiceReferenceId(Inv $invoice): string
+    {
+        $number = $invoice->getNumber();
+        if ($number !== null && $number !== '') {
+            return $number;
+        }
+        return $this->t->translate('peppol.document.reference.null')
+            . ($invoice->reqId() ?: 'Not Found');
+    }
+
+    /**
      * Related logic:
      * https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
      *                                          cac-AdditionalDocumentReference/
@@ -462,17 +488,7 @@ class PeppolHelper
                                                     AdditionalDocumentReference
     {
         $url_key = $invoice->getUrlKey();
-        $invoice_number = $this->t->translate('peppol.document.reference.null')
-            . ($invoice->reqId() ?: 'Not Found');
-        // Inv::$number defaults to '' (non-nullable string), not null --
-        // a "!== null" guard here never actually caught the no-number
-        // case, so a blank number silently overwrote the translated
-        // fallback above with an empty string, emitting an empty
-        // <cbc:ID></cbc:ID> -- rejected by real Peppol validation
-        // (PEPPOL-EN16931-R008, found 2026-08-31).
-        if ($invoice->getNumber() !== null && $invoice->getNumber() !== '') {
-            $invoice_number = $invoice->getNumber();
-        }
+        $invoice_number = $this->invoiceReferenceId($invoice);
         $inv_attachments = $upR->repoUploadUrlClientquery(
                                         $url_key, $invoice->reqClientId());
         $aliases = $this->s->getCustomerFilesFolderAliases();
@@ -508,10 +524,8 @@ class PeppolHelper
                 throw new TTSNPdfFile($this->t);
             }
         }
-        $invoice_id = $invoice->reqId();
         return new additionalDocumentReference(
-            $invoice_number ?? $this->t->translate(
-                'peppol.document.reference.null') . ($invoice_id ?: 'Not Found'),
+            $invoice_number,
             '130',
             // Same '' vs null normalization as $invoice_number above --
             // Inv::$document_description defaults to '' (see class
