@@ -4653,4 +4653,44 @@ trait AcceptanceTesterActions
         $retryInterval = $this->retryInterval ?? 200;
         return $this->getScenario()->runStep(new \Codeception\Step\Retry('setMaxRedirects', func_get_args(), $retryNum, $retryInterval));
     }
+
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     * Executes a shell command.
+     * Fails if exit code is > 0. You can disable this by passing `false` as second argument
+     *
+     * ```php
+     * <?php
+     * $I->runShellCommand('phpunit');
+     *
+     * // do not fail test when command fails
+     * $I->runShellCommand('phpunit', false);
+     * ```
+     *
+     * Added manually (not via `codecept build`) alongside the Cli module
+     * entry in Acceptance.suite.yml: regenerating this whole file picked
+     * up an unrelated Codeception version-drift diff across every actor
+     * class, which isn't part of this change -- see
+     * PeppolHappyPathCest.php's own docblock for why Acceptance needs Cli
+     * at all. Just this method and grabShellOutput() below, matching
+     * Cli::runShellCommand()/grabShellOutput()'s already-committed
+     * CliTesterActions.php generated output verbatim.
+     * @see \Codeception\Module\Cli::runShellCommand()
+     */
+    public function runShellCommand(string $command, bool $failNonZero = true): void
+    {
+        $this->getScenario()->runStep(new \Codeception\Step\Action('runShellCommand', func_get_args()));
+    }
+
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     * Returns the output from latest command
+     * @see \Codeception\Module\Cli::grabShellOutput()
+     */
+    public function grabShellOutput(): string
+    {
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('grabShellOutput', func_get_args()));
+    }
 }

@@ -27,6 +27,7 @@ use App\Invoice\InvRecurring\Console\ProcessRecurringInvoicesCommand;
 use App\Invoice\PaymentInformation\GatewayStatus\Console\CheckGatewaySandboxesCommand;
 use App\Invoice\PaymentInformation\GatewayStatus\Console\RebuildGatewayStatusCommand;
 use App\Invoice\Peppol\Console\RetryFailedCommand;
+use App\Invoice\Peppol\Console\SeedPeppolHappyPathFixtureCommand;
 use App\Invoice\Setting\Console\BackupDatabaseCommand;
 use App\Invoice\Setting\Console\CheckGatewaySecretsCommand;
 use App\Invoice\Setting\Console\EnsurePeppolAccessPointProviderSettingCommand;
@@ -52,6 +53,7 @@ return [
             'as4/monitor'         => As4MonitorCommand::class,
             'as4/test-send'       => As4TestSendCommand::class,
             'peppol/retry-failed' => RetryFailedCommand::class,
+            'peppol/seed-happy-path-fixture' => SeedPeppolHappyPathFixtureCommand::class,
             'system/check-php-version' => CheckPhpVersionCommand::class,
             'invrecurring/process' => ProcessRecurringInvoicesCommand::class,
             'setting/backup-database' => BackupDatabaseCommand::class,
