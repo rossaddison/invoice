@@ -214,7 +214,18 @@ use Yiisoft\Html\Tag\Form;
        */
       Html::openTag('div', ['class' => 'mb-3', 'id' => 'postaladdress_field']); ?>
    <?= Html::label($translator->translate('client.postaladdress.available') . ': ', 'postaladdress_id'); ?>
-   <?php if ($postal_address_count > 0 && $origin == 'edit'): ?>
+   <?php /**
+    * $origin used to gate both branches here (`&& $origin == 'edit'`), so
+    * reaching this same edit page via any other link -- most notably
+    * postaladdress/index's own "No Postal address" link and the invoice
+    * list's client-active icon, both of which pass origin=inv -- silently
+    * hid this entire section, dropdown/add-button and all, with no
+    * indication why. $origin has no other use in this file (only ever
+    * read here). Found 2026-08-31: the two most direct paths to fixing a
+    * missing postal address landed on a page where the fix control itself
+    * was invisible.
+    */ ?>
+   <?php if ($postal_address_count > 0): ?>
     <?= Field::select($form, 'postaladdress_id')
         ->label($translator->translate('client.postaladdress.available'))
         ->required(false)
@@ -224,7 +235,7 @@ use Yiisoft\Html\Tag\Form;
         ])
         ->optionsData($optionsDataPostalAddresses); ?>
    <?php endif; ?>
-   <?php if ($postal_address_count === 0 && $origin == 'edit'): ?>
+   <?php if ($postal_address_count === 0): ?>
     <?= Html::a($translator->translate('client.postaladdress.add'),
         $urlGenerator->generate('postaladdress/add', ['client_id' => $client->reqId(), 'origin' => 'client']),
         ['class' => 'btn btn-warning btn-lg mt-3']); ?>

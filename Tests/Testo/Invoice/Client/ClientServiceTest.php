@@ -131,10 +131,12 @@ final class ClientServiceTest
         Assert::same('1 Elm Street', $client->getClientAddress1());
         Assert::same('jane@example.test', $client->getClientEmail());
         Assert::same('999', $client->getClientTelegramChatId());
-        // hasIdentity() is false, so the forced active/postal-address reset
-        // does not run and the body-supplied value is used as-is.
+        // hasIdentity() is false (a brand-new client), so the "new client"
+        // defaults apply regardless of what the body submitted: active and
+        // no postal address yet (there's nothing to link until it's saved
+        // once and a real postal address is created for it).
         Assert::true($client->getClientActive());
-        Assert::same(5, $client->getPostaladdressId());
+        Assert::same(0, $client->getPostaladdressId());
     }
 
     public function saveClientLeavesOptionalFieldsAtDefaultsWhenBodyOmitsThem(): void
@@ -196,14 +198,25 @@ final class ClientServiceTest
         Assert::same(' ', $client->getClientFullName());
     }
 
-    public function saveClientForcesActiveAndResetsPostalAddressAndReturnsIdWhenModelHasIdentity(): void
+    public function saveClientRespectsSubmittedActiveAndPostalAddressWhenModelHasIdentity(): void
     {
+        // Regression test for the 2026-08-31 bug: the entity migration to
+        // Cycle ORM swapped this method's `isNewRecord()` check for
+        // `isPersisted()`/`hasIdentity()` without inverting the condition,
+        // so an EXISTING client's just-submitted client_active and
+        // postaladdress_id were silently overwritten back to true/0 on
+        // every single edit -- a client could never be deactivated, and
+        // its postal address link could never actually be changed, via
+        // the edit form.
         $client = new Client();
         $client->setId(5);
-        $body = $this->minimalBody() + [
+        // array_merge(), not `+` -- `+` keeps the LEFT array's value on a
+        // key collision, so minimalBody()'s 'client_active' => '1' would
+        // silently survive over this test's own '0' otherwise.
+        $body = array_merge($this->minimalBody(), [
             'client_active' => '0',
             'postaladdress_id' => '99',
-        ];
+        ]);
 
         /** @var ClientRepository&m\MockInterface $repo */
         $repo = m::mock(ClientRepository::class);
@@ -213,8 +226,8 @@ final class ClientServiceTest
         $service = new ClientService($repo);
 
         Assert::same(5, $service->saveClient($client, $body));
-        Assert::true($client->getClientActive());
-        Assert::same(0, $client->getPostaladdressId());
+        Assert::false($client->getClientActive());
+        Assert::same(99, $client->getPostaladdressId());
     }
 
     public function saveClientAppliesBirthdateWhenProvidedInValidFormat(): void
