@@ -115,7 +115,18 @@ trait PeppolHelperInvoiceLineTrait
                     [
                         'name' => "{$a}DocumentReference",
                         'value' => [
-                            ['name' => "{$b}ID", 'value' => $invoice->getNumber()],
+                            // Same fallback as PeppolHelper::additionalDocumentReference()'s
+                            // $invoice_number: Inv::$number defaults to ''
+                            // (non-nullable string), so passing it through
+                            // unguarded emitted an empty <cbc:ID></cbc:ID>
+                            // -- rejected by real Peppol validation
+                            // (PEPPOL-EN16931-R008, found 2026-08-31 via
+                            // the real HTTP Peppol route's validator).
+                            ['name' => "{$b}ID", 'value' =>
+                                ($invoice->getNumber() !== null && $invoice->getNumber() !== '')
+                                    ? $invoice->getNumber()
+                                    : $this->t->translate('peppol.document.reference.null')
+                                        . ($invoice->reqId() ?: 'Not Found')],
                             ['name' => "{$b}DocumentTypeCode", 'value' => '130'],
                         ],
                     ],
@@ -202,6 +213,38 @@ trait PeppolHelperInvoiceLineTrait
     ): array {
         $a = Schema::CAC;
         $b = Schema::CBC;
+        // Both were previously always spliced in, even with a blank/absent
+        // ID -- unlike orderLineRef/buyersItemId just above, which already
+        // use this same "build [] when absent, spread it in" pattern.
+        // Emitting <cac:SellersItemIdentification><cbc:ID></cbc:ID>...
+        // with no real value is rejected by real Peppol validation
+        // (PEPPOL-EN16931-R008, found 2026-08-31 via the real HTTP Peppol
+        // route's validator).
+        $sellersItemId = $item->getProduct()?->getProductSku();
+        $sellersItemIdentification = ($sellersItemId !== null && $sellersItemId !== '')
+            ? [[
+                'name' => "{$a}SellersItemIdentification",
+                'value' => [
+                    ['name' => "{$b}ID", 'value' => $sellersItemId],
+                ],
+            ]]
+            : [];
+        $standardItemId = $item->getProduct()?->getProductSiiId();
+        $standardItemIdentification = ($standardItemId !== null && $standardItemId !== '')
+            ? [[
+                'name' => "{$a}StandardItemIdentification",
+                'value' => [
+                    [
+                        'name' => "{$b}ID",
+                        'value' => $standardItemId,
+                        'attributes' => [
+                            'schemeID' =>
+                                $item->getProduct()?->getProductSiiSchemeid(),
+                        ],
+                    ],
+                ],
+            ]]
+            : [];
         return [
                             'name' => "{$a}Item",
                             'value' => [
@@ -211,30 +254,8 @@ trait PeppolHelperInvoiceLineTrait
                                     'value' => $item->getName()
                                 ],
                                 ...$buyersItemId,
-                                [
-                                    'name' => "{$a}SellersItemIdentification",
-                                    'value' => [
-                                        [
-                                            'name' => "{$b}ID",
-                                            'value' =>
-                                        $item->getProduct()?->getProductSku()
-                                        ],
-                                    ],
-                                ],
-                                [
-                                    'name' => "{$a}StandardItemIdentification",
-                                    'value' => [
-                                        [
-                                            'name' => "{$b}ID",
-                                            'value' =>
-                                       $item->getProduct()?->getProductSiiId(),
-                                            'attributes' => [
-                                                'schemeID' =>
-                                $item->getProduct()?->getProductSiiSchemeid(),
-                                            ],
-                                        ],
-                                    ],
-                                ],
+                                ...$sellersItemIdentification,
+                                ...$standardItemIdentification,
                                 ...$originCountry,
                                 [
                                     'name' => "{$a}CommodityClassification",

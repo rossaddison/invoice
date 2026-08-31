@@ -36,12 +36,19 @@ trait PeppolHelperDeliveryTrait
      */
     public function buildDeliveryLocationAddress(): Address
     {
-        $street_name = $this->delivery_location->getAddress1();
-        $additional_street_name = $this->delivery_location->getAddress2();
-        $building_number = $this->delivery_location->getBuildingNumber();
-        $cityName = $this->delivery_location->getCity();
-        $postalZone = $this->delivery_location->getZip();
-        $countrySubEntity = $this->delivery_location->getState();
+        // Normalized to null (not '') below: Address::xmlSerialize()
+        // consistently only omits each element when its value is exactly
+        // null, but DeliveryLocation's address fields default to '', so a
+        // blank one was slipping through as an empty element -- rejected
+        // by real Peppol validation (PEPPOL-EN16931-R008, found
+        // 2026-08-31 via the real HTTP Peppol route's validator).
+        $blankToNull = static fn (?string $v): ?string => ($v !== null && $v !== '') ? $v : null;
+        $street_name = $blankToNull($this->delivery_location->getAddress1());
+        $additional_street_name = $blankToNull($this->delivery_location->getAddress2());
+        $building_number = $blankToNull($this->delivery_location->getBuildingNumber());
+        $cityName = $blankToNull($this->delivery_location->getCity());
+        $postalZone = $blankToNull($this->delivery_location->getZip());
+        $countrySubEntity = $blankToNull($this->delivery_location->getState());
         $country_name = $this->delivery_location->getCountry();
         if (null !== $country_name) {
             return $this->ublDeliveryLocation(
