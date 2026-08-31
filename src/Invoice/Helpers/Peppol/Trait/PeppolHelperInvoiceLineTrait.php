@@ -112,24 +112,7 @@ trait PeppolHelperInvoiceLineTrait
                         ],
                     ],
                     ...$orderLineRef,
-                    [
-                        'name' => "{$a}DocumentReference",
-                        'value' => [
-                            // Same fallback as PeppolHelper::additionalDocumentReference()'s
-                            // $invoice_number: Inv::$number defaults to ''
-                            // (non-nullable string), so passing it through
-                            // unguarded emitted an empty <cbc:ID></cbc:ID>
-                            // -- rejected by real Peppol validation
-                            // (PEPPOL-EN16931-R008, found 2026-08-31 via
-                            // the real HTTP Peppol route's validator).
-                            ['name' => "{$b}ID", 'value' =>
-                                ($invoice->getNumber() !== null && $invoice->getNumber() !== '')
-                                    ? $invoice->getNumber()
-                                    : $this->t->translate('peppol.document.reference.null')
-                                        . ($invoice->reqId() ?: 'Not Found')],
-                            ['name' => "{$b}DocumentTypeCode", 'value' => '130'],
-                        ],
-                    ],
+                    $this->lineDocumentReference($invoice),
                     $this->itemLineACs($aciiR, $item_id),
                     $this->buildInvoiceLineItemElement($item, $itemDesc,
                         $buyersItemId, $originCountry),
@@ -369,6 +352,27 @@ trait PeppolHelperInvoiceLineTrait
                                     ],
                                 ],
                             ],
+        ];
+    }
+
+    /**
+     * This invoice line's own DocumentReference back to the parent invoice
+     * -- same id as PeppolHelper::additionalDocumentReference()'s own
+     * self-reference (see invoiceReferenceId()'s docblock there). Extracted
+     * alongside itemLineACs()/buildInvoiceLineItemElement()/
+     * buildInvoiceLinePriceElement() below to keep
+     * buildInvoiceLinesArray()'s own Cognitive Complexity comfortably
+     * under SonarQube's threshold (php:S3776) -- this block used to embed
+     * a nested ternary inline (php:S3358).
+     */
+    private function lineDocumentReference(Inv $invoice): array
+    {
+        return [
+            'name' => Schema::CAC . 'DocumentReference',
+            'value' => [
+                ['name' => Schema::CBC . 'ID', 'value' => $this->invoiceReferenceId($invoice)],
+                ['name' => Schema::CBC . 'DocumentTypeCode', 'value' => '130'],
+            ],
         ];
     }
 
