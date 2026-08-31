@@ -52,6 +52,16 @@ use Yiisoft\Yii\Console\ExitCode;
  * A prior version of this fixture left the client inactive (the entity's
  * own default) and mistook the resulting "not found" for a genuine Cycle
  * staleness bug; root-caused and fixed 2026-08-31.
+ *
+ * --generate-only (seed then generate in the same process) previously
+ * failed with "Missing invoice lines" even though --generate-existing
+ * against the same freshly-seeded id worked fine right after, in a
+ * separate process. Root cause: Cycle's identity map hands the
+ * same-process re-query back the SAME $inv object (by class + id)
+ * seed() already had in scope, rather than a freshly-hydrated one -- and
+ * that object's own in-memory items collection was never updated when
+ * the item was created, only persisted to the DB. Fixed by keeping it in
+ * sync (see seed()'s own comment) -- 2026-08-31.
  */
 final class SeedPeppolHappyPathFixtureCommand extends Command
 {
@@ -240,8 +250,18 @@ final class SeedPeppolHappyPathFixtureCommand extends Command
         // sees $item->getProduct() === null and silently `continue`s past
         // this item, leaving invoiceLines empty ("Missing invoice lines").
         $invItem->setProduct($product);
+        // Same reasoning as setProduct() above, plus the inverse side:
+        // Cycle's identity map hands back the SAME $inv object (by class
+        // + id) to a same-process re-query rather than a freshly-hydrated
+        // one, so $inv's own in-memory items collection -- never updated
+        // when this item was created, only persisted to the DB -- stays
+        // empty for that re-query. --generate-existing (a separate
+        // process, no prior heap entry) never hit this, which is what
+        // made it look process-dependent. Found & fixed 2026-08-31.
+        $invItem->setInv($inv);
         $this->deps->iiR->save($invItem);
         $invItemId = $invItem->reqId();
+        $inv->getItems()->add($invItem);
 
         $invItemAmount = new InvItemAmount(
             inv_item_id: $invItemId,
