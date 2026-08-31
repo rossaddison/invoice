@@ -24,6 +24,7 @@ use App\Invoice\Helpers\Peppol\{
     PeppolHelperNetDeps,
     PeppolValidator,
 };
+use App\Invoice\Helpers\Peppol\Exception\PeppolBuyerPostalAddressNotFoundException;
 use App\Invoice\Helpers\Peppol\Exception\PeppolTaxCategoryCodeNotFoundException;
 use App\Invoice\Helpers\Peppol\Validator\ChecksumValidator;
 use App\Invoice\Peppol\PeppolSendServiceInterface;
@@ -571,6 +572,18 @@ trait Peppol
             );
             $msg .= ' ' . Html::a(
                 $this->translator->translate('peppol.tax.category.not.found.fix'),
+                $url)->render();
+        }
+        if ($e instanceof PeppolBuyerPostalAddressNotFoundException
+                && null !== $e->clientId) {
+            $url = $this->webService->generateUrl(
+                'client/edit',
+                ['id' => $e->clientId, 'origin' => 'edit'],
+                [],
+                'postaladdress_field',
+            );
+            $msg .= ' ' . Html::a(
+                $this->translator->translate('peppol.buyer.postal.address.not.found.fix'),
                 $url)->render();
         }
         return $msg;

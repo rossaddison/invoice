@@ -81,111 +81,120 @@ trait PeppolHelperCustomerTrait
         paR $paR, cpR $cpR): array
     {
         $client = $invoice->getClient();
-        if ($client) {
-            $postaladdress_id = $client->getPostaladdressId();
-            $client_peppol = $cpR->repoClientPeppolLoadedquery($client->reqId());
-            if (null == $postaladdress_id) {
-                throw new BuyerPostAddNf();
-            }
-            if ($postaladdress_id) {
-                $postaladdress = $paR->repoPostalAddressLoadedquery($postaladdress_id);
-                $accounting_customer_party = [];
-                $country_helper = new CountryHelper();
-                if ($postaladdress && $client_peppol) {
-                    $accounting_customer_party = [
-                        'Party' => [
-                            'EndPointID' => [
-                                'value' => $client_peppol->getEndpointid(),
-                                'schemeID' =>
-                                        $client_peppol->getEndpointidSchemeid(),
-                            ],
-                            'PartyIdentification' => [
-                                'ID' => [
-                                    'value' =>
-                                            $client_peppol->getIdentificationid(),
-                                    'schemeID' =>
-                                    $client_peppol->getIdentificationidSchemeid(),
-                                ],
-                            ],
-                            'PostalAddress' => [
-                                'StreetName' => $postaladdress->getStreetName(),
-                                'AdditionalStreetName' =>
-                                    $postaladdress->getAdditionalStreetName(),
-                                'AddressLine' => [
-                                    'Line' => $postaladdress->getBuildingNumber(),
-                                ],
-                                'CityName' => $postaladdress->getCityName(),
-                                'PostalZone' => $postaladdress->getPostalZone(),
-                                'CountrySubentity' =>
-                                            $postaladdress->getCountrysubentity(),
-                                'Country' => [
-                                    'IdentificationCode' =>
-$country_helper->getCountryIdentificationCodeWithLeague(
-                                                    $postaladdress->getCountry()),
-                                    'ListId' => 'ISO3166-1:Alpha2',
-                                ],
-                            ],
-                            'PhysicalLocation' => [
-                                'StreetName' =>
-                                        (string) $client->getClientAddress1(),
-                                'AdditionalStreetName' =>
-                                        (string) $client->getClientAddress2(),
-                                'AddressLine' => [
-                                    'Line' =>
-                                    (string) $client->getClientBuildingNumber(),
-                                ],
-                                'CityName' => (string) $client->getClientCity(),
-                                'PostalZone' => (string) $client->getClientZip(),
-                                'CountrySubentity' =>
-                                            (string) $client->getClientState(),
-                                'Country' => [
-                                    'IdentificationCode' =>
-$country_helper->getCountryIdentificationCodeWithLeague(
-                                        (string) $client->getClientCountry()),
-                                    'ListId' => 'ISO3166-1:Alpha2',
-                                ],
-                            ],
-                            'Contact' => [
-                                'Name' => $client->getClientName(),
-                                'Telephone' =>
-                                            (string) $client->getClientPhone(),
-                                'ElectronicMail' => $client->getClientEmail(),
-                            ],
-                            'PartyTaxScheme' => [
-                                'CompanyID' =>
-                                        $client_peppol->getTaxschemecompanyid(),
-                                'CompanyID_attributes' => [
-                                    'schemeID' => '',
-                                    'schemeAgencyID' => '',
-                                ],
-                                'TaxScheme' => [
-                                    'ID' => $client_peppol->getTaxSchemeid(),
-                                    'Attributes' => [
-                                        'schemeID' => '',
-                                        'schemeAgencyID' => '',
-                                    ],
-                                ],
-                            ],
-                            'PartyLegalEntity' => [
-                                'RegistrationName' =>
-                            $client_peppol->getLegalEntityRegistrationName(),
-                                'CompanyID' =>
-                                    $client_peppol->getLegalEntityCompanyid(),
-                                'Attributes' => [
-                                    'schemeID' =>
-                           $client_peppol->getLegalEntityCompanyidSchemeid(),
-                                ],
-                                'CompanyLegalform' =>
-                           $client_peppol->getLegalEntityCompanyLegalForm(),
-                            ],
-                        ],
-                    ];
-                }
-                return $accounting_customer_party;
-            }
-            return [];
+        if (!$client) {
+            throw new ClientNf($this->t);
         }
-        throw new ClientNf($this->t);
+        $postaladdress_id = $client->getPostaladdressId();
+        if (null == $postaladdress_id) {
+            throw new BuyerPostAddNf($client->reqId());
+        }
+        $postaladdress = $paR->repoPostalAddressLoadedquery($postaladdress_id);
+        // Previously fell through to a silent `[]` here (and on a missing
+        // $client_peppol below) when the linked postaladdress row itself
+        // couldn't be loaded (e.g. an orphaned/deleted PostalAddress) --
+        // every caller of this array (buildCustomerContact(),
+        // buildCustomerPostalAddress(), buildCustomerPartyTaxScheme(),
+        // buildCustomerLegalEntity()) unconditionally indexes
+        // $party['Party'][...] with no null-check, so that silent `[]`
+        // surfaced as an opaque "Undefined array key 'Party'" PHP warning
+        // deep in buildCustomerContact() instead of a clear, actionable
+        // exception (found 2026-08-31 via the real HTTP Peppol route).
+        if (null === $postaladdress) {
+            throw new BuyerPostAddNf($client->reqId());
+        }
+        $client_peppol = $cpR->repoClientPeppolLoadedquery($client->reqId());
+        if (null === $client_peppol) {
+            throw new ClientNf($this->t);
+        }
+        $country_helper = new CountryHelper();
+        return [
+            'Party' => [
+                'EndPointID' => [
+                    'value' => $client_peppol->getEndpointid(),
+                    'schemeID' =>
+                            $client_peppol->getEndpointidSchemeid(),
+                ],
+                'PartyIdentification' => [
+                    'ID' => [
+                        'value' =>
+                                $client_peppol->getIdentificationid(),
+                        'schemeID' =>
+                        $client_peppol->getIdentificationidSchemeid(),
+                    ],
+                ],
+                'PostalAddress' => [
+                    'StreetName' => $postaladdress->getStreetName(),
+                    'AdditionalStreetName' =>
+                        $postaladdress->getAdditionalStreetName(),
+                    'AddressLine' => [
+                        'Line' => $postaladdress->getBuildingNumber(),
+                    ],
+                    'CityName' => $postaladdress->getCityName(),
+                    'PostalZone' => $postaladdress->getPostalZone(),
+                    'CountrySubentity' =>
+                                $postaladdress->getCountrysubentity(),
+                    'Country' => [
+                        'IdentificationCode' =>
+$country_helper->getCountryIdentificationCodeWithLeague(
+                                        $postaladdress->getCountry()),
+                        'ListId' => 'ISO3166-1:Alpha2',
+                    ],
+                ],
+                'PhysicalLocation' => [
+                    'StreetName' =>
+                            (string) $client->getClientAddress1(),
+                    'AdditionalStreetName' =>
+                            (string) $client->getClientAddress2(),
+                    'AddressLine' => [
+                        'Line' =>
+                        (string) $client->getClientBuildingNumber(),
+                    ],
+                    'CityName' => (string) $client->getClientCity(),
+                    'PostalZone' => (string) $client->getClientZip(),
+                    'CountrySubentity' =>
+                                (string) $client->getClientState(),
+                    'Country' => [
+                        'IdentificationCode' =>
+$country_helper->getCountryIdentificationCodeWithLeague(
+                            (string) $client->getClientCountry()),
+                        'ListId' => 'ISO3166-1:Alpha2',
+                    ],
+                ],
+                'Contact' => [
+                    'Name' => $client->getClientName(),
+                    'Telephone' =>
+                                (string) $client->getClientPhone(),
+                    'ElectronicMail' => $client->getClientEmail(),
+                ],
+                'PartyTaxScheme' => [
+                    'CompanyID' =>
+                            $client_peppol->getTaxschemecompanyid(),
+                    'CompanyID_attributes' => [
+                        'schemeID' => '',
+                        'schemeAgencyID' => '',
+                    ],
+                    'TaxScheme' => [
+                        'ID' => $client_peppol->getTaxSchemeid(),
+                        'Attributes' => [
+                            'schemeID' => '',
+                            'schemeAgencyID' => '',
+                        ],
+                    ],
+                ],
+                'PartyLegalEntity' => [
+                    'RegistrationName' =>
+                $client_peppol->getLegalEntityRegistrationName(),
+                    'CompanyID' =>
+                        $client_peppol->getLegalEntityCompanyid(),
+                    'Attributes' => [
+                        'schemeID' =>
+               $client_peppol->getLegalEntityCompanyidSchemeid(),
+                    ],
+                    'CompanyLegalform' =>
+               $client_peppol->getLegalEntityCompanyLegalForm(),
+                ],
+            ],
+        ];
     }
 
     /**

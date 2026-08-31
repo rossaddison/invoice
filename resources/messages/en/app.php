@@ -1963,6 +1963,7 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/)'
     . ' missing.',
   'peppol.tax.category.not.found.fix' => 'Set it now',
+  'peppol.buyer.postal.address.not.found.fix' => 'Fix it now',
   'peppol.tax.category.percent.not.found' =>
     'Peppol Tax Category percent'
     . ' (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/)'

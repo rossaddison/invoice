@@ -204,7 +204,15 @@ use Yiisoft\Html\Tag\Form;
       ->required(false)
       ->hint($translator->translate('hint.this.field.is.not.required')); ?>
   <?= $formFields->clientUrlField($form); ?>
-  <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+  <?= /**
+       * Anchor for the "fix it now" link Inv\Trait\Peppol's
+       * friendlyPeppolExceptionMessage() appends to
+       * PeppolBuyerPostalAddressNotFoundException's flash message
+       * (client/edit/{id}#postaladdress_field) -- a distinct id from
+       * whatever Field::select() below auto-generates for the
+       * 'postaladdress_id' attribute itself, so the two never collide.
+       */
+      Html::openTag('div', ['class' => 'mb-3', 'id' => 'postaladdress_field']); ?>
    <?= Html::label($translator->translate('client.postaladdress.available') . ': ', 'postaladdress_id'); ?>
    <?php if ($postal_address_count > 0 && $origin == 'edit'): ?>
     <?= Field::select($form, 'postaladdress_id')

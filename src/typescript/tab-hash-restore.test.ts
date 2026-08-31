@@ -71,4 +71,67 @@ describe('initTabHashRestore', () => {
         document.body.innerHTML = '<a data-bs-toggle="tab" href="#product-images"></a>';
         expect(() => initTabHashRestore()).not.toThrow();
     });
+
+    it('shows the tab whose button trigger targets the hash via data-bs-target', () => {
+        // Client's tabs use <button data-bs-target="..."> rather than
+        // <a href="...">; buttons have no href attribute at all.
+        setHash('#pane-address');
+        const show = vi.fn();
+        const getOrCreateInstance = vi.fn().mockReturnValue({ show });
+        vi.stubGlobal('bootstrap', { Tab: { getOrCreateInstance } });
+        document.body.innerHTML = `
+            <button data-bs-toggle="tab" data-bs-target="#pane-personal"></button>
+            <button data-bs-toggle="tab" data-bs-target="#pane-address"></button>`;
+
+        initTabHashRestore();
+
+        const [[triggerArg]] = getOrCreateInstance.mock.calls;
+        expect((triggerArg as HTMLElement).dataset.bsTarget).toBe('#pane-address');
+        expect(show).toHaveBeenCalledTimes(1);
+    });
+
+    it('activates the containing pane and scrolls to a field nested inside it', () => {
+        setHash('#postaladdress_field');
+        const show = vi.fn();
+        const getOrCreateInstance = vi.fn().mockReturnValue({ show });
+        vi.stubGlobal('bootstrap', { Tab: { getOrCreateInstance } });
+        document.body.innerHTML = `
+            <button data-bs-toggle="tab" data-bs-target="#pane-personal"></button>
+            <button data-bs-toggle="tab" data-bs-target="#pane-address"></button>
+            <div class="tab-pane" id="pane-address">
+                <div id="postaladdress_field"></div>
+            </div>`;
+        const target = document.getElementById('postaladdress_field') as HTMLElement;
+        const scrollIntoView = vi.fn();
+        target.scrollIntoView = scrollIntoView;
+
+        initTabHashRestore();
+
+        const [[triggerArg]] = getOrCreateInstance.mock.calls;
+        expect((triggerArg as HTMLElement).dataset.bsTarget).toBe('#pane-address');
+        expect(show).toHaveBeenCalledTimes(1);
+        expect(scrollIntoView).toHaveBeenCalledTimes(1);
+    });
+
+    it('returns early when the hash matches no element and no trigger', () => {
+        setHash('#nowhere');
+        const getOrCreateInstance = vi.fn();
+        vi.stubGlobal('bootstrap', { Tab: { getOrCreateInstance } });
+        document.body.innerHTML = '<button data-bs-toggle="tab" data-bs-target="#pane-address"></button>';
+
+        expect(() => initTabHashRestore()).not.toThrow();
+        expect(getOrCreateInstance).not.toHaveBeenCalled();
+    });
+
+    it('returns early when the nested element has no enclosing tab-pane', () => {
+        setHash('#orphan-field');
+        const getOrCreateInstance = vi.fn();
+        vi.stubGlobal('bootstrap', { Tab: { getOrCreateInstance } });
+        document.body.innerHTML = `
+            <button data-bs-toggle="tab" data-bs-target="#pane-address"></button>
+            <div id="orphan-field"></div>`;
+
+        expect(() => initTabHashRestore()).not.toThrow();
+        expect(getOrCreateInstance).not.toHaveBeenCalled();
+    });
 });
