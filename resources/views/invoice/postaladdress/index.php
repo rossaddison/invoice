@@ -75,7 +75,7 @@ $columns = [
         header: $translator->translate('active'),
         content: static function (PostalAddress $model)
             use ($cR, $urlGenerator): Yiisoft\Html\Tag\A|string {
-            if (null!==($clientId = $model->getClientId())) {
+            if (null!==($clientId = $model->getClientId()) && $cR->repoClientCount($clientId) > 0) {
                 $client = $cR->repoClientquery($clientId);
                 if (null !== $client->getPostaladdressId()
                         && $client->getPostaladdressId() > 0) {
