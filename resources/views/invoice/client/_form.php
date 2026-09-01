@@ -243,15 +243,18 @@ use Yiisoft\Html\Tag\Form;
     * missing postal address landed on a page where the fix control itself
     * was invisible.
     *
-    * Replaced with $client->hasIdentity(): on the Add-client form $client
-    * is a brand-new, unpersisted Client (buildAddParameters() hardcodes
-    * postal_address_count to 0 and has no id yet), so the removal above
-    * exposed the "Add a Client Postal Address" button unconditionally --
-    * its link's $client->reqId() throws LogicException("Client not
-    * persisted") immediately (App\Infrastructure\Persistence\Trait\RequireId).
-    * There's nothing to link a postal address to until the client itself
-    * is saved once, so this whole section is skipped until then. Found
-    * 2026-08-31 the same day, one commit later.
+    * $client->hasIdentity() gates the select (there's nothing to pick
+    * from a brand-new client anyway -- postal_address_count is always 0
+    * on Add) and $client->reqId() below (its link needs a real id --
+    * calling reqId() on an unpersisted Client throws
+    * LogicException("Client not persisted"),
+    * App\Infrastructure\Persistence\Trait\RequireId -- found 2026-08-31
+    * the same day, one commit later, when removing the $origin check
+    * above first exposed this unconditionally). The "Add" button itself
+    * stays visible either way per explicit request -- disabled with an
+    * explanation on Add rather than hidden, since a client with zero
+    * postal addresses should always see *some* control here, matching
+    * what's already shown once the client exists.
     */ ?>
    <?php if ($client->hasIdentity() && $postal_address_count > 0): ?>
     <?= Field::select($form, 'postaladdress_id')
@@ -263,10 +266,31 @@ use Yiisoft\Html\Tag\Form;
         ])
         ->optionsData($optionsDataPostalAddresses); ?>
    <?php endif; ?>
-   <?php if ($client->hasIdentity() && $postal_address_count === 0): ?>
-    <?= Html::a($translator->translate('client.postaladdress.add'),
-        $urlGenerator->generate('postaladdress/add', ['client_id' => $client->reqId(), 'origin' => 'client']),
-        ['class' => 'btn btn-warning btn-lg mt-3']); ?>
+   <?php if ($postal_address_count === 0): ?>
+    <?php if ($client->hasIdentity()): ?>
+     <?= Html::a($translator->translate('client.postaladdress.add'),
+         $urlGenerator->generate('postaladdress/add', ['client_id' => $client->reqId(), 'origin' => 'client']),
+         ['class' => 'btn btn-warning btn-lg mt-3']); ?>
+    <?php else: ?>
+     <?php /**
+      * A `title` on the disabled <a> itself never shows: pointer-events:none
+      * blocks the hover that would trigger it. Bootstrap's own documented
+      * fix for a disabled-link tooltip -- put data-bs-toggle="tooltip" +
+      * title on a wrapping element that still receives pointer events
+      * instead. initTooltips() (index.ts) already auto-initializes every
+      * [data-bs-toggle="tooltip"] on the page, so no extra JS needed here.
+      */ ?>
+     <?= Html::openTag('span', [
+         'data-bs-toggle' => 'tooltip',
+         'title' => $translator->translate('client.postaladdress.add.save.first'),
+     ]); ?>
+      <?= Html::a($translator->translate('client.postaladdress.add'), '#', [
+          'class' => 'btn btn-warning btn-lg mt-3 disabled',
+          'style' => 'pointer-events:none',
+          'aria-disabled' => 'true',
+      ]); ?>
+     <?= Html::closeTag('span'); ?>
+    <?php endif; ?>
    <?php endif; ?>
   <?= Html::closeTag('div'); ?>
   <?php
