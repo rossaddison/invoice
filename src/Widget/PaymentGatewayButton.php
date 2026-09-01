@@ -89,4 +89,24 @@ final class PaymentGatewayButton
             ->render()
         . Html::closeTag('div');
     }
+
+    /**
+     * GoCardless -- Wikimedia Commons (CC BY-SA 4.0, sourced from
+     * gocardless.com per the file's own description), a wide wordmark
+     * (viewBox 1000x148.82, icon + text combined) like
+     * braintree.png/stripe.png/mollie.png rather than the square glyphs
+     * used for paypal/adyen/square/razorpay -- sized to roughly the same
+     * aspect ratio (200x30) instead of the 50x50 helper.
+     */
+    public static function gocardless(): string
+    {
+        return
+        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
+            .  new Img()
+            ->size(200, 30)
+            ->src('/img/gocardless.svg')
+            ->addClass(self::BTN_LIGHT)
+            ->render()
+        . Html::closeTag('div');
+    }
 }

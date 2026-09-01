@@ -1121,13 +1121,14 @@ if ((in_array($inv->reqStatusId(), [2, 3])
             ]);
              echo H::openTag('i', ['class' => $biDash]);
              echo H::closeTag('i');
-             // 7 of this app's many integrated gateways now have a logo
+             // 8 of this app's many integrated gateways now have a logo
              // (braintree/stripe/mollie already had one; paypal/adyen/
-             // square/razorpay added 2026-09-01 via Simple Icons,
-             // simpleicons.org -- CC0 icon glyphs, used per each
-             // company's own brand guidelines to identify their payment
-             // method). Still no source image for checkout_com, paystack,
-             // yookassa, robokassa, truelayer, mercado_pago, gocardless --
+             // square/razorpay added via Simple Icons, simpleicons.org --
+             // CC0 icon glyphs; gocardless via Wikimedia Commons, CC
+             // BY-SA 4.0, sourced from gocardless.com -- each used per
+             // its own company's brand guidelines to identify their
+             // payment method). Still no source image for checkout_com,
+             // paystack, yookassa, robokassa, truelayer, mercado_pago --
              // those fall through to the plain-text fallback (PR #1170).
              echo $translator->translate('pay.now') . '➡️' . match (ucfirst($gateway)) {
                 'Braintree' => PaymentGatewayButton::braintree(),
@@ -1137,6 +1138,7 @@ if ((in_array($inv->reqStatusId(), [2, 3])
                 'Adyen' => PaymentGatewayButton::adyen(),
                 'Square' => PaymentGatewayButton::square(),
                 'Razorpay' => PaymentGatewayButton::razorpay(),
+                'Gocardless' => PaymentGatewayButton::gocardless(),
                 default => ' ' . H::encode(ucfirst($gateway)),
              };
 
