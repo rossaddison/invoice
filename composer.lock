@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2ac7fdcc720abe0d4e5880387ed17187",
+    "content-hash": "7d6a2b4ed8ed9ea1d8cb9728d6ffb35e",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -19753,16 +19753,16 @@
         },
         {
             "name": "yiisoft/yii-dataview",
-            "version": "1.1.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "832f14490a021d240b7c7d0ed476063548176cf0"
+                "reference": "f7004af920c9b262d5896bf92705720990c832d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/832f14490a021d240b7c7d0ed476063548176cf0",
-                "reference": "832f14490a021d240b7c7d0ed476063548176cf0",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/f7004af920c9b262d5896bf92705720990c832d1",
+                "reference": "f7004af920c9b262d5896bf92705720990c832d1",
                 "shasum": ""
             },
             "require": {
@@ -19781,10 +19781,10 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.91",
-                "maglnet/composer-require-checker": "^4.7.1",
                 "phpunit/phpunit": "^10.5.58",
                 "rector/rector": "^2.1.7",
                 "roave/infection-static-analysis-plugin": "^1.35",
+                "shipmonk/composer-dependency-analyser": "^1.8",
                 "spatie/phpunit-watcher": "^1.24",
                 "vimeo/psalm": "^5.26.1 || ^6.12",
                 "yiisoft/di": "^1.4",
@@ -19794,6 +19794,7 @@
                 "yiisoft/test-support": "^3.0.2",
                 "yiisoft/translator-message-php": "^1.1.1"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "config-plugin": {
@@ -19842,7 +19843,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-03-21T14:40:58+00:00"
+            "time": "2026-08-31T04:22:17+00:00"
         },
         {
             "name": "yiisoft/yii-event",
@@ -28296,7 +28297,8 @@
         "rossaddison/yii-auth-client": 20,
         "rossaddison/yii-cycle-1": 20,
         "yiisoft/data-cycle": 20,
-        "yiisoft/rate-limiter": 20
+        "yiisoft/rate-limiter": 20,
+        "yiisoft/yii-dataview": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
