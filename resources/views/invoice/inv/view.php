@@ -983,9 +983,17 @@ if ($peppolEnabled) {
     echo H::closeTag('li');
     echo H::openTag('li');
      echo H::openTag('a', [
-         'href' => 'https',
-         'onclick' =>
- "window.open('https://ecosio.com/en/peppol-e-invoice-xml-document-validator/')",
+         // Was 'href' => 'https' -- a literal, broken relative URL, plus
+         // an onclick doing the real window.open() without
+         // preventDefault(), so the browser ALSO followed that broken
+         // href: on a page like inv/view/154, a relative "https" resolves
+         // against the current path, replacing the id segment and
+         // producing inv/view/https -- a 404. Found 2026-09-01 live on
+         // yii3i.online. Fixed the same way the Storecove link right
+         // below this already does it: a real external href + target
+         // _blank, no inline JS needed at all.
+         'href' => 'https://ecosio.com/en/peppol-e-invoice-xml-document-validator/',
+         'target' => '_blank',
          'class' => $dropdownItem
      ]);
       echo H::openTag('i', [
