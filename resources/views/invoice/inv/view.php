@@ -1124,12 +1124,15 @@ if ((in_array($inv->reqStatusId(), [2, 3])
              // 8 of this app's many integrated gateways now have a logo
              // (braintree/stripe/mollie already had one; paypal/adyen/
              // square/razorpay added via Simple Icons, simpleicons.org --
-             // CC0 icon glyphs; gocardless via Wikimedia Commons, CC
-             // BY-SA 4.0, sourced from gocardless.com -- each used per
-             // its own company's brand guidelines to identify their
-             // payment method). Still no source image for checkout_com,
-             // paystack, yookassa, robokassa, truelayer, mercado_pago --
-             // those fall through to the plain-text fallback (PR #1170).
+             // CC0 icon glyphs; gocardless/paystack/yookassa via Wikimedia
+             // Commons; checkout_com/robokassa/truelayer/mercado_pago
+             // sourced directly from each company's own site (no Simple
+             // Icons or Wikimedia Commons entry existed for any of the
+             // four) -- each used per its own company's brand guidelines
+             // to identify their payment method. All 14 of this app's
+             // integrated gateways now have a logo (PR #1170's plain-text
+             // fallback below is now unreachable in practice, kept as a
+             // safety net for any future gateway added without one).
              echo $translator->translate('pay.now') . '➡️' . match (ucfirst($gateway)) {
                 'Braintree' => PaymentGatewayButton::braintree(),
                 'Stripe' => PaymentGatewayButton::stripe(),
@@ -1139,6 +1142,12 @@ if ((in_array($inv->reqStatusId(), [2, 3])
                 'Square' => PaymentGatewayButton::square(),
                 'Razorpay' => PaymentGatewayButton::razorpay(),
                 'Gocardless' => PaymentGatewayButton::gocardless(),
+                'Checkout_com' => PaymentGatewayButton::checkoutCom(),
+                'Paystack' => PaymentGatewayButton::paystack(),
+                'Yookassa' => PaymentGatewayButton::yookassa(),
+                'Robokassa' => PaymentGatewayButton::robokassa(),
+                'Truelayer' => PaymentGatewayButton::truelayer(),
+                'Mercado_pago' => PaymentGatewayButton::mercadoPago(),
                 default => ' ' . H::encode(ucfirst($gateway)),
              };
 
