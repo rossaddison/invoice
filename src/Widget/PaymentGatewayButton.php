@@ -46,4 +46,47 @@ final class PaymentGatewayButton
             ->render()
         . Html::closeTag('div');
     }
+
+    /**
+     * PayPal/Adyen/Square/Razorpay -- Simple Icons (simpleicons.org, CC0
+     * for the icon glyphs themselves, brand marks used per each company's
+     * own guidelines for identifying their payment method) rather than
+     * this app's own asset, since public/img/ had no PayPal/Adyen/Square/
+     * Razorpay logo of any kind despite those gateways being fully
+     * integrated (found 2026-09-01, same investigation as the "Pay Now"
+     * dropdown text-fallback fix). Square SVG glyphs (viewBox 0 0 24 24),
+     * not wordmarks like braintree.png/stripe.png/mollie.png -- sized
+     * 50x50 rather than those three's wide dimensions accordingly.
+     */
+    public static function paypal(): string
+    {
+        return self::squareIconButton('paypal');
+    }
+
+    public static function adyen(): string
+    {
+        return self::squareIconButton('adyen');
+    }
+
+    public static function square(): string
+    {
+        return self::squareIconButton('square');
+    }
+
+    public static function razorpay(): string
+    {
+        return self::squareIconButton('razorpay');
+    }
+
+    private static function squareIconButton(string $name): string
+    {
+        return
+        Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
+            .  new Img()
+            ->size(50, 50)
+            ->src('/img/' . $name . '.svg')
+            ->addClass(self::BTN_LIGHT)
+            ->render()
+        . Html::closeTag('div');
+    }
 }

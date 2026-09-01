@@ -1121,22 +1121,22 @@ if ((in_array($inv->reqStatusId(), [2, 3])
             ]);
              echo H::openTag('i', ['class' => $biDash]);
              echo H::closeTag('i');
-             // Only 3 of this app's many integrated gateways have a logo
-             // image in public/img/ (braintree.png, stripe.png,
-             // mollie.png) -- PaymentGatewayButton has no method, and no
-             // source image, for the rest (PayPal, Adyen, Checkout.com,
-             // Square, Razorpay, Paystack, YooKassa, Robokassa,
-             // TrueLayer...). Every one of those previously fell through
-             // this chain silently, showing a bare "Pay Now ➡️" with no
-             // indication which gateway it was -- found 2026-09-01 live
-             // on yii3i.online. Can't source missing brand logo files
-             // here, but every entry should at least name its gateway --
-             // same text-fallback this dropdown already uses two
-             // branches below for the no-payment-method case.
+             // 7 of this app's many integrated gateways now have a logo
+             // (braintree/stripe/mollie already had one; paypal/adyen/
+             // square/razorpay added 2026-09-01 via Simple Icons,
+             // simpleicons.org -- CC0 icon glyphs, used per each
+             // company's own brand guidelines to identify their payment
+             // method). Still no source image for checkout_com, paystack,
+             // yookassa, robokassa, truelayer, mercado_pago, gocardless --
+             // those fall through to the plain-text fallback (PR #1170).
              echo $translator->translate('pay.now') . '➡️' . match (ucfirst($gateway)) {
                 'Braintree' => PaymentGatewayButton::braintree(),
                 'Stripe' => PaymentGatewayButton::stripe(),
                 'Mollie' => PaymentGatewayButton::mollie(),
+                'Paypal' => PaymentGatewayButton::paypal(),
+                'Adyen' => PaymentGatewayButton::adyen(),
+                'Square' => PaymentGatewayButton::square(),
+                'Razorpay' => PaymentGatewayButton::razorpay(),
                 default => ' ' . H::encode(ucfirst($gateway)),
              };
 
