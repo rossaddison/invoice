@@ -126,8 +126,28 @@ declare(strict_types=1);
            /mnt/c/wamp64/www/invoice/backups/
            
            ....provide the <password>
-  
+
 </b>
+ <b>28. Updating Node -- package.json's own "engines" constraint is
+        node ^22.22.3 || ^24.15.0 || >=26.0.0. This box is Alpine (musl
+        libc), not glibc -- nvm's precompiled Node builds generally don't
+        work here and nvm isn't installed (confirmed: "nvm: not found").
+        Node is managed via apk instead:
+        apk update
+        apk info nodejs                (see what's currently installed/available)
+        apk upgrade nodejs npm
+        node -v
+
+        For a specific version not offered by the currently enabled
+        repos, check what's available first rather than guessing:
+        apk search nodejs
+
+        Apache's service account reads its own environment -- if
+        anything shells out to `node` from a web request (e.g. the
+        Playwright PDF button) can't find it after an update, point
+        NODE_BINARY in .env at its absolute path (`which node`) rather
+        than relying on PATH.
+ </b>
 </p>
 </pre>
 </div>
