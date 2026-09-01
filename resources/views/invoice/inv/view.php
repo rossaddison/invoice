@@ -1121,18 +1121,23 @@ if ((in_array($inv->reqStatusId(), [2, 3])
             ]);
              echo H::openTag('i', ['class' => $biDash]);
              echo H::closeTag('i');
-             // 8 of this app's many integrated gateways now have a logo
+             // All 14 of this app's integrated gateways now have a logo
              // (braintree/stripe/mollie already had one; paypal/adyen/
              // square/razorpay added via Simple Icons, simpleicons.org --
              // CC0 icon glyphs; gocardless/paystack/yookassa via Wikimedia
              // Commons; checkout_com/robokassa/truelayer/mercado_pago
-             // sourced directly from each company's own site (no Simple
-             // Icons or Wikimedia Commons entry existed for any of the
-             // four) -- each used per its own company's brand guidelines
-             // to identify their payment method. All 14 of this app's
-             // integrated gateways now have a logo (PR #1170's plain-text
-             // fallback below is now unreachable in practice, kept as a
-             // safety net for any future gateway added without one).
+             // sourced directly from each company's own site -- each used
+             // per its own company's brand guidelines to identify their
+             // payment method). The match arms below must use the exact
+             // keys activePaymentGateways() (SettingPaymentTrait.php)
+             // declares -- ucfirst($gateway) only uppercases the first
+             // character, so e.g. 'GoCardless'/'Checkout_Com'/'TrueLayer'/
+             // 'Mercado_Pago' stay mixed-case and do NOT become
+             // 'Gocardless'/'Checkout_com'/'Truelayer'/'Mercado_pago'.
+             // Found 2026-09-01: those four guessed-lowercase arms never
+             // matched, so GoCardless/Checkout.com/TrueLayer/Mercado Pago
+             // silently fell through to the PR #1170 plain-text fallback
+             // despite having images wired up in PaymentGatewayButton.php.
              echo $translator->translate('pay.now') . '➡️' . match (ucfirst($gateway)) {
                 'Braintree' => PaymentGatewayButton::braintree(),
                 'Stripe' => PaymentGatewayButton::stripe(),
@@ -1141,13 +1146,13 @@ if ((in_array($inv->reqStatusId(), [2, 3])
                 'Adyen' => PaymentGatewayButton::adyen(),
                 'Square' => PaymentGatewayButton::square(),
                 'Razorpay' => PaymentGatewayButton::razorpay(),
-                'Gocardless' => PaymentGatewayButton::gocardless(),
-                'Checkout_com' => PaymentGatewayButton::checkoutCom(),
+                'GoCardless' => PaymentGatewayButton::gocardless(),
+                'Checkout_Com' => PaymentGatewayButton::checkoutCom(),
                 'Paystack' => PaymentGatewayButton::paystack(),
                 'Yookassa' => PaymentGatewayButton::yookassa(),
                 'Robokassa' => PaymentGatewayButton::robokassa(),
-                'Truelayer' => PaymentGatewayButton::truelayer(),
-                'Mercado_pago' => PaymentGatewayButton::mercadoPago(),
+                'TrueLayer' => PaymentGatewayButton::truelayer(),
+                'Mercado_Pago' => PaymentGatewayButton::mercadoPago(),
                 default => ' ' . H::encode(ucfirst($gateway)),
              };
 
