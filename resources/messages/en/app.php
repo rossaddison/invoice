@@ -395,6 +395,7 @@ return [
   'client.peppol.taxschemeid' => 'Tax Scheme ID',
   'client.postaladdress' => 'Postal Address',
   'client.postaladdress.add' => 'Add a Client Postal Address',
+  'client.postaladdress.add.save.first' => 'Save this client first, then add a postal address',
   'client.postaladdress.additional.street.name' =>
     'Additional Street Name',
   'client.postaladdress.available' => 'Available Postal Addresses',
