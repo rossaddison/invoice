@@ -1121,11 +1121,24 @@ if ((in_array($inv->reqStatusId(), [2, 3])
             ]);
              echo H::openTag('i', ['class' => $biDash]);
              echo H::closeTag('i');
-             echo $translator->translate('pay.now')
-                . '➡️'
-                . (ucfirst($gateway) == 'Braintree' ? PaymentGatewayButton::braintree() : '')
-                . (ucfirst($gateway) == 'Stripe' ? PaymentGatewayButton::stripe() : '')
-                . (ucfirst($gateway) == 'Mollie' ? PaymentGatewayButton::mollie() : '');
+             // Only 3 of this app's many integrated gateways have a logo
+             // image in public/img/ (braintree.png, stripe.png,
+             // mollie.png) -- PaymentGatewayButton has no method, and no
+             // source image, for the rest (PayPal, Adyen, Checkout.com,
+             // Square, Razorpay, Paystack, YooKassa, Robokassa,
+             // TrueLayer...). Every one of those previously fell through
+             // this chain silently, showing a bare "Pay Now ➡️" with no
+             // indication which gateway it was -- found 2026-09-01 live
+             // on yii3i.online. Can't source missing brand logo files
+             // here, but every entry should at least name its gateway --
+             // same text-fallback this dropdown already uses two
+             // branches below for the no-payment-method case.
+             echo $translator->translate('pay.now') . '➡️' . match (ucfirst($gateway)) {
+                'Braintree' => PaymentGatewayButton::braintree(),
+                'Stripe' => PaymentGatewayButton::stripe(),
+                'Mollie' => PaymentGatewayButton::mollie(),
+                default => ' ' . H::encode(ucfirst($gateway)),
+             };
 
             echo H::closeTag('a');
         }
