@@ -69,7 +69,7 @@ use Yiisoft\Html\Tag\Form;
  * E.164 Regex rule among them). A validation failure on any field
  * outside that list silently showed no error anywhere, with no visual
  * cue why the save appeared to do nothing. Found 2026-08-31 via a real
- * client whose stored client_mobile ('07726232648', no leading '+')
+ * client whose stored client_mobile ('07777777777', no leading '+')
  * blocked every save of that client -- including unrelated fields like
  * postaladdress_id -- with zero indication why. Removed the
  * restriction so any validated field's error is visible.
@@ -84,35 +84,42 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('ul', ['class' => 'nav nav-tabs nav-fill', 'role' => 'tablist']); ?>
 
  <?= Html::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); ?>
-  <?= Html::tag('button', '<i class="bi bi-person-fill me-1"></i>' . $translator->translate('personal.information'),
+  <?= Html::tag('button', '<i class="bi bi-person-fill me-1"></i>'
+          . $translator->translate('personal.information'),
     ['class' => 'nav-link active bg-primary text-white', 'id' => 'tab-personal',
      'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-personal',
      'type' => 'button', 'role' => 'tab'])->encode(false); ?>
  <?= Html::closeTag('li'); ?>
 
  <?= Html::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); ?>
-  <?= Html::tag('button', '<i class="bi bi-house-fill me-1"></i>' . $translator->translate('address'),
+  <?= Html::tag('button', '<i class="bi bi-house-fill me-1"></i>'
+          . $translator->translate('address'),
     ['class' => 'nav-link bg-success text-white', 'id' => 'tab-address',
      'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-address',
      'type' => 'button', 'role' => 'tab'])->encode(false); ?>
  <?= Html::closeTag('li'); ?>
 
  <?= Html::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); ?>
-  <?= Html::tag('button', '<i class="bi bi-telephone-fill me-1"></i>' . $translator->translate('contact.information'),
+  <?= Html::tag('button', '<i class="bi bi-telephone-fill me-1"></i>'
+          . $translator->translate('contact.information')
+          . '➕'
+          . $translator->translate('client.postaladdress'),
     ['class' => 'nav-link bg-info text-white', 'id' => 'tab-contact',
      'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-contact',
      'type' => 'button', 'role' => 'tab'])->encode(false); ?>
  <?= Html::closeTag('li'); ?>
 
  <?= Html::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); ?>
-  <?= Html::tag('button', '<i class="bi bi-graph-up me-1"></i>' . $translator->translate('demographics'),
+  <?= Html::tag('button', '<i class="bi bi-graph-up me-1"></i>'
+          . $translator->translate('demographics'),
     ['class' => 'nav-link bg-warning text-dark', 'id' => 'tab-demographics',
      'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-demographics',
      'type' => 'button', 'role' => 'tab'])->encode(false); ?>
  <?= Html::closeTag('li'); ?>
 
  <?= Html::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); ?>
-  <?= Html::tag('button', '<i class="bi bi-receipt me-1"></i>' . $translator->translate('tax.information'),
+  <?= Html::tag('button', '<i class="bi bi-receipt me-1"></i>'
+          . $translator->translate('tax.information'),
     ['class' => 'nav-link bg-danger text-white', 'id' => 'tab-tax',
      'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-tax',
      'type' => 'button', 'role' => 'tab'])->encode(false); ?>
@@ -235,8 +242,18 @@ use Yiisoft\Html\Tag\Form;
     * read here). Found 2026-08-31: the two most direct paths to fixing a
     * missing postal address landed on a page where the fix control itself
     * was invisible.
+    *
+    * Replaced with $client->hasIdentity(): on the Add-client form $client
+    * is a brand-new, unpersisted Client (buildAddParameters() hardcodes
+    * postal_address_count to 0 and has no id yet), so the removal above
+    * exposed the "Add a Client Postal Address" button unconditionally --
+    * its link's $client->reqId() throws LogicException("Client not
+    * persisted") immediately (App\Infrastructure\Persistence\Trait\RequireId).
+    * There's nothing to link a postal address to until the client itself
+    * is saved once, so this whole section is skipped until then. Found
+    * 2026-08-31 the same day, one commit later.
     */ ?>
-   <?php if ($postal_address_count > 0): ?>
+   <?php if ($client->hasIdentity() && $postal_address_count > 0): ?>
     <?= Field::select($form, 'postaladdress_id')
         ->label($translator->translate('client.postaladdress.available'))
         ->required(false)
@@ -246,7 +263,7 @@ use Yiisoft\Html\Tag\Form;
         ])
         ->optionsData($optionsDataPostalAddresses); ?>
    <?php endif; ?>
-   <?php if ($postal_address_count === 0): ?>
+   <?php if ($client->hasIdentity() && $postal_address_count === 0): ?>
     <?= Html::a($translator->translate('client.postaladdress.add'),
         $urlGenerator->generate('postaladdress/add', ['client_id' => $client->reqId(), 'origin' => 'client']),
         ['class' => 'btn btn-warning btn-lg mt-3']); ?>
