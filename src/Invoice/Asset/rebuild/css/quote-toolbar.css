@@ -8,8 +8,16 @@
 }
 
 .quote-actions-toolbar .btn {
-    font-size: 0.875rem;
-    padding: 0.375rem 0.75rem;
+    /* No font-size/padding here -- QuoteToolbar.php (renderButton())
+     * already applies Bootstrap's own .btn-lg class to every button;
+     * this selector's higher specificity (two classes vs. one) was
+     * silently overriding it back down to smaller than even Bootstrap's
+     * *default* .btn size (font-size: 0.875rem vs. .btn-lg's real
+     * 1.25rem / bootstrap.css:3328), shrinking every button in this
+     * toolbar well below what the widget actually requested. Found
+     * 2026-09-01 via a real screenshot at 100% zoom. Letting .btn-lg's
+     * own sizing apply naturally instead.
+     */
     border-width: 1px;
     transition: all 0.15s ease-in-out;
 }
