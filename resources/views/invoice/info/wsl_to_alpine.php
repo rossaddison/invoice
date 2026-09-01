@@ -126,8 +126,25 @@ declare(strict_types=1);
            /mnt/c/wamp64/www/invoice/backups/
            
            ....provide the <password>
-  
+
 </b>
+ <b>28. Updating Node (via nvm) -- package.json's own "engines" constraint is
+        node ^22.22.3 || ^24.15.0 || >=26.0.0:
+        nvm install --lts
+        nvm alias default lts/*
+        node -v
+
+        Or a specific major version instead of latest LTS:
+        nvm install 24
+        nvm alias default 24
+
+        Apache's service account reads its own environment, not the
+        interactive shell nvm sets up -- if anything shells out to `node`
+        from a web request (e.g. the Playwright PDF button) and stops
+        finding it after this, point NODE_BINARY in .env at the new
+        version's absolute path (nvm's own `which node` after switching
+        shows it) rather than relying on PATH.
+ </b>
 </p>
 </pre>
 </div>
