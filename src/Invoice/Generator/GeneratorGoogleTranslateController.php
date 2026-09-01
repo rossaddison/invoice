@@ -472,6 +472,16 @@ final class GeneratorGoogleTranslateController extends BaseController
             $request->setParent('projects/' . $projectId);
             $request->setContents($batchValues);
             $request->setTargetLanguageCode($targetLanguage);
+            // Google's TranslateTextRequest defaults to mimeType text/html
+            // when unset (unlike the 'text/html' request just above this
+            // one, used for actual HTML content -- these are plain app.php
+            // UI label strings). Left unset, an apostrophe comes back
+            // HTML-entity-escaped as the literal text "&#39;" instead of
+            // "'" -- visible verbatim in a rendered tooltip/label, since
+            // nothing downstream expects or decodes HTML entities in a
+            // plain translation string. Found 2026-09-01 via the
+            // googleTranslateAllLocalesDiff sweep's own real output.
+            $request->setMimeType('text/plain');
             $response = $translationClient->translateText($request);
             /**
              * @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations
