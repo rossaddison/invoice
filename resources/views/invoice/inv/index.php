@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Asset\YiiDataViewNoInlineJsAsset;
 use App\Invoice\Inv\Widget\InvsFilterOptions;
 use App\Invoice\Inv\Widget\InvsListWidget;
 use Yiisoft\Bootstrap5\Breadcrumbs;
@@ -47,9 +48,18 @@ use Yiisoft\Html\Html as H;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsYearMonthDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsStatusDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsCategorySecondaryRunDropDownFilter
+ * @var Yiisoft\Assets\AssetManager $assetManager
  */
 
 $settingTabIndex = 'setting/tabIndex';
+
+// The client filter column below is the one DropdownFilter in this app
+// using useInlineJs(false) (InvsColumnBuilder::buildColumns()) -- see
+// project_yii_dataview_csp_upstream_resolution memory. Registered here
+// rather than globally in the layout since every other filter in this
+// app still uses its own equivalent (native-reset + data-actions.ts),
+// which doesn't need this file at all.
+$assetManager->register(YiiDataViewNoInlineJsAsset::class);
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 

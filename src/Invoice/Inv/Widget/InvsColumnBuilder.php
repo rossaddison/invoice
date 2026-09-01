@@ -119,12 +119,21 @@ final class InvsColumnBuilder
                 content: static fn(Inv $model): string =>
                     Html::encode($model->getClient()?->getClientFullName()),
                 encodeContent: false,
+                // First DropdownFilter in this app switched from the
+                // native-reset class (this app's own CSP workaround,
+                // still used by every other filter below) to the vendor's
+                // own opt-out mechanism (useInlineJs(false),
+                // yiisoft/yii-dataview#355) -- see
+                // project_yii_dataview_csp_upstream_resolution memory.
+                // Loaded via App\Invoice\Asset\YiiDataViewNoInlineJsAsset,
+                // registered in inv/index.php.
                 filter: DropdownFilter::widget()
                     ->addAttributes(['id' => 'filter-client', 'name' => 'client_id',
-                        'class' => self::FILTER_CLASS,
+                        'class' => 'inv-filter',
                         'aria-label' => 'Filter by client',
                         'title' => $t->translate('client')])
-                    ->optionsData($this->filterOptions->clients),
+                    ->optionsData($this->filterOptions->clients)
+                    ->useInlineJs(false),
                 filterFactory: new NoOpFilterFactory(),
                 withSorting: false,
                 visible: !$isHidden('client'),
