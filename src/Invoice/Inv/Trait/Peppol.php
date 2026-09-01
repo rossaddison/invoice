@@ -423,7 +423,18 @@ trait Peppol
                 'errors'     => $pVal->getErrors(),
             ]);
         }
-        return $this->factory->createResponse('<pre>' . Html::encode($xml) . '</pre>');
+        // Same reasoning as getHtmlResponse() two branches up: $this->factory
+        // is DataResponseFactoryInterface -- DataResponseMiddleware +
+        // JsonFormatter JSON-encode whatever's passed to createResponse(),
+        // turning this already-HTML-encoded <pre> string into a JSON string
+        // body instead of an HTML response. The browser then displays the
+        // raw JSON-encoded text verbatim (no HTML entity decoding applies to
+        // a JSON response), showing literal "&lt;Invoice" instead of the
+        // real XML. Found 2026-09-01 live on yii3i.online -- this is the
+        // default (peppol_debug_with_internal_validator off) branch, so it
+        // hit every normal Peppol screen view, not just a debug mode.
+        // See feedback_factory_html_encoding memory for the general pattern.
+        return $this->webService->getHtmlResponse('<pre>' . Html::encode($xml) . '</pre>');
     }
 
     private function peppolRespond(
