@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d6a2b4ed8ed9ea1d8cb9728d6ffb35e",
+    "content-hash": "36cf682cf148f2dc2fadb292f4b7275e",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -3361,16 +3361,16 @@
         },
         {
             "name": "gocardless/gocardless-pro",
-            "version": "8.0.6",
+            "version": "8.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gocardless/gocardless-pro-php.git",
-                "reference": "e0a6e3a76e937395a61b626878309ff67e05a8fe"
+                "reference": "6015d8b62a9265baa9ecc0954b2a2dc8bda8a7fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gocardless/gocardless-pro-php/zipball/e0a6e3a76e937395a61b626878309ff67e05a8fe",
-                "reference": "e0a6e3a76e937395a61b626878309ff67e05a8fe",
+                "url": "https://api.github.com/repos/gocardless/gocardless-pro-php/zipball/6015d8b62a9265baa9ecc0954b2a2dc8bda8a7fe",
+                "reference": "6015d8b62a9265baa9ecc0954b2a2dc8bda8a7fe",
                 "shasum": ""
             },
             "require": {
@@ -3410,9 +3410,9 @@
             ],
             "support": {
                 "issues": "https://github.com/gocardless/gocardless-pro-php/issues",
-                "source": "https://github.com/gocardless/gocardless-pro-php/tree/v8.0.6"
+                "source": "https://github.com/gocardless/gocardless-pro-php/tree/v8.1.0"
             },
-            "time": "2026-08-13T12:57:21+00:00"
+            "time": "2026-09-01T09:46:32+00:00"
         },
         {
             "name": "google/auth",
@@ -3814,16 +3814,16 @@
         },
         {
             "name": "google/protobuf",
-            "version": "v5.36.0",
+            "version": "v5.36.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/protocolbuffers/protobuf-php.git",
-                "reference": "9c105104b54709ecd902494ab340ed2122789b2d"
+                "reference": "d64d16befba8632967f604b9644c0bb8f64cfbc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/9c105104b54709ecd902494ab340ed2122789b2d",
-                "reference": "9c105104b54709ecd902494ab340ed2122789b2d",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/d64d16befba8632967f604b9644c0bb8f64cfbc3",
+                "reference": "d64d16befba8632967f604b9644c0bb8f64cfbc3",
                 "shasum": ""
             },
             "require": {
@@ -3852,9 +3852,9 @@
                 "proto"
             ],
             "support": {
-                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v5.36.0"
+                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v5.36.1"
             },
-            "time": "2026-08-20T13:06:50+00:00"
+            "time": "2026-08-31T22:07:31+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -24262,12 +24262,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "1aeb854428ebcc1f5854d4f5c538dfdb87e1ee76"
+                "reference": "2f891ad13c35ae7d74f84963331a144d33ae3f57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/1aeb854428ebcc1f5854d4f5c538dfdb87e1ee76",
-                "reference": "1aeb854428ebcc1f5854d4f5c538dfdb87e1ee76",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/2f891ad13c35ae7d74f84963331a144d33ae3f57",
+                "reference": "2f891ad13c35ae7d74f84963331a144d33ae3f57",
                 "shasum": ""
             },
             "conflict": {
@@ -24606,7 +24606,7 @@
                 "getgrav/grav": "<=2.0.19",
                 "getgrav/grav-plugin-api": "<1.0.0.0-beta15",
                 "getgrav/grav-plugin-form": "<9.1",
-                "getkirby/cms": "<=4.9.3|>=5,<=5.4.3",
+                "getkirby/cms": "<=4.9.4|>=5,<5.5.2",
                 "getkirby/kirby": "<3.9.8.3-dev|>=3.10,<3.10.1.2-dev|>=4,<4.7.1",
                 "getkirby/panel": "<2.5.14",
                 "getkirby/starterkit": "<=3.7.0.2",
@@ -25096,7 +25096,7 @@
                 "starcitizenwiki/embedvideo": "<=4",
                 "statamic/cms": "<5.74.3|>=6,<6.24.2",
                 "stormpath/sdk": "<9.9.99",
-                "studio-42/elfinder": "<=2.1.67",
+                "studio-42/elfinder": "<=2.1.69",
                 "studiomitte/friendlycaptcha": "<0.1.4",
                 "subhh/libconnect": "<7.0.8|>=8,<8.1",
                 "sukohi/surpass": "<1",
@@ -25397,7 +25397,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-31T17:55:04+00:00"
+            "time": "2026-08-31T22:31:49+00:00"
         },
         {
             "name": "rossaddison/translator-extractor",
