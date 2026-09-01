@@ -150,7 +150,7 @@
         "yiisoft/view": "^12.2.4",
         "yiisoft/widget": "^2.2.2",
         "yiisoft/yii-console": "^2.4.2",
-        "yiisoft/yii-dataview": "^1.1.0",
+        "yiisoft/yii-dataview": "dev-master",
         "yiisoft/yii-event": "^2.2",
         "yiisoft/yii-http": "^1.1.1",
         "yiisoft/yii-middleware": "^1.1.2",
