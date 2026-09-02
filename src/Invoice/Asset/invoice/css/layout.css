@@ -280,6 +280,28 @@ div.table-content .table-responsive {
      desktop already shows, which the hardcoded black text is legible
      against. */
 
+  /* Same inline-style-wins problem as above, this time for size, not
+     colour: every dropdown toggler/item and nav-link in the navbar
+     carries an inline `font-size: {Setting}px` driven by
+     $bootstrap5LayoutInvoiceNavbarFontSize — a single admin-configured
+     value meant for a desktop-density menu, defaulting to just 10px if
+     the Setting (bootstrap5_layout_invoice_navbar_font_size) was never
+     touched (see LayoutViewInjection.php). Nothing scaled it up for a
+     phone, so the whole menu read as genuinely too small to use there.
+     `!important` is required for the same reason the comment above
+     explains — a class-based rule alone loses to the inline style.
+     1rem (16px) matches this app's own --inv-form-fs default and is the
+     common mobile-legibility baseline (also the size below which iOS
+     Safari auto-zooms focused inputs, though that particular effect
+     doesn't apply to these non-input elements). */
+  .navbar .dropdown-toggle,
+  .navbar .dropdown-item,
+  .navbar .nav-link,
+  .navbar .btn,
+  #navbar {
+    font-size: 1rem !important;
+  }
+
   #content {
     padding: var(--spacing-md);
   }
