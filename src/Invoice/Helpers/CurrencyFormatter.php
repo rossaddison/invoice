@@ -39,13 +39,11 @@ final readonly class CurrencyFormatter
      *
      * @param mixed $amount
      */
-    public function format(
-        mixed $amount, string $decimal_point, string $thousands_separator): string
+    public function format(mixed $amount, string $decimal_point, string $thousands_separator): string
     {
         $decimals = $decimal_point !== '' ? 2 : 0;
-        return number_format(
-            $this->roundToScale($amount, $decimals), $decimals,
-                $decimal_point, $thousands_separator);
+        $rounded = $this->roundToScale($amount, $decimals);
+        return number_format($rounded, $decimals, $decimal_point, $thousands_separator);
     }
 
     /**

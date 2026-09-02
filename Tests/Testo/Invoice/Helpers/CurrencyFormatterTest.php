@@ -48,6 +48,17 @@ final class CurrencyFormatterTest
         Assert::same($this->formatter->format('not-a-number', '.', ','), '0.00');
     }
 
+    public function fallsBackToZeroWhenBigDecimalRejectsAnIsNumericString(): void
+    {
+        // PHP's is_numeric() accepts a leading-space numeric string (the
+        // `!is_numeric($raw)` guard above lets it through unchanged), but
+        // Brick\Math\BigDecimal::of() does not -- it throws
+        // NumberFormatException (a MathException) for " 123". Exercises
+        // the catch branch directly rather than leaving it untested as
+        // dead-looking code.
+        Assert::same($this->formatter->format(' 123', '.', ','), '0.00');
+    }
+
     public function roundsHalfUpAtTheDecimalBoundary(): void
     {
         Assert::same($this->formatter->format(1.005, '.', ','), '1.01');

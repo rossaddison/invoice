@@ -68,8 +68,7 @@ final readonly class NumberHelper
                                                 'currency_symbol_placement');
         $thousands_separator = $this->s->getSetting('thousands_separator');
         $decimal_point = $this->s->getSetting('decimal_point');
-        $formatted = $this->currencyFormatter->format(
-                                    $amount, $decimal_point, $thousands_separator);
+        $formatted = $this->currencyFormatter->format($amount, $decimal_point, $thousands_separator);
         if ($currency_symbol_placement == 'before') {
             return $currency_symbol . $formatted;
         }
@@ -93,8 +92,7 @@ final readonly class NumberHelper
         }
         $thousands_separator = $this->s->getSetting('thousands_separator');
         $decimal_point = $this->s->getSetting('decimal_point');
-        return $this->currencyFormatter->format(
-                                    $amount, $decimal_point, $thousands_separator);
+        return $this->currencyFormatter->format($amount, $decimal_point, $thousands_separator);
     }
 
     /**
