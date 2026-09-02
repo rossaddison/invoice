@@ -927,11 +927,10 @@ if ((null !== $currentPath) && !$isGuest) {
     }
 
     echo Nav::widget()
-    ->class('navbar inv-nav')
+    ->class('inv-nav')
     ->items(
         // Translate
         Dropdown::widget()
-        ->addClass('navbar')
         ->addAttributes([
             'class' => 'inv-cornflower',
             'data-bs-toggle' => 'tooltip',
@@ -976,7 +975,6 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Settings
         Dropdown::widget()
-        ->addClass('navbar')
         ->addTogglerCssStyle([
             'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
             'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
@@ -1092,7 +1090,6 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // peppol
         Dropdown::widget()
-        ->addClass('navbar')
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
             'url' => '#',
@@ -1134,7 +1131,6 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Client
         Dropdown::widget()
-        ->addClass('navbar')
         ->addTogglerCssStyle([
             'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
             'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
@@ -1162,7 +1158,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Quote
         Dropdown::widget()
-        ->addClass('navbar inv-cornflower')
+        ->addClass('inv-cornflower')
         ->addTogglerCssStyle([
             'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
             'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
@@ -1181,7 +1177,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // SalesOrder
         Dropdown::widget()
-        ->addClass('navbar inv-cornflower')
+        ->addClass('inv-cornflower')
         ->addTogglerCssStyle([
             'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
             'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
@@ -1197,7 +1193,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Invoice
         Dropdown::widget()
-        ->addClass('navbar inv-cornflower')
+        ->addClass('inv-cornflower')
         ->addTogglerCssStyle([
             'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
             'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
@@ -1228,7 +1224,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Payment
         Dropdown::widget()
-        ->addClass('navbar inv-cornflower')
+        ->addClass('inv-cornflower')
         ->addTogglerCssStyle([
                 'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
                 'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
@@ -1250,7 +1246,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Product
         Dropdown::widget()
-        ->addClass('navbar inv-cornflower')
+        ->addClass('inv-cornflower')
         ->addTogglerCssStyle([
                 'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
                 'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
@@ -1289,7 +1285,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 itemAttributes: $itemFontArray),
         ),
         Dropdown::widget()
-        ->addClass('navbar inv-cornflower')
+        ->addClass('inv-cornflower')
         ->addTogglerCssStyle([
                 'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
                 'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
@@ -1308,7 +1304,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Projects
         Dropdown::widget()
-        ->addClass('navbar inv-cornflower')
+        ->addClass('inv-cornflower')
         ->addTogglerCssStyle([
                 'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
                 'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
@@ -1327,7 +1323,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Reports
         Dropdown::widget()
-        ->addClass('navbar inv-cornflower')
+        ->addClass('inv-cornflower')
         ->addTogglerCssStyle([
                 'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
                 'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
