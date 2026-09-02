@@ -74,4 +74,14 @@ final class NumberHelperFormatAmountTest
     {
         Assert::same($this->nh->standardizeAmount('1234'), '1234');
     }
+
+    public function formatAmountRoundsHalfUpOnExactDecimalBoundary(): void
+    {
+        Assert::same($this->nh->formatAmount(0.145), '0.15');
+    }
+
+    public function formatAmountWithNegativeAmount(): void
+    {
+        Assert::same($this->nh->formatAmount(-1234.56), '-1,234.56');
+    }
 }

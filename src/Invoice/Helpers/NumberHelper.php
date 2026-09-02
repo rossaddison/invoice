@@ -50,8 +50,11 @@ final readonly class NumberHelper
     use QuoteCalcTrait;
     use SoCalcTrait;
 
+    private CurrencyFormatter $currencyFormatter;
+
     public function __construct(private SRepo $s)
     {
+        $this->currencyFormatter = new CurrencyFormatter();
     }
 
     /**
@@ -65,21 +68,14 @@ final readonly class NumberHelper
                                                 'currency_symbol_placement');
         $thousands_separator = $this->s->getSetting('thousands_separator');
         $decimal_point = $this->s->getSetting('decimal_point');
+        $formatted = $this->currencyFormatter->format($amount, $decimal_point, $thousands_separator);
         if ($currency_symbol_placement == 'before') {
-            return $currency_symbol . number_format(
-                (float) $amount, ($decimal_point) ? 2 : 0, $decimal_point,
-                    $thousands_separator
-            );
+            return $currency_symbol . $formatted;
         }
         if ($currency_symbol_placement == 'afterspace') {
-            return number_format(
-                (float) $amount, ($decimal_point) ? 2 : 0, $decimal_point,
-                    $thousands_separator
-            ) . '&nbsp;' . $currency_symbol;
+            return $formatted . '&nbsp;' . $currency_symbol;
         }
-        return number_format(
-            (float) $amount, ($decimal_point) ? 2 : 0, $decimal_point,
-                $thousands_separator) . $currency_symbol;
+        return $formatted . $currency_symbol;
     }
 
     /**
@@ -91,14 +87,12 @@ final readonly class NumberHelper
     public function formatAmount(mixed $amount = null): ?string
     {
         $this->s->loadSettings();
-        if (null !== $amount) {
-            $thousands_separator = $this->s->getSetting('thousands_separator');
-            $decimal_point = $this->s->getSetting('decimal_point');
-            return number_format(
-                (float) $amount, ($decimal_point) ? 2 : 0,
-                    $decimal_point, $thousands_separator);
+        if (null === $amount) {
+            return null;
         }
-        return null;
+        $thousands_separator = $this->s->getSetting('thousands_separator');
+        $decimal_point = $this->s->getSetting('decimal_point');
+        return $this->currencyFormatter->format($amount, $decimal_point, $thousands_separator);
     }
 
     /**
