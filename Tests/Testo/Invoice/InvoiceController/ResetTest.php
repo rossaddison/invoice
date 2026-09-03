@@ -56,7 +56,8 @@ final class ResetTest
     }
 
     /**
-     * @return array{0: InvoiceController, 1: WebControllerService&m\MockInterface}
+     * @return array{0: InvoiceController, 1: WebControllerService&m\MockInterface,
+     *     2: WebViewRenderer&m\MockInterface}
      */
     private function makeController(bool $editPermission): array
     {
@@ -96,7 +97,7 @@ final class ResetTest
             $webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash,
         );
 
-        return [$controller, $webService];
+        return [$controller, $webService, $webViewRenderer];
     }
 
     private function makeRequest(string $dbPassword): Request
@@ -148,6 +149,26 @@ final class ResetTest
             $webService->shouldReceive('getNotFoundResponse')->once()->andReturn($notFound);
 
             Assert::same($controller->resetQuoteSalesOrderInvConfirm(), $notFound);
+        } finally {
+            $this->restoreEnv();
+        }
+    }
+
+    public function confirmRendersTheWarningAndTheTableListWhenAllowed(): void
+    {
+        $this->stashEnv();
+        try {
+            $_ENV['YII_DEBUG'] = 'true';
+            [$controller, , $webViewRenderer] = $this->makeController(true);
+            /** @var Response&m\MockInterface $rendered */
+            $rendered = m::mock(Response::class);
+            $webViewRenderer->shouldReceive('render')->once()
+                ->with('debug/reset_quote_so_inv_confirm', [
+                    'alerts' => '<alerts/>',
+                    'tables' => QuoteSalesOrderInvResetService::tables(),
+                ])->andReturn($rendered);
+
+            Assert::same($controller->resetQuoteSalesOrderInvConfirm(), $rendered);
         } finally {
             $this->restoreEnv();
         }

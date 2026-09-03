@@ -212,7 +212,7 @@ final class InvoiceController extends BaseController
         if ($canEdit) {
             $this->removeAllSettings($sR);
         }
-        return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
+        return $this->webService->getRedirectResponse('invoice/index');
     }
 
     /**
