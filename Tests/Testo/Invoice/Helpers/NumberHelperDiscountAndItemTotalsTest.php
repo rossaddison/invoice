@@ -8,13 +8,11 @@ use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\InvItemAmount\InvItemAmount;
 use App\Infrastructure\Persistence\Quote\Quote;
-use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\InvItem\InvItemRepository as IIR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\Quote\QuoteRepository as QR;
-use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\Setting\SettingRepository;
 use Mockery as m;
 use ReflectionClass;
@@ -23,12 +21,17 @@ use Testo\Test;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 
 /**
- * invCalculateTotalsofItemTotals() and the three near-identical
- * *IncludeCustomerDiscountRequest() methods -- the last of NumberHelper's
- * previously-untested first-party calculation logic (the three
- * calculate*Taxes() methods are covered in NumberHelperTaxCalculationsTest;
- * the big orchestrators calculateInv()/calculateQuote()/calculateSo() that
- * call into all of these remain the next target beyond this).
+ * invCalculateTotalsofItemTotals() and the two remaining
+ * *IncludeCustomerDiscountRequest() methods (quote/inv -- the third,
+ * salesorderIncludeCustomerDiscountRequest(), was deleted alongside
+ * calculateSo() -- see the note on that method's own former location and
+ * project_number_helper_tax_calculation_tests: NumberHelper::calculateSo()
+ * had zero callers anywhere in src/ and relied on a raw object-iteration
+ * trick that only works because QuoteItem::$id is deliberately public --
+ * SalesOrderItem::$id is private, so the method would have silently
+ * computed all-zero totals for every sales order had anything ever called
+ * it. Real SalesOrder totals are computed by the entirely separate
+ * SalesOrderAmountService, not NumberHelper).
  */
 #[Test]
 final class NumberHelperDiscountAndItemTotalsTest
@@ -227,32 +230,6 @@ final class NumberHelperDiscountAndItemTotalsTest
         $qR->shouldReceive('repoQuoteUnloadedquery')->once()->with(1)->andReturn(null);
 
         Assert::same($this->makeHelper()->quoteIncludeCustomerDiscountRequest(1, 100.0, $qR), 100.0);
-    }
-
-    // -----------------------------------------------------------------
-    // salesorderIncludeCustomerDiscountRequest()
-    // -----------------------------------------------------------------
-
-    public function salesorderDiscountIsSubtractedFromTheTotal(): void
-    {
-        /** @var SalesOrder&m\MockInterface $so */
-        $so = m::mock(SalesOrder::class);
-        $so->shouldReceive('getDiscountAmount')->andReturn(25.0);
-
-        /** @var SOR&m\MockInterface $soR */
-        $soR = m::mock(SOR::class);
-        $soR->shouldReceive('repoSalesOrderUnloadedquery')->once()->with(1)->andReturn($so);
-
-        Assert::same($this->makeHelper()->salesorderIncludeCustomerDiscountRequest(1, 200.0, $soR), 175.0);
-    }
-
-    public function salesorderDiscountIsZeroWhenTheSalesOrderIsMissing(): void
-    {
-        /** @var SOR&m\MockInterface $soR */
-        $soR = m::mock(SOR::class);
-        $soR->shouldReceive('repoSalesOrderUnloadedquery')->once()->with(1)->andReturn(null);
-
-        Assert::same($this->makeHelper()->salesorderIncludeCustomerDiscountRequest(1, 200.0, $soR), 200.0);
     }
 
     // -----------------------------------------------------------------
