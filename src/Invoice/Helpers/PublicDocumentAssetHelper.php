@@ -38,7 +38,16 @@ final readonly class PublicDocumentAssetHelper
     {
         $bootstrapCssUrl = $assetManager->getUrl(BootstrapCssOnlyAsset::class, 'bootstrap.min.css');
         $bootstrapIconsCssUrl = $assetManager->getUrl(NodeModulesBootstrapIconsAsset::class, 'bootstrap-icons.min.css');
-        $customPdfCssPath = $aliases->get('@invoice/Asset/core/css/custom-pdf.css');
+        // '@invoice' is not a registered alias anywhere in config/ -- only
+        // '@root' is (confirmed: config/common/params.php's
+        // 'yiisoft/aliases' block has no '@invoice' entry). MpdfHelper.php
+        // uses '@invoice/...' too, but that code path is evidently
+        // unexercised in production: PlaywrightDocumentHtmlBuilder, the
+        // PDF generator actually in live use, resolves the same directory
+        // via '@root' . '/src/Invoice' instead -- see
+        // project_public_document_css_fix memory for the live
+        // InvalidArgumentException this mistake produced.
+        $customPdfCssPath = $aliases->get('@root') . '/src/Invoice/Asset/core/css/custom-pdf.css';
         $customPdfCss = (string) file_get_contents($customPdfCssPath);
         return ['bootstrapCssUrl' => $bootstrapCssUrl, 'bootstrapIconsCssUrl' => $bootstrapIconsCssUrl, 'customPdfCss' => $customPdfCss];
     }

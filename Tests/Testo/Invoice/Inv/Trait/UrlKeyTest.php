@@ -210,14 +210,13 @@ final class UrlKeyTest
         $assetManager = m::mock(AssetManager::class);
         $assetManager->shouldReceive('getUrl')->twice()->andReturn('https://example.test/bootstrap.min.css');
 
-        $cssPath = tempnam(sys_get_temp_dir(), 'custom-pdf-');
-        if ($cssPath === false) {
-            Assert::fail('tempnam() failed to allocate a temp file');
-        }
+        // PublicDocumentAssetHelper reads via the real '@root' alias plus a
+        // literal path (see project_public_document_css_fix memory) --
+        // pointing '@root' at the real project root here reads the real,
+        // already-committed custom-pdf.css.
         /** @var Aliases&m\MockInterface $aliases */
         $aliases = m::mock(Aliases::class);
-        $aliases->shouldReceive('get')->once()
-            ->with('@invoice/Asset/core/css/custom-pdf.css')->andReturn($cssPath);
+        $aliases->shouldReceive('get')->once()->with('@root')->andReturn(dirname(__DIR__, 5));
 
         $ud = new InvUrlKeyUserDeps($uR, $ucR, $uiR, $pmR, $upR, $aciiR, $assetManager, $aliases);
 
@@ -239,13 +238,9 @@ final class UrlKeyTest
         $activeUser = m::mock(User::class);
         $activeUser->shouldReceive('reqId')->andReturn($userId);
 
-        try {
-            $result = $this->makeHarness($webViewRenderer, $activeUser)
-                ->urlKey($urlKey, $gateway, $language, $currentUser, $repos, $ud);
-            Assert::same($result, $response);
-        } finally {
-            unlink($cssPath);
-        }
+        $result = $this->makeHarness($webViewRenderer, $activeUser)
+            ->urlKey($urlKey, $gateway, $language, $currentUser, $repos, $ud);
+        Assert::same($result, $response);
     }
 }
 
