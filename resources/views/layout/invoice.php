@@ -954,7 +954,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         NavLink::to(
             //label
-             new I()->class('navbar bi bi-speedometer'),
+             new I()->class('bi bi-speedometer'),
             // url
             $urlGenerator->generate('invoice/dashboard'),
             // active
@@ -965,9 +965,15 @@ if ((null !== $currentPath) && !$isGuest) {
             false,
             // attributes
             [],
-            // url attributes
-            ['class' => 'btn btn-lg',
-             'style' => 'font-size:' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
+            // url attributes -- deliberately no 'btn btn-lg' here: every
+            // sibling in this nav row is a Dropdown toggler, which renders
+            // as a plain .nav-link.dropdown-toggle with no button styling
+            // (Yiisoft\Bootstrap5\Dropdown ignores togglerVariant()/
+            // togglerSize() once nested inside Nav::widget()). Adding
+            // .btn.btn-lg here gave this one item Bootstrap button
+            // padding/border its neighbors don't have, throwing the whole
+            // row out of vertical alignment ("not quite level").
+            ['style' => 'font-size:' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
                 . 'font-family:' . $bootstrap5LayoutInvoiceNavbarFont . ';'
                 . 'color:#adb5bd;'],
             // visible
