@@ -100,7 +100,11 @@ reviews:
           that ships it to production without real XML-DSIG verification.
 
     # ── PHPUnit tests ─────────────────────────────────────────────────────────
-    - path: "Tests/**/*.php"
+    # Scoped to the two directories phpunit.xml.dist actually maps to PHPUnit
+    # (<testsuite name="PHPUnit"> and <testsuite name="Unit">). Deliberately
+    # excludes Tests/Testo (a different framework, its own block below) and
+    # Tests/{Acceptance,Functional,Integration,Cli} (Codeception *Cest.php).
+    - path: "Tests/{PHPUnit,Unit}/**/*.php"
       instructions: |
         PHPUnit 13:
         - Attribute syntax only: #[\PHPUnit\Framework\Attributes\DataProvider],
@@ -112,6 +116,35 @@ reviews:
         - Test markers S, I, R, D, N, W are failures; only . (pass) is acceptable.
         - PHPUnit notices from Cycle ORM createMock() are pre-existing and acceptable.
         - assertSame(expected, actual) — expected value is always the first argument.
+
+    # ── Testo tests ──────────────────────────────────────────────────────────
+    # Separate framework from PHPUnit (testo.php: suite "Unit" -> Tests/Testo).
+    # Do not apply PHPUnit-specific conventions from the block above here —
+    # CodeRabbit raised this exact conflation on PR #1202, checked
+    # ApproveTest.php, confirmed the divergence, and withdrew the finding.
+    - path: "Tests/Testo/**/*.php"
+      instructions: |
+        Testo, not PHPUnit — different conventions, do not cross-apply PHPUnit
+        rules from the Tests/{PHPUnit,Unit}/**/*.php block:
+        - No createFixture()/setUp(). Build mocks per test via private make*()
+          helper methods (makeHarness(), makeCoreDeps(), etc.) — see
+          Tests/Testo/Invoice/Quote/Trait/ApproveTest.php and ConfirmTest.php
+          as reference examples.
+        - Class-level #[Test] attribute (use Testo\Test), not a base TestCase.
+        - Testo\Assert::same(mixed $actual, mixed $expected, ...) — actual is
+          the FIRST argument, expected is SECOND. This is the reverse of
+          PHPUnit's assertSame(expected, actual); do not flag actual-first
+          Assert::same() calls here as an argument-order violation.
+        - Mockery mocks still need an explicit
+          `/** @var SomeInterface&Mockery\MockInterface */` docblock immediately
+          before `m::mock(SomeInterface::class)` when the mock is assigned via
+          `??=` or passed inline as an argument — Psalm drops the intersection
+          type otherwise (recurring gotcha in this suite).
+        - Response-body assertions: prefer Mockery argument-matching
+          (`$factory->createResponse(...)->with($expectedJsonString)`) over
+          reading a value back out of a mocked response object afterward.
+        - No markTestSkipped() as a workaround — mock the dependency instead.
+        - Never add @psalm-suppress — tests must pass Psalm errorLevel 1 too.
 
     # ── TypeScript / Angular ──────────────────────────────────────────────────
     - path: "**/*.ts"
