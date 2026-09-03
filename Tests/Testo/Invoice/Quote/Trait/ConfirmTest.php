@@ -435,6 +435,44 @@ final class ConfirmTest
         Assert::same($result, $notFound);
     }
 
+    // The guard is a strict $user_client_count == 1, not a >0 check --
+    // this covers the other side of that boundary from the count-0 case
+    // above: a client with two-or-more user accounts is rejected exactly
+    // the same way as a client with none.
+    public function confirmReturnsNotFoundWhenTheClientHasMultipleUserAccounts(): void
+    {
+        $quote = $this->stubQuoteForSuccessfulGuards();
+
+        /** @var QR&m\MockInterface $qR */
+        $qR = m::mock(QR::class);
+        $qR->shouldReceive('repoQuoteUnLoadedquery')->once()->with(9)->andReturn($quote);
+        $qR->shouldNotReceive('save');
+
+        /** @var UserClient&m\MockInterface $userClient */
+        $userClient = m::mock(UserClient::class);
+        $userClient->shouldNotReceive('reqUserId');
+
+        /** @var UCR&m\MockInterface $ucR */
+        $ucR = m::mock(UCR::class);
+        $ucR->shouldReceive('repoUserquery')->once()->with(5)->andReturn($userClient);
+        $ucR->shouldReceive('repoUserqueryCount')->once()->with(5)->andReturn(2);
+
+        /** @var Response&m\MockInterface $notFound */
+        $notFound = m::mock(Response::class);
+        $harness = $this->makeHarness([], $this->makeUnusedFactory(), notFoundResponse: $notFound);
+
+        $result = $harness->quoteToSoConfirm(
+            $this->defaultRequest(),
+            $this->makeFormHydrator(true),
+            $this->makeCoreDeps($qR),
+            $this->makeItemDeps(),
+            $this->makeUserDeps($ucR),
+            $this->makeTransferDeps(),
+        );
+
+        Assert::same($result, $notFound);
+    }
+
     public function confirmConvertsTheQuoteToASalesOrderOnTheHappyPath(): void
     {
         $quote = $this->stubQuoteForSuccessfulGuards();
