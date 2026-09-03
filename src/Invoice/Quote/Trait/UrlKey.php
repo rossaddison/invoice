@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Quote\Trait;
 
 use App\Infrastructure\Persistence\Quote\Quote;
+use App\Invoice\Helpers\PublicDocumentAssetHelper;
 use App\Invoice\{
     Quote\QuoteUrlKeyRepoDeps,
     Quote\QuoteUrlKeyUserDeps,
@@ -116,26 +117,29 @@ trait UrlKey
         $parameters = [
             'renderTemplate' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/template/quote/public/' . $template,
-                [
-                    'isGuest'         => $currentUser->isGuest(),
-                    'alert'           => $this->alert(),
-                    'quote'           => $quote,
-                    'qiaR'            => $repos->qiaR,
-                    'acqiR'           => $repos->acqiR,
-                    'quote_amount'    => $quote_amount,
-                    'items'           => $repos->qiR->repoQuotequery($quote_id),
-                    'quote_tax_rates' => $quote_tax_rates,
-                    'quote_url_key'   => $urlKey,
-                    'flash_message'   => $this->flashMessage('info', ''),
-                    'custom_fields'   => $custom_fields,
-                    'has_expired'     => $hasExpired,
-                    'client'          => $quote->getClient(),
-                    'userInv'         => $userInv,
-                    'modal_purchase_order_number' => $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/quote/modal_purchase_order_number',
-                        ['urlKey' => $urlKey],
-                    ),
-                ],
+                array_merge(
+                    [
+                        'isGuest'         => $currentUser->isGuest(),
+                        'alert'           => $this->alert(),
+                        'quote'           => $quote,
+                        'qiaR'            => $repos->qiaR,
+                        'acqiR'           => $repos->acqiR,
+                        'quote_amount'    => $quote_amount,
+                        'items'           => $repos->qiR->repoQuotequery($quote_id),
+                        'quote_tax_rates' => $quote_tax_rates,
+                        'quote_url_key'   => $urlKey,
+                        'flash_message'   => $this->flashMessage('info', ''),
+                        'custom_fields'   => $custom_fields,
+                        'has_expired'     => $hasExpired,
+                        'client'          => $quote->getClient(),
+                        'userInv'         => $userInv,
+                        'modal_purchase_order_number' => $this->webViewRenderer->renderPartialAsString(
+                            '//invoice/quote/modal_purchase_order_number',
+                            ['urlKey' => $urlKey],
+                        ),
+                    ],
+                    PublicDocumentAssetHelper::resolve($ud->assetManager, $ud->aliases),
+                ),
             ),
         ];
         return $this->webViewRenderer->render('url_key', $parameters);

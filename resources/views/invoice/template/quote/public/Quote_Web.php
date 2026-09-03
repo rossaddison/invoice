@@ -32,6 +32,11 @@ use Yiisoft\Html\Tag\Img;
  *
  * @var string $alert
  * @var string $modal_purchase_order_number
+ *
+ * Related logic: see App\Invoice\Helpers\PublicDocumentAssetHelper
+ * @var string $bootstrapCssUrl
+ * @var string $bootstrapIconsCssUrl
+ * @var string $customPdfCss
  */
 
 $vat          = $s->getSetting('enable_vat_registration');
@@ -64,7 +69,9 @@ echo H::openTag('html', ['lang' => $translator->translate('cldr')]); //0
    echo ' ';
    echo $quote->getNumber();
   echo H::closeTag('title'); //2
-  echo H::tag('link', '', ['rel' => 'stylesheet', 'href' => '/assets/css/invoice-documents.css']);
+  echo H::tag('link', '', ['rel' => 'stylesheet', 'href' => $bootstrapCssUrl]);
+  echo H::tag('link', '', ['rel' => 'stylesheet', 'href' => $bootstrapIconsCssUrl]);
+  echo H::style($customPdfCss);
   echo H::tag('meta', '', ['name' => 'viewport', 'content' => 'width=device-width,initial-scale=1']);
  echo H::closeTag('head'); //1
  echo H::openTag('body'); //1

@@ -25,7 +25,9 @@ use App\Invoice\{
     CustomField\CustomFieldRepository as CFR,
     DeliveryLocation\DeliveryLocationRepository as DR,
     Group\GroupRepository as GR,
-    Helpers\CustomValuesHelper as CVH, Inv\InvForm,
+    Helpers\CustomValuesHelper as CVH,
+    Helpers\PublicDocumentAssetHelper,
+    Inv\InvForm,
     Inv\InvRepository as InvRepo, Inv\InvService,
     InvAllowanceCharge\InvAllowanceChargeForm, InvAllowanceCharge\InvAllowanceChargeService,
     InvCustom\InvCustomForm, InvCustom\InvCustomService,
@@ -882,7 +884,7 @@ final class SalesOrderController extends BaseController
         $parameters = [
             'renderTemplate' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/template/salesorder/public/'
-                    . ($this->sR->getSetting('public_salesorder_template') ?: 'SalesOrder_Web'), [
+                    . ($this->sR->getSetting('public_salesorder_template') ?: 'SalesOrder_Web'), array_merge([
                     'isGuest' => $currentUser->isGuest(),
                     'terms_and_conditions_file' =>
                         $this->webViewRenderer->renderPartialAsString(
@@ -900,7 +902,7 @@ final class SalesOrderController extends BaseController
                     'userInv' => $uiR->repoUserInvUserIdcount($salesorder->reqUserId()) > 0
                         ? $uiR->repoUserInvUserIdquery($salesorder->reqUserId())
                         : null,
-                ]),
+                ], PublicDocumentAssetHelper::resolve($deps->assetManager, $deps->aliases))),
         ];
         return $this->webViewRenderer->render('url_key', $parameters);
     }
