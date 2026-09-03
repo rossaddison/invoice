@@ -353,6 +353,7 @@ export class QuoteHandler {
         const btn =
             (document.querySelector('.quote_with_purchase_order_number_confirm') as HTMLElement) ||
             poConfirm;
+        const originalHtml = btn?.innerHTML || '';
 
         if (btn) {
             setButtonLoadingOn(btn);
@@ -371,11 +372,24 @@ export class QuoteHandler {
             if (data.success === 1) {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
                 secureReload();
+            } else {
+                // Server-side validation/conversion failure (success: 0) --
+                // previously silent: the button stayed stuck spinning
+                // forever with no feedback at all. Restore the button's
+                // own original markup here, not the generic
+                // setButtonLoadingOff() fallback -- that fallback renders
+                // the same checkmark icon as the success path above,
+                // which is exactly what made a real failure look like it
+                // had worked.
+                if (btn) setButtonLoadingOff(btn, originalHtml);
+                alert(data.message || 'Failed to approve quote. Please check the purchase order details and try again.');
             }
         } catch (error) {
             console.error('approve error', error);
             if (btn) {
-                setButtonLoadingOff(btn);
+                // See the comment above -- must pass originalHtml, or the
+                // error path renders the same success checkmark icon.
+                setButtonLoadingOff(btn, originalHtml);
             }
             alert('An error occurred while approving quote. See console for details.');
         }
