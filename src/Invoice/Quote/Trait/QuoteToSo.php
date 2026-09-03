@@ -141,7 +141,9 @@ trait QuoteToSo
                         $this->webViewRenderer->renderPartialAsString(
                         '//invoice/setting/quote_successful',
                         ['heading' => $this->translator->translate(
-                            'record.successfully.updated'),'url' =>
+                            'record.successfully.updated'),
+                            'message' => $this->translator->translate(
+                            'quote.rejected'),'url' =>
                             'quote/view','id' => $quote_id],
                     ));
                 }
