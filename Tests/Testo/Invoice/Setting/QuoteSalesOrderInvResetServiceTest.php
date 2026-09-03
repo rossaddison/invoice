@@ -47,11 +47,14 @@ final class QuoteSalesOrderInvResetServiceTest
         $schemaProvider = m::mock(SchemaProviderInterface::class);
         /** @var DatabaseBackupService&m\MockInterface $backupService */
         $backupService = m::mock(DatabaseBackupService::class);
+        // Portable across machines/CI runners: rtrim() covers the trailing
+        // separator some sys_get_temp_dir() implementations already
+        // include, so the service's own '/backups' suffix doesn't produce
+        // a doubled slash.
         /** @var Aliases&m\MockInterface $aliases */
         $aliases = m::mock(Aliases::class);
         $aliases->shouldReceive('get')->with('@root')->andReturn(
-            'C:\Users\rossa\AppData\Local\Temp\claude\c--wamp64-www-invoice'
-            . '\df662089-7612-481e-9495-7371ecd861a9\scratchpad\reset-service-test',
+            rtrim(sys_get_temp_dir(), '/\\'),
         );
         return [$database, $schemaProvider, $backupService, $aliases];
     }
