@@ -38,12 +38,14 @@ use Yiisoft\Data\Cycle\Reader\EntityReader;
  * notably the read-only-on-fully-paid state transition, a real business
  * rule that was entirely untested before this.
  *
- * calculateQuote()/calculateSo() are structurally near-identical but pull
- * in an extra wrinkle (quoteCalculateTotalsofItemTotals/
- * salesorderCalculateTotalsofItemTotals rely on PHP's default *public-
- * property-only* object iteration to read just the item's `id` -- QuoteItem/
- * SalesOrderItem have exactly one public property for this reason) --
- * covering those is the next step after this file, not done here.
+ * calculateQuote() is structurally near-identical but pulls in an extra
+ * wrinkle (quoteCalculateTotalsofItemTotals relies on PHP's default
+ * *public-property-only* object iteration to read just the item's `id` --
+ * QuoteItem has exactly one public property for this reason) -- covering
+ * it is the next step after this file, not done here. calculateSo() was
+ * deleted rather than tested -- see
+ * NumberHelperDiscountAndItemTotalsTest's own docblock and
+ * project_number_helper_tax_calculation_tests for why.
  */
 #[Test]
 final class NumberHelperCalculateInvTest
