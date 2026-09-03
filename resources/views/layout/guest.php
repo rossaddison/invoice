@@ -177,7 +177,6 @@ $currentPath = $currentRoute->getUri()?->getPath();
 if ((null !== $currentPath) && !$isGuest) {
     // Client
     echo Dropdown::widget()
-    ->addClass('navbar')
     ->addTogglerCssStyle([
         'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
         'font-family' => $bootstrap5LayoutGuestNavbarFont,
@@ -200,7 +199,6 @@ if ((null !== $currentPath) && !$isGuest) {
     if ($hasQuotesOrSalesOrders) {
     // Quote
     echo Dropdown::widget()
-    ->addClass('navbar')
     ->addTogglerCssStyle([
         'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
         'font-family' => $bootstrap5LayoutGuestNavbarFont,
@@ -217,7 +215,6 @@ if ((null !== $currentPath) && !$isGuest) {
 
     // SalesOrder
     echo Dropdown::widget()
-    ->addClass('navbar')
     ->addTogglerCssStyle([
         'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
         'font-family' => $bootstrap5LayoutGuestNavbarFont,
@@ -235,7 +232,6 @@ if ((null !== $currentPath) && !$isGuest) {
 
     // Invoice
     echo Dropdown::widget()
-    ->addClass('navbar')
     ->addTogglerCssStyle([
         'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
         'font-family' => $bootstrap5LayoutGuestNavbarFont,
@@ -252,7 +248,6 @@ if ((null !== $currentPath) && !$isGuest) {
 
     // Payment
     echo Dropdown::widget()
-    ->addClass('navbar')
     ->addTogglerCssStyle([
         'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
         'font-family' => $bootstrap5LayoutGuestNavbarFont,
@@ -273,7 +268,6 @@ if ((null !== $currentPath) && !$isGuest) {
 
     // Settings
     echo Dropdown::widget()
-    ->addClass('navbar')
     ->addTogglerCssStyle([
         'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
         'font-family' => $bootstrap5LayoutGuestNavbarFont,
@@ -321,7 +315,6 @@ if ((null !== $currentPath) && !$isGuest) {
     ->render();
     // Translate
     echo Dropdown::widget()
-    ->addClass('navbar')
     ->addAttributes([
         'data-bs-toggle' => 'tooltip',
         'title' => $t->translate('language'),
