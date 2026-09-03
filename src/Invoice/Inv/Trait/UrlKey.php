@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Infrastructure\Persistence\{Inv\Inv, InvItem\InvItem};
+use App\Invoice\Helpers\PublicDocumentAssetHelper;
 use App\Invoice\{
     Inv\InvUrlKeyRepoDeps,
     Inv\InvUrlKeyUserDeps,
@@ -99,7 +100,7 @@ trait UrlKey
                     '//invoice/template/invoice/public/'
                         . ($this->sR->getSetting(
                             'public_invoice_template')
-                                ?: 'Invoice_Web'), [
+                                ?: 'Invoice_Web'), array_merge([
                 'alert' => $this->alert(),
                 'aliases' => $this->sR->getImg(),
                 'attachments' => $attachments,
@@ -132,7 +133,7 @@ trait UrlKey
                     $ud->uiR->repoUserInvUserIdcount($user_id)
                         > 0 ? $ud->uiR->repoUserInvUserIdquery(
                         $user_id) : null,
-            ]),
+            ], PublicDocumentAssetHelper::resolve($ud->assetManager, $ud->aliases))),
         ];
         return $this->webViewRenderer->render('url_key',
                 $parameters);

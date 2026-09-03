@@ -10,6 +10,8 @@ use App\Invoice\Upload\UploadRepository as UPR;
 use App\Invoice\UserClient\UserClientRepository as UCR;
 use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\User\UserRepository as UR;
+use Yiisoft\Aliases\Aliases;
+use Yiisoft\Assets\AssetManager;
 
 final class InvUrlKeyUserDeps
 {
@@ -20,6 +22,8 @@ final class InvUrlKeyUserDeps
         public readonly PMR $pmR,
         public readonly UPR $upR,
         public readonly ACIIR $aciiR,
+        public readonly AssetManager $assetManager,
+        public readonly Aliases $aliases,
     ) {
     }
 }

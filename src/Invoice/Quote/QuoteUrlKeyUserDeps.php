@@ -9,6 +9,8 @@ use App\Invoice\{
     UserClient\UserClientRepository as UCR,
     UserInv\UserInvRepository as UIR,
 };
+use Yiisoft\Aliases\Aliases;
+use Yiisoft\Assets\AssetManager;
 
 final class QuoteUrlKeyUserDeps
 {
@@ -16,5 +18,7 @@ final class QuoteUrlKeyUserDeps
         public readonly QTRR $qtrR,
         public readonly UIR $uiR,
         public readonly UCR $ucR,
+        public readonly AssetManager $assetManager,
+        public readonly Aliases $aliases,
     ) {}
 }
