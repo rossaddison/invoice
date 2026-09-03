@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82e1ee22210f2dfbf9d649477a3746e8",
+    "content-hash": "9167a54b586d407104ecebf2513e7fa2",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -922,16 +922,16 @@
         },
         {
             "name": "anthropic-ai/sdk",
-            "version": "v0.44.0",
+            "version": "v0.46.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/anthropics/anthropic-sdk-php.git",
-                "reference": "f63c00d80f180e1c3acd6cf8835df5b1baa625a1"
+                "reference": "93aa419595dceeb7062292e09406b4e2a63b96e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/anthropics/anthropic-sdk-php/zipball/f63c00d80f180e1c3acd6cf8835df5b1baa625a1",
-                "reference": "f63c00d80f180e1c3acd6cf8835df5b1baa625a1",
+                "url": "https://api.github.com/repos/anthropics/anthropic-sdk-php/zipball/93aa419595dceeb7062292e09406b4e2a63b96e1",
+                "reference": "93aa419595dceeb7062292e09406b4e2a63b96e1",
                 "shasum": ""
             },
             "require": {
@@ -979,9 +979,9 @@
             "description": "Anthropic PHP SDK",
             "support": {
                 "issues": "https://github.com/anthropics/anthropic-sdk-php/issues",
-                "source": "https://github.com/anthropics/anthropic-sdk-php/tree/v0.44.0"
+                "source": "https://github.com/anthropics/anthropic-sdk-php/tree/v0.46.0"
             },
-            "time": "2026-08-26T17:59:57+00:00"
+            "time": "2026-09-01T18:08:37+00:00"
         },
         {
             "name": "braintree/braintree_php",
