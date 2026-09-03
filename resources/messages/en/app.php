@@ -574,6 +574,20 @@ return [
   'datetime.immutable.time.created' => 'Time',
   'days' => 'Days',
   'debug' => 'Debug Mode On',
+  'debug.reset.tree.confirm' => 'Are you sure you want to continue?',
+  'debug.reset.tree.confirm.button' => 'Drop and Rebuild',
+  'debug.reset.tree.db.password' => 'Database Password',
+  'debug.reset.tree.done' => 'Inv, Quote and SalesOrder tables dropped and rebuilt',
+  'debug.reset.tree.failed' => 'Reset failed, nothing else was changed',
+  'debug.reset.tree.menu' => 'Reset Inv/Quote/SalesOrder',
+  'debug.reset.tree.tables.heading' => 'The following tables will be dropped and recreated empty:',
+  'debug.reset.tree.title' => 'Reset Inv, Quote and SalesOrder',
+  'debug.reset.tree.warning' =>
+    'This permanently deletes every invoice, quote and sales order and all'
+    . ' of their line items, amounts, tax rates, custom fields and'
+    . ' allowance charges. A gzipped backup is written to /backups first,'
+    . ' but this cannot be undone from this screen.',
+  'debug.reset.tree.wrong.password' => 'Incorrect database password, nothing was changed',
   'decimal.point' => 'Decimal Point',
   'default' => 'Default',
   'default.country' => 'Default country',

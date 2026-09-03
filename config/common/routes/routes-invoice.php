@@ -76,5 +76,28 @@ return [
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([ICLR::class, 'settingReset'])
                 ->name('invoice/settingReset'),
+
+            // Debug-mode-only: drops and rebuilds the entire Inv/Quote/
+            // SalesOrder entity trees. See QuoteSalesOrderInvResetService
+            // and project_sales_order_amount_so_id_column_incident memory.
+            Route::get('/reset_quote_so_inv')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([ICLR::class, 'resetQuoteSalesOrderInvConfirm'])
+                ->name('invoice/resetQuoteSalesOrderInvConfirm'),
+
+            Route::post('/reset_quote_so_inv')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([ICLR::class, 'resetQuoteSalesOrderInv'])
+                ->name('invoice/resetQuoteSalesOrderInv'),
+
+            // Second leg: this request's own controller construction is
+            // what actually triggers the schema rebuild (see
+            // QuoteSalesOrderInvResetService::resetAutoIncrement()'s
+            // docblock), so the AUTO_INCREMENT reset has to happen here,
+            // not in the same request that dropped the tables.
+            Route::get('/reset_quote_so_inv_finish')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([ICLR::class, 'resetQuoteSalesOrderInvFinish'])
+                ->name('invoice/resetQuoteSalesOrderInvFinish'),
         ), // invoice
 ];
