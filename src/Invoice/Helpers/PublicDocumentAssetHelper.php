@@ -36,10 +36,10 @@ final readonly class PublicDocumentAssetHelper
      */
     public static function resolve(AssetManager $assetManager, Aliases $aliases): array
     {
-        return [
-            'bootstrapCssUrl' => $assetManager->getUrl(BootstrapCssOnlyAsset::class, 'bootstrap.min.css'),
-            'bootstrapIconsCssUrl' => $assetManager->getUrl(NodeModulesBootstrapIconsAsset::class, 'bootstrap-icons.min.css'),
-            'customPdfCss' => (string) file_get_contents($aliases->get('@invoice/Asset/core/css/custom-pdf.css')),
-        ];
+        $bootstrapCssUrl = $assetManager->getUrl(BootstrapCssOnlyAsset::class, 'bootstrap.min.css');
+        $bootstrapIconsCssUrl = $assetManager->getUrl(NodeModulesBootstrapIconsAsset::class, 'bootstrap-icons.min.css');
+        $customPdfCssPath = $aliases->get('@invoice/Asset/core/css/custom-pdf.css');
+        $customPdfCss = (string) file_get_contents($customPdfCssPath);
+        return ['bootstrapCssUrl' => $bootstrapCssUrl, 'bootstrapIconsCssUrl' => $bootstrapIconsCssUrl, 'customPdfCss' => $customPdfCss];
     }
 }
