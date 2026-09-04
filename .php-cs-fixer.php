@@ -12,7 +12,6 @@ $root = __DIR__;
 $finder =  new Finder()
     ->in([
         $root.'/config',
-        $root.'/dev-scripts-psalm-1',
         $root.'/src',
         $root.'/resources/views',
         $root.'/Tests',

@@ -139,7 +139,8 @@ jobs:
           echo "|-----------|----------:|--------:|" >> $GITHUB_STEP_SUMMARY
           php -r "
             \$h = json_decode(file_get_contents('benchmarks/results/history.json'), true);
-            \$last = end(\$h['runs'] ?? []);
+            \$runs = \$h['runs'] ?? [];
+            \$last = end(\$runs);
             if (!\$last) { echo '| No results | — | — |' . PHP_EOL; exit; }
             foreach (\$last['results'] as \$k => \$v) {
               \$ops = number_format(\$v['ops_per_sec'] ?? 0);
