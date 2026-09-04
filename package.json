@@ -34,7 +34,7 @@
     "picomatch": "^4.0.7",
     "prettier": "^4.0.0-alpha.13",
     "rollup": ">=4.63.1",
-    "sass": "^1.103.1",
+    "sass": "^1.104.0",
     "typedoc": "^0.28.20",
     "typescript": "^7.0.2",
     "vitepress": "^2.0.0-alpha.18",
