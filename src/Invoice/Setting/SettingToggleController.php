@@ -90,23 +90,11 @@ final class SettingToggleController extends BaseController
      * form field, applies uniformly to every grid that supports it
      * (Invoice/Quote/SalesOrder/Product all read the same key -- see
      * InvsListWidget::withGridDisplayOptions()'s docblock for the
-     * pattern each *ListWidget follows). $origin only decides the
-     * redirect target for a no-JS fallback; hx-swap="none" discards the
-     * response body either way when JS is available.
+     * pattern each *ListWidget follows).
      */
     public function gridStickyHeader(#[RouteArgument('origin')] string $origin): Response
     {
-        $setting = $this->sR->withKey('grid_sticky_header');
-        if ($setting) {
-            $setting->setSettingValue($setting->getSettingValue() === '0' ? '1' : '0');
-            $this->sR->save($setting);
-            return $this->webService->getRedirectResponse($origin . self::INDEX_SUFFIX);
-        }
-        $new_setting = new Setting();
-        $new_setting->setSettingKey('grid_sticky_header');
-        $new_setting->setSettingValue('1');
-        $this->sR->save($new_setting);
-        return $this->webService->getRedirectResponse($origin . self::INDEX_SUFFIX);
+        return $this->toggleBooleanSettingCreatingAtOne('grid_sticky_header', $origin);
     }
 
     /**
@@ -123,14 +111,30 @@ final class SettingToggleController extends BaseController
      */
     public function navbarSticky(#[RouteArgument('origin')] string $origin): Response
     {
-        $setting = $this->sR->withKey('bootstrap5_layout_invoice_navbar_sticky');
+        return $this->toggleBooleanSettingCreatingAtOne('bootstrap5_layout_invoice_navbar_sticky', $origin);
+    }
+
+    /**
+     * Shared by gridStickyHeader()/navbarSticky() -- CI's real SonarCloud
+     * gate flagged the two as duplicated code before this extraction
+     * (new_duplicated_lines_density over its 3% threshold), identical
+     * apart from the setting key. Deliberately NOT also used by the
+     * pre-existing visible() above, despite the very similar shape: that
+     * method's own create-branch leaves a fresh Setting's value at
+     * whatever the entity's own default is rather than explicitly
+     * setting '1' -- a real behavioural difference, not just a smaller
+     * duplicate, and not this PR's code to change.
+     */
+    private function toggleBooleanSettingCreatingAtOne(string $key, string $origin): Response
+    {
+        $setting = $this->sR->withKey($key);
         if ($setting) {
             $setting->setSettingValue($setting->getSettingValue() === '0' ? '1' : '0');
             $this->sR->save($setting);
             return $this->webService->getRedirectResponse($origin . self::INDEX_SUFFIX);
         }
         $new_setting = new Setting();
-        $new_setting->setSettingKey('bootstrap5_layout_invoice_navbar_sticky');
+        $new_setting->setSettingKey($key);
         $new_setting->setSettingValue('1');
         $this->sR->save($new_setting);
         return $this->webService->getRedirectResponse($origin . self::INDEX_SUFFIX);
