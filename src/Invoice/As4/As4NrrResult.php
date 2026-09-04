@@ -14,7 +14,8 @@ final readonly class As4NrrResult
     private function __construct(
         public bool $valid,
         public string $reason,
-    ) {}
+    ) {
+    }
 
     public static function success(): self
     {

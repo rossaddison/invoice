@@ -15,7 +15,6 @@ use DateTimeImmutable;
  */
 trait TaskTrait2
 {
-
     public function setFinishDate(?DateTime $finish_date): void
     {
         $this->finish_date = $finish_date;

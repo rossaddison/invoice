@@ -14,7 +14,6 @@ use RequireId;
  */
 trait UserInvTrait3
 {
-
     public function setCountry(string $country): void
     {
         $this->country = $country;

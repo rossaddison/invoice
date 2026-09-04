@@ -18,5 +18,6 @@ readonly class Every implements Expression
         public string     $variable,
         public Expression $in,
         public Expression $satisfies,
-    ) {}
+    ) {
+    }
 }

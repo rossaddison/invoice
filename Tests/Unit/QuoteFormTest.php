@@ -38,15 +38,15 @@ final class QuoteFormTest extends TestCase
     {
         // Create very long content (over 65535 characters)
         $longContent = str_repeat('This is a very long quote notes content. ', 2000); // ~84,000 chars
-        
+
         $form = $this->createFormWithData([
             'notes' => $longContent,
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
-        
+
         // Should be valid - no length constraints on longText notes field
         $this->assertTrue($result->isValid(), 'Notes field (longText) should accept unlimited content');
     }
@@ -65,7 +65,7 @@ final class QuoteFormTest extends TestCase
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'All string fields should accept content without Length validation');
     }
@@ -80,25 +80,25 @@ final class QuoteFormTest extends TestCase
             'group_id' => 1,
             'client_id' => null // missing required field
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'Should fail validation without required client_id');
-        
+
         // Test without required group_id
         $form = $this->createFormWithData([
             'client_id' => 1,
             'group_id' => null // missing required field
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'Should fail validation without required group_id');
-        
+
         // Test with both required fields
         $form = $this->createFormWithData([
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'Should pass validation with all required fields');
     }
@@ -117,7 +117,7 @@ final class QuoteFormTest extends TestCase
             'notes' => '', // Empty longText field
             'discount_amount' => 0.0,
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'Empty optional fields should pass validation');
     }
@@ -134,7 +134,7 @@ final class QuoteFormTest extends TestCase
             'discount_amount' => 123.45,
             'delivery_location_id' => 5
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'Numeric fields should accept valid numbers');
     }
@@ -145,7 +145,7 @@ final class QuoteFormTest extends TestCase
     public function testFormInitializationFromEntity(): void
     {
         $form = QuoteForm::show($this->quote);
-        
+
         $this->assertEquals('Test quote notes', $form->getNotes());
         $this->assertEquals(1, $form->getClientId());
         $this->assertEquals(1, $form->getGroupId());
@@ -161,7 +161,7 @@ final class QuoteFormTest extends TestCase
     public function testGettersReturnCorrectTypes(): void
     {
         $form = QuoteForm::show($this->quote);
-        
+
         $this->assertIsString($form->getNumber());
         $this->assertIsString($form->getNotes());
         $this->assertIsInt($form->getClientId());
@@ -178,13 +178,13 @@ final class QuoteFormTest extends TestCase
     public function testNotesFieldPreservesContent(): void
     {
         $specialContent = "Line 1\nLine 2\n\nLine 4 with special chars: @#$%^&*()";
-        
+
         $form = $this->createFormWithData([
             'notes' => $specialContent,
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'Notes field should preserve special content');
         $this->assertEquals($specialContent, $form->getNotes(), 'Notes content should be preserved exactly');
@@ -200,7 +200,7 @@ final class QuoteFormTest extends TestCase
         $group = $this->createStub(Group::class);
         $user = $this->createStub(User::class);
         $now = new DateTimeImmutable();
-        
+
         $quote->method('getNumber')->willReturn('QUOTE-001');
         $quote->method('getDateCreated')->willReturn($now);
         $quote->method('getInvId')->willReturn(1);
@@ -216,7 +216,7 @@ final class QuoteFormTest extends TestCase
         $quote->method('getClient')->willReturn($client);
         $quote->method('getGroup')->willReturn($group);
         $quote->method('getUser')->willReturn($user);
-        
+
         return $quote;
     }
 
@@ -227,10 +227,10 @@ final class QuoteFormTest extends TestCase
     {
         $quote = $this->createMockQuote();
         $form = QuoteForm::show($quote);
-        
+
         // Use reflection to set properties for testing
         $reflection = new \ReflectionClass($form);
-        
+
         foreach ($data as $property => $value) {
             if ($reflection->hasProperty($property)) {
                 $prop = $reflection->getProperty($property);
@@ -238,7 +238,7 @@ final class QuoteFormTest extends TestCase
                 $prop->setValue($form, $value);
             }
         }
-        
+
         return $form;
     }
 }

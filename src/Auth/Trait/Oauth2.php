@@ -12,7 +12,7 @@ use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 trait Oauth2
 {
     public const string DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN =
-            'developersandboxhmrc-access';
+        'developersandboxhmrc-access';
 
     public const string GITHUB_ACCESS_TOKEN = 'github-access';
 
@@ -59,13 +59,15 @@ trait Oauth2
 
         $authUrl =
             $microsoftOnline->getAuthUrlWithTenantInserted(
-                    $microsoftOnline->getTenant());
+                $microsoftOnline->getTenant()
+            );
 
         $microsoftOnline->setAuthUrl($authUrl);
 
         $tokenUrl =
             $microsoftOnline->getTokenUrlWithTenantInserted(
-                    $microsoftOnline->getTenant());
+                $microsoftOnline->getTenant()
+            );
         $microsoftOnline->setTokenUrl($tokenUrl);
     }
 
@@ -199,9 +201,11 @@ trait Oauth2
      * @param string $self
      * @return string
      */
-    private function getAccessToken(User $user,
-            TokenRepository $tR, string $self): string
-    {
+    private function getAccessToken(
+        User $user,
+        TokenRepository $tR,
+        string $self
+    ): string {
         $identity = $user->getIdentity();
         $identityId = (int) $identity->getId();
         // This records the fact that the user has signed up with

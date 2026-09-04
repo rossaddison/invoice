@@ -48,7 +48,7 @@ class Quote
     use QuoteTrait1;
     use QuoteTrait2;
     use QuoteTrait3;
-    
+
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 

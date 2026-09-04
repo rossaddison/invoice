@@ -11,7 +11,6 @@ use App\Infrastructure\Persistence\InvAmount\InvAmount;
  */
 trait InvTrait5
 {
-
     public function getUrlKey(): string
     {
         return $this->url_key;

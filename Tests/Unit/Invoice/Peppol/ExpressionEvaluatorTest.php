@@ -243,7 +243,9 @@ final class ExpressionEvaluatorTest extends TestCase
         // Simplified: for $v in //cbc:Amount return $v
         $xml = $this->invoiceXml('<cbc:Amount>10</cbc:Amount><cbc:Amount>20</cbc:Amount>');
         $xp  = $this->xpath($xml);
-        $expr = new ForExpression('v', new Path('//cbc:Amount'),
+        $expr = new ForExpression(
+            'v',
+            new Path('//cbc:Amount'),
             new BinaryExpression(BinaryOperator::ADD, new VariableRef('v'), new Literal(0))
         );
         $result = $this->ev->evaluate($expr, $xp);
@@ -394,7 +396,9 @@ final class ExpressionEvaluatorTest extends TestCase
         $xml = $this->invoiceXml('<cbc:Amount>10</cbc:Amount><cbc:Amount>-5</cbc:Amount>');
         $xp  = $this->xpath($xml);
         // some $v in //cbc:Amount satisfies $v > 0
-        $expr = new Some('v', new Path('//cbc:Amount'),
+        $expr = new Some(
+            'v',
+            new Path('//cbc:Amount'),
             new BinaryExpression(BinaryOperator::GT, new VariableRef('v'), new Literal(0))
         );
         self::assertTrue($this->ev->evaluateBool($expr, $xp));
@@ -404,7 +408,9 @@ final class ExpressionEvaluatorTest extends TestCase
     {
         $xml = $this->invoiceXml('<cbc:Amount>10</cbc:Amount><cbc:Amount>-5</cbc:Amount>');
         $xp  = $this->xpath($xml);
-        $expr = new Every('v', new Path('//cbc:Amount'),
+        $expr = new Every(
+            'v',
+            new Path('//cbc:Amount'),
             new BinaryExpression(BinaryOperator::GT, new VariableRef('v'), new Literal(0))
         );
         self::assertFalse($this->ev->evaluateBool($expr, $xp));
@@ -413,7 +419,9 @@ final class ExpressionEvaluatorTest extends TestCase
     public function testEveryOnEmptySequenceIsVacuouslyTrue(): void
     {
         $xp = $this->xpath($this->invoiceXml());
-        $expr = new Every('v', new Path('//cbc:Amount'),
+        $expr = new Every(
+            'v',
+            new Path('//cbc:Amount'),
             new BinaryExpression(BinaryOperator::GT, new VariableRef('v'), new Literal(0))
         );
         self::assertTrue($this->ev->evaluateBool($expr, $xp));

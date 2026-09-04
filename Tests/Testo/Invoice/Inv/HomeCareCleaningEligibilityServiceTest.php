@@ -73,7 +73,13 @@ final class HomeCareCleaningEligibilityServiceTest
             $e3->once()->andReturn(null);
         }
         return new HomeCareCleaningEligibilityService(
-            $invR, $invItemR, $productR, $settingR, $visitR, $clientR);
+            $invR,
+            $invItemR,
+            $productR,
+            $settingR,
+            $visitR,
+            $clientR
+        );
     }
 
     /**

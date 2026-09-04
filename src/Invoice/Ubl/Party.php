@@ -23,8 +23,7 @@ class Party implements XmlSerializable
         private readonly ?PartyLegalEntity $partyLegalEntity,
         private readonly ?string $endpointID,
         private readonly mixed $endpointID_schemeID
-    )
-    {
+    ) {
     }
 
     public function getPartyName(): ?string
@@ -47,7 +46,8 @@ class Party implements XmlSerializable
              * Error message: Buyer electronic address MUST be provided
              */
             throw new InvalidArgumentException($this->translator->translate(
-                            'peppol.validator.Invoice.cac.Party.cbc.EndPointID'));
+                'peppol.validator.Invoice.cac.Party.cbc.EndPointID'
+            ));
         }
     }
 
@@ -75,13 +75,13 @@ class Party implements XmlSerializable
         if ($this->partyIdentificationId !== null) {
             $partyIdentificationAttributes = [];
 
-/**
- * For Danish Suppliers it is mandatory to use schemeID when
- * PartyIdentification/ID is used for AccountingCustomerParty or
- * AccountingSupplierParty
- * Related logic:
- * https://github.com/search?q=org%3AOpenPEPPOL+PartyIdentification&type=code
- */
+            /**
+             * For Danish Suppliers it is mandatory to use schemeID when
+             * PartyIdentification/ID is used for AccountingCustomerParty or
+             * AccountingSupplierParty
+             * Related logic:
+             * https://github.com/search?q=org%3AOpenPEPPOL+PartyIdentification&type=code
+             */
             if (null !== $this->partyIdentificationSchemeId) {
                 $partyIdentificationAttributes['schemeID'] =
                                             $this->partyIdentificationSchemeId;

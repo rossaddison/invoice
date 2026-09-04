@@ -16,7 +16,8 @@ readonly class Violation
         public string   $ruleId,
         public Severity $severity,
         public string   $message,
-    ) {}
+    ) {
+    }
 
     public static function fatal(string $ruleId, string $message): self
     {

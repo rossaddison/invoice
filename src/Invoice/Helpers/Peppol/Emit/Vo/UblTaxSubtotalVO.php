@@ -10,5 +10,6 @@ readonly class UblTaxSubtotalVO
         public float           $taxableAmount,
         public float           $taxAmount,
         public UblTaxCategoryVO $taxCategory,
-    ) {}
+    ) {
+    }
 }

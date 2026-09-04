@@ -16,8 +16,7 @@ class Contact implements XmlSerializable
         private readonly ?string $telephone,
         private readonly ?string $telefax,
         private readonly ?string $electronicMail,
-    )
-    {
+    ) {
     }
 
     /**

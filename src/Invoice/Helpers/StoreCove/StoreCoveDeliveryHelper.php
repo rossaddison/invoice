@@ -26,7 +26,8 @@ final readonly class StoreCoveDeliveryHelper
     public function __construct(
         private DL $deliveryLocation,
         private Translator $t,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws PeppolDeliveryLocationCountryNameNotFoundException
@@ -85,14 +86,19 @@ final readonly class StoreCoveDeliveryHelper
      * @param string $country_name
      * @return Address
      */
-    public function ublDeliveryLocation(?string $streetName,
-            ?string $additionalStreetName, ?string $buildingNumber,
-            ?string $cityName, ?string $postalZone, ?string $countrySubEntity,
-            string $country_name): Address
-    {
+    public function ublDeliveryLocation(
+        ?string $streetName,
+        ?string $additionalStreetName,
+        ?string $buildingNumber,
+        ?string $cityName,
+        ?string $postalZone,
+        ?string $countrySubEntity,
+        string $country_name
+    ): Address {
         $country_helper = new CountryHelper();
         $cic = $country_helper->getCountryIdentificationCodeWithLeague(
-                $country_name);
+            $country_name
+        );
         $country = new Country($cic, self::ISO3166_1_ALPHA2);
         return new Address(
             $streetName,
@@ -114,9 +120,11 @@ final readonly class StoreCoveDeliveryHelper
      * @param DelPartyRepo $delpartyRepo
      * @return Party|null
      */
-    public function deliveryParty(Inv $invoice, DelRepo $delRepo,
-            DelPartyRepo $delpartyRepo): ?Party
-    {
+    public function deliveryParty(
+        Inv $invoice,
+        DelRepo $delRepo,
+        DelPartyRepo $delpartyRepo
+    ): ?Party {
         $invoice_id = $invoice->reqId();
         $inv = $delRepo->repoPartyquery($invoice_id);
         if ($inv) {
@@ -124,8 +132,19 @@ final readonly class StoreCoveDeliveryHelper
             $delparty = $delpartyRepo->repoDeliveryPartyquery((int) $delivery_party_id);
             $partyName = (null !== $delparty ? $delparty->getPartyName() :
                 null);
-            return null !== $partyName ? new Party($this->t, $partyName,
-                null, null, null, null, null, null, null, null, null) : null;
+            return null !== $partyName ? new Party(
+                $this->t,
+                $partyName,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            ) : null;
         }
         return null;
     }

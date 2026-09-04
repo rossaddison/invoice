@@ -387,7 +387,11 @@ final class InvItemServiceTest
         $deps = new IiAddProductDeps($depsPR, $depsTRR, $depsIIAS, $depsIIAR, $depsSR, $depsUNR);
 
         $result = $service->addInvItemProduct(
-            $model, ['product_id' => '7', 'quantity' => '2'], '100', $deps, mergeIfExists: true,
+            $model,
+            ['product_id' => '7', 'quantity' => '2'],
+            '100',
+            $deps,
+            mergeIfExists: true,
         );
 
         Assert::same(55, $result);

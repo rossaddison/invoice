@@ -22,5 +22,6 @@ final class QuoteViewItemDeps
         public readonly ACQIR $acqiR,
         public readonly QCR $qcR,
         public readonly PR $pR,
-    ) {}
+    ) {
+    }
 }

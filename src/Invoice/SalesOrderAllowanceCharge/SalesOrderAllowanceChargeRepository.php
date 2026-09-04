@@ -24,8 +24,9 @@ final class SalesOrderAllowanceChargeRepository extends Select\Repository
      * @param EntityWriter $entityWriter
      */
     public function __construct(
-        Select $select, private readonly EntityWriter $entityWriter)
-    {
+        Select $select,
+        private readonly EntityWriter $entityWriter
+    ) {
         parent::__construct($select);
     }
 
@@ -65,8 +66,8 @@ final class SalesOrderAllowanceChargeRepository extends Select\Repository
      * @throws Throwable
      */
     public function save(
-        array|SalesOrderAllowanceCharge|null $salesorderallowancecharge): void
-    {
+        array|SalesOrderAllowanceCharge|null $salesorderallowancecharge
+    ): void {
         $this->entityWriter->write([$salesorderallowancecharge]);
     }
 
@@ -77,8 +78,8 @@ final class SalesOrderAllowanceChargeRepository extends Select\Repository
      * @throws Throwable
      */
     public function delete(
-        array|SalesOrderAllowanceCharge|null $salesorderallowancecharge): void
-    {
+        array|SalesOrderAllowanceCharge|null $salesorderallowancecharge
+    ): void {
         $this->entityWriter->delete([$salesorderallowancecharge]);
     }
 
@@ -99,8 +100,7 @@ final class SalesOrderAllowanceChargeRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return SalesOrderAllowanceCharge|null
      */
-    public function repoSalesOrderAllowanceChargeLoadedquery(int $id):
-        ?SalesOrderAllowanceCharge
+    public function repoSalesOrderAllowanceChargeLoadedquery(int $id): ?SalesOrderAllowanceCharge
     {
         $query = $this->select()
                       ->load('allowance_charge')
@@ -112,8 +112,7 @@ final class SalesOrderAllowanceChargeRepository extends Select\Repository
      * @param int $salesorderNumber
      * @psalm-return EntityReader
      */
-    public function repoSalesOrderNumberQuery(int $salesorderNumber):
-        EntityReader
+    public function repoSalesOrderNumberQuery(int $salesorderNumber): EntityReader
     {
         $query = $this->select()
                       ->load('sales_order')

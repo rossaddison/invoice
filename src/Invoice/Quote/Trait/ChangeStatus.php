@@ -16,14 +16,14 @@ trait ChangeStatus
     {
         $data = $request->getQueryParams();
         $parameters = ['success' => 0];
-         /**
-         * Purpose: Provide a list of ids from quote/index checkbox column
-         * as an array
-         * @var array $data['keylist']
-         */
+        /**
+        * Purpose: Provide a list of ids from quote/index checkbox column
+        * as an array
+        * @var array $data['keylist']
+        */
         $raw = $data['keylist'] ?? null;
         $keyList = is_array($raw)
-            ? array_map(static fn(mixed $v): string => (string) $v, $raw)
+            ? array_map(static fn (mixed $v): string => (string) $v, $raw)
             : [];
         $statusId = (int) ($data['status_id'] ?? 0);
         if ($keyList !== [] && $statusId >= 1 && $statusId <= 6) {
@@ -42,8 +42,10 @@ trait ChangeStatus
                 }
                 $parameters['success'] = 1;
             }
-            $this->flashMessage('info',
-                $this->translator->translate('record.successfully.updated'));
+            $this->flashMessage(
+                'info',
+                $this->translator->translate('record.successfully.updated')
+            );
         }
         return $this->factory->createResponse(Json::encode($parameters));
     }

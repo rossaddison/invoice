@@ -15,5 +15,7 @@ namespace App\Invoice\Helpers\Peppol\Ast;
  */
 readonly class Literal implements Expression
 {
-    public function __construct(public string|int|float|bool $value) {}
+    public function __construct(public string|int|float|bool $value)
+    {
+    }
 }

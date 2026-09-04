@@ -10,13 +10,13 @@ use PHPUnit\Framework\TestCase;
 class CategoryPrimaryEntityTest extends TestCase
 {
     public string $initialCategory = 'Initial Category';
-    
+
     public string $updatedCategory = 'Updated Category';
-    
+
     public function testConstructorWithDefaults(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $this->assertFalse($categoryPrimary->hasIdentity());
         $this->assertSame('', $categoryPrimary->getName());
     }
@@ -24,7 +24,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testConstructorWithName(): void
     {
         $categoryPrimary = new CategoryPrimary('Electronics');
-        
+
         $this->assertFalse($categoryPrimary->hasIdentity());
         $this->assertSame('Electronics', $categoryPrimary->getName());
     }
@@ -32,7 +32,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testConstructorWithEmptyName(): void
     {
         $categoryPrimary = new CategoryPrimary('');
-        
+
         $this->assertFalse($categoryPrimary->hasIdentity());
         $this->assertSame('', $categoryPrimary->getName());
     }
@@ -40,9 +40,9 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testPersistenceCheck(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $this->assertFalse($categoryPrimary->hasIdentity());
-        
+
         // After construction with name, should still not be persisted
         $categoryPrimary->setName('Test');
         $this->assertFalse($categoryPrimary->hasIdentity());
@@ -52,7 +52,7 @@ class CategoryPrimaryEntityTest extends TestCase
     {
         $categoryPrimary = new CategoryPrimary();
         $categoryPrimary->setName('Furniture');
-        
+
         $this->assertSame('Furniture', $categoryPrimary->getName());
     }
 
@@ -60,14 +60,14 @@ class CategoryPrimaryEntityTest extends TestCase
     {
         $categoryPrimary = new CategoryPrimary('Initial Name');
         $categoryPrimary->setName('');
-        
+
         $this->assertSame('', $categoryPrimary->getName());
     }
 
     public function testCommonProductCategories(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $commonCategories = [
             'Electronics',
             'Clothing',
@@ -84,7 +84,7 @@ class CategoryPrimaryEntityTest extends TestCase
             'Music & Movies',
             'Jewelry & Accessories'
         ];
-        
+
         foreach ($commonCategories as $category) {
             $categoryPrimary->setName($category);
             $this->assertSame($category, $categoryPrimary->getName());
@@ -94,7 +94,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testBusinessCategories(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $businessCategories = [
             'Professional Services',
             'Consulting',
@@ -111,7 +111,7 @@ class CategoryPrimaryEntityTest extends TestCase
             'Hospitality',
             'Retail Trade'
         ];
-        
+
         foreach ($businessCategories as $category) {
             $categoryPrimary->setName($category);
             $this->assertSame($category, $categoryPrimary->getName());
@@ -121,23 +121,23 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testIndustrySpecificCategories(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         // Technology industry
         $categoryPrimary->setName('Software Development');
         $this->assertSame('Software Development', $categoryPrimary->getName());
-        
+
         // Healthcare industry
         $categoryPrimary->setName('Medical Equipment');
         $this->assertSame('Medical Equipment', $categoryPrimary->getName());
-        
+
         // Manufacturing industry
         $categoryPrimary->setName('Industrial Machinery');
         $this->assertSame('Industrial Machinery', $categoryPrimary->getName());
-        
+
         // Education industry
         $categoryPrimary->setName('Educational Materials');
         $this->assertSame('Educational Materials', $categoryPrimary->getName());
-        
+
         // Automotive industry
         $categoryPrimary->setName('Vehicle Parts & Accessories');
         $this->assertSame('Vehicle Parts & Accessories', $categoryPrimary->getName());
@@ -146,7 +146,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testServiceCategories(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $serviceCategories = [
             'IT Support',
             'Web Development',
@@ -163,7 +163,7 @@ class CategoryPrimaryEntityTest extends TestCase
             'User Experience Design',
             'Technical Documentation'
         ];
-        
+
         foreach ($serviceCategories as $category) {
             $categoryPrimary->setName($category);
             $this->assertSame($category, $categoryPrimary->getName());
@@ -173,7 +173,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testRetailCategories(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $retailCategories = [
             'Apparel & Fashion',
             'Home Improvement',
@@ -190,7 +190,7 @@ class CategoryPrimaryEntityTest extends TestCase
             'Travel Accessories',
             'Fitness Equipment'
         ];
-        
+
         foreach ($retailCategories as $category) {
             $categoryPrimary->setName($category);
             $this->assertSame($category, $categoryPrimary->getName());
@@ -200,17 +200,17 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testLongCategoryNames(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $longName = 'Professional Enterprise Software Development and Implementation Services for Large-Scale Organizations';
         $categoryPrimary->setName($longName);
-        
+
         $this->assertSame($longName, $categoryPrimary->getName());
     }
 
     public function testSpecialCharactersInNames(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $specialNames = [
             'Health & Wellness',
             'Arts & Crafts',
@@ -223,7 +223,7 @@ class CategoryPrimaryEntityTest extends TestCase
             'Office & School Supplies',
             'Pet & Animal Care'
         ];
-        
+
         foreach ($specialNames as $name) {
             $categoryPrimary->setName($name);
             $this->assertSame($name, $categoryPrimary->getName());
@@ -233,7 +233,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testCategoryNamesWithNumbers(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $numberedNames = [
             'Category 1',
             'Type 2 Products',
@@ -246,7 +246,7 @@ class CategoryPrimaryEntityTest extends TestCase
             '365-Day Support',
             'Top 10 Products'
         ];
-        
+
         foreach ($numberedNames as $name) {
             $categoryPrimary->setName($name);
             $this->assertSame($name, $categoryPrimary->getName());
@@ -256,7 +256,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testCategoryNamesWithPunctuation(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $punctuationNames = [
             'High-Performance Computing',
             'State-of-the-Art Technology',
@@ -269,7 +269,7 @@ class CategoryPrimaryEntityTest extends TestCase
             'Point-of-Sale Equipment',
             'Multi-Purpose Tools'
         ];
-        
+
         foreach ($punctuationNames as $name) {
             $categoryPrimary->setName($name);
             $this->assertSame($name, $categoryPrimary->getName());
@@ -279,7 +279,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testUnicodeInNames(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $unicodeNames = [
             '电子产品 (Electronics)',
             'Électronique',
@@ -292,7 +292,7 @@ class CategoryPrimaryEntityTest extends TestCase
             'Zdrowie i Uroda',
             'Kráska a zdraví'
         ];
-        
+
         foreach ($unicodeNames as $name) {
             $categoryPrimary->setName($name);
             $this->assertSame($name, $categoryPrimary->getName());
@@ -302,14 +302,14 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testConstructorAndSetterConsistency(): void
     {
         $categoryName = 'Test Category';
-        
+
         // Create via constructor
         $category1 = new CategoryPrimary($categoryName);
-        
+
         // Create via setter
         $category2 = new CategoryPrimary();
         $category2->setName($categoryName);
-        
+
         $this->assertSame($category1->getName(), $category2->getName());
         $this->assertSame($categoryName, $category1->getName());
         $this->assertSame($categoryName, $category2->getName());
@@ -318,10 +318,10 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testNullIdBehavior(): void
     {
         $categoryPrimary = new CategoryPrimary('Test');
-        
+
         // Entity should remain unpersisted after construction and name changes
         $this->assertFalse($categoryPrimary->hasIdentity());
-        
+
         $categoryPrimary->setName('Updated Name');
         $this->assertFalse($categoryPrimary->hasIdentity());
     }
@@ -329,7 +329,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testMethodReturnTypes(): void
     {
         $categoryPrimary = new CategoryPrimary('Electronics');
-        
+
         $this->assertFalse($categoryPrimary->hasIdentity());
         $this->assertIsString($categoryPrimary->getName());
     }
@@ -337,12 +337,12 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testCategoryNameOverwriting(): void
     {
         $categoryPrimary = new CategoryPrimary($this->initialCategory);
-        
+
         $this->assertSame($this->initialCategory, $categoryPrimary->getName());
-        
+
         $categoryPrimary->setName($this->updatedCategory);
         $this->assertSame($this->updatedCategory, $categoryPrimary->getName());
-        
+
         $categoryPrimary->setName('Final Category');
         $this->assertSame('Final Category', $categoryPrimary->getName());
     }
@@ -350,7 +350,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testEcommerceCategories(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $ecommerceCategories = [
             'Digital Downloads',
             'Subscription Services',
@@ -367,7 +367,7 @@ class CategoryPrimaryEntityTest extends TestCase
             'Local Products',
             'Seasonal Collections'
         ];
-        
+
         foreach ($ecommerceCategories as $category) {
             $categoryPrimary->setName($category);
             $this->assertSame($category, $categoryPrimary->getName());
@@ -377,7 +377,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testB2BCategories(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $b2bCategories = [
             'Enterprise Software',
             'Industrial Equipment',
@@ -394,7 +394,7 @@ class CategoryPrimaryEntityTest extends TestCase
             'Quality Control',
             'Compliance Services'
         ];
-        
+
         foreach ($b2bCategories as $category) {
             $categoryPrimary->setName($category);
             $this->assertSame($category, $categoryPrimary->getName());
@@ -404,7 +404,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testCreativeIndustryCategories(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $creativeCategories = [
             'Graphic Design Services',
             'Video Production',
@@ -421,7 +421,7 @@ class CategoryPrimaryEntityTest extends TestCase
             'UI/UX Design',
             'Creative Consulting'
         ];
-        
+
         foreach ($creativeCategories as $category) {
             $categoryPrimary->setName($category);
             $this->assertSame($category, $categoryPrimary->getName());
@@ -431,7 +431,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testTechnologyCategories(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $techCategories = [
             'Cloud Computing',
             'Artificial Intelligence',
@@ -448,7 +448,7 @@ class CategoryPrimaryEntityTest extends TestCase
             'System Architecture',
             'Technical Support'
         ];
-        
+
         foreach ($techCategories as $category) {
             $categoryPrimary->setName($category);
             $this->assertSame($category, $categoryPrimary->getName());
@@ -458,7 +458,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testHealthcareCategories(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $healthcareCategories = [
             'Medical Devices',
             'Pharmaceuticals',
@@ -475,7 +475,7 @@ class CategoryPrimaryEntityTest extends TestCase
             'Medical Training',
             'Healthcare Consulting'
         ];
-        
+
         foreach ($healthcareCategories as $category) {
             $categoryPrimary->setName($category);
             $this->assertSame($category, $categoryPrimary->getName());
@@ -485,19 +485,19 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testEdgeCaseNames(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         // Single character
         $categoryPrimary->setName('A');
         $this->assertSame('A', $categoryPrimary->getName());
-        
+
         // Numbers only
         $categoryPrimary->setName('12345');
         $this->assertSame('12345', $categoryPrimary->getName());
-        
+
         // Special characters only
         $categoryPrimary->setName('***');
         $this->assertSame('***', $categoryPrimary->getName());
-        
+
         // Mixed alphanumeric with symbols
         $categoryPrimary->setName('Cat-2024_v1.0');
         $this->assertSame('Cat-2024_v1.0', $categoryPrimary->getName());
@@ -506,19 +506,19 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testWhitespaceHandling(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         // Leading/trailing spaces
         $categoryPrimary->setName(' Electronics ');
         $this->assertSame(' Electronics ', $categoryPrimary->getName());
-        
+
         // Multiple spaces
         $categoryPrimary->setName('Home    Appliances');
         $this->assertSame('Home    Appliances', $categoryPrimary->getName());
-        
+
         // Tab characters
         $categoryPrimary->setName("Office\tSupplies");
         $this->assertSame("Office\tSupplies", $categoryPrimary->getName());
-        
+
         // Newline characters
         $categoryPrimary->setName("Multi\nLine\nCategory");
         $this->assertSame("Multi\nLine\nCategory", $categoryPrimary->getName());
@@ -527,7 +527,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testHierarchicalCategoryNames(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $hierarchicalNames = [
             'Electronics > Computers',
             'Home & Garden > Furniture',
@@ -540,7 +540,7 @@ class CategoryPrimaryEntityTest extends TestCase
             'Kitchen > Small Appliances',
             'Office > Computer Accessories'
         ];
-        
+
         foreach ($hierarchicalNames as $name) {
             $categoryPrimary->setName($name);
             $this->assertSame($name, $categoryPrimary->getName());
@@ -550,7 +550,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testCategoryNamesWithBrands(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $brandNames = [
             'Apple Products',
             'Microsoft Solutions',
@@ -563,7 +563,7 @@ class CategoryPrimaryEntityTest extends TestCase
             'Oracle Solutions',
             'IBM Services'
         ];
-        
+
         foreach ($brandNames as $name) {
             $categoryPrimary->setName($name);
             $this->assertSame($name, $categoryPrimary->getName());
@@ -573,7 +573,7 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testSeasonalCategories(): void
     {
         $categoryPrimary = new CategoryPrimary();
-        
+
         $seasonalCategories = [
             'Spring Collection',
             'Summer Essentials',
@@ -588,7 +588,7 @@ class CategoryPrimaryEntityTest extends TestCase
             'New Year Promotions',
             'Black Friday Deals'
         ];
-        
+
         foreach ($seasonalCategories as $category) {
             $categoryPrimary->setName($category);
             $this->assertSame($category, $categoryPrimary->getName());
@@ -600,11 +600,11 @@ class CategoryPrimaryEntityTest extends TestCase
         // Explicit null (though not typically done)
         $category1 = new CategoryPrimary(null);
         $this->assertNull($category1->getName());
-        
+
         // Empty string
         $category2 = new CategoryPrimary('');
         $this->assertSame('', $category2->getName());
-        
+
         // Normal string
         $category3 = new CategoryPrimary('Normal Category');
         $this->assertSame('Normal Category', $category3->getName());
@@ -613,16 +613,16 @@ class CategoryPrimaryEntityTest extends TestCase
     public function testStateConsistency(): void
     {
         $categoryPrimary = new CategoryPrimary($this->initialCategory);
-        
+
         // Verify initial state
         $this->assertSame($this->initialCategory, $categoryPrimary->getName());
         $this->assertFalse($categoryPrimary->hasIdentity());
-        
+
         // Change name
         $categoryPrimary->setName($this->updatedCategory);
         $this->assertSame($this->updatedCategory, $categoryPrimary->getName());
         $this->assertFalse($categoryPrimary->hasIdentity());
-        
+
         // Set empty name
         $categoryPrimary->setName('');
         $this->assertSame('', $categoryPrimary->getName());

@@ -68,19 +68,42 @@ final class XPathTokenizer
         $i      = 0;
 
         while ($i < $len) {
-            if (ctype_space($input[$i])) { $i++; continue; }
+            if (ctype_space($input[$i])) {
+                $i++;
+                continue;
+            }
             $c = $input[$i];
 
-            if ($this->isQuote($c))                           { $tokens[] = $this->scanString($input, $i); continue; }
-            if ($this->isNumberStart($c, $input, $i, $len))   { $tokens[] = $this->scanNumber($input, $i); continue; }
-            if ($c === '$')                                    { $tokens[] = $this->scanVariable($input, $i, $len); continue; }
-            if ($this->isNameStart($c))                        { $tokens[] = $this->scanName($input, $i, $len); continue; }
+            if ($this->isQuote($c)) {
+                $tokens[] = $this->scanString($input, $i);
+                continue;
+            }
+            if ($this->isNumberStart($c, $input, $i, $len)) {
+                $tokens[] = $this->scanNumber($input, $i);
+                continue;
+            }
+            if ($c === '$') {
+                $tokens[] = $this->scanVariable($input, $i, $len);
+                continue;
+            }
+            if ($this->isNameStart($c)) {
+                $tokens[] = $this->scanName($input, $i, $len);
+                continue;
+            }
 
             $two = $this->matchTwoChar($input, $i, $len);
-            if ($two !== null) { $tokens[] = $two; $i += 2; continue; }
+            if ($two !== null) {
+                $tokens[] = $two;
+                $i += 2;
+                continue;
+            }
 
             $single = $this->matchSingleChar($c);
-            if ($single !== null) { $tokens[] = $single; $i++; continue; }
+            if ($single !== null) {
+                $tokens[] = $single;
+                $i++;
+                continue;
+            }
 
             throw new XPathParseException("Unexpected character '{$c}' at offset {$i} in: {$input}");
         }
@@ -114,12 +137,26 @@ final class XPathTokenizer
         $depth = 0;
         for ($i = $startPos + 1, $n = count($tokens); $i < $n; $i++) {
             $t = $tokens[$i];
-            if ($this->isOpenBracket($t['type']))                  { $depth++; continue; }
-            if ($this->isCloseBracket($t['type']) && $depth === 0) { break; }
-            if ($this->isCloseBracket($t['type']))                 { $depth--; continue; }
-            if ($depth > 0)                                        { continue; }
-            if ($t['type'] === self::T_PIPE)                       { return true; }
-            if ($this->isNonPathPrimary($t))                       { return false; }
+            if ($this->isOpenBracket($t['type'])) {
+                $depth++;
+                continue;
+            }
+            if ($this->isCloseBracket($t['type']) && $depth === 0) {
+                break;
+            }
+            if ($this->isCloseBracket($t['type'])) {
+                $depth--;
+                continue;
+            }
+            if ($depth > 0) {
+                continue;
+            }
+            if ($t['type'] === self::T_PIPE) {
+                return true;
+            }
+            if ($this->isNonPathPrimary($t)) {
+                return false;
+            }
         }
         return false;
     }
@@ -205,7 +242,9 @@ final class XPathTokenizer
     {
         $quote = $input[$i++];
         $start = $i;
-        while ($i < strlen($input) && $input[$i] !== $quote) { $i++; }
+        while ($i < strlen($input) && $input[$i] !== $quote) {
+            $i++;
+        }
         $value = substr($input, $start, $i - $start);
         $i++;
         return ['type' => self::T_STRING, 'value' => $value];
@@ -215,7 +254,9 @@ final class XPathTokenizer
     private function scanNumber(string $input, int &$i): array
     {
         $start = $i;
-        while ($i < strlen($input) && (ctype_digit($input[$i]) || $input[$i] === '.')) { $i++; }
+        while ($i < strlen($input) && (ctype_digit($input[$i]) || $input[$i] === '.')) {
+            $i++;
+        }
         return ['type' => self::T_NUMBER, 'value' => substr($input, $start, $i - $start)];
     }
 
@@ -224,7 +265,9 @@ final class XPathTokenizer
     {
         $i++;
         $start = $i;
-        while ($i < $len && (ctype_alnum($input[$i]) || $input[$i] === '_' || $input[$i] === '-')) { $i++; }
+        while ($i < $len && (ctype_alnum($input[$i]) || $input[$i] === '_' || $input[$i] === '-')) {
+            $i++;
+        }
         return ['type' => self::T_VARIABLE, 'value' => substr($input, $start, $i - $start)];
     }
 
@@ -237,10 +280,14 @@ final class XPathTokenizer
     private function scanName(string $input, int &$i, int $len): array
     {
         $start = $i;
-        while ($i < $len && (ctype_alnum($input[$i]) || $input[$i] === '_' || $input[$i] === '-' || $input[$i] === '.')) { $i++; }
+        while ($i < $len && (ctype_alnum($input[$i]) || $input[$i] === '_' || $input[$i] === '-' || $input[$i] === '.')) {
+            $i++;
+        }
         if ($i < $len && $input[$i] === ':' && $i + 1 < $len && $this->isNameStart($input[$i + 1])) {
             $i++;
-            while ($i < $len && (ctype_alnum($input[$i]) || $input[$i] === '_' || $input[$i] === '-' || $input[$i] === '.')) { $i++; }
+            while ($i < $len && (ctype_alnum($input[$i]) || $input[$i] === '_' || $input[$i] === '-' || $input[$i] === '.')) {
+                $i++;
+            }
         }
         return ['type' => self::T_NAME, 'value' => substr($input, $start, $i - $start)];
     }

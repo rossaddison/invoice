@@ -82,8 +82,8 @@ final class DeliveryController extends BaseController
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                        $this->deliveryService->saveDelivery($delivery, $body);
-                        return $this->webService->getRedirectResponse('inv/edit', ['id' => $inv_id]);
+                    $this->deliveryService->saveDelivery($delivery, $body);
+                    return $this->webService->getRedirectResponse('inv/edit', ['id' => $inv_id]);
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
@@ -136,8 +136,7 @@ final class DeliveryController extends BaseController
      *
      * @psalm-return SortableDataInterface&DataReaderInterface<int, Delivery>
      */
-    public function deliveriesWithSort(DeliveryRepository $dR, Sort $sort):
-        SortableDataInterface
+    public function deliveriesWithSort(DeliveryRepository $dR, Sort $sort): SortableDataInterface
     {
         return $dR->findAllPreloaded()
                          ->withSort($sort);
@@ -205,8 +204,8 @@ final class DeliveryController extends BaseController
                         /** @var array $body */
                         $body = $request->getParsedBody() ?? [];
                         if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                                $this->deliveryService->saveDelivery($delivery, $body);
-                                return $this->webService->getRedirectResponse('delivery/index');
+                            $this->deliveryService->saveDelivery($delivery, $body);
+                            return $this->webService->getRedirectResponse('delivery/index');
                         }
                         $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                         $parameters['form'] = $form;

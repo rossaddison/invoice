@@ -65,7 +65,8 @@ final class PeppolBisPayloadValidator implements As4PayloadValidatorInterface
         private readonly SchematronRunnerInterface $runner,
         /** Absolute path to the Schematron .sch file */
         private readonly string $schematronPath,
-    ) {}
+    ) {
+    }
 
     /**
      * @return ValidationViolation[]  Non-fatal violations (warnings / info).
@@ -78,8 +79,8 @@ final class PeppolBisPayloadValidator implements As4PayloadValidatorInterface
         $doc        = $this->loadDocument($payloadXml);
         $violations = $this->runner->run($this->schematronDocument(), $doc);
 
-        $fatals   = array_values(array_filter($violations, static fn(ValidationViolation $v) => $v->severity === Severity::Fatal));
-        $warnings = array_values(array_filter($violations, static fn(ValidationViolation $v) => $v->severity !== Severity::Fatal));
+        $fatals   = array_values(array_filter($violations, static fn (ValidationViolation $v) => $v->severity === Severity::Fatal));
+        $warnings = array_values(array_filter($violations, static fn (ValidationViolation $v) => $v->severity !== Severity::Fatal));
 
         if ($fatals !== []) {
             throw new As4PayloadValidationException($fatals);

@@ -26,7 +26,6 @@ use Yiisoft\Aliases\Aliases;
 #[Test]
 final class GatewayStatusServiceTest
 {
-
     /**
      * @return GatewayStatusRepository&m\MockInterface
      */

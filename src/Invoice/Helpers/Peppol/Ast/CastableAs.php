@@ -19,5 +19,6 @@ readonly class CastableAs implements Expression
     public function __construct(
         public Expression $value,
         public string     $typeName,
-    ) {}
+    ) {
+    }
 }

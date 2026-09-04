@@ -10,15 +10,13 @@ use Yiisoft\Router\Route;
 
 return [
     RoutePermission::invoiceGroup(
-
-            Route::methods([Method::GET, Method::POST], '/image/{product_image_id}')
+        Route::methods([Method::GET, Method::POST], '/image/{product_image_id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([ProductAttachmentController::class, 'downloadImageFile'])
                 ->name('product/downloadImageFile'),
-
-            Route::methods([Method::GET, Method::POST], '/image_attachment/{id}')
+        Route::methods([Method::GET, Method::POST], '/image_attachment/{id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([ProductAttachmentController::class, 'imageAttachment'])
                 ->name('product/imageAttachment'),
-        ), // invoice
+    ), // invoice
 ];

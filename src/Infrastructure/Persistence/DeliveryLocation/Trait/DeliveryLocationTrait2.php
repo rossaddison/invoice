@@ -14,7 +14,6 @@ use RequireId;
  */
 trait DeliveryLocationTrait2
 {
-
     public function setState(string $state): void
     {
         $this->state = $state;
@@ -57,8 +56,7 @@ trait DeliveryLocationTrait2
 
     public function setElectronicAddressScheme(
         ?string $electronic_address_scheme
-    ): void
-    {
+    ): void {
         $this->electronic_address_scheme = $electronic_address_scheme;
     }
 

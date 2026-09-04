@@ -22,5 +22,6 @@ final class QiAddProductTaskDeps
         public readonly UR $uR,
         public readonly TRR $trr,
         public readonly Translator $translator,
-    ) {}
+    ) {
+    }
 }

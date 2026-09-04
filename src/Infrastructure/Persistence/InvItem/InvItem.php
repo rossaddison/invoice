@@ -25,7 +25,7 @@ class InvItem
     use InvItemTrait2;
     use InvItemTrait3;
     use InvItemTrait4;
-    
+
     #[Column(type: 'date', nullable: false)]
     private mixed $date_added;
 

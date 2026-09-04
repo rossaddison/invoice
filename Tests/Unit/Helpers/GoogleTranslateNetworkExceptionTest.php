@@ -14,7 +14,7 @@ class GoogleTranslateNetworkExceptionTest extends TestCase
     public function testExceptionInheritance(): void
     {
         $exception = new GoogleTranslateNetworkException();
-        
+
         $this->assertInstanceOf(RuntimeException::class, $exception);
         $this->assertInstanceOf(FriendlyExceptionInterface::class, $exception);
     }
@@ -22,20 +22,20 @@ class GoogleTranslateNetworkExceptionTest extends TestCase
     public function testGetName(): void
     {
         $exception = new GoogleTranslateNetworkException();
-        
+
         $expectedName = 'There appears to be a Network error.';
-        
+
         $this->assertSame($expectedName, $exception->getName());
     }
 
     public function testGetSolution(): void
     {
         $exception = new GoogleTranslateNetworkException();
-        
+
         $expectedSolution = <<<'SOLUTION'
                 Please try again later.
             SOLUTION;
-        
+
         $this->assertSame($expectedSolution, $exception->getSolution());
     }
 
@@ -43,7 +43,7 @@ class GoogleTranslateNetworkExceptionTest extends TestCase
     {
         $exception = new GoogleTranslateNetworkException();
         $name = $exception->getName();
-        
+
         $this->assertStringContainsString('Network error', $name);
         $this->assertStringContainsString('appears to be', $name);
     }
@@ -52,7 +52,7 @@ class GoogleTranslateNetworkExceptionTest extends TestCase
     {
         $exception = new GoogleTranslateNetworkException();
         $solution = $exception->getSolution();
-        
+
         $this->assertStringContainsString('try again later', $solution);
     }
 
@@ -60,7 +60,7 @@ class GoogleTranslateNetworkExceptionTest extends TestCase
     {
         $message = 'Network connection failed';
         $exception = new GoogleTranslateNetworkException($message);
-        
+
         $this->assertSame($message, $exception->getMessage());
     }
 
@@ -69,7 +69,7 @@ class GoogleTranslateNetworkExceptionTest extends TestCase
         $message = 'Connection timeout';
         $code = 504;
         $exception = new GoogleTranslateNetworkException($message, $code);
-        
+
         $this->assertSame($message, $exception->getMessage());
         $this->assertSame($code, $exception->getCode());
     }
@@ -78,7 +78,7 @@ class GoogleTranslateNetworkExceptionTest extends TestCase
     {
         $previousException = new RuntimeException('Curl error');
         $exception = new GoogleTranslateNetworkException('Network error', 0, $previousException);
-        
+
         $this->assertSame($previousException, $exception->getPrevious());
     }
 
@@ -86,7 +86,7 @@ class GoogleTranslateNetworkExceptionTest extends TestCase
     {
         $this->expectException(GoogleTranslateNetworkException::class);
         $this->expectExceptionMessage('Network issue');
-        
+
         throw new GoogleTranslateNetworkException('Network issue');
     }
 
@@ -103,35 +103,35 @@ class GoogleTranslateNetworkExceptionTest extends TestCase
     public function testGetNameReturnType(): void
     {
         $exception = new GoogleTranslateNetworkException();
-        
+
         $this->assertIsString($exception->getName());
     }
 
     public function testGetSolutionReturnType(): void
     {
         $exception = new GoogleTranslateNetworkException();
-        
+
         $this->assertIsString($exception->getSolution());
     }
 
     public function testGetNameIsNotEmpty(): void
     {
         $exception = new GoogleTranslateNetworkException();
-        
+
         $this->assertNotEmpty($exception->getName());
     }
 
     public function testGetSolutionIsNotEmpty(): void
     {
         $exception = new GoogleTranslateNetworkException();
-        
+
         $this->assertNotEmpty($exception->getSolution());
     }
 
     public function testExceptionDefaultValues(): void
     {
         $exception = new GoogleTranslateNetworkException();
-        
+
         $this->assertSame('', $exception->getMessage());
         $this->assertSame(0, $exception->getCode());
         $this->assertNull($exception->getPrevious());
@@ -140,7 +140,7 @@ class GoogleTranslateNetworkExceptionTest extends TestCase
     public function testExceptionStackTrace(): void
     {
         $exception = new GoogleTranslateNetworkException('Stack test');
-        
+
         $this->assertIsArray($exception->getTrace());
         $this->assertIsString($exception->getTraceAsString());
     }
@@ -148,7 +148,7 @@ class GoogleTranslateNetworkExceptionTest extends TestCase
     public function testExceptionFile(): void
     {
         $exception = new GoogleTranslateNetworkException();
-        
+
         $this->assertIsString($exception->getFile());
         $this->assertIsInt($exception->getLine());
     }
@@ -156,9 +156,9 @@ class GoogleTranslateNetworkExceptionTest extends TestCase
     public function testExceptionToString(): void
     {
         $exception = new GoogleTranslateNetworkException('String test');
-        
+
         $stringRepresentation = (string) $exception;
-        
+
         $this->assertIsString($stringRepresentation);
         $this->assertStringContainsString('GoogleTranslateNetworkException', $stringRepresentation);
         $this->assertStringContainsString('String test', $stringRepresentation);
@@ -167,7 +167,7 @@ class GoogleTranslateNetworkExceptionTest extends TestCase
     public function testExceptionImplementsInterface(): void
     {
         $exception = new GoogleTranslateNetworkException();
-        
+
         $this->assertTrue(method_exists($exception, 'getName'));
         $this->assertTrue(method_exists($exception, 'getSolution'));
     }

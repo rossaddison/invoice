@@ -46,5 +46,6 @@ readonly class FunctionCall implements Expression
     public function __construct(
         public string $name,
         public array  $arguments = [],
-    ) {}
+    ) {
+    }
 }

@@ -21,5 +21,6 @@ final readonly class UblOrderLineData
         public string $unitCode,
         public float  $unitPrice,
         public float  $lineExtensionAmount,
-    ) {}
+    ) {
+    }
 }

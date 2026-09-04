@@ -11,7 +11,6 @@ use RequireId;
  */
 trait PostalAddressTrait1
 {
-
     public function reqId(): int
     {
         return $this->requireId($this->id, 'PostalAddress');

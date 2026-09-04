@@ -12,5 +12,7 @@ namespace App\Invoice\Helpers\Peppol\Ast;
  */
 readonly class Abs implements Expression
 {
-    public function __construct(public Expression $value) {}
+    public function __construct(public Expression $value)
+    {
+    }
 }

@@ -13,8 +13,8 @@ class CreditNoteLine extends InvoiceLine
 
     public function __construct(
         public float $invoicedQuantity,
-        protected bool $isCreditNoteLine)
-    {
+        protected bool $isCreditNoteLine
+    ) {
     }
 
     /**

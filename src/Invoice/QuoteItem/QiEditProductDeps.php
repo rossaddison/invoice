@@ -21,5 +21,6 @@ final class QiEditProductDeps
         public readonly QR $qR,
         public readonly QIAS $qias,
         public readonly QIAR $qiar,
-    ) {}
+    ) {
+    }
 }

@@ -20,5 +20,6 @@ final class QuoteToSoTransferDeps
         public readonly ACSOIR $acsoiR,
         public readonly soIAR $soiaR,
         public readonly soIAS $soiaS,
-    ) {}
+    ) {
+    }
 }

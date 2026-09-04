@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Command\Invoice;
 
 use App\Infrastructure\Persistence\{
-   Client\Client, ClientCustom\ClientCustom, ClientNote\ClientNote,
-   ClientPeppol\ClientPeppol, Company\Company, CompanyPrivate\CompanyPrivate,
-   Contract\Contract, CustomField\CustomField, CustomValue\CustomValue,
-   Delivery\Delivery, DeliveryLocation\DeliveryLocation,
-   DeliveryParty\DeliveryParty, EmailTemplate\EmailTemplate,
-   Family\Family, FromDropDown\FromDropDown, Group\Group,
-   PostalAddress\PostalAddress, ProductCustom\ProductCustom,
-   Product\Product, ProductImage\ProductImage, ProductProperty\ProductProperty,
-   Profile\Profile, Project\Project, Task\Task, TaxRate\TaxRate, Unit\Unit,
-   UnitPeppol\UnitPeppol, Upload\Upload
+    Client\Client, ClientCustom\ClientCustom, ClientNote\ClientNote,
+    ClientPeppol\ClientPeppol, Company\Company, CompanyPrivate\CompanyPrivate,
+    Contract\Contract, CustomField\CustomField, CustomValue\CustomValue,
+    Delivery\Delivery, DeliveryLocation\DeliveryLocation,
+    DeliveryParty\DeliveryParty, EmailTemplate\EmailTemplate,
+    Family\Family, FromDropDown\FromDropDown, Group\Group,
+    PostalAddress\PostalAddress, ProductCustom\ProductCustom,
+    Product\Product, ProductImage\ProductImage, ProductProperty\ProductProperty,
+    Profile\Profile, Project\Project, Task\Task, TaxRate\TaxRate, Unit\Unit,
+    UnitPeppol\UnitPeppol, Upload\Upload
 };
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

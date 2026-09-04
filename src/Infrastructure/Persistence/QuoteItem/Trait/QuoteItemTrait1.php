@@ -17,7 +17,6 @@ use DateTimeImmutable;
  */
 trait QuoteItemTrait1
 {
-
     //relation $tax_rate
     public function getTaxRate(): ?TaxRate
     {

@@ -19,7 +19,6 @@ use DateTimeImmutable;
  */
 trait QuoteTrait2
 {
-
     public function reqClientId(): int
     {
         return $this->requireId($this->client_id, 'Client');

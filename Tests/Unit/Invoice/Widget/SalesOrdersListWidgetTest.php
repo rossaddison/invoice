@@ -402,9 +402,14 @@ final class SalesOrdersListWidgetTest extends TestCase
     public function testWithCsrfAcceptsStringableObject(): void
     {
         $stringable = new class ('view-csrf-token') implements \Stringable {
-            public function __construct(private readonly string $value) {}
+            public function __construct(private readonly string $value)
+            {
+            }
             #[\Override]
-            public function __toString(): string { return $this->value; }
+            public function __toString(): string
+            {
+                return $this->value;
+            }
         };
 
         $widget = $this->makeWidget()->withCsrf($stringable);
@@ -475,7 +480,7 @@ final class SalesOrdersListWidgetTest extends TestCase
     public function testComputeGroupTotalsReturnsEmptyArrayWhenPaginatorIsEmpty(): void
     {
         $paginator     = $this->makeEmptyPaginator();
-        $getGroupValue = static fn(SalesOrder $_so): string => 'unused';
+        $getGroupValue = static fn (SalesOrder $_so): string => 'unused';
 
         $result = $this->makeGroupingRenderer()->computeGroupTotals($paginator, $getGroupValue);
 
@@ -488,19 +493,19 @@ final class SalesOrdersListWidgetTest extends TestCase
         $so2       = $this->makeSalesOrderMock(total: 200.00);
         $paginator = new OffsetPaginator(new IterableDataReader([$so1, $so2]));
 
-        $getGroupValue = static fn(SalesOrder $_so): string => 'All';
+        $getGroupValue = static fn (SalesOrder $_so): string => 'All';
 
         $result = $this->makeGroupingRenderer()->computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(1, $result);
-        $this->assertSame(2,      $result['All']['count']);
+        $this->assertSame(2, $result['All']['count']);
         $this->assertSame(300.00, $result['All']['total']);
     }
 
     public function testComputeGroupTotalsSeparatesDistinctGroups(): void
     {
         $so1 = $this->makeSalesOrderMock(clientFullName: 'Alice', total: 100.00);
-        $so2 = $this->makeSalesOrderMock(clientFullName: 'Bob',   total: 200.00);
+        $so2 = $this->makeSalesOrderMock(clientFullName: 'Bob', total: 200.00);
         $so3 = $this->makeSalesOrderMock(clientFullName: 'Alice', total: 150.00);
 
         $paginator = new OffsetPaginator(new IterableDataReader([$so1, $so2, $so3]));
@@ -511,9 +516,9 @@ final class SalesOrdersListWidgetTest extends TestCase
         $result = $renderer->computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(2, $result);
-        $this->assertSame(2,      $result['Alice']['count']);
+        $this->assertSame(2, $result['Alice']['count']);
         $this->assertSame(250.00, $result['Alice']['total']);
-        $this->assertSame(1,      $result['Bob']['count']);
+        $this->assertSame(1, $result['Bob']['count']);
         $this->assertSame(200.00, $result['Bob']['total']);
     }
 
@@ -526,11 +531,11 @@ final class SalesOrdersListWidgetTest extends TestCase
         $so->method('getSalesOrderAmount')->willReturn($soAmount);
 
         $paginator     = new OffsetPaginator(new IterableDataReader([$so]));
-        $getGroupValue = static fn(SalesOrder $_so): string => 'NullTotal';
+        $getGroupValue = static fn (SalesOrder $_so): string => 'NullTotal';
 
         $result = $this->makeGroupingRenderer()->computeGroupTotals($paginator, $getGroupValue);
 
-        $this->assertSame(1,    $result['NullTotal']['count']);
+        $this->assertSame(1, $result['NullTotal']['count']);
         $this->assertSame(0.00, $result['NullTotal']['total']);
     }
 }

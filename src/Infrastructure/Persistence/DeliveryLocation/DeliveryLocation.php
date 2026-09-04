@@ -70,8 +70,7 @@ class DeliveryLocation
     private ?Client $client = null;
 
     public function __construct(
-    )
-    {
+    ) {
         $this->date_created = new DateTimeImmutable();
         $this->date_modified = new DateTimeImmutable();
     }

@@ -6,4 +6,6 @@ namespace App\Invoice\Helpers\Peppol\Ast;
 
 use RuntimeException;
 
-final class EvaluationException extends RuntimeException {}
+final class EvaluationException extends RuntimeException
+{
+}

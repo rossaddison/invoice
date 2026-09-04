@@ -155,18 +155,18 @@ class As4Constants
     // Binary encoding
     public const string WSS_ENCODING_BASE64 =
         'http://docs.oasis-open.org/wss/2004/01/' // NOSONAR
-            . 'oasis-200401-wss-soap-message-security-1.0#Base64Binary';
+        . 'oasis-200401-wss-soap-message-security-1.0#Base64Binary';
 
     // SOAP Attachment transform
     public const string SOAP_SWA_ATTACHMENT_CONTENT_ONLY =
         'http://docs.oasis-open.org/wss/' // NOSONAR
-            . 'oasis-wss-SwAProfile-1.1#Attachment-Content-Only';
+        . 'oasis-wss-SwAProfile-1.1#Attachment-Content-Only';
     public const string SOAP_SWA_ATTACHMENT_SIGNATURE =
         'http://docs.oasis-open.org/wss/' // NOSONAR
-            . 'oasis-wss-SwAProfile-1.1#Attachment-Content-Signature-Transform';
+        . 'oasis-wss-SwAProfile-1.1#Attachment-Content-Signature-Transform';
     public const string SOAP_SWA_ATTACHMENT_CIPHERTEXT =
         'http://docs.oasis-open.org/wss/' // NOSONAR
-            . 'oasis-wss-SwAProfile-1.1#Attachment-Ciphertext-Transform';
+        . 'oasis-wss-SwAProfile-1.1#Attachment-Ciphertext-Transform';
 
     // Four Corner Topology Enhancement
     public const string PROPERTY_ORIGINAL_SENDER = 'originalSender';

@@ -17,7 +17,6 @@ use RequireId;
  */
 trait ClientTrait2
 {
-
     public function getClientName(): string
     {
         return $this->client_name;

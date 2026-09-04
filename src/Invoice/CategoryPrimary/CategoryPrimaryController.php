@@ -113,8 +113,10 @@ final class CategoryPrimaryController extends BaseController
                 $categoryPrimary = $this->categoryprimary($categoryPrimaryRepository, $id);
                 if ($categoryPrimary) {
                     $this->categoryPrimaryService->deleteCategoryPrimary($categoryPrimary);
-                    $this->flashMessage('info',
-                        $this->translator->translate('record.successfully.deleted'));
+                    $this->flashMessage(
+                        'info',
+                        $this->translator->translate('record.successfully.deleted')
+                    );
                 }
             }
             return $this->webService->getRedirectResponse('categoryprimary/index');

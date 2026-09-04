@@ -71,7 +71,9 @@ final class ProductController extends BaseController
         $form->unit_peppol_id = $defaultUnitPeppol?->reqId();
         $productCustomForm = new ProductCustomForm();
         $customData  = $this->fetchCustomFieldsAndValues(
-            $d->customFieldRepository, $d->customValueRepository, 'product_custom'
+            $d->customFieldRepository,
+            $d->customValueRepository,
+            'product_custom'
         );
         $parameters  = [
             'title'          => $this->translator->translate('add'),
@@ -194,7 +196,9 @@ final class ProductController extends BaseController
         $form              = ProductForm::show($product);
         $productCustomForm = new ProductCustomForm();
         $customData = $this->fetchCustomFieldsAndValues(
-            $d->customFieldRepository, $d->customValueRepository, 'product_custom'
+            $d->customFieldRepository,
+            $d->customValueRepository,
+            'product_custom'
         );
         $parameters = [
             'title'          => $this->translator->translate('edit'),
@@ -295,9 +299,11 @@ final class ProductController extends BaseController
             ->withSort($sort);
 
         $gridSummary = $this->sR->gridSummary(
-            $paginator, $this->translator,
+            $paginator,
+            $this->translator,
             (int) $this->sR->getSetting('default_list_limit'),
-            $this->translator->translate('products'), '',
+            $this->translator->translate('products'),
+            '',
         );
 
         $visible                           = $this->sR->getSetting('columns_all_visible') !== '0';

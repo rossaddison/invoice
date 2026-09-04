@@ -106,7 +106,10 @@ final class CheckoutComPaymentController
     public function checkoutComInForm(CurrentRoute $currentRoute): Response
     {
         $resolved = $this->resolveConfiguredInvoiceWithBalance(
-            $currentRoute, $this->checkoutComPaymentService, 'Checkout.com');
+            $currentRoute,
+            $this->checkoutComPaymentService,
+            'Checkout.com'
+        );
         if ($resolved instanceof Response) {
             return $resolved;
         }

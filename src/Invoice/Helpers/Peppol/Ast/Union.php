@@ -18,5 +18,6 @@ readonly class Union implements Expression
     public function __construct(
         public Expression $left,
         public Expression $right,
-    ) {}
+    ) {
+    }
 }

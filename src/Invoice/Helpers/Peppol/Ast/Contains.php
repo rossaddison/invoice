@@ -10,5 +10,6 @@ readonly class Contains implements Expression
     public function __construct(
         public Expression $haystack,
         public Expression $needle,
-    ) {}
+    ) {
+    }
 }

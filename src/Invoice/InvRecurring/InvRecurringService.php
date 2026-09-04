@@ -34,10 +34,12 @@ final readonly class InvRecurringService
 
         isset($array['frequency']) ?
             $model->setFrequency(
-                (string) $array['frequency']) : '';
+                (string) $array['frequency']
+            ) : '';
 
         $baseInvoice = $this->invR->repoInvUnloadedquery(
-            (int) $array['inv_id']);
+            (int) $array['inv_id']
+        );
         if (null !== $baseInvoice) {
             $dateHelper = new DateHelper($this->s);
 
@@ -51,10 +53,12 @@ final readonly class InvRecurringService
                 $nextDate = $dateHelper
                     ->incrementDateStringToDateTime(
                         (string) $array['start'],
-                        (string) $array['frequency']);
+                        (string) $array['frequency']
+                    );
                 $model->setNext($nextDate);
                 $model->setStart(
-                    new \DateTime((string) $array['start']));
+                    new \DateTime((string) $array['start'])
+                );
             }
 
             // Next is null because it has stopped
@@ -64,10 +68,12 @@ final readonly class InvRecurringService
                 $nextDate = $dateHelper
                     ->incrementDateStringToDateTime(
                         (string) $array['start'],
-                        (string) $array['frequency']);
+                        (string) $array['frequency']
+                    );
                 $model->setNext($nextDate);
                 $model->setStart(
-                    new \DateTime((string) $array['start']));
+                    new \DateTime((string) $array['start'])
+                );
             }
 
             /**
@@ -88,7 +94,8 @@ final readonly class InvRecurringService
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->invR->repoInvUnLoadedquery(
-                (int) $array[$inv]);
+                (int) $array[$inv]
+            );
             if ($invEntity) {
                 $model->setInv($invEntity);
             }

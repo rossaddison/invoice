@@ -83,13 +83,20 @@ final class InvItemController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                    $this->invitemService->addInvItemProduct($invitem,
-                            $body, $inv_id,
-                            new IiAddProductDeps($d->pR, $d->trR, new IIAS($d->iiar, $d->iiR), $d->iiar, $this->sR, $d->uR));
-                    $this->flashMessage('info',
-                        $this->translator->translate('record.successfully.created'));
-                    return $this->webService->getRedirectResponse('inv/view',
-                        ['id' => $inv_id]);
+                $this->invitemService->addInvItemProduct(
+                    $invitem,
+                    $body,
+                    $inv_id,
+                    new IiAddProductDeps($d->pR, $d->trR, new IIAS($d->iiar, $d->iiR), $d->iiar, $this->sR, $d->uR)
+                );
+                $this->flashMessage(
+                    'info',
+                    $this->translator->translate('record.successfully.created')
+                );
+                return $this->webService->getRedirectResponse(
+                    'inv/view',
+                    ['id' => $inv_id]
+                );
             }
             $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -130,10 +137,17 @@ final class InvItemController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();
             if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                    $this->invitemService->addInvItemTask($invitem, $body,
-                            $inv_id, $d->taskR, $d->trR, new IIAS($d->iiar, $d->iiR), $d->iiar);
-                    $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
-                    return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
+                $this->invitemService->addInvItemTask(
+                    $invitem,
+                    $body,
+                    $inv_id,
+                    $d->taskR,
+                    $d->trR,
+                    new IIAS($d->iiar, $d->iiR),
+                    $d->iiar
+                );
+                $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
+                return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -225,7 +239,12 @@ final class InvItemController extends BaseController
             $body = $request->getParsedBody();
             if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                 $redirect = $this->processProductSave(
-                    $inv_item, $inv_item_id, $body, $inv_id, $inv_item_allowances_charges, $d
+                    $inv_item,
+                    $inv_item_id,
+                    $body,
+                    $inv_id,
+                    $inv_item_allowances_charges,
+                    $d
                 );
                 if (null !== $redirect) {
                     return $redirect;
@@ -251,7 +270,11 @@ final class InvItemController extends BaseController
         $charge = $this->accumulativeCharges($inv_item_allowances_charges) ?: 0.00;
         $allowance = $this->accumulativeAllowances($inv_item_allowances_charges) ?: 0.00;
         $tax_rate_id = $this->invitemService->saveInvItemProduct(
-            $inv_item, $body, (string) $inv_id, $d->pR, $d->uR
+            $inv_item,
+            $body,
+            (string) $inv_id,
+            $d->pR,
+            $d->uR
         ) ?: 1;
         $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $d->trR);
         if (null === $tax_rate_percentage) {
@@ -402,7 +425,10 @@ final class InvItemController extends BaseController
         $charge = $this->accumulativeCharges($inv_item_allowances_charges) ?: 0.00;
         $allowance = $this->accumulativeAllowances($inv_item_allowances_charges) ?: 0.00;
         $tax_rate_id = $this->invitemService->saveInvItemTask(
-            $inv_item, $body, (string) $inv_id, $d->taskR
+            $inv_item,
+            $body,
+            (string) $inv_id,
+            $d->taskR
         ) ?: 1;
         $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $d->trR);
         if (null === $tax_rate_percentage) {

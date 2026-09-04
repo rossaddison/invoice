@@ -34,8 +34,10 @@ final readonly class InvSentLogService
         $model->setDateSent(
             $datetime_created::createFromFormat(
                 'Y-m-d',
-                $date_sent) ?:
-            new DateTimeImmutable('1901/01/01'));
+                $date_sent
+            ) ?:
+            new DateTimeImmutable('1901/01/01')
+        );
         $this->repository->save($model);
     }
 
@@ -46,12 +48,14 @@ final readonly class InvSentLogService
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
-                $this->cR->repoClientquery((int) $array[$client]));
+                $this->cR->repoClientquery((int) $array[$client])
+            );
         }
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
-                (int) $array[$inv]);
+                (int) $array[$inv]
+            );
             if ($invEntity) {
                 $model->setInv($invEntity);
             }

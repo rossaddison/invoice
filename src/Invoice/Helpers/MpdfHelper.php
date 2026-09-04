@@ -152,8 +152,10 @@ class MpdfHelper
         'ignore_invalid_utf8' => true,
         'tabSpaces' => 4,
     ];
-    
-    public function __construct(private readonly Translator $translator){}
+
+    public function __construct(private readonly Translator $translator)
+    {
+    }
 
     /**
      * @param string $html

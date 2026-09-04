@@ -26,7 +26,8 @@ final readonly class SalesOrderAmountService
         array $array
     ): void {
         $sales_order = $this->soR->repoSalesOrderUnLoadedquery(
-            (int) $array['sales_order_id']);
+            (int) $array['sales_order_id']
+        );
         if ($sales_order) {
             $model->setSalesOrder($sales_order);
             $model->setSalesOrderId($sales_order->reqId());

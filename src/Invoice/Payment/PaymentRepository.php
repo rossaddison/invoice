@@ -24,9 +24,10 @@ final class PaymentRepository extends Select\Repository implements PaymentReposi
     * @param Select<TEntity> $select
     * @param EntityWriter $entityWriter
     */
-    public function __construct(Select $select,
-        private readonly EntityWriter $entityWriter)
-    {
+    public function __construct(
+        Select $select,
+        private readonly EntityWriter $entityWriter
+    ) {
         parent::__construct($select);
     }
 
@@ -136,8 +137,9 @@ final class PaymentRepository extends Select\Repository implements PaymentReposi
      * @psalm-return EntityReader
      */
     public function repoPaymentAmountWithDateFilter(
-        string $paymentAmount, string $paymentDate)
-    {
+        string $paymentAmount,
+        string $paymentDate
+    ) {
         $query = $this->select()
                       ->where(['payment_date' => $paymentDate])
                       ->andWhere(['amount' => $paymentAmount]);

@@ -21,9 +21,10 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
     private string $password = '';
     private bool $rememberMe = false;
 
-    public function __construct(private readonly AuthService $authService,
-            private readonly TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly AuthService $authService,
+        private readonly TranslatorInterface $translator
+    ) {
     }
 
     /**
@@ -92,10 +93,17 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
         $englishErrorMessageId = $required->getMessage();
         $currentLocale = $this->translator->getLocale();
         $translatedErrorMessage =
-                $this->translator->translate($englishErrorMessageId,
-                [], 'yii-validator', $currentLocale);
-        return [new Required(str_replace('{Property}',
-                $login, $translatedErrorMessage))];
+                $this->translator->translate(
+                    $englishErrorMessageId,
+                    [],
+                    'yii-validator',
+                    $currentLocale
+                );
+        return [new Required(str_replace(
+            '{Property}',
+            $login,
+            $translatedErrorMessage
+        ))];
     }
 
     /**
@@ -113,7 +121,8 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
 
                     if (!$this->authService->login($this->login, $this->password)) {
                         $result->addError($this->translator->translate(
-                            'validator.invalid.login.password'));
+                            'validator.invalid.login.password'
+                        ));
                     }
 
                     return $result;

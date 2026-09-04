@@ -17,4 +17,6 @@ namespace App\Invoice\Helpers\Peppol\Ast;
  * those three nodes are called AndNode, OrNode, and StringCast respectively.
  * Every other node matches the name listed in the Schematron analysis report.
  */
-interface Expression {}
+interface Expression
+{
+}

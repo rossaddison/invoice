@@ -11,7 +11,6 @@ use RequireId;
  */
 trait CustomFieldTrait3
 {
-
     public function setTextAreaRows(int $rows): void
     {
         $this->text_area_rows = $rows;

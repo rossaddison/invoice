@@ -9,7 +9,6 @@ use App\Invoice\Quote\QuoteRepository as QR;
 
 trait SettingInvoiceMarkTrait
 {
-
     /**
      * @param int $invoice_id
      * @param IR $iR
@@ -26,8 +25,8 @@ trait SettingInvoiceMarkTrait
                 $iR->save($invoice);
             }
 
-//set the invoice to 'read only' only once it has been viewed according
-//to 'Other settings' 2 sent, 3 viewed, 4 paid,
+            //set the invoice to 'read only' only once it has been viewed according
+            //to 'Other settings' 2 sent, 3 viewed, 4 paid,
             if ($this->getSetting('read_only_toggle') == 3) {
                 $invoice = $iR->repoInvUnloadedquery($invoice_id);
                 if ($invoice) {
@@ -69,7 +68,8 @@ trait SettingInvoiceMarkTrait
             // if invoice_status_id is 2
             if (null !== $this->withKey('read_only_toggle')
                 && $this->withKey(
-                        'read_only_toggle')?->getSettingValue() === '2') {
+                    'read_only_toggle'
+                )?->getSettingValue() === '2') {
                 $invoice->setIsReadOnly(true);
             }
             $iR->save($invoice);
@@ -106,16 +106,27 @@ trait SettingInvoiceMarkTrait
 
         if ($currency_symbol_placement == 'before') {
             return $currency_symbol . number_format(
-                    (float) $amount, ($decimal_point) ? 2 : 0,
-                    $decimal_point, $thousands_separator);
+                (float) $amount,
+                ($decimal_point) ? 2 : 0,
+                $decimal_point,
+                $thousands_separator
+            );
         }
         if ($currency_symbol_placement == 'afterspace') {
-            return number_format((float) $amount, ($decimal_point) ? 2 : 0,
-                    $decimal_point, $thousands_separator) . '&nbsp;'
+            return number_format(
+                (float) $amount,
+                ($decimal_point) ? 2 : 0,
+                $decimal_point,
+                $thousands_separator
+            ) . '&nbsp;'
                     . $currency_symbol;
         }
-        return number_format((float) $amount, ($decimal_point) ? 2 : 0,
-                $decimal_point, $thousands_separator) . $currency_symbol;
+        return number_format(
+            (float) $amount,
+            ($decimal_point) ? 2 : 0,
+            $decimal_point,
+            $thousands_separator
+        ) . $currency_symbol;
     }
 
     /**
@@ -130,8 +141,12 @@ trait SettingInvoiceMarkTrait
             $decimal_point = $this->getSetting('decimal_point');
             //force the rounding of amounts to 2 decimal points if the decimal
             // point setting is filled.
-            return number_format($amount, ($decimal_point) ? 2 : 0,
-                    $decimal_point, $thousands_separator);
+            return number_format(
+                $amount,
+                ($decimal_point) ? 2 : 0,
+                $decimal_point,
+                $thousands_separator
+            );
         }
         return null;
     }

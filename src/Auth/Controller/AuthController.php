@@ -58,7 +58,7 @@ final class AuthController
     use Redirects;
 
     public const string
-            DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
+        DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
     public const string GITHUB_ACCESS_TOKEN = 'github-access';
     public const string GOOGLE_ACCESS_TOKEN = 'google-access';
@@ -105,7 +105,11 @@ final class AuthController
         $this->telegramToken = $this->sR->getSetting('telegram_token');
         $this->tfaHelper = new AuthTfaHelper($this->sR, $this->recoveryCodeService);
         $this->secHelper = new AuthSecurityHelper(
-            $this->rateLimiter, $this->rateLimiterStorage, $this->logger, $this->session);
+            $this->rateLimiter,
+            $this->rateLimiterStorage,
+            $this->logger,
+            $this->session
+        );
     }
 
     /**
@@ -159,22 +163,44 @@ final class AuthController
 
         return match ($authclient) {
             'developersandboxhmrc' => $this->callbackDeveloperGovSandboxHmrc(
-                    $request, $d, $_language, $code, $state),
+                $request,
+                $d,
+                $_language,
+                $code,
+                $state
+            ),
             'facebook' => $this->callbackFacebook($request, $d, $_language),
             'github' => $this->callbackGithub($request, $d, $_language, $code, $state),
             'google' => $this->callbackGoogle($request, $d, $_language, $code, $state),
             'govuk' => $this->callbackGovUk($request, $d, $_language, $code, $state),
             'linkedin' => $this->callbackLinkedIn($request, $d, $_language, $code, $state),
-            'microsoftonline' => $this->callbackMicrosoftOnline($request, $d, $_language,
-                    $code, $state, (string) $sessionState),
-            'openbanking' => $this->callbackOpenBanking($request,
-                    $this->translator, $code, $state),
+            'microsoftonline' => $this->callbackMicrosoftOnline(
+                $request,
+                $d,
+                $_language,
+                $code,
+                $state,
+                (string) $sessionState
+            ),
+            'openbanking' => $this->callbackOpenBanking(
+                $request,
+                $this->translator,
+                $code,
+                $state
+            ),
             'x' => $this->callbackX($request, $d, $_language, $code, $state),
-            'vkontakte' => $this->callbackVKontakte($request, $d, $_language, $code,
-                    $state, (string) $deviceId),
+            'vkontakte' => $this->callbackVKontakte(
+                $request,
+                $d,
+                $_language,
+                $code,
+                $state,
+                (string) $deviceId
+            ),
             'yandex' => $this->callbackYandex($request, $d, $_language, $code, $state),
             default => throw new \InvalidArgumentException(
-                    "Unsupported 'authclient' value: {$authclient}"),
+                "Unsupported 'authclient' value: {$authclient}"
+            ),
         };
     }
 
@@ -221,8 +247,11 @@ final class AuthController
 
         $codeVerifier = Random::string(128);
         $this->session->set('code_verifier', $codeVerifier);
-        $codeChallenge = strtr(rtrim(base64_encode(hash('sha256',
-                $codeVerifier, true)), '='), '+/', '-_');
+        $codeChallenge = strtr(rtrim(base64_encode(hash(
+            'sha256',
+            $codeVerifier,
+            true
+        )), '='), '+/', '-_');
         $errors = $loginForm->isValidated()
             ? $loginForm->getValidationResult()->getErrorMessagesIndexedByProperty()
             : [];
@@ -239,10 +268,12 @@ final class AuthController
                 //Fade-out CSS for TFA badge
                 'styleTagFadeOut' =>  new Style()->content(
                     '.fade-out { opacity: 1; transition: opacity 40s ease-in; }'
-                        . ' .fade-out.hidden { opacity: 0; }'),
+                        . ' .fade-out.hidden { opacity: 0; }'
+                ),
                 'request' => $request,
                 'idpList' => $this->idpList(
-                    $codeChallenge),
+                    $codeChallenge
+                ),
             ],
         );
     }
@@ -298,8 +329,10 @@ final class AuthController
             $sessionState = $client->getSessionAuthState();
 
             if ($sessionState === null) {
-                $this->logger->log(LogLevel::ALERT,
-                    "Session Auth state is null for provider: {$idP}");
+                $this->logger->log(
+                    LogLevel::ALERT,
+                    "Session Auth state is null for provider: {$idP}"
+                );
                 exit(1);
             }
 
@@ -307,15 +340,19 @@ final class AuthController
             if (!$sessionState || !hash_equals($sessionState, $state)) {
                 // State is invalid, possible cross-site request forgery.
                 // Exit with an error code.
-                $this->logger->log(LogLevel::ALERT,
-                        "CSRF attack attempt detected for provider: {$idP}");
+                $this->logger->log(
+                    LogLevel::ALERT,
+                    "CSRF attack attempt detected for provider: {$idP}"
+                );
                 exit(1);
             }
         } catch (\Exception $e) {
             // Log exception details for debugging
-            $this->logger->log(LogLevel::ALERT,
-            "Exception validating OAuth2 state for provider: {$idP}. Error: "
-                . $e->getMessage());
+            $this->logger->log(
+                LogLevel::ALERT,
+                "Exception validating OAuth2 state for provider: {$idP}. Error: "
+                . $e->getMessage()
+            );
             exit(1);
         }
     }
@@ -331,14 +368,14 @@ final class AuthController
      * @return string
      */
     protected function proceedToMenuButtonWithMaskedRandomAndTimeTokenLink(
-            TranslatorInterface $translator,
-            User $user,
-            UserInvRepository $uiR,
-            string $language,
-            string $_language,
-            string $randomAndTimeToken,
-            string $provider): string
-    {
+        TranslatorInterface $translator,
+        User $user,
+        UserInvRepository $uiR,
+        string $language,
+        string $_language,
+        string $randomAndTimeToken,
+        string $provider
+    ): string {
         $tokenType = $this->getTokenType($provider);
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         $userInv = new UserInv();
@@ -562,14 +599,14 @@ final class AuthController
                 ? $cookieLogin->addCookie($identity, $this->redirectToInvoiceIndex())
                 : $this->redirectToInvoiceIndex();
         }
-/**
- * If the observer user is signing up WITHOUT email (=> userinv account status is 0),
- *  e.g. by console ... yii userinv/assignRole observer 2,
- * the admin will have to make the user active via Settings Invoice User Account
- *  AND assign the user an added client.
- * Also the token that was originally assigned on signup, must now be 'disabled'
- *  because the admin is responsible for making the user active.
- */
+        /**
+         * If the observer user is signing up WITHOUT email (=> userinv account status is 0),
+         *  e.g. by console ... yii userinv/assignRole observer 2,
+         * the admin will have to make the user active via Settings Invoice User Account
+         *  AND assign the user an added client.
+         * Also the token that was originally assigned on signup, must now be 'disabled'
+         *  because the admin is responsible for making the user active.
+         */
         $awaitingEmailVerification = $this->hasUnusedEmailVerificationToken($tR, $userId);
         $this->disableToken($tR, $userId, $this->getTokenType('email-verification'));
         return $awaitingEmailVerification

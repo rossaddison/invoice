@@ -15,8 +15,7 @@ class Delivery implements XmlSerializable
         private array $deliveryLocationID_scheme,
         private readonly ?Address $deliveryLocation,
         private readonly ?Party $deliveryParty
-    )
-    {
+    ) {
     }
 
     /**

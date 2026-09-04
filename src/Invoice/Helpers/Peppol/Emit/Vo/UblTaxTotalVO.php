@@ -13,5 +13,6 @@ readonly class UblTaxTotalVO
         public float  $taxAmount,
         public string $taxAmountCurrencyId,
         public array  $taxSubtotals,
-    ) {}
+    ) {
+    }
 }

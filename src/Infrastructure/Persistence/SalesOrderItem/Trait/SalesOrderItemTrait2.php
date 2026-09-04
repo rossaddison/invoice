@@ -16,7 +16,6 @@ use DateTimeImmutable;
  */
 trait SalesOrderItemTrait2
 {
-
     public function setPeppolPoItemid(string $peppol_po_itemid): void
     {
         $this->peppol_po_itemid = $peppol_po_itemid;

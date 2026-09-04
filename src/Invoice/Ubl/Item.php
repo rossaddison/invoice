@@ -15,8 +15,7 @@ class Item implements XmlSerializable
         private ?string $buyersItemIdentification,
         private ?string $sellersItemIdentification,
         private ?ClassifiedTaxCategory $classifiedTaxCategory
-    )
-    {
+    ) {
     }
 
     /**

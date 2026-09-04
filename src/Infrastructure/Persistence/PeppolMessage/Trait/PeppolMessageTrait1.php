@@ -11,7 +11,6 @@ use DateTimeImmutable;
  */
 trait PeppolMessageTrait1
 {
-
     public function reqId(): int
     {
         return $this->requireId($this->id, 'PeppolMessage');

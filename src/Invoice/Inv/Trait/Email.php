@@ -9,7 +9,6 @@ use App\Infrastructure\Persistence\{
     Inv\Inv, InvSentLog\InvSentLog,
     EmailTemplate\EmailTemplate
 };
-
 use App\Invoice\{
     EmailTemplate\EmailTemplateRepository as ETR,
     Inv\InvEmailService,
@@ -18,12 +17,10 @@ use App\Invoice\{
     Inv\MailerInvForm,
     InvSentLog\InvSentLogRepository as ISLR
 };
-
 use Yiisoft\{
     Router\HydratorAttribute\RouteArgument,
     Yii\View\Renderer\WebViewRenderer
 };
-
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -42,12 +39,28 @@ trait Email
     ): Response {
         $mailerDeps = new MailerHelperCustomDeps($d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
         $mailer_helper = new MailerHelper(
-            $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
-        $template_helper = new TemplateHelper($this->sR, $d->ccR, $d->qcR, $d->icR, $d->pcR,
-            $d->socR, $d->cfR, $d->cvR);
+            $this->sR,
+            $this->session,
+            $this->translator,
+            $this->logger,
+            $this->mailer,
+            $mailerDeps
+        );
+        $template_helper = new TemplateHelper(
+            $this->sR,
+            $d->ccR,
+            $d->qcR,
+            $d->icR,
+            $d->pcR,
+            $d->socR,
+            $d->cfR,
+            $d->cvR
+        );
         if (!$mailer_helper->mailerConfigured()) {
-            $this->flashMessage('warning',
-                $this->translator->translate('email.not.configured'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('email.not.configured')
+            );
             return $this->webService->getRedirectResponse('inv/index');
         }
         $inv = $this->inv($id, $d->iR, true);
@@ -79,12 +92,16 @@ trait Email
         }
         $emailTemplateName = $template_helper->selectEmailInvoiceTemplate($invoice);
         if ($emailTemplateName == '') {
-            $this->flashMessage('warning',
-                $this->translator->translate('email.template.not.configured'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('email.template.not.configured')
+            );
             return $this->webService->getRedirectResponse(
-                'setting/tabIndex', ['_language' => 'en'],
-                    ['active' => 'invoices'],
-                    'settings[email_invoice_template]');
+                'setting/tabIndex',
+                ['_language' => 'en'],
+                ['active' => 'invoices'],
+                'settings[email_invoice_template]'
+            );
         }
         $setting_status_email_template =
             $d->etR->repoEmailTemplatequery((int) $emailTemplateName) ?: null;
@@ -107,7 +124,8 @@ trait Email
             'alert' => $this->alert(),
             'autoTemplate' => null !== $setting_status_email_template ?
                 $this->getInjectEmailTemplateArray(
-                    $setting_status_email_template) : [],
+                    $setting_status_email_template
+                ) : [],
             'settingStatusPdfTemplate' => $pdfTemplateName,
             'emailTemplates' => $d->etR->repoEmailTemplateType('invoice'),
             'dropdownTitlesOfEmailTemplates' => $this->emailTemplates($d->etR),
@@ -117,16 +135,20 @@ trait Email
             'invoice' => $invoice,
             'pdfTemplates' => $this->emailGetInvoiceTemplates('pdf'),
             'templateTags' => $this->webViewRenderer->renderPartialAsString(
-                '//invoice/emailtemplate/template-tags-with-inv', [
+                '//invoice/emailtemplate/template-tags-with-inv',
+                [
                     'custom_fields' => $custom_fields,
                     'template_tags_quote' => '',
                     'template_tags_inv' =>
                     $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/emailtemplate/template-tags-inv', [
+                        '//invoice/emailtemplate/template-tags-inv',
+                        [
                     'custom_fields_inv_custom' =>
                         $custom_fields['inv_custom'],
-                ]),
-            ]),
+                ]
+                    ),
+            ]
+            ),
             'form' => new MailerInvForm(),
         ];
         return $this->webViewRenderer->render('mailer_invoice', $parameters);

@@ -10,7 +10,6 @@ use Yiisoft\Yii\Runner\Http\HttpApplicationRunner;
 
 trait SettingConfigTrait
 {
-
     /**
      * Related logic:
        C:\wamp64\www\invoice\src\Invoice\Helpers\PdfHelper.php generate_inv_html
@@ -23,14 +22,14 @@ trait SettingConfigTrait
         $config = $this->getConfigParams();
         $params = $config->get('params');
         if (null !== $company) {
-    /**
-     * @var array $params['company']
-     * @var string $params['company']['vat_id']
-     * @var string $params['company']['tax_code']
-     * @var string $params['company']['tax_currency'],
-     * @var string $params['company']['iso_3166_country_identification_code']
-     * @var string $params['company']['iso_3166_country_identification_list_id']
-     */
+            /**
+             * @var array $params['company']
+             * @var string $params['company']['vat_id']
+             * @var string $params['company']['tax_code']
+             * @var string $params['company']['tax_currency'],
+             * @var string $params['company']['iso_3166_country_identification_code']
+             * @var string $params['company']['iso_3166_country_identification_list_id']
+             */
             $company_array = [
                 // Normally non-changing parameters
                 'vat_id' => $params['company']['vat_id'],
@@ -85,24 +84,24 @@ trait SettingConfigTrait
     {
         $config = $this->getConfigParams();
         $params = $config->get('params');
-/**
- * @var array $params['company']
- * @var string $params['company']['name']
- * @var string $params['company']['address_1']
- * @var string $params['company']['address_2']
- * @var string $params['company']['zip']
- * @var string $params['company']['city']
- * @var string $params['company']['state']
- * @var string $params['company']['country']
- * @var string $params['company']['vat_id']
- * @var string $params['company']['tax_code']
- * @var string $params['company']['tax_currency'],
- * @var string $params['company']['document_currency'],
- * @var string $params['company']['phone']
- * @var string $params['company']['fax']
- * @var string $params['company']['iso_3166_country_identification_code']
- * @var string $params['company']['iso_3166_country_identification_list_id']
- */
+        /**
+         * @var array $params['company']
+         * @var string $params['company']['name']
+         * @var string $params['company']['address_1']
+         * @var string $params['company']['address_2']
+         * @var string $params['company']['zip']
+         * @var string $params['company']['city']
+         * @var string $params['company']['state']
+         * @var string $params['company']['country']
+         * @var string $params['company']['vat_id']
+         * @var string $params['company']['tax_code']
+         * @var string $params['company']['tax_currency'],
+         * @var string $params['company']['document_currency'],
+         * @var string $params['company']['phone']
+         * @var string $params['company']['fax']
+         * @var string $params['company']['iso_3166_country_identification_code']
+         * @var string $params['company']['iso_3166_country_identification_list_id']
+         */
         return [
             'logo_path' => '/site/' . $this->publicLogo() . '.png',
             'name' => $params['company']['name'],

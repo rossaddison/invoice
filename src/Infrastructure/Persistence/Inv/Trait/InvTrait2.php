@@ -9,7 +9,6 @@ namespace App\Infrastructure\Persistence\Inv\Trait;
  */
 trait InvTrait2
 {
-
     public function hasIdentity(): bool
     {
         return $this->id !== null;

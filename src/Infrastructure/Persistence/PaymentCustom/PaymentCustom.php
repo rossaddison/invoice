@@ -15,7 +15,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class PaymentCustom
 {
     use RequireId;
- 
+
     #[BelongsTo(target: Payment::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Payment $payment = null;
 
@@ -30,8 +30,8 @@ class PaymentCustom
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $custom_field_id = null,
         #[Column(type: 'text', nullable: true)]
-        private string $value = '')
-    {
+        private string $value = ''
+    ) {
     }
 
     public function getPayment(): ?Payment

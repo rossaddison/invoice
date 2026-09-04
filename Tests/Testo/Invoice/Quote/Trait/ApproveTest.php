@@ -170,9 +170,21 @@ final class ApproveTest
         $urlGenerator = m::mock(UrlGenerator::class);
 
         return new QuoteApproveHarness(
-            $webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash,
-            $factory, $soService, $soTaxRateService, $soCustomService, $soItemService, $soacService,
-            $activeUser, $urlGenerator,
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash,
+            $factory,
+            $soService,
+            $soTaxRateService,
+            $soCustomService,
+            $soItemService,
+            $soacService,
+            $activeUser,
+            $urlGenerator,
         );
     }
 

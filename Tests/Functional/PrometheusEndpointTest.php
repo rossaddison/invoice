@@ -29,7 +29,7 @@ final class PrometheusEndpointTest extends TestCase
     public function testInvoiceSystemMetrics(): void
     {
         // Simulate metrics that would be collected in a real invoice system
-        
+
         // 1. Invoice operations
         $invoiceOpsCounter = $this->registry->getOrRegisterCounter(
             'yii3_invoice',
@@ -82,40 +82,65 @@ final class PrometheusEndpointTest extends TestCase
 
         // Test the output format and content
         $this->assertStringContainsString(
-                '# HELP yii3_invoice_invoice_operations_total', $output);
+            '# HELP yii3_invoice_invoice_operations_total',
+            $output
+        );
         $this->assertStringContainsString(
-                '# TYPE yii3_invoice_invoice_operations_total counter', $output);
-        
+            '# TYPE yii3_invoice_invoice_operations_total counter',
+            $output
+        );
+
         // Check specific metric values
         $this->assertStringContainsString(
-                'operation="create",status="success"} 2', $output);
+            'operation="create",status="success"} 2',
+            $output
+        );
         $this->assertStringContainsString(
-                'operation="create",status="error"} 1', $output);
+            'operation="create",status="error"} 1',
+            $output
+        );
         $this->assertStringContainsString(
-                'operation="view",status="success"} 6', $output);
+            'operation="view",status="success"} 6',
+            $output
+        );
 
         // Verify histogram metrics are present
         $this->assertStringContainsString(
-                'yii3_invoice_database_query_duration_seconds_bucket', $output);
+            'yii3_invoice_database_query_duration_seconds_bucket',
+            $output
+        );
         $this->assertStringContainsString(
-                'yii3_invoice_database_query_duration_seconds_count', $output);
+            'yii3_invoice_database_query_duration_seconds_count',
+            $output
+        );
         $this->assertStringContainsString(
-                'yii3_invoice_database_query_duration_seconds_sum', $output);
+            'yii3_invoice_database_query_duration_seconds_sum',
+            $output
+        );
 
         // Verify gauge metrics
         $this->assertStringContainsString(
-                'yii3_invoice_active_connections 3', $output);
+            'yii3_invoice_active_connections 3',
+            $output
+        );
         $this->assertStringContainsString(
-                'yii3_invoice_php_memory_usage_bytes', $output);
+            'yii3_invoice_php_memory_usage_bytes',
+            $output
+        );
 
         // Ensure proper Prometheus format
         $lines = explode("\n", $output);
-        $metricLines = array_filter($lines,
-                fn($line) => !empty($line) && !str_starts_with($line, '#'));
-        
-        $this->assertGreaterThan(10, count($metricLines),
-                'Should have multiple metric lines');
-        
+        $metricLines = array_filter(
+            $lines,
+            fn ($line) => !empty($line) && !str_starts_with($line, '#')
+        );
+
+        $this->assertGreaterThan(
+            10,
+            count($metricLines),
+            'Should have multiple metric lines'
+        );
+
         // $metricLines is already filtered to non-empty lines above.
         foreach ($metricLines as $line) {
             $this->assertMatchesRegularExpression(
@@ -129,7 +154,7 @@ final class PrometheusEndpointTest extends TestCase
     public function testBusinessMetrics(): void
     {
         // Business-specific metrics for the invoice application
-        
+
         // Revenue metrics
         $revenueGauge = $this->registry->getOrRegisterGauge(
             'yii3_invoice_business',
@@ -171,7 +196,7 @@ final class PrometheusEndpointTest extends TestCase
                 . '_amount{currency="USD"} 125000.5', $output);
         $this->assertStringContainsString('yii3_invoice_business_total_revenue'
                 . '_amount{currency="EUR"} 95000.75', $output);
-        
+
         $this->assertStringContainsString('yii3_invoice_business_products'
                 . '_generated_from_families_total{family_id="family_1"} 25', $output);
         $this->assertStringContainsString('yii3_invoice_business_products'
@@ -189,36 +214,42 @@ final class PrometheusEndpointTest extends TestCase
     {
         // Simulate what a real /metrics endpoint would return
         $this->addSampleMetrics();
-        
+
         $renderer = new RenderTextFormat();
         $output = $renderer->render($this->registry->getMetricFamilySamples());
-        
+
         // Test that output is valid for Prometheus scraping
         $this->assertStringStartsWithAnyOf([
             '# HELP',
             '# TYPE',
             // Or a metric line if no help/type comments
         ], $output);
-        
+
         // Check content-type would be correct
-        $this->assertEquals('text/plain; version=0.0.4; charset=utf-8',
-                'text/plain; version=0.0.4; charset=utf-8');
-        
+        $this->assertEquals(
+            'text/plain; version=0.0.4; charset=utf-8',
+            'text/plain; version=0.0.4; charset=utf-8'
+        );
+
         // Verify no PHP errors or warnings in output
         $this->assertStringNotContainsString('Warning:', $output);
         $this->assertStringNotContainsString('Error:', $output);
         $this->assertStringNotContainsString('Fatal:', $output);
-        
+
         // Check metrics are properly separated
         $lines = explode("\n", $output);
         $this->assertGreaterThan(5, count($lines));
-        
+
         // Verify we have both HELP and TYPE comments
-        $helpLines = array_filter($lines, fn($line) => str_starts_with($line,
-                '# HELP'));
-        $typeLines = array_filter($lines, fn($line) => str_starts_with($line,
-                '# TYPE'));
-        
+        $helpLines = array_filter($lines, fn ($line) => str_starts_with(
+            $line,
+            '# HELP'
+        ));
+        $typeLines = array_filter($lines, fn ($line) => str_starts_with(
+            $line,
+            '# TYPE'
+        ));
+
         $this->assertGreaterThan(0, count($helpLines), 'Should have HELP comments');
         $this->assertGreaterThan(0, count($typeLines), 'Should have TYPE comments');
     }
@@ -226,17 +257,28 @@ final class PrometheusEndpointTest extends TestCase
     private function addSampleMetrics(): void
     {
         // Add various metric types for comprehensive testing
-        
-        $this->registry->getOrRegisterCounter('test', 'requests_total',
-                'Total requests', ['status'])
+
+        $this->registry->getOrRegisterCounter(
+            'test',
+            'requests_total',
+            'Total requests',
+            ['status']
+        )
             ->incBy(100, ['200']);
-            
-        $this->registry->getOrRegisterGauge('test', 'cpu_usage',
-                'CPU usage percentage')
+
+        $this->registry->getOrRegisterGauge(
+            'test',
+            'cpu_usage',
+            'CPU usage percentage'
+        )
             ->set(75.5);
-            
-        $this->registry->getOrRegisterHistogram('test', 'request_duration',
-                'Request duration', ['endpoint'])
+
+        $this->registry->getOrRegisterHistogram(
+            'test',
+            'request_duration',
+            'Request duration',
+            ['endpoint']
+        )
             ->observe(0.5, ['api']);
     }
 

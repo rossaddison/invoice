@@ -77,7 +77,10 @@ final readonly class SalesOrderPdfService
             . '_'
             . str_replace(['\\', '/'], '_', $so->getNumber() ?? (string) random_int(0, 10));
         return $mpdf->pdfCreate(
-            $html, $filename, $stream, $this->s,
+            $html,
+            $filename,
+            $stream,
+            $this->s,
             new PdfCreateContext($so->getPassword(), null, null, false, false, [], $so),
         );
     }
@@ -159,7 +162,8 @@ final readonly class SalesOrderPdfService
             ),
         ];
         return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/template/salesorder/pdf/' . $soTemplate, $data,
+            '//invoice/template/salesorder/pdf/' . $soTemplate,
+            $data,
         );
     }
 

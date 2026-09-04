@@ -59,7 +59,8 @@ final class OrderResponseAdvancedService
         private readonly SalesOrderItemRepository $salesOrderItemRepository,
         private readonly As4MessageDispatcher $dispatcher,
         private readonly LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     /**
      * Whole-order "Acknowledge" shortcut -- every line gets the same

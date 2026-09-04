@@ -12,8 +12,7 @@ class Country implements XmlSerializable
     public function __construct(
         private readonly string $identificationCode,
         private readonly ?string $listId
-    )
-    {
+    ) {
     }
 
     // used in StoreCoveHelper

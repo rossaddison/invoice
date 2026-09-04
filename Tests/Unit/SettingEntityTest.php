@@ -12,7 +12,7 @@ final class SettingEntityTest extends TestCase
     public function testConstructorWithDefaults(): void
     {
         $setting = new Setting();
-        
+
         $this->assertFalse($setting->hasIdentity());
         $this->assertSame('', $setting->getSettingKey());
         $this->assertSame('', $setting->getSettingValue());
@@ -21,7 +21,7 @@ final class SettingEntityTest extends TestCase
     public function testConstructorWithParameters(): void
     {
         $setting = new Setting('theme', 'dark');
-        
+
         $this->assertFalse($setting->hasIdentity());
         $this->assertSame('theme', $setting->getSettingKey());
         $this->assertSame('dark', $setting->getSettingValue());
@@ -31,7 +31,7 @@ final class SettingEntityTest extends TestCase
     {
         $setting = new Setting();
         $setting->setSettingKey('language');
-        
+
         $this->assertSame('language', $setting->getSettingKey());
     }
 
@@ -39,14 +39,14 @@ final class SettingEntityTest extends TestCase
     {
         $setting = new Setting();
         $setting->setSettingValue('en_US');
-        
+
         $this->assertSame('en_US', $setting->getSettingValue());
     }
 
     public function testSettingIdGetter(): void
     {
         $setting = new Setting();
-        
+
         $this->assertFalse($setting->hasIdentity());
     }
 
@@ -69,7 +69,7 @@ final class SettingEntityTest extends TestCase
     {
         $longKey = str_repeat('key_', 20); // 80 characters
         $setting = new Setting($longKey, 'value');
-        
+
         $this->assertSame($longKey, $setting->getSettingKey());
         $this->assertSame('value', $setting->getSettingValue());
     }
@@ -78,7 +78,7 @@ final class SettingEntityTest extends TestCase
     {
         $longValue = str_repeat('This is a very long setting value. ', 5); // ~175 characters
         $setting = new Setting('description', $longValue);
-        
+
         $this->assertSame('description', $setting->getSettingKey());
         $this->assertSame($longValue, $setting->getSettingValue());
     }
@@ -88,7 +88,7 @@ final class SettingEntityTest extends TestCase
         $setting = new Setting('email_host', 'smtp.example.com');
         $setting->setSettingKey('smtp_host');
         $setting->setSettingValue('mail.company.com');
-        
+
         $this->assertSame('smtp_host', $setting->getSettingKey());
         $this->assertSame('mail.company.com', $setting->getSettingValue());
     }
@@ -98,7 +98,7 @@ final class SettingEntityTest extends TestCase
         $setting = new Setting();
         $setting->setSettingKey('timezone');
         $setting->setSettingValue('America/New_York');
-        
+
         $this->assertSame('timezone', $setting->getSettingKey());
         $this->assertSame('America/New_York', $setting->getSettingValue());
     }
@@ -106,7 +106,7 @@ final class SettingEntityTest extends TestCase
     public function testEmptySettingHandling(): void
     {
         $setting = new Setting('', '');
-        
+
         $this->assertSame('', $setting->getSettingKey());
         $this->assertSame('', $setting->getSettingValue());
     }
@@ -114,7 +114,7 @@ final class SettingEntityTest extends TestCase
     public function testSpecialCharactersInSettings(): void
     {
         $setting = new Setting('special_chars', 'Value with @#$%^&*()');
-        
+
         $this->assertSame('special_chars', $setting->getSettingKey());
         $this->assertSame('Value with @#$%^&*()', $setting->getSettingValue());
     }
@@ -122,7 +122,7 @@ final class SettingEntityTest extends TestCase
     public function testUnicodeInSettings(): void
     {
         $setting = new Setting('unicode_test', 'Tëst Vâlùe 测试');
-        
+
         $this->assertSame('unicode_test', $setting->getSettingKey());
         $this->assertSame('Tëst Vâlùe 测试', $setting->getSettingValue());
     }
@@ -131,7 +131,7 @@ final class SettingEntityTest extends TestCase
     {
         $jsonValue = '{"theme": "dark", "language": "en"}';
         $setting = new Setting('user_preferences', $jsonValue);
-        
+
         $this->assertSame('user_preferences', $setting->getSettingKey());
         $this->assertSame($jsonValue, $setting->getSettingValue());
     }

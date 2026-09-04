@@ -33,5 +33,6 @@ readonly class Rule
     public function __construct(
         public string $context,
         public array  $assertions,
-    ) {}
+    ) {
+    }
 }

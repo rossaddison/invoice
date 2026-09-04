@@ -33,7 +33,7 @@ final readonly class FormFields
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
 
-/** @var array<array-key, array<array-key, string>|string> $clientOptions */
+        /** @var array<array-key, array<array-key, string>|string> $clientOptions */
         $clientOptions = $optionsData['client'] ?? [];
 
         return Html::openTag('div')
@@ -61,7 +61,7 @@ final readonly class FormFields
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
 
-/** @var array<array-key, array<array-key, string>|string> $groupOptions */
+        /** @var array<array-key, array<array-key, string>|string> $groupOptions */
         $groupOptions = $optionsData['group'] ?? [];
 
         return Html::openTag('div')
@@ -89,7 +89,7 @@ final readonly class FormFields
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
 
-/** @var array<array-key, array<array-key, string>|string> $statusOptions */
+        /** @var array<array-key, array<array-key, string>|string> $statusOptions */
         $statusOptions = $optionsData[$statusKey] ?? [];
 
         return Html::openTag('div')
@@ -127,9 +127,10 @@ final readonly class FormFields
     /**
      * Date created field
      */
-    public function dateCreatedField(InvForm|QuoteForm|SalesOrderForm $form,
-            string $labelKey = 'date.issued'): string
-    {
+    public function dateCreatedField(
+        InvForm|QuoteForm|SalesOrderForm $form,
+        string $labelKey = 'date.issued'
+    ): string {
         $value = $form->getDateCreated();
         $dateValue = $value instanceof \DateTimeImmutable ?
                 $value->format('Y-m-d') : '';
@@ -158,7 +159,8 @@ final readonly class FormFields
                 ->value($form->getPassword())
                 ->placeholder($this->translator->translate('password'))
                 ->hint(
-                $this->translator->translate('hint.this.field.is.not.required'))
+                    $this->translator->translate('hint.this.field.is.not.required')
+                )
                 ->render()
             . Html::closeTag('div');
     }
@@ -179,7 +181,8 @@ final readonly class FormFields
                 ->value($value ?? '')
                 ->placeholder($this->translator->translate('note'))
                 ->hint(
-                $this->translator->translate('hint.this.field.is.not.required'))
+                    $this->translator->translate('hint.this.field.is.not.required')
+                )
                 ->render()
             . Html::closeTag('div');
     }

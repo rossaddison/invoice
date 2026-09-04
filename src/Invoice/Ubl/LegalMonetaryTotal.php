@@ -22,8 +22,7 @@ class LegalMonetaryTotal implements XmlSerializable
         private readonly float $payableAmount,
         private readonly string $document_currency,
         public SettingRepository $s,
-    )
-    {
+    ) {
     }
 
     /**
@@ -41,8 +40,12 @@ class LegalMonetaryTotal implements XmlSerializable
             [
                 'name' => Schema::CBC . 'LineExtensionAmount',
                 'value' => $this->s->currencyConverter(number_format(
-                        $this->lineExtensionAmount
-                        ?: 0.00, 2, '.', '')),
+                    $this->lineExtensionAmount
+                        ?: 0.00,
+                    2,
+                    '.',
+                    ''
+                )),
                 'attributes' => [
                     'currencyID' => $this->document_currency,
                 ],
@@ -50,8 +53,12 @@ class LegalMonetaryTotal implements XmlSerializable
             [
                 'name' => Schema::CBC . 'TaxExclusiveAmount',
                 'value' => $this->s->currencyConverter(number_format(
-                        $this->taxExclusiveAmount
-                        ?: 0.00, 2, '.', '')),
+                    $this->taxExclusiveAmount
+                        ?: 0.00,
+                    2,
+                    '.',
+                    ''
+                )),
                 'attributes' => [
                     'currencyID' => $this->document_currency,
                 ],
@@ -59,8 +66,12 @@ class LegalMonetaryTotal implements XmlSerializable
             [
                 'name' => Schema::CBC . 'TaxInclusiveAmount',
                 'value' => $this->s->currencyConverter(number_format(
-                        $this->taxInclusiveAmount
-                        ?: 0.00, 2, '.', '')),
+                    $this->taxInclusiveAmount
+                        ?: 0.00,
+                    2,
+                    '.',
+                    ''
+                )),
                 'attributes' => [
                     'currencyID' => $this->document_currency,
                 ],
@@ -68,8 +79,12 @@ class LegalMonetaryTotal implements XmlSerializable
             [
                 'name' => Schema::CBC . 'AllowanceTotalAmount',
                 'value' => $this->s->currencyConverter(number_format(
-                        $this->allowanceTotalAmount
-                        ?: 0.00, 2, '.', '')),
+                    $this->allowanceTotalAmount
+                        ?: 0.00,
+                    2,
+                    '.',
+                    ''
+                )),
                 'attributes' => [
                     'currencyID' => $this->document_currency,
                 ],
@@ -77,8 +92,12 @@ class LegalMonetaryTotal implements XmlSerializable
             [
                 'name' => Schema::CBC . 'PayableAmount',
                 'value' => $this->s->currencyConverter(number_format(
-                        $this->payableAmount
-                        ?: 0.00, 2, '.', '')),
+                    $this->payableAmount
+                        ?: 0.00,
+                    2,
+                    '.',
+                    ''
+                )),
                 'attributes' => [
                     'currencyID' => $this->document_currency,
                 ],

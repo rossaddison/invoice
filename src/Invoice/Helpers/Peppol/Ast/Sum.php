@@ -13,5 +13,7 @@ namespace App\Invoice\Helpers\Peppol\Ast;
  */
 readonly class Sum implements Expression
 {
-    public function __construct(public Expression $path) {}
+    public function __construct(public Expression $path)
+    {
+    }
 }

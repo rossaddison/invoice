@@ -20,5 +20,6 @@ final class FamilyEditDeps
         public readonly cvR $cvR,
         public readonly cpR $cpR,
         public readonly csR $csR,
-    ) {}
+    ) {
+    }
 }

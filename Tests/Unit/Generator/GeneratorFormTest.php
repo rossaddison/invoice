@@ -23,9 +23,9 @@ class GeneratorFormTest extends TestCase
     public function testFormInitializationFromEntity(): void
     {
         $this->setupMockGentor();
-        
+
         $form = GeneratorForm::show($this->gentor);
-        
+
         $this->assertSame('test_route_prefix', $form->getRoutePrefix());
         $this->assertSame('test_route_suffix', $form->getRouteSuffix());
         $this->assertSame('TestCamelCase', $form->getCamelcaseCapitalName());
@@ -40,18 +40,18 @@ class GeneratorFormTest extends TestCase
     public function testGetFormName(): void
     {
         $this->setupMockGentor();
-        
+
         $form = GeneratorForm::show($this->gentor);
-        
+
         $this->assertSame('', $form->getFormName());
     }
 
     public function testAllStringGettersReturnString(): void
     {
         $this->setupMockGentor();
-        
+
         $form = GeneratorForm::show($this->gentor);
-        
+
         $this->assertIsString($form->getRoutePrefix());
         $this->assertIsString($form->getRouteSuffix());
         $this->assertIsString($form->getCamelcaseCapitalName());
@@ -80,9 +80,9 @@ class GeneratorFormTest extends TestCase
         $this->gentor->method('isModifiedInclude')->willReturn(false);
         $this->gentor->method('isUpdatedInclude')->willReturn(false);
         $this->gentor->method('isDeletedInclude')->willReturn(false);
-        
+
         $form = GeneratorForm::show($this->gentor);
-        
+
         $this->assertSame('', $form->getRoutePrefix());
         $this->assertSame('', $form->getRouteSuffix());
         $this->assertSame('', $form->getCamelcaseCapitalName());
@@ -97,7 +97,7 @@ class GeneratorFormTest extends TestCase
     public function testLongStringValues(): void
     {
         $longString = str_repeat('Long', 50); // 200 characters
-        
+
         $this->gentor->method('getRoutePrefix')->willReturn($longString);
         $this->gentor->method('getRouteSuffix')->willReturn($longString);
         $this->gentor->method('getCamelcaseCapitalName')->willReturn($longString);
@@ -112,9 +112,9 @@ class GeneratorFormTest extends TestCase
         $this->gentor->method('isModifiedInclude')->willReturn(true);
         $this->gentor->method('isUpdatedInclude')->willReturn(true);
         $this->gentor->method('isDeletedInclude')->willReturn(true);
-        
+
         $form = GeneratorForm::show($this->gentor);
-        
+
         $this->assertSame($longString, $form->getRoutePrefix());
         $this->assertSame($longString, $form->getRouteSuffix());
         $this->assertSame($longString, $form->getCamelcaseCapitalName());
@@ -129,7 +129,7 @@ class GeneratorFormTest extends TestCase
     public function testSpecialCharactersInStrings(): void
     {
         $specialChars = '!@#$%^&*()_+-=[]{}|;:,.<>?`~"\'\\';
-        
+
         $this->gentor->method('getRoutePrefix')->willReturn($specialChars);
         $this->gentor->method('getRouteSuffix')->willReturn($specialChars);
         $this->gentor->method('getCamelcaseCapitalName')->willReturn($specialChars);
@@ -144,9 +144,9 @@ class GeneratorFormTest extends TestCase
         $this->gentor->method('isModifiedInclude')->willReturn(true);
         $this->gentor->method('isUpdatedInclude')->willReturn(false);
         $this->gentor->method('isDeletedInclude')->willReturn(true);
-        
+
         $form = GeneratorForm::show($this->gentor);
-        
+
         $this->assertSame($specialChars, $form->getRoutePrefix());
         $this->assertSame($specialChars, $form->getRouteSuffix());
         $this->assertSame($specialChars, $form->getCamelcaseCapitalName());
@@ -161,7 +161,7 @@ class GeneratorFormTest extends TestCase
     public function testUnicodeCharactersInStrings(): void
     {
         $unicode = 'Hello 世界! 🌍 Héllö Wørld™€₹中文';
-        
+
         $this->gentor->method('getRoutePrefix')->willReturn($unicode);
         $this->gentor->method('getRouteSuffix')->willReturn($unicode);
         $this->gentor->method('getCamelcaseCapitalName')->willReturn($unicode);
@@ -176,9 +176,9 @@ class GeneratorFormTest extends TestCase
         $this->gentor->method('isModifiedInclude')->willReturn(false);
         $this->gentor->method('isUpdatedInclude')->willReturn(false);
         $this->gentor->method('isDeletedInclude')->willReturn(false);
-        
+
         $form = GeneratorForm::show($this->gentor);
-        
+
         $this->assertSame($unicode, $form->getRoutePrefix());
         $this->assertSame($unicode, $form->getRouteSuffix());
         $this->assertSame($unicode, $form->getCamelcaseCapitalName());
@@ -207,9 +207,9 @@ class GeneratorFormTest extends TestCase
         $this->gentor->method('isModifiedInclude')->willReturn(true);
         $this->gentor->method('isUpdatedInclude')->willReturn(true);
         $this->gentor->method('isDeletedInclude')->willReturn(true);
-        
+
         $form = GeneratorForm::show($this->gentor);
-        
+
         $this->assertSame('invoice', $form->getRoutePrefix());
         $this->assertSame('invoice', $form->getRouteSuffix());
         $this->assertSame('Invoice', $form->getCamelcaseCapitalName());
@@ -238,9 +238,9 @@ class GeneratorFormTest extends TestCase
         $this->gentor->method('isModifiedInclude')->willReturn(false);
         $this->gentor->method('isUpdatedInclude')->willReturn(true);
         $this->gentor->method('isDeletedInclude')->willReturn(false);
-        
+
         $form = GeneratorForm::show($this->gentor);
-        
+
         $this->assertSame('quote', $form->getRoutePrefix());
         $this->assertSame('quote', $form->getRouteSuffix());
         $this->assertSame('Quote', $form->getCamelcaseCapitalName());
@@ -255,9 +255,9 @@ class GeneratorFormTest extends TestCase
     public function testGetterMethodsConsistency(): void
     {
         $this->setupMockGentor();
-        
+
         $form = GeneratorForm::show($this->gentor);
-        
+
         // Test that getter methods are consistent (same result on multiple calls)
         $this->assertSame($form->getRoutePrefix(), $form->getRoutePrefix());
         $this->assertSame($form->getRouteSuffix(), $form->getRouteSuffix());
@@ -274,9 +274,9 @@ class GeneratorFormTest extends TestCase
     public function testFormNameAlwaysEmpty(): void
     {
         $this->setupMockGentor();
-        
+
         $form = GeneratorForm::show($this->gentor);
-        
+
         // Form name should always be empty regardless of entity values
         $this->assertSame('', $form->getFormName());
         $this->assertEmpty($form->getFormName());
@@ -299,9 +299,9 @@ class GeneratorFormTest extends TestCase
         $this->gentor->method('isModifiedInclude')->willReturn(true);
         $this->gentor->method('isUpdatedInclude')->willReturn(true);
         $this->gentor->method('isDeletedInclude')->willReturn(true);
-        
+
         $form = GeneratorForm::show($this->gentor);
-        
+
         $this->assertSame('deep/nested/route', $form->getRoutePrefix());
         $this->assertSame('entity', $form->getRouteSuffix());
         $this->assertSame('DeepNestedEntity', $form->getCamelcaseCapitalName());

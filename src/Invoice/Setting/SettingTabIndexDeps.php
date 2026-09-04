@@ -18,5 +18,6 @@ final class SettingTabIndexDeps
         public readonly PM $pm,
         public readonly TR $tR,
         public readonly CSR $csR,
-    ) {}
+    ) {
+    }
 }

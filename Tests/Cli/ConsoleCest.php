@@ -39,7 +39,7 @@ final class ConsoleCest
         $command = dirname(__DIR__, 2) . '/yii';
         $I->runShellCommand($command . ' invoice/items');
         $I->seeResultCodeIs(ExitCode::OK);
-        
+
         // Verify that invoice items were created successfully
         $I->comment('Testing InvItemAllowanceCharge functionality:');
         $I->comment('- Item-level allowances (discounts) can be applied per invoice item');
@@ -59,7 +59,7 @@ final class ConsoleCest
         $command = dirname(__DIR__, 2) . '/yii';
         $I->runShellCommand($command . ' invoice/items');
         $I->seeResultCodeIs(ExitCode::OK);
-        
+
         // Verify that invoice-level allowances/charges can be added
         $I->comment('Testing InvAllowanceCharge functionality:');
         $I->comment('- Invoice-level allowances/charges appear after "With Item Tax"');
@@ -83,7 +83,7 @@ final class ConsoleCest
         $command = dirname(__DIR__, 2) . '/yii';
         $I->runShellCommand($command . ' invoice/items');
         $I->seeResultCodeIs(ExitCode::OK);
-        
+
         $I->comment('Testing complete invoice calculation flow:');
         $I->comment('Step 1: Item subtotals calculated');
         $I->comment('Step 2: Item-level discounts applied (InvItemAllowanceCharge)');
@@ -103,7 +103,7 @@ final class ConsoleCest
         $command = dirname(__DIR__, 2) . '/yii';
         $I->runShellCommand($command . ' invoice/items');
         $I->seeResultCodeIs(ExitCode::OK);
-        
+
         $I->comment('Expected invoice structure:');
         $I->comment('┌─────────────────────────────────────────┐');
         $I->comment('│ Items Table                             │');

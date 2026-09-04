@@ -19,7 +19,6 @@ use DateTimeImmutable;
  */
 trait QuoteTrait3
 {
-
     public function setDateRequired(DateTimeImmutable $date_required): void
     {
         $this->date_required = $date_required;

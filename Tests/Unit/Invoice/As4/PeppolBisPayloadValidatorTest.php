@@ -33,11 +33,12 @@ class PeppolBisPayloadValidatorTest extends TestCase
      */
     private function parserStub(SchematronDocument $document, int &$callCount = 0): SchematronParserInterface
     {
-        return new class($document, $callCount) implements SchematronParserInterface {
+        return new class ($document, $callCount) implements SchematronParserInterface {
             public function __construct(
                 private readonly SchematronDocument $document,
                 private int &$callCount,
-            ) {}
+            ) {
+            }
 
             #[\Override]
             public function parseFile(string $path): SchematronDocument
@@ -61,9 +62,11 @@ class PeppolBisPayloadValidatorTest extends TestCase
      */
     private function runnerStub(array $violations = []): SchematronRunnerInterface
     {
-        return new class($violations) implements SchematronRunnerInterface {
+        return new class ($violations) implements SchematronRunnerInterface {
             /** @param ValidationViolation[] $violations */
-            public function __construct(private readonly array $violations) {}
+            public function __construct(private readonly array $violations)
+            {
+            }
 
             /** @return array<int, ValidationViolation> */
             #[\Override]

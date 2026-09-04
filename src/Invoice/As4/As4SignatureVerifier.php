@@ -128,9 +128,16 @@ class As4SignatureVerifier
         $body   = '';
         $inside = false;
         foreach ($lines as $line) {
-            if (str_contains($line, 'BEGIN PUBLIC KEY')) { $inside = true; continue; }
-            if (str_contains($line, 'END PUBLIC KEY')) { break; }
-            if ($inside) { $body .= trim($line); }
+            if (str_contains($line, 'BEGIN PUBLIC KEY')) {
+                $inside = true;
+                continue;
+            }
+            if (str_contains($line, 'END PUBLIC KEY')) {
+                break;
+            }
+            if ($inside) {
+                $body .= trim($line);
+            }
         }
         return $body;
     }

@@ -11,7 +11,7 @@ use Yiisoft\Validator\Rule\Required;
 final class PaymentPeppolForm extends FormModel
 {
     private ?int $inv_id = null;
-    
+
     #[Required]
     private ?int $auto_reference = null;
 

@@ -35,7 +35,8 @@ final readonly class UserService
         $userId = $this->resolveUserId();
 
         return null !== $userId && $this->accessChecker->userHasPermission(
-            $userId, $permission
+            $userId,
+            $permission
         );
     }
 

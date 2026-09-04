@@ -14,7 +14,6 @@ use RequireId;
  */
 trait CompanyTrait1
 {
-
     public function getCompanyPrivates(): ArrayCollection
     {
         return $this->companyPrivates;

@@ -6,7 +6,7 @@ namespace App\Infrastructure\Persistence\InvAllowanceCharge;
 
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository;
 use App\Infrastructure\Persistence\{
-   AllowanceCharge\AllowanceCharge, Inv\Inv, Trait\RequireId
+    AllowanceCharge\AllowanceCharge, Inv\Inv, Trait\RequireId
 };
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -17,9 +17,12 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class InvAllowanceCharge
 {
     use RequireId;
- 
-    #[BelongsTo(target: AllowanceCharge::class, nullable: false,
-        fkAction: 'NO ACTION')]
+
+    #[BelongsTo(
+        target: AllowanceCharge::class,
+        nullable: false,
+        fkAction: 'NO ACTION'
+    )]
     private ?AllowanceCharge $allowance_charge = null;
 
     #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
@@ -35,8 +38,8 @@ class InvAllowanceCharge
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $amount = null,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $vat_or_tax = null)
-    {
+        private ?float $vat_or_tax = null
+    ) {
     }
 
     public function getAllowanceCharge(): ?AllowanceCharge
@@ -58,7 +61,7 @@ class InvAllowanceCharge
     {
         return $this->requireId($this->id, 'InvAllowanceCharge');
     }
-    
+
     public function hasIdentity(): bool
     {
         return $this->id !== null;

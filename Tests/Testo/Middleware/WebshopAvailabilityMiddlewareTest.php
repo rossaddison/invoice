@@ -48,7 +48,7 @@ final class WebshopAvailabilityMiddlewareTest
     /** Throws if called -- proves the request never reached the real route handler. */
     private function throwingHandler(): RequestHandlerInterface
     {
-        return new class implements RequestHandlerInterface {
+        return new class () implements RequestHandlerInterface {
             #[\Override]
             public function handle(ServerRequestInterface $request): ResponseInterface
             {
@@ -59,7 +59,7 @@ final class WebshopAvailabilityMiddlewareTest
 
     private function okHandler(): RequestHandlerInterface
     {
-        return new class implements RequestHandlerInterface {
+        return new class () implements RequestHandlerInterface {
             #[\Override]
             public function handle(ServerRequestInterface $request): ResponseInterface
             {

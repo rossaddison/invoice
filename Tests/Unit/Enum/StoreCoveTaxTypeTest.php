@@ -37,9 +37,9 @@ class StoreCoveTaxTypeTest extends TestCase
         ];
 
         $cases = StoreCoveTaxType::cases();
-        
+
         $this->assertCount(22, $cases);
-        
+
         foreach ($expectedCases as $caseName => $expectedValue) {
             $enumCase = StoreCoveTaxType::{$caseName};
             $this->assertSame($expectedValue, $enumCase->value);
@@ -201,23 +201,23 @@ class StoreCoveTaxTypeTest extends TestCase
     public function testAllCasesHaveUniqueValues(): void
     {
         $cases = StoreCoveTaxType::cases();
-        $values = array_map(fn($case) => $case->value, $cases);
-        
+        $values = array_map(fn ($case) => $case->value, $cases);
+
         $this->assertSame(count($values), count(array_unique($values)));
     }
 
     public function testAllCasesHaveUniqueNames(): void
     {
         $cases = StoreCoveTaxType::cases();
-        $names = array_map(fn($case) => $case->name, $cases);
-        
+        $names = array_map(fn ($case) => $case->name, $cases);
+
         $this->assertSame(count($names), count(array_unique($names)));
     }
 
     public function testAllValuesAreSnakeCase(): void
     {
         $cases = StoreCoveTaxType::cases();
-        
+
         foreach ($cases as $case) {
             $this->assertMatchesRegularExpression('/^[a-z0-9_]+$/', $case->value);
         }
@@ -241,9 +241,9 @@ class StoreCoveTaxTypeTest extends TestCase
             'zero_rated' => StoreCoveTaxType::ZeroRated->value,
             'exempt' => StoreCoveTaxType::Exempt->value,
         ]);
-        
+
         $this->assertJson($json);
-        
+
         $decoded = json_decode($json, true);
         $this->assertSame('standard', $decoded['standard']);
         $this->assertSame('zero_rated', $decoded['zero_rated']);
@@ -261,7 +261,7 @@ class StoreCoveTaxTypeTest extends TestCase
         $standard1 = StoreCoveTaxType::Standard;
         $standard2 = StoreCoveTaxType::Standard;
         $zeroRated = StoreCoveTaxType::ZeroRated;
-        
+
         $this->assertSame($standard1, $standard2);
         $this->assertNotSame($standard1, $zeroRated);
         $this->assertSame($standard1->value, $standard2->value);

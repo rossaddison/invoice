@@ -91,8 +91,15 @@ final class ClientController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator,
-                $webViewRenderer, $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
         $this->clientService = $clientService;
         $this->clientCustomService = $clientCustomService;
         $this->factory = $factory;
@@ -156,8 +163,13 @@ final class ClientController extends BaseController
         $origin     = $currentRoute->getArgument('origin');
         $new_client = new Client();
         $form       = new ClientForm();
-        $parameters         = $this->buildAddParameters($currentRoute,
-            $cfR, $cvR, $new_client, $origin);
+        $parameters         = $this->buildAddParameters(
+            $currentRoute,
+            $cfR,
+            $cvR,
+            $new_client,
+            $origin
+        );
         $parameters['form'] = $form;
 
         if ($request->getMethod() === Method::POST) {
@@ -176,8 +188,10 @@ final class ClientController extends BaseController
             $cId = $this->clientService->saveClient($new_client, $saveBody);
             if (null !== $cId) {
                 $this->saveNewClientCustomFields($saveBody, $cId, $formHydrator);
-                $this->flashMessage('info',
-                    $this->translator->translate('record.successfully.created'));
+                $this->flashMessage(
+                    'info',
+                    $this->translator->translate('record.successfully.created')
+                );
                 $redirect = $this->redirectAfterAdd($origin);
                 if (null !== $redirect) {
                     return $redirect;
@@ -304,8 +318,15 @@ final class ClientController extends BaseController
         }
 
         $origin     = $currentRoute->getArgument('origin');
-        $parameters = $this->buildEditParameters($currentRoute, $d->cfR, $d->cvR,
-                $d->ccR, $d->paR, $client, $origin);
+        $parameters = $this->buildEditParameters(
+            $currentRoute,
+            $d->cfR,
+            $d->cvR,
+            $d->ccR,
+            $d->paR,
+            $client,
+            $origin
+        );
         /** @var ClientForm $form */
         $form = $parameters['form'];
 
@@ -315,10 +336,16 @@ final class ClientController extends BaseController
                 $returned_form = $this->saveFormFields($body, $form, $client, $formHydrator);
                 $parameters['body'] = $body;
                 if ($returned_form->isValid() && $client->hasIdentity()) {
-                    $this->processCustomFields($body, $formHydrator,
-                            $this->clientCustomFieldProcessor, $client->reqId());
-                    $this->flashMessage('info',
-                            $this->translator->translate('record.successfully.updated'));
+                    $this->processCustomFields(
+                        $body,
+                        $formHydrator,
+                        $this->clientCustomFieldProcessor,
+                        $client->reqId()
+                    );
+                    $this->flashMessage(
+                        'info',
+                        $this->translator->translate('record.successfully.updated')
+                    );
                     $redirect = $this->redirectAfterEdit($origin);
                     if (null !== $redirect) {
                         return $redirect;
@@ -453,14 +480,18 @@ final class ClientController extends BaseController
     {
         try {
             $this->clientService->deleteClient($this->client($currentRoute, $cR));
-            $this->flashMessage('info',
-                $this->translator->translate('record.successfully.deleted'));
-//UserClient Entity automatically deletes the UserClient record relevant to this client
+            $this->flashMessage(
+                'info',
+                $this->translator->translate('record.successfully.deleted')
+            );
+            //UserClient Entity automatically deletes the UserClient record relevant to this client
             return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger',
-                    $this->translator->translate('client.delete.history.exits.no'));
+            $this->flashMessage(
+                'danger',
+                $this->translator->translate('client.delete.history.exits.no')
+            );
             return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
         }
     }
@@ -472,9 +503,12 @@ final class ClientController extends BaseController
      * @param FormHydrator $formHydrator
      * @return ClientForm
      */
-    public function saveFormFields(array $body, ClientForm $form,
-            Client $client, FormHydrator $formHydrator): ClientForm
-    {
+    public function saveFormFields(
+        array $body,
+        ClientForm $form,
+        Client $client,
+        FormHydrator $formHydrator
+    ): ClientForm {
         if ($formHydrator->populateAndValidate($form, $body)) {
             $formName = $form->getFormName();
             /** @var array<string, mixed> $saveBody */
@@ -531,20 +565,23 @@ final class ClientController extends BaseController
         if (isset($query_params['filter_client_name'])
                 && !empty($query_params['filter_client_name'])) {
             $clients = $d->cR->filterClientName(
-                    (string) $query_params['filter_client_name']);
+                (string) $query_params['filter_client_name']
+            );
         }
         if (isset($query_params['filter_client_surname'])
                 && !empty($query_params['filter_client_surname'])) {
             $clients = $d->cR->filterClientSurname(
-                    (string) $query_params['filter_client_surname']);
+                (string) $query_params['filter_client_surname']
+            );
         }
         if ((isset($query_params['filter_client_name'])
                 && !empty($query_params['filter_client_name']))
            && (isset($query_params['filter_client_surname'])
                    && !empty($query_params['filter_client_surname']))) {
             $clients = $d->cR->filterClientNameSurname(
-                    (string) $query_params['filter_client_name'],
-                        (string) $query_params['filter_client_surname']);
+                (string) $query_params['filter_client_name'],
+                (string) $query_params['filter_client_surname']
+            );
         }
         $paginator = (new DataOffsetPaginator($clients))
             ->withPageSize($this->sR->positiveListLimit())
@@ -601,8 +638,10 @@ final class ClientController extends BaseController
         $userInv = $context['userInv'];
         $client_array = $d->ucR->getAssignedToUser($user_id);
         if (empty($client_array)) {
-            $this->flashMessage('warning',
-                $this->translator->translate('user.clients.assigned.not'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('user.clients.assigned.not')
+            );
             return $this->webService->getNotFoundResponse();
         }
         $clients = $d->cR->repoUserClient($client_array);
@@ -625,7 +664,8 @@ final class ClientController extends BaseController
                     ? (int) $this->sR->getSetting('default_list_limit') : 1,
             'modal_create_client' =>
                 $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/client/modal_create_client'),
+                    '//invoice/client/modal_create_client'
+                ),
             'userInv'    => $userInv,
             'urlCreator' => $urlCreator,
         ];
@@ -654,11 +694,21 @@ final class ClientController extends BaseController
         // Note: client_id is used as the 'origin'
         //  (could be 'quote','main','dashboard')
         $bootstrap5ModalQuote = new Bootstrap5ModalQuote(
-            $this->translator, $this->webViewRenderer, $d->cR, $d->gR, $this->sR, $d->ucR,
+            $this->translator,
+            $this->webViewRenderer,
+            $d->cR,
+            $d->gR,
+            $this->sR,
+            $d->ucR,
             new QuoteForm(),
         );
         $bootstrap5ModalInv = new Bootstrap5ModalInv(
-            $this->translator, $this->webViewRenderer, $d->cR, $d->gR, $this->sR, $d->ucR,
+            $this->translator,
+            $this->webViewRenderer,
+            $d->cR,
+            $d->gR,
+            $this->sR,
+            $d->ucR,
             new InvForm(),
         );
 
@@ -669,12 +719,13 @@ final class ClientController extends BaseController
             'custom_fields'     => $d->cfR->repoTablequery('client_custom'),
             'customValues'      => $d->cvR->fixCfValueToCf($d->cfR->repoTablequery('client_custom')),
             'cpR'               => $d->cpR,
-            'clientCustomValues'=> $this->clientCustomValues($cId, $d->ccR),
+            'clientCustomValues' => $this->clientCustomValues($cId, $d->ccR),
             'client'            => $client,
             'client_notes'      => $d->cnR->repoClientNoteCount($cId) > 0
                                        ? $d->cnR->repoClientquery($cId) : [],
             'partial_client_address' => $this->webViewRenderer->renderPartialAsString(
-                '//invoice/client/partial_client_address', ['client' => $client]
+                '//invoice/client/partial_client_address',
+                ['client' => $client]
             ),
             'client_modal_layout_quote' =>
                 $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString((string) $cId, []),
@@ -687,7 +738,8 @@ final class ClientController extends BaseController
             // All payments are loaded here and filtered inside the view partial
             // via: if ($payment->getInv()->reqClientId() === $client->reqId())
             'payment_table' => $this->webViewRenderer->renderPartialAsString(
-                '//invoice/payment/partial_payment_table', [
+                '//invoice/payment/partial_payment_table',
+                [
                     'client'   => $client,
                     'payments' => $d->pymtR->repoPaymentInvLoadedAll(
                         (int) $this->sR->getSetting('payment_list_limit') ?: 10
@@ -716,8 +768,12 @@ final class ClientController extends BaseController
 
         // Invoice tables — "all" (with session) plus one per status
         //  (1 draft … 13 written-off)
-        $parameters['invoice_table'] = $this->renderInvTablePartial($d->iR, $cId,
-                null, $session);
+        $parameters['invoice_table'] = $this->renderInvTablePartial(
+            $d->iR,
+            $cId,
+            null,
+            $session
+        );
         $invStatusKeys = [
             1  => 'invoice_draft_table',
             2  => 'invoice_sent_table',
@@ -748,9 +804,11 @@ final class ClientController extends BaseController
      * @param int|null $status  null = all quotes; 1–6 = specific status
      * @return string
      */
-    private function renderQuoteTablePartial(qR $qR, int|string $cId,
-        ?int $status = null): string
-    {
+    private function renderQuoteTablePartial(
+        qR $qR,
+        int|string $cId,
+        ?int $status = null
+    ): string {
         $id = (int) $cId;
         $data = $status === null
             ? ['quote_count' => $qR->repoCountByClient($id),
@@ -759,7 +817,8 @@ final class ClientController extends BaseController
                 'quotes' => $qR->byClientQuoteStatus($id, $status)];
 
         return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/quote/partial_quote_table', $data
+            '//invoice/quote/partial_quote_table',
+            $data
         );
     }
 

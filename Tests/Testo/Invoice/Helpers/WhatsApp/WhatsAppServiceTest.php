@@ -18,7 +18,6 @@ use Testo\Test;
 #[Test]
 final class WhatsAppServiceTest
 {
-
     /**
      * @return LoggerInterface&m\MockInterface
      */

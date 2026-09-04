@@ -30,8 +30,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 trait Index
 {
-
-public function index(
+    public function index(
         Request $request,
         InvIndexListDeps $list,
         InvIndexNavDeps $nav,
@@ -137,7 +136,9 @@ public function index(
                     $nav->csR->optionsDataCategorySecondaries(),
                 'modal_add_inv' =>
                     $bootstrap5ModalInv->renderPartialLayoutWithFormAsString(
-                        'inv', []),
+                        'inv',
+                        []
+                    ),
                 'modal_create_recurring_multiple' =>
                     $this->indexModalCreateRecurringMultiple($list->irR),
                 'modal_copy_inv_multiple' =>
@@ -164,10 +165,12 @@ public function index(
                         ->withDwellingRepository($nav->dwR)
                         ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
                         ->withDecimalPlaces(
-                            (int) $this->sR->getSetting('tax_rate_decimal_places'))
+                            (int) $this->sR->getSetting('tax_rate_decimal_places')
+                        )
                         ->withVisible($visible !== '0')
                         ->withVisibleInvSentLogColumn(
-                            $visibleToggleInvSentLogColumn !== '0')
+                            $visibleToggleInvSentLogColumn !== '0'
+                        )
                         ->withGroupBy($filter->groupBy ?? 'none')
                         ->withClientCount($list->clientRepo->count())
                         ->withGridDisplayOptions($gridSummary, $sortString)
@@ -187,8 +190,10 @@ public function index(
 
             return $this->webViewRenderer->render('index', $parameters);
         }
-        $this->flashMessage('info',
-            $this->translator->translate('user.client.active.no'));
+        $this->flashMessage(
+            'info',
+            $this->translator->translate('user.client.active.no')
+        );
         return $this->webService->getRedirectResponse('client/index');
     }
 
@@ -262,7 +267,8 @@ public function index(
     {
         $notSet = $this->sR->getSetting('not.set');
         $gRObj = $list->groupRepo->repoGroupquery(
-            (int) $this->sR->getSetting('default_invoice_group'));
+            (int) $this->sR->getSetting('default_invoice_group')
+        );
         return (null !== $gRObj && strlen($gRObj->getName() ?? '') > 0)
             ? ($gRObj->getName() ?? $notSet)
             : $notSet;
@@ -272,7 +278,8 @@ public function index(
     {
         $notSet = $this->sR->getSetting('not.set');
         $pmRObj = $nav->pmR->repoPaymentMethodquery(
-            (int) $this->sR->getSetting('invoice_default_payment_method'));
+            (int) $this->sR->getSetting('invoice_default_payment_method')
+        );
         return (null !== $pmRObj && strlen($pmRObj->getName() ?? '') > 0)
             ? ($pmRObj->getName() ?? $notSet)
             : $notSet;
@@ -282,20 +289,24 @@ public function index(
     {
         if ($this->sR->getSetting('disable_read_only') == '') {
             $this->flashMessage('warning', $this->translator->translate(
-                'security.disable.read.only.empty'));
+                'security.disable.read.only.empty'
+            ));
         }
         if ($this->sR->getSetting('disable_read_only') == '1') {
             $this->flashMessage('warning', $this->translator->translate(
-                'security.disable.read.only.warning'));
+                'security.disable.read.only.warning'
+            ));
         }
     }
 
     private function indexModalCreateRecurringMultiple(IRR $irR): string
     {
         return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/inv/modal_create_recurring_multiple', [
+            '//invoice/inv/modal_create_recurring_multiple',
+            [
             'recur_frequencies' => $irR->recurFrequencies(),
-        ]);
+        ]
+        );
     }
 
     private function indexModalCopyInvMultiple(iterable $clients): string
@@ -326,7 +337,8 @@ public function index(
                 ? (string) Html::a(
                     Html::tag('i', '', ['class' => 'bi bi-pencil']),
                     $setting_url,
-                    ['class' => 'btn btn-primary'])
+                    ['class' => 'btn btn-primary']
+                )
                 : '');
         $this->flashMessage($level, $message);
     }
@@ -340,7 +352,8 @@ public function index(
     private function homeCareRunFlash(CSR $csR): void
     {
         $categorySecondaryId = (int) $this->sR->getSetting(
-            'homecare_current_run_category_secondary_id');
+            'homecare_current_run_category_secondary_id'
+        );
         if ($categorySecondaryId <= 0) {
             return;
         }
@@ -359,8 +372,10 @@ public function index(
             ]),
             ['class' => 'btn btn-primary'],
         );
-        $this->flashMessage('info',
+        $this->flashMessage(
+            'info',
             $this->translator->translate('homecare.current.run') . ' '
-                . str_repeat('&nbsp;', 2) . (string) $link);
+                . str_repeat('&nbsp;', 2) . (string) $link
+        );
     }
 }

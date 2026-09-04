@@ -17,5 +17,6 @@ final class ProductLookupQuoteDeps
         public readonly uR $uR,
         public readonly qiaR $qiaR,
         public readonly qiaS $qiaS,
-    ) {}
+    ) {
+    }
 }

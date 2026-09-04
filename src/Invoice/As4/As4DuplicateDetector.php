@@ -11,7 +11,8 @@ final class As4DuplicateDetector implements As4DuplicateDetectorInterface
 {
     public function __construct(
         private readonly As4MessageRepositoryInterface $repository,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function isDuplicate(string $messageId): bool

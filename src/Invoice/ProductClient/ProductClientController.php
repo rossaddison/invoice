@@ -11,13 +11,11 @@ use App\Invoice\ProductClient\ProductClientForm;
 use App\Invoice\ProductClient\ProductClientService;
 use App\Invoice\ProductClient\ProductClientRepository;
 use App\Invoice\Setting\SettingRepository as sR;
-
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Client\ClientService;
 use App\Invoice\Product\ProductRepository;
 use App\User\UserService;
 use App\Service\WebControllerService;
-
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\FormModel\FormHydrator;
@@ -27,9 +25,8 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
-
-use \Exception;
-use \DateTimeImmutable;
+use Exception;
+use DateTimeImmutable;
 
 final class ProductClientController extends BaseController
 {
@@ -47,8 +44,14 @@ final class ProductClientController extends BaseController
         Flash $flash,
     ) {
         parent::__construct(
-            $webService, $userService, $translator, $webViewRenderer, $session,
-            $sR, $flash);
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
         $this->productclientService = $productclientService;
         $this->clientService = $clientService;
     }
@@ -78,7 +81,7 @@ final class ProductClientController extends BaseController
         if (isset($queryParams['product_ids']) && is_string($queryParams['product_ids'])) {
             $productIds = array_filter(
                 array_map('intval', explode(',', $queryParams['product_ids'])),
-                fn(int $id): bool => $id > 0
+                fn (int $id): bool => $id > 0
             );
         }
         if (empty($productIds)) {
@@ -302,14 +305,14 @@ final class ProductClientController extends BaseController
         ]);
     }
 
-    public function add(Request $request,
+    public function add(
+        Request $request,
         FormHydrator $formHydrator,
         ClientRepository $clientRepository,
         ProductRepository $productRepository,
         #[RouteArgument('productId')] string $productId,
         #[RouteArgument('clientId')] string $clientId,
-    ) : Response
-    {
+    ): Response {
         $productclient = new ProductClient();
         $form = ProductClientForm::show($productclient, (int) $productId, (int) $clientId);
         $parameters = [
@@ -327,7 +330,9 @@ final class ProductClientController extends BaseController
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
                 if ($formHydrator->populateFromPostAndValidate(
-                        $form, $request)) {
+                    $form,
+                    $request
+                )) {
                     $this->productclientService
                          ->save($productclient, $body);
                     return $this->webService
@@ -347,7 +352,8 @@ final class ProductClientController extends BaseController
      * @param int $id
      * @return Response
      */
-    public function delete(ProductClientRepository $productClientRepository,
+    public function delete(
+        ProductClientRepository $productClientRepository,
         #[RouteArgument('id')] int $id
     ): Response {
         try {
@@ -358,12 +364,13 @@ final class ProductClientController extends BaseController
                 $this->flashMessage(
                     'info',
                     $this->translator
-                         ->translate('record.successfully.deleted'));
+                         ->translate('record.successfully.deleted')
+                );
                 return $this->webService
                             ->getRedirectResponse('productclient/index');
             }
             return $this->webService->getRedirectResponse('productclient/index');
-    } catch (Exception $e) {
+        } catch (Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('productclient/index');
         }
@@ -375,20 +382,24 @@ final class ProductClientController extends BaseController
         ProductClientRepository $productclientRepository,
         ClientRepository $clientRepository,
         ProductRepository $productRepository,
-        #[RouteArgument('id')] int $id): Response {
+        #[RouteArgument('id')] int $id
+    ): Response {
         $productclient = $this->productclient($productclientRepository, $id);
-        if ($productclient){
-            $form = ProductClientForm::show($productclient,
-            $productclient->getProductId(), $productclient->getClientId());
+        if ($productclient) {
+            $form = ProductClientForm::show(
+                $productclient,
+                $productclient->getProductId(),
+                $productclient->getClientId()
+            );
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'productclient/edit',
                 'actionArguments' => ['id' => $id],
                 'errors' => [],
                 'form' => $form,
-                'clients'=>$clientRepository->findAllPreloaded(),
-                'products'=>$productRepository->findAllPreloaded(),
-                'productRepository'=>$productRepository,
+                'clients' => $clientRepository->findAllPreloaded(),
+                'products' => $productRepository->findAllPreloaded(),
+                'productRepository' => $productRepository,
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -418,8 +429,8 @@ final class ProductClientController extends BaseController
      */
     private function productclient(
         ProductClientRepository $productclientRepository,
-        int $id) : ProductClient|null
-    {
+        int $id
+    ): ProductClient|null {
         if ($id) {
             return $productclientRepository->repoProductClientQuery($id);
         }
@@ -433,9 +444,8 @@ final class ProductClientController extends BaseController
      */
     public function view(
         ProductClientRepository $productclientRepository,
-        #[RouteArgument('id')] int $id)
-            : \Psr\Http\Message\ResponseInterface
-    {
+        #[RouteArgument('id')] int $id
+    ): \Psr\Http\Message\ResponseInterface {
         $productclient = $this->productclient($productclientRepository, $id);
         if ($productclient) {
             $product = $productclient->getProduct();
@@ -456,7 +466,7 @@ final class ProductClientController extends BaseController
                 'client' => $client,
                 'alert' => '',
             ];
-        return $this->webViewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('productclient/index');
     }
@@ -467,8 +477,8 @@ final class ProductClientController extends BaseController
      * @return array<string, string>
      */
     private function buildClientOptionsArray(
-        \Yiisoft\Data\Cycle\Reader\EntityReader $clients): array
-    {
+        \Yiisoft\Data\Cycle\Reader\EntityReader $clients
+    ): array {
         $options = [];
         /**
          * @var Client $client

@@ -17,7 +17,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 trait ProductTrait3
 {
-
     public function getProductPriceBaseQuantity(): float
     {
         return $this->product_price_base_quantity;

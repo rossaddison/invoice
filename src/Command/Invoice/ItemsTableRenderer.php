@@ -31,7 +31,8 @@ final class ItemsTableRenderer
         private array $invItems,
         private array $invItemAllowanceCharges,
         private array $taxRates,
-    ) {}
+    ) {
+    }
 
     /**
      * @return array{afterDiscount: float, itemTax: float}
@@ -221,8 +222,8 @@ final class ItemsTableRenderer
         );
 
         ['allowanceAmount' => $itemAllowanceAmount, 'allowanceTax' => $itemAllowanceTax,
-         'chargeAmount'    => $itemChargeAmount,    'chargeTax'    => $itemChargeTax]
-            = $this->applyItemAllowanceCharges($table, $itemId);
+            'chargeAmount'    => $itemChargeAmount,    'chargeTax'    => $itemChargeTax]
+               = $this->applyItemAllowanceCharges($table, $itemId);
 
         $grandTotal = $itemTotal;
         if ($itemAllowanceAmount > 0 || $itemChargeAmount > 0) {

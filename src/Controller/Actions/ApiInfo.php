@@ -28,9 +28,10 @@ final readonly class ApiInfo implements MiddlewareInterface
      * )
      */
     #[\Override]
-    public function process(ServerRequestInterface $request,
-            RequestHandlerInterface $handler): ResponseInterface
-    {
+    public function process(
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler
+    ): ResponseInterface {
         // Refer to config/common/routes/routes.php
         // 'info/v2' JsonDataResponseMiddleware
         return $this->responseFactory->createResponse(

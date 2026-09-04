@@ -19,8 +19,7 @@ class ClassifiedTaxCategory implements XmlSerializable
         private readonly ?string $taxExemptionReasonCode,
         private readonly ?string $schemeID,
         private readonly ?string $schemeName
-    )
-    {
+    ) {
     }
 
     public const string UNCL5305 = 'UNCL5305';
@@ -39,7 +38,7 @@ class ClassifiedTaxCategory implements XmlSerializable
                 $this->percent >= 6  => 'AA',
                 default              => 'Z',
             }
-            : null;
+        : null;
     }
 
     /**

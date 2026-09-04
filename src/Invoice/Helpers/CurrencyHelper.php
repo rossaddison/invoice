@@ -12,8 +12,8 @@ class CurrencyHelper
     private function __construct(
         private readonly mixed $code,
         private readonly mixed $numeric,
-        private readonly mixed $decimals)
-    {
+        private readonly mixed $decimals
+    ) {
     }
 
     /**
@@ -61,8 +61,11 @@ class CurrencyHelper
              * @var string $currencies[$code]['numeric']
              * @var string $currencies[$code]['decimals']
              */
-            return new self($code,
-                $currencies[$code]['numeric'], $currencies[$code]['decimals']);
+            return new self(
+                $code,
+                $currencies[$code]['numeric'],
+                $currencies[$code]['decimals']
+            );
         }
         return null;
     }

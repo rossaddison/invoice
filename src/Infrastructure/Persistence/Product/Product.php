@@ -33,7 +33,7 @@ class Product
     use ProductTrait2;
     use ProductTrait3;
     use ProductTrait4;
-    
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 

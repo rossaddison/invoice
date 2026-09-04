@@ -26,5 +26,6 @@ final readonly class InvsToolbarParams
         public bool $enableGrouping,
         public EmailTemplateRepository $etR,
         public FromDropDownRepository $fdR,
-    ) {}
+    ) {
+    }
 }

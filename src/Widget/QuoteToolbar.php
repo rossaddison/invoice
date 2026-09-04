@@ -13,7 +13,7 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final readonly class QuoteToolbar
 {
-        public function __construct(
+    public function __construct(
         private UrlGeneratorInterface $urlGenerator,
         private TranslatorInterface $translator,
     ) {
@@ -68,13 +68,13 @@ final readonly class QuoteToolbar
 
         // Email button (only if editing allowed, quote is draft, and has amount)
         if (null !== $quoteAmountTotal && $quoteEdit && ($quote->reqStatusId() === 1) && ($quoteAmountTotal > 0)) {
-                $buttons[] = $this->createLinkButton(
-                    'send-email',
-                    $this->urlGenerator->generate('quote/emailStage0', ['id' => $quoteId]),
-                    'bi-send',
-                    'btn-outline-success',
-                    $this->translator->translate('send.email'),
-                );
+            $buttons[] = $this->createLinkButton(
+                'send-email',
+                $this->urlGenerator->generate('quote/emailStage0', ['id' => $quoteId]),
+                'bi-send',
+                'btn-outline-success',
+                $this->translator->translate('send.email'),
+            );
         }
 
         // Quote to SO / Quote to Invoice buttons (extracted to reduce cognitive complexity)
@@ -134,12 +134,17 @@ final readonly class QuoteToolbar
         }
         if ($quote->reqStatusId() === 4) {
             return [$this->createModalButton(
-                'quote-to-so', '#quote-to-so', 'bi-arrow-repeat', 'btn-outline-warning',
+                'quote-to-so',
+                '#quote-to-so',
+                'bi-arrow-repeat',
+                'btn-outline-warning',
                 $this->translator->translate('quote.to.so'),
             )];
         }
         return [$this->createDisabledButton(
-            'quote-to-so-disabled', 'bi-arrow-repeat', 'btn-outline-secondary',
+            'quote-to-so-disabled',
+            'bi-arrow-repeat',
+            'btn-outline-secondary',
             $this->translator->translate('quote.to.so') . ' (' . $this->translator->translate('approval.required') . ')',
             $this->translator->translate('quote.must.be.approved.first'),
         )];
@@ -159,15 +164,21 @@ final readonly class QuoteToolbar
             ]];
         }
         return [$this->createDisabledButton(
-            'quote-to-invoice-disabled', 'bi-arrow-repeat', 'btn-outline-secondary',
+            'quote-to-invoice-disabled',
+            'bi-arrow-repeat',
+            'btn-outline-secondary',
             $this->translator->translate('quote.to.invoice') . ' (' . $this->translator->translate('approval.required') . ')',
             $this->translator->translate('quote.must.be.approved.first'),
         )];
     }
 
-    private function createLinkButton(string $id, string $href, string $icon,
-        string $class, string $title): array
-    {
+    private function createLinkButton(
+        string $id,
+        string $href,
+        string $icon,
+        string $class,
+        string $title
+    ): array {
         return [
             'type' => 'link',
             'id' => $id,
@@ -178,9 +189,13 @@ final readonly class QuoteToolbar
         ];
     }
 
-    private function createModalButton(string $id, string $href, string $icon,
-        string $class, string $title): array
-    {
+    private function createModalButton(
+        string $id,
+        string $href,
+        string $icon,
+        string $class,
+        string $title
+    ): array {
         return [
             'type' => 'modal',
             'id' => $id,
@@ -191,9 +206,13 @@ final readonly class QuoteToolbar
         ];
     }
 
-    private function createDisabledButton(string $id, string $icon,
-        string $class, string $title, string $tooltip): array
-    {
+    private function createDisabledButton(
+        string $id,
+        string $icon,
+        string $class,
+        string $title,
+        string $tooltip
+    ): array {
         return [
             'type' => 'disabled',
             'id' => $id,

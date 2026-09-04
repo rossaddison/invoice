@@ -21,11 +21,11 @@ final class ProductImageForm extends FormModel
     #[Required]
     private mixed $uploaded_date = '';
     private ?int $product_id = null;
-    
+
     public static function show(
         ProductImage $productImage,
-        ?int $product_id): self
-    {
+        ?int $product_id
+    ): self {
         $form = new self();
         $form->file_name_original = $productImage->getFileNameOriginal();
         $form->file_name_new = $productImage->getFileNameNew();

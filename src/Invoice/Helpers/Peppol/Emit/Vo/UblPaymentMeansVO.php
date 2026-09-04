@@ -16,5 +16,6 @@ readonly class UblPaymentMeansVO
         public ?string $cardHolderName,
         public ?string $paymentMandateId,
         public ?string $paymentMandatePayerAccountId,
-    ) {}
+    ) {
+    }
 }

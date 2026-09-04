@@ -27,25 +27,30 @@ final readonly class DeliveryService
         $datetime = new \DateTimeImmutable();
         $d = $datetime::createFromFormat(
             'Y-m-d',
-            (string) $array['start_date']);
+            (string) $array['start_date']
+        );
         $datetime2 = new \DateTimeImmutable();
         $d2 = $datetime2::createFromFormat(
             'Y-m-d',
-            (string) $array['actual_delivery_date']);
+            (string) $array['actual_delivery_date']
+        );
         $datetime3 = new \DateTimeImmutable();
         $d3 = $datetime3::createFromFormat(
             'Y-m-d',
-            (string) $array['end_date']);
+            (string) $array['end_date']
+        );
         $d ? $model->setStartDate($d) : '';
         $d2 ? $model->setActualDeliveryDate($d2) : '';
         $d3 ? $model->setEndDate($d3) : '';
 
         isset($array['delivery_location_id']) ?
             $model->setDeliveryLocationId(
-                (int) $array['delivery_location_id']) : '';
+                (int) $array['delivery_location_id']
+            ) : '';
         isset($array['delivery_party_id']) ?
             $model->setDeliveryPartyId(
-                (int) $array['delivery_party_id']) : '';
+                (int) $array['delivery_party_id']
+            ) : '';
         isset($array['inv_id']) ?
             $model->setInvId((int) $array['inv_id']) : '';
         isset($array['inv_item_id']) ?
@@ -62,7 +67,9 @@ final readonly class DeliveryService
         if (isset($array[$delivery_location])) {
             $model->setDeliveryLocation(
                 $this->dlR->repoDeliveryLocationquery(
-                    (int) $array[$delivery_location]));
+                    (int) $array[$delivery_location]
+                )
+            );
         }
     }
 

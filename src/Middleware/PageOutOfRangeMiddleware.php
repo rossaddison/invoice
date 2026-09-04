@@ -20,7 +20,8 @@ final class PageOutOfRangeMiddleware implements MiddlewareInterface
 {
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function process(

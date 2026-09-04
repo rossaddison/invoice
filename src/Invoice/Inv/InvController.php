@@ -51,9 +51,28 @@ use Psr\{
 
 final class InvController extends BaseController
 {
-    use Add, Archive, Attachment, BatchEmail, Credit, Delete, Edit, Email, Flush, Guest,
-        HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol,
-        Storecove, Trash, Typescript, UrlKey, View, HomeCareScan;
+    use Add;
+    use Archive;
+    use Attachment;
+    use BatchEmail;
+    use Credit;
+    use Delete;
+    use Edit;
+    use Email;
+    use Flush;
+    use Guest;
+    use HtmlTrait;
+    use Index;
+    use MultipleCopy;
+    use OptionsData;
+    use PdfTrait;
+    use Peppol;
+    use Storecove;
+    use Trash;
+    use Typescript;
+    use UrlKey;
+    use View;
+    use HomeCareScan;
 
     protected string $controllerName = 'invoice/inv';
 
@@ -83,8 +102,13 @@ final class InvController extends BaseController
         InvControllerUIDeps $ui,
     ) {
         parent::__construct(
-            $base->webService, $base->userService, $base->translator,
-            $base->webViewRenderer, $base->session, $base->sR, $base->flash
+            $base->webService,
+            $base->userService,
+            $base->translator,
+            $base->webViewRenderer,
+            $base->session,
+            $base->sR,
+            $base->flash
         );
         $this->factory                      = $infra->factory;
         $this->htmlResponseFactory          = $infra->htmlResponseFactory;
@@ -107,8 +131,7 @@ final class InvController extends BaseController
     }
 
     // Add, Credit, MultipleCopy
-    protected function activeUser(int $client_id, UR $uR, UCR $ucR, UIR $uiR):
-        ?User
+    protected function activeUser(int $client_id, UR $uR, UCR $ucR, UIR $uiR): ?User
     {
         $user_client = $ucR->repoUserquery($client_id);
         if (null !== $user_client) {
@@ -126,22 +149,29 @@ final class InvController extends BaseController
     }
 
     // Add, Credit
-    public function defaultTaxes(Inv $inv, TRR $trR,
-        FormHydrator $formHydrator): void
-    {
+    public function defaultTaxes(
+        Inv $inv,
+        TRR $trR,
+        FormHydrator $formHydrator
+    ): void {
         if ($trR->repoCountAll() > 0) {
             $taxrates = $trR->findAllPreloaded();
             /** @var TaxRate $taxrate */
             foreach ($taxrates as $taxrate) {
                 $taxrate->getTaxRateDefault() == 1 ? $this->defaultTaxInv(
-                    $taxrate, $inv, $formHydrator) : '';
+                    $taxrate,
+                    $inv,
+                    $formHydrator
+                ) : '';
             }
         }
     }
 
-    public function defaultTaxInv(TaxRate $taxRate, Inv $inv,
-            FormHydrator $formHydrator): void
-    {
+    public function defaultTaxInv(
+        TaxRate $taxRate,
+        Inv $inv,
+        FormHydrator $formHydrator
+    ): void {
         $inv_tax_rate = [];
         $inv_tax_rate['inv_id'] = $inv->reqId();
         $inv_tax_rate['tax_rate_id'] = $taxRate->reqId();
@@ -152,19 +182,24 @@ final class InvController extends BaseController
         *  ..\resources\views\invoice\setting\views partial_settings_taxes.php
         */
         $inv_tax_rate['include_item_tax'] = (
-            $this->sR->getSetting('default_include_item_tax') == '1' ? 1 : 0);
+            $this->sR->getSetting('default_include_item_tax') == '1' ? 1 : 0
+        );
 
         $inv_tax_rate['inv_tax_rate_amount'] = 0;
         ($formHydrator->populateAndValidate(new InvTaxRateForm(), $inv_tax_rate))
                         ? $this->inv_tax_rate_service->saveInvTaxRate(
-                            new InvTaxRate(), $inv_tax_rate) : '';
+                            new InvTaxRate(),
+                            $inv_tax_rate
+                        ) : '';
     }
 
     // resources/views/invoice/inv/partial_item_table
-    public function deleteInvItem(#[RouteArgument('id')] int $id, IIR $iiR,
-            ACIIR $aciiR, IIAR $iiaR):
-        Response
-    {
+    public function deleteInvItem(
+        #[RouteArgument('id')] int $id,
+        IIR $iiR,
+        ACIIR $aciiR,
+        IIAR $iiaR
+    ): Response {
         try {
             $invItem = $this->invItem($id, $iiR);
             if ($invItem) {
@@ -174,19 +209,29 @@ final class InvController extends BaseController
                     $aciis = $aciiR->repoInvItemquery($invItem->reqId());
                     /** @var InvItemAllowanceCharge $acii */
                     foreach ($aciis as $acii) {
-                        $this->aciis->deleteInvItemAllowanceCharge($acii, $iiaR,
-                                $aciiR);
+                        $this->aciis->deleteInvItemAllowanceCharge(
+                            $acii,
+                            $iiaR,
+                            $aciiR
+                        );
                     }
                     $this->inv_item_service->deleteInvItem($invItem);
                     $this->flashMessage('info', $this->translator->translate(
-                        'record.successfully.deleted'));
+                        'record.successfully.deleted'
+                    ));
                     return $this->webService->getRedirectResponse(
-                        'inv/view', ['id' => $invItem->reqInvId()]);
+                        'inv/view',
+                        ['id' => $invItem->reqInvId()]
+                    );
                 }
-                $this->flashMessage('warning',
-                    $this->translator->translate('delete.sent'));
-                return $this->webService->getRedirectResponse('inv/view',
-                        ['id' => $invItem->reqInvId()]);
+                $this->flashMessage(
+                    'warning',
+                    $this->translator->translate('delete.sent')
+                );
+                return $this->webService->getRedirectResponse(
+                    'inv/view',
+                    ['id' => $invItem->reqInvId()]
+                );
             }
         } catch (\Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
@@ -194,19 +239,23 @@ final class InvController extends BaseController
         }
         $inv_id = (string) $this->session->get('inv_id');
         return $this->factory->createResponse(
-                $this->webViewRenderer->renderPartialAsString(
-            '//invoice/setting/inv_message',
-            ['heading' => $this->translator->translate('items'),
+            $this->webViewRenderer->renderPartialAsString(
+                '//invoice/setting/inv_message',
+                ['heading' => $this->translator->translate('items'),
                 'message' =>
                     $this->translator->translate('record.successfully.deleted'),
                 'url' => 'inv/view', 'id' => $inv_id],
-        ));
+            )
+        );
     }
-    
+
     // Email, PdfTrait
-    public function generateInvNumberIfApplicable(int $inv_id, IR $iR,
-        SR $sR, GR $gR): void
-    {
+    public function generateInvNumberIfApplicable(
+        int $inv_id,
+        IR $iR,
+        SR $sR,
+        GR $gR
+    ): void {
         if ($inv_id > 0) {
             $inv = $iR->repoInvUnloadedquery($inv_id);
             if ($inv) {
@@ -214,7 +263,11 @@ final class InvController extends BaseController
                 if ($iR->repoCount($inv_id) > 0 && $inv->reqStatusId() === 1 && $inv->getNumber() === '') {
                     // Generate new inv number if applicable
                     $inv->setNumber((string) $this->generateInvGetNumber(
-                        $group_id, $sR, $iR, $gR));
+                        $group_id,
+                        $sR,
+                        $iR,
+                        $gR
+                    ));
                     $iR->save($inv);
                 }
             }
@@ -222,9 +275,12 @@ final class InvController extends BaseController
     }
 
     // above function
-    private function generateInvGetNumber(int $group_id, SR $sR, IR $iR,
-        GR $gR): mixed
-    {
+    private function generateInvGetNumber(
+        int $group_id,
+        SR $sR,
+        IR $iR,
+        GR $gR
+    ): mixed {
         $inv_number = '';
         if ($sR->getSetting('generate_invoice_number_for_draft') == '0') {
             /** @var mixed $inv_number */
@@ -288,7 +344,7 @@ final class InvController extends BaseController
         }
         return null;
     }
-    
+
     // deleteInvTaxRate
     protected function invtaxrate(int $id, ITRR $invtaxrateRepository): ?InvTaxRate
     {
@@ -301,7 +357,7 @@ final class InvController extends BaseController
         }
         return null;
     }
-    
+
     /**
      * Purpose:
      * Prevent browser manipulation and ensure that views are only accessible
@@ -310,7 +366,8 @@ final class InvController extends BaseController
      * invoices.
      * Used in: Attachment, PdfTrait, View
      */
-    protected function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR) : bool {
+    protected function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR): bool
+    {
         $statusId = $inv->reqStatusId();
         // has observer role
         if ($statusId > 0
@@ -322,8 +379,10 @@ final class InvController extends BaseController
             && ($inv->reqUserId() === $this->userService->getUser()?->reqId())
             // the invoice client is associated with the above user
             // the observer user may be paying for more than one client
-            && ($ucR->repoUserClientqueryCount($inv->reqUserId(),
-                                            $inv->reqClientId()) > 0)) {
+            && ($ucR->repoUserClientqueryCount(
+                $inv->reqUserId(),
+                $inv->reqClientId()
+            ) > 0)) {
             $userInv = $uiR->repoUserInvUserIdquery($inv->reqUserId());
             // the current observer user is active
             if (null !== $userInv && $userInv->getActive()) {
@@ -334,14 +393,16 @@ final class InvController extends BaseController
     }
 
     // PdfTrait, View
-    protected function rbacAccountant() : bool {
+    protected function rbacAccountant(): bool
+    {
         return $this->userService->hasPermission(Permissions::VIEW_INV)
             && $this->userService->hasPermission(Permissions::VIEW_PAYMENT)
             && $this->userService->hasPermission(Permissions::EDIT_PAYMENT);
     }
 
     // Attachment, Edit, PdfTrait, View
-    protected function rbacAdmin() : bool {
+    protected function rbacAdmin(): bool
+    {
         return $this->userService->hasPermission(Permissions::VIEW_INV)
             && $this->userService->hasPermission(Permissions::EDIT_INV);
     }
@@ -360,8 +421,10 @@ final class InvController extends BaseController
         $setting_url = '';
         if (null !== $setting) {
             $setting_id = $setting->reqSettingId();
-            $setting_url = $this->url_generator->generate('setting/markSent',
-                ['_language' => $_language, 'setting_id' => $setting_id]);
+            $setting_url = $this->url_generator->generate(
+                'setting/markSent',
+                ['_language' => $_language, 'setting_id' => $setting_id]
+            );
         }
         $level = $mark_sent == '0' ? 'success' : 'danger';
         $on_off = $mark_sent == '0' ? 'off' : 'on';
@@ -373,14 +436,14 @@ final class InvController extends BaseController
             . $this->translator->translate('mark.sent.'
             . $on_off) . str_repeat('&nbsp;', 2)
             . (!empty($setting_url) ? (string) Html::a(
-              Html::tag(
-                  'i',
-                  '',
-                  ['class' => 'bi bi-pencil'],
-              ),
-              $setting_url,
-              ['class' => 'btn btn-' . $level],
-          )
+                Html::tag(
+                    'i',
+                    '',
+                    ['class' => 'bi bi-pencil'],
+                ),
+                $setting_url,
+                ['class' => 'btn btn-' . $level],
+            )
           : '');
         $this->flashMessage($level, $message);
     }
@@ -395,8 +458,9 @@ final class InvController extends BaseController
     }
 
     protected function flashNoEnabledGateways(
-        array $enabled_gateways, string $message): void
-    {
+        array $enabled_gateways,
+        string $message
+    ): void {
         if (empty(array_filter($enabled_gateways))) {
             $this->flashMessage('warning', $message);
         }

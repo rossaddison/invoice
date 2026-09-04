@@ -22,7 +22,8 @@ final class PeppolStatusPageBuilder
         private readonly PeppolMessageRepository $peppolMessageRepository,
         private readonly CycleOrmAs4MessageRepository $as4MessageRepository,
         private readonly Aliases $aliases,
-    ) {}
+    ) {
+    }
 
     /**
      * @return array{

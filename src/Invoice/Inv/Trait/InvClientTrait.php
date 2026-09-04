@@ -24,8 +24,7 @@ trait InvClientTrait
      * @param int $status_id
      * @return EntityReader
      */
-    public function byClientInvStatus(int $client_id, int $status_id):
-        EntityReader
+    public function byClientInvStatus(int $client_id, int $status_id): EntityReader
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id])
@@ -99,8 +98,11 @@ trait InvClientTrait
      * @return float
      */
     public function withTotalFromTo(
-            int $client_id, string $from, string $to, IAR $iaR): float
-    {
+        int $client_id,
+        string $from,
+        string $to,
+        IAR $iaR
+    ): float {
         $invoices = $this->repoClientLoadedFromToDate($client_id, $from, $to);
         $sum = 0.00;
         /**
@@ -123,8 +125,11 @@ trait InvClientTrait
      * @return float
      */
     public function withItemSubtotalFromTo(
-            int $client_id, string $from, string $to, IAR $iaR): float
-    {
+        int $client_id,
+        string $from,
+        string $to,
+        IAR $iaR
+    ): float {
         $invoices = $this->repoClientLoadedFromToDate($client_id, $from, $to);
         $sum = 0.00;
         /**
@@ -147,8 +152,11 @@ trait InvClientTrait
      * @return float
      */
     public function withItemTaxTotalFromTo(
-            int $client_id, string $from, string $to, IAR $iaR): float
-    {
+        int $client_id,
+        string $from,
+        string $to,
+        IAR $iaR
+    ): float {
         $invoices = $this->repoClientLoadedFromToDate($client_id, $from, $to);
         $sum = 0.00;
         /**
@@ -171,8 +179,11 @@ trait InvClientTrait
      * @return float
      */
     public function withTaxTotalFromTo(
-            int $client_id, string $from, string $to, IAR $iaR): float
-    {
+        int $client_id,
+        string $from,
+        string $to,
+        IAR $iaR
+    ): float {
         $invoices = $this->repoClientLoadedFromToDate($client_id, $from, $to);
         $sum = 0.00;
         /**
@@ -196,8 +207,11 @@ trait InvClientTrait
      * @return float
      */
     public function withPaidFromTo(
-                    int $client_id, string $from, string $to, IAR $iaR): float
-    {
+        int $client_id,
+        string $from,
+        string $to,
+        IAR $iaR
+    ): float {
         $invoices = $this->repoClientLoadedFromToDate($client_id, $from, $to);
         $sum = 0.00;
         /**
@@ -227,8 +241,9 @@ trait InvClientTrait
          */
         foreach ($invoices as $invoice) {
             $invoice_amount = (
-                    $iaR->repoInvAmountCount($invoice->reqId()) > 0 ?
-                    $iaR->repoInvquery($invoice->reqId()) : null);
+                $iaR->repoInvAmountCount($invoice->reqId()) > 0 ?
+                    $iaR->repoInvquery($invoice->reqId()) : null
+            );
             $sum += (null !== $invoice_amount ? $invoice_amount->getPaid() ??
                     0.00 : 0.00);
         }
@@ -271,8 +286,9 @@ trait InvClientTrait
          */
         foreach ($invoices as $invoice) {
             $invoice_amount = (
-                    $iaR->repoInvAmountCount($invoice->reqId()) > 0 ?
-                    $iaR->repoInvquery($invoice->reqId()) : null);
+                $iaR->repoInvAmountCount($invoice->reqId()) > 0 ?
+                    $iaR->repoInvquery($invoice->reqId()) : null
+            );
             $sum += (null !== $invoice_amount ? $invoice_amount->getBalance()
                                                                 ?? 0.00 : 0.00);
         }
@@ -298,8 +314,10 @@ trait InvClientTrait
      * @return int
      */
     public function repoCountClientLoadedFromToDate(
-            int $client_id, string $from_date, string $to_date): int
-    {
+        int $client_id,
+        string $from_date,
+        string $to_date
+    ): int {
         return $this->select()
                       ->load('client')
                       ->where(['client_id' => $client_id])
@@ -316,8 +334,10 @@ trait InvClientTrait
      * @return EntityReader
      */
     public function repoClientLoadedFromToDate(
-            int $client_id, string $from_date, string $to_date): EntityReader
-    {
+        int $client_id,
+        string $from_date,
+        string $to_date
+    ): EntityReader {
         $query = $this->select()
                       ->load('client')
                       ->where(['client_id' => $client_id])

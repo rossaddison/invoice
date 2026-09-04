@@ -22,10 +22,22 @@ class PModeSecurity
     private string $keyDerivationPrf = As4Constants::KEY_DERIVATION_PRF;
     private string $wssVersion = '1.1.1';
 
-    public function isSigningEnabled(): bool { return $this->signEnabled; }
-    public function getSignCertificate(): string { return $this->signCertificate; }
-    public function getSignAlgorithm(): string { return $this->signAlgorithm; }
-    public function getSignHashAlgorithm(): string { return $this->signHashAlgorithm; }
+    public function isSigningEnabled(): bool
+    {
+        return $this->signEnabled;
+    }
+    public function getSignCertificate(): string
+    {
+        return $this->signCertificate;
+    }
+    public function getSignAlgorithm(): string
+    {
+        return $this->signAlgorithm;
+    }
+    public function getSignHashAlgorithm(): string
+    {
+        return $this->signHashAlgorithm;
+    }
 
     public function setSignCertificate(string $cert): self
     {
@@ -33,14 +45,38 @@ class PModeSecurity
         return $this;
     }
 
-    public function isEncryptionEnabled(): bool { return $this->encryptEnabled; }
-    public function getEncryptCertificate(): string { return $this->encryptCertificate; }
-    public function getEncryptAlgorithm(): string { return $this->encryptAlgorithm; }
-    public function getKeyAgreement(): string { return $this->keyAgreement; }
-    public function getKeyWrapping(): string { return $this->keyWrapping; }
-    public function getKeyDerivation(): string { return $this->keyDerivation; }
-    public function getKeyDerivationPrf(): string { return $this->keyDerivationPrf; }
-    public function getWssVersion(): string { return $this->wssVersion; }
+    public function isEncryptionEnabled(): bool
+    {
+        return $this->encryptEnabled;
+    }
+    public function getEncryptCertificate(): string
+    {
+        return $this->encryptCertificate;
+    }
+    public function getEncryptAlgorithm(): string
+    {
+        return $this->encryptAlgorithm;
+    }
+    public function getKeyAgreement(): string
+    {
+        return $this->keyAgreement;
+    }
+    public function getKeyWrapping(): string
+    {
+        return $this->keyWrapping;
+    }
+    public function getKeyDerivation(): string
+    {
+        return $this->keyDerivation;
+    }
+    public function getKeyDerivationPrf(): string
+    {
+        return $this->keyDerivationPrf;
+    }
+    public function getWssVersion(): string
+    {
+        return $this->wssVersion;
+    }
 
     public function setEncryptCertificate(string $cert): self
     {

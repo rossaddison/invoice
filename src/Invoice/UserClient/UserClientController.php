@@ -42,8 +42,15 @@ final class UserClientController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $webViewRenderer,
-                $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
         $this->userclientService = $userclientService;
         $this->factory = $factory;
     }
@@ -71,19 +78,21 @@ final class UserClientController extends BaseController
             $client_id = $user_client->reqClientId();
             if (($iR->countAllWithUserClient($user_id, $client_id) === 0)
              && ($qR->countAllWithUserClient($user_id, $client_id) === 0)
-             && ($soR->countAllWithUserClient($user_id, $client_id) === 0)){
+             && ($soR->countAllWithUserClient($user_id, $client_id) === 0)) {
                 $this->userclientService->deleteUserClient($user_client);
                 $user_inv = $uiR->repoUserInvUserIdquery($user_id);
                 if (null !== $user_inv) {
                     $this->flashMessage('info', $this->translator->translate(
-                                                    'record.successfully.deleted'));
+                        'record.successfully.deleted'
+                    ));
                     return $this->factory->createResponse(
                         $this->webViewRenderer->renderPartialAsString(
                             '//invoice/setting/userclient_successful',
                             [
                                 'heading' => $this->translator->translate('client'),
                                 'message' => $this->translator->translate(
-                                                    'record.successfully.deleted'),
+                                    'record.successfully.deleted'
+                                ),
                                 'url' => 'userinv/client','id' => $user_inv->reqId(),
                             ],
                         ),
@@ -92,15 +101,16 @@ final class UserClientController extends BaseController
                 return $this->webService->getRedirectResponse('userinv/index');
             }
             $this->flashMessage('danger', $this->translator->translate(
-                                                    'user.client.delete.not'));
+                'user.client.delete.not'
+            ));
         }
         return $this->webService->getRedirectResponse('userinv/index');
     }
 
-// The preceding url is userinv/client/{userinv_id} showing the currently
-// assigned clients to this user
-// Retrieves userclient/new.php which offers an 'all client option'
-// and an individual client option
+    // The preceding url is userinv/client/{userinv_id} showing the currently
+    // assigned clients to this user
+    // Retrieves userclient/new.php which offers an 'all client option'
+    // and an individual client option
 
     /**
      * @param Request $request
@@ -142,7 +152,14 @@ final class UserClientController extends BaseController
             return $this->webViewRenderer->render('new', $parameters);
         }
         return $this->processClientAssignment(
-            $request, $user_id, $uiR, $ucR, $ucS, $formHydrator, $parameters);
+            $request,
+            $user_id,
+            $uiR,
+            $ucR,
+            $ucS,
+            $formHydrator,
+            $parameters
+        );
     }
 
     /**
@@ -177,12 +194,16 @@ final class UserClientController extends BaseController
                 $form_array    = ['user_id' => $user_id, 'client_id' => $value];
                 $existingCount = $ucR->repoUserClientqueryCount($user_id, (int) $value);
                 if ($existingCount > 0) {
-                    $this->flashMessage('info',
-                        $this->translator->translate('client.already.exists'));
+                    $this->flashMessage(
+                        'info',
+                        $this->translator->translate('client.already.exists')
+                    );
                 } elseif ($formHydrator->populateAndValidate($form, $form_array)) {
                     $this->userclientService->saveUserClient($user_client, $form_array);
-                    $this->flashMessage('info',
-                        $this->translator->translate('record.successfully.updated'));
+                    $this->flashMessage(
+                        'info',
+                        $this->translator->translate('record.successfully.updated')
+                    );
                 } else {
                     $parameters['errors'] =
                         $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -214,9 +235,10 @@ final class UserClientController extends BaseController
      * @param UserClientRepository $ucR
      * @return UserClient|null
      */
-    private function userclient(CurrentRoute $currentRoute,
-                                        UserClientRepository $ucR): ?UserClient
-    {
+    private function userclient(
+        CurrentRoute $currentRoute,
+        UserClientRepository $ucR
+    ): ?UserClient {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
             return $ucR->repoUserClientquery((int) $id);

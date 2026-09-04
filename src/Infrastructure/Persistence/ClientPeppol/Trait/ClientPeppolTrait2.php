@@ -13,7 +13,6 @@ use RequireId;
  */
 trait ClientPeppolTrait2
 {
-
     public function setTaxschemecompanyid(string $input): void
     {
         $this->taxschemecompanyid = $input;

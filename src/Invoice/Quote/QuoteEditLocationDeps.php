@@ -14,5 +14,6 @@ final class QuoteEditLocationDeps
     public function __construct(
         public readonly ContractRepo $contractRepo,
         public readonly DLR $delRepo,
-    ) {}
+    ) {
+    }
 }

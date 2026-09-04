@@ -14,15 +14,15 @@ final class CategorySecondaryForm extends FormModel
 
     #[Required]
     private ?string $name = '';
-    
+
     public static function show(CategorySecondary $categorySecondary): self
     {
         $form = new self();
-        
+
         $form->category_primary_id = $categorySecondary->reqCategoryPrimaryId();
-        
+
         $form->name = $categorySecondary->getName() ?? '';
-        
+
         return $form;
     }
 

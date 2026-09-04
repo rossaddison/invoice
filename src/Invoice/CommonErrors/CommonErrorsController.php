@@ -31,8 +31,13 @@ final class CommonErrorsController extends BaseController
         Flash $flash,
     ) {
         parent::__construct(
-            $webService, $userService, $translator,
-            $webViewRenderer, $session, $sR, $flash
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
         );
     }
 

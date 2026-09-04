@@ -11,7 +11,9 @@ use Psr\Log\LoggerInterface;
  */
 final class NullAs4PayloadHandler implements As4PayloadHandlerInterface
 {
-    public function __construct(private readonly LoggerInterface $logger) {}
+    public function __construct(private readonly LoggerInterface $logger)
+    {
+    }
 
     #[\Override]
     public function handle(string $payloadXml, string $senderPartyId, string $action): void

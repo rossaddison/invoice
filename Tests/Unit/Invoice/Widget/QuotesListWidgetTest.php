@@ -355,9 +355,14 @@ final class QuotesListWidgetTest extends TestCase
     public function testWithCsrfAcceptsStringableObject(): void
     {
         $stringable = new class ('view-csrf-token') implements \Stringable {
-            public function __construct(private readonly string $value) {}
+            public function __construct(private readonly string $value)
+            {
+            }
             #[\Override]
-            public function __toString(): string { return $this->value; }
+            public function __toString(): string
+            {
+                return $this->value;
+            }
         };
 
         $widget = $this->makeWidget()->withCsrf($stringable);
@@ -482,7 +487,7 @@ final class QuotesListWidgetTest extends TestCase
     public function testComputeGroupTotalsReturnsEmptyArrayWhenPaginatorIsEmpty(): void
     {
         $paginator = $this->makeEmptyPaginator();
-        $getGroupValue = static fn(Quote $_q): string => 'unused';
+        $getGroupValue = static fn (Quote $_q): string => 'unused';
 
         $result = QuotesGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
@@ -494,19 +499,19 @@ final class QuotesListWidgetTest extends TestCase
         $q1 = $this->makeQuoteMock(total: 100.00);
         $q2 = $this->makeQuoteMock(total: 200.00);
         $paginator = new OffsetPaginator(new IterableDataReader([$q1, $q2]));
-        $getGroupValue = static fn(Quote $_q): string => 'All';
+        $getGroupValue = static fn (Quote $_q): string => 'All';
 
         $result = QuotesGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(1, $result);
-        $this->assertSame(2,      $result['All']['count']);
+        $this->assertSame(2, $result['All']['count']);
         $this->assertSame(300.00, $result['All']['total']);
     }
 
     public function testComputeGroupTotalsSeparatesDistinctGroups(): void
     {
         $q1 = $this->makeQuoteMock(clientFullName: 'Alice', total: 100.00);
-        $q2 = $this->makeQuoteMock(clientFullName: 'Bob',   total: 200.00);
+        $q2 = $this->makeQuoteMock(clientFullName: 'Bob', total: 200.00);
         $q3 = $this->makeQuoteMock(clientFullName: 'Alice', total: 150.00);
 
         $paginator = new OffsetPaginator(new IterableDataReader([$q1, $q2, $q3]));
@@ -516,9 +521,9 @@ final class QuotesListWidgetTest extends TestCase
         $result = QuotesGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(2, $result);
-        $this->assertSame(2,      $result['Alice']['count']);
+        $this->assertSame(2, $result['Alice']['count']);
         $this->assertSame(250.00, $result['Alice']['total']);
-        $this->assertSame(1,      $result['Bob']['count']);
+        $this->assertSame(1, $result['Bob']['count']);
         $this->assertSame(200.00, $result['Bob']['total']);
     }
 
@@ -531,11 +536,11 @@ final class QuotesListWidgetTest extends TestCase
         $quote->method('reqStatusId')->willReturn(1);
 
         $paginator     = new OffsetPaginator(new IterableDataReader([$quote]));
-        $getGroupValue = static fn(Quote $_q): string => 'NullAmounts';
+        $getGroupValue = static fn (Quote $_q): string => 'NullAmounts';
 
         $result = QuotesGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
-        $this->assertSame(1,    $result['NullAmounts']['count']);
+        $this->assertSame(1, $result['NullAmounts']['count']);
         $this->assertSame(0.00, $result['NullAmounts']['total']);
     }
 }

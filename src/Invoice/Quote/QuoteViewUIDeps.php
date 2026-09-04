@@ -22,5 +22,6 @@ final class QuoteViewUIDeps
         public readonly ACR $acR,
         public readonly CR $cR,
         public readonly GR $gR,
-    ) {}
+    ) {
+    }
 }

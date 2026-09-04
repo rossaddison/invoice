@@ -28,7 +28,6 @@ use Testo\Test;
 #[Test]
 final class PaystackPaymentServiceTest
 {
-
     /**
      * @return LoggerInterface&m\MockInterface
      */

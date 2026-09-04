@@ -75,8 +75,10 @@ final class SalesOrdersColumnBuilder
                 $spanTag = Html::tag('span', $label, ['class' => 'badge text-bg-' . $class])->render();
                 if (7 === $statusId) {
                     return Html::tag('a', $spanTag, [
-                        'href'     => $ug->generate('salesorder/soToInvoice',
-                            ['id' => $m->reqId()]),
+                        'href'     => $ug->generate(
+                            'salesorder/soToInvoice',
+                            ['id' => $m->reqId()]
+                        ),
                         'class'    => 'text-decoration-none',
                         'hx-boost' => 'false',
                     ])->render();
@@ -92,7 +94,7 @@ final class SalesOrdersColumnBuilder
         $ug = $this->urlGenerator;
         return new DataColumn(
             'number',
-            content: static fn(SalesOrder $m): A =>
+            content: static fn (SalesOrder $m): A =>
                 Html::a(
                     $m->getNumber() ?? '#',
                     $ug->generate('salesorder/view', ['id' => $m->reqId()]),
@@ -157,7 +159,7 @@ final class SalesOrdersColumnBuilder
         return new DataColumn(
             'date_created',
             header: $t->translate('date.created'),
-            content: static fn(SalesOrder $m): string =>
+            content: static fn (SalesOrder $m): string =>
                 $m->getDateCreated() instanceof \DateTimeImmutable
                     ? $m->getDateCreated()->format('Y-m-d')
                     : '',
@@ -173,7 +175,7 @@ final class SalesOrdersColumnBuilder
         return new DataColumn(
             property: 'filterClient',
             header: $t->translate('client'),
-            content: static fn(SalesOrder $m): string =>
+            content: static fn (SalesOrder $m): string =>
                 Html::encode($m->getClient()?->getClientFullName() ?? ''),
             encodeContent: false,
             filter: DropdownFilter::widget()

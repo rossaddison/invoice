@@ -14,7 +14,6 @@ use RequireId;
  */
 trait CompanyPrivateTrait1
 {
-
     public function isActiveToday(): bool
     {
         $today = new \DateTimeImmutable('today');

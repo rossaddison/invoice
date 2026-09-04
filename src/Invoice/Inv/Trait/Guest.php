@@ -12,7 +12,6 @@ use App\Infrastructure\Persistence\User\User;
 use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Enum\DoNotSendReason;
 use App\Invoice\Enum\FlashScope;
-
 use App\Invoice\{
     Client\ClientRepository as ClientR,
     Client\ClientService,
@@ -35,7 +34,6 @@ use Psr\{
 
 trait Guest
 {
-    
     /**
      * Related logic:
      *  see Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]')
@@ -330,11 +328,13 @@ trait Guest
             'decimalPlaces' => $dp,
             'modalBacsQuickPay' =>
                 $this->webViewRenderer->renderPartialAsString(
-                    '_modal_bacs_quickpay', [
+                    '_modal_bacs_quickpay',
+                    [
                         'bacsPaymentService' => $d->bacsPaymentService,
                         'bacsUnpaidInvs'     => $bacsUnpaidInvs,
                         'decimalPlaces'      => $dp,
-            ]),
+            ]
+                ),
             'optionsClientsDropDownFilter' =>
                 $this->optionsDataUserClientsFilter($d->ucR, $user_id),
             'optionsInvNumberDropDownFilter' =>
@@ -391,7 +391,9 @@ trait Guest
         if ((isset($filter->filterInvNumber) && !empty($filter->filterInvNumber))
            && (isset($filter->filterInvAmountTotal) && !empty($filter->filterInvAmountTotal))) {
             $invs = $iR->filterInvNumberAndInvAmountTotal(
-                $filter->filterInvNumber, (float) $filter->filterInvAmountTotal);
+                $filter->filterInvNumber,
+                (float) $filter->filterInvAmountTotal
+            );
         }
         if (isset($filter->filterClient) && !empty($filter->filterClient)) {
             $invs = $iR->filterGuestClient($filter->filterClient);
@@ -407,9 +409,11 @@ trait Guest
      *
      * @psalm-return SDI&DRI<int, \App\Infrastructure\Persistence\Inv\Inv>
      */
-    private function invsStatusGuest(IR $iR, mixed $status,
-        array $user_clients): SDI
-    {
+    private function invsStatusGuest(
+        IR $iR,
+        mixed $status,
+        array $user_clients
+    ): SDI {
         return $iR->repoGuestClientsPostDraft((int) $status, $user_clients);
     }
 
@@ -433,7 +437,8 @@ trait Guest
             $inv->setDoNotSendReason($validReason);
             $iR->save($inv);
             $this->flashMessage('info', $this->translator->translate(
-                $validReason !== '' ? 'do.not.send.flashSet' : 'do.not.send.flashCleared'));
+                $validReason !== '' ? 'do.not.send.flashSet' : 'do.not.send.flashCleared'
+            ));
         }
         return $this->webService->getRedirectResponse('inv/guest');
     }

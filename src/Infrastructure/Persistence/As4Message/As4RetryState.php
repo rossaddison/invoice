@@ -36,12 +36,30 @@ class As4RetryState
     #[Cycle\Column(type: 'datetime', nullable: true)]
     private ?DateTimeImmutable $lockedAt = null;
 
-    public function getAttemptCount(): int { return $this->attemptCount; }
-    public function getMaxAttempts(): int { return $this->maxAttempts; }
-    public function getRetryIntervalSeconds(): int { return $this->retryIntervalSeconds; }
-    public function getLastAttemptAt(): ?DateTimeImmutable { return $this->lastAttemptAt; }
-    public function getFirstSentAt(): ?DateTimeImmutable { return $this->firstSentAt; }
-    public function getLockedAt(): ?DateTimeImmutable { return $this->lockedAt; }
+    public function getAttemptCount(): int
+    {
+        return $this->attemptCount;
+    }
+    public function getMaxAttempts(): int
+    {
+        return $this->maxAttempts;
+    }
+    public function getRetryIntervalSeconds(): int
+    {
+        return $this->retryIntervalSeconds;
+    }
+    public function getLastAttemptAt(): ?DateTimeImmutable
+    {
+        return $this->lastAttemptAt;
+    }
+    public function getFirstSentAt(): ?DateTimeImmutable
+    {
+        return $this->firstSentAt;
+    }
+    public function getLockedAt(): ?DateTimeImmutable
+    {
+        return $this->lockedAt;
+    }
 
     public function recordAttempt(): void
     {

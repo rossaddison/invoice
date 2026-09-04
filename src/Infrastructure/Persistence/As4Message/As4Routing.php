@@ -48,15 +48,42 @@ class As4Routing
         $this->receiverEndpoint = $params->receiverEndpoint;
     }
 
-    public function getConversationId(): string { return $this->conversationId; }
-    public function getRefToMessageId(): ?string { return $this->refToMessageId; }
-    public function getSenderPartyId(): string { return $this->senderPartyId; }
-    public function getSenderRole(): string { return $this->senderRole; }
-    public function getReceiverPartyId(): string { return $this->receiverPartyId; }
-    public function getReceiverRole(): string { return $this->receiverRole; }
-    public function getService(): string { return $this->service; }
-    public function getAction(): string { return $this->action; }
-    public function getReceiverEndpoint(): string { return $this->receiverEndpoint; }
+    public function getConversationId(): string
+    {
+        return $this->conversationId;
+    }
+    public function getRefToMessageId(): ?string
+    {
+        return $this->refToMessageId;
+    }
+    public function getSenderPartyId(): string
+    {
+        return $this->senderPartyId;
+    }
+    public function getSenderRole(): string
+    {
+        return $this->senderRole;
+    }
+    public function getReceiverPartyId(): string
+    {
+        return $this->receiverPartyId;
+    }
+    public function getReceiverRole(): string
+    {
+        return $this->receiverRole;
+    }
+    public function getService(): string
+    {
+        return $this->service;
+    }
+    public function getAction(): string
+    {
+        return $this->action;
+    }
+    public function getReceiverEndpoint(): string
+    {
+        return $this->receiverEndpoint;
+    }
 
     public function setRefToMessageId(string $refToMessageId): void
     {

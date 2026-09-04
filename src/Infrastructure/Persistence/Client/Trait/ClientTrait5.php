@@ -17,7 +17,6 @@ use RequireId;
  */
 trait ClientTrait5
 {
-
     public function getDeliveryLocations(): ArrayCollection
     {
         return $this->delivery_locations;

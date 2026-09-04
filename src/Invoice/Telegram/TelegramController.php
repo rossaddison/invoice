@@ -59,8 +59,15 @@ final class TelegramController extends BaseController
         private IR $iR,
         private PaymentService $paymentService,
     ) {
-        parent::__construct($webService, $userService, $translator,
-                $webViewRenderer, $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
     }
 
     public function index(UrlGenerator $urlGenerator): Response
@@ -69,8 +76,10 @@ final class TelegramController extends BaseController
         try {
             $configError = $this->telegramConfigError($token);
             if ($configError !== null) {
-                $this->flashMessage('danger',
-                    $this->translator->translate($configError));
+                $this->flashMessage(
+                    'danger',
+                    $this->translator->translate($configError)
+                );
             } else {
                 $this->processIndexAction($token, $urlGenerator);
             }
@@ -103,8 +112,10 @@ final class TelegramController extends BaseController
         try {
             $configError = $this->telegramConfigError($token);
             if ($configError !== null) {
-                $this->flashMessage('danger',
-                    $this->translator->translate($configError));
+                $this->flashMessage(
+                    'danger',
+                    $this->translator->translate($configError)
+                );
                 [$redirectRoute, $redirectArgs] = [self::ROUTE_SETTING_TAB, []];
             } else {
                 [$redirectRoute, $redirectArgs] =
@@ -155,12 +166,16 @@ final class TelegramController extends BaseController
             $telegramHelper = new TelegramHelper($token, $this->logger);
             $result = $telegramHelper->createTelegramInvoiceLink($inv, $currency, $providerToken);
             if (!$result instanceof FailResult) {
-                $this->flashMessage('success',
-                    $this->translator->translate('telegram.invoice.link.created'));
+                $this->flashMessage(
+                    'success',
+                    $this->translator->translate('telegram.invoice.link.created')
+                );
                 $this->flashMessage('primary', $result);
             } else {
-                $this->flashMessage('danger',
-                    'Telegram createInvoiceLink failed: ' . ($result->description ?? ''));
+                $this->flashMessage(
+                    'danger',
+                    'Telegram createInvoiceLink failed: ' . ($result->description ?? '')
+                );
             }
         } catch (TelegramParseResultException $e) {
             $this->logger->warning($e->getMessage());
@@ -184,8 +199,10 @@ final class TelegramController extends BaseController
         try {
             $configError = $this->telegramConfigError($token);
             if ($configError !== null) {
-                $this->flashMessage('danger',
-                    $this->translator->translate($configError));
+                $this->flashMessage(
+                    'danger',
+                    $this->translator->translate($configError)
+                );
                 return $this->webService->getRedirectResponse(self::ROUTE_SETTING_TAB);
             }
             $inv = $this->iR->repoInvLoadedquery((int) $inv_id);
@@ -213,14 +230,20 @@ final class TelegramController extends BaseController
         $latString = $this->sR->getSetting('company_latitude');
         $lngString = $this->sR->getSetting('company_longitude');
         if ($this->sR->getSetting('enable_telegram') !== '1') {
-            $this->flashMessage('danger',
-                $this->translator->translate('telegram.bot.api.enabled.not'));
+            $this->flashMessage(
+                'danger',
+                $this->translator->translate('telegram.bot.api.enabled.not')
+            );
         } elseif (strlen($token) < 2) {
-            $this->flashMessage('danger',
-                $this->translator->translate('telegram.bot.api.token.not.set'));
+            $this->flashMessage(
+                'danger',
+                $this->translator->translate('telegram.bot.api.token.not.set')
+            );
         } elseif ($latString === '' || $lngString === '') {
-            $this->flashMessage('warning',
-                $this->translator->translate('telegram.location.not.configured'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('telegram.location.not.configured')
+            );
         } else {
             try {
                 $telegramHelper = new TelegramHelper($token, $this->logger);
@@ -230,11 +253,15 @@ final class TelegramController extends BaseController
                     (float) $lngString,
                 );
                 if (!$result instanceof FailResult) {
-                    $this->flashMessage('success',
-                        $this->translator->translate('telegram.location.sent'));
+                    $this->flashMessage(
+                        'success',
+                        $this->translator->translate('telegram.location.sent')
+                    );
                 } else {
-                    $this->flashMessage('danger',
-                        'Telegram sendLocation failed: ' . ($result->description ?? ''));
+                    $this->flashMessage(
+                        'danger',
+                        'Telegram sendLocation failed: ' . ($result->description ?? '')
+                    );
                 }
             } catch (TelegramParseResultException $e) {
                 $this->logger->warning($e->getMessage());
@@ -262,8 +289,10 @@ final class TelegramController extends BaseController
         try {
             $configError = $this->telegramConfigError($token);
             if ($configError !== null) {
-                $this->flashMessage('danger',
-                    $this->translator->translate($configError));
+                $this->flashMessage(
+                    'danger',
+                    $this->translator->translate($configError)
+                );
                 $redirectRoute = self::ROUTE_SETTING_TAB;
             } else {
                 $redirectRoute = $this->performRefundStars($token, $payment_id, $pR);
@@ -318,8 +347,10 @@ final class TelegramController extends BaseController
         try {
             $configError = $this->telegramConfigError($token);
             if ($configError !== null) {
-                $this->flashMessage('danger',
-                    $this->translator->translate($configError));
+                $this->flashMessage(
+                    'danger',
+                    $this->translator->translate($configError)
+                );
             } else {
                 $telegramHelper = new TelegramHelper($token, $this->logger);
                 $failResultWebhookInfo = $telegramHelper->getWebhookInfo();
@@ -346,8 +377,10 @@ final class TelegramController extends BaseController
         try {
             $configError = $this->telegramConfigError($token);
             if ($configError !== null) {
-                $this->flashMessage('danger',
-                    $this->translator->translate($configError));
+                $this->flashMessage(
+                    'danger',
+                    $this->translator->translate($configError)
+                );
             } else {
                 $failResultWebhookInfo = $this->performSetWebhook($token, $urlGenerator);
             }
@@ -371,15 +404,19 @@ final class TelegramController extends BaseController
         try {
             $configError = $this->telegramConfigError($token);
             if ($configError !== null) {
-                $this->flashMessage('danger',
-                    $this->translator->translate($configError));
+                $this->flashMessage(
+                    'danger',
+                    $this->translator->translate($configError)
+                );
             } else {
                 $telegramHelper = new TelegramHelper($token, $this->logger);
                 $this->telegramBotApi = $telegramHelper->getBotApi();
                 $failResult = $telegramHelper->deleteWebhook();
                 if (!$failResult instanceof FailResult) {
-                    $this->flashMessage('success',
-                        $this->translator->translate('telegram.bot.api.webhook.deleted'));
+                    $this->flashMessage(
+                        'success',
+                        $this->translator->translate('telegram.bot.api.webhook.deleted')
+                    );
                 } else {
                     $this->flashFailResult($failResult);
                 }
@@ -404,26 +441,34 @@ final class TelegramController extends BaseController
         try {
             $configError = $this->telegramConfigError($token);
             if ($configError !== null) {
-                $this->flashMessage('danger',
-                    $this->translator->translate($configError));
+                $this->flashMessage(
+                    'danger',
+                    $this->translator->translate($configError)
+                );
             } else {
                 $telegramHelper = new TelegramHelper($token, $this->logger);
                 $this->telegramBotApi = $telegramHelper->getBotApi();
                 $failResultDelete = $telegramHelper->deleteWebhook();
                 if (!$failResultDelete instanceof FailResult) {
-                    $this->flashMessage('success',
-                        $this->translator->translate('telegram.bot.api.webhook.deleted'));
+                    $this->flashMessage(
+                        'success',
+                        $this->translator->translate('telegram.bot.api.webhook.deleted')
+                    );
                 } else {
                     $this->flashFailResult($failResultDelete);
                 }
                 $failResultUpdates =
                     $this->telegramBotApi->getUpdates(null, null, null, null);
                 if (!$failResultUpdates instanceof FailResult) {
-                    $this->flashMessage('success',
-                        $this->translator->translate('telegram.bot.api.get.updates.success'));
+                    $this->flashMessage(
+                        'success',
+                        $this->translator->translate('telegram.bot.api.get.updates.success')
+                    );
                 } else {
-                    $this->flashMessage('danger',
-                        $this->translator->translate('telegram.bot.api.get.updates.danger'));
+                    $this->flashMessage(
+                        'danger',
+                        $this->translator->translate('telegram.bot.api.get.updates.danger')
+                    );
                     $this->flashFailResult($failResultUpdates);
                 }
             }
@@ -466,8 +511,10 @@ final class TelegramController extends BaseController
         $this->telegramBotApi = $telegramHelper->getBotApi();
         $failResult = $telegramHelper->setWebhook($urlGenerator, null, null, null, null, $secretToken);
         if (strlen($chatId) <= 1) {
-            $this->flashMessage('danger',
-                $this->translator->translate('telegram.bot.api.chat.id.not.set'));
+            $this->flashMessage(
+                'danger',
+                $this->translator->translate('telegram.bot.api.chat.id.not.set')
+            );
             return;
         }
         if ($failResult instanceof FailResult) {
@@ -489,10 +536,25 @@ final class TelegramController extends BaseController
         }
         $text = $this->translator->translate('telegram.bot.api.hello.world.test.message');
         $sendMessageResult = $this->telegramBotApi->sendMessage(
-            $chatId, $text, null, null, null, null, null, null, null, null, null, null, null);
+            $chatId,
+            $text,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
         if (!$sendMessageResult instanceof FailResult) {
-            $this->flashMessage('success',
-                $this->translator->translate('telegram.bot.api.hello.world.test.message.sent'));
+            $this->flashMessage(
+                'success',
+                $this->translator->translate('telegram.bot.api.hello.world.test.message.sent')
+            );
         } else {
             $this->handleTestMessageFailure($sendMessageResult, $urlGenerator);
         }
@@ -502,9 +564,12 @@ final class TelegramController extends BaseController
         FailResult $result,
         UrlGenerator $urlGenerator,
     ): void {
-        $this->flashMessage('danger',
+        $this->flashMessage(
+            'danger',
             $this->translator->translate(
-                'telegram.bot.api.hello.world.test.message.sent.not'));
+                'telegram.bot.api.hello.world.test.message.sent.not'
+            )
+        );
         if ($result->description !== null) {
             $this->flashMessage('primary', self::FAIL_RESULT_PREFIX . $result->description);
         }
@@ -520,8 +585,10 @@ final class TelegramController extends BaseController
                 409 => Button::deleteWebhook($urlGenerator, $this->translator),
                 default => $result->description ?? '',
             };
-            $this->flashMessage('primary',
-                self::FAIL_RESULT_PREFIX . (string) $result->errorCode . ' ' . $match);
+            $this->flashMessage(
+                'primary',
+                self::FAIL_RESULT_PREFIX . (string) $result->errorCode . ' ' . $match
+            );
         }
         $this->webService->getRedirectResponse(self::ROUTE_SETTING_TAB);
     }
@@ -530,8 +597,10 @@ final class TelegramController extends BaseController
     {
         $chatId = $inv->getClient()?->getClientTelegramChatId();
         if ($chatId === null || $chatId === '') {
-            $this->flashMessage('danger',
-                $this->translator->translate('telegram.invoice.client.chat.id.not.set'));
+            $this->flashMessage(
+                'danger',
+                $this->translator->translate('telegram.invoice.client.chat.id.not.set')
+            );
             return;
         }
         $number     = $inv->getNumber() ?? (string) $inv->reqId();
@@ -541,19 +610,25 @@ final class TelegramController extends BaseController
         /** @var list<string> $matches */
         $matches = $globResult === false ? [] : $globResult;
         if ($matches === []) {
-            $this->flashMessage('warning',
-                $this->translator->translate('telegram.pdf.not.found'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('telegram.pdf.not.found')
+            );
             return;
         }
-        usort($matches, static fn(string $a, string $b): int => (int) filemtime($b) - (int) filemtime($a));
+        usort($matches, static fn (string $a, string $b): int => (int) filemtime($b) - (int) filemtime($a));
         $telegramHelper = new TelegramHelper($token, $this->logger);
         $result = $telegramHelper->sendInvoicePdf($chatId, $matches[0], 'Invoice #' . $number);
         if (!$result instanceof FailResult) {
-            $this->flashMessage('success',
-                $this->translator->translate('telegram.pdf.sent'));
+            $this->flashMessage(
+                'success',
+                $this->translator->translate('telegram.pdf.sent')
+            );
         } else {
-            $this->flashMessage('danger',
-                'Telegram sendDocument failed: ' . ($result->description ?? ''));
+            $this->flashMessage(
+                'danger',
+                'Telegram sendDocument failed: ' . ($result->description ?? '')
+            );
         }
     }
 
@@ -566,8 +641,10 @@ final class TelegramController extends BaseController
         }
         $note = $payment->getNote();
         if (!preg_match('/Telegram:\s*(\S+)\s*\|\s*tguid:(\d+)/', $note, $m)) {
-            $this->flashMessage('warning',
-                $this->translator->translate('telegram.stars.no.charge.id'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('telegram.stars.no.charge.id')
+            );
             return self::ROUTE_PAYMENT_INDEX;
         }
         $chargeId = $m[1];
@@ -575,11 +652,15 @@ final class TelegramController extends BaseController
         $telegramHelper = new TelegramHelper($token, $this->logger);
         $result = $telegramHelper->refundStarPayment($userId, $chargeId);
         if ($result === true) {
-            $this->flashMessage('success',
-                $this->translator->translate('telegram.stars.refunded'));
+            $this->flashMessage(
+                'success',
+                $this->translator->translate('telegram.stars.refunded')
+            );
         } else {
-            $this->flashMessage('danger',
-                'Telegram refundStarPayment failed: ' . ($result->description ?? ''));
+            $this->flashMessage(
+                'danger',
+                'Telegram refundStarPayment failed: ' . ($result->description ?? '')
+            );
         }
         return self::ROUTE_PAYMENT_INDEX;
     }
@@ -587,11 +668,16 @@ final class TelegramController extends BaseController
     private function performSetWebhook(
         string $token,
         UrlGenerator $urlGenerator,
-    ): FailResult|\Phptg\BotApi\Type\Update\WebhookInfo
-    {
+    ): FailResult|\Phptg\BotApi\Type\Update\WebhookInfo {
         $telegramHelper = new TelegramHelper($token, $this->logger);
         $failResultSetWebhook = $telegramHelper->setWebhook(
-            $urlGenerator, null, null, null, false, null);
+            $urlGenerator,
+            null,
+            null,
+            null,
+            false,
+            null
+        );
         $failResultWebhookInfo = $telegramHelper->getWebhookInfo();
         if (!$failResultSetWebhook instanceof FailResult) {
             $this->flashMessage('success',

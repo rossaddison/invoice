@@ -20,5 +20,6 @@ final class IiAddProductDeps
         public readonly IIAR $iiaR,
         public readonly SR $sR,
         public readonly UNR $uR,
-    ) {}
+    ) {
+    }
 }

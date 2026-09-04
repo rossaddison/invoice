@@ -35,8 +35,15 @@ final class WhatsAppController extends BaseController
         private readonly WhatsAppService $whatsAppService,
         private readonly PlainTextResponseFactory $plainTextFactory,
     ) {
-        parent::__construct($webService, $userService, $translator,
-                $webViewRenderer, $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
     }
 
     /**
@@ -117,20 +124,26 @@ final class WhatsAppController extends BaseController
     {
         $testNumber = $this->sR->getSetting('whatsapp_test_recipient_number');
         if ($testNumber === '') {
-            $this->flashMessage('warning',
-                $this->translator->translate('whatsapp.business.cloud.api.test.recipient.not.set'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('whatsapp.business.cloud.api.test.recipient.not.set')
+            );
             return;
         }
 
         $result = $this->whatsAppService->sendTemplateMessage($testNumber);
         if ($result->sent) {
-            $this->flashMessage('success',
-                $this->translator->translate('whatsapp.business.cloud.api.test.message.sent'));
+            $this->flashMessage(
+                'success',
+                $this->translator->translate('whatsapp.business.cloud.api.test.message.sent')
+            );
             return;
         }
 
-        $this->flashMessage('danger',
-            $this->translator->translate('whatsapp.business.cloud.api.test.message.sent.not'));
+        $this->flashMessage(
+            'danger',
+            $this->translator->translate('whatsapp.business.cloud.api.test.message.sent.not')
+        );
         if ($result->error !== null) {
             $this->flashMessage('primary', $result->error);
         }

@@ -17,5 +17,6 @@ final readonly class As4MessageParams
         public string $action,
         public string $receiverEndpoint,
         public string $soapMessage,
-    ) {}
+    ) {
+    }
 }

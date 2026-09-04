@@ -17,7 +17,7 @@ use DateTimeImmutable;
 class InvSentLog
 {
     use RequireId;
- 
+
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 
@@ -62,7 +62,7 @@ class InvSentLog
     {
         return $this->requireId($this->id, 'InvSentLog');
     }
-    
+
     public function hasIdentity(): bool
     {
         return $this->id !== null;

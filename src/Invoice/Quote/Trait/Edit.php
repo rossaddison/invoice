@@ -69,11 +69,17 @@ trait Edit
             'quote_statuses' => $core->quoteRepo->getStatuses($this->translator),
             'cvH' => new CVH($this->sR, $form->cvR),
             'customFields' => $this->fetchCustomFieldsAndValues(
-                $form->cfR, $form->cvR, 'quote_custom')['customFields'],
+                $form->cfR,
+                $form->cvR,
+                'quote_custom'
+            )['customFields'],
             // Applicable to normally building up permanent selection lists
             // eg. dropdowns
             'customValues' => $this->fetchCustomFieldsAndValues(
-                $form->cfR, $form->cvR, 'quote_custom')['customValues'],
+                $form->cfR,
+                $form->cvR,
+                'quote_custom'
+            )['customValues'],
             // There will initially be no custom_values attached to this
             // quote until they are filled in the field on the form
             'quoteCustomValues' => $this->quoteCustomValues($quote_id, $form->qcR),
@@ -85,7 +91,8 @@ trait Edit
         ];
         $loc->delRepo->repoClientCount($quote->reqClientId()) > 0 ? '' :
             $this->flashMessage('warning', $this->translator->translate(
-                'quote.delivery.location.none'));
+                'quote.delivery.location.none'
+            ));
         if ($request->getMethod() === Method::POST) {
             $body = (array) $request->getParsedBody();
             $quote = $this->quote($id, $core->quoteRepo, false);
@@ -95,16 +102,29 @@ trait Edit
                 $user = $this->activeUser($client_id, $form->uR, $core->ucR, $core->uiR);
                 if (null !== $user) {
                     if ($formHydrator->populateAndValidate($quoteForm, $body)) {
-                        $this->quote_service->saveQuote($user, $quote,
-                            $body, $this->sR, $core->groupRepo);
-                        $this->processCustomFields($body, $formHydrator,
+                        $this->quote_service->saveQuote(
+                            $user,
+                            $quote,
+                            $body,
+                            $this->sR,
+                            $core->groupRepo
+                        );
+                        $this->processCustomFields(
+                            $body,
+                            $formHydrator,
                             $this->quoteCustomFieldProcessor,
-                                $quote_id);
-                        $this->flashMessage('success',
+                            $quote_id
+                        );
+                        $this->flashMessage(
+                            'success',
                             $this->translator->translate(
-                                'record.successfully.updated'));
+                                'record.successfully.updated'
+                            )
+                        );
                         return $this->webService->getRedirectResponse(
-                            'quote/view', ['id' => $quote_id]);
+                            'quote/view',
+                            ['id' => $quote_id]
+                        );
                     }
                     $parameters['form'] = $quoteForm;
                     $parameters['errors'] =
@@ -117,9 +137,10 @@ trait Edit
     }
 
     // '#quote_tax_submit' => quote.js
-    public function saveQuoteTaxRate(Request $request,
-        FormHydrator $formHydrator): Response
-    {
+    public function saveQuoteTaxRate(
+        Request $request,
+        FormHydrator $formHydrator
+    ): Response {
         $body = $request->getQueryParams();
         $ajax_body = [
             'quote_id' => $body['quote_id'],
@@ -130,12 +151,15 @@ trait Edit
         $quoteTaxRate = new QuoteTaxRate();
         $ajax_content = QuoteTaxRateForm::show($quoteTaxRate);
         if ($formHydrator->populateAndValidate($ajax_content, $ajax_body)) {
-            $this->quote_tax_rate_service->saveQuoteTaxRate($quoteTaxRate,
-                $ajax_body);
+            $this->quote_tax_rate_service->saveQuoteTaxRate(
+                $quoteTaxRate,
+                $ajax_body
+            );
             $parameters = [
                 'success' => 1,
                 'flash_message' => $this->translator->translate(
-                    'quote.tax.rate.saved'),
+                    'quote.tax.rate.saved'
+                ),
             ];
             //return response to quote.js to reload page at location
             return $this->factory->createResponse(Json::encode($parameters));
@@ -143,7 +167,8 @@ trait Edit
         $parameters = [
             'success' => 0,
             'flash_message' => $this->translator->translate(
-                'quote.tax.rate.incomplete.fields'),
+                'quote.tax.rate.incomplete.fields'
+            ),
         ];
         //return response to quote.js to reload page at location
         return $this->factory->createResponse(Json::encode($parameters));

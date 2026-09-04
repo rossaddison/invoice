@@ -55,24 +55,28 @@ final readonly class TrueLayerCredentials
     public function clientId(): string
     {
         return (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_truelayer_clientId') ?: '');
+            $this->settings->getSetting('gateway_truelayer_clientId') ?: ''
+        );
     }
 
     public function clientSecret(): string
     {
         return (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_truelayer_clientSecret') ?: '');
+            $this->settings->getSetting('gateway_truelayer_clientSecret') ?: ''
+        );
     }
 
     public function signingKid(): string
     {
         return (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_truelayer_signingKid') ?: '');
+            $this->settings->getSetting('gateway_truelayer_signingKid') ?: ''
+        );
     }
 
     public function privateKey(): string
     {
         return (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_truelayer_privateKey') ?: '');
+            $this->settings->getSetting('gateway_truelayer_privateKey') ?: ''
+        );
     }
 }

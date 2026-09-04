@@ -11,9 +11,9 @@ class PayeeFinancialAccount implements XmlSerializable
 {
     public function __construct(
         private readonly ?FinancialInstitutionBranch $financialInstitutionBranch,
-        private readonly ?string $id, private readonly ?string $name
-    )
-    {
+        private readonly ?string $id,
+        private readonly ?string $name
+    ) {
     }
 
     #[\Override]

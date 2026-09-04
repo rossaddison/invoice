@@ -51,7 +51,6 @@ return [
             Route::get('/products/{id:\d+}')
                 ->action([ProductsController::class, 'show'])
                 ->name('shop/catalog/show'),
-
             Route::get('/cart')
                 ->action([CartController::class, 'index'])
                 ->name('shop/cart/index'),
@@ -67,7 +66,6 @@ return [
                 ->middleware(RateLimiter::perIp(30, 'shop_cart_remove'))
                 ->action([CartController::class, 'remove'])
                 ->name('shop/cart/remove'),
-
             Route::post('/delivery-address')
                 ->action([DeliveryController::class, 'update'])
                 ->name('shop/delivery-address'),
@@ -84,7 +82,6 @@ return [
                 ->middleware(RateLimiter::perIp(5, 'shop_currency_refresh_rate'))
                 ->action([CurrencyController::class, 'refreshRate'])
                 ->name('shop/currency/refresh-rate'),
-
             Route::get('/checkout')
                 ->action([CheckoutController::class, 'index'])
                 ->name('shop/checkout/index'),

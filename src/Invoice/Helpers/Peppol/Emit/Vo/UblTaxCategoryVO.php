@@ -12,5 +12,6 @@ readonly class UblTaxCategoryVO
         public string  $taxSchemeId,
         public ?string $taxExemptionReasonCode,
         public ?string $taxExemptionReason,
-    ) {}
+    ) {
+    }
 }

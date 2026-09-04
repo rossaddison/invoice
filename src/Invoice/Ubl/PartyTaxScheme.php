@@ -12,8 +12,7 @@ class PartyTaxScheme implements XmlSerializable
     public function __construct(
         private readonly string $companyId,
         private readonly TaxScheme $taxScheme
-    )
-    {
+    ) {
     }
 
     public function getCompanyId(): string
@@ -26,10 +25,10 @@ class PartyTaxScheme implements XmlSerializable
         return $this->taxScheme;
     }
 
-/**
- * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=PartyTaxScheme
- * @param Writer $writer
- */
+    /**
+     * Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?p=3&q=PartyTaxScheme
+     * @param Writer $writer
+     */
     #[\Override]
     public function xmlSerialize(Writer $writer): void
     {

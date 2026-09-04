@@ -269,8 +269,9 @@ final class TelegramHelper
     }
 
     public static function pushToWebhook(
-        string $jsonString, Logger $logger): Update
-    {
+        string $jsonString,
+        Logger $logger
+    ): Update {
         return Update::fromJson($jsonString, $logger);
     }
 

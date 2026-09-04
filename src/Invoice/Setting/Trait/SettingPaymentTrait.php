@@ -9,7 +9,6 @@ use Yiisoft\Translator\TranslatorInterface;
 
 trait SettingPaymentTrait
 {
-
     /**
      * Below are listed online dashboard tested PCI COMPLIANT i.e. credit
      * card details not stored on server, Payment Gateways. Each gateway's

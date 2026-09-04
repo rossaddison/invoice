@@ -122,8 +122,8 @@ final class CustomFieldController extends BaseController
 
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                    $this->customFieldService->saveCustomField($custom_field, $body);
-                    return $this->webService->getRedirectResponse('customfield/index');
+                $this->customFieldService->saveCustomField($custom_field, $body);
+                return $this->webService->getRedirectResponse('customfield/index');
             }
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -161,8 +161,8 @@ final class CustomFieldController extends BaseController
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                        $this->customFieldService->saveCustomField($custom_field, $body);
-                        return $this->webService->getRedirectResponse('customfield/index');
+                    $this->customFieldService->saveCustomField($custom_field, $body);
+                    return $this->webService->getRedirectResponse('customfield/index');
                 }
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -236,8 +236,8 @@ final class CustomFieldController extends BaseController
      */
     private function customfield(
         CurrentRoute $curR,
-        CustomFieldRepository $cfR): ?CustomField
-    {
+        CustomFieldRepository $cfR
+    ): ?CustomField {
         $id = (int) $curR->getArgument('id');
         return $cfR->repoCustomFieldquery($id);
     }

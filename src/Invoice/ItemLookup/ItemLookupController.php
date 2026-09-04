@@ -35,16 +35,22 @@ final class ItemLookupController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator,
-                                        $webViewRenderer, $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
         $this->itemlookupService = $itemlookupService;
     }
 
     /**
      * @param ItemLookupRepository $itemlookupRepository
      */
-    public function index(ItemLookupRepository $itemlookupRepository):
-                                            \Psr\Http\Message\ResponseInterface
+    public function index(ItemLookupRepository $itemlookupRepository): \Psr\Http\Message\ResponseInterface
     {
         $itemLookups = $this->itemlookups($itemlookupRepository);
         $paginator = (new OffsetPaginator($itemLookups));
@@ -76,9 +82,10 @@ final class ItemLookupController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                    $this->itemlookupService->saveItemLookup($itemLookup, $body);
-                    return $this->webService->getRedirectResponse(
-                                                            'itemlookup/index');
+                $this->itemlookupService->saveItemLookup($itemLookup, $body);
+                return $this->webService->getRedirectResponse(
+                    'itemlookup/index'
+                );
             }
             $parameters['errors'] =
               $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -113,9 +120,10 @@ final class ItemLookupController extends BaseController
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                        $this->itemlookupService->saveItemLookup($lookup, $body);
-                        return $this->webService->getRedirectResponse(
-                                                            'itemlookup/index');
+                    $this->itemlookupService->saveItemLookup($lookup, $body);
+                    return $this->webService->getRedirectResponse(
+                        'itemlookup/index'
+                    );
                 }
                 $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -171,9 +179,10 @@ final class ItemLookupController extends BaseController
      * @param ItemLookupRepository $itemlookupRepository
      * @return ItemLookup|null
      */
-    private function itemlookup(CurrentRoute $currentRoute,
-                        ItemLookupRepository $itemlookupRepository): ?ItemLookup
-    {
+    private function itemlookup(
+        CurrentRoute $currentRoute,
+        ItemLookupRepository $itemlookupRepository
+    ): ?ItemLookup {
         $id = (int) $currentRoute->getArgument('id');
         return $itemlookupRepository->repoItemLookupquery($id);
     }

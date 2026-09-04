@@ -26,7 +26,7 @@ final class PhpVersionCheckServiceTest extends TestCase
     {
         $repo = $this->createStub(SettingRepositoryInterface::class);
         $repo->method('withKey')->willReturnCallback(
-            fn(string $key): ?Setting => null,
+            fn (string $key): ?Setting => null,
         );
         $repo->method('save')->willReturnCallback(function (?Setting $setting): void {
             if ($setting !== null) {
@@ -34,7 +34,7 @@ final class PhpVersionCheckServiceTest extends TestCase
             }
         });
         $repo->method('getSetting')->willReturnCallback(
-            fn(string $key): string => $this->savedSettings[$key] ?? '',
+            fn (string $key): string => $this->savedSettings[$key] ?? '',
         );
         return $repo;
     }
@@ -142,7 +142,7 @@ final class PhpVersionCheckServiceTest extends TestCase
 
         $repo = $this->createStub(SettingRepositoryInterface::class);
         $repo->method('withKey')->willReturnCallback(
-            fn(string $key): ?Setting => $key === 'system_php_latest_patch_version' ? $existing : null,
+            fn (string $key): ?Setting => $key === 'system_php_latest_patch_version' ? $existing : null,
         );
         $savedInstances = [];
         $repo->method('save')->willReturnCallback(function (?Setting $setting) use (&$savedInstances): void {
@@ -156,7 +156,7 @@ final class PhpVersionCheckServiceTest extends TestCase
 
         $updatedExisting = array_filter(
             $savedInstances,
-            static fn(Setting $s): bool => $s->getSettingKey() === 'system_php_latest_patch_version',
+            static fn (Setting $s): bool => $s->getSettingKey() === 'system_php_latest_patch_version',
         );
         $this->assertNotEmpty($updatedExisting);
         $this->assertSame($existing, reset($updatedExisting), 'The pre-existing Setting instance should be reused, not replaced.');

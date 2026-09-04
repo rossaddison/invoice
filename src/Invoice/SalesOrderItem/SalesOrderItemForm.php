@@ -42,14 +42,14 @@ final class SalesOrderItemForm extends FormModel
     private ?int $product_unit_id = null;
 
     private ?string $so_id = null;
-    
+
     public static function show(
         SoItem $salesOrderItem,
-        ?string $so_id): self
-    {
+        ?string $so_id
+    ): self {
         $form = new self();
         $form->so_id = $so_id;
-//https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/
+        //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/
         $form->peppol_po_itemid = $salesOrderItem->getPeppolPoItemid();
         //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/
         $form->peppol_po_lineid = $salesOrderItem->getPeppolPoLineid();

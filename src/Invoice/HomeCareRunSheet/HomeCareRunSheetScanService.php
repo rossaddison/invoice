@@ -26,7 +26,8 @@ final readonly class HomeCareRunSheetScanService
         private RSIR $rsiR,
         private HomeCareRunSheetVisionService $vision,
         private SR $sR,
-    ) {}
+    ) {
+    }
 
     public function scan(HomeCareRunSheet $runSheet, string $imageBytes, MediaType $mediaType, int $byUserId): void
     {

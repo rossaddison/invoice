@@ -58,7 +58,12 @@ trait HomeCareScan
         [$clientId, $visit] = $claim;
 
         return $this->decideAndRecordHomeCareScanOutcome(
-            $clientId, $visit, $eligibilityService, $visitRepository, $d, $formHydrator,
+            $clientId,
+            $visit,
+            $eligibilityService,
+            $visitRepository,
+            $d,
+            $formHydrator,
         );
     }
 
@@ -103,7 +108,11 @@ trait HomeCareScan
         }
 
         $newInvoiceId = $this->generateHomeCareCleaningInvoice(
-            $clientId, $templateInvoice, $d, $formHydrator);
+            $clientId,
+            $templateInvoice,
+            $d,
+            $formHydrator
+        );
         $this->applyHomeCareScanOutcome($visit, $newInvoiceId, $clientId, $templateInvoice);
         $visitRepository->save($visit);
 

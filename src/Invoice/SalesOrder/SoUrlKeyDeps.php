@@ -30,5 +30,6 @@ final class SoUrlKeyDeps
         public readonly UCR $ucR,
         public readonly AssetManager $assetManager,
         public readonly Aliases $aliases,
-    ) {}
+    ) {
+    }
 }

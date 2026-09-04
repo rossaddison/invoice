@@ -39,7 +39,7 @@ final readonly class InvEmailService
         $templateHelper = $this->templateHelper();
         $d = $this->d;
         $parseDeps = new ParseTemplateDeps($d->custom->cvR, $d->core->iR, $d->core->iaR, $d->relation->qR, $d->relation->qaR, $d->relation->soR, $d->core->uiR);
-        $parse = fn(string $tpl): string => $templateHelper->parseTemplate($invId, true, $tpl, $parseDeps);
+        $parse = fn (string $tpl): string => $templateHelper->parseTemplate($invId, true, $tpl, $parseDeps);
         $params = new MailerSendParams(
             $parse($data->fromEmail),
             $parse($data->fromName),
@@ -55,24 +55,39 @@ final readonly class InvEmailService
     private function mailerDeps(): MailerHelperCustomDeps
     {
         return new MailerHelperCustomDeps(
-            $this->d->custom->ccR, $this->d->custom->qcR, $this->d->core->icR, $this->d->custom->pcR,
-            $this->d->custom->socR, $this->d->custom->cfR, $this->d->custom->cvR,
+            $this->d->custom->ccR,
+            $this->d->custom->qcR,
+            $this->d->core->icR,
+            $this->d->custom->pcR,
+            $this->d->custom->socR,
+            $this->d->custom->cfR,
+            $this->d->custom->cvR,
         );
     }
 
     private function mailerHelper(): MailerHelper
     {
         return new MailerHelper(
-            $this->sR, $this->session, $this->translator,
-            $this->logger, $this->mailer, $this->mailerDeps(),
+            $this->sR,
+            $this->session,
+            $this->translator,
+            $this->logger,
+            $this->mailer,
+            $this->mailerDeps(),
         );
     }
 
     private function templateHelper(): TemplateHelper
     {
         return new TemplateHelper(
-            $this->sR, $this->d->custom->ccR, $this->d->custom->qcR, $this->d->core->icR,
-            $this->d->custom->pcR, $this->d->custom->socR, $this->d->custom->cfR, $this->d->custom->cvR,
+            $this->sR,
+            $this->d->custom->ccR,
+            $this->d->custom->qcR,
+            $this->d->core->icR,
+            $this->d->custom->pcR,
+            $this->d->custom->socR,
+            $this->d->custom->cfR,
+            $this->d->custom->cvR,
         );
     }
 }

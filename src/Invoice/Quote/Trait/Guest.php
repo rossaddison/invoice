@@ -118,12 +118,16 @@ trait Guest
      * @param Sort $sort
      * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
-    private function quotesStatusWithSortGuest(QR $qR, int $status,
-        array $user_clients, Sort $sort):
-            \Yiisoft\Data\Reader\SortableDataInterface
-    {
+    private function quotesStatusWithSortGuest(
+        QR $qR,
+        int $status,
+        array $user_clients,
+        Sort $sort
+    ): \Yiisoft\Data\Reader\SortableDataInterface {
         return $qR->repoGuestClientsSentViewedApprovedRejectedCancelled(
-            $status, $user_clients)
+            $status,
+            $user_clients
+        )
                      ->withSort($sort);
     }
 
@@ -140,7 +144,8 @@ trait Guest
             && (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal']))) {
             $quotes = $qR->filterQuoteNumberAndQuoteAmountTotal(
                 (string) $query_params['filterQuoteNumber'],
-                (float) $query_params['filterQuoteAmountTotal']);
+                (float) $query_params['filterQuoteAmountTotal']
+            );
         }
         return $quotes;
     }

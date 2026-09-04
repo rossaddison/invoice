@@ -14,7 +14,6 @@ use RequireId;
  */
 trait CompanyPrivateTrait2
 {
-
     public function getBacsAccountNumber(): ?string
     {
         return $this->bacs_account_number;

@@ -15,7 +15,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class QuoteCustom
 {
     use RequireId;
-    
+
     #[BelongsTo(target: CustomField::class, nullable: false)]
     private ?CustomField $custom_field = null;
 
@@ -25,16 +25,13 @@ class QuoteCustom
     public function __construct(
         #[Column(type: 'primary')]
         private ?int $id = null,
-
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $quote_id = null,
-
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $custom_field_id = null,
-
         #[Column(type: 'text', nullable: true)]
-        private string $value = '')
-    {
+        private string $value = ''
+    ) {
     }
 
     public function getCustomField(): ?CustomField

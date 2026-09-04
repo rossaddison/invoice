@@ -18,5 +18,6 @@ final readonly class As4SmpEndpoint
         public string $certificatePem,
         /** transportProfile attribute from the SMP Endpoint element */
         public string $transportProfile,
-    ) {}
+    ) {
+    }
 }

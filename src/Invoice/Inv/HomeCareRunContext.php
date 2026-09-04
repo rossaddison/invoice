@@ -18,5 +18,6 @@ final readonly class HomeCareRunContext
         public int $categorySecondaryId,
         public bool $applyDateFilter,
         public string $lastRunDate,
-    ) {}
+    ) {
+    }
 }

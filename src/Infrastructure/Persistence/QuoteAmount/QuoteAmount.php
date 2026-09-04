@@ -14,35 +14,28 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class QuoteAmount
 {
     use RequireId;
-    
+
     #[BelongsTo(target: Quote::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Quote $quote = null;
 
     public function __construct(
         #[Column(type: 'primary')]
         private ?int $id = null,
-
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $quote_id = null,
-
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $item_subtotal = 0.00,
-
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $item_tax_total = 0.00,
-
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private float $packhandleship_total = 0.00,
-
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private float $packhandleship_tax = 0.00,
-
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $tax_total = 0.00,
-
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $total = 0.00)
-    {
+        private ?float $total = 0.00
+    ) {
     }
 
     public function getQuote(): ?Quote
@@ -54,7 +47,7 @@ class QuoteAmount
     {
         $this->quote = $quote;
     }
-    
+
     public function reqId(): int
     {
         return $this->requireId($this->id, 'Quote Amount');

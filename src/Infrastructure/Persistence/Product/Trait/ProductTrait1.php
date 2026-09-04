@@ -17,7 +17,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 trait ProductTrait1
 {
-
     public function reqId(): int
     {
         return $this->requireId($this->id, 'Product');

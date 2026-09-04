@@ -31,7 +31,8 @@ final class UsersListWidget extends Widget
         private readonly CurrentRoute $currentRoute,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly TranslatorInterface $translator,
-    ) {}
+    ) {
+    }
 
     public function withPaginator(OffsetPaginator $paginator): static
     {
@@ -78,21 +79,21 @@ final class UsersListWidget extends Widget
             ->columns(
                 new DataColumn(
                     'id',
-                    content: static fn(User $data): string => (string) $data->reqId(),
+                    content: static fn (User $data): string => (string) $data->reqId(),
                 ),
                 new DataColumn(
                     'login',
-                    content: fn(User $data): string => $data->getLogin(),
+                    content: fn (User $data): string => $data->getLogin(),
                     header: $this->translator->translate('gridview.login'),
                 ),
                 new DataColumn(
                     'create_at',
-                    content: fn(User $data): string => $data->getCreatedAt()->format('r'),
+                    content: fn (User $data): string => $data->getCreatedAt()->format('r'),
                     header: $this->translator->translate('gridview.create.at'),
                 ),
                 new DataColumn(
                     'api',
-                    content: fn(User $data): A =>
+                    content: fn (User $data): A =>
                         Html::a(
                             'API User Data',
                             $this->urlGenerator->generate('api/user/profile', ['login' => $data->getLogin()]),
@@ -102,7 +103,7 @@ final class UsersListWidget extends Widget
                 ),
                 new DataColumn(
                     'profile',
-                    content: fn(User $data): A =>
+                    content: fn (User $data): A =>
                         Html::a(
                             Html::tag('i', '', ['class' => 'bi bi-person-fill ms-1', 'style' => 'font-size: 1.5em;']),
                             $this->urlGenerator->generate('user/profile', ['login' => $data->getLogin()]),

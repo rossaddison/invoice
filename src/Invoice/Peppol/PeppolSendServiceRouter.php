@@ -29,7 +29,8 @@ final readonly class PeppolSendServiceRouter implements PeppolSendServiceInterfa
         private OxalisPeppolSendService $oxalis,
         private StorecovePeppolSendService $storecove,
         private SR $sR,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function send(

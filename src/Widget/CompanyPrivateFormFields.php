@@ -121,9 +121,11 @@ final readonly class CompanyPrivateFormFields
      * CompanyPrivate company selection dropdown
      * @param array<string, string> $companyOptions
      */
-    public function companyPrivateCompanySelect(CompanyPrivateForm $form,
-            array $companyOptions, string $labelKey): string
-    {
+    public function companyPrivateCompanySelect(
+        CompanyPrivateForm $form,
+        array $companyOptions,
+        string $labelKey
+    ): string {
         return Field::select($form, 'company_id')
             ->label($labelKey)
             ->addInputAttributes([
@@ -139,9 +141,10 @@ final readonly class CompanyPrivateFormFields
     /**
      * CompanyPrivate file field
      */
-    public function companyPrivateFileField(CompanyPrivateForm $form,
-        string $fieldName): string
-    {
+    public function companyPrivateFileField(
+        CompanyPrivateForm $form,
+        string $fieldName
+    ): string {
         $value = match ($fieldName) {
             'logo_filename' => $form->getLogoFilename(),
             default => null,

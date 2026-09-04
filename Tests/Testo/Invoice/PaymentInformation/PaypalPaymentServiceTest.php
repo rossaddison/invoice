@@ -31,7 +31,6 @@ use Testo\Test;
 #[Test]
 final class PaypalPaymentServiceTest
 {
-
     /**
      * @return LoggerInterface&m\MockInterface
      */

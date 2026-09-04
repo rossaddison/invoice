@@ -21,7 +21,7 @@ class Task
     use RequireId;
     use TaskTrait1;
     use TaskTrait2;
- 
+
     #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
 

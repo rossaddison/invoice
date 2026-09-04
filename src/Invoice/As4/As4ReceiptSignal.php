@@ -21,5 +21,6 @@ final readonly class As4ReceiptSignal
         public string $refToMessageId,
         /** eb:Timestamp of the signal */
         public \DateTimeImmutable $timestamp,
-    ) {}
+    ) {
+    }
 }

@@ -15,7 +15,9 @@ use App\Invoice\Setting\SettingRepository as SRepo;
  */
 abstract class AbstractDateHelper
 {
-    public function __construct(protected readonly SRepo $s) {}
+    public function __construct(protected readonly SRepo $s)
+    {
+    }
 
     public function style(): string
     {

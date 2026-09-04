@@ -13,9 +13,7 @@ use App\Invoice\{
     UserClient\UserClientRepository as UCR,
     UserInv\UserInvRepository as UIR
 };
-
 use Psr\Http\Message\ResponseInterface as Response;
-
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 
 trait Attachment
@@ -29,22 +27,22 @@ trait Attachment
         UPR $uPR,
     ): bool {
         $file_exists = file_exists($target);
-// The file does not exist yet in the target path but it exists in the tmp folder
-// on the server
+        // The file does not exist yet in the target path but it exists in the tmp folder
+        // on the server
         if (!$file_exists) {
-// Record the details of this upload
-// (Related logic:
-//  see https://www.php.net/manual/en/function.is-uploaded-file.php)
-// Returns true if the file named by filename was uploaded via HTTP POST.
-// This is useful to help ensure that a malicious user hasn't tried to trick
-// the script into working on files upon which it should not be working--for
-// instance, /etc/passwd. This sort of check is especially important if there
-// is any chance that anything done with uploaded files could reveal their
-// contents to the user, or even to other users on the same system. For proper
-// working, the function isUploadedFile() needs an argument like
-// $_FILES['userfile']['tmp_name'], - the name of the uploaded file on the
-// client's machine
-// $_FILES['userfile']['name'] does not work.
+            // Record the details of this upload
+            // (Related logic:
+            //  see https://www.php.net/manual/en/function.is-uploaded-file.php)
+            // Returns true if the file named by filename was uploaded via HTTP POST.
+            // This is useful to help ensure that a malicious user hasn't tried to trick
+            // the script into working on files upon which it should not be working--for
+            // instance, /etc/passwd. This sort of check is especially important if there
+            // is any chance that anything done with uploaded files could reveal their
+            // contents to the user, or even to other users on the same system. For proper
+            // working, the function isUploadedFile() needs an argument like
+            // $_FILES['userfile']['tmp_name'], - the name of the uploaded file on the
+            // client's machine
+            // $_FILES['userfile']['name'] does not work.
             if (is_uploaded_file($tmp) && move_uploaded_file($tmp, $target)) {
                 $track_file = new Upload();
                 $track_file->setClientId($client_id);
@@ -55,13 +53,17 @@ trait Attachment
                 $uPR->save($track_file);
                 return true;
             }
-                $this->flashMessage('warning',
-                    $this->translator->translate('possible.file.upload.attack')
-                        . $tmp);
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('possible.file.upload.attack')
+                    . $tmp
+            );
             return false;
         }
-        $this->flashMessage('warning',
-                $this->translator->translate('error.duplicate.file'));
+        $this->flashMessage(
+            'warning',
+            $this->translator->translate('error.duplicate.file')
+        );
         return false;
     }
 
@@ -69,29 +71,41 @@ trait Attachment
     {
         $this->flashMessage('danger', $this->translator->translate('path')
                 . $this->translator->translate('is.not.writable'));
-        return $this->webService->getRedirectResponse('inv/view',
-                ['id' => $inv_id]);
+        return $this->webService->getRedirectResponse(
+            'inv/view',
+            ['id' => $inv_id]
+        );
     }
 
     private function attachmentSuccessfullyCreated(int $inv_id): Response
     {
-        $this->flashMessage('success',
-                $this->translator->translate('record.successfully.created'));
-        return $this->webService->getRedirectResponse('inv/view',
-                ['id' => $inv_id]);
+        $this->flashMessage(
+            'success',
+            $this->translator->translate('record.successfully.created')
+        );
+        return $this->webService->getRedirectResponse(
+            'inv/view',
+            ['id' => $inv_id]
+        );
     }
 
     private function attachmentNoFileUploaded(int $inv_id): Response
     {
-        $this->flashMessage('warning',
-                $this->translator->translate('no.file.uploaded'));
-        return $this->webService->getRedirectResponse('inv/view',
-                ['id' => $inv_id]);
+        $this->flashMessage(
+            'warning',
+            $this->translator->translate('no.file.uploaded')
+        );
+        return $this->webService->getRedirectResponse(
+            'inv/view',
+            ['id' => $inv_id]
+        );
     }
 
-    public function attachment(#[RouteArgument('id')] int $inv_id, IR $iR,
-            UPR $uPR): Response
-    {
+    public function attachment(
+        #[RouteArgument('id')] int $inv_id,
+        IR $iR,
+        UPR $uPR
+    ): Response {
         $aliases = $this->sR->getCustomerFilesFolderAliases();
         $targetPath = $aliases->get('@customer_files');
         if (!is_writable($targetPath) && $inv_id) {
@@ -128,7 +142,7 @@ trait Attachment
             ? $this->attachmentSuccessfullyCreated($inv_id)
             : $this->attachmentNoFileUploaded($inv_id);
     }
-    
+
     /**
      * Use: Download an attached, and currently uploaded file
      * @param int $upload_id
@@ -139,9 +153,13 @@ trait Attachment
      *
      * @return never
      */
-    public function downloadFile(#[RouteArgument('upload_id')] int $upload_id,
-        IR $iR, UCR $ucR, UIR $uiR, UPR $upR) : never
-    {
+    public function downloadFile(
+        #[RouteArgument('upload_id')] int $upload_id,
+        IR $iR,
+        UCR $ucR,
+        UIR $uiR,
+        UPR $upR
+    ): never {
         $cC = 'Cache-Control: public, must-revalidate, post-check=0, pre-check=0';
         if ($upload_id) {
             $upload = $upR->repoUploadquery($upload_id);
@@ -171,7 +189,8 @@ trait Attachment
                         header('Expires: -1');
                         header($cC);
                         header(
-            "Content-Disposition: attachment; filename=\"$original_file_name\"");
+                            "Content-Disposition: attachment; filename=\"$original_file_name\""
+                        );
                         header('Content-Type: ' . $ctype);
                         header('Content-Length: ' . (string) $file_size);
                         echo file_get_contents($target_path_with_filename, true);

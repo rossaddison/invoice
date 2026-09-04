@@ -14,7 +14,6 @@ use RequireId;
  */
 trait CompanyTrait3
 {
-
     public function getTwitter(): ?string
     {
         return $this->twitter;

@@ -13,9 +13,18 @@ class PModeReceiptConfig
     private bool $receiptNonRepudiation = true;
     private string $receiptReplyPattern = 'Response';
 
-    public function shouldSendReceipt(): bool { return $this->sendReceipt; }
-    public function shouldSignReceipt(): bool { return $this->receiptNonRepudiation; }
-    public function getReceiptReplyPattern(): string { return $this->receiptReplyPattern; }
+    public function shouldSendReceipt(): bool
+    {
+        return $this->sendReceipt;
+    }
+    public function shouldSignReceipt(): bool
+    {
+        return $this->receiptNonRepudiation;
+    }
+    public function getReceiptReplyPattern(): string
+    {
+        return $this->receiptReplyPattern;
+    }
 
     public function setReceiptReplyPattern(string $pattern): self
     {

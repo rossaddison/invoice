@@ -137,7 +137,11 @@ final class SignupController
                     $redirect = $this->webService->getRedirectResponse('site/signupfailed');
                 } else {
                     $redirect = $this->processSendSignupEmail(
-                        $user, $currentRoute, $deps, $signupForm);
+                        $user,
+                        $currentRoute,
+                        $deps,
+                        $signupForm
+                    );
                 }
             }
             $redirect = $redirect ?? $this->webService->getRedirectResponse('site/signupsuccess');
@@ -212,9 +216,14 @@ final class SignupController
         $language = $languageArray[$_language];
         $randomAndTimeToken = $this->getEmailVerificationToken($user, $deps->tR);
         $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink(
-            $user, $deps->uiR, $language, $_language, $randomAndTimeToken,
+            $user,
+            $deps->uiR,
+            $language,
+            $_language,
+            $randomAndTimeToken,
             $signupForm->getConsentPeriodicInvoice(),
-            $signupForm->getConsentTelegramOutstanding());
+            $signupForm->getConsentTelegramOutstanding()
+        );
         if (($this->sR->getSetting('email_send_method') == 'symfony')
                 || ($this->sR->mailerEnabled())) {
             $configEmail = $this->sR->getConfigAdminEmail();
@@ -290,8 +299,8 @@ final class SignupController
         string $_language,
         string $randomAndTimeToken,
         bool $consentPeriodicInvoice = false,
-        bool $consentTelegramOutstanding = false): string
-    {
+        bool $consentTelegramOutstanding = false
+    ): string {
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         $userInv = new UserInv();
         $userId = $user->reqId();

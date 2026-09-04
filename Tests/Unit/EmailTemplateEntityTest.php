@@ -10,19 +10,19 @@ use PHPUnit\Framework\TestCase;
 final class EmailTemplateEntityTest extends TestCase
 {
     public string $invoiceTemplate = 'Invoice Template';
-    
+
     public string $quoteTemplate = 'Quote Template';
-    
+
     public string $testExampleCom = 'test@example.com';
-    
+
     public string $ccTestCom = 'cc@test.com';
-    
+
     public string $bccTestCom = 'bcc@test.com';
-    
+
     public function testConstructorWithDefaults(): void
     {
         $emailTemplate = new EmailTemplate();
-        
+
         $this->assertFalse($emailTemplate->hasIdentity());
         $this->assertSame('', $emailTemplate->getEmailTemplateTitle());
         $this->assertSame('', $emailTemplate->getEmailTemplateType());
@@ -48,7 +48,7 @@ final class EmailTemplateEntityTest extends TestCase
             'archive@company.com',
             'invoice_template.pdf'
         );
-        
+
         $this->assertFalse($emailTemplate->hasIdentity());
         $this->assertSame($this->invoiceTemplate, $emailTemplate->getEmailTemplateTitle());
         $this->assertSame('invoice', $emailTemplate->getEmailTemplateType());
@@ -72,7 +72,7 @@ final class EmailTemplateEntityTest extends TestCase
     {
         $emailTemplate = new EmailTemplate();
         $emailTemplate->setEmailTemplateTitle($this->quoteTemplate);
-        
+
         $this->assertSame($this->quoteTemplate, $emailTemplate->getEmailTemplateTitle());
     }
 
@@ -80,7 +80,7 @@ final class EmailTemplateEntityTest extends TestCase
     {
         $emailTemplate = new EmailTemplate();
         $emailTemplate->setEmailTemplateType('quote');
-        
+
         $this->assertSame('quote', $emailTemplate->getEmailTemplateType());
     }
 
@@ -89,7 +89,7 @@ final class EmailTemplateEntityTest extends TestCase
         $htmlBody = '<html><body><h1>Thank you!</h1><p>Your quote is attached.</p></body></html>';
         $emailTemplate = new EmailTemplate();
         $emailTemplate->setEmailTemplateBody($htmlBody);
-        
+
         $this->assertSame($htmlBody, $emailTemplate->getEmailTemplateBody());
     }
 
@@ -97,7 +97,7 @@ final class EmailTemplateEntityTest extends TestCase
     {
         $emailTemplate = new EmailTemplate();
         $emailTemplate->setEmailTemplateSubject('Your Quote Request');
-        
+
         $this->assertSame('Your Quote Request', $emailTemplate->getEmailTemplateSubject());
     }
 
@@ -105,7 +105,7 @@ final class EmailTemplateEntityTest extends TestCase
     {
         $emailTemplate = new EmailTemplate();
         $emailTemplate->setEmailTemplateFromName('Sales Team');
-        
+
         $this->assertSame('Sales Team', $emailTemplate->getEmailTemplateFromName());
     }
 
@@ -113,7 +113,7 @@ final class EmailTemplateEntityTest extends TestCase
     {
         $emailTemplate = new EmailTemplate();
         $emailTemplate->setEmailTemplateFromEmail('sales@company.com');
-        
+
         $this->assertSame('sales@company.com', $emailTemplate->getEmailTemplateFromEmail());
     }
 
@@ -121,7 +121,7 @@ final class EmailTemplateEntityTest extends TestCase
     {
         $emailTemplate = new EmailTemplate();
         $emailTemplate->setEmailTemplateCc('supervisor@company.com');
-        
+
         $this->assertSame('supervisor@company.com', $emailTemplate->getEmailTemplateCc());
     }
 
@@ -129,7 +129,7 @@ final class EmailTemplateEntityTest extends TestCase
     {
         $emailTemplate = new EmailTemplate();
         $emailTemplate->setEmailTemplateBcc('records@company.com');
-        
+
         $this->assertSame('records@company.com', $emailTemplate->getEmailTemplateBcc());
     }
 
@@ -137,7 +137,7 @@ final class EmailTemplateEntityTest extends TestCase
     {
         $emailTemplate = new EmailTemplate();
         $emailTemplate->setEmailTemplatePdfTemplate('quote_template.pdf');
-        
+
         $this->assertSame('quote_template.pdf', $emailTemplate->getEmailTemplatePdfTemplate());
     }
 
@@ -160,9 +160,9 @@ final class EmailTemplateEntityTest extends TestCase
     {
         $longBody = str_repeat('<p>This is a very long email template body with lots of content. </p>', 20);
         $longSubject = 'Very Long Email Subject That Could Potentially Exceed Normal Database Limits And Still Be Valid';
-        
+
         $emailTemplate = new EmailTemplate('Long Template', 'long', $longBody, $longSubject, 'Sender', $this->testExampleCom, '', '', '');
-        
+
         $this->assertSame($longBody, $emailTemplate->getEmailTemplateBody());
         $this->assertSame($longSubject, $emailTemplate->getEmailTemplateSubject());
     }
@@ -182,10 +182,10 @@ final class EmailTemplateEntityTest extends TestCase
                 </body>
             </html>
         ';
-        
+
         $emailTemplate = new EmailTemplate();
         $emailTemplate->setEmailTemplateBody($htmlContent);
-        
+
         $this->assertSame($htmlContent, $emailTemplate->getEmailTemplateBody());
     }
 
@@ -194,7 +194,7 @@ final class EmailTemplateEntityTest extends TestCase
         $emailTemplate = new EmailTemplate();
         $emailTemplate->setEmailTemplateCc('manager@company.com, supervisor@company.com');
         $emailTemplate->setEmailTemplateBcc('archive@company.com, backup@company.com');
-        
+
         $this->assertSame('manager@company.com, supervisor@company.com', $emailTemplate->getEmailTemplateCc());
         $this->assertSame('archive@company.com, backup@company.com', $emailTemplate->getEmailTemplateBcc());
     }
@@ -204,7 +204,7 @@ final class EmailTemplateEntityTest extends TestCase
         $emailTemplate = new EmailTemplate();
         $emailTemplate->setEmailTemplateSubject('Invoice #12345 - €1,234.56 (20% VAT)');
         $emailTemplate->setEmailTemplateFromName('Müller & Associates');
-        
+
         $this->assertSame('Invoice #12345 - €1,234.56 (20% VAT)', $emailTemplate->getEmailTemplateSubject());
         $this->assertSame('Müller & Associates', $emailTemplate->getEmailTemplateFromName());
     }
@@ -214,7 +214,7 @@ final class EmailTemplateEntityTest extends TestCase
         $emailTemplate = new EmailTemplate();
         $emailTemplate->setEmailTemplateTitle('Förmula Tëst 测试');
         $emailTemplate->setEmailTemplateSubject('Ñoñó España 日本語');
-        
+
         $this->assertSame('Förmula Tëst 测试', $emailTemplate->getEmailTemplateTitle());
         $this->assertSame('Ñoñó España 日本語', $emailTemplate->getEmailTemplateSubject());
     }
@@ -231,7 +231,7 @@ final class EmailTemplateEntityTest extends TestCase
         $emailTemplate->setEmailTemplateCc($this->ccTestCom);
         $emailTemplate->setEmailTemplateBcc($this->bccTestCom);
         $emailTemplate->setEmailTemplatePdfTemplate('chained.pdf');
-        
+
         $this->assertSame('Chained Template', $emailTemplate->getEmailTemplateTitle());
         $this->assertSame('chained', $emailTemplate->getEmailTemplateType());
         $this->assertSame('<p>Chained body</p>', $emailTemplate->getEmailTemplateBody());
@@ -246,7 +246,7 @@ final class EmailTemplateEntityTest extends TestCase
     public function testEmptyFieldHandling(): void
     {
         $emailTemplate = new EmailTemplate('', '', '', '', '', '', '', '', '');
-        
+
         $this->assertSame('', $emailTemplate->getEmailTemplateTitle());
         $this->assertSame('', $emailTemplate->getEmailTemplateType());
         $this->assertSame('', $emailTemplate->getEmailTemplateBody());
@@ -261,7 +261,7 @@ final class EmailTemplateEntityTest extends TestCase
     public function testNullFieldHandling(): void
     {
         $emailTemplate = new EmailTemplate(null, null, '', null, null, null, null, null, null);
-        
+
         $this->assertNull($emailTemplate->getEmailTemplateTitle());
         $this->assertNull($emailTemplate->getEmailTemplateType());
         $this->assertSame('', $emailTemplate->getEmailTemplateBody());
@@ -285,7 +285,7 @@ final class EmailTemplateEntityTest extends TestCase
         $emailTemplate->setEmailTemplateCc('cc@setup.com');
         $emailTemplate->setEmailTemplateBcc('bcc@setup.com');
         $emailTemplate->setEmailTemplatePdfTemplate('complete_setup.pdf');
-        
+
         $this->assertSame('Complete Setup Template', $emailTemplate->getEmailTemplateTitle());
         $this->assertSame('complete', $emailTemplate->getEmailTemplateType());
         $this->assertSame('<h1>Complete Setup</h1><p>This is a complete email template setup.</p>', $emailTemplate->getEmailTemplateBody());
@@ -309,15 +309,15 @@ final class EmailTemplateEntityTest extends TestCase
     public function testEmailAddressFormats(): void
     {
         $emailTemplate = new EmailTemplate();
-        
+
         // Standard email
         $emailTemplate->setEmailTemplateFromEmail('user@domain.com');
         $this->assertSame('user@domain.com', $emailTemplate->getEmailTemplateFromEmail());
-        
+
         // Email with subdomain
         $emailTemplate->setEmailTemplateFromEmail('admin@mail.company.co.uk');
         $this->assertSame('admin@mail.company.co.uk', $emailTemplate->getEmailTemplateFromEmail());
-        
+
         // Email with plus sign
         $emailTemplate->setEmailTemplateFromEmail('user+tag@example.com');
         $this->assertSame('user+tag@example.com', $emailTemplate->getEmailTemplateFromEmail());

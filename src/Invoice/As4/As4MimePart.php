@@ -18,5 +18,6 @@ final readonly class As4MimePart
         public string $contentType,
         /** Raw body bytes */
         public string $body,
-    ) {}
+    ) {
+    }
 }

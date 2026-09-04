@@ -79,9 +79,9 @@ final class XPathTokenizerTest extends TestCase
     public function testArithmeticOperators(): void
     {
         $tokens = $this->t->tokenize('+ - *');
-        self::assertSame(XPathTokenizer::T_PLUS,  $tokens[0]['type']);
+        self::assertSame(XPathTokenizer::T_PLUS, $tokens[0]['type']);
         self::assertSame(XPathTokenizer::T_MINUS, $tokens[1]['type']);
-        self::assertSame(XPathTokenizer::T_STAR,  $tokens[2]['type']);
+        self::assertSame(XPathTokenizer::T_STAR, $tokens[2]['type']);
     }
 
     public function testPathSeparators(): void
@@ -96,8 +96,8 @@ final class XPathTokenizerTest extends TestCase
     public function testParensAndBrackets(): void
     {
         $tokens = $this->t->tokenize('()[]');
-        self::assertSame(XPathTokenizer::T_LPAREN,   $tokens[0]['type']);
-        self::assertSame(XPathTokenizer::T_RPAREN,   $tokens[1]['type']);
+        self::assertSame(XPathTokenizer::T_LPAREN, $tokens[0]['type']);
+        self::assertSame(XPathTokenizer::T_RPAREN, $tokens[1]['type']);
         self::assertSame(XPathTokenizer::T_LBRACKET, $tokens[2]['type']);
         self::assertSame(XPathTokenizer::T_RBRACKET, $tokens[3]['type']);
     }
@@ -133,13 +133,13 @@ final class XPathTokenizerTest extends TestCase
     {
         // preceding-sibling::cac:Foo — three tokens: NAME, DCOLON, NAME
         $tokens = $this->t->tokenize('preceding-sibling::cac:Foo');
-        self::assertSame(XPathTokenizer::T_NAME,   $tokens[0]['type']);
-        self::assertSame('preceding-sibling',       $tokens[0]['value']);
-        self::assertSame(XPathTokenizer::T_DCOLON,  $tokens[1]['type']);
-        self::assertSame('::',                      $tokens[1]['value']);
-        self::assertSame(XPathTokenizer::T_NAME,    $tokens[2]['type']);
-        self::assertSame('cac:Foo',                 $tokens[2]['value']);
-        self::assertSame(XPathTokenizer::T_EOF,     $tokens[3]['type']);
+        self::assertSame(XPathTokenizer::T_NAME, $tokens[0]['type']);
+        self::assertSame('preceding-sibling', $tokens[0]['value']);
+        self::assertSame(XPathTokenizer::T_DCOLON, $tokens[1]['type']);
+        self::assertSame('::', $tokens[1]['value']);
+        self::assertSame(XPathTokenizer::T_NAME, $tokens[2]['type']);
+        self::assertSame('cac:Foo', $tokens[2]['value']);
+        self::assertSame(XPathTokenizer::T_EOF, $tokens[3]['type']);
     }
 
     public function testAxisSeparatorTokenToString(): void

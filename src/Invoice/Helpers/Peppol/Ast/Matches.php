@@ -16,5 +16,6 @@ readonly class Matches implements Expression
     public function __construct(
         public Expression $value,
         public Expression $pattern,
-    ) {}
+    ) {
+    }
 }

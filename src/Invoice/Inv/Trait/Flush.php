@@ -11,7 +11,6 @@ use App\Infrastructure\Persistence\{
     InvCustom\InvCustom, InvRecurring\InvRecurring, InvSentLog\InvSentLog,
     InvTaxRate\InvTaxRate, Payment\Payment, PaymentCustom\PaymentCustom
 };
-
 use App\Invoice\{
     Inv\InvFlushCoreDeps,
     Inv\InvFlushItemDeps,
@@ -72,8 +71,10 @@ trait Flush
         foreach ($core->iR->findAllPreloaded() as $i) {
             $core->iR->delete($i);
         }
-        $this->flashMessage('danger',
-            $this->translator->translate('caution.deleted.invoices'));
+        $this->flashMessage(
+            'danger',
+            $this->translator->translate('caution.deleted.invoices')
+        );
         return $this->webService->getRedirectResponse('inv/index');
     }
 }

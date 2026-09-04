@@ -36,7 +36,8 @@ final class As4RetryEngineTestFixture
         public readonly As4MessageRepositoryInterface&MockObject $repository,
         public readonly As4SenderInterface&MockObject $sender,
         public readonly As4ReceiptParserInterface&MockObject $receiptParser,
-    ) {}
+    ) {
+    }
 }
 
 #[AllowMockObjectsWithoutExpectations]

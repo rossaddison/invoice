@@ -6,7 +6,6 @@ namespace App\Invoice\Helpers\Peppol\Trait;
 
 trait PeppolUneceRec2011eTrait3
 {
-
     protected function getUNECERec2011eChunk35(): array
     {
         return [

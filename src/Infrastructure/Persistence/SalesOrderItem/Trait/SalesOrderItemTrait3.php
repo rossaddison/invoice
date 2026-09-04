@@ -16,7 +16,6 @@ use DateTimeImmutable;
  */
 trait SalesOrderItemTrait3
 {
-
     public function setQuantity(float $quantity): void
     {
         $this->quantity = $quantity;

@@ -18,11 +18,21 @@ class PModeParties
         private string $initiatorParty,
         private string $responderParty,
         private string $responderProtocolAddress,
-    ) {}
+    ) {
+    }
 
-    public function getInitiatorParty(): string { return $this->initiatorParty; }
-    public function getInitiatorRole(): string { return $this->initiatorRole; }
-    public function getInitiatorPartyType(): string { return $this->initiatorPartyType; }
+    public function getInitiatorParty(): string
+    {
+        return $this->initiatorParty;
+    }
+    public function getInitiatorRole(): string
+    {
+        return $this->initiatorRole;
+    }
+    public function getInitiatorPartyType(): string
+    {
+        return $this->initiatorPartyType;
+    }
 
     public function setInitiatorRole(string $role): self
     {
@@ -30,10 +40,22 @@ class PModeParties
         return $this;
     }
 
-    public function getResponderParty(): string { return $this->responderParty; }
-    public function getResponderRole(): string { return $this->responderRole; }
-    public function getResponderPartyType(): string { return $this->responderPartyType; }
-    public function getResponderProtocolAddress(): string { return $this->responderProtocolAddress; }
+    public function getResponderParty(): string
+    {
+        return $this->responderParty;
+    }
+    public function getResponderRole(): string
+    {
+        return $this->responderRole;
+    }
+    public function getResponderPartyType(): string
+    {
+        return $this->responderPartyType;
+    }
+    public function getResponderProtocolAddress(): string
+    {
+        return $this->responderProtocolAddress;
+    }
 
     public function setResponderRole(string $role): self
     {

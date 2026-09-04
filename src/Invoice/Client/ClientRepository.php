@@ -112,7 +112,7 @@ final class ClientRepository extends Select\Repository implements ClientReposito
                 ->withOrder(['id' => 'asc']),
         );
     }
-    
+
     public function repoClientCount(int $id): int
     {
         return $this->select()
@@ -216,8 +216,7 @@ final class ClientRepository extends Select\Repository implements ClientReposito
             /**
              * @var Client $client
              */
-            foreach ($this->repoUserClient($ucR->getClientsWithUserAccounts())
-                    as $client) {
+            foreach ($this->repoUserClient($ucR->getClientsWithUserAccounts()) as $client) {
                 $optionsData[$client->reqId()] = ($client->getClientName()
                     ?: '??')
                         . str_repeat(' ', 3)

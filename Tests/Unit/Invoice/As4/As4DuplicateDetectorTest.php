@@ -17,7 +17,8 @@ final class As4DuplicateDetectorTestFixture
     public function __construct(
         public readonly As4DuplicateDetector $detector,
         public readonly As4MessageRepositoryInterface&MockObject $repository,
-    ) {}
+    ) {
+    }
 }
 
 #[AllowMockObjectsWithoutExpectations]

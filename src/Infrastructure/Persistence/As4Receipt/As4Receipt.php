@@ -95,13 +95,40 @@ class As4Receipt
         return isset($this->id);
     }
 
-    public function getReceiptMessageId(): string { return $this->receiptMessageId; }
-    public function getRefToMessageId(): string { return $this->refToMessageId; }
-    public function getDigestValue(): string { return $this->digestValue; }
-    public function getOriginSender(): string { return $this->originSender; }
-    public function getOriginReceiver(): string { return $this->originReceiver; }
-    public function getReceiptXml(): string { return $this->receiptXml; }
-    public function isSigned(): bool { return $this->isSigned; }
-    public function getReceivedAt(): DateTime { return $this->receivedAt; }
-    public function getCreatedAt(): DateTime { return $this->createdAt; }
+    public function getReceiptMessageId(): string
+    {
+        return $this->receiptMessageId;
+    }
+    public function getRefToMessageId(): string
+    {
+        return $this->refToMessageId;
+    }
+    public function getDigestValue(): string
+    {
+        return $this->digestValue;
+    }
+    public function getOriginSender(): string
+    {
+        return $this->originSender;
+    }
+    public function getOriginReceiver(): string
+    {
+        return $this->originReceiver;
+    }
+    public function getReceiptXml(): string
+    {
+        return $this->receiptXml;
+    }
+    public function isSigned(): bool
+    {
+        return $this->isSigned;
+    }
+    public function getReceivedAt(): DateTime
+    {
+        return $this->receivedAt;
+    }
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
 }

@@ -130,7 +130,10 @@ final class NumberHelperCalculateInvTest
         $itrR->shouldReceive('repoCount')->with(7)->andReturn(0);
 
         return new CalcInvDeps(
-            $aciR, $iiR, $iiaR, $itrR,
+            $aciR,
+            $iiR,
+            $iiaR,
+            $itrR,
             $this->makeIar(),
             $this->makeIrForDiscount(),
             $this->makePymR(fullyPaid: true),
@@ -318,7 +321,11 @@ final class NumberHelperCalculateInvTest
         $iaR->shouldReceive('save')->once()->with($invAmount);
 
         $deps = new CalcInvDeps(
-            $aciR, $iiR, $iiaR, $itrR, $iaR,
+            $aciR,
+            $iiR,
+            $iiaR,
+            $itrR,
+            $iaR,
             $this->makeIrForDiscount(expectReadOnlyFlip: false),
             $this->makePymR(fullyPaid: false),
         );
@@ -383,7 +390,11 @@ final class NumberHelperCalculateInvTest
         $iaR->shouldReceive('save')->once()->with($invAmount);
 
         $deps = new CalcInvDeps(
-            $aciR, $iiR, $iiaR, $itrR, $iaR,
+            $aciR,
+            $iiR,
+            $iiaR,
+            $itrR,
+            $iaR,
             $this->makeIrForDiscount(expectReadOnlyFlip: false),
             $this->makePymR(fullyPaid: false),
         );
@@ -443,7 +454,11 @@ final class NumberHelperCalculateInvTest
         $iaR->shouldReceive('save')->once()->with($invAmount);
 
         $deps = new CalcInvDeps(
-            $aciR, $iiR, $iiaR, $itrR, $iaR,
+            $aciR,
+            $iiR,
+            $iiaR,
+            $itrR,
+            $iaR,
             $this->makeIrForDiscount(expectReadOnlyFlip: false),
             $this->makePymR(fullyPaid: false),
         );
@@ -514,7 +529,11 @@ final class NumberHelperCalculateInvTest
         $pymR->shouldReceive('repoInvquery')->once()->with(7)->andReturn($this->entityReaderOf([$payment]));
 
         $deps = new CalcInvDeps(
-            $aciR, $iiR, $iiaR, $itrR, $iaR,
+            $aciR,
+            $iiR,
+            $iiaR,
+            $itrR,
+            $iaR,
             $this->makeIrForDiscount(expectReadOnlyFlip: false),
             $pymR,
         );
@@ -560,7 +579,11 @@ final class NumberHelperCalculateInvTest
         $itrR->shouldReceive('repoCount')->with(7)->andReturn(0);
 
         $deps = new CalcInvDeps(
-            $aciR, $iiR, $iiaR, $itrR, $this->makeIar(),
+            $aciR,
+            $iiR,
+            $iiaR,
+            $itrR,
+            $this->makeIar(),
             $this->makeIrForDiscount(expectReadOnlyFlip: false),
             $this->makePymR(fullyPaid: true),
         );

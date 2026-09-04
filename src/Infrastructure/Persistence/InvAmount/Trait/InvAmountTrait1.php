@@ -11,7 +11,6 @@ use App\Infrastructure\Persistence\Inv\Inv;
  */
 trait InvAmountTrait1
 {
-
     public function getInv(): ?Inv
     {
         return $this->inv;

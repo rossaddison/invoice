@@ -69,9 +69,11 @@ trait PeppolHelperDeliveryTrait
      * @param DelRepo $delRepo
      * @return Party|null
      */
-    public function deliveryParty(Inv $invoice, DelRepo $delRepo,
-                                             DelPartyRepo $delpartyRepo): ?Party
-    {
+    public function deliveryParty(
+        Inv $invoice,
+        DelRepo $delRepo,
+        DelPartyRepo $delpartyRepo
+    ): ?Party {
         $invoice_id = $invoice->reqId();
         $inv = $delRepo->repoPartyquery($invoice_id);
         if ($inv) {
@@ -79,8 +81,19 @@ trait PeppolHelperDeliveryTrait
             $delparty = $delpartyRepo->repoDeliveryPartyquery((int) $delivery_party_id);
             $partyName = (null !== $delparty ? $delparty->getPartyName()
                                                                     : null);
-            return null !== $partyName ? new Party($this->t, $partyName,
-               null, null, null, null, null, null, null, null, null) : null;
+            return null !== $partyName ? new Party(
+                $this->t,
+                $partyName,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            ) : null;
         }
         return null;
     }
@@ -96,14 +109,19 @@ trait PeppolHelperDeliveryTrait
      * @param string $country_name
      * @return Address
      */
-    public function ublDeliveryLocation(?string $streetName,
-            ?string $additionalStreetName, ?string $buildingNumber,
-            ?string $cityName, ?string $postalZone, ?string $countrySubEntity,
-            string $country_name): Address
-    {
+    public function ublDeliveryLocation(
+        ?string $streetName,
+        ?string $additionalStreetName,
+        ?string $buildingNumber,
+        ?string $cityName,
+        ?string $postalZone,
+        ?string $countrySubEntity,
+        string $country_name
+    ): Address {
         $country_helper = new CountryHelper();
         $cic = $country_helper->getCountryIdentificationCodeWithLeague(
-                $country_name);
+            $country_name
+        );
         $country = new Country($cic, 'ISO3166-1:Alpha2');
         return new Address(
             $streetName,

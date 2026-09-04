@@ -18,7 +18,7 @@ use DateTimeImmutable;
 class InvRecurring
 {
     use RequireId;
- 
+
     /**
      * Every Recurring Invoice record belongs to one related Invoice
      * @var Inv $inv
@@ -38,15 +38,15 @@ class InvRecurring
         #[Column(type: 'string(191)', nullable: false)]
         private string $frequency = '',
         #[Column(type: 'date', nullable: true)]
-        private mixed $next = '')
-    {
+        private mixed $next = ''
+    ) {
     }
 
     public function reqId(): int
     {
         return $this->requireId($this->id, 'InvCustom');
     }
-    
+
     public function setId(int $id): void
     {
         $this->id = $id;
@@ -66,7 +66,7 @@ class InvRecurring
     {
         return $this->requireId($this->inv_id, 'Inv');
     }
-    
+
     public function setInvId(int $inv_id): void
     {
         $this->inv_id = $inv_id;

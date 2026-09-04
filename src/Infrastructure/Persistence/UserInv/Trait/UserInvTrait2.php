@@ -14,7 +14,6 @@ use RequireId;
  */
 trait UserInvTrait2
 {
-
     public function setLanguage(string $language): void
     {
         $this->language = $language;

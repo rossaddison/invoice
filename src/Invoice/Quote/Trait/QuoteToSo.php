@@ -74,7 +74,9 @@ trait QuoteToSo
         // default_invoice_group 1, default_quote_group 2, default_sales_order_group 3
         /** @var string|null $number */
         $number = $core->gR->generateNumber(
-            (int) $this->sR->getSetting('default_sales_order_group'), true);
+            (int) $this->sR->getSetting('default_sales_order_group'),
+            true
+        );
         if ($number === null) {
             throw new GroupException($this->translator);
         }
@@ -94,28 +96,57 @@ trait QuoteToSo
             'password' => $quote->getPassword() ?? '',
             'notes' => $quote->getNotes(),
         ];
-        $this->flashMessage('info',
-            $this->translator->translate('salesorder.agree.to.terms'));
+        $this->flashMessage(
+            'info',
+            $this->translator->translate('salesorder.agree.to.terms')
+        );
         $new_so = new SoEntity();
         $form = new SoForm();
         $success = 0;
         if ($formHydrator->populateAndValidate($form, $so_body) && $quote->getSoId() === 0) {
             $client_id = $so_body['client_id'];
             $user = $this->activeUser(
-                $client_id, $userDeps->uR, $userDeps->ucR, $userDeps->uiR);
+                $client_id,
+                $userDeps->uR,
+                $userDeps->ucR,
+                $userDeps->uiR
+            );
             if (null !== $user) {
                 $this->so_service->addSo($user, $new_so, $so_body);
                 $new_so_id = $new_so->reqId();
                 $this->quoteToSoQuoteItems(
-                    $quote_id, $new_so_id, $formHydrator, $core, $items, $transfer);
+                    $quote_id,
+                    $new_so_id,
+                    $formHydrator,
+                    $core,
+                    $items,
+                    $transfer
+                );
                 $this->quoteToSoQuoteTaxRates(
-                    $quote_id, $new_so_id, $items->qtrR, $formHydrator);
+                    $quote_id,
+                    $new_so_id,
+                    $items->qtrR,
+                    $formHydrator
+                );
                 $this->quoteToSoQuoteCustom(
-                    $quote_id, $new_so_id, $core->qcR, $transfer->cfR, $formHydrator);
+                    $quote_id,
+                    $new_so_id,
+                    $core->qcR,
+                    $transfer->cfR,
+                    $formHydrator
+                );
                 $this->quoteToSoQuoteAmount(
-                    $quote_id, $new_so_id, $core->qaR, $transfer->soR);
+                    $quote_id,
+                    $new_so_id,
+                    $core->qaR,
+                    $transfer->soR
+                );
                 $this->quoteToSoQuoteAllowanceCharges(
-                    $quote_id, $new_so_id, $core->acqR, $formHydrator);
+                    $quote_id,
+                    $new_so_id,
+                    $core->acqR,
+                    $formHydrator
+                );
                 // Set the quote's sales order id so that it cannot be copied in the future
                 $quote->setSoId($new_so_id);
                 $quote->setStatusId(4);
@@ -126,10 +157,12 @@ trait QuoteToSo
         return $this->factory->createResponse(Json::encode(['success' => $success]));
     }
 
-    public function reject(#[RouteArgument('url_key')] string $url_key, QR $qR,
-            UCR $ucR, UIR $uiR):
-        Response
-    {
+    public function reject(
+        #[RouteArgument('url_key')] string $url_key,
+        QR $qR,
+        UCR $ucR,
+        UIR $uiR
+    ): Response {
         if ($url_key && $qR->repoUrlKeyGuestCount($url_key) > 0) {
             $quote = $qR->repoUrlKeyGuestLoaded($url_key);
             if ($quote) {
@@ -139,13 +172,16 @@ trait QuoteToSo
                     $qR->save($quote);
                     return $this->factory->createResponse(
                         $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/setting/quote_successful',
-                        ['heading' => $this->translator->translate(
-                            'record.successfully.updated'),
+                            '//invoice/setting/quote_successful',
+                            ['heading' => $this->translator->translate(
+                                'record.successfully.updated'
+                            ),
                             'message' => $this->translator->translate(
-                            'quote.rejected'),'url' =>
+                                'quote.rejected'
+                            ),'url' =>
                             'quote/view','id' => $quote_id],
-                    ));
+                        )
+                    );
                 }
             }
         }
@@ -171,7 +207,8 @@ trait QuoteToSo
             $parameters = [
                 'success' => 0,
                 'flash_message' => $this->translator->translate(
-                    'quote.sales.order.already.created.from.quote'),
+                    'quote.sales.order.already.created.from.quote'
+                ),
             ];
             return $this->factory->createResponse(Json::encode($parameters));
         }
@@ -208,7 +245,9 @@ trait QuoteToSo
                 // Generate number only after validation passes
                 $so_body['number'] =
                         (string) $core->gR->generateNumber(
-                            (int) $body['group_id'], true);
+                            (int) $body['group_id'],
+                            true
+                        );
                 $so = $this->so_service->addSo($user, $new_so, $so_body);
                 $new_so_id = $so->reqId();
                 // Ensure that the quote has a specific po and therefore
@@ -216,16 +255,39 @@ trait QuoteToSo
                 // Transfer each quote_item to so_item and the
                 // corresponding so_item_amount to so_item_amount
                 // for each item
-                $this->quoteToSoQuoteItems($quote_id,
-                    $new_so_id, $formHydrator, $core, $items, $transfer);
-                $this->quoteToSoQuoteTaxRates($quote_id,
-                    $new_so_id, $items->qtrR, $formHydrator);
-                $this->quoteToSoQuoteCustom($quote_id,
-                    $new_so_id, $core->qcR, $transfer->cfR, $formHydrator);
-                $this->quoteToSoQuoteAmount($quote_id,
-                    $new_so_id, $core->qaR, $transfer->soR);
-                $this->quoteToSoQuoteAllowanceCharges($quote_id,
-                    $new_so_id, $core->acqR, $formHydrator);
+                $this->quoteToSoQuoteItems(
+                    $quote_id,
+                    $new_so_id,
+                    $formHydrator,
+                    $core,
+                    $items,
+                    $transfer
+                );
+                $this->quoteToSoQuoteTaxRates(
+                    $quote_id,
+                    $new_so_id,
+                    $items->qtrR,
+                    $formHydrator
+                );
+                $this->quoteToSoQuoteCustom(
+                    $quote_id,
+                    $new_so_id,
+                    $core->qcR,
+                    $transfer->cfR,
+                    $formHydrator
+                );
+                $this->quoteToSoQuoteAmount(
+                    $quote_id,
+                    $new_so_id,
+                    $core->qaR,
+                    $transfer->soR
+                );
+                $this->quoteToSoQuoteAllowanceCharges(
+                    $quote_id,
+                    $new_so_id,
+                    $core->acqR,
+                    $formHydrator
+                );
                 // Set the quote's sales order id so that it
                 // cannot be copied in the future
                 $quote->setSoId($new_so_id);
@@ -233,20 +295,24 @@ trait QuoteToSo
                 $result = [
                     'success' => 1,
                     'flash_message' => $this->translator->translate(
-                        'quote.sales.order.created.from.quote'),
+                        'quote.sales.order.created.from.quote'
+                    ),
                     'redirect_url' => $this->url_generator->generate(
                         'salesorder/view',
-                            ['_language' =>
+                        ['_language' =>
                                 (string) $this->session->get(
-                                        '_language'),
-                                'id' => $new_so_id]),
+                                    '_language'
+                                ),
+                                'id' => $new_so_id]
+                    ),
                 ];
             } // null!==$user_client && $user_client_count==1
         } else {
             $result = [
                 'success' => 0,
                 'flash_message' => $this->translator->translate(
-                    'quote.sales.order.not.created.from.quote'),
+                    'quote.sales.order.not.created.from.quote'
+                ),
             ];
         }
         //return response to quote.js to reload page at location
@@ -256,9 +322,11 @@ trait QuoteToSo
     }
 
     private function quoteToSoQuoteTaxRates(
-        int $quote_id, int $so_id, QTRR $qtrR,
-            FormHydrator $formHydrator): void
-    {
+        int $quote_id,
+        int $so_id,
+        QTRR $qtrR,
+        FormHydrator $formHydrator
+    ): void {
         // Get all tax rates that have been setup for the quote
         $quote_tax_rates = $qtrR->repoQuotequery($quote_id);
         /** @var QuoteTaxRate $quote_tax_rate */
@@ -276,7 +344,9 @@ trait QuoteToSo
             $form = new SoTaxRateForm();
             if ($formHydrator->populateAndValidate($form, $so_tax_rate)) {
                 $this->so_tax_rate_service->saveSoTaxRate(
-                    $entity, $so_tax_rate);
+                    $entity,
+                    $so_tax_rate
+                );
             }
         } // foreach
     }
@@ -298,20 +368,25 @@ trait QuoteToSo
             // using the custom_field_id to find details
             /** @var CustomField $existing_custom_field */
             $existing_custom_field = $cfR->repoCustomFieldquery(
-                $quote_custom->reqCustomFieldId());
+                $quote_custom->reqCustomFieldId()
+            );
             if ($cfR->repoTableAndLabelCountquery(
-                'inv_custom', (string) $existing_custom_field->getLabel()
-                ) !== 0) {
+                'inv_custom',
+                (string) $existing_custom_field->getLabel()
+            ) !== 0) {
                 // Build an identitcal custom field for the po
                 $custom_field = new CustomField();
                 $custom_field->setTable('so_custom');
                 $custom_field->setLabel(
-                    (string) $existing_custom_field->getLabel());
+                    (string) $existing_custom_field->getLabel()
+                );
                 $custom_field->setType($existing_custom_field->getType());
                 $custom_field->setLocation(
-                    (int) $existing_custom_field->getLocation());
+                    (int) $existing_custom_field->getLocation()
+                );
                 $custom_field->setOrder(
-                    (int) $existing_custom_field->getOrder());
+                    (int) $existing_custom_field->getOrder()
+                );
                 $cfR->save($custom_field);
                 // Build the so_custom field record
                 $so_custom = [
@@ -328,9 +403,12 @@ trait QuoteToSo
         } // foreach
     }
 
-    private function quoteToSoQuoteAmount(int $quote_id,
-        int $copy_id, QAR $qaR, SOR $soR): void
-    {
+    private function quoteToSoQuoteAmount(
+        int $quote_id,
+        int $copy_id,
+        QAR $qaR,
+        SOR $soR
+    ): void {
         $basis_quote = $qaR->repoQuotequery($quote_id);
         $newSo = $soR->repoSalesOrderUnLoadedquery($copy_id);
         if (null !== $newSo && null !== $basis_quote) {
@@ -340,17 +418,23 @@ trait QuoteToSo
             // hydrate
             $soA->setSalesOrderId($copy_id);
             $soA->setItemSubtotal(
-                $basis_quote->getItemSubtotal() ?? 0.00);
+                $basis_quote->getItemSubtotal() ?? 0.00
+            );
             $soA->setItemTaxTotal(
-                $basis_quote->getItemTaxTotal() ?? 0.00);
+                $basis_quote->getItemTaxTotal() ?? 0.00
+            );
             $soA->setPackhandleshipTotal(
-                $basis_quote->getPackhandleshipTotal() ?: 0.00);
+                $basis_quote->getPackhandleshipTotal() ?: 0.00
+            );
             $soA->setPackhandleshipTax(
-                $basis_quote->getPackhandleshipTax() ?: 0.00);
+                $basis_quote->getPackhandleshipTax() ?: 0.00
+            );
             $soA->setTaxTotal(
-                $basis_quote->getTaxTotal() ?? 0.00);
+                $basis_quote->getTaxTotal() ?? 0.00
+            );
             $soA->setTotal(
-                $basis_quote->getTotal() ?? 0.00);
+                $basis_quote->getTotal() ?? 0.00
+            );
         }
         $soR->save($newSo);
     }
@@ -397,18 +481,30 @@ trait QuoteToSo
             $form = SoItemForm::show($newSoItem, (string) $new_so_id);
             if ($formHydrator->populateAndValidate($form, $so_item)) {
                 // Save the SO item without calculating amounts yet
-                $this->so_item_service->addSoItemProductTask($newSoItem, $so_item,
-                    (string) $new_so_id, $items->pR, $items->taskR,
-                    $items->unR, $this->translator);
+                $this->so_item_service->addSoItemProductTask(
+                    $newSoItem,
+                    $so_item,
+                    (string) $new_so_id,
+                    $items->pR,
+                    $items->taskR,
+                    $items->unR,
+                    $this->translator
+                );
 
                 // Copy allowances/charges from quote item to sales order item
                 $this->copyQuoteItemAllowanceChargesToSo(
-                    $origQuoteItemId, $core->acqiR, $new_so_id,
-                    $newSoItem, $transfer->acsoiR);
+                    $origQuoteItemId,
+                    $core->acqiR,
+                    $new_so_id,
+                    $newSoItem,
+                    $transfer->acsoiR
+                );
 
                 // Now calculate amounts INCLUDING the allowances/charges
                 $tax_rate_percentage = $this->so_item_service->taxratePercentage(
-                    (int) $so_item['tax_rate_id'], $items->trR);
+                    (int) $so_item['tax_rate_id'],
+                    $items->trR
+                );
                 if (isset($so_item['quantity'], $so_item['price'],
                     $so_item['discount_amount'])
                     && null !== $tax_rate_percentage
@@ -428,8 +524,12 @@ trait QuoteToSo
     }
 
     private function copyQuoteItemAllowanceChargesToSo(
-        int $origQuoteItemId, ACQIR $acqiR, int $new_so_id,
-            SoItem $newSalesOrderItem, ACSOIR $acsoiR): void {
+        int $origQuoteItemId,
+        ACQIR $acqiR,
+        int $new_so_id,
+        SoItem $newSalesOrderItem,
+        ACSOIR $acsoiR
+    ): void {
 
         $all = $acqiR->repoQuoteItemquery($origQuoteItemId);
         /**
@@ -441,7 +541,8 @@ trait QuoteToSo
             $acsoItem->setSalesOrder($newSalesOrderItem->getSalesOrder());
             $acsoItem->setSalesOrderItem($newSalesOrderItem);
             $acsoItem->setAllowanceCharge(
-                    $quoteItemAllowanceCharge->getAllowanceCharge());
+                $quoteItemAllowanceCharge->getAllowanceCharge()
+            );
 
             $acsoItem->setSalesOrderId($new_so_id);
             $acsoItem->setSalesOrderItemId($newSalesOrderItem->reqId());
@@ -457,9 +558,12 @@ trait QuoteToSo
         }
     }
 
-    private function quoteToSoQuoteAllowanceCharges(int $quote_id,
-        int $new_so_id, ACQR $acqR, FormHydrator $formHydrator): void
-    {
+    private function quoteToSoQuoteAllowanceCharges(
+        int $quote_id,
+        int $new_so_id,
+        ACQR $acqR,
+        FormHydrator $formHydrator
+    ): void {
         $quote_allowance_charges = $acqR->repoACQquery($quote_id);
         /**
          * @var \App\Infrastructure\Persistence\QuoteAllowanceCharge\QuoteAllowanceCharge $quote_allowance_charge

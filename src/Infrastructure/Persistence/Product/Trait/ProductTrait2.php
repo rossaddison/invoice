@@ -17,7 +17,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 trait ProductTrait2
 {
-
     public function getProductIccListid(): ?string
     {
         return $this->product_icc_listid;

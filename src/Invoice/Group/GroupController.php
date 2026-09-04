@@ -86,8 +86,8 @@ final class GroupController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                    $this->groupService->saveGroup($group, $body);
-                    return $this->webService->getRedirectResponse('group/index');
+                $this->groupService->saveGroup($group, $body);
+                return $this->webService->getRedirectResponse('group/index');
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -188,8 +188,10 @@ final class GroupController extends BaseController
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
-            $this->flashMessage('warning',
-                $this->translator->translate('permission'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('permission')
+            );
             return $this->webService->getRedirectResponse('group/index');
         }
         return $canEdit;

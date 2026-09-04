@@ -14,7 +14,6 @@ use RequireId;
  */
 trait CompanyTrait2
 {
-
     public function getZip(): ?string
     {
         return $this->zip;

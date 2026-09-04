@@ -17,5 +17,6 @@ final class QiEditTaskDeps
         public readonly TaskR $taskR,
         public readonly QIAS $qias,
         public readonly QIAR $qiar,
-    ) {}
+    ) {
+    }
 }

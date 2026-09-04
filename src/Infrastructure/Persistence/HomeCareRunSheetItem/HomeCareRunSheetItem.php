@@ -47,7 +47,8 @@ class HomeCareRunSheetItem
         private ?string $detected_reason_code = null,
         #[Column(type: 'bool', typecast: 'bool', default: true)]
         private bool $accepted = true,
-    ) {}
+    ) {
+    }
 
     public function reqId(): int
     {

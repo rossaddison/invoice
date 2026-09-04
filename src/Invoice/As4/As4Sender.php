@@ -21,7 +21,8 @@ final class As4Sender implements As4SenderInterface
     public function __construct(
         private readonly As4HttpClient $httpClient,
         private readonly LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     /**
      * Send a signed AS4 envelope to the given endpoint.

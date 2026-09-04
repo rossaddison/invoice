@@ -53,7 +53,7 @@ class UserRbacLink
     {
         return $this->id;
     }
-    
+
     public function getUserId(): ?int
     {
         return $this->user_inv?->reqUserId();

@@ -38,7 +38,8 @@ trait Delete
                 $this->quote_service
                      ->deleteQuote($quote);
                 $this->flashMessage('success', $this->translator->translate(
-                        'record.successfully.deleted'));
+                    'record.successfully.deleted'
+                ));
                 return $this->webService->getRedirectResponse('quote/index');
             }
             $this->flashMessage('danger', $deleteNot);

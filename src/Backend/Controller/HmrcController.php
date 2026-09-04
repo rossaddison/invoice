@@ -213,8 +213,10 @@ final class HmrcController extends BaseController
         $tokenString = (string) $this->session->get('hmrc_access_token');
 
         if ($vrn === '' || strlen($tokenString) === 0) {
-            $this->flashMessage('warning',
-                $this->translator->translate('mtd.vat.obligations.missing.vrn.or.token'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('mtd.vat.obligations.missing.vrn.or.token')
+            );
             return $this->webService->getRedirectResponse('backend/hmrc/index');
         }
 
@@ -289,8 +291,10 @@ final class HmrcController extends BaseController
         $otpReference = (string) $this->session->get('otpRef');
 
         if ($nino === '' || strlen($tokenString) === 0) {
-            $this->flashMessage('warning',
-                $this->translator->translate('mtd.vat.obligations.missing.vrn.or.token'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('mtd.vat.obligations.missing.vrn.or.token')
+            );
             return $this->webService->getRedirectResponse('backend/hmrc/index');
         }
 
@@ -429,7 +433,7 @@ final class HmrcController extends BaseController
      *       16 headers are required for the WEB_APP_VIA_SERVER method.
      * Related logic: https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/
      */
-    private function webAppViaServerBuildArrayFromStrings( // NOSONAR php:S107 — HMRC fraud-prevention spec mandates exactly 16 header strings
+    private function webAppViaServerBuildArrayFromStrings(// NOSONAR php:S107 — HMRC fraud-prevention spec mandates exactly 16 header strings
         string $govClientConnectionMethod,
         string $govClientBrowserJsUserAgent,
         string $govClientDeviceID,

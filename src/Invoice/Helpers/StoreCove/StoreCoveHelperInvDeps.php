@@ -18,5 +18,6 @@ final class StoreCoveHelperInvDeps
         public readonly IIAR $iiaR,
         public readonly paR $paR,
         public readonly cpR $cpR,
-    ) {}
+    ) {
+    }
 }

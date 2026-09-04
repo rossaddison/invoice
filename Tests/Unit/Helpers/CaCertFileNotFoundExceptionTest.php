@@ -14,7 +14,7 @@ class CaCertFileNotFoundExceptionTest extends TestCase
     public function testExceptionInheritance(): void
     {
         $exception = new CaCertFileNotFoundException();
-        
+
         $this->assertInstanceOf(RuntimeException::class, $exception);
         $this->assertInstanceOf(FriendlyExceptionInterface::class, $exception);
     }
@@ -23,7 +23,7 @@ class CaCertFileNotFoundExceptionTest extends TestCase
     {
         $exception = new CaCertFileNotFoundException();
         $name = $exception->getName();
-        
+
         $this->assertIsString($name);
         $this->assertStringContainsString('SSL certificate', $name);
         $this->assertStringContainsString('cacert.pem', $name);
@@ -35,7 +35,7 @@ class CaCertFileNotFoundExceptionTest extends TestCase
     {
         $exception = new CaCertFileNotFoundException();
         $name = $exception->getName();
-        
+
         // Should contain the current PHP version twice
         $occurrences = substr_count($name, PHP_VERSION);
         $this->assertGreaterThanOrEqual(2, $occurrences);
@@ -45,7 +45,7 @@ class CaCertFileNotFoundExceptionTest extends TestCase
     {
         $exception = new CaCertFileNotFoundException();
         $solution = $exception->getSolution();
-        
+
         $this->assertIsString($solution);
         $this->assertStringContainsString('Download from this website', $solution);
         $this->assertStringContainsString('cloud.google.com', $solution);
@@ -58,7 +58,7 @@ class CaCertFileNotFoundExceptionTest extends TestCase
     {
         $exception = new CaCertFileNotFoundException();
         $solution = $exception->getSolution();
-        
+
         $this->assertStringContainsString('1.', $solution);
         $this->assertStringContainsString('2.', $solution);
         $this->assertStringContainsString('3.', $solution);
@@ -70,7 +70,7 @@ class CaCertFileNotFoundExceptionTest extends TestCase
     {
         $message = 'Custom certificate error';
         $exception = new CaCertFileNotFoundException($message);
-        
+
         $this->assertSame($message, $exception->getMessage());
     }
 
@@ -79,7 +79,7 @@ class CaCertFileNotFoundExceptionTest extends TestCase
         $message = 'Certificate not found';
         $code = 500;
         $exception = new CaCertFileNotFoundException($message, $code);
-        
+
         $this->assertSame($message, $exception->getMessage());
         $this->assertSame($code, $exception->getCode());
     }
@@ -88,7 +88,7 @@ class CaCertFileNotFoundExceptionTest extends TestCase
     {
         $previousException = new RuntimeException('SSL error');
         $exception = new CaCertFileNotFoundException('Certificate error', 0, $previousException);
-        
+
         $this->assertSame($previousException, $exception->getPrevious());
     }
 
@@ -96,7 +96,7 @@ class CaCertFileNotFoundExceptionTest extends TestCase
     {
         $this->expectException(CaCertFileNotFoundException::class);
         $this->expectExceptionMessage('Cert file missing');
-        
+
         throw new CaCertFileNotFoundException('Cert file missing');
     }
 
@@ -113,35 +113,35 @@ class CaCertFileNotFoundExceptionTest extends TestCase
     public function testGetNameReturnType(): void
     {
         $exception = new CaCertFileNotFoundException();
-        
+
         $this->assertIsString($exception->getName());
     }
 
     public function testGetSolutionReturnType(): void
     {
         $exception = new CaCertFileNotFoundException();
-        
+
         $this->assertIsString($exception->getSolution());
     }
 
     public function testGetNameIsNotEmpty(): void
     {
         $exception = new CaCertFileNotFoundException();
-        
+
         $this->assertNotEmpty($exception->getName());
     }
 
     public function testGetSolutionIsNotEmpty(): void
     {
         $exception = new CaCertFileNotFoundException();
-        
+
         $this->assertNotEmpty($exception->getSolution());
     }
 
     public function testExceptionDefaultValues(): void
     {
         $exception = new CaCertFileNotFoundException();
-        
+
         $this->assertSame('', $exception->getMessage());
         $this->assertSame(0, $exception->getCode());
         $this->assertNull($exception->getPrevious());
@@ -150,7 +150,7 @@ class CaCertFileNotFoundExceptionTest extends TestCase
     public function testExceptionStackTrace(): void
     {
         $exception = new CaCertFileNotFoundException('Stack test');
-        
+
         $this->assertIsArray($exception->getTrace());
         $this->assertIsString($exception->getTraceAsString());
     }
@@ -158,7 +158,7 @@ class CaCertFileNotFoundExceptionTest extends TestCase
     public function testExceptionFile(): void
     {
         $exception = new CaCertFileNotFoundException();
-        
+
         $this->assertIsString($exception->getFile());
         $this->assertIsInt($exception->getLine());
     }
@@ -166,9 +166,9 @@ class CaCertFileNotFoundExceptionTest extends TestCase
     public function testExceptionToString(): void
     {
         $exception = new CaCertFileNotFoundException('String test');
-        
+
         $stringRepresentation = (string) $exception;
-        
+
         $this->assertIsString($stringRepresentation);
         $this->assertStringContainsString('CaCertFileNotFoundException', $stringRepresentation);
         $this->assertStringContainsString('String test', $stringRepresentation);
@@ -177,7 +177,7 @@ class CaCertFileNotFoundExceptionTest extends TestCase
     public function testExceptionImplementsInterface(): void
     {
         $exception = new CaCertFileNotFoundException();
-        
+
         $this->assertTrue(method_exists($exception, 'getName'));
         $this->assertTrue(method_exists($exception, 'getSolution'));
     }
@@ -186,11 +186,11 @@ class CaCertFileNotFoundExceptionTest extends TestCase
     {
         $exception = new CaCertFileNotFoundException();
         $solution = $exception->getSolution();
-        
+
         $step1Pos = strpos($solution, '1.');
         $step2Pos = strpos($solution, '2.');
         $step3Pos = strpos($solution, '3.');
-        
+
         $this->assertLessThan($step2Pos, $step1Pos);
         $this->assertLessThan($step3Pos, $step2Pos);
     }

@@ -21,7 +21,7 @@ final class CategoryPrimaryForm extends FormModel
     public static function show(CategoryPrimary $categoryPrimary): self
     {
         $form = new self();
-        
+
         $form->name = $categoryPrimary->getName() ?? '';
 
         return $form;

@@ -21,10 +21,12 @@ final readonly class ZugFerdHelper
      * @param IIAR $iiaR
      * @param InvAmount $inv_amount
      */
-    public function __construct(private SRepo $s, private IIAR $iiaR,
-            private InvAmount $inv_amount,
-            private readonly Translator $translator)
-    {
+    public function __construct(
+        private SRepo $s,
+        private IIAR $iiaR,
+        private InvAmount $inv_amount,
+        private readonly Translator $translator
+    ) {
     }
 
     /**

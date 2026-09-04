@@ -20,7 +20,9 @@ final readonly class CompanyPrivateService
      * @param array $array
      */
     public function saveCompanyPrivate(
-        CompanyPrivate $model, array $array): void {
+        CompanyPrivate $model,
+        array $array
+    ): void {
         $this->persist($model, $array);
         isset($array['company_id']) ?
             $model->setCompanyId((int) $array['company_id']) : '';
@@ -40,7 +42,8 @@ final readonly class CompanyPrivateService
             $model->setRcc((string) $array['rcc']) : '';
         isset($array['logo_filename']) ?
             $model->setLogoFilename(
-                (string) $array['logo_filename']) : '';
+                (string) $array['logo_filename']
+            ) : '';
         isset($array['logo_width']) ?
             $model->setLogoWidth((int) $array['logo_width']) : '';
         isset($array['logo_height']) ?
@@ -52,13 +55,17 @@ final readonly class CompanyPrivateService
             $model->setStartDate(
                 $datetime_start_date::createFromFormat(
                     'Y-m-d',
-                    (string) $array['start_date'])) : '';
+                    (string) $array['start_date']
+                )
+            ) : '';
         $datetime_end_date = new \DateTime();
         isset($array['end_date']) ?
             $model->setEndDate(
                 $datetime_end_date::createFromFormat(
                     'Y-m-d',
-                    (string) $array['end_date'])) : '';
+                    (string) $array['end_date']
+                )
+            ) : '';
         $this->repository->save($model);
     }
 
@@ -69,7 +76,8 @@ final readonly class CompanyPrivateService
         $company = 'company_id';
         if (isset($array[$company])) {
             $model->setCompany(
-                $this->cR->repoCompanyquery((int) $array[$company]));
+                $this->cR->repoCompanyquery((int) $array[$company])
+            );
         }
     }
 

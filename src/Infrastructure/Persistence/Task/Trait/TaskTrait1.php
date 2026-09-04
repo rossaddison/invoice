@@ -15,7 +15,6 @@ use DateTimeImmutable;
  */
 trait TaskTrait1
 {
-
     public function reqId(): int
     {
         return $this->requireId($this->id, 'Task');

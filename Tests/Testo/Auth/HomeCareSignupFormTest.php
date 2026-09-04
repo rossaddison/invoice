@@ -23,7 +23,6 @@ use Yiisoft\Validator\Validator;
 #[Test]
 final class HomeCareSignupFormTest
 {
-
     /**
      * @return User&m\MockInterface
      */

@@ -42,7 +42,7 @@ final class RateLimitRedirectMiddlewareTest
     /** Throws if called — proves the caller reached the real handler, not the inner limiter's stub. */
     private function makeThrowingHandler(): RequestHandlerInterface
     {
-        return new class implements RequestHandlerInterface {
+        return new class () implements RequestHandlerInterface {
             #[\Override]
             public function handle(ServerRequestInterface $request): ResponseInterface
             {
@@ -54,7 +54,7 @@ final class RateLimitRedirectMiddlewareTest
     /** Returns a fixed 200 with a recognisable body, to prove it — not the inner limiter — ran. */
     private function makeOkHandler(): RequestHandlerInterface
     {
-        return new class implements RequestHandlerInterface {
+        return new class () implements RequestHandlerInterface {
             #[\Override]
             public function handle(ServerRequestInterface $request): ResponseInterface
             {

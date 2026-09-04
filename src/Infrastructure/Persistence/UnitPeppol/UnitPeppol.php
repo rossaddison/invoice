@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\UnitPeppol;
 
 use App\Infrastructure\Persistence\{
-   Unit\Unit, Trait\RequireId
+    Unit\Unit, Trait\RequireId
 };
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -16,7 +16,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class UnitPeppol
 {
     use RequireId;
-    
+
     #[BelongsTo(target: Unit::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Unit $unit = null;
 
@@ -30,8 +30,8 @@ class UnitPeppol
         #[Column(type: 'string(120)', nullable: false)]
         private string $name = '',
         #[Column(type: 'longText', nullable: false)]
-        private string $description = '')
-    {
+        private string $description = ''
+    ) {
     }
 
     public function getUnit(): ?Unit

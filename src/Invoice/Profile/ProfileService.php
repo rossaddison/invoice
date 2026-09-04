@@ -26,7 +26,8 @@ final readonly class ProfileService
         $this->persist($model, $array);
         isset($array['company_id']) ?
             $model->setCompanyId(
-                (int) $array['company_id']) : '';
+                (int) $array['company_id']
+            ) : '';
         $model->setCurrent($array['current'] === '1' ? 1 : 0);
         isset($array['mobile']) ?
             $model->setMobile((string) $array['mobile']) : '';
@@ -34,7 +35,8 @@ final readonly class ProfileService
             $model->setEmail((string) $array['email']) : '';
         isset($array['description']) ?
             $model->setDescription(
-                (string) $array['description']) : '';
+                (string) $array['description']
+            ) : '';
 
         $this->repository->save($model);
     }
@@ -46,7 +48,8 @@ final readonly class ProfileService
         $company = 'company_id';
         if (isset($array[$company])) {
             $model->setCompany(
-                $this->cR->repoCompanyquery((int) $array[$company]));
+                $this->cR->repoCompanyquery((int) $array[$company])
+            );
         }
     }
 

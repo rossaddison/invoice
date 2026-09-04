@@ -23,7 +23,7 @@ class SampleTest extends TestCase
     public function testArrayOperations(): void
     {
         $array = [1, 2, 3];
-        
+
         $this->assertCount(3, $array);
         $this->assertContains(2, $array);
         $this->assertNotContains(4, $array);

@@ -49,12 +49,18 @@ final class PeppolMessageRepository extends Select\Repository implements PeppolM
             $query = $query->andWhere(['status' => trim((string) $queryParams['status'])]);
         }
         if (!empty($queryParams['message_id'])) {
-            $query = $query->andWhere('message_id', 'like',
-                '%' . trim((string) $queryParams['message_id']) . '%');
+            $query = $query->andWhere(
+                'message_id',
+                'like',
+                '%' . trim((string) $queryParams['message_id']) . '%'
+            );
         }
         if (!empty($queryParams['recipient_id'])) {
-            $query = $query->andWhere('recipient_id', 'like',
-                '%' . trim((string) $queryParams['recipient_id']) . '%');
+            $query = $query->andWhere(
+                'recipient_id',
+                'like',
+                '%' . trim((string) $queryParams['recipient_id']) . '%'
+            );
         }
         if (!empty($queryParams['inv_id'])) {
             $query = $query->andWhere(['inv_id' => (int) $queryParams['inv_id']]);

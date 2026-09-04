@@ -17,5 +17,6 @@ final class QiacEditDeps
         public readonly QuoteAmountRepository $qaR,
         public readonly QuoteItemAmountRepository $qiaR,
         public readonly QuoteTaxRateRepository $qtrR,
-    ) {}
+    ) {
+    }
 }

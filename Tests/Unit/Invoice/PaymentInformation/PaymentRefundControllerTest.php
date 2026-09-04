@@ -54,7 +54,7 @@ final class PaymentRefundControllerTest extends TestCase
     {
         $translator = $this->createStub(TranslatorInterface::class);
         $translator->method('translate')->willReturnCallback(
-            static fn(string|Stringable $id): string => $id . str_repeat(':%s', $placeholderCounts[(string) $id] ?? 1),
+            static fn (string|Stringable $id): string => $id . str_repeat(':%s', $placeholderCounts[(string) $id] ?? 1),
         );
 
         return $translator;
@@ -83,7 +83,7 @@ final class PaymentRefundControllerTest extends TestCase
     {
         $route = $this->createStub(CurrentRoute::class);
         $route->method('getArgument')->willReturnCallback(
-            static fn(string $name, ?string $default = null): ?string => match ($name) {
+            static fn (string $name, ?string $default = null): ?string => match ($name) {
                 'payment_id' => (string) $paymentId,
                 'gateway' => $gateway,
                 default => $default,
@@ -109,7 +109,7 @@ final class PaymentRefundControllerTest extends TestCase
     ): PaymentRefundController {
         $sR = $this->createStub(SettingRepository::class);
         $sR->method('getSetting')->willReturnCallback(
-            static fn(string $key): string => $settings[$key] ?? '',
+            static fn (string $key): string => $settings[$key] ?? '',
         );
 
         if ($paymentRepository === null) {
@@ -329,7 +329,7 @@ final class PaymentRefundControllerTest extends TestCase
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger->expects(self::once())->method('error')->with('Online payment refund failed.', self::callback(
-            static fn(array $context): bool => $context['driver'] === 'stripe' && $context['message'] === 'card_declined',
+            static fn (array $context): bool => $context['driver'] === 'stripe' && $context['message'] === 'card_declined',
         ));
 
         $controller = $this->makeController(

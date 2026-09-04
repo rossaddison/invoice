@@ -22,7 +22,8 @@ final readonly class CategorySecondaryService
         $this->persist($model, $array);
         isset($array['category_primary_id']) ?
             $model->setCategoryPrimaryId(
-                (int) $array['category_primary_id']) : '';
+                (int) $array['category_primary_id']
+            ) : '';
         isset($array['name']) ?
             $model->setName((string) $array['name']) : '';
         $this->repository->save($model);
@@ -33,7 +34,8 @@ final readonly class CategorySecondaryService
         $cp = 'category_primary_id';
         if (isset($array[$cp])) {
             $model->setCategoryPrimary(
-                $this->cpR->repoCategoryPrimaryQuery((int) $array[$cp]));
+                $this->cpR->repoCategoryPrimaryQuery((int) $array[$cp])
+            );
         }
     }
 

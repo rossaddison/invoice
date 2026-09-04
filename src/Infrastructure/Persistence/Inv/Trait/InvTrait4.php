@@ -9,7 +9,6 @@ use DateTimeImmutable;
 
 trait InvTrait4
 {
-
     public function setDateDue(SettingRepositoryInterface $sR): void
     {
         if (empty($sR->getSetting('invoices_due_after'))) {

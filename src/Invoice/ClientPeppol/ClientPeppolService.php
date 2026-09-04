@@ -26,10 +26,12 @@ final readonly class ClientPeppolService
             $model->setClientId((int) $array['client_id']) : '';
         isset($array['accounting_cost']) ?
             $model->setAccountingCost(
-                (string) $array['accounting_cost']) : '';
+                (string) $array['accounting_cost']
+            ) : '';
         isset($array['buyer_reference']) ?
             $model->setBuyerReference(
-                (string) $array['buyer_reference']) : '';
+                (string) $array['buyer_reference']
+            ) : '';
         $this->applyEndpointFields($model, $array);
         $this->applyIdentificationFields($model, $array);
         $this->applyLegalEntityFields($model, $array);
@@ -41,13 +43,16 @@ final readonly class ClientPeppolService
     {
         isset($array['endpointid']) ?
             $model->setEndpointid(
-                (string) $array['endpointid']) : '';
+                (string) $array['endpointid']
+            ) : '';
         isset($array['endpointid_schemeid']) ?
             $model->setEndpointidSchemeid(
-                (string) $array['endpointid_schemeid']) : '';
+                (string) $array['endpointid_schemeid']
+            ) : '';
         isset($array['financial_institution_branchid']) ?
             $model->setFinancialInstitutionBranchid(
-                (string) $array['financial_institution_branchid'])
+                (string) $array['financial_institution_branchid']
+            )
             : '';
     }
 
@@ -55,13 +60,16 @@ final readonly class ClientPeppolService
     {
         isset($array['identificationid']) ?
             $model->setIdentificationid(
-                (string) $array['identificationid']) : '';
+                (string) $array['identificationid']
+            ) : '';
         isset($array['identificationid_schemeid']) ?
             $model->setIdentificationidSchemeid(
-                (string) $array['identificationid_schemeid']) : '';
+                (string) $array['identificationid_schemeid']
+            ) : '';
         isset($array['supplier_assigned_accountid']) ?
             $model->setSupplierAssignedAccountId(
-                (string) $array['supplier_assigned_accountid'])
+                (string) $array['supplier_assigned_accountid']
+            )
             : '';
     }
 
@@ -69,18 +77,22 @@ final readonly class ClientPeppolService
     {
         isset($array['legal_entity_companyid']) ?
             $model->setLegalEntityCompanyid(
-                (string) $array['legal_entity_companyid']) : '';
+                (string) $array['legal_entity_companyid']
+            ) : '';
         isset($array['legal_entity_companyid_schemeid']) ?
             $model->setLegalEntityCompanyidSchemeid(
-                (string) $array['legal_entity_companyid_schemeid'])
+                (string) $array['legal_entity_companyid_schemeid']
+            )
             : '';
         isset($array['legal_entity_company_legal_form']) ?
             $model->setLegalEntityCompanyLegalForm(
-                (string) $array['legal_entity_company_legal_form'])
+                (string) $array['legal_entity_company_legal_form']
+            )
             : '';
         isset($array['legal_entity_registration_name']) ?
             $model->setLegalEntityRegistrationName(
-                (string) $array['legal_entity_registration_name'])
+                (string) $array['legal_entity_registration_name']
+            )
             : '';
     }
 
@@ -88,10 +100,12 @@ final readonly class ClientPeppolService
     {
         isset($array['taxschemecompanyid']) ?
             $model->setTaxschemecompanyid(
-                (string) $array['taxschemecompanyid']) : '';
+                (string) $array['taxschemecompanyid']
+            ) : '';
         isset($array['taxschemeid']) ?
             $model->setTaxschemeid(
-                (string) $array['taxschemeid']) : '';
+                (string) $array['taxschemeid']
+            ) : '';
     }
 
     private function persist(
@@ -101,7 +115,8 @@ final readonly class ClientPeppolService
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
-                $this->cR->repoClientquery((int) $array[$client]));
+                $this->cR->repoClientquery((int) $array[$client])
+            );
         }
     }
 

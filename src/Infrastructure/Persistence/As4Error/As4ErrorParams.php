@@ -15,5 +15,6 @@ final readonly class As4ErrorParams
         public string $originSender,
         public string $originReceiver,
         public string $errorXml,
-    ) {}
+    ) {
+    }
 }
