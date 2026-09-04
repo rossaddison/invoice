@@ -9,6 +9,7 @@ use App\Invoice\ProductClient\ProductClientRepository as PcR;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Widget\GridComponents;
 use App\Widget\NoOpFilterFactory;
+use App\Widget\StickyGridHeaderTrait;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Html\Html;
@@ -33,6 +34,8 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
 
 final class ProductsListWidget extends Widget
 {
+    use StickyGridHeaderTrait;
+
     private const string DOM_ID = 'ProductsGridView';
     private const string ROUTE_INDEX = 'product/index';
 
@@ -47,7 +50,6 @@ final class ProductsListWidget extends Widget
     private array $optionsDataProductsDropdownFilter = [];
     /** @psalm-var array<array-key, array<array-key, string>|string> */
     private array $optionsDataFamiliesDropdownFilter = [];
-    private bool $stickyHeader = false;
 
     public function __construct(
         private readonly CurrentRoute $currentRoute,
@@ -123,20 +125,6 @@ final class ProductsListWidget extends Widget
     {
         $new = clone $this;
         $new->optionsDataFamiliesDropdownFilter = $options;
-        return $new;
-    }
-
-    /**
-     * The shared 'grid_sticky_header' setting -- see
-     * SettingToggleController::gridStickyHeader()'s docblock for why
-     * this is one setting for every grid, not one per grid, and
-     * src/Invoice/Asset/invoice/css/overrides.css for the CSS rule this
-     * class enables by name.
-     */
-    public function withStickyHeader(bool $stickyHeader): static
-    {
-        $new = clone $this;
-        $new->stickyHeader = $stickyHeader;
         return $new;
     }
 

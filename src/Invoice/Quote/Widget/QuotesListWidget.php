@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\Quote\Quote;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\Setting\SettingRepository as SR;
+use App\Widget\StickyGridHeaderTrait;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Router\CurrentRoute;
@@ -30,6 +31,8 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
  */
 final class QuotesListWidget extends Widget
 {
+    use StickyGridHeaderTrait;
+
     private const string DOM_ID = 'QuotesGridView';
 
     private ?OffsetPaginator $paginator = null;
@@ -43,7 +46,6 @@ final class QuotesListWidget extends Widget
     private int $clientCount = 0;
     private string $gridSummary = '';
     private string $sortString = '-id';
-    private bool $stickyHeader = false;
     /** @psalm-var array<array-key, array<array-key, string>|string> */
     private array $optionsDataClientsDropdownFilter = [];
     /** @psalm-var array<array-key, array<array-key, string>|string> */
@@ -130,20 +132,6 @@ final class QuotesListWidget extends Widget
     {
         $new = clone $this;
         $new->sortString = $sortString;
-        return $new;
-    }
-
-    /**
-     * The shared 'grid_sticky_header' setting -- see
-     * SettingToggleController::gridStickyHeader()'s docblock for why
-     * this is one setting for every grid, not one per grid, and
-     * src/Invoice/Asset/invoice/css/overrides.css for the CSS rule this
-     * class enables by name.
-     */
-    public function withStickyHeader(bool $stickyHeader): static
-    {
-        $new = clone $this;
-        $new->stickyHeader = $stickyHeader;
         return $new;
     }
 

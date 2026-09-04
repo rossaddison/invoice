@@ -9,6 +9,7 @@ use App\Invoice\Inv\InvRepository as InvRepo;
 use App\Invoice\SalesOrder\SalesOrderRepository as SoR;
 use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as SoAR;
 use App\Invoice\Setting\SettingRepository as SR;
+use App\Widget\StickyGridHeaderTrait;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Html\Html;
@@ -32,6 +33,8 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
 
 final class SalesOrdersListWidget extends Widget
 {
+    use StickyGridHeaderTrait;
+
     private const string DOM_ID = 'SalesOrdersGridView';
     private const string ROUTE_INDEX = 'salesorder/index';
 
@@ -47,7 +50,6 @@ final class SalesOrdersListWidget extends Widget
     private string $sortString = '-id';
     private int $status = 0;
     private string $salesOrderToolbar = '';
-    private bool $stickyHeader = false;
     /** @psalm-var array<array-key, array<array-key, string>|string> */
     private array $optionsDataClientsDropdownFilter = [];
 
@@ -151,20 +153,6 @@ final class SalesOrdersListWidget extends Widget
     {
         $new = clone $this;
         $new->optionsDataClientsDropdownFilter = $options;
-        return $new;
-    }
-
-    /**
-     * The shared 'grid_sticky_header' setting -- see
-     * SettingToggleController::gridStickyHeader()'s docblock for why
-     * this is one setting for every grid, not one per grid, and
-     * src/Invoice/Asset/invoice/css/overrides.css for the CSS rule this
-     * class enables by name.
-     */
-    public function withStickyHeader(bool $stickyHeader): static
-    {
-        $new = clone $this;
-        $new->stickyHeader = $stickyHeader;
         return $new;
     }
 
