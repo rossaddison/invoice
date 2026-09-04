@@ -10,6 +10,7 @@ use App\Invoice\Family\FamilyRepository;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\Product\ProductRepository;
 use App\Invoice\Quote\QuoteRepository;
+use App\Invoice\Setting\QuoteSalesOrderInvResetService;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Trait\InvoiceInstallTrait;
@@ -18,6 +19,7 @@ use App\Invoice\Unit\UnitRepository;
 use App\Invoice\UserInv\UserInvRepository;
 use App\Invoice\UserInv\UserRbacLinkRepository;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Router\CurrentRoute;
@@ -31,6 +33,8 @@ final class InvoiceController extends BaseController
     use InvoiceStoreCoveTrait;
 
     protected string $controllerName = 'invoice';
+
+    private const string ROUTE_INDEX = 'invoice/index';
 
     public function faq(
         SettingRepository $sR,
@@ -309,5 +313,104 @@ final class InvoiceController extends BaseController
             'lines' => $lines,
             'logFile' => $logFile,
         ]);
+    }
+
+    /**
+     * Confirmation page for resetQuoteSalesOrderInv() -- debug-mode only,
+     * shows the exact table list and requires the DB password to proceed.
+     */
+    public function resetQuoteSalesOrderInvConfirm(): Response
+    {
+        if (!$this->debugResetAllowed()) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $this->flashMessage('warning', $this->translator->translate('debug.reset.tree.confirm'));
+        return $this->webViewRenderer->render('debug/reset_quote_so_inv_confirm', [
+            'alerts' => $this->alert(),
+            'tables' => QuoteSalesOrderInvResetService::tables(),
+        ]);
+    }
+
+    /**
+     * Backs up the database, then drops the entire Inv, Quote and
+     * SalesOrder entity trees and clears the cached schema -- see
+     * QuoteSalesOrderInvResetService and
+     * project_sales_order_amount_so_id_column_incident memory. Debug mode
+     * and EDIT_INV permission are required (route middleware plus a
+     * redundant in-action check -- see debugLogs() for the same pattern),
+     * and the submitted db_password field must match $_ENV['DB_PASSWORD']
+     * exactly, checked with hash_equals() to avoid a timing side-channel.
+     *
+     * Redirects to resetQuoteSalesOrderInvFinish() rather than recreating
+     * the tables here directly: this request has already resolved (and
+     * cached, for its own lifetime) the pre-drop ORM schema via
+     * BaseController's constructor-injected SettingRepository, so nothing
+     * in this same request can trigger a fresh rebuild. The *next*
+     * request's controller construction does that naturally.
+     */
+    public function resetQuoteSalesOrderInv(
+        Request $request,
+        QuoteSalesOrderInvResetService $resetService,
+    ): Response {
+        if (!$this->debugResetAllowed()) {
+            return $this->webService->getNotFoundResponse();
+        }
+        return $this->webService->getRedirectResponse(
+            $this->dropQuoteSalesOrderInvTree($request, $resetService),
+        );
+    }
+
+    /**
+     * @return string the route name resetQuoteSalesOrderInv() should redirect to.
+     */
+    private function dropQuoteSalesOrderInvTree(
+        Request $request,
+        QuoteSalesOrderInvResetService $resetService,
+    ): string {
+        $body = (array) $request->getParsedBody();
+        $submitted = (string) ($body['db_password'] ?? '');
+        $expected = $_ENV['DB_PASSWORD'] ?? '';
+        if ($expected === '' || !hash_equals($expected, $submitted)) {
+            $this->flashMessage('danger', $this->translator->translate('debug.reset.tree.wrong.password'));
+            return 'invoice/resetQuoteSalesOrderInvConfirm';
+        }
+        try {
+            $resetService->dropAndClearSchema();
+            return 'invoice/resetQuoteSalesOrderInvFinish';
+        } catch (\Throwable $e) {
+            $this->flashMessage('danger', $this->translator->translate('debug.reset.tree.failed')
+                . ': ' . $e->getMessage());
+            return self::ROUTE_INDEX;
+        }
+    }
+
+    /**
+     * Second leg of resetQuoteSalesOrderInv() -- by the time this action's
+     * body runs, this request's own controller construction has already
+     * resolved the ORM schema fresh (the previous request cleared the
+     * cache), which is what actually recreates the Inv/Quote/SalesOrder
+     * tables via Cycle\Schema\Generator\SyncTables. Only once that's true
+     * is it safe to reset AUTO_INCREMENT on them.
+     */
+    public function resetQuoteSalesOrderInvFinish(QuoteSalesOrderInvResetService $resetService): Response
+    {
+        if (!$this->debugResetAllowed()) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $tables = QuoteSalesOrderInvResetService::tables();
+        try {
+            $resetService->resetAutoIncrement($tables);
+            $this->flashMessage('success', $this->translator->translate('debug.reset.tree.done')
+                . ' (' . count($tables) . ')');
+        } catch (\Throwable $e) {
+            $this->flashMessage('danger', $this->translator->translate('debug.reset.tree.failed')
+                . ': ' . $e->getMessage());
+        }
+        return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
+    }
+
+    private function debugResetAllowed(): bool
+    {
+        return ($_ENV['YII_DEBUG'] ?? '') === 'true' && $this->userService->hasPermission(Permissions::EDIT_INV);
     }
 }

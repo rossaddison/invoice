@@ -540,6 +540,20 @@ if ((null !== $currentPath) && !$isGuest) {
                         'title' => $t->translate('test.remove.tooltip'),
                             'hidden' => !$debugMode],
                 ),
+                // Drops and rebuilds the entire Inv/Quote/SalesOrder tree --
+                // debug mode + EDIT_INV + DB password gated. See
+                // InvoiceController::resetQuoteSalesOrderInvConfirm() and
+                // project_sales_order_amount_so_id_column_incident memory.
+                DropdownItem::link(
+                    '⚠️ ' . $t->translate('debug.reset.tree.menu'),
+                    $urlGenerator->generate('invoice/resetQuoteSalesOrderInvConfirm'),
+                    false,
+                    itemAttributes: $itemFontArray +
+                    ['data-bs-toggle' => 'tooltip',
+                        'title' => $t->translate('debug.reset.tree.warning'),
+                        'style' => 'background-color: #ffcccb',
+                            'hidden' => !$debugMode],
+                ),
             ),
             // Performance
             Dropdown::widget()
