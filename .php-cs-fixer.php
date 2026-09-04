@@ -13,9 +13,17 @@ $finder =  new Finder()
     ->in([
         $root.'/config',
         $root.'/src',
-        $root.'/resources/views',
         $root.'/Tests',
     ])
+    // resources/views is deliberately NOT included: its view partials
+    // follow the one-space-per-nesting-level indentation convention
+    // documented in _html_php_conventions.php, which PSR12's indentation
+    // rule can never satisfy -- confirmed live 2026-09-04, the first time
+    // this workflow's own plumbing bugs were fixed enough to let it
+    // actually run: it stripped nearly all leading whitespace from 1132
+    // files rather than reformatting them sensibly, destroying the
+    // documented nesting structure. Do not add resources/views back here
+    // without also reconciling that convention with PSR12 first.
     // relative not absolute paths
     ->exclude([
         'invoice/del',
