@@ -100,7 +100,7 @@ jobs:
         # Alpine versions are paired explicitly rather than a free matrix.
         include:
           - php: '84'
-            alpine: '3.22'
+            alpine: '3.24'
           # - php: '85'
           #   alpine: 'edge'
 
