@@ -28,8 +28,72 @@ on:
 name: invoice build
 
 jobs:
+  # Built once on PHP 8.4/ubuntu-latest and shared via artifact with both
+  # `sonar` and every `tests` matrix leg (PHP 8.4 and 8.5, ubuntu and
+  # windows) below, instead of each of those 5 jobs independently running
+  # its own full `composer install` from scratch. composer.lock is
+  # committed, so `composer install` (not `update`) always produces the
+  # exact same vendor/ regardless of which PHP version or OS runs it.
+  #
+  # Not shared with tests-alpine: that job runs under musl libc rather
+  # than glibc, installs PHP via apk rather than shivammathur/setup-php,
+  # and is a single leg with no matrix redundancy of its own to eliminate
+  # — kept fully independent rather than risking a glibc/musl mismatch for
+  # no real benefit.
+  #
+  # Windows note for whoever adds real test-running steps to the `tests`
+  # job later (see that job's own comment): vendor/bin/*'s wrapper scripts
+  # are OS-specific (.bat on Windows, shell script elsewhere) and are
+  # baked in at `composer install` time for whatever OS ran it — this
+  # artifact is built on ubuntu-latest, so its vendor/bin/*.bat wrappers
+  # don't exist. Invoke tools via `php vendor/bin/x` explicitly rather
+  # than relying on the wrapper script working after downloading this
+  # artifact on a Windows leg.
+  install:
+    name: Install Composer dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Composer GitHub auth
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: composer config --global --auth github-oauth.github.com "$GITHUB_TOKEN"
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.4'
+          extensions: apcu, fileinfo, pdo, pdo_sqlite, intl, gd, openssl, dom, json, mbstring, curl, uopz, sodium, ctype
+          tools: composer:v2
+
+      - name: Determine composer cache directory
+        run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
+
+      - name: Cache dependencies installed with composer
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: php8.4-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            php8.4-composer-
+
+      - name: Install dependencies with composer
+        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+
+      - name: Upload vendor artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: vendor-php84
+          path: vendor
+          retention-days: 1
+
   sonar:
     name: SonarCloud
+    needs: [install]
     runs-on: ubuntu-latest
     if: github.actor != 'dependabot[bot]'
     steps:
@@ -46,13 +110,11 @@ jobs:
           tools: composer:v2
           coverage: pcov
 
-      - name: Set up Composer GitHub auth
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: composer config --global --auth github-oauth.github.com "$GITHUB_TOKEN"
-
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+      - name: Download vendor artifact
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: vendor-php84
+          path: vendor
 
       - name: Generate PHP coverage
         run: php -d memory_limit=512M vendor/bin/phpunit --coverage-clover coverage.xml --log-junit test-results.xml
@@ -82,7 +144,13 @@ jobs:
 
   tests:
     name: PHP ${{ matrix.php }}-${{ matrix.os }}
-    needs: [sonar]
+    # Only needs `install` (the shared vendor/ artifact), not `sonar` --
+    # this job doesn't consume anything sonar produces. It used to wait
+    # for sonar to finish first regardless, which serialised roughly a
+    # full extra SonarCloud run's worth of wall-clock time in front of
+    # every matrix leg, including both windows-latest ones, for no actual
+    # dependency reason.
+    needs: [install]
 
     env:
       extensions: apcu, fileinfo, pdo, pdo_sqlite, intl, gd, openssl, dom, json, mbstring, curl, uopz, sodium, ctype
@@ -121,12 +189,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Composer GitHub auth
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
-        run: composer config --global --auth github-oauth.github.com "$GITHUB_TOKEN"
-      
       - name: Install PHP with extensions
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
         with:
@@ -135,29 +197,13 @@ jobs:
           ini-values: date.timezone='UTC', max_execution_time=400, memory_limit=1024M
           tools: composer:v2
           coverage: pcov
-          
-      - name: Determine composer cache directory on Linux
-        if: matrix.os == 'ubuntu-latest'
-        run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
-        
-      - name: Determine composer cache directory on Windows
-        if: matrix.os == 'windows-latest'
-        run: echo "COMPOSER_CACHE_DIR=~\AppData\Local\Composer" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        
-      - name: Cache dependencies installed with composer
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+
+      - name: Download vendor artifact
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
         with:
-          path: ${{ env.COMPOSER_CACHE_DIR }}
-          key: php${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: |
-            php${{ matrix.php }}-composer-
-            
-      - name: Update composer
-        run: composer self-update
-        
-      - name: Install dependencies with composer
-        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
-                
+          name: vendor-php84
+          path: vendor
+
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
