@@ -104,7 +104,9 @@ final readonly class StoreCoveHelper
         $url_key = $invoice->getUrlKey();
         $invoice_id = $invoice->reqId();
         $inv_attachments = $upR->repoUploadUrlClientquery(
-            $url_key, $invoice->reqClientId());
+            $url_key,
+            $invoice->reqClientId()
+        );
         $aliases = $this->s->getCustomerFilesFolderAliases();
         $targetPath = $aliases->get('@customer_files');
         $attachments = [];
@@ -134,8 +136,11 @@ final readonly class StoreCoveHelper
                 $attachments[$incrementor] = [
                     'filename' => $inv_attachment->getFileNameOriginal(),
                     'document'
-                    => mb_convert_encoding($target_path_with_filename,
-                        'HTML-ENTITIES', 'UTF-8'),
+                    => mb_convert_encoding(
+                        $target_path_with_filename,
+                        'HTML-ENTITIES',
+                        'UTF-8'
+                    ),
                     'mimeType' => $ctype,
                     'primaryImage' => false,
                     self::KEY_DOCUMENT_ID => $documentId,
@@ -152,8 +157,9 @@ final readonly class StoreCoveHelper
      * @return int
      */
     private function buildPeppolPaymentForReference(
-                                            string $provider, int $inv_id): int
-    {
+        string $provider,
+        int $inv_id
+    ): int {
         $pp = new PaymentPeppol($inv_id, $provider);
         return $pp->getAutoReference();
     }
@@ -167,9 +173,11 @@ final readonly class StoreCoveHelper
      * @param DateTimeImmutable $date_created
      * @return string
      */
-    public function getDescriptionCodeForTaxPoint(Inv $inv,
-      DateTimeImmutable $date_supplied, DateTimeImmutable $date_created): string
-    {
+    public function getDescriptionCodeForTaxPoint(
+        Inv $inv,
+        DateTimeImmutable $date_supplied,
+        DateTimeImmutable $date_created
+    ): string {
         $dcI = 'Invoice Issue Date/Time ie. Date Created/Issued';
         $adS = 'Actual Delivery Date/Time ie. Date Supplied';
         $uncl2005_subset_array = [
@@ -204,7 +212,10 @@ final readonly class StoreCoveHelper
             $input_date = DateTime::createFromImmutable($date_tax_point);
         }
         $start_end_array = $datehelper->invoicePeriodStartEnd(
-                            $invoice, $input_date, $this->delRepo);
+            $invoice,
+            $input_date,
+            $this->delRepo
+        );
         $startDate = (string) $start_end_array['StartDate'];
         $endDate = (string) $start_end_array['EndDate'];
         return $startDate . ' - ' . $endDate;
@@ -218,9 +229,13 @@ final readonly class StoreCoveHelper
      * @param SOR $soR
      * @return array
      */
-    public function buildReferencesArray(Inv $invoice,
-            ContractRepo $contractRepo, cpR $cpR, SOIR $soiR, SOR $soR): array
-    {
+    public function buildReferencesArray(
+        Inv $invoice,
+        ContractRepo $contractRepo,
+        cpR $cpR,
+        SOIR $soiR,
+        SOR $soR
+    ): array {
         $sales_order_id = $invoice->getSoId();
         if ($sales_order_id > 0) {
             $sales_order = $soR->repoSalesOrderUnLoadedquery($sales_order_id);
@@ -391,13 +406,19 @@ final readonly class StoreCoveHelper
         if ($date_tax_point === $date_created_or_issued) {
             $input_date = DateTime::createFromImmutable($date_created_or_issued);
             $description_code = $this->getDescriptionCodeForTaxPoint(
-                            $invoice, $date_supplied, $date_created_or_issued);
+                $invoice,
+                $date_supplied,
+                $date_created_or_issued
+            );
         } else {
             $input_date = DateTime::createFromImmutable($date_tax_point);
             $description_code = '';
         }
         $start_end_array = $datehelper->invoicePeriodStartEnd(
-                                        $invoice, $input_date, $this->delRepo);
+            $invoice,
+            $input_date,
+            $this->delRepo
+        );
         $startDate = (string) $start_end_array['StartDate'];
         $endDate = (string) $start_end_array['EndDate'];
         return new InvoicePeriod($startDate, $endDate, $description_code);
@@ -431,15 +452,27 @@ final readonly class StoreCoveHelper
          * @var string $payeeFinancialAccount['ID']
          */
         $pm_id = $payeeFinancialAccount['ID'];
-        $payment_id = $this->buildPeppolPaymentForReference('storecove',
-                                                          $invoice_id);
+        $payment_id = $this->buildPeppolPaymentForReference(
+            'storecove',
+            $invoice_id
+        );
         $invoice_period = $this->ublInvoicePeriod($invoice, $this->s);
-        $invoice_lines = $this->lineBuilder->buildInvoiceLinesArray($invoice,
-                                            $invoice_period, $inv, $net, $charge);
+        $invoice_lines = $this->lineBuilder->buildInvoiceLinesArray(
+            $invoice,
+            $invoice_period,
+            $inv,
+            $net,
+            $charge
+        );
         $allowance_charges = $this->lineBuilder->documentLevelAllowanceCharges(
-                                                        $invoice, $charge->aciR);
+            $invoice,
+            $charge->aciR
+        );
         $taxSubtotal = $this->lineBuilder->buildTaxSubtotalArray(
-                                                $invoice, $inv->iiaR, $charge->trR);
+            $invoice,
+            $inv->iiaR,
+            $charge->trR
+        );
         /**
          * @var float $taxSubtotal['TaxableAmounts']
          */
@@ -539,8 +572,13 @@ final readonly class StoreCoveHelper
         StoreCoveHelperNetDeps $net,
         StoreCoveHelperChargeDeps $charge,
     ): array {
-        $references = $this->buildReferencesArray($invoice, $net->contractRepo,
-                                                        $inv->cpR, $charge->soiR, $inv->soR);
+        $references = $this->buildReferencesArray(
+            $invoice,
+            $net->contractRepo,
+            $inv->cpR,
+            $charge->soiR,
+            $inv->soR
+        );
         $config_peppol = $this->s->getConfigPeppol();
         /**
          * @var array $config_peppol['PartyLegalEntity']
@@ -565,11 +603,13 @@ final readonly class StoreCoveHelper
             throw new TaxSchemeCompanyIdNotFoundException($this->t);
         }
         $identifier = (int) $this->s->getSetting(
-                                             'storecove_sender_identifier');
+            'storecove_sender_identifier'
+        );
         $store_cove_sender_array =
                       StoreCoveArrays::storeCoveSenderIdentifierArray();
         $identifier_basis = $this->s->getSetting(
-                                        'storecove_sender_identifier_basis');
+            'storecove_sender_identifier_basis'
+        );
         $routing_scheme_identifier = '';
         /**
          * @var int $key
@@ -578,7 +618,8 @@ final readonly class StoreCoveHelper
         foreach ($store_cove_sender_array as $key => $value) {
             if ($key == $identifier) {
                 if ($identifier_basis === $this->t->translate(
-                                                        'storecove.tax')) {
+                    'storecove.tax'
+                )) {
                     /**
                      * @var string $value[$identifier_basis]
                      */
@@ -586,7 +627,8 @@ final readonly class StoreCoveHelper
                     continue;
                 }
                 if ($identifier_basis === $this->t->translate(
-                                                        'storecove.legal')) {
+                    'storecove.legal'
+                )) {
                     /**
                      * @var string $value[$identifier_basis]
                      */
@@ -607,7 +649,10 @@ final readonly class StoreCoveHelper
         StoreCoveHelperInvDeps $inv,
     ): array {
         $acp = $this->customerParser->buildPeppolAccountingCustomerPartyArray(
-                                                        $invoice, $inv->paR, $inv->cpR);
+            $invoice,
+            $inv->paR,
+            $inv->cpR
+        );
         $customer_partyTaxScheme = $this->customerParser->buildCustomerPartyTaxScheme($acp);
         $customer_partyLegalEntity = $this->customerParser->buildCustomerLegalEntity($acp);
         $customer_tax_scheme = $customer_partyTaxScheme->getTaxScheme();
@@ -697,16 +742,22 @@ final readonly class StoreCoveHelper
         $country_code_identifier = $this->s->getSetting('storecove_country');
         $site = curl_init();
         if ($site) {
-            curl_setopt($site,
-                    CURLOPT_URL, 'https://api.storecove.com/api/v2/legal_entities');
+            curl_setopt(
+                $site,
+                CURLOPT_URL,
+                'https://api.storecove.com/api/v2/legal_entities'
+            );
             curl_setopt($site, CURLOPT_POST, true);
             curl_setopt($site, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($site, CURLOPT_HTTPHEADER,
-                    [
+            curl_setopt(
+                $site,
+                CURLOPT_HTTPHEADER,
+                [
                         'Accept: application/json',
                         "Authorization: Bearer $api_key_here",
                         'Content-Type: application/json'
-                    ]);
+                    ]
+            );
             curl_setopt($site, CURLOPT_HEADER, true);
             $data = '{"party_name": "Test Party", "line1": "Test Street 1",'
                     . ' "city": "Test City", "zip": "Zippy",'

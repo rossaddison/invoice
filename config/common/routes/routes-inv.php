@@ -10,323 +10,273 @@ use Yiisoft\Router\Route;
 
 return [
     RoutePermission::invoiceGroup(
-Route::methods([Method::GET, Method::POST], '/inv/pdfDashboardIncludeCf/{id}')
+        Route::methods([Method::GET, Method::POST], '/inv/pdfDashboardIncludeCf/{id}')
                 ->middleware(RoutePermission::check(Permissions::VIEW_INV))
                 ->action([InvController::class, 'pdfDashboardIncludeCf'])
                 ->name('inv/pdfDashboardIncludeCf'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/pdfDashboardExcludeCf/{id}')
+        Route::methods([Method::GET, Method::POST], '/inv/pdfDashboardExcludeCf/{id}')
                 ->middleware(RoutePermission::check(Permissions::VIEW_INV))
                 ->action([InvController::class, 'pdfDashboardExcludeCf'])
                 ->name('inv/pdfDashboardExcludeCf'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/pdfDownloadIncludeCf/{url_key}')
+        Route::methods([Method::GET, Method::POST], '/inv/pdfDownloadIncludeCf/{url_key}')
                 ->middleware(RoutePermission::check(Permissions::VIEW_INV))
                 ->action([InvController::class, 'pdfDownloadIncludeCf'])
                 ->name('inv/pdfDownloadIncludeCf'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/pdfDownloadExcludeCf/{url_key}')
+        Route::methods([Method::GET, Method::POST], '/inv/pdfDownloadExcludeCf/{url_key}')
                 ->middleware(RoutePermission::check(Permissions::VIEW_INV))
                 ->action([InvController::class, 'pdfDownloadExcludeCf'])
                 ->name('inv/pdfDownloadExcludeCf'),
-
-            Route::methods([Method::GET, Method::POST], '/download_file/{upload_id}')
+        Route::methods([Method::GET, Method::POST], '/download_file/{upload_id}')
                 ->middleware(RoutePermission::check(Permissions::VIEW_INV))
                 ->action([InvController::class, 'downloadFile'])
                 ->name('inv/downloadFile'),
 
-            // Because the inv/view is accessible to the observer and the admin
-            // the inv/view function is further refined with rbac
-            Route::methods([Method::GET, Method::POST], '/inv/view/{id}')
-                ->name('inv/view')
-                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
-                ->action([InvController::class, 'view']),
+        // Because the inv/view is accessible to the observer and the admin
+        // the inv/view function is further refined with rbac
+        Route::methods([Method::GET, Method::POST], '/inv/view/{id}')
+            ->name('inv/view')
+            ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+            ->action([InvController::class, 'view']),
 
-            // id acquired by session
-            Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]')
-                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
-                ->action([InvController::class, 'guest'])
-                ->name('inv/guest'),
+        // id acquired by session
+        Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]')
+            ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+            ->action([InvController::class, 'guest'])
+            ->name('inv/guest'),
 
-            // Lets a signed-in guest print their own home-care QR code
-            Route::get('/client_invoices/qr')
-                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
-                ->action([InvController::class, 'guestQrCode'])
-                ->name('inv/guest/qr'),
+        // Lets a signed-in guest print their own home-care QR code
+        Route::get('/client_invoices/qr')
+            ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+            ->action([InvController::class, 'guestQrCode'])
+            ->name('inv/guest/qr'),
 
-            // HomeCare field-worker-only offline PWA (see
-            // docs/HOMECARE_OFFLINE_PWA_AUGUST_2026.md): a JSON snapshot
-            // of the worker's allocated invoices, and the standalone
-            // shell page the service worker precaches to render it with
-            // zero connectivity.
-            Route::get('/client_invoices/offline-data')
-                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
-                ->action([InvController::class, 'guestOfflineData'])
-                ->name('inv/guest/offlineData'),
-
-            Route::get('/client_invoices/offline')
+        // HomeCare field-worker-only offline PWA (see
+        // docs/HOMECARE_OFFLINE_PWA_AUGUST_2026.md): a JSON snapshot
+        // of the worker's allocated invoices, and the standalone
+        // shell page the service worker precaches to render it with
+        // zero connectivity.
+        Route::get('/client_invoices/offline-data')
+            ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+            ->action([InvController::class, 'guestOfflineData'])
+            ->name('inv/guest/offlineData'),
+        Route::get('/client_invoices/offline')
                 ->middleware(RoutePermission::check(Permissions::VIEW_INV))
                 ->action([InvController::class, 'guestOffline'])
                 ->name('inv/guest/offline'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/urlKey/{url_key}/{gateway}')
+        Route::methods([Method::GET, Method::POST], '/inv/urlKey/{url_key}/{gateway}')
                 ->name('inv/urlKey')
                 ->middleware(RoutePermission::check(Permissions::VIEW_INV))
                 ->action([InvController::class, 'urlKey']),
 
-            // id acquired by session
-            Route::methods([Method::GET, Method::POST], '/inv/pdf/{include}')
-                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
-                ->action([InvController::class, 'pdf'])
-                ->name('inv/pdf'),
+        // id acquired by session
+        Route::methods([Method::GET, Method::POST], '/inv/pdf/{include}')
+            ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+            ->action([InvController::class, 'pdf'])
+            ->name('inv/pdf'),
 
-            // Further restricted to admin/observer inside pdfPlaywright()
-            // itself (excludes accountant) since this shells out to
-            // Node/Chromium per request rather than using mPDF.
-            Route::methods([Method::GET, Method::POST], '/inv/pdfPlaywright/{id}')
-                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
-                ->action([InvController::class, 'pdfPlaywright'])
-                ->name('inv/pdfPlaywright'),
+        // Further restricted to admin/observer inside pdfPlaywright()
+        // itself (excludes accountant) since this shells out to
+        // Node/Chromium per request rather than using mPDF.
+        Route::methods([Method::GET, Method::POST], '/inv/pdfPlaywright/{id}')
+            ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+            ->action([InvController::class, 'pdfPlaywright'])
+            ->name('inv/pdfPlaywright'),
 
-            // Internal — navigated to by playwright/render-invoice.ts only,
-            // never linked from the UI. Serves the invoice document mPDF
-            // converts (not the admin inv/view screen) as a real page.
-            Route::methods([Method::GET, Method::POST], '/inv/pdfPlaywrightDocument/{id}')
-                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
-                ->action([InvController::class, 'pdfPlaywrightDocument'])
-                ->name('inv/pdfPlaywrightDocument'),
+        // Internal — navigated to by playwright/render-invoice.ts only,
+        // never linked from the UI. Serves the invoice document mPDF
+        // converts (not the admin inv/view screen) as a real page.
+        Route::methods([Method::GET, Method::POST], '/inv/pdfPlaywrightDocument/{id}')
+            ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+            ->action([InvController::class, 'pdfPlaywrightDocument'])
+            ->name('inv/pdfPlaywrightDocument'),
 
-            // {invoice} is a complete string
-            Route::methods([Method::GET, Method::POST], '/inv/download/{invoice}')
-                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
-                ->action([InvController::class, 'download'])
-                ->name('inv/download'),
-
-            Route::get('/inv[/page/{page:\d+}[/status/{status:\d+}]]')
+        // {invoice} is a complete string
+        Route::methods([Method::GET, Method::POST], '/inv/download/{invoice}')
+            ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+            ->action([InvController::class, 'download'])
+            ->name('inv/download'),
+        Route::get('/inv[/page/{page:\d+}[/status/{status:\d+}]]')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'index'])
                 ->name('inv/index'),
-
-            Route::get('/inv/[/status/{status:\d+}]')
+        Route::get('/inv/[/status/{status:\d+}]')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'indexMark'])
                 ->name('inv/indexmark'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/peppolStreamToggle/{id}')
+        Route::methods([Method::GET, Method::POST], '/inv/peppolStreamToggle/{id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'peppolStreamToggle'])
                 ->name('inv/peppolStreamToggle'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/peppolDocCurrencyToggle/{id}')
+        Route::methods([Method::GET, Method::POST], '/inv/peppolDocCurrencyToggle/{id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'peppolDocCurrencyToggle'])
                 ->name('inv/peppolDocCurrencyToggle'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/peppolSend/{id}')
+        Route::methods([Method::GET, Method::POST], '/inv/peppolSend/{id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'peppolSend'])
                 ->name('inv/peppolSend'),
-
-            Route::methods([Method::GET, Method::POST], '/archive')
+        Route::methods([Method::GET, Method::POST], '/archive')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'archive'])
                 ->name('inv/archive'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/saveCustom')
+        Route::methods([Method::GET, Method::POST], '/inv/saveCustom')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'saveCustom'])
                 ->name('inv/saveCustom'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/saveInvAllowanceCharge')
+        Route::methods([Method::GET, Method::POST], '/inv/saveInvAllowanceCharge')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'saveInvAllowanceCharge'])
                 ->name('inv/saveInvAllowanceCharge'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/saveInvTaxRate')
+        Route::methods([Method::GET, Method::POST], '/inv/saveInvTaxRate')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'saveInvTaxRate'])
                 ->name('inv/saveInvTaxRate'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/deleteInvTaxRate/{id}')
+        Route::methods([Method::GET, Method::POST], '/inv/deleteInvTaxRate/{id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'deleteInvTaxRate'])
                 ->name('inv/deleteInvTaxRate'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/deleteInvItem/{id}')
+        Route::methods([Method::GET, Method::POST], '/inv/deleteInvItem/{id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'deleteInvItem'])
                 ->name('inv/deleteInvItem'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/emailStage0/{id}')
+        Route::methods([Method::GET, Method::POST], '/inv/emailStage0/{id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'emailStage0'])
                 ->name('inv/emailStage0'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/emailStage2/{id}')
+        Route::methods([Method::GET, Method::POST], '/inv/emailStage2/{id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'emailStage2'])
                 ->name('inv/emailStage2'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/markAsSent')
+        Route::methods([Method::GET, Method::POST], '/inv/markAsSent')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'markAsSent'])
                 ->name('inv/markAsSent'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/markSentAsDraft')
+        Route::methods([Method::GET, Method::POST], '/inv/markSentAsDraft')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'markSentAsDraft'])
                 ->name('inv/markSentAsDraft'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/setworker/{inv_id}')
+        Route::methods([Method::GET, Method::POST], '/inv/setworker/{inv_id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'setWorker'])
                 ->name('inv/setworker'),
 
-            // VIEW_INV, not EDIT_INV — the worker role that sets this from
-            // inv/guest only has VIEW_INV (see resources/rbac/items.php).
-            Route::methods([Method::GET, Method::POST], '/inv/setdonotsend/{inv_id}')
-                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
-                ->action([InvController::class, 'setDoNotSend'])
-                ->name('inv/setdonotsend'),
-
-            Route::methods([Method::GET], '/inv/batchEmailPreview')
+        // VIEW_INV, not EDIT_INV — the worker role that sets this from
+        // inv/guest only has VIEW_INV (see resources/rbac/items.php).
+        Route::methods([Method::GET, Method::POST], '/inv/setdonotsend/{inv_id}')
+            ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+            ->action([InvController::class, 'setDoNotSend'])
+            ->name('inv/setdonotsend'),
+        Route::methods([Method::GET], '/inv/batchEmailPreview')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'batchEmailPreview'])
                 ->name('inv/batchEmailPreview'),
-
-            Route::methods([Method::GET], '/inv/batchEmail')
+        Route::methods([Method::GET], '/inv/batchEmail')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'batchEmail'])
                 ->name('inv/batchEmail'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/modalChangeClient')
+        Route::methods([Method::GET, Method::POST], '/inv/modalChangeClient')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'modalChangeClient'])
                 ->name('inv/modalChangeClient'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/attachment/{id}')
+        Route::methods([Method::GET, Method::POST], '/inv/attachment/{id}')
                 ->name('inv/attachment')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'attachment']),
-
-            Route::methods([Method::GET, Method::POST], '/inv/edit/{id}')
+        Route::methods([Method::GET, Method::POST], '/inv/edit/{id}')
                 ->name('inv/edit')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'edit']),
-
-            Route::methods([Method::GET, Method::POST], '/inv/flush')
+        Route::methods([Method::GET, Method::POST], '/inv/flush')
                 ->name('inv/flush')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'flush']),
-
-            Route::methods([Method::GET, Method::POST], '/inv/peppol/{id}')
+        Route::methods([Method::GET, Method::POST], '/inv/peppol/{id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'peppol'])
                 ->name('inv/peppol'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/storecove/{id}')
+        Route::methods([Method::GET, Method::POST], '/inv/storecove/{id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'storecove'])
                 ->name('inv/storecove'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/test')
+        Route::methods([Method::GET, Method::POST], '/inv/test')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'test'])
                 ->name('inv/test'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/save')
+        Route::methods([Method::GET, Method::POST], '/inv/save')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'save'])
                 ->name('inv/save'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/delete/{id}')
+        Route::methods([Method::GET, Method::POST], '/inv/delete/{id}')
                 ->name('inv/delete')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'delete']),
-
-            Route::get('/inv/trash')
+        Route::get('/inv/trash')
                 ->name('inv/trash')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'trash']),
-
-            Route::methods([Method::GET, Method::POST], '/inv/restore/{id}')
+        Route::methods([Method::GET, Method::POST], '/inv/restore/{id}')
                 ->name('inv/restore')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'restore']),
-
-            Route::methods([Method::GET, Method::POST], '/inv/html/{include}')
+        Route::methods([Method::GET, Method::POST], '/inv/html/{include}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'html'])
                 ->name('inv/html'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/saveInvItem')
+        Route::methods([Method::GET, Method::POST], '/inv/saveInvItem')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'saveInvItem'])
                 ->name('inv/saveInvItem'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/modalcreate')
+        Route::methods([Method::GET, Method::POST], '/inv/modalcreate')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'modalcreate'])
                 ->name('inv/modalcreate'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/multiplecopy')
+        Route::methods([Method::GET, Method::POST], '/inv/multiplecopy')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'multiplecopy'])
                 ->name('inv/multiplecopy'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/multiplecopyspreadsheet')
+        Route::methods([Method::GET, Method::POST], '/inv/multiplecopyspreadsheet')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'multiplecopyspreadsheet'])
                 ->name('inv/multiplecopyspreadsheet'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/copyalltodate')
+        Route::methods([Method::GET, Method::POST], '/inv/copyalltodate')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'copyAllToDate'])
                 ->name('inv/copyalltodate'),
-
-            Route::methods([Method::GET], '/inv/copycsvtemplate')
+        Route::methods([Method::GET], '/inv/copycsvtemplate')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'csvTemplateInvCopy'])
                 ->name('inv/copycsvtemplate'),
-
-            Route::methods([Method::GET], '/inv/bulkquickpay')
+        Route::methods([Method::GET], '/inv/bulkquickpay')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'bulkquickpay'])
                 ->name('inv/bulkquickpay'),
-
-            Route::methods([Method::GET], '/inv/quickpayform')
+        Route::methods([Method::GET], '/inv/quickpayform')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'quickpayform'])
                 ->name('inv/quickpayform'),
-
-            Route::methods([Method::GET], '/inv/quickpay')
+        Route::methods([Method::GET], '/inv/quickpay')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'quickpay'])
                 ->name('inv/quickpay'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/confirm')
+        Route::methods([Method::GET, Method::POST], '/inv/confirm')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'confirm'])
                 ->name('inv/confirm'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/add/{origin}')
+        Route::methods([Method::GET, Method::POST], '/inv/add/{origin}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'add'])
                 ->name('inv/add'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/createConfirm')
+        Route::methods([Method::GET, Method::POST], '/inv/createConfirm')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'createConfirm'])
                 ->name('inv/createConfirm'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/createCreditConfirm')
+        Route::methods([Method::GET, Method::POST], '/inv/createCreditConfirm')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'createCreditConfirm'])
                 ->name('inv/createCreditConfirm'),
-
-            Route::methods([Method::GET, Method::POST], '/inv/invToInvConfirm')
+        Route::methods([Method::GET, Method::POST], '/inv/invToInvConfirm')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'invToInvConfirm'])
                 ->name('inv/invToInvConfirm'),
-        ), // invoice
+    ), // invoice
 ];

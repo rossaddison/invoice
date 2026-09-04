@@ -20,11 +20,11 @@ final class ProductPropertyForm extends FormModel
     private ?Product $product = null;
 
     private ?int $product_id = null;
-    
+
     public static function show(
         ProductProperty $productProperty,
-        ?int $product_id): self
-    {
+        ?int $product_id
+    ): self {
         $form = new self();
         $form->name = $productProperty->getName();
         $form->value = $productProperty->getValue();

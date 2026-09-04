@@ -58,11 +58,11 @@ final class AuthValidationTest extends TestCase
         // Test trimming whitespace
         $this->assertEquals($this->oneToSix, $this->sanitizeCode(' 123456 '));
         $this->assertEquals($this->oneToSix, $this->sanitizeCode("\t123456\n"));
-        
+
         // Test removal of common separators
         $this->assertEquals($this->oneToSix, $this->sanitizeCode('1-2-3-4-5-6'));
         $this->assertEquals('ABCD1234', $this->sanitizeCode('A.B.C.D.1.2.3.4'));
-        
+
         // Test numeric input handling
         $this->assertEquals($this->oneToSix, $this->sanitizeCode(123456));
     }
@@ -76,7 +76,7 @@ final class AuthValidationTest extends TestCase
         $this->assertNull($this->sanitizeAndValidateCode(null));
         $this->assertNull($this->sanitizeAndValidateCode([]));
         $this->assertNull($this->sanitizeAndValidateCode(new \stdClass()));
-        
+
         // Test mixed content
         $this->assertEquals($this->oneToSix, $this->sanitizeAndValidateCode('1a2b3c4d5e6f', true)); // Extract digits only
         $this->assertEquals('ABCD1234', $this->sanitizeAndValidateCode('AB-CD-12-34', false)); // Remove separators
@@ -112,11 +112,11 @@ final class AuthValidationTest extends TestCase
         if ($input === null) {
             return '';
         }
-        
+
         $code = (string) $input;
         $code = trim($code);
         $code = preg_replace('/[^a-zA-Z0-9]/', '', $code);
-        
+
         return $code;
     }
 
@@ -132,17 +132,17 @@ final class AuthValidationTest extends TestCase
         if ($input === null || is_array($input) || is_object($input)) {
             return null;
         }
-        
+
         $code = $this->sanitizeCode($input);
-        
+
         if ($digitsOnly) {
             $code = preg_replace('/\D/', '', $code);
         }
-        
+
         if (empty($code)) {
             return null;
         }
-        
+
         return ($this->isValidTotpCode($code) || $this->isValidBackupCode($code)) ? $code : null;
 
     }

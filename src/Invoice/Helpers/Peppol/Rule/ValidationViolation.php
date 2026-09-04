@@ -27,5 +27,6 @@ final class ValidationViolation
         public readonly string       $message,
         public readonly string|null  $line,
         public readonly string|null  $xpath,
-    ) {}
+    ) {
+    }
 }

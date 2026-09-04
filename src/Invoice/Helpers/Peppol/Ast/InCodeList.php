@@ -23,5 +23,6 @@ readonly class InCodeList implements Expression
     public function __construct(
         public Expression $value,
         public CodeLists  $list,
-    ) {}
+    ) {
+    }
 }

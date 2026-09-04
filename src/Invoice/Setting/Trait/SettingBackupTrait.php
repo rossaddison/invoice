@@ -37,8 +37,10 @@ trait SettingBackupTrait
             header('Content-Length: ' . (string) $fileSize);
             readfile($filePath);
         } catch (\Throwable $e) {
-            $this->flashMessage('danger',
-                $this->translator->translate('backup.download.failed') . ': ' . $e->getMessage());
+            $this->flashMessage(
+                'danger',
+                $this->translator->translate('backup.download.failed') . ': ' . $e->getMessage()
+            );
             return $this->webService->getRedirectResponse('setting/tabIndex', [], ['active' => 'backup']);
         } finally {
             if (is_file($filePath)) {

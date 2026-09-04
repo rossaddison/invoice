@@ -24,8 +24,9 @@ final class SalesOrderItemAllowanceChargeRepository extends Select\Repository
      * @param EntityWriter $entityWriter
      */
     public function __construct(
-        Select $select, private readonly EntityWriter $entityWriter)
-    {
+        Select $select,
+        private readonly EntityWriter $entityWriter
+    ) {
         parent::__construct($select);
     }
 
@@ -108,8 +109,7 @@ final class SalesOrderItemAllowanceChargeRepository extends Select\Repository
      * @psalm-return TEntity|null
      * @return SalesOrderItemAllowanceCharge|null
      */
-    public function repoSalesOrderItemAllowanceChargequery(int $id):
-        ?SalesOrderItemAllowanceCharge
+    public function repoSalesOrderItemAllowanceChargequery(int $id): ?SalesOrderItemAllowanceCharge
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -168,8 +168,7 @@ final class SalesOrderItemAllowanceChargeRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderItemOriginalquery(int $sales_order_item_id):
-        ?SalesOrderItemAllowanceCharge
+    public function repoSalesOrderItemOriginalquery(int $sales_order_item_id): ?SalesOrderItemAllowanceCharge
     {
         $query = $this->select()
                       ->load('allowance_charge')

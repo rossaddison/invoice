@@ -13,7 +13,6 @@ use RequireId;
  */
 trait DeliveryTrait1
 {
-
     public function reqId(): int
     {
         return $this->requireId($this->id, 'Delivery');

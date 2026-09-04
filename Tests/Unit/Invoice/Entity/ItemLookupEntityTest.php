@@ -47,8 +47,10 @@ class ItemLookupEntityTest extends TestCase
 
         $this->assertSame(1, $itemLookup->reqId());
         $this->assertSame($this->premiumWidget, $itemLookup->getName());
-        $this->assertSame('High-quality widget for professional use',
-                $itemLookup->getDescription());
+        $this->assertSame(
+            'High-quality widget for professional use',
+            $itemLookup->getDescription()
+        );
         $this->assertSame(99.99, $itemLookup->getPrice());
     }
 

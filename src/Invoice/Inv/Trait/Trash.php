@@ -28,8 +28,10 @@ trait Trash
             $inv = $invRepo->findTrashedById($id);
             if ($inv) {
                 $this->inv_service->restoreInv($inv);
-                $this->flashMessage('success',
-                    $this->translator->translate('delete.invoice.restored'));
+                $this->flashMessage(
+                    'success',
+                    $this->translator->translate('delete.invoice.restored')
+                );
             }
         } catch (\Exception $e) {
             $this->flashMessage('danger', $e->getMessage());

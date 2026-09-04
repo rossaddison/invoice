@@ -12,9 +12,10 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final readonly class IdentityProviderButton
 {
-    public function __construct(private readonly Translator $translator,
-        private readonly UrlGenerator $generator)
-    {
+    public function __construct(
+        private readonly Translator $translator,
+        private readonly UrlGenerator $generator
+    ) {
     }
 
     public function developerSandboxHmrc(string $developerSandboxHmrcAuthUrl): string

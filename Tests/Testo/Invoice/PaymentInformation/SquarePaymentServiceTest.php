@@ -26,7 +26,6 @@ use Testo\Test;
 #[Test]
 final class SquarePaymentServiceTest
 {
-
     /**
      * @return LoggerInterface&m\MockInterface
      */

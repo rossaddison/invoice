@@ -13,8 +13,8 @@ class PartyLegalEntity implements XmlSerializable
         private string $registrationName,
         private string $companyId,
         private array $companyIdAttributes,
-        private readonly string $companyLegalForm)
-    {
+        private readonly string $companyLegalForm
+    ) {
     }
 
     /**
@@ -58,8 +58,9 @@ class PartyLegalEntity implements XmlSerializable
      * @return PartyLegalEntity
      */
     public function setCompanyId(
-        string $companyId, ?array $companyIdAttributes = null): self
-    {
+        string $companyId,
+        ?array $companyIdAttributes = null
+    ): self {
         $this->companyId = $companyId;
         if (null !== $companyIdAttributes) {
             $this->companyIdAttributes = $companyIdAttributes;

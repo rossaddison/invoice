@@ -23,5 +23,6 @@ readonly class UblPartyVO
         public ?string $registrationName,
         public ?string $companyId,
         public ?string $companyIdSchemeId,
-    ) {}
+    ) {
+    }
 }

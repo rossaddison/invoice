@@ -20,11 +20,11 @@ final class QuoteAllowanceChargeForm extends FormModel
     private ?int $quote_id = null;
 
     private ?int $vat_or_tax = null;
-    
+
     public static function show(
         QuoteAllowanceCharge $quoteAllowanceCharge,
-        ?int $quote_id): self
-    {
+        ?int $quote_id
+    ): self {
         $form = new self();
         $form->allowance_charge_id = $quoteAllowanceCharge->reqAllowanceChargeId();
         $form->amount = (int) $quoteAllowanceCharge->getAmount();

@@ -29,7 +29,9 @@ use Yiisoft\RequestProvider\RequestProvider;
 final class InvIndexFilterHydrationTest
 {
     /** Dummy signature — provides a ReflectionParameter typed as InvIndexFilter. */
-    private static function filterSignature(InvIndexFilter $filter): void {}
+    private static function filterSignature(InvIndexFilter $filter): void
+    {
+    }
 
     /** @return array<string, \ReflectionParameter> */
     private function reflectionParams(): array
@@ -45,11 +47,19 @@ final class InvIndexFilterHydrationTest
     {
         $provider  = new RequestProvider($request);
         $container = new class ($provider) implements ContainerInterface {
-            public function __construct(private readonly RequestProvider $p) {}
+            public function __construct(private readonly RequestProvider $p)
+            {
+            }
             #[\Override]
-            public function get(string $id): mixed { return new FromQueryResolver($this->p); }
+            public function get(string $id): mixed
+            {
+                return new FromQueryResolver($this->p);
+            }
             #[\Override]
-            public function has(string $id): bool  { return $id === FromQueryResolver::class; }
+            public function has(string $id): bool
+            {
+                return $id === FromQueryResolver::class;
+            }
         };
         return new RequestInputParametersResolver(
             new Hydrator(attributeResolverFactory: new ContainerAttributeResolverFactory($container))

@@ -21,7 +21,8 @@ final readonly class As4HttpResponse
         public string $body,
         /** Value of the HTTP Content-Type response header (used for MIME boundary detection). */
         public string $contentType = '',
-    ) {}
+    ) {
+    }
 
     /** Returns true for HTTP 200 or 202 (synchronous or async acceptance). */
     public function isSuccess(): bool

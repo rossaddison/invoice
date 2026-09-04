@@ -14,8 +14,20 @@ class PModeErrorConfig
     private bool $processErrorNotifyProducer = true;
     private bool $missingReceiptNotifyProducer = true;
 
-    public function shouldReportAsResponse(): bool { return $this->reportAsResponse; }
-    public function shouldNotifyConsumerOnError(): bool { return $this->processErrorNotifyConsumer; }
-    public function shouldNotifyProducerOnError(): bool { return $this->processErrorNotifyProducer; }
-    public function shouldNotifyProducerOnMissingReceipt(): bool { return $this->missingReceiptNotifyProducer; }
+    public function shouldReportAsResponse(): bool
+    {
+        return $this->reportAsResponse;
+    }
+    public function shouldNotifyConsumerOnError(): bool
+    {
+        return $this->processErrorNotifyConsumer;
+    }
+    public function shouldNotifyProducerOnError(): bool
+    {
+        return $this->processErrorNotifyProducer;
+    }
+    public function shouldNotifyProducerOnMissingReceipt(): bool
+    {
+        return $this->missingReceiptNotifyProducer;
+    }
 }

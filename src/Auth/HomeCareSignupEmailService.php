@@ -73,7 +73,12 @@ final readonly class HomeCareSignupEmailService
         $language = $languageArray[$_language];
         $randomAndTimeToken = $this->getEmailVerificationToken($user, $d);
         $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink(
-            $user, $d->uiR, $language, $_language, $randomAndTimeToken);
+            $user,
+            $d->uiR,
+            $language,
+            $_language,
+            $randomAndTimeToken
+        );
         if (($this->sR->getSetting('email_send_method') == 'symfony')
                 || ($this->sR->mailerEnabled())) {
             $configEmail = $this->sR->getConfigAdminEmail();

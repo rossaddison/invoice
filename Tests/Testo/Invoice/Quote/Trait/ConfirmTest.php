@@ -169,8 +169,19 @@ final class ConfirmTest
         }
 
         return new QuoteConfirmHarness(
-            $webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash,
-            $factory, $soService, $soTaxRateService, $soCustomService, $soItemService, $soacService,
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash,
+            $factory,
+            $soService,
+            $soTaxRateService,
+            $soCustomService,
+            $soItemService,
+            $soacService,
             $urlGenerator,
         );
     }

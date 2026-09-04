@@ -10,7 +10,6 @@ use DateTimeZone;
 
 trait SettingGovMtdTrait
 {
-
     /**
      * @return array
      */
@@ -52,9 +51,10 @@ trait SettingGovMtdTrait
      * @param string $uniqueReference
      * @return string
      */
-    public function fphGenerateMultiFactor(string $mfaType,
-                                                string $uniqueReference): string
-    {
+    public function fphGenerateMultiFactor(
+        string $mfaType,
+        string $uniqueReference
+    ): string {
         // Current timestamp in ISO 8601 format
         // https://developer.service.hmrc.gov.uk/guides/fraud-prevention/
         // change-log/

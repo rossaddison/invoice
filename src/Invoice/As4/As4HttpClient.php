@@ -40,7 +40,8 @@ final class As4HttpClient implements As4HttpTransportInterface
         private readonly ClientInterface $httpClient,
         private readonly RequestFactoryInterface $requestFactory,
         private readonly StreamFactoryInterface $streamFactory,
-    ) {}
+    ) {
+    }
 
     /**
      * Sends the signed envelope to the given endpoint.

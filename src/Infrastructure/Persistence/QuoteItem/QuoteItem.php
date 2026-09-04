@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\QuoteItem;
 
 use App\Infrastructure\Persistence\{
-   Quote\Quote, Product\Product, Task\Task, TaxRate\TaxRate, Trait\RequireId
+    Quote\Quote, Product\Product, Task\Task, TaxRate\TaxRate, Trait\RequireId
 };
 use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
 use Cycle\Annotated\Annotation\Column;
@@ -24,7 +24,7 @@ class QuoteItem
     use QuoteItemTrait1;
     use QuoteItemTrait2;
     use QuoteItemTrait3;
- 
+
     #[Column(type: 'date', nullable: false)]
     private mixed $date_added;
 

@@ -8,8 +8,7 @@ use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Infrastructure\Persistence\Trait\RequireId;
-use App\Invoice\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository
-    as SOIACR;
+use App\Invoice\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository as SOIACR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;

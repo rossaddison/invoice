@@ -104,7 +104,10 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
 
             $expr instanceof Exists      => $this->evalExists($expr, $xpath, $context, $bindings),
             $expr instanceof NotExists   => !$this->evalExists(
-                new Exists($expr->path), $xpath, $context, $bindings
+                new Exists($expr->path),
+                $xpath,
+                $context,
+                $bindings
             ),
 
             $expr instanceof Not              =>
@@ -115,7 +118,7 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
             $expr instanceof VariableRef      => $bindings[$expr->name] ?? '',
 
             $expr instanceof Count       => $this->evalCount($expr, $xpath, $context, $bindings),
-            $expr instanceof Sum         => $this->evalSum($expr,   $xpath, $context, $bindings),
+            $expr instanceof Sum         => $this->evalSum($expr, $xpath, $context, $bindings),
             $expr instanceof Round       =>
                 round($this->evalNumeric($expr->value, $xpath, $context, $bindings)),
             $expr instanceof Abs         =>
@@ -143,19 +146,19 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
 
             $expr instanceof Contains    => str_contains(
                 $this->evalString($expr->haystack, $xpath, $context, $bindings),
-                $this->evalString($expr->needle,   $xpath, $context, $bindings),
+                $this->evalString($expr->needle, $xpath, $context, $bindings),
             ),
             $expr instanceof StartsWith  => str_starts_with(
                 $this->evalString($expr->string, $xpath, $context, $bindings),
                 $this->evalString($expr->prefix, $xpath, $context, $bindings),
             ),
-            $expr instanceof Matches     => $this->evalMatches($expr,     $xpath, $context, $bindings),
-            $expr instanceof InCodeList  => $this->evalInCodeList($expr,  $xpath, $context, $bindings),
-            $expr instanceof Checksum    => $this->evalChecksum($expr,    $xpath, $context, $bindings),
-            $expr instanceof IfThenElse  => $this->evalIfThenElse($expr,  $xpath, $context, $bindings),
-            $expr instanceof Some        => $this->evalSome($expr,        $xpath, $context, $bindings),
-            $expr instanceof Every       => $this->evalEvery($expr,       $xpath, $context, $bindings),
-            $expr instanceof Union       => $this->evalUnion($expr,       $xpath, $context, $bindings),
+            $expr instanceof Matches     => $this->evalMatches($expr, $xpath, $context, $bindings),
+            $expr instanceof InCodeList  => $this->evalInCodeList($expr, $xpath, $context, $bindings),
+            $expr instanceof Checksum    => $this->evalChecksum($expr, $xpath, $context, $bindings),
+            $expr instanceof IfThenElse  => $this->evalIfThenElse($expr, $xpath, $context, $bindings),
+            $expr instanceof Some        => $this->evalSome($expr, $xpath, $context, $bindings),
+            $expr instanceof Every       => $this->evalEvery($expr, $xpath, $context, $bindings),
+            $expr instanceof Union       => $this->evalUnion($expr, $xpath, $context, $bindings),
 
             default => throw new EvaluationException(
                 'Unhandled expression type: ' . $expr::class
@@ -312,30 +315,30 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         return match ($expr->operator) {
             BinaryOperator::EQ  => $this->evalNodeSetEqual($expr->left, $expr->right, $xpath, $context, $bindings),
             BinaryOperator::NE  => !$this->evalNodeSetEqual($expr->left, $expr->right, $xpath, $context, $bindings),
-            BinaryOperator::GT  => $this->evalNumeric($expr->left,  $xpath, $context, $bindings)
+            BinaryOperator::GT  => $this->evalNumeric($expr->left, $xpath, $context, $bindings)
                                 >  $this->evalNumeric($expr->right, $xpath, $context, $bindings),
-            BinaryOperator::GTE => $this->evalNumeric($expr->left,  $xpath, $context, $bindings)
+            BinaryOperator::GTE => $this->evalNumeric($expr->left, $xpath, $context, $bindings)
                                 >= $this->evalNumeric($expr->right, $xpath, $context, $bindings),
-            BinaryOperator::LT  => $this->evalNumeric($expr->left,  $xpath, $context, $bindings)
+            BinaryOperator::LT  => $this->evalNumeric($expr->left, $xpath, $context, $bindings)
                                 <  $this->evalNumeric($expr->right, $xpath, $context, $bindings),
-            BinaryOperator::LTE => $this->evalNumeric($expr->left,  $xpath, $context, $bindings)
+            BinaryOperator::LTE => $this->evalNumeric($expr->left, $xpath, $context, $bindings)
                                 <= $this->evalNumeric($expr->right, $xpath, $context, $bindings),
-            BinaryOperator::AND => $this->evalBool($expr->left,  $xpath, $context, $bindings)
+            BinaryOperator::AND => $this->evalBool($expr->left, $xpath, $context, $bindings)
                                 && $this->evalBool($expr->right, $xpath, $context, $bindings),
-            BinaryOperator::OR  => $this->evalBool($expr->left,  $xpath, $context, $bindings)
+            BinaryOperator::OR  => $this->evalBool($expr->left, $xpath, $context, $bindings)
                                 || $this->evalBool($expr->right, $xpath, $context, $bindings),
-            BinaryOperator::ADD => $this->evalNumeric($expr->left,  $xpath, $context, $bindings)
+            BinaryOperator::ADD => $this->evalNumeric($expr->left, $xpath, $context, $bindings)
                                 +  $this->evalNumeric($expr->right, $xpath, $context, $bindings),
-            BinaryOperator::SUB => $this->evalNumeric($expr->left,  $xpath, $context, $bindings)
+            BinaryOperator::SUB => $this->evalNumeric($expr->left, $xpath, $context, $bindings)
                                 -  $this->evalNumeric($expr->right, $xpath, $context, $bindings),
-            BinaryOperator::MUL => $this->evalNumeric($expr->left,  $xpath, $context, $bindings)
+            BinaryOperator::MUL => $this->evalNumeric($expr->left, $xpath, $context, $bindings)
                                 *  $this->evalNumeric($expr->right, $xpath, $context, $bindings),
             BinaryOperator::DIV => $this->safeDivide(
-                $this->evalNumeric($expr->left,  $xpath, $context, $bindings),
+                $this->evalNumeric($expr->left, $xpath, $context, $bindings),
                 $this->evalNumeric($expr->right, $xpath, $context, $bindings),
             ),
             BinaryOperator::MOD => fmod(
-                $this->evalNumeric($expr->left,  $xpath, $context, $bindings),
+                $this->evalNumeric($expr->left, $xpath, $context, $bindings),
                 $this->evalNumeric($expr->right, $xpath, $context, $bindings),
             ),
         };
@@ -386,7 +389,7 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         array $bindings
     ): bool {
         /** @psalm-suppress MixedAssignment */
-        $left  = $this->evaluate($left,  $xpath, $context, $bindings);
+        $left  = $this->evaluate($left, $xpath, $context, $bindings);
         /** @psalm-suppress MixedAssignment */
         $right = $this->evaluate($right, $xpath, $context, $bindings);
 
@@ -450,7 +453,7 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         ?DOMNode $context,
         array $bindings
     ): bool {
-        $value   = $this->evalString($expr->value,   $xpath, $context, $bindings);
+        $value   = $this->evalString($expr->value, $xpath, $context, $bindings);
         $pattern = $this->evalString($expr->pattern, $xpath, $context, $bindings);
         $pcre    = '/' . str_replace('/', '\\/', $pattern) . '/u';
 
@@ -590,7 +593,7 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         ?DOMNode $context,
         array $bindings
     ): array {
-        $left   = $this->evalNodes($expr->left,  $xpath, $context, $bindings);
+        $left   = $this->evalNodes($expr->left, $xpath, $context, $bindings);
         $merged = $left;
 
         foreach ($this->evalNodes($expr->right, $xpath, $context, $bindings) as $node) {
@@ -669,8 +672,8 @@ final class ExpressionEvaluator // NOSONAR php:S1448 — visitor pattern; each E
         array $bindings
     ): string {
         $value  = $this->evalString($expr->value, $xpath, $context, $bindings);
-        $from   = $this->evalString($expr->from,  $xpath, $context, $bindings);
-        $to     = $this->evalString($expr->to,    $xpath, $context, $bindings);
+        $from   = $this->evalString($expr->from, $xpath, $context, $bindings);
+        $to     = $this->evalString($expr->to, $xpath, $context, $bindings);
         $toLen  = mb_strlen($to);
         $result = '';
         foreach (mb_str_split($value) as $char) {

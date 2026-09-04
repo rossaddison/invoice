@@ -21,9 +21,10 @@ final class QaRepository extends Select\Repository
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
-    public function __construct(Select $select,
-        private readonly EntityWriter $entityWriter)
-    {
+    public function __construct(
+        Select $select,
+        private readonly EntityWriter $entityWriter
+    ) {
         parent::__construct($select);
     }
 

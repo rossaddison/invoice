@@ -47,7 +47,7 @@ final class AllowanceChargeForm extends FormModel implements RulesProviderInterf
     #[Integer(min: 1)]
     private ?int $tax_rate_id = null;
 
-    public static function show(AllowanceCharge $allowanceCharge, TranslatorInterface $translator) : self
+    public static function show(AllowanceCharge $allowanceCharge, TranslatorInterface $translator): self
     {
         $form = new self($translator);
         $form->identifier = $allowanceCharge->getIdentifier();
@@ -84,7 +84,8 @@ final class AllowanceChargeForm extends FormModel implements RulesProviderInterf
                         } elseif ($amount <= 0) {
                             $result->addError(
                                 $this->translator->translate(
-                                'allowance.or.charge.amount.fixed.must.be.positive')
+                                    'allowance.or.charge.amount.fixed.must.be.positive'
+                                )
                             );
                         }
                         return $result;
@@ -101,7 +102,8 @@ final class AllowanceChargeForm extends FormModel implements RulesProviderInterf
                         ) {
                             $result->addError(
                                 $this->translator->translate(
-                                'allowance.or.charge.base.amount.required.when.mfn.set')
+                                    'allowance.or.charge.base.amount.required.when.mfn.set'
+                                )
                             );
                         }
                         return $result;

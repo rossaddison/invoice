@@ -21,5 +21,6 @@ final class InvBatchEmailDeps
         public readonly UIR $uiR,
         public readonly InvEmailCustomDeps $custom,
         public readonly InvEmailRelationDeps $relation,
-    ) {}
+    ) {
+    }
 }

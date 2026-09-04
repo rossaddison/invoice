@@ -42,10 +42,17 @@ final class ClientPeppolController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator,
-            $webViewRenderer, $session, $sR, $flash);
-            $this->clientPeppolService = $clientPeppolService;
-            $this->factory = $factory;
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
+        $this->clientPeppolService = $clientPeppolService;
+        $this->factory = $factory;
     }
 
     /**
@@ -92,7 +99,9 @@ final class ClientPeppolController extends BaseController
                         $client = $clientRepository->repoClientquery((int)$client_id);
                         $client_peppol->setClient($client);
                         $this->clientPeppolService->saveClientPeppol(
-                                $client_peppol, $body);
+                            $client_peppol,
+                            $body
+                        );
                         $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                         return $this->webService->getRedirectResponse('client/index');
                     }
@@ -208,9 +217,11 @@ final class ClientPeppolController extends BaseController
             if ($clientpeppol) {
                 $this->clientPeppolService->deleteClientPeppol($clientpeppol);
                 $this->flashMessage('info', $this->translator->translate(
-                        'record.successfully.deleted'));
+                    'record.successfully.deleted'
+                ));
                 return $this->webService->getRedirectResponse(
-                        'clientpeppol/index');
+                    'clientpeppol/index'
+                );
             }
             return $this->webService->getRedirectResponse('clientpeppol/index');
         } catch (Exception $e) {
@@ -233,7 +244,9 @@ final class ClientPeppolController extends BaseController
         ClientPeppolRepository $clientpeppolRepository,
     ): Response {
         $clientpeppol = $this->clientpeppol(
-            $currentRoute, $clientpeppolRepository);
+            $currentRoute,
+            $clientpeppolRepository
+        );
         $body = $request->getParsedBody() ?? [];
         if (!$clientpeppol) {
             return $this->webService->getNotFoundResponse();
@@ -267,32 +280,44 @@ final class ClientPeppolController extends BaseController
         if ($request->getMethod() === Method::POST && is_array($body)) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $this->clientPeppolService->saveClientPeppol(
-                    $clientpeppol, $body);
+                    $clientpeppol,
+                    $body
+                );
                 // Guest user's return url to see user's clients
                 if ($this->userService->hasPermission(
-                        Permissions::EDIT_CLIENT_PEPPOL)
+                    Permissions::EDIT_CLIENT_PEPPOL
+                )
                         && $this->userService->hasPermission(
-                            Permissions::VIEW_INV)
+                            Permissions::VIEW_INV
+                        )
                                 && !$this->userService->hasPermission(
-                                    Permissions::EDIT_INV)) {
+                                    Permissions::EDIT_INV
+                                )) {
                     $redirect = $this->factory->createResponse(
                         $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/setting/clientpeppol_successful_guest',
-                        ['url' => 'client/guest',
+                            '//invoice/setting/clientpeppol_successful_guest',
+                            ['url' => 'client/guest',
                             'heading' => $this->translator->translate(
-                                'client.peppol'), 'message' =>
+                                'client.peppol'
+                            ), 'message' =>
                                     $this->translator->translate(
-                                        'record.successfully.updated')],
-                    ));
-                // Administrator's return url to see all clients
+                                        'record.successfully.updated'
+                                    )],
+                        )
+                    );
+                    // Administrator's return url to see all clients
                 } elseif ($this->userService->hasPermission(
-                        Permissions::EDIT_CLIENT_PEPPOL)
+                    Permissions::EDIT_CLIENT_PEPPOL
+                )
                             && $this->userService->hasPermission(
-                                Permissions::VIEW_INV)
+                                Permissions::VIEW_INV
+                            )
                                     && $this->userService->hasPermission(
-                                        Permissions::EDIT_INV)) {
+                                        Permissions::EDIT_INV
+                                    )) {
                     $redirect = $this->webService->getRedirectResponse(
-                        'client/index');
+                        'client/index'
+                    );
                 }
             }
             if ($redirect === null) {
@@ -309,9 +334,10 @@ final class ClientPeppolController extends BaseController
      * @param ClientPeppolRepository $clientpeppolRepository
      * @return ClientPeppol|null
      */
-    private function clientpeppol(CurrentRoute $currentRoute,
-            ClientPeppolRepository $clientpeppolRepository): ?ClientPeppol
-    {
+    private function clientpeppol(
+        CurrentRoute $currentRoute,
+        ClientPeppolRepository $clientpeppolRepository
+    ): ?ClientPeppol {
         $client_id = (int) $currentRoute->getArgument('client_id');
         return $clientpeppolRepository->repoClientPeppolLoadedquery($client_id);
     }
@@ -321,8 +347,7 @@ final class ClientPeppolController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function clientpeppols(ClientPeppolRepository $clientpeppolRepository):
-        \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function clientpeppols(ClientPeppolRepository $clientpeppolRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $clientpeppolRepository->findAllPreloaded();
     }

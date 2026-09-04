@@ -23,7 +23,8 @@ class CountryHelper
             [
                 '@helpers' => __DIR__,
                 '@country_list' => '@helpers/Country-list'
-            ]);
+            ]
+        );
         $file = $new_aliases->get('@country_list')
                 . DIRECTORY_SEPARATOR
                 . $cldr
@@ -65,8 +66,9 @@ class CountryHelper
      * @return string
      */
     public function getCountryIdentificationCodeWithCountryList(
-                                    string $cldr, string $country_name): string
-    {
+        string $cldr,
+        string $country_name
+    ): string {
         /** @var array<string, string> $countries */
         $countries = $this->getCountryList($cldr);
         foreach ($countries as $key => $value) {
@@ -96,8 +98,8 @@ class CountryHelper
      * @return string
      */
     public function getCountryIdentificationCodeWithLeague(
-        string $name): string
-    {
+        string $name
+    ): string {
         //https://github.com/thephpleague/iso3166
         $iso3166 = new ISO3166();
         try {

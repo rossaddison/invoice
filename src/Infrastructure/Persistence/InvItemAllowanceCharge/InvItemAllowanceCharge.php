@@ -16,13 +16,19 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class InvItemAllowanceCharge
 {
     use RequireId;
- 
-    #[BelongsTo(target: AllowanceCharge::class, nullable: false,
-        fkAction: 'NO ACTION')]
+
+    #[BelongsTo(
+        target: AllowanceCharge::class,
+        nullable: false,
+        fkAction: 'NO ACTION'
+    )]
     private ?AllowanceCharge $allowance_charge = null;
 
-    #[BelongsTo(target: InvItem::class, nullable: false,
-        fkAction: 'NO ACTION')]
+    #[BelongsTo(
+        target: InvItem::class,
+        nullable: false,
+        fkAction: 'NO ACTION'
+    )]
     private ?InvItem $inv_item = null;
 
     #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
@@ -40,8 +46,8 @@ class InvItemAllowanceCharge
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $amount = null,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $vat_or_tax = null)
-    {
+        private ?float $vat_or_tax = null
+    ) {
     }
 
     public function getAllowanceCharge(): ?AllowanceCharge
@@ -78,7 +84,7 @@ class InvItemAllowanceCharge
     {
         return $this->requireId($this->id, 'InvItemAllowanceCharge');
     }
-    
+
     public function hasIdentity(): bool
     {
         return $this->id !== null;

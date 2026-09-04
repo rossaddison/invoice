@@ -30,7 +30,6 @@ use Yiisoft\Data\Cycle\Reader\EntityReader;
 #[Test]
 final class ProductServiceFindOrCreateHouseNumberTest
 {
-
     /**
      * @return Family&m\MockInterface
      */

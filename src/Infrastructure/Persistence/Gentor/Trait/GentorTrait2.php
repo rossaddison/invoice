@@ -9,7 +9,6 @@ namespace App\Infrastructure\Persistence\Gentor\Trait;
  */
 trait GentorTrait2
 {
-
     public function getControllerLayoutDirDotPath(): string
     {
         return $this->controller_layout_dir_dot_path;

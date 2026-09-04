@@ -136,9 +136,9 @@ class ReportController extends BaseController
     private function invoiceAgingDueInvoices(InvAmountRepository $iaR): array
     {
         $numberhelper = new NumberHelper($this->sR);
-        $fifteens     = $iaR->AgingCount(1, 15) > 0    ? $iaR->Aging(1, 15)   : null;
-        $thirties     = $iaR->AgingCount(16, 30) > 0   ? $iaR->Aging(16, 30)  : null;
-        $overthirties = $iaR->AgingCount(31, 365) > 0  ? $iaR->Aging(31, 365) : null;
+        $fifteens     = $iaR->AgingCount(1, 15) > 0 ? $iaR->Aging(1, 15) : null;
+        $thirties     = $iaR->AgingCount(16, 30) > 0 ? $iaR->Aging(16, 30) : null;
+        $overthirties = $iaR->AgingCount(31, 365) > 0 ? $iaR->Aging(31, 365) : null;
         $results = [];
         $row = ['range_index' => 0, 'invoice_number' => '', 'invoice_balance' => 0.00];
         foreach ([[1, $fifteens], [2, $thirties], [3, $overthirties]] as [$rangeIndex, $reader]) {

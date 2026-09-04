@@ -56,7 +56,7 @@ final class PaymentInformationQueryHelperTest extends TestCase
     {
         $translator = $this->createStub(TranslatorInterface::class);
         $translator->method('translate')->willReturnCallback(
-            static fn(string|\Stringable $id): string => $id . ':%s',
+            static fn (string|\Stringable $id): string => $id . ':%s',
         );
 
         return $translator;

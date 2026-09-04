@@ -63,8 +63,8 @@ final readonly class SalesOrderAllowanceChargeService
                 } else {
                     $amount = (float) $array['amount'];
                 }
-    $taxation = $amount * ($allowanceChargeTaxRate->getTaxRatePercent() ?? 0.00)
-            / 100.00;
+                $taxation = $amount * ($allowanceChargeTaxRate->getTaxRatePercent() ?? 0.00)
+                        / 100.00;
                 $model->setVatOrTax($taxation);
             }
         }

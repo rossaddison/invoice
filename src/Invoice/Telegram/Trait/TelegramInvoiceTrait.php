@@ -28,18 +28,24 @@ trait TelegramInvoiceTrait
         }
         $chatId = $inv->getClient()?->getClientTelegramChatId();
         if ($chatId === null || $chatId === '') {
-            $this->flashMessage('danger',
-                $this->translator->translate('telegram.invoice.client.chat.id.not.set'));
+            $this->flashMessage(
+                'danger',
+                $this->translator->translate('telegram.invoice.client.chat.id.not.set')
+            );
             return ['inv/view', ['id' => $inv_id]];
         }
         $telegramHelper = new TelegramHelper($token, $this->logger);
         $result = $telegramHelper->sendTelegramInvoice($chatId, $inv, $currency, $providerToken);
         if (!$result instanceof FailResult) {
-            $this->flashMessage('success',
-                $this->translator->translate('telegram.invoice.sent'));
+            $this->flashMessage(
+                'success',
+                $this->translator->translate('telegram.invoice.sent')
+            );
         } else {
-            $this->flashMessage('danger',
-                'Telegram sendInvoice failed: ' . ($result->description ?? ''));
+            $this->flashMessage(
+                'danger',
+                'Telegram sendInvoice failed: ' . ($result->description ?? '')
+            );
             if ($result->errorCode !== null) {
                 $this->flashMessage('primary', 'Error code: ' . (string) $result->errorCode);
             }

@@ -18,7 +18,6 @@ use App\Invoice\
     Unit\UnitRepository as UR,
     QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository as ACQIR,
 };
-
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final readonly class QuoteItemService
@@ -93,14 +92,24 @@ final readonly class QuoteItemService
         if ($product) {
             $model->setProductId($product_id);
             $this->applyProductNameDescription(
-                $model, $array, $product_id, $product, $deps->pr, $deps->translator
+                $model,
+                $array,
+                $product_id,
+                $product,
+                $deps->pr,
+                $deps->translator
             );
         }
         $task = $deps->taskR->repoTaskquery($task_id);
         if ($task) {
             $model->setTaskId($task_id);
             $this->applyTaskNameDescription(
-                $model, $array, $task_id, $task, $deps->taskR, $deps->translator
+                $model,
+                $array,
+                $task_id,
+                $task,
+                $deps->taskR,
+                $deps->translator
             );
         }
         $this->applyQuantityPriceDiscountOrder($model, $array);
@@ -153,7 +162,12 @@ final readonly class QuoteItemService
         $product = $deps->pr->repoProductquery($product_id);
         if ($product) {
             $this->applyProductNameDescription(
-                $model, $array, $product_id, $product, $deps->pr, $deps->translator
+                $model,
+                $array,
+                $product_id,
+                $product,
+                $deps->pr,
+                $deps->translator
             );
         }
         $this->applyQuantityPriceDiscountOrder($model, $array);
@@ -332,7 +346,12 @@ final readonly class QuoteItemService
         $product = $pr->repoProductquery((int) $product_id);
         if (null !== $product && isset($array['product_id'])) {
             $this->applyProductNameDescription(
-                $model, $array, (int) $product_id, $product, $pr, $translator
+                $model,
+                $array,
+                (int) $product_id,
+                $product,
+                $pr,
+                $translator
             );
         }
         $this->applyQuantityPriceDiscountOrder($model, $array);

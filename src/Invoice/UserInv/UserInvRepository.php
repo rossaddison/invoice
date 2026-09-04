@@ -23,8 +23,9 @@ final class UserInvRepository extends Select\Repository
      * @param EntityWriter $entityWriter
      */
     public function __construct(
-                    Select $select, private readonly EntityWriter $entityWriter)
-    {
+        Select $select,
+        private readonly EntityWriter $entityWriter
+    ) {
         parent::__construct($select);
     }
 

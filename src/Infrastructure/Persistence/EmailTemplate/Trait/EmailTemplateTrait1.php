@@ -9,7 +9,6 @@ namespace App\Infrastructure\Persistence\EmailTemplate\Trait;
  */
 trait EmailTemplateTrait1
 {
-
     /**
      * @throws \LogicException if the entity has not been persisted yet.
      */

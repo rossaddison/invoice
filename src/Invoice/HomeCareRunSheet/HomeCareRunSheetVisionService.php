@@ -39,7 +39,8 @@ final readonly class HomeCareRunSheetVisionService
         private RSIR $rsiR,
         private WR $wR,
         private SR $sR,
-    ) {}
+    ) {
+    }
 
     /**
      * @param array<int, HomeCareRunSheetItem> $items the sheet's own snapshot

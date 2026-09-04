@@ -14,7 +14,6 @@ use RequireId;
  */
 trait UserInvTrait4
 {
-
     public function getIban(): ?string
     {
         return $this->iban;

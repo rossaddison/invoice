@@ -25,8 +25,7 @@ $dbHost = $_ENV['DB_HOST_IP_ADDRESS'] ?? 'localhost';
 $dsn = 'mysql:host=' . $dbHost . ';dbname=' . $dbName . ';charset=utf8mb4';
 
 return [
-    ConnectionInterface::class => static function (SchemaCache $schemaCache)
-        use ($dsn, $dbUser, $dbPassword): Connection {
+    ConnectionInterface::class => static function (SchemaCache $schemaCache) use ($dsn, $dbUser, $dbPassword): Connection {
         return new Connection(
             new Driver($dsn, $dbUser, $dbPassword),
             $schemaCache,

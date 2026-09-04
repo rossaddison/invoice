@@ -18,5 +18,6 @@ readonly class Translate implements Expression
         public Expression $value,
         public Expression $from,
         public Expression $to,
-    ) {}
+    ) {
+    }
 }

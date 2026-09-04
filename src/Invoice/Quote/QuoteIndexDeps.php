@@ -22,5 +22,6 @@ final class QuoteIndexDeps
         public readonly GR $groupRepo,
         public readonly SOR $soR,
         public readonly UCR $ucR,
-    ) {}
+    ) {
+    }
 }

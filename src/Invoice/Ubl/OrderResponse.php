@@ -40,7 +40,8 @@ class OrderResponse implements XmlSerializable
         private readonly ?Party $sellerSupplierParty,
         private readonly ?Party $buyerCustomerParty,
         private readonly array $lines,
-    ) {}
+    ) {
+    }
 
     public function setDocumentCurrencyCode(): self
     {

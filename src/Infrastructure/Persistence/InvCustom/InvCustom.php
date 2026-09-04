@@ -15,7 +15,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class InvCustom
 {
     use RequireId;
- 
+
     #[BelongsTo(target: Inv::class, nullable: false)]
     private ?Inv $inv = null;
 
@@ -30,8 +30,8 @@ class InvCustom
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $custom_field_id = null,
         #[Column(type: 'text', nullable: true)]
-        private ?string $value = '')
-    {
+        private ?string $value = ''
+    ) {
     }
 
     public function getInv(): ?Inv
@@ -58,7 +58,7 @@ class InvCustom
     {
         return $this->requireId($this->id, 'InvCustom');
     }
-    
+
     public function hasIdentity(): bool
     {
         return $this->id !== null;

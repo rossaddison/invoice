@@ -45,7 +45,7 @@ class SalesOrder
     use SalesOrderTrait2;
     use SalesOrderTrait3;
     use SalesOrderTrait4;
- 
+
     #[BelongsTo(
         target: Client::class,
         nullable: false,

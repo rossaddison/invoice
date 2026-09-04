@@ -42,7 +42,8 @@ final readonly class SalesOrderToInvoiceConverter
         private InvCustomService $invCustomService,
         private InvAllowanceChargeService $invAllowanceChargeService,
         private TranslatorInterface $translator,
-    ) {}
+    ) {
+    }
 
     public function soToInvoiceSoItems(
         int $so_id,
@@ -77,13 +78,25 @@ final readonly class SalesOrderToInvoiceConverter
             $form = new InvItemForm();
             if ($formHydrator->populateAndValidate($form, $inv_item)) {
                 $savedInvItem = $this->invItemService->addInvItemProductTask(
-                    $newInvItem, $inv_item, (string) $new_inv_id,
-                    $d->pR, $d->taskR, $d->unR, $this->translator);
+                    $newInvItem,
+                    $inv_item,
+                    (string) $new_inv_id,
+                    $d->pR,
+                    $d->taskR,
+                    $d->unR,
+                    $this->translator
+                );
                 $this->copySoItemAllowanceChargesToInv(
-                        $origSoItemId, $d->acsoiR, $new_inv_id,
-                        $savedInvItem, $d->aciiR);
+                    $origSoItemId,
+                    $d->acsoiR,
+                    $new_inv_id,
+                    $savedInvItem,
+                    $d->aciiR
+                );
                 $tax_rate_percentage = $this->invItemService->taxratePercentage(
-                        (int) $inv_item['tax_rate_id'], $d->trR);
+                    (int) $inv_item['tax_rate_id'],
+                    $d->trR
+                );
                 if (isset($inv_item['quantity'], $inv_item['price'],
                     $inv_item['discount_amount'])
                     && null !== $tax_rate_percentage
@@ -137,19 +150,26 @@ final readonly class SalesOrderToInvoiceConverter
         foreach ($so_customs as $so_custom) {
             /** @var CustomField $existing_custom_field */
             $existing_custom_field = $d->cfR->repoCustomFieldquery(
-                $so_custom->reqCustomFieldId());
-            if ($d->cfR->repoTableAndLabelCountquery('inv_custom',
-                (string) $existing_custom_field->getLabel()) !== 0) {
+                $so_custom->reqCustomFieldId()
+            );
+            if ($d->cfR->repoTableAndLabelCountquery(
+                'inv_custom',
+                (string) $existing_custom_field->getLabel()
+            ) !== 0) {
                 $custom_field = new CustomField();
                 $custom_field->setTable('inv_custom');
                 $custom_field->setLabel(
-                    (string) $existing_custom_field->getLabel());
+                    (string) $existing_custom_field->getLabel()
+                );
                 $custom_field->setType(
-                    $existing_custom_field->getType());
+                    $existing_custom_field->getType()
+                );
                 $custom_field->setLocation(
-                    (int) $existing_custom_field->getLocation());
+                    (int) $existing_custom_field->getLocation()
+                );
                 $custom_field->setOrder(
-                    (int) $existing_custom_field->getOrder());
+                    (int) $existing_custom_field->getOrder()
+                );
                 $d->cfR->save($custom_field);
                 $inv_custom = [
                     'inv_id' => $inv_id,
@@ -201,15 +221,20 @@ final readonly class SalesOrderToInvoiceConverter
             $form = InvAllowanceChargeForm::show($invAllowanceCharge, $new_inv_id);
             if ($formHydrator->populateAndValidate($form, $new_inv_ac)) {
                 $this->invAllowanceChargeService->saveInvAllowanceCharge(
-                    $invAllowanceCharge, $new_inv_ac
+                    $invAllowanceCharge,
+                    $new_inv_ac
                 );
             }
         }
     }
 
     private function copySoItemAllowanceChargesToInv(
-        int $origSoItemId, ACSOIR $acsoiR, int $new_inv_id,
-            InvItem $newInvItem, ACIIR $aciiR): void {
+        int $origSoItemId,
+        ACSOIR $acsoiR,
+        int $new_inv_id,
+        InvItem $newInvItem,
+        ACIIR $aciiR
+    ): void {
 
         $all = $acsoiR->repoSalesOrderItemquery($origSoItemId);
         /**
@@ -220,13 +245,14 @@ final readonly class SalesOrderToInvoiceConverter
             $acInvItem->setInv($newInvItem->getInv());
             $acInvItem->setInvItem($newInvItem);
             $acInvItem->setAllowanceCharge(
-                            $salesOrderItemAllowanceCharge->getAllowanceCharge());
+                $salesOrderItemAllowanceCharge->getAllowanceCharge()
+            );
 
             // Also set FK IDs for consistency
             $acInvItem->setInvId($new_inv_id);
             $acInvItem->setInvItemId($newInvItem->reqId());
             $acInvItem->setAllowanceChargeId(
-            (int) $salesOrderItemAllowanceCharge->getAllowanceCharge()?->reqId()
+                (int) $salesOrderItemAllowanceCharge->getAllowanceCharge()?->reqId()
             );
 
             // Set other properties

@@ -32,7 +32,8 @@ final class As4ReceiveController
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly StreamFactoryInterface $streamFactory,
         private readonly LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     public function receive(Request $request): Response
     {

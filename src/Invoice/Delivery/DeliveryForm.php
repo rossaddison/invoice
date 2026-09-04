@@ -40,16 +40,16 @@ final class DeliveryForm extends FormModel
         /**
          * @var DateTimeImmutable|string $this->date_created
          */
-            return $this->date_created;
-        }
+        return $this->date_created;
+    }
 
     public function getDateModified(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->date_modified
          */
-            return $this->date_modified;
-        }
+        return $this->date_modified;
+    }
 
     public function getStartDate(): string|DateTimeImmutable
     {

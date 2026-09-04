@@ -33,7 +33,8 @@ final class PhpVersionCheckService
         private readonly HttpClient $httpClient,
         private readonly RequestFactoryInterface $requestFactory,
         private readonly SR $settingRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * Calls php.net, persists the result to settings, and returns it.

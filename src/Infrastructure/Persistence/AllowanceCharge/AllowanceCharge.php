@@ -19,7 +19,7 @@ class AllowanceCharge
     use RequireId;
     use AllowanceChargeTrait1;
     use AllowanceChargeTrait2;
-    
+
     #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
 
@@ -31,8 +31,11 @@ class AllowanceCharge
          * Identifier true => charge, false => allowance
          */
         private bool $identifier = false,
-        #[Column(type: 'tinyInteger(1)',
-                nullable: false, default: 0)]
+        #[Column(
+            type: 'tinyInteger(1)',
+            nullable: false,
+            default: 0
+        )]
         /* 0 = Overall, 1 = InvoiceLine */
         private int $level = 0,
         #[Column(type: 'string(3)', nullable: false)]
@@ -52,7 +55,7 @@ class AllowanceCharge
         #[Column(type: 'integer(11)', nullable: false)]
         private int $base_amount = 0,
         #[Column(type: 'integer(11)', nullable: false)]
-        private int $tax_rate_id = 0)
-    {
+        private int $tax_rate_id = 0
+    ) {
     }
 }

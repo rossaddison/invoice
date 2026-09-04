@@ -69,7 +69,8 @@ final class InvsColumnBuilder
         private readonly bool $visible,
         private readonly bool $visibleInvSentLogColumn,
         private readonly string|\Stringable $csrf = '',
-    ) {}
+    ) {
+    }
 
     /**
      * @return ColumnInterface[]
@@ -90,9 +91,11 @@ final class InvsColumnBuilder
 
         $homeCareEnabled = $sR->getSetting('homecare_auto_invoice_enabled') === '1';
         /** @var list<string> $hiddenColumns */
-        $hiddenColumns = array_values(array_filter(explode(',',
-            $sR->getSetting('homecare_hidden_inv_columns'))));
-        $isHidden = fn(string $key): bool =>
+        $hiddenColumns = array_values(array_filter(explode(
+            ',',
+            $sR->getSetting('homecare_hidden_inv_columns')
+        )));
+        $isHidden = fn (string $key): bool =>
             $this->isColumnHidden($key, $homeCareEnabled, $hiddenColumns);
 
         $columns = [
@@ -116,7 +119,7 @@ final class InvsColumnBuilder
             new DataColumn(
                 property: 'filterClient',
                 header: $t->translate('client'),
-                content: static fn(Inv $model): string =>
+                content: static fn (Inv $model): string =>
                     Html::encode($model->getClient()?->getClientFullName()),
                 encodeContent: false,
                 // First DropdownFilter in this app switched from the
@@ -139,17 +142,19 @@ final class InvsColumnBuilder
                 visible: !$isHidden('client'),
             ),
 
-            new DataColumn('client_number',
+            new DataColumn(
+                'client_number',
                 header: $t->translate('client.number'),
-                content: static fn(Inv $m): string =>
+                content: static fn (Inv $m): string =>
                     Html::encode($m->getClient()?->getClientNumber()),
                 encodeContent: false,
-                visible: !$isHidden('client_number')),
+                visible: !$isHidden('client_number')
+            ),
 
             new DataColumn(
                 property: 'filterClientAddress1',
                 header: $t->translate('street.address'),
-                content: static fn(Inv $m): string =>
+                content: static fn (Inv $m): string =>
                     Html::encode($m->getClient()?->getClientAddress1()),
                 encodeContent: false,
                 filter: TextInputFilter::widget()->addAttributes([
@@ -158,19 +163,22 @@ final class InvsColumnBuilder
                     'title' => $t->translate('street.address'),
                     'placeholder' => $t->translate('street.address')]),
                 filterFactory: new NoOpFilterFactory(),
-                visible: !$isHidden('client_address_1')),
+                visible: !$isHidden('client_address_1')
+            ),
 
-            new DataColumn('client_address_2',
+            new DataColumn(
+                'client_address_2',
                 header: $t->translate('street.address.2'),
-                content: static fn(Inv $m): string =>
+                content: static fn (Inv $m): string =>
                     Html::encode($m->getClient()?->getClientAddress2()),
                 encodeContent: false,
-                visible: !$isHidden('client_address_2')),
+                visible: !$isHidden('client_address_2')
+            ),
 
             new DataColumn(
                 property: 'filterClientGroup',
                 header: $t->translate('client.group'),
-                content: static fn(Inv $model): string =>
+                content: static fn (Inv $model): string =>
                     $model->getClient()?->getClientGroup() ?? '',
                 filter: DropdownFilter::widget()
                     ->addAttributes(['id' => 'filter-client-group', 'name' => 'number',
@@ -183,23 +191,29 @@ final class InvsColumnBuilder
                 visible: !$isHidden('client_group'),
             ),
 
-            new DataColumn('time_created',
+            new DataColumn(
+                'time_created',
                 header: $t->translate('datetime.immutable.time.created'),
-                content: static fn(Inv $m): string =>
+                content: static fn (Inv $m): string =>
                     $m->getTimeCreated()->format('H:i:s'),
-                visible: $vis && !$isHidden('time_created')),
+                visible: $vis && !$isHidden('time_created')
+            ),
 
             ...$this->buildDateColumns(),
             ...$this->buildAmountColumns($sR, $dp, $totalAmount),
 
             new DataColumn(
                 header: '🚚',
-                content: static fn(Inv $model): A =>
-                    Html::a(Html::tag('i', '', ['class' => 'bi-plus']),
-                        $ug->generate('del/add',
+                content: static fn (Inv $model): A =>
+                    Html::a(
+                        Html::tag('i', '', ['class' => 'bi-plus']),
+                        $ug->generate(
+                            'del/add',
                             ['client_id' => $model->reqClientId()],
                             ['origin' => 'inv', 'origin_id' => $model->reqId(),
-                                'action' => 'index'])),
+                                'action' => 'index']
+                        )
+                    ),
                 encodeContent: false,
                 visible: $vis && !$isHidden('delivery_add'),
                 withSorting: false,
@@ -243,7 +257,8 @@ final class InvsColumnBuilder
                 encodeHeader: false,
                 content: static function (Inv $model) use ($islR, $toggleAnchor): string|A {
                     return $islR->repoInvSentLogEmailedCountForEachInvoice(
-                        $model->reqId()) > 0 ? $toggleAnchor : '0 📧';
+                        $model->reqId()
+                    ) > 0 ? $toggleAnchor : '0 📧';
                 },
                 encodeContent: false,
             ),
@@ -256,7 +271,8 @@ final class InvsColumnBuilder
                 encodeHeader: false,
                 content: static function (Inv $model) use ($islR, $ug, $t): string|A {
                     $count = $islR->repoInvSentLogEmailedCountForEachInvoice(
-                        $model->reqId());
+                        $model->reqId()
+                    );
                     if ($count > 0) {
                         return (new A())
                             ->addAttributes(['type' => 'reset',
@@ -264,8 +280,11 @@ final class InvsColumnBuilder
                                 'title' => $t->translate('email.logs')])
                             ->addClass('btn btn-success me-1')
                             ->content((string) $count)
-                            ->href($ug->generate('invsentlog/index', [],
-                                ['filterInvNumber' => $model->getNumber()]))
+                            ->href($ug->generate(
+                                'invsentlog/index',
+                                [],
+                                ['filterInvNumber' => $model->getNumber()]
+                            ))
                             ->id('btn-all-visible');
                     }
                     return '0 📧';
@@ -279,8 +298,7 @@ final class InvsColumnBuilder
                         'title' => $t->translate('email.logs.table')])
                     ->render(),
                 encodeHeader: false,
-                content: static function (Inv $model)
-                    use ($islR, $ug, $gridComponents): string {
+                content: static function (Inv $model) use ($islR, $ug, $gridComponents): string {
                     $modelId     = $model->reqId();
                     $invSentLogs = $islR->repoInvSentLogForEachInvoice($modelId);
                     $model->setInvSentLogs();
@@ -289,7 +307,10 @@ final class InvsColumnBuilder
                         $model->addInvSentLog($invSentLog);
                     }
                     return $gridComponents->gridMiniTableOfInvSentLogsForInv(
-                        $model, 4, $ug);
+                        $model,
+                        4,
+                        $ug
+                    );
                 },
                 visible: $this->visibleInvSentLogColumn,
                 encodeContent: false,
@@ -332,10 +353,14 @@ final class InvsColumnBuilder
                 footer: (new Span())->addClass('inv-footer-amount')
                     ->addAttributes(['style' => self::AMOUNT_FILTER_STYLE])
                     ->content(
-                        Html::tag('small', $t->translate('total') . ':',
-                            ['class' => 'inv-footer-label'])
+                        Html::tag(
+                            'small',
+                            $t->translate('total') . ':',
+                            ['class' => 'inv-footer-label']
+                        )
                         . ' ' . $sR->getSetting('currency_symbol')
-                        . ' ' . number_format($totalAmount, $dp))
+                        . ' ' . number_format($totalAmount, $dp)
+                    )
                     ->encode(false)->render(),
             ),
         ];
@@ -378,10 +403,14 @@ final class InvsColumnBuilder
                 footer: (new Span())->addClass('inv-footer-amount')
                     ->addAttributes(['style' => self::AMOUNT_FILTER_STYLE])
                     ->content(
-                        Html::tag('small', $t->translate('paid') . ':',
-                            ['class' => 'inv-footer-label'])
+                        Html::tag(
+                            'small',
+                            $t->translate('paid') . ':',
+                            ['class' => 'inv-footer-label']
+                        )
                         . ' ' . $sR->getSetting('currency_symbol')
-                        . ' ' . number_format($totalPaid, $dp))
+                        . ' ' . number_format($totalPaid, $dp)
+                    )
                     ->encode(false)->render(),
             ),
             new DataColumn(
@@ -406,10 +435,14 @@ final class InvsColumnBuilder
                 footer: (new Span())->addClass('inv-footer-amount')
                     ->addAttributes(['style' => self::AMOUNT_FILTER_STYLE])
                     ->content(
-                        Html::tag('small', $t->translate('balance') . ':',
-                            ['class' => 'inv-footer-label'])
+                        Html::tag(
+                            'small',
+                            $t->translate('balance') . ':',
+                            ['class' => 'inv-footer-label']
+                        )
                         . ' ' . $sR->getSetting('currency_symbol')
-                        . ' ' . number_format($totalBalance, $dp))
+                        . ' ' . number_format($totalBalance, $dp)
+                    )
                     ->encode(false)->render(),
             ),
         ];
@@ -424,7 +457,8 @@ final class InvsColumnBuilder
     {
         $t = $this->translator;
         return [
-            new DataColumn('date_modified',
+            new DataColumn(
+                'date_modified',
                 header: $t->translate('datetime.immutable.date.modified'),
                 content: static function (Inv $m): Label {
                     $cls = $m->getDateModified() <> $m->getDateCreated()
@@ -434,8 +468,10 @@ final class InvsColumnBuilder
                         ->content(Html::encode($m->getDateModified()->format('Y-m-d')));
                 },
                 encodeContent: false,
-                visible: $this->visible),
-            new DataColumn('date_due',
+                visible: $this->visible
+            ),
+            new DataColumn(
+                'date_due',
                 header: $t->translate('due.date'),
                 content: static function (Inv $m): Label {
                     $now = new \DateTimeImmutable('now');
@@ -447,7 +483,8 @@ final class InvsColumnBuilder
                 },
                 encodeContent: false,
                 withSorting: true,
-                visible: $this->visible),
+                visible: $this->visible
+            ),
         ];
     }
 
@@ -569,14 +606,16 @@ final class InvsColumnBuilder
                             $t->translate('quote') . ' → '
                             . $t->translate('salesorder') . ' → '
                             . $t->translate('invoice')
-                            . ' (' . $t->translate('peppol') . ')')
+                            . ' (' . $t->translate('peppol') . ')'
+                        )
                         . '">🔀</span>';
                 }
                 if (($model->getQuoteId() ?? 0) > 0) {
                     return '<span class="badge bg-info text-dark" data-bs-toggle="tooltip" title="'
                         . Html::encode(
                             $t->translate('quote') . ' → '
-                            . $t->translate('invoice'))
+                            . $t->translate('invoice')
+                        )
                         . '">💬→📄</span>';
                 }
                 return '<span class="badge bg-secondary" data-bs-toggle="tooltip" title="'
@@ -595,7 +634,7 @@ final class InvsColumnBuilder
         return new DataColumn(
             property: 'filterFamilyName',
             header: $t->translate('family.name'),
-            content: static fn(Inv $model): string => $model->getFirstItemFamilyName(),
+            content: static fn (Inv $model): string => $model->getFirstItemFamilyName(),
             encodeContent: false,
             filter: DropdownFilter::widget()
                 ->addAttributes(['id' => 'filter-family-name', 'name' => 'number',
@@ -613,11 +652,12 @@ final class InvsColumnBuilder
     {
         $t      = $this->translator;
         $header = $t->translate(
-            'datetime.immutable.date.created.mySql.format.year.month.filter');
+            'datetime.immutable.date.created.mySql.format.year.month.filter'
+        );
         return new DataColumn(
             property: 'filterDateCreatedYearMonth',
             header: $header,
-            content: static fn(Inv $model): string =>
+            content: static fn (Inv $model): string =>
                 $model->getDateCreated()->format('Y-m-d'),
             filter: DropdownFilter::widget()
                 ->addAttributes(['id' => 'filter-year-month', 'name' => 'number',
@@ -642,7 +682,7 @@ final class InvsColumnBuilder
                 ->render(),
             encodeHeader: false,
             property: 'id',
-            content: static fn(Inv $model): A =>
+            content: static fn (Inv $model): A =>
                 (new A())
                     ->addAttributes(['style' => 'text-decoration:none'])
                     ->href($ug->generate('client/edit', [
@@ -657,8 +697,7 @@ final class InvsColumnBuilder
     {
         $t = $this->translator;
         return new CheckboxColumn(
-            content: static function (Checkbox $input, DataContext $context)
-                use ($t): string {
+            content: static function (Checkbox $input, DataContext $context) use ($t): string {
                 $inv = $context->data;
                 if (!$inv instanceof Inv) {
                     return '';
@@ -671,7 +710,8 @@ final class InvsColumnBuilder
                         'data-bs-toggle' => 'tooltip',
                         'title'          => $inv->getInvAmount()->getTotal() == 0
                             ? $t->translate(
-                                'index.checkbox.add.some.items.to.enable')
+                                'index.checkbox.add.some.items.to.enable'
+                            )
                             : '',
                     ])
                     ->value($id)
@@ -728,7 +768,8 @@ final class InvsColumnBuilder
                                     'class' => 'btn btn-outline-warning btn-sm']],
                                 '1' => ['1' => ['data-bs-toggle' => 'tooltip',
                                     'title' => $t->translate(
-                                        'security.disable.read.only.true.draft.check.and.mark'),
+                                        'security.disable.read.only.true.draft.check.and.mark'
+                                    ),
                                     'class' => 'btn btn-warning btn-sm']],
                             ],
                             'true' => [
@@ -740,7 +781,8 @@ final class InvsColumnBuilder
                                     'style' => 'pointer-events:none']],
                                 '1' => ['2' => ['data-bs-toggle' => 'tooltip',
                                     'title' => $t->translate(
-                                        'security.disable.read.only.true.sent.check.and.mark'),
+                                        'security.disable.read.only.true.sent.check.and.mark'
+                                    ),
                                     'class' => 'btn btn-outline-danger btn-sm']],
                             ],
                         ];
@@ -771,14 +813,14 @@ final class InvsColumnBuilder
                 . Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']),
             buttons: [
                 new ActionButton(
-                    url: static fn(Inv $inv): string =>
+                    url: static fn (Inv $inv): string =>
                         $ug->generate('inv/pdfDashboardExcludeCf', ['id' => $inv->reqId()]),
                     attributes: ['data-bs-toggle' => 'tooltip', 'target' => '_blank',
                         'title' => $t->translate('download.pdf'),
                         'class' => 'bi bi-file-pdf btn btn-outline-danger btn-sm dropdown-item'],
                 ),
                 new ActionButton(
-                    url: static fn(Inv $inv): string =>
+                    url: static fn (Inv $inv): string =>
                         $ug->generate('inv/pdfDashboardIncludeCf', ['id' => $inv->reqId()]),
                     attributes: ['data-bs-toggle' => 'tooltip', 'target' => '_blank',
                         'title' => $t->translate('download.pdf') . '➡️'
@@ -894,14 +936,14 @@ final class InvsColumnBuilder
                 . '<br/>🏛️ ' . $t->translate('judgement')
                 . '<br/>👮 ' . $t->translate('enforcement')
                 . '<br/>🛑️ ' . $t->translate('credit.invoice.for.invoice')
-                . '<br/>❎ ' . $t->translate('loss'))
+                . '<br/>❎ ' . $t->translate('loss')
+            )
             . '">📊 ' . $t->translate('status') . '</span>';
         return new DataColumn(
             property: 'filterStatus',
             header: $header,
             encodeHeader: false,
-            content: static function (Inv $model)
-                use ($iR, $irR, $sR, $t): string {
+            content: static function (Inv $model) use ($iR, $irR, $sR, $t): string {
                 $statusId = $model->reqStatusId();
                 $paid     = $model->getInvAmount()->getPaid() ?? 0.0;
                 $total    = $model->getInvAmount()->getTotal() ?? 0.0;

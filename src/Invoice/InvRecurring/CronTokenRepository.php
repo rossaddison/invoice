@@ -26,7 +26,9 @@ use Yiisoft\Auth\IdentityWithTokenRepositoryInterface;
  */
 final class CronTokenRepository implements IdentityWithTokenRepositoryInterface
 {
-    public function __construct(private readonly SR $sR) {}
+    public function __construct(private readonly SR $sR)
+    {
+    }
 
     #[\Override]
     public function findIdentityByToken(string $token, ?string $type = null): ?IdentityInterface

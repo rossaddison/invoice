@@ -100,8 +100,10 @@ final class PaymentRefundController
         $reference = $this->resolveProviderReference($payment->reqInvId(), $driver);
 
         if (null === $reference || $reference === '') {
-            $this->flashMessage('warning',
-                sprintf($this->translator->translate('refund.no.provider.reference'), $driver));
+            $this->flashMessage(
+                'warning',
+                sprintf($this->translator->translate('refund.no.provider.reference'), $driver)
+            );
             return $this->webService->getRedirectResponse('payment/index');
         }
 
@@ -132,8 +134,10 @@ final class PaymentRefundController
     {
         if ($result->refunded) {
             $this->recordRefundNote($context->payment, $context->driver, $result);
-            $this->flashMessage('success',
-                sprintf($this->translator->translate('refund.successful'), $context->driver));
+            $this->flashMessage(
+                'success',
+                sprintf($this->translator->translate('refund.successful'), $context->driver)
+            );
             return;
         }
 
@@ -143,8 +147,10 @@ final class PaymentRefundController
             'reference'  => $context->reference,
             'message'    => $result->message,
         ]);
-        $this->flashMessage('danger',
-            sprintf($this->translator->translate('refund.failed'), $context->driver));
+        $this->flashMessage(
+            'danger',
+            sprintf($this->translator->translate('refund.failed'), $context->driver)
+        );
     }
 
     private function dispatchRefund(string $driver, string $reference, float $amount): ?PaymentRefundResult

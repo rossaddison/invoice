@@ -34,7 +34,8 @@ final class ChangePasswordController
     ) {
         // withControllerName returns a new instance so reassignment is needed
         $this->webViewRenderer = $webViewRenderer->withControllerName(
-            'changepassword');
+            'changepassword'
+        );
     }
 
     public function change(
@@ -49,11 +50,11 @@ final class ChangePasswordController
         if ($identity === null) {
             return $this->redirectToMain();
         }
-/**
- * Identity and User are in a HasOne relationship so no null value
- * Get the username or emailaddress of the current user
- * Related logic: see src\User\User function getLogin()
- */
+        /**
+         * Identity and User are in a HasOne relationship so no null value
+         * Get the username or emailaddress of the current user
+         * Related logic: see src\User\User function getLogin()
+         */
         $login = $identity->getUser()?->getLogin();
         $successRedirect = null;
 
@@ -72,16 +73,16 @@ final class ChangePasswordController
             && $formHydrator->populate($changePasswordForm, $request->getParsedBody())
             && $changePasswordForm->change()
         ) {
-// Identity implements CookieLoginIdentityInterface: ensure the regeneration of
-//  the cookie auth key by means of $authService->logout();
-// Related logic: see vendor\yiisoft\user\src\Login\Cookie\
-//  CookieLoginIdentityInterface
-// Specific note: "Make sure to invalidate earlier issued keys when you implement
-//  force user logout,
-// PASSWORD CHANGE and other scenarios, that require forceful access revocation
-//  for old sessions.
-// The authService logout function will regenerate the auth key here =>
-//  overwriting any auth key
+            // Identity implements CookieLoginIdentityInterface: ensure the regeneration of
+            //  the cookie auth key by means of $authService->logout();
+            // Related logic: see vendor\yiisoft\user\src\Login\Cookie\
+            //  CookieLoginIdentityInterface
+            // Specific note: "Make sure to invalidate earlier issued keys when you implement
+            //  force user logout,
+            // PASSWORD CHANGE and other scenarios, that require forceful access revocation
+            //  for old sessions.
+            // The authService logout function will regenerate the auth key here =>
+            //  overwriting any auth key
             $authService->logout();
             $this->flashMessage('success', $this->translator->translate('validator.password.change'));
             $successRedirect = $this->redirectToMain();

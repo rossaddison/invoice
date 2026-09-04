@@ -30,5 +30,6 @@ readonly class BinaryExpression implements Expression
         public BinaryOperator $operator,
         public Expression     $left,
         public Expression     $right,
-    ) {}
+    ) {
+    }
 }

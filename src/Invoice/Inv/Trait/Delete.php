@@ -21,8 +21,10 @@ trait Delete
             $inv = $this->inv($id, $invRepo);
             if ($inv) {
                 $this->inv_service->deleteInv($inv);
-                $this->flashMessage('info',
-                    $this->translator->translate('record.successfully.deleted'));
+                $this->flashMessage(
+                    'info',
+                    $this->translator->translate('record.successfully.deleted')
+                );
                 return $this->webService->getRedirectResponse('inv/index');
             }
             return $this->webService->getRedirectResponse('inv/index');

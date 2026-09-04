@@ -9,11 +9,9 @@ use App\Infrastructure\Persistence\InvItemAmount\InvItemAmount;
 use App\Infrastructure\Persistence\InvItemAllowanceCharge\InvItemAllowanceCharge;
 use App\Infrastructure\Persistence\QuoteItemAllowanceCharge\QuoteItemAllowanceCharge;
 use App\Infrastructure\Persistence\Product\Product;
-use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository
-    as ACQIR;
+use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository as ACQIR;
 use App\Invoice\Inv\InvRepository as IR;
-use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository
-    as ACIIR;
+use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
 use App\Invoice\InvItem\Trait\InvItemTaskTrait;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\InvItemAmount\InvItemAmountService as IIAS;
@@ -210,9 +208,13 @@ final readonly class InvItemService
      *        reverses the allowance/charge for a credit note, matching the
      *        negated quantity/subtotal used elsewhere in that flow.
      */
-    public function addInvItemAllowanceCharges(string $copyInvId,
-        int $originalId, int $newId, ACIIR $aciiR, float $multiplier = 1.0): void
-    {
+    public function addInvItemAllowanceCharges(
+        string $copyInvId,
+        int $originalId,
+        int $newId,
+        ACIIR $aciiR,
+        float $multiplier = 1.0
+    ): void {
         $originalACs = $aciiR->repoInvItemquery($originalId);
         /**
          * @var InvItemAllowanceCharge $originalAC
@@ -220,7 +222,8 @@ final readonly class InvItemService
         foreach ($originalACs as $originalAC) {
             $iiac = new InvItemAllowanceCharge();
             $iiac->setAllowanceChargeId(
-                (int) $originalAC->getAllowanceCharge()?->reqId());
+                (int) $originalAC->getAllowanceCharge()?->reqId()
+            );
             $iiac->setInvId((int) $copyInvId);
             $iiac->setInvItemId($newId);
             $iiac->setAmount((float) $originalAC->getAmount() * $multiplier);
@@ -237,9 +240,13 @@ final readonly class InvItemService
      * @param ACQIR $acqiR
      * @param ACIIR $aciiR
      */
-    public function addInvItemAllowanceChargesFromQuote(string $copyInvId,
-        int $originalId, int $newId, ACQIR $acqiR, ACIIR $aciiR): void
-    {
+    public function addInvItemAllowanceChargesFromQuote(
+        string $copyInvId,
+        int $originalId,
+        int $newId,
+        ACQIR $acqiR,
+        ACIIR $aciiR
+    ): void {
         // Get all allowance charges associated with quote_item i.e. $originalId
         $originalACs = $acqiR->repoQuoteItemquery($originalId);
         /**
@@ -248,7 +255,8 @@ final readonly class InvItemService
         foreach ($originalACs as $originalAC) {
             $iiac = new InvItemAllowanceCharge();
             $iiac->setAllowanceChargeId(
-                (int) $originalAC->getAllowanceCharge()?->reqId());
+                (int) $originalAC->getAllowanceCharge()?->reqId()
+            );
             $iiac->setInvId((int) $copyInvId);
             $iiac->setInvItemId($newId);
             $iiac->setAmount((float) $originalAC->getAmount());
@@ -265,9 +273,13 @@ final readonly class InvItemService
      * @param UNR $unR
      * @return int
      */
-    public function saveInvItemProduct(InvItem $model, array $array,
-                                string $inv_id, PR $pr, UNR $unR): int
-    {
+    public function saveInvItemProduct(
+        InvItem $model,
+        array $array,
+        string $inv_id,
+        PR $pr,
+        UNR $unR
+    ): int {
         $tax_rate_id = (int) ($array['tax_rate_id'] ?? 0);
         $model->setTaxRateId($tax_rate_id);
         $model->setInvId((int) $inv_id);
@@ -299,8 +311,11 @@ final readonly class InvItemService
     }
 
     private function applyInvItemProductNameDesc(
-        InvItem $model, array $array, int $product_id,
-        Product $product, PR $pr
+        InvItem $model,
+        array $array,
+        int $product_id,
+        Product $product,
+        PR $pr
     ): void {
         // 'name'/'description' mirror the same precedence: a caller-supplied
         // value (e.g. invToInvInvItems() copying the template invoice's own
@@ -330,11 +345,21 @@ final readonly class InvItemService
 
     private function applyOptionalInvItemFields(InvItem $model, array $array): void
     {
-        if (isset($array['note'])) { $model->setNote((string) $array['note']); }
-        if (isset($array['quantity'])) { $model->setQuantity((float) $array['quantity']); }
-        if (isset($array['price'])) { $model->setPrice((float) $array['price']); }
-        if (isset($array['discount_amount'])) { $model->setDiscountAmount((float) $array['discount_amount']); }
-        if (isset($array['order'])) { $model->setOrder((int) $array['order']); }
+        if (isset($array['note'])) {
+            $model->setNote((string) $array['note']);
+        }
+        if (isset($array['quantity'])) {
+            $model->setQuantity((float) $array['quantity']);
+        }
+        if (isset($array['price'])) {
+            $model->setPrice((float) $array['price']);
+        }
+        if (isset($array['discount_amount'])) {
+            $model->setDiscountAmount((float) $array['discount_amount']);
+        }
+        if (isset($array['order'])) {
+            $model->setOrder((int) $array['order']);
+        }
     }
 
     private function applyInvItemUnit(InvItem $model, array $array, UNR $unR): void
@@ -379,10 +404,15 @@ final readonly class InvItemService
      * @param UNR $uR
      * @param Translator $translator
      */
-    public function addInvItemProductTask(InvItem $model, array $array,
-            string $inv_id, PR $pr, taskR $taskR,
-            UNR $uR, Translator $translator): InvItem
-    {
+    public function addInvItemProductTask(
+        InvItem $model,
+        array $array,
+        string $inv_id,
+        PR $pr,
+        taskR $taskR,
+        UNR $uR,
+        Translator $translator
+    ): InvItem {
         $tax_rate_id = isset($array['tax_rate_id']) ? (int) $array['tax_rate_id'] : 0;
         $model->setTaxRateId($tax_rate_id);
         $product_id = (int) ($array['product_id'] ?? 0);
@@ -525,9 +555,12 @@ final readonly class InvItemService
      * @param InvItemRepository $iiR
      * @param IIAR $iiaR
      */
-    public function initializeCreditInvItems(int $basis_inv_id,
-           string $new_inv_id, InvItemRepository $iiR, IIAR $iiaR): void
-    {
+    public function initializeCreditInvItems(
+        int $basis_inv_id,
+        string $new_inv_id,
+        InvItemRepository $iiR,
+        IIAR $iiaR
+    ): void {
         // Get the basis invoice's items and balance with a negative quantity
         $items = $iiR->repoInvquery($basis_inv_id);
         /** @var InvItem $item */
@@ -557,7 +590,12 @@ final readonly class InvItemService
 
             // Reverse this item's allowance/charges onto the credit note item
             $this->addInvItemAllowanceCharges(
-                $new_inv_id, $item->reqId(), $new_item->reqId(), $this->aciiR, -1.0);
+                $new_inv_id,
+                $item->reqId(),
+                $new_item->reqId(),
+                $this->aciiR,
+                -1.0
+            );
 
             // Create an item amount for this item; reversing the items amounts
             // to negative
@@ -567,13 +605,17 @@ final readonly class InvItemService
                 $new_item_amount = new InvItemAmount();
                 $new_item_amount->setInvItemId($new_item->reqId());
                 $new_item_amount->setSubtotal(
-                            ($basis_item_amount->getSubtotal() ?? 0.00) * -1.00);
+                    ($basis_item_amount->getSubtotal() ?? 0.00) * -1.00
+                );
                 $new_item_amount->setTaxTotal(
-                            ($basis_item_amount->getTaxTotal() ?? 0.00) * -1.00);
+                    ($basis_item_amount->getTaxTotal() ?? 0.00) * -1.00
+                );
                 $new_item_amount->setDiscount(
-                            ($basis_item_amount->getDiscount() ?? 0.00) * -1.00);
+                    ($basis_item_amount->getDiscount() ?? 0.00) * -1.00
+                );
                 $new_item_amount->setTotal(
-                            ($basis_item_amount->getTotal() ?? 0.00) * -1.00);
+                    ($basis_item_amount->getTotal() ?? 0.00) * -1.00
+                );
                 $iiaR->save($new_item_amount);
             }
         }

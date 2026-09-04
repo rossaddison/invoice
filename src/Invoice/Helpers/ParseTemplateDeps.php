@@ -22,5 +22,6 @@ final class ParseTemplateDeps
         public readonly QAR $qaR,
         public readonly SOR $soR,
         public readonly uiR $uiR,
-    ) {}
+    ) {
+    }
 }

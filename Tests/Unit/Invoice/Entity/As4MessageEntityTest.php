@@ -104,10 +104,10 @@ class As4MessageEntityTest extends TestCase
 
     public function testStateEnumValues(): void
     {
-        $this->assertSame('pending',   As4MessageState::pending->value);
-        $this->assertSame('sent',      As4MessageState::sent->value);
-        $this->assertSame('receipt',   As4MessageState::receiptReceived->value);
-        $this->assertSame('failed',    As4MessageState::failed->value);
+        $this->assertSame('pending', As4MessageState::pending->value);
+        $this->assertSame('sent', As4MessageState::sent->value);
+        $this->assertSame('receipt', As4MessageState::receiptReceived->value);
+        $this->assertSame('failed', As4MessageState::failed->value);
         $this->assertSame('duplicate', As4MessageState::duplicate->value);
         $this->assertSame('delivered', As4MessageState::delivered->value);
     }

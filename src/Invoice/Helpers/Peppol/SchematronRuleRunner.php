@@ -34,7 +34,8 @@ final class SchematronRuleRunner implements SchematronRunnerInterface
 {
     public function __construct(
         private readonly ExpressionEvaluator $evaluator,
-    ) {}
+    ) {
+    }
 
     /**
      * Validate $document against all rules in $doc and return every violation found.

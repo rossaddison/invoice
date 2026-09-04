@@ -12,9 +12,7 @@ use App\Invoice\Qa\QaRepository;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
-
 use Psr\Http\Message\{ResponseInterface as Response, ServerRequestInterface as Request};
-
 use Yiisoft\{Data\Cycle\Reader\EntityReader,
     FormModel\FormHydrator, Http\Method, Input\Http\Attribute\Parameter\Query,
     Router\HydratorAttribute\RouteArgument, Session\SessionInterface,
@@ -37,8 +35,14 @@ final class QaController extends BaseController
         Flash $flash,
     ) {
         parent::__construct(
-            $webService, $userService, $translator,
-            $webViewRenderer, $session, $sR, $flash);
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
         $this->qaService = $qaService;
     }
 
@@ -49,18 +53,18 @@ final class QaController extends BaseController
         #[Query('page')]
         ?string $queryPage = null,
         #[Query('sort')]
-        ?string $querySort = null): Response
-    {
-      $page = $queryPage ?? $page;
-      $parameters = [
-        'qas' => $qaRepository->findAllPreloaded(),
-        'alert' => $this->alert(),
-        'defaultPageSizeOffsetPaginator' => $sR->getSetting('default_list_limit')
-            ? (int)$sR->getSetting('default_list_limit') : 1,
-        'page' => (int) $page > 0 ? (int) $page : 1,
-        'sortString' => $querySort ?? '-id',
-      ];
-      return $this->webViewRenderer->render('index', $parameters);
+        ?string $querySort = null
+    ): Response {
+        $page = $queryPage ?? $page;
+        $parameters = [
+          'qas' => $qaRepository->findAllPreloaded(),
+          'alert' => $this->alert(),
+          'defaultPageSizeOffsetPaginator' => $sR->getSetting('default_list_limit')
+              ? (int)$sR->getSetting('default_list_limit') : 1,
+          'page' => (int) $page > 0 ? (int) $page : 1,
+          'sortString' => $querySort ?? '-id',
+        ];
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -84,9 +88,12 @@ final class QaController extends BaseController
             if (is_array($body)) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $this->qaService->saveQa($qa, $body);
-                    $this->flashMessage('info',
-                            $this->translator->translate(
-                                'record.successfully.created'));
+                    $this->flashMessage(
+                        'info',
+                        $this->translator->translate(
+                            'record.successfully.created'
+                        )
+                    );
                     return $this->webService->getRedirectResponse('qa/index');
                 }
                 $parameters['errors'] = $form->getValidationResult()
@@ -102,28 +109,35 @@ final class QaController extends BaseController
      * @param int $id
      * @return Response
      */
-    public function delete(QaRepository $qaRepository,
+    public function delete(
+        QaRepository $qaRepository,
         #[RouteArgument('id')] int $id
     ): Response {
         try {
             $qa = $this->qa($qaRepository, $id);
             if ($qa) {
                 $this->qaService->deleteQa($qa);
-                $this->flashMessage('info',
-                    $this->translator->translate('record.successfully.deleted'));
+                $this->flashMessage(
+                    'info',
+                    $this->translator->translate('record.successfully.deleted')
+                );
                 return $this->webService->getRedirectResponse('qa/index');
             }
             return $this->webService->getRedirectResponse('qa/index');
-    } catch (Exception $e) {
+        } catch (Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('qa/index');
         }
     }
 
-    public function edit(Request $request, FormHydrator $formHydrator,
-        QaRepository $qaRepository, #[RouteArgument('id')] int $id): Response {
+    public function edit(
+        Request $request,
+        FormHydrator $formHydrator,
+        QaRepository $qaRepository,
+        #[RouteArgument('id')] int $id
+    ): Response {
         $qa = $this->qa($qaRepository, $id);
-        if ($qa){
+        if ($qa) {
             $form = QaForm::show($qa);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
@@ -136,7 +150,7 @@ final class QaController extends BaseController
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
-                    if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
+                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                         $this->qaService->saveQa($qa, $body);
                         return $this->webService->getRedirectResponse('qa/index');
                     }
@@ -169,9 +183,10 @@ final class QaController extends BaseController
      * @param int $id
      * @return Response
      */
-    public function view(QaRepository $qaRepository,
-        #[RouteArgument('id')] int $id): Response
-    {
+    public function view(
+        QaRepository $qaRepository,
+        #[RouteArgument('id')] int $id
+    ): Response {
         $qa = $this->qa($qaRepository, $id);
         if ($qa) {
             $form = QaForm::show($qa);
@@ -182,7 +197,7 @@ final class QaController extends BaseController
                 'form' => $form,
                 'qa' => $qa,
             ];
-        return $this->webViewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('
                 qa/index');

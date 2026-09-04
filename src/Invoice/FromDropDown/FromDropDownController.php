@@ -145,8 +145,8 @@ final class FromDropDownController extends BaseController
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                        $this->fromService->saveFromDropDown($from, $body);
-                        return $this->webService->getRedirectResponse('from/index');
+                    $this->fromService->saveFromDropDown($from, $body);
+                    return $this->webService->getRedirectResponse('from/index');
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;

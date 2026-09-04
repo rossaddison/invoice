@@ -30,7 +30,8 @@ final readonly class DeliveryLocationService
             $model->setName((string) $array['name']) : '';
         isset($array['building_number']) ?
             $model->setBuildingNumber(
-                (string) $array['building_number']) : '';
+                (string) $array['building_number']
+            ) : '';
         isset($array['address_1']) ?
             $model->setAddress1((string) $array['address_1']) : '';
         isset($array['address_2']) ?
@@ -45,10 +46,12 @@ final readonly class DeliveryLocationService
             $model->setCountry((string) $array['country']) : '';
         isset($array['global_location_number']) ?
             $model->setGlobalLocationNumber(
-                (string) $array['global_location_number']) : '';
+                (string) $array['global_location_number']
+            ) : '';
         isset($array['electronic_address_scheme']) ?
             $model->setElectronicAddressScheme(
-                (string) $array['electronic_address_scheme']) : '';
+                (string) $array['electronic_address_scheme']
+            ) : '';
         $this->repository->save($model);
     }
 
@@ -59,7 +62,8 @@ final readonly class DeliveryLocationService
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
-                $this->cR->repoClientquery((int) $array[$client]));
+                $this->cR->repoClientquery((int) $array[$client])
+            );
         }
     }
 

@@ -77,9 +77,11 @@ trait PeppolHelperCustomerTrait
      * @throws ClientNf
      * @return array
      */
-    private function buildPeppolAccountingCustomerPartyArray(Inv $invoice,
-        paR $paR, cpR $cpR): array
-    {
+    private function buildPeppolAccountingCustomerPartyArray(
+        Inv $invoice,
+        paR $paR,
+        cpR $cpR
+    ): array {
         $client = $invoice->getClient();
         if (!$client) {
             throw new ClientNf($this->t);
@@ -136,7 +138,8 @@ trait PeppolHelperCustomerTrait
                     'Country' => [
                         'IdentificationCode' =>
 $country_helper->getCountryIdentificationCodeWithLeague(
-                                        $postaladdress->getCountry()),
+    $postaladdress->getCountry()
+),
                         'ListId' => 'ISO3166-1:Alpha2',
                     ],
                 ],
@@ -156,7 +159,8 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                     'Country' => [
                         'IdentificationCode' =>
 $country_helper->getCountryIdentificationCodeWithLeague(
-                            (string) $client->getClientCountry()),
+    (string) $client->getClientCountry()
+),
                         'ListId' => 'ISO3166-1:Alpha2',
                     ],
                 ],

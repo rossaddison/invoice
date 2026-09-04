@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 /** @psalm-suppress UnusedVariable */
-$lang = array (
+$lang = array(
   'account.information' => 'Account Information',
   'active' => 'Active',
   'add' => 'Add',

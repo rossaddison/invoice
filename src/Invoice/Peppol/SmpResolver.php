@@ -37,7 +37,8 @@ final class SmpResolver implements SmpResolverInterface
         private readonly RequestFactoryInterface $requestFactory,
         private readonly string $smlZone    = 'edelivery.tech.ec.europa.eu',
         private readonly ?string $smpBaseUrl = null,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function resolve(string $participantId, string $documentTypeId): SmpEndpoint

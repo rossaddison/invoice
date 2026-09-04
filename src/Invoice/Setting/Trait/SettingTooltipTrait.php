@@ -8,7 +8,6 @@ use Yiisoft\Html\Html as H;
 
 trait SettingTooltipTrait
 {
-
     public function tooltipArray(): array
     {
         return array_merge(

@@ -11,14 +11,14 @@ use App\Infrastructure\Persistence\SalesOrderItemAllowanceCharge\{
 };
 use App\Infrastructure\Persistence\SalesOrderItemAmount\SalesOrderItemAmount;
 use App\Invoice\{
-Product\ProductRepository as PR,
-SalesOrder\SalesOrderRepository as SOR,
-SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository as ACSOIR,
-SalesOrderItemAmount\SalesOrderItemAmountRepository as SoIAR,
-SalesOrderItemAmount\SalesOrderItemAmountService as SoIAS,
-Task\TaskRepository as taskR,
-TaxRate\TaxRateRepository as TRR,
-Unit\UnitRepository as UR,
+    Product\ProductRepository as PR,
+    SalesOrder\SalesOrderRepository as SOR,
+    SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository as ACSOIR,
+    SalesOrderItemAmount\SalesOrderItemAmountRepository as SoIAR,
+    SalesOrderItemAmount\SalesOrderItemAmountService as SoIAS,
+    Task\TaskRepository as taskR,
+    TaxRate\TaxRateRepository as TRR,
+    Unit\UnitRepository as UR,
 };
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
@@ -40,7 +40,8 @@ final readonly class SalesOrderItemService
     ): void {
         if (isset($array['sales_order_id'])) {
             $sales_order = $this->soR
-                ->repoSalesOrderUnLoadedquery((int) $array['sales_order_id']
+                ->repoSalesOrderUnLoadedquery(
+                    (int) $array['sales_order_id']
                 );
             if ($sales_order) {
                 $model->setSalesOrder($sales_order);
@@ -48,7 +49,8 @@ final readonly class SalesOrderItemService
             }
         }
         if (isset($array['tax_rate_id'])) {
-            $tax_rate = $this->trR->repoTaxRatequery((int) $array['tax_rate_id']
+            $tax_rate = $this->trR->repoTaxRatequery(
+                (int) $array['tax_rate_id']
             );
             if ($tax_rate) {
                 $model->setTaxRate($tax_rate);
@@ -56,7 +58,8 @@ final readonly class SalesOrderItemService
             }
         }
         if (isset($array['product_id'])) {
-            $product = $this->pR->repoProductquery((int) $array['product_id']
+            $product = $this->pR->repoProductquery(
+                (int) $array['product_id']
             );
             if ($product) {
                 $model->setProduct($product);

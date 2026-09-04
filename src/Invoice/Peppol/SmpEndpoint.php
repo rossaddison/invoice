@@ -10,5 +10,6 @@ final readonly class SmpEndpoint
         public string $endpointUrl,
         public string $certificate,
         public string $transportProfile,
-    ) {}
+    ) {
+    }
 }

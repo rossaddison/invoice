@@ -23,7 +23,7 @@ class SalesOrderItem
     use SalesOrderItemTrait1;
     use SalesOrderItemTrait2;
     use SalesOrderItemTrait3;
-     
+
     #[Column(type: 'date', nullable: false)]
     private mixed $date_added;
 

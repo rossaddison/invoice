@@ -231,4 +231,3 @@ class As4Receiver
         return $nodes->item(0)?->nodeValue ?? '';
     }
 }
-

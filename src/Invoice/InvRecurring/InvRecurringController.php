@@ -347,8 +347,8 @@ final class InvRecurringController extends BaseController
                 if ($request->getMethod() === Method::POST) {
                     $body = $request->getParsedBody() ?? [];
                     if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                            $this->invrecurringService->saveInvRecurring($inv_recurring, $body);
-                            return $this->webService->getRedirectResponse('invrecurring/index');
+                        $this->invrecurringService->saveInvRecurring($inv_recurring, $body);
+                        return $this->webService->getRedirectResponse('invrecurring/index');
                     }
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;

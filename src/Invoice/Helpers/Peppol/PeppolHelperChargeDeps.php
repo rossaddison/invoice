@@ -18,5 +18,6 @@ final class PeppolHelperChargeDeps
         public readonly ACIIR $aciiR,
         public readonly SOIR $soiR,
         public readonly TRR $trR,
-    ) {}
+    ) {
+    }
 }

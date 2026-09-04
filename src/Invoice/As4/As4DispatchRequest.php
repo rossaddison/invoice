@@ -29,5 +29,6 @@ final readonly class As4DispatchRequest
         public ?string $conversationId = null,
         /** MIME content-ID for the payload attachment; auto-generated when null */
         public ?string $payloadContentId = null,
-    ) {}
+    ) {
+    }
 }

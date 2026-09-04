@@ -22,7 +22,7 @@ final class CompanyPrivateFormTest extends TestCase
     private CompanyPrivate $companyPrivate;
 
     public string $gln = '1234567890123';
-    
+
     #[\Override]
     protected function setUp(): void
     {
@@ -40,16 +40,16 @@ final class CompanyPrivateFormTest extends TestCase
             'vat_id' => str_repeat('V', 31), // 31 chars - should fail
             'company_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'vat_id should fail validation with 31 characters');
-        
+
         // Test with 30 characters (should pass)
         $form = $this->createFormWithData([
             'vat_id' => str_repeat('V', 30), // 30 chars - should pass
             'company_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'vat_id should pass validation with 30 characters');
     }
@@ -64,16 +64,16 @@ final class CompanyPrivateFormTest extends TestCase
             'tax_code' => str_repeat('T', 21), // 21 chars - should fail
             'company_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'tax_code should fail validation with 21 characters');
-        
+
         // Test with 20 characters (should pass)
         $form = $this->createFormWithData([
             'tax_code' => str_repeat('T', 20), // 20 chars - should pass
             'company_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'tax_code should pass validation with 20 characters');
     }
@@ -88,16 +88,16 @@ final class CompanyPrivateFormTest extends TestCase
             'iban' => str_repeat('I', 35), // 35 chars - should fail
             'company_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'iban should fail validation with 35 characters');
-        
+
         // Test with 34 characters (should pass)
         $form = $this->createFormWithData([
             'iban' => str_repeat('I', 34), // 34 chars - should pass
             'company_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'iban should pass validation with 34 characters');
     }
@@ -112,16 +112,16 @@ final class CompanyPrivateFormTest extends TestCase
             'gln' => str_repeat('G', 15), // 15 chars - should fail
             'company_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'gln should fail validation with 15 characters');
-        
+
         // Test with 14 characters (should pass)
         $form = $this->createFormWithData([
             'gln' => str_repeat('G', 14), // 14 chars - should pass
             'company_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'gln should pass validation with 14 characters');
     }
@@ -136,16 +136,16 @@ final class CompanyPrivateFormTest extends TestCase
             'rcc' => str_repeat('R', 8), // 8 chars - should fail
             'company_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'rcc should fail validation with 8 characters');
-        
+
         // Test with 7 characters (should pass)
         $form = $this->createFormWithData([
             'rcc' => str_repeat('R', 7), // 7 chars - should pass
             'company_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'rcc should pass validation with 7 characters');
     }
@@ -160,16 +160,16 @@ final class CompanyPrivateFormTest extends TestCase
             'logo_filename' => str_repeat('L', 151), // 151 chars - should fail
             'company_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'logo_filename should fail validation with 151 characters');
-        
+
         // Test with 150 characters (should pass)
         $form = $this->createFormWithData([
             'logo_filename' => str_repeat('L', 150), // 150 chars - should pass
             'company_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'logo_filename should pass validation with 150 characters');
     }
@@ -183,15 +183,15 @@ final class CompanyPrivateFormTest extends TestCase
         $form = $this->createFormWithData([
             'company_id' => null // missing required field
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'Should fail validation without required company_id');
-        
+
         // Test with required company_id
         $form = $this->createFormWithData([
             'company_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'Should pass validation with required company_id');
     }
@@ -213,7 +213,7 @@ final class CompanyPrivateFormTest extends TestCase
             'logo_height' => '', // Optional field
             'logo_margin' => '' // Optional field
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'Empty optional fields should pass validation');
     }
@@ -235,7 +235,7 @@ final class CompanyPrivateFormTest extends TestCase
             'logo_height' => '100',
             'logo_margin' => '10'
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'Realistic field values should pass validation');
     }
@@ -246,7 +246,7 @@ final class CompanyPrivateFormTest extends TestCase
     public function testFormInitializationFromEntity(): void
     {
         $form = CompanyPrivateForm::show($this->companyPrivate);
-        
+
         $this->assertEquals(1, $form->getCompanyId());
         $this->assertEquals('GB123456789', $form->getVatId());
         $this->assertEquals('TC12345', $form->getTaxCode());
@@ -273,10 +273,10 @@ final class CompanyPrivateFormTest extends TestCase
             'rcc' => str_repeat('R', 7), // Max RCC length
             'logo_filename' => str_repeat('L', 150) // Max logo filename length
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'All maximum length values should be acceptable for business use');
-        
+
         // Verify these limits are NOT the old excessive 65535 values
         $this->assertNotEquals(65535, 30, 'VAT ID limit should not be 65535');
         $this->assertNotEquals(65535, 20, 'Tax code limit should not be 65535');
@@ -292,9 +292,9 @@ final class CompanyPrivateFormTest extends TestCase
         $companyPrivate = $this->createStub(CompanyPrivate::class);
         $company = $this->createStub(Company::class);
         $now = new DateTimeImmutable();
-        
+
         $company->method('getName')->willReturn('Test Company');
-        
+
         $companyPrivate->method('reqCompanyId')->willReturn(1);
         $companyPrivate->method('getCompany')->willReturn($company);
         $companyPrivate->method('getVatId')->willReturn('GB123456789');
@@ -308,32 +308,32 @@ final class CompanyPrivateFormTest extends TestCase
         $companyPrivate->method('getLogoMargin')->willReturn(10);
         $companyPrivate->method('getStartDate')->willReturn($now);
         $companyPrivate->method('getEndDate')->willReturn($now);
-        
+
         return $companyPrivate;
     }
 
-   /**
-    * Create CompanyPrivateForm with custom data for testing
-    */
-   private function createFormWithData(array $data): CompanyPrivateForm
-   {
-       $companyPrivate = $this->createMockCompanyPrivate();
+    /**
+     * Create CompanyPrivateForm with custom data for testing
+     */
+    private function createFormWithData(array $data): CompanyPrivateForm
+    {
+        $companyPrivate = $this->createMockCompanyPrivate();
 
-       $form = CompanyPrivateForm::show($companyPrivate);
+        $form = CompanyPrivateForm::show($companyPrivate);
 
-       $reflection = new \ReflectionClass($form);
+        $reflection = new \ReflectionClass($form);
 
-       foreach ($data as $property => $value) {
-           if (!$reflection->hasProperty($property)) {
-               throw new \RuntimeException("Property '{$property}' "
-               . "does not exist on "
-               . CompanyPrivateForm::class);
-           }
+        foreach ($data as $property => $value) {
+            if (!$reflection->hasProperty($property)) {
+                throw new \RuntimeException("Property '{$property}' "
+                . "does not exist on "
+                . CompanyPrivateForm::class);
+            }
 
-           $reflection->getProperty($property)
-               ->setValue($form, $value);
-       }
+            $reflection->getProperty($property)
+                ->setValue($form, $value);
+        }
 
-       return $form;
-   }
+        return $form;
+    }
 }

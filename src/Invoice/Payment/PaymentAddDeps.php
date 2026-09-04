@@ -22,5 +22,6 @@ final class PaymentAddDeps
         public readonly CustomFieldRepository $cfR,
         public readonly CustomValueRepository $cvR,
         public readonly ClientRepository $cR,
-    ) {}
+    ) {
+    }
 }

@@ -21,7 +21,8 @@ final class StaticAs4SmpResolver implements As4SmpResolverInterface
         private readonly string $endpointUrl,
         private readonly string $certificatePem,
         private readonly string $transportProfile = 'bilateral-as4-test',
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function resolve(As4SmpQuery $query): As4SmpEndpoint

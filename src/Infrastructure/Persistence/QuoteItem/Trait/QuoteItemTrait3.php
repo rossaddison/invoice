@@ -17,7 +17,6 @@ use DateTimeImmutable;
  */
 trait QuoteItemTrait3
 {
-
     public function setProductUnit(string $product_unit): void
     {
         $this->product_unit = $product_unit;

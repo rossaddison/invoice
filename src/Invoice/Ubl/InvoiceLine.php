@@ -27,7 +27,8 @@ class InvoiceLine implements XmlSerializable
         private ?Price $price,
         private SettingRepository $s,
         private InvoiceLineAccountingFields $accountingFields = new InvoiceLineAccountingFields(),
-    ) {}
+    ) {
+    }
 
     public function reqId(): string
     {
@@ -151,13 +152,18 @@ class InvoiceLine implements XmlSerializable
                     . ($this->isCreditNoteLine ?
                         'CreditedQuantity' : 'InvoicedQuantity'),
                 'value' => number_format(
-                        $this->invoicedQuantity ?: 0, 2, '.', ''),
+                    $this->invoicedQuantity ?: 0,
+                    2,
+                    '.',
+                    ''
+                ),
                 'attributes' => $invoicedQuantityAttributes,
             ],
             [
                 'name' => Schema::CBC . 'LineExtensionAmount',
                 'value' => $this->s->currencyConverter(
-                 number_format($this->lineExtensionAmount ?: 0.00, 2, '.', '')),
+                    number_format($this->lineExtensionAmount ?: 0.00, 2, '.', '')
+                ),
                 'attributes' => [
                     'currencyID' =>
                         $this->s->getSetting('peppol_document_currency'),

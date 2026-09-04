@@ -41,7 +41,8 @@ final readonly class InvItemAmountService
         $inv_item = 'inv_item_id';
         if (isset($array[$inv_item])) {
             $invItemEntity = $this->iiR->repoInvItemquery(
-                (int) $array[$inv_item]);
+                (int) $array[$inv_item]
+            );
             if ($invItemEntity) {
                 $model->setInvItem($invItemEntity);
             }

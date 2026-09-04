@@ -58,5 +58,6 @@ final class SeedFixtureDeps
         public readonly SalesOrderRepository $soR,
         public readonly UserRepository $uR,
         public readonly DatabaseManager $dbal,
-    ) {}
+    ) {
+    }
 }

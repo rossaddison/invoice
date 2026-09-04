@@ -35,8 +35,10 @@ trait UrlKey
         }
         $inv = $repos->iR->repoUrlKeyGuestLoaded($urlKey);
         if (!($inv instanceof Inv)) {
-            $this->flashMessage('danger',
-                $this->translator->translate('not.found'));
+            $this->flashMessage(
+                'danger',
+                $this->translator->translate('not.found')
+            );
             return $this->webService->getNotFoundResponse();
         }
         return $this->renderUrlKey($inv, $urlKey, $clientChosenGateway, $_language, $repos, $ud);
@@ -53,16 +55,20 @@ trait UrlKey
         $inv_id = $inv->reqId();
         $this->session->set('inv_id', $inv_id);
         if ($repos->itrR->repoCount($inv_id) == 0) {
-            $this->flashMessage('warning',
-                $this->translator->translate('tax.rate.active.not'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('tax.rate.active.not')
+            );
         }
         $client_id = $inv->reqClientId();
         $user = $this->activeUser($client_id, $ud->uR, $ud->ucR, $ud->uiR);
         $user_id = $user?->reqId() ?? 0;
         $user_inv = $user_id > 0 ? $ud->uiR->repoUserInvUserIdquery($user_id) : null;
         if ($user_id <= 0 || $user_inv === null || !$user_inv->getActive()) {
-            $this->flashMessage('danger',
-                $this->translator->translate('client.not.allocated.to.user'));
+            $this->flashMessage(
+                'danger',
+                $this->translator->translate('client.not.allocated.to.user')
+            );
             return $this->webService->getNotFoundResponse();
         }
         if ($ud->uiR->repoUserInvUserIdcount($user_id) === 1
@@ -75,32 +81,43 @@ trait UrlKey
         $repos->iR->save($inv);
         $payment_method = $inv->getPaymentMethod() !== 0 ?
             $ud->pmR->repoPaymentMethodquery(
-                (int) $inv->getPaymentMethod()) : null;
+                (int) $inv->getPaymentMethod()
+            ) : null;
         $custom_fields = [
             'invoice' => $repos->cfR->repoTablequery('inv_custom'),
             'client' => $repos->cfR->repoTablequery('client_custom'),
         ];
         $attachments = $this->viewPartialInvAttachments(
-            $_language, $urlKey, $client_id, $ud->upR);
+            $_language,
+            $urlKey,
+            $client_id,
+            $ud->upR
+        );
         $inv_amount = ((
-            $repos->iaR->repoInvAmountCount($inv_id) > 0) ?
+            $repos->iaR->repoInvAmountCount($inv_id) > 0
+        ) ?
                 $repos->iaR->repoInvquery($inv_id) : null);
         if ($inv_amount === null) {
-            $this->flashMessage('warning',
-                $this->translator->translate('amount.no'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('amount.no')
+            );
             return $this->webService->getNotFoundResponse();
         }
         $is_overdue = (
             $inv_amount->getBalance() > 0
                 && $inv->getDateDue()
-                    < (new \DateTimeImmutable('now')));
+                    < (new \DateTimeImmutable('now'))
+        );
         $parameters = [
             'renderTemplate' =>
                 $this->webViewRenderer->renderPartialAsString(
                     '//invoice/template/invoice/public/'
                         . ($this->sR->getSetting(
-                            'public_invoice_template')
-                                ?: 'Invoice_Web'), array_merge([
+                            'public_invoice_template'
+                        )
+                                ?: 'Invoice_Web'),
+                    array_merge([
                 'alert' => $this->alert(),
                 'aliases' => $this->sR->getImg(),
                 'attachments' => $attachments,
@@ -128,14 +145,17 @@ trait UrlKey
                 'payment_method' => $payment_method,
                 'paymentTermsArray' =>
                     $this->sR->getPaymentTermArray(
-                        $this->translator),
+                        $this->translator
+                    ),
                 'userInv' =>
                     $ud->uiR->repoUserInvUserIdcount($user_id)
                         > 0 ? $ud->uiR->repoUserInvUserIdquery(
-                        $user_id) : null,
-            ], PublicDocumentAssetHelper::resolve($ud->assetManager, $ud->aliases))),
+                            $user_id
+                        ) : null,
+            ], PublicDocumentAssetHelper::resolve($ud->assetManager, $ud->aliases))
+                ),
         ];
         return $this->webViewRenderer->render('url_key',
-                $parameters);
+            $parameters);
     }
 }

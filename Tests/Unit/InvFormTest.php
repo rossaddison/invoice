@@ -36,7 +36,7 @@ final class InvFormTest extends TestCase
     {
         // Create very long content (over 65535 characters)
         $longContent = str_repeat('This is a very long text content. ', 2000); // ~70,000 chars
-        
+
         // Set longText fields to very long content
         $form = $this->createFormWithData([
             'terms' => $longContent,
@@ -44,9 +44,9 @@ final class InvFormTest extends TestCase
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
-        
+
         // Should be valid - no length constraints on longText fields
         $this->assertTrue($result->isValid(), 'LongText fields should accept unlimited content');
     }
@@ -62,17 +62,17 @@ final class InvFormTest extends TestCase
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'Number field should fail validation with 101 characters');
-        
+
         // Test valid number field
         $form = $this->createFormWithData([
             'number' => str_repeat('1', 100), // 100 chars - should pass
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'Number field should pass validation with 100 characters');
     }
@@ -88,17 +88,17 @@ final class InvFormTest extends TestCase
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'stand_in_code should fail with 4 characters');
-        
+
         // Test with 3 characters (should pass)
         $form = $this->createFormWithData([
             'stand_in_code' => 'ABC', // 3 chars - should pass
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'stand_in_code should pass with 3 characters');
     }
@@ -114,17 +114,17 @@ final class InvFormTest extends TestCase
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'url_key should fail with 33 characters');
-        
+
         // Test with 32 characters (should pass)
         $form = $this->createFormWithData([
             'url_key' => str_repeat('a', 32), // 32 chars - should pass
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'url_key should pass with 32 characters');
     }
@@ -140,17 +140,17 @@ final class InvFormTest extends TestCase
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'password should fail with 91 characters');
-        
+
         // Test with 90 characters (should pass)
         $form = $this->createFormWithData([
             'password' => str_repeat('p', 90), // 90 chars - should pass
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'password should pass with 90 characters');
     }
@@ -166,17 +166,17 @@ final class InvFormTest extends TestCase
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'document_description should fail with 33 characters');
-        
+
         // Test with 32 characters (should pass)
         $form = $this->createFormWithData([
             'document_description' => str_repeat('d', 32), // 32 chars - should pass
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'document_description should pass with 32 characters');
     }
@@ -191,25 +191,25 @@ final class InvFormTest extends TestCase
             'group_id' => 1,
             'client_id' => null // empty required field
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'Should fail validation without required client_id');
-        
+
         // Test without required group_id
         $form = $this->createFormWithData([
             'client_id' => 1,
             'group_id' => null // empty required field
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'Should fail validation without required group_id');
-        
+
         // Test with both required fields
         $form = $this->createFormWithData([
             'client_id' => 1,
             'group_id' => 1
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'Should pass validation with all required fields');
     }
@@ -230,7 +230,7 @@ final class InvFormTest extends TestCase
             'terms' => '', // Empty longText field
             'note' => '' // Empty longText field
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'Empty optional fields should pass validation');
     }
@@ -241,7 +241,7 @@ final class InvFormTest extends TestCase
     public function testFormInitializationFromEntity(): void
     {
         $form = InvForm::show($this->inv);
-        
+
         $this->assertEquals('INV-001', $form->number);
         $this->assertEquals('Test terms', $form->terms);
         $this->assertEquals('Test note', $form->getNote());
@@ -257,7 +257,7 @@ final class InvFormTest extends TestCase
         $inv = $this->createStub(Inv::class);
         $client = $this->createStub(Client::class);
         $now = new DateTimeImmutable();
-        
+
         $inv->method('getNumber')->willReturn('INV-001');
         $inv->method('getTerms')->willReturn('Test terms');
         $inv->method('getNote')->willReturn('Test note');
@@ -285,7 +285,7 @@ final class InvFormTest extends TestCase
         $inv->method('getDocumentDescription')->willReturn('Test description');
         $inv->method('getIsReadOnly')->willReturn(false);
         $inv->method('getClient')->willReturn($client);
-        
+
         return $inv;
     }
 
@@ -296,10 +296,10 @@ final class InvFormTest extends TestCase
     {
         $inv = $this->createMockInv();
         $form = InvForm::show($inv);
-        
+
         // Use reflection to set properties for testing
         $reflection = new \ReflectionClass($form);
-        
+
         foreach ($data as $property => $value) {
             if ($reflection->hasProperty($property)) {
                 $prop = $reflection->getProperty($property);
@@ -307,7 +307,7 @@ final class InvFormTest extends TestCase
                 $prop->setValue($form, $value);
             }
         }
-        
+
         return $form;
     }
 }

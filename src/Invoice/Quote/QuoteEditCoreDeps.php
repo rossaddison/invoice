@@ -22,5 +22,6 @@ final class QuoteEditCoreDeps
         public readonly GR $groupRepo,
         public readonly UCR $ucR,
         public readonly UIR $uiR,
-    ) {}
+    ) {
+    }
 }

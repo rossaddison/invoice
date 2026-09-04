@@ -58,7 +58,7 @@ switch ($env) {
     case 'docker':
         $dbHost = $_ENV['DB_HOST_IP_ADDRESS'] ?? '192.168.0.24';
         break;
-    // alpine will fall into this default
+        // alpine will fall into this default
     default:
         $dbHost = $_ENV['DB_HOST_IP_ADDRESS'] ?? 'localhost';
 }

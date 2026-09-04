@@ -90,7 +90,7 @@ final class SchematronParserTest extends TestCase
         );
         $doc = $this->parser->parseString($xml);
         self::assertArrayHasKey('fromSelect', $doc->variables);
-        self::assertArrayHasKey('fromValue',  $doc->variables);
+        self::assertArrayHasKey('fromValue', $doc->variables);
     }
 
     // ── Rules and assertions ──────────────────────────────────────────────────

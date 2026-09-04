@@ -69,10 +69,17 @@ final class SoapEnvelopeBuilder implements As4EnvelopeBuilderInterface
         $messaging->appendChild($userMessage);
 
         $userMessage->appendChild($this->buildMessageInfo($doc, $params->messageId, $ts));
-        $userMessage->appendChild($this->buildPartyInfo($doc, $params->senderPartyId,
-            $params->receiverPartyId));
-        $userMessage->appendChild($this->buildCollaborationInfo($doc, $params->service,
-            $params->action, $params->conversationId));
+        $userMessage->appendChild($this->buildPartyInfo(
+            $doc,
+            $params->senderPartyId,
+            $params->receiverPartyId
+        ));
+        $userMessage->appendChild($this->buildCollaborationInfo(
+            $doc,
+            $params->service,
+            $params->action,
+            $params->conversationId
+        ));
         $userMessage->appendChild($this->buildPayloadInfo($doc, $params->payloadContentId));
 
         return $messaging;

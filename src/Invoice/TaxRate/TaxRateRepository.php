@@ -143,7 +143,7 @@ final class TaxRateRepository extends Select\Repository
             $optionsDataTaxRates[$taxRateId] = ($taxRate->getTaxRateName() ?? '')
                 . '  '
                 . (string) ($taxRate->getTaxRatePercent() ?? '');
-            
+
         }
         return $optionsDataTaxRates;
     }

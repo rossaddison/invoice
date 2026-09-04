@@ -33,8 +33,13 @@ trait TinkPaymentTrait
             $viewData['alert'] = 'Currency not supported.';
         } else {
             $details = $this->openBankingPaymentService->initiateTinkPayment(
-                $amount, $ctx->invoice, $company, $invCurrency,
-                $recipientName, (int) $clientId, (int) $clientSecret,
+                $amount,
+                $ctx->invoice,
+                $company,
+                $invCurrency,
+                $recipientName,
+                (int) $clientId,
+                (int) $clientSecret,
             );
             $singleKeyArray   = (array) ($details['data'] ?? []);
             $data             = (array) ($singleKeyArray['data'] ?? []);

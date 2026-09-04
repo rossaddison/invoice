@@ -28,7 +28,6 @@ use Testo\Test;
 #[Test]
 final class YookassaPaymentServiceTest
 {
-
     /**
      * @return LoggerInterface&m\MockInterface
      */

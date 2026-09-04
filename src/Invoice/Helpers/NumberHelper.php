@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Invoice\Helpers;
 
 use App\Infrastructure\Persistence\Inv\Inv;
-
 use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Infrastructure\Persistence\QuoteAllowanceCharge\QuoteAllowanceCharge;
 use App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate;
@@ -18,7 +17,6 @@ use App\Invoice\Setting\SettingRepository as SRepo;
 use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
 use App\Invoice\InvItem\InvItemRepository as IIR;
 use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
-
 use App\Invoice\Helpers\Trait\QuoteCalcTrait;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
 use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository as ACQR;
@@ -52,7 +50,8 @@ final readonly class NumberHelper
         $this->s->loadSettings();
         $currency_symbol = $this->s->getSetting('currency_symbol');
         $currency_symbol_placement = $this->s->getSetting(
-                                                'currency_symbol_placement');
+            'currency_symbol_placement'
+        );
         $thousands_separator = $this->s->getSetting('thousands_separator');
         $decimal_point = $this->s->getSetting('decimal_point');
         $formatted = $this->currencyFormatter->format($amount, $decimal_point, $thousands_separator);
@@ -103,8 +102,13 @@ final readonly class NumberHelper
      */
     public function calculateQuote(
         int $quote_id,
-        ACQR $acqR, QIR $qiR, QIAR $qiaR, QTRR $qtrR, QAR $qaR, QR $qR): void
-    {
+        ACQR $acqR,
+        QIR $qiR,
+        QIAR $qiaR,
+        QTRR $qtrR,
+        QAR $qaR,
+        QR $qR
+    ): void {
         $quote_allowance_charge_amount_total = 0.00;
         $quote_allowance_charge_tax_total = 0.00;
 
@@ -114,7 +118,10 @@ final readonly class NumberHelper
         // Quote Subtotal + Item Tax
         // -------------------------
         $quote_item_amounts = $this->quoteCalculateTotalsofItemTotals(
-            $quote_id, $qiR, $qiaR);
+            $quote_id,
+            $qiR,
+            $qiaR
+        );
 
         // individual quote_item_amount['subtotal'] already includes
         // charges and allowances
@@ -129,7 +136,10 @@ final readonly class NumberHelper
         // ---------
         if ($this->s->getSetting('enable_vat_registration') === '0') {
             $quote_tax_rate_total = $this->calculateQuoteTaxes(
-                                                        $quote_id, $qtrR, $qaR);
+                $quote_id,
+                $qtrR,
+                $qaR
+            );
         } else {
             // No Quote Taxes are allowed under the VAT regime.
             $quote_tax_rate_total = 0.00;
@@ -167,7 +177,10 @@ final readonly class NumberHelper
         // -----------------------------------------------
         $quote_total =
             $this->quoteIncludeCustomerDiscountRequest(
-                $quote_id, $final_discountable_and_chargeable_total, $qR);
+                $quote_id,
+                $final_discountable_and_chargeable_total,
+                $qR
+            );
 
         $count = $qiR->repoCount($quote_id);
         $count_quote_amount = $qaR->repoQuoteAmountCount($quote_id);
@@ -198,7 +211,10 @@ final readonly class NumberHelper
         // Invoice Subtotal + Item Tax
         // -------------------------
         $inv_item_amounts = $this->invCalculateTotalsofItemTotals(
-                                                          $inv_id, $iiR, $iiaR);
+            $inv_id,
+            $iiR,
+            $iiaR
+        );
         $inv_item_subtotal_discount
         // individual inv_item_amount['subtotal'] already includes
         // charges and allowances
@@ -213,8 +229,12 @@ final readonly class NumberHelper
         // Invoice Tax
         // ---------
         $inv_tax_rate_total = $this->s->getSetting(
-            'enable_vat_registration') === '0' ? $this->calculateInvTaxes(
-                                                   $inv_id, $itrR, $iaR) : 0.00;
+            'enable_vat_registration'
+        ) === '0' ? $this->calculateInvTaxes(
+            $inv_id,
+            $itrR,
+            $iaR
+        ) : 0.00;
 
         $inv_allowance_charges = $aciR->repoACIquery($inv_id);
         /** @var InvAllowanceCharge $inv_allowance_charge */
@@ -248,7 +268,10 @@ final readonly class NumberHelper
         // Final Grand Total after Applying Cash Discount
         // ----------------------------------------------
         $inv_total = $this->invIncludeCustomerDiscountRequest(
-                        $inv_id, $final_discountable_and_chargeable_total, $iR);
+            $inv_id,
+            $final_discountable_and_chargeable_total,
+            $iR
+        );
 
         //---------------------------------------------------------------------
         // Give the Invoice its summary of amounts at the bottom of the invoice
@@ -286,8 +309,12 @@ final readonly class NumberHelper
         $deps->iaR->save($inv_amount);
         $invoice = $deps->iR->repoInvUnLoadedquery($inv_id) ?? null;
         if ($inv_total > 0.00 && $total_paid > 0.00) {
-            $this->invBalanceZeroSetToReadOnlyIfFullyPaid($deps->iR, $this->s,
-                $invoice, $balance);
+            $this->invBalanceZeroSetToReadOnlyIfFullyPaid(
+                $deps->iR,
+                $this->s,
+                $invoice,
+                $balance
+            );
         }
     }
 
@@ -352,25 +379,28 @@ final readonly class NumberHelper
     /**
      * @psalm-param IR<Inv> $iR
      */
-    private function invBalanceZeroSetToReadOnlyIfFullyPaid(IR $iR,
-                                SRepo $sR, ?Inv $invoice, float $balance): void
-    {
-// draft => 1, sent => 2, viewed => 3, paid => 4
-// As soon as the balance on the invoice is zero and the read-only-toggle is 4
-// ie. paid,
-// for Administrative purposes set the invoice to read-only to avoid tampering
-            if (($sR->getSetting('read_only_toggle') === (string) 4)
-                    && null !== $invoice
+    private function invBalanceZeroSetToReadOnlyIfFullyPaid(
+        IR $iR,
+        SRepo $sR,
+        ?Inv $invoice,
+        float $balance
+    ): void {
+        // draft => 1, sent => 2, viewed => 3, paid => 4
+        // As soon as the balance on the invoice is zero and the read-only-toggle is 4
+        // ie. paid,
+        // for Administrative purposes set the invoice to read-only to avoid tampering
+        if (($sR->getSetting('read_only_toggle') === (string) 4)
+                && null !== $invoice
 // Force the user to set the status to read-only manually i.e. view..edit  if
 // it is a deliberate zero invoice i.e. `paid` and `total` equaling zero ....
 // here by only setting to read only if `paid` and `total` are greater than zero.
-                    && $balance == 0.00
-                    && ($invoice->getInvAmount()->getPaid() > 0.00)
-                    && ($invoice->getInvAmount()->getTotal() > 0.00)) {
-                $invoice->setIsReadOnly(true);
-                // Set the status to paid
-                $invoice->setStatusId(4);
-                $iR->save($invoice);
+                && $balance == 0.00
+                && ($invoice->getInvAmount()->getPaid() > 0.00)
+                && ($invoice->getInvAmount()->getTotal() > 0.00)) {
+            $invoice->setIsReadOnly(true);
+            // Set the status to paid
+            $invoice->setStatusId(4);
+            $iR->save($invoice);
         }
     }
 
@@ -381,8 +411,10 @@ final readonly class NumberHelper
      * @return array
      */
     public function invCalculateTotalsofItemTotals(
-                                    int $inv_id, IIR $iiR, IIAR $iiaR): array
-    {
+        int $inv_id,
+        IIR $iiR,
+        IIAR $iiaR
+    ): array {
         $get_all_items_in_inv = $iiR->repoInvItemIdquery($inv_id);
         $grand_sub_total = 0.00;
         $grand_taxtotal = 0.00;
@@ -434,19 +466,21 @@ final readonly class NumberHelper
      * @return float
      */
     public function quoteIncludeCustomerDiscountRequest(
-                            int $quote_id, float $quote_total, QR $qR): float
-    {
+        int $quote_id,
+        float $quote_total,
+        QR $qR
+    ): float {
         $quote = $qR->repoQuoteUnloadedquery($quote_id);
         $total = $quote_total;
         $discount_amount = 0.00;
         if ($quote) {
             $discount_amount = (float) $quote->getDiscountAmount();
         }
-// Subtract Quote Table's discount amount from Quote Amount Table's quote_total
-// Discount and Percent are mutually exclusive ie. if you use the one you
-// exclude the other. Discount amount is the user inputed amount on the quote
-// representing a cash discount. Discount percent is the user inputed
-// percentage on the quote representing a cash percentage
+        // Subtract Quote Table's discount amount from Quote Amount Table's quote_total
+        // Discount and Percent are mutually exclusive ie. if you use the one you
+        // exclude the other. Discount amount is the user inputed amount on the quote
+        // representing a cash discount. Discount percent is the user inputed
+        // percentage on the quote representing a cash percentage
         return $total - $discount_amount;
     }
 
@@ -457,19 +491,21 @@ final readonly class NumberHelper
      * @return float
      */
     public function invIncludeCustomerDiscountRequest(
-                                int $inv_id, float $inv_total, IR $iR): float
-    {
+        int $inv_id,
+        float $inv_total,
+        IR $iR
+    ): float {
         $inv = $iR->repoInvUnloadedquery($inv_id);
         $discount_amount = 0.00;
         $total = $inv_total;
         if ($inv) {
             $discount_amount = (float) $inv->getDiscountAmount();
         }
-// Subtract Invoice Table's discount amount from Invoice Amount Table's inv_total
-// Discount and Percent are mutually exclusive ie. if you use the one you
-// exclude the other. Discount amount is the user inputed amount on the invoice
-// representing a cash discount. Discount percent is the user inputed
-// percentage on the invoice representing a cash percentage
+        // Subtract Invoice Table's discount amount from Invoice Amount Table's inv_total
+        // Discount and Percent are mutually exclusive ie. if you use the one you
+        // exclude the other. Discount amount is the user inputed amount on the invoice
+        // representing a cash discount. Discount percent is the user inputed
+        // percentage on the invoice representing a cash percentage
         return $total - $discount_amount;
     }
 
@@ -478,28 +514,31 @@ final readonly class NumberHelper
      * @param int $quote_id
      */
     public function calculateQuoteTaxes(
-                                  int $quote_id, QTRR $qtrR, QAR $qaR): float
-    {
-// Quote amount Table fields:
-//  id->quote_id->item_subtotal->item_tax_total->tax_total*->total
-// Quote Tax Rate Table fields:
-//  id->quote_id->tax_rate_id->include_item_tax->quote_tax_rate_amount*
+        int $quote_id,
+        QTRR $qtrR,
+        QAR $qaR
+    ): float {
+        // Quote amount Table fields:
+        //  id->quote_id->item_subtotal->item_tax_total->tax_total*->total
+        // Quote Tax Rate Table fields:
+        //  id->quote_id->tax_rate_id->include_item_tax->quote_tax_rate_amount*
 
-// Tax_total*    =    sum of quote_tax_rate_amount*   per   quote_id.
+        // Tax_total*    =    sum of quote_tax_rate_amount*   per   quote_id.
 
-// First check to see if there are any quote taxes applied
+        // First check to see if there are any quote taxes applied
         $total_quote_tax_rate_amount = 0.00;
         $quote_tax_rates = $qtrR->repoQuotequery($quote_id);
         $quote_tax_rates_count = $qtrR->repoCount($quote_id);
-// At least one quote tax rate has been set and the quote has amounts that
-//  quote tax rates can be applied to
+        // At least one quote tax rate has been set and the quote has amounts that
+        //  quote tax rates can be applied to
         if (($quote_tax_rates_count > 0) && ($qaR->repoQuoteAmountCount(
-                $quote_id) > 0)) {
+            $quote_id
+        ) > 0)) {
             // There are quote taxes applied
             $quote_amount = $qaR->repoQuotequery($quote_id);
             if ($quote_amount) {
-// Loop through the quote taxes and update quote_tax_rate_amount for each of
-//  the applied quote taxes
+                // Loop through the quote taxes and update quote_tax_rate_amount for each of
+                //  the applied quote taxes
                 /** @var QuoteTaxRate $quote_tax_rate */
                 foreach ($quote_tax_rates as $quote_tax_rate) {
                     // If the include item tax has been checked
@@ -513,10 +552,12 @@ final readonly class NumberHelper
 // The quote tax rate should not include the applied item tax so get the general
 //  tax rate from Tax Rate table
 : (($quote_amount->getItemSubtotal() ?? 0.00)
-* (($quote_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100.00)));
+* (($quote_tax_rate->getTaxRate()?->getTaxRatePercent() ?? 0.00) / 100.00))
+                    );
                     // Update the quote tax rate amount
                     $quote_tax_rate->setQuoteTaxRateAmount(
-                                                        $quote_tax_rate_amount);
+                        $quote_tax_rate_amount
+                    );
                     $qtrR->save($quote_tax_rate);
                     $total_quote_tax_rate_amount += $quote_tax_rate_amount;
                 }
@@ -530,8 +571,10 @@ final readonly class NumberHelper
      * @param int $salesorder_id
      */
     public function calculateSalesorderTaxes(
-        int $salesorder_id, SOTRR $sotrR, SOAR $soaR): float
-    {
+        int $salesorder_id,
+        SOTRR $sotrR,
+        SOAR $soaR
+    ): float {
         $total_salesorder_tax_rate_amount = 0.00;
         $salesorder_tax_rates = $sotrR->repoSalesOrderquery($salesorder_id);
         $salesorder_tax_rates_count = $sotrR->repoCount($salesorder_id);
@@ -553,7 +596,8 @@ final readonly class NumberHelper
                                 ?? 0.00) / 100.00))
                     );
                     $salesorder_tax_rate->setSalesOrderTaxRateAmount(
-                        $salesorder_tax_rate_amount);
+                        $salesorder_tax_rate_amount
+                    );
                     $sotrR->save($salesorder_tax_rate);
                     $total_salesorder_tax_rate_amount +=
                         $salesorder_tax_rate_amount;
@@ -570,14 +614,14 @@ final readonly class NumberHelper
      */
     public function calculateInvTaxes(int $inv_id, ITRR $itrR, IAR $iaR): float
     {
-// Invoice amount Table fields:
-//  id->inv_id->item_subtotal->item_tax_total->tax_total*->total
-// Invoice Tax Rate Table fields:
-//  id->inv_id->tax_rate_id->include_item_tax->inv_tax_rate_amount*
+        // Invoice amount Table fields:
+        //  id->inv_id->item_subtotal->item_tax_total->tax_total*->total
+        // Invoice Tax Rate Table fields:
+        //  id->inv_id->tax_rate_id->include_item_tax->inv_tax_rate_amount*
 
-// Tax_total*    =    sum of inv_tax_rate_amount*   per   inv_id.
+        // Tax_total*    =    sum of inv_tax_rate_amount*   per   inv_id.
 
-// First check to see if there are any invoice taxes applied
+        // First check to see if there are any invoice taxes applied
         $total_inv_tax_rate_amount = 0.00;
         $inv_tax_rates = $itrR->repoInvquery($inv_id);
         $inv_tax_rates_count = $itrR->repoCount($inv_id);

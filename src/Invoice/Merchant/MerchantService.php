@@ -34,7 +34,8 @@ final readonly class MerchantService
          */
         $date = $array['date'] ?? '';
         $model->setDate(
-            $datetime::createFromFormat('Y-m-d', $date));
+            $datetime::createFromFormat('Y-m-d', $date)
+        );
 
         isset($array['driver']) ?
             $model->setDriver((string) $array['driver']) : '';
@@ -42,7 +43,8 @@ final readonly class MerchantService
             $model->setResponse((string) $array['response']) : '';
         isset($array['reference']) ?
             $model->setReference(
-                (string) $array['reference']) : '';
+                (string) $array['reference']
+            ) : '';
         $this->repository->save($model);
     }
 
@@ -71,7 +73,8 @@ final readonly class MerchantService
         $model->setInvId((int) $array['inv_id']);
         /** @var bool $array['merchant_response_successful'] */
         $model->setSuccessful(
-            $array['merchant_response_successful']);
+            $array['merchant_response_successful']
+        );
         /** @var \DateTime $array['merchant_response_date'] */
         $model->setDate($array['merchant_response_date']);
         /**
@@ -85,10 +88,12 @@ final readonly class MerchantService
          * @var string $array['merchant_response_reference']
          */
         $model->setReference(
-            $array['merchant_response_reference']);
+            $array['merchant_response_reference']
+        );
         /** @var string|null $array['merchant_response_provider_reference'] */
         $model->setProviderReference(
-            $array['merchant_response_provider_reference'] ?? null);
+            $array['merchant_response_provider_reference'] ?? null
+        );
         $this->repository->save($model);
     }
 

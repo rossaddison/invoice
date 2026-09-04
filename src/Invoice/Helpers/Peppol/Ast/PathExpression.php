@@ -27,5 +27,7 @@ namespace App\Invoice\Helpers\Peppol\Ast;
  */
 readonly class PathExpression implements Expression
 {
-    public function __construct(public string $xpath) {}
+    public function __construct(public string $xpath)
+    {
+    }
 }

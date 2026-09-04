@@ -52,7 +52,8 @@ final class QuotesListWidget extends Widget
         private readonly CurrentRoute $currentRoute,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly TranslatorInterface $translator,
-    ) {}
+    ) {
+    }
 
     public function withPaginator(OffsetPaginator $paginator): static
     {
@@ -198,7 +199,8 @@ final class QuotesListWidget extends Widget
         $urlCreator->__invoke([], OrderHelper::stringToArray($this->sortString));
 
         $columnCount = count(array_filter(
-            $columns, static fn(ColumnInterface $col): bool => $col->isVisible()
+            $columns,
+            static fn (ColumnInterface $col): bool => $col->isVisible()
         ));
 
         $tableClass = ($this->visible ? 'table-responsive' : 'table')
@@ -245,8 +247,13 @@ final class QuotesListWidget extends Widget
 
         if ($enableGrouping) {
             $gridView = QuotesGroupingHelper::applyGrouping(
-                $gridView, $getGroupValue, $groupTotals,
-                $decimalPlaces, $groupBy, $columnCount, $sR
+                $gridView,
+                $getGroupValue,
+                $groupTotals,
+                $decimalPlaces,
+                $groupBy,
+                $columnCount,
+                $sR
             );
         }
 

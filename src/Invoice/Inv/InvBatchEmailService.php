@@ -25,7 +25,8 @@ final readonly class InvBatchEmailService
         private MailerInterface $mailer,
         public readonly InvBatchEmailDeps $d,
         private InvPdfService $invPdfService,
-    ) {}
+    ) {
+    }
 
     /**
      * @param  list<int> $invIds
@@ -215,10 +216,18 @@ final readonly class InvBatchEmailService
     private function mailerHelper(): MailerHelper
     {
         return new MailerHelper(
-            $this->sR, $this->session, $this->translator, $this->logger, $this->mailer,
+            $this->sR,
+            $this->session,
+            $this->translator,
+            $this->logger,
+            $this->mailer,
             new MailerHelperCustomDeps(
-                $this->d->custom->ccR, $this->d->custom->qcR, $this->d->icR,
-                $this->d->custom->pcR, $this->d->custom->socR, $this->d->custom->cfR,
+                $this->d->custom->ccR,
+                $this->d->custom->qcR,
+                $this->d->icR,
+                $this->d->custom->pcR,
+                $this->d->custom->socR,
+                $this->d->custom->cfR,
                 $this->d->custom->cvR,
             ),
         );
@@ -227,9 +236,14 @@ final readonly class InvBatchEmailService
     private function templateHelper(): TemplateHelper
     {
         return new TemplateHelper(
-            $this->sR, $this->d->custom->ccR, $this->d->custom->qcR,
-            $this->d->icR, $this->d->custom->pcR, $this->d->custom->socR,
-            $this->d->custom->cfR, $this->d->custom->cvR,
+            $this->sR,
+            $this->d->custom->ccR,
+            $this->d->custom->qcR,
+            $this->d->icR,
+            $this->d->custom->pcR,
+            $this->d->custom->socR,
+            $this->d->custom->cfR,
+            $this->d->custom->cvR,
         );
     }
 }

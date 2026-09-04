@@ -243,9 +243,14 @@ final class ProductsListWidgetTest extends TestCase
     public function testWithCsrfAcceptsStringableObject(): void
     {
         $stringable = new class ('view-csrf-token') implements \Stringable {
-            public function __construct(private readonly string $value) {}
+            public function __construct(private readonly string $value)
+            {
+            }
             #[\Override]
-            public function __toString(): string { return $this->value; }
+            public function __toString(): string
+            {
+                return $this->value;
+            }
         };
 
         $widget = $this->makeWidget()->withCsrf($stringable);

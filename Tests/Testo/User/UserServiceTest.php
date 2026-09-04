@@ -25,7 +25,6 @@ use Yiisoft\User\CurrentUser;
 #[Test]
 final class UserServiceTest
 {
-
     /**
      * @return IdentityInterface&m\MockInterface
      */

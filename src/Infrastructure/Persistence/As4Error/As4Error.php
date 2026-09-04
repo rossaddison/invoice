@@ -114,18 +114,54 @@ class As4Error
         return $this;
     }
 
-    public function getErrorMessageId(): string { return $this->errorMessageId; }
-    public function getRefToMessageId(): string { return $this->refToMessageId; }
-    public function getErrorCode(): string { return $this->errorCode; }
-    public function getCategory(): string { return $this->category; }
-    public function getShortDescription(): string { return $this->shortDescription; }
-    public function getDescription(): ?string { return $this->description; }
-    public function getOriginSender(): string { return $this->originSender; }
-    public function getOriginReceiver(): string { return $this->originReceiver; }
-    public function getErrorXml(): string { return $this->errorXml; }
-    public function isSigned(): bool { return $this->isSigned; }
-    public function getReceivedAt(): DateTime { return $this->receivedAt; }
-    public function getCreatedAt(): DateTime { return $this->createdAt; }
+    public function getErrorMessageId(): string
+    {
+        return $this->errorMessageId;
+    }
+    public function getRefToMessageId(): string
+    {
+        return $this->refToMessageId;
+    }
+    public function getErrorCode(): string
+    {
+        return $this->errorCode;
+    }
+    public function getCategory(): string
+    {
+        return $this->category;
+    }
+    public function getShortDescription(): string
+    {
+        return $this->shortDescription;
+    }
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+    public function getOriginSender(): string
+    {
+        return $this->originSender;
+    }
+    public function getOriginReceiver(): string
+    {
+        return $this->originReceiver;
+    }
+    public function getErrorXml(): string
+    {
+        return $this->errorXml;
+    }
+    public function isSigned(): bool
+    {
+        return $this->isSigned;
+    }
+    public function getReceivedAt(): DateTime
+    {
+        return $this->receivedAt;
+    }
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
 
     public function isCritical(): bool
     {

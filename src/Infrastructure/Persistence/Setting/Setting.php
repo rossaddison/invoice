@@ -12,7 +12,7 @@ use Cycle\Annotated\Annotation\Entity;
 class Setting
 {
     use RequireId;
- 
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -21,7 +21,7 @@ class Setting
         private string $setting_value = '')
     {
     }
-    
+
     public function reqSettingId(): int
     {
         return $this->requireId($this->id, 'Setting');

@@ -36,8 +36,15 @@ final class CustomValueController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator,
-                $webViewRenderer, $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
         $this->customValueService = $customValueService;
     }
 
@@ -66,10 +73,11 @@ final class CustomValueController extends BaseController
      * @param CurrentRoute $currentRoute
      * @return Response
      */
-    public function field(CustomFieldRepository $customfieldRepository,
-            CustomValueRepository $customvalueRepository,
-            CurrentRoute $currentRoute): Response
-    {
+    public function field(
+        CustomFieldRepository $customfieldRepository,
+        CustomValueRepository $customvalueRepository,
+        CurrentRoute $currentRoute
+    ): Response {
         $this->rbac();
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
@@ -124,11 +132,15 @@ final class CustomValueController extends BaseController
                 if ($request->getMethod() === Method::POST) {
                     $body = $request->getParsedBody() ?? [];
                     if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                            $this->customValueService->saveCustomValue(
-                                $custom_value, $body);
-                            return
-                                $this->webService->getRedirectResponse(
-                                    'customvalue/field', ['id' => $field_id]);
+                        $this->customValueService->saveCustomValue(
+                            $custom_value,
+                            $body
+                        );
+                        return
+                            $this->webService->getRedirectResponse(
+                                'customvalue/field',
+                                ['id' => $field_id]
+                            );
                     }
                     $parameters['form'] = $form;
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -170,9 +182,11 @@ final class CustomValueController extends BaseController
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                        $this->customValueService->saveCustomValue($custom_value, $body);
-                        return $this->webService->getRedirectResponse(
-                            'customvalue/field', ['id' => $custom_field_id]);
+                    $this->customValueService->saveCustomValue($custom_value, $body);
+                    return $this->webService->getRedirectResponse(
+                        'customvalue/field',
+                        ['id' => $custom_field_id]
+                    );
                 }
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -242,10 +256,11 @@ final class CustomValueController extends BaseController
      */
     private function customvalue(
         CurrentRoute $currentRoute,
-        CustomValueRepository $customvalueRepository): ?CustomValue
-    {
+        CustomValueRepository $customvalueRepository
+    ): ?CustomValue {
         return $customvalueRepository->repoCustomValuequery(
-            (int) $currentRoute->getArgument('id'));
+            (int) $currentRoute->getArgument('id')
+        );
     }
 
     /**

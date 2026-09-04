@@ -92,8 +92,12 @@ final class QuoteItemController extends BaseController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? '';
                 if (is_array($body)) {
-                    $this->quoteitemService->addQuoteItemProduct($quoteItem, $body, $quote_id,
-                        new QiAddProductDeps($pR, $qiar, new QIAS($qiar, $qiR), $uR, $trR, $this->translator));
+                    $this->quoteitemService->addQuoteItemProduct(
+                        $quoteItem,
+                        $body,
+                        $quote_id,
+                        new QiAddProductDeps($pR, $qiar, new QIAS($qiar, $qiR), $uR, $trR, $this->translator)
+                    );
                     $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
                 }

@@ -43,7 +43,8 @@ final readonly class HomeCareRunSheetApplyService
         private IR $iR,
         private WR $wR,
         private InvMarkSentService $invMarkSentService,
-    ) {}
+    ) {
+    }
 
     /**
      * @return list<int> invoice ids actually flipped to sent — see

@@ -98,8 +98,14 @@ final class InvItemServiceCreditTest extends TestCase
         ['aciiR' => $aciiR, 'service' => $service] = $this->makeService();
 
         $basisItem = new InvItem(
-            id: 719, name: 'Cleen Screans', quantity: 2.00, price: 10.00,
-            discount_amount: 0.00, inv_id: 289, tax_rate_id: 3, product_id: 7,
+            id: 719,
+            name: 'Cleen Screans',
+            quantity: 2.00,
+            price: 10.00,
+            discount_amount: 0.00,
+            inv_id: 289,
+            tax_rate_id: 3,
+            product_id: 7,
         );
         $iiR = $this->createMock(InvItemRepository::class);
         $iiR->expects($this->once())->method('repoInvquery')->with(289)->willReturn($this->reader([$basisItem]));
@@ -120,7 +126,7 @@ final class InvItemServiceCreditTest extends TestCase
                     && $saved->reqAllowanceChargeId() === 5
                     && $saved->getAmount() === '-5'
                     && $saved->getVatOrTax() === '-1'
-                    ;
+                ;
             })
         );
 

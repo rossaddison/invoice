@@ -11,7 +11,6 @@ use DateTimeImmutable;
  */
 trait InvTrait3
 {
-
     public function getContractId(): ?int
     {
         return $this->contract_id;
@@ -29,8 +28,10 @@ trait InvTrait3
 
     public function setStatusId(int $status_id): void
     {
-        $this->status_id = (!in_array($status_id,
-                [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]) ? 1 : $status_id);
+        $this->status_id = (!in_array(
+            $status_id,
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+        ) ? 1 : $status_id);
     }
 
     public function isDeleted(): bool

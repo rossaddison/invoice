@@ -45,9 +45,9 @@ final class ProjectController extends BaseController
      * @param ProjectRepository $projectRepository
      */
     public function index(
-            ProjectRepository $projectRepository,
-            #[Query('page')] ?int $page = null): \Psr\Http\Message\ResponseInterface
-    {
+        ProjectRepository $projectRepository,
+        #[Query('page')] ?int $page = null
+    ): \Psr\Http\Message\ResponseInterface {
         $canEdit = $this->rbac();
         $parameters = [
             'page' => $page > 0 ? $page : 1,
@@ -195,8 +195,8 @@ final class ProjectController extends BaseController
      */
     private function project(
         CurrentRoute $currentRoute,
-        ProjectRepository $pjtR): ?Project
-    {
+        ProjectRepository $pjtR
+    ): ?Project {
         return $pjtR->repoProjectquery((int) $currentRoute->getArgument('id'));
     }
 

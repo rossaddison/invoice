@@ -82,9 +82,11 @@ trait QuoteCalcTrait
      *                      allowance: float|mixed,
      *                      total: float|mixed}
      */
-    private function quoteCalculateTotalsofItemTotals(int $quote_id,
-        QIR $qiR, QIAR $qiaR): array
-    {
+    private function quoteCalculateTotalsofItemTotals(
+        int $quote_id,
+        QIR $qiR,
+        QIAR $qiaR
+    ): array {
         $get_all_items_in_quote = $qiR->repoQuoteItemIdquery($quote_id);
         $grand_sub_total = 0.00;
         $grand_taxtotal = 0.00;

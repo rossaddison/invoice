@@ -73,7 +73,8 @@ final class OnlinePaymentRecorderService
         $this->paymentService->addPaymentViaPaymentHandler($payment, $payment_array);
 
         $payment_success_msg = sprintf($this->translator->translate(
-                    'online.payment.payment.successful'), $ctx->invoice_number);
+            'online.payment.payment.successful'
+        ), $ctx->invoice_number);
 
         $this->recordAuditRow($ctx, true, $payment_success_msg);
 
@@ -98,7 +99,10 @@ final class OnlinePaymentRecorderService
     {
         $payment_failure_msg = sprintf(
             $this->translator->translate(
-                'online.payment.payment.failed'), $ctx->invoice_number);
+                'online.payment.payment.failed'
+            ),
+            $ctx->invoice_number
+        );
 
         $this->recordAuditRow($ctx, false, $payment_failure_msg);
 

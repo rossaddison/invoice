@@ -21,7 +21,8 @@ trait InvGuestTrait
                        ->load('client')
                        ->where(['url_key' => $url_key])
                        ->andWhere(
-                               ['status_id' => ['in' => new Parameter([2,3,4])]])
+                           ['status_id' => ['in' => new Parameter([2,3,4])]]
+                       )
                        ->where('deleted_at', null);
         return  $query->fetchOne() ?: null;
     }
@@ -39,14 +40,14 @@ trait InvGuestTrait
                       ->count();
     }
 
-    public function repoClientGuestCount(int $inv_id, array $user_client = []):
-        Select
+    public function repoClientGuestCount(int $inv_id, array $user_client = []): Select
     {
         return $this->select()
                       ->where(['id' => $inv_id])
                       ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
                       ->andWhere(['client_id' => ['in' => new Parameter(
-                              $user_client)]])
+                          $user_client
+                      )]])
                       ->where('deleted_at', null);
     }
 

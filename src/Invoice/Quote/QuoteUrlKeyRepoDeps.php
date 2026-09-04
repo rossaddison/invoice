@@ -22,5 +22,6 @@ final class QuoteUrlKeyRepoDeps
         public readonly QIAR $qiaR,
         public readonly ACQIR $acqiR,
         public readonly QR $qR,
-    ) {}
+    ) {
+    }
 }

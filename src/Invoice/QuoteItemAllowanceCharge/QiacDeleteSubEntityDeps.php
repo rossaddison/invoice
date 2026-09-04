@@ -15,5 +15,6 @@ final class QiacDeleteSubEntityDeps
         public readonly QuoteItemAmountRepository $qiaR,
         public readonly QuoteAllowanceChargeRepository $acqR,
         public readonly QuoteItemAllowanceChargeRepository $acqiR,
-    ) {}
+    ) {
+    }
 }

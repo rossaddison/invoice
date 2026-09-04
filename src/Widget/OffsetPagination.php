@@ -141,8 +141,11 @@ final class OffsetPagination extends Widget
             if ($page === null) {
                 $result .= (string) Html::span('…', ['class' => 'page-link']);
             } else {
-                $result .= (string) Html::a((string) $page,
-                        $this->getPageLink($page), ['class' => 'page-link']);
+                $result .= (string) Html::a(
+                    (string) $page,
+                    $this->getPageLink($page),
+                    ['class' => 'page-link']
+                );
             }
             $result .= Html::closeTag('li');
         }

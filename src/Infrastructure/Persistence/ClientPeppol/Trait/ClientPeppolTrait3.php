@@ -13,7 +13,6 @@ use RequireId;
  */
 trait ClientPeppolTrait3
 {
-
     public function setSupplierAssignedAccountId(string $input): void
     {
         $this->supplier_assigned_accountid = $input;

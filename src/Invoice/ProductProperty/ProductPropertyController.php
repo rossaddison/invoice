@@ -143,8 +143,10 @@ final class ProductPropertyController extends BaseController
     ): Response {
         $productProperty = $this->productproperty($currentRoute, $ppR);
         if ($productProperty) {
-            $form = ProductPropertyForm::show($productProperty,
-                $productProperty->reqProductId());
+            $form = ProductPropertyForm::show(
+                $productProperty,
+                $productProperty->reqProductId()
+            );
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'productproperty/edit',
@@ -178,10 +180,11 @@ final class ProductPropertyController extends BaseController
      */
     private function productproperty(
         CurrentRoute $currentRoute,
-        ProductPropertyRepository $ppR): ?ProductProperty
-    {
+        ProductPropertyRepository $ppR
+    ): ?ProductProperty {
         return $ppR->repoProductPropertyLoadedquery(
-            (int) $currentRoute->getArgument('id'));
+            (int) $currentRoute->getArgument('id')
+        );
     }
 
     /**
@@ -201,11 +204,15 @@ final class ProductPropertyController extends BaseController
      */
     public function view(CurrentRoute $currentRoute, ProductPropertyRepository $productpropertyRepository): \Psr\Http\Message\ResponseInterface
     {
-        $productProperty = $this->productproperty($currentRoute,
-            $productpropertyRepository);
+        $productProperty = $this->productproperty(
+            $currentRoute,
+            $productpropertyRepository
+        );
         if ($productProperty) {
-            $form = ProductPropertyForm::show($productProperty,
-                $productProperty->reqProductId());
+            $form = ProductPropertyForm::show(
+                $productProperty,
+                $productProperty->reqProductId()
+            );
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'productproperty/view',

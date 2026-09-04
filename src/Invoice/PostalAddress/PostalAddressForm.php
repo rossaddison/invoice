@@ -33,12 +33,11 @@ final class PostalAddressForm extends FormModel
     #[Length(min: 0, max: 50)]
     private ?string $country = '';
     private ?int $client_id = null;
-    
+
     public static function show(
         PostalAddress $postalAddress,
         ?int $client_id
-    ): self
-    {
+    ): self {
         $form = new self();
         $form->street_name = $postalAddress->getStreetName();
         $form->additional_street_name = $postalAddress->getAdditionalStreetName();

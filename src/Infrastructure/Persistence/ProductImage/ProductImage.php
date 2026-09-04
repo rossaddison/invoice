@@ -17,7 +17,7 @@ use DateTimeImmutable;
 class ProductImage
 {
     use RequireId;
- 
+
     #[BelongsTo(target: Product::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Product $product = null;
 

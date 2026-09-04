@@ -33,6 +33,6 @@ return [
     AssignmentsStorageInterface::class =>
         static function (DatabaseManager $databaseManager): CycleAssignmentsStorage {
             return new CycleAssignmentsStorage($databaseManager->database());
-    },
+        },
     AccessCheckerInterface::class => Manager::class,
 ];

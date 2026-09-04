@@ -7,7 +7,6 @@ namespace App\Invoice\Inv\Trait;
 use App\Infrastructure\Persistence\{
     Group\Group, Inv\Inv, InvAmount\InvAmount, User\User
 };
-
 use App\Invoice\{
     Inv\InvCreditDeps,
     Inv\InvCreateCreditCoreDeps,
@@ -69,8 +68,10 @@ trait Credit
     {
         $userClient = $d->ucR->repoUserquery($clientId);
         if (null === $userClient || null === $userClient->getClient()) {
-            $this->flashMessage('warning',
-                $this->translator->translate('user.client.no.account'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('user.client.no.account')
+            );
             return '';
         }
         return ($userClient->getClient()?->getClientName() ?? '')
@@ -133,9 +134,11 @@ trait Credit
         // In the event of the database being manually edited
         // (highly unlikely) present this warning anyway
         if (!empty($clientFullname)) {
-            $this->flashMessage('warning',
+            $this->flashMessage(
+                'warning',
                 $this->translator->translate('user.inv.more.than.one.assigned')
-                    . ' ' . $clientFullname);
+                    . ' ' . $clientFullname
+            );
         }
         return $this->webService->getRedirectResponse('inv/index');
     }
@@ -156,7 +159,13 @@ trait Credit
         $result    = null;
         if ($basis_inv !== null) {
             $result = $this->processCreditConfirm(
-                $basis_inv, (int) $body['inv_id'], $body, $formHydrator, $core, $userDeps);
+                $basis_inv,
+                (int) $body['inv_id'],
+                $body,
+                $formHydrator,
+                $core,
+                $userDeps
+            );
         }
         return $result ?? $this->factory->createResponse(Json::encode([
             'success' => 0,
@@ -193,7 +202,7 @@ trait Credit
             'password'            => $body['password'],
             'payment_method'      => 0,
             'terms'               => '',
-            'delivery_location_id'=> $basis_inv->getDeliveryLocationId(),
+            'delivery_location_id' => $basis_inv->getDeliveryLocationId(),
         ];
         $new_inv = new Inv();
         $form    = new InvForm();
@@ -205,22 +214,43 @@ trait Credit
                 $saved_inv_id = 0;
                 $this->inv_service->withTransaction(
                     function () use (
-                        $user, $new_inv, $ajax_body, $core, $basis_inv_id,
-                        $basis_inv, &$saved_inv_id
+                        $user,
+                        $new_inv,
+                        $ajax_body,
+                        $core,
+                        $basis_inv_id,
+                        $basis_inv,
+                        &$saved_inv_id
                     ): void {
                         $saved_inv    = $this->inv_service->saveInv(
-                            $user, $new_inv, $ajax_body, $this->sR, $core->gR);
+                            $user,
+                            $new_inv,
+                            $ajax_body,
+                            $this->sR,
+                            $core->gR
+                        );
                         $saved_inv_id = $saved_inv->reqId();
                         if ($saved_inv_id > 0) {
                             $savedInvId = (string) $saved_inv_id;
                             $this->inv_item_service->initializeCreditInvItems(
-                                $basis_inv_id, $savedInvId, $core->iiR, $core->iiaR);
+                                $basis_inv_id,
+                                $savedInvId,
+                                $core->iiR,
+                                $core->iiaR
+                            );
                             $this->inv_allowance_charge_service->initializeCreditInvAllowanceCharges(
-                                $basis_inv_id, $saved_inv_id);
+                                $basis_inv_id,
+                                $saved_inv_id
+                            );
                             $this->inv_amount_service->initializeCreditInvAmount(
-                                new InvAmount(), $basis_inv_id, $savedInvId);
+                                new InvAmount(),
+                                $basis_inv_id,
+                                $savedInvId
+                            );
                             $this->inv_tax_rate_service->initializeCreditInvTaxRate(
-                                $basis_inv_id, $savedInvId);
+                                $basis_inv_id,
+                                $savedInvId
+                            );
                             $basis_inv->setCreditinvoiceParentId($saved_inv_id);
                             $core->iR->save($basis_inv);
                         }
@@ -230,7 +260,8 @@ trait Credit
                     return $this->factory->createResponse(Json::encode([
                         'success'       => 1,
                         'flash_message' => $this->translator->translate(
-                            'credit.note.creation.successful'),
+                            'credit.note.creation.successful'
+                        ),
                     ]));
                 }
             }

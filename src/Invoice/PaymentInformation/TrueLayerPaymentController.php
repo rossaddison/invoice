@@ -98,7 +98,10 @@ final class TrueLayerPaymentController
     public function trueLayerInForm(CurrentRoute $currentRoute): Response
     {
         $resolved = $this->resolveConfiguredInvoiceWithBalance(
-            $currentRoute, $this->trueLayerPaymentService, 'TrueLayer');
+            $currentRoute,
+            $this->trueLayerPaymentService,
+            'TrueLayer'
+        );
         if ($resolved instanceof Response) {
             return $resolved;
         }

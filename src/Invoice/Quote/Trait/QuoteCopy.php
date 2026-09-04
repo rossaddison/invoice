@@ -58,8 +58,10 @@ trait QuoteCopy
         $original = $core->qR->repoQuoteUnloadedquery($quote_id);
         // Accept client_ids[] (multiselect) or fall back to single client_id
         /** @var int[] $clientIds */
-        $clientIds = array_values(array_filter(array_map('intval',
-            (array)($data_quote_js['client_ids'] ?? [$data_quote_js['client_id'] ?? '0']))));
+        $clientIds = array_values(array_filter(array_map(
+            'intval',
+            (array)($data_quote_js['client_ids'] ?? [$data_quote_js['client_id'] ?? '0'])
+        )));
 
         if (null === $original || empty($clientIds)) {
             return $this->factory->createResponse(Json::encode(['success' => 0]));
@@ -133,9 +135,11 @@ trait QuoteCopy
      * so pass the qaR to find this new Quote Amount
      * Related logic: InvController A)
      */
-    private function quoteToQuoteQuoteAmount(int $quoteId, int $copiedId,
-        QAR $qaR): void
-    {
+    private function quoteToQuoteQuoteAmount(
+        int $quoteId,
+        int $copiedId,
+        QAR $qaR
+    ): void {
         $original = $qaR->repoQuotequery($quoteId);
         if (null !== $original) {
             $array = [];
@@ -151,13 +155,18 @@ trait QuoteCopy
             $copied = $qaR->repoQuotequery($copiedId);
             null !== $copied ?
                 $this->quote_amount_service->saveQuoteAmountViaCalculations(
-                    $copied, $array) : '';
+                    $copied,
+                    $array
+                ) : '';
         }
     }
 
-    private function quoteToQuoteQuoteCustom(int $quote_id,
-        int $copy_id, QCR $qcR, FormHydrator $formHydrator): void
-    {
+    private function quoteToQuoteQuoteCustom(
+        int $quote_id,
+        int $copy_id,
+        QCR $qcR,
+        FormHydrator $formHydrator
+    ): void {
         $quote_customs = $qcR->repoFields($quote_id);
         /** @var QuoteCustom $quote_custom */
         foreach ($quote_customs as $quote_custom) {
@@ -170,7 +179,9 @@ trait QuoteCopy
             $form = new QuoteCustomForm();
             if ($formHydrator->populateAndValidate($form, $copy_custom)) {
                 $this->quote_custom_service->saveQuoteCustom(
-                    $entity, $copy_custom);
+                    $entity,
+                    $copy_custom
+                );
             }
         }
     }
@@ -216,19 +227,30 @@ trait QuoteCopy
             $form = new QuoteItemForm();
             if ($formHydrator->populateAndValidate($form, $copy_item)) {
                 $this->quote_item_service->addQuoteItemProductTask(
-                    $newQuoteItem, $copy_item, (string) $new_quote_id,
-                    new QiAddProductTaskDeps($items->pR, $items->taskR, $qiaR, $qiaS, $items->unR, $items->trR, $this->translator));
+                    $newQuoteItem,
+                    $copy_item,
+                    (string) $new_quote_id,
+                    new QiAddProductTaskDeps($items->pR, $items->taskR, $qiaR, $qiaS, $items->unR, $items->trR, $this->translator)
+                );
                 // All the original allowance charges associated with the quote
                 // item will have to be copied as well
-                $this->copyQuoteItemAllowanceCharges($origQuoteItemId,
-                    $core->acqiR, $new_quote_id, $newQuoteItem);
+                $this->copyQuoteItemAllowanceCharges(
+                    $origQuoteItemId,
+                    $core->acqiR,
+                    $new_quote_id,
+                    $newQuoteItem
+                );
             }
 
         } // items as quote_item
     }
 
-    private function copyQuoteItemAllowanceCharges(int $origQuoteItemId,
-        ACQIR $acqiR, int $new_quote_id, QuoteItem $newQuoteItem): void {
+    private function copyQuoteItemAllowanceCharges(
+        int $origQuoteItemId,
+        ACQIR $acqiR,
+        int $new_quote_id,
+        QuoteItem $newQuoteItem
+    ): void {
         // Note: QuoteAllowanceCharges are irrelevant here since they relate
         // to the final grand totals and not individual items
         // Both the individual item and the grand total inherit from the
@@ -264,9 +286,12 @@ trait QuoteCopy
         }
     }
 
-    private function quoteToQuoteQuoteTaxRates(int $quote_id,
-        int $copy_id, QTRR $qtrR, FormHydrator $formHydrator): void
-    {
+    private function quoteToQuoteQuoteTaxRates(
+        int $quote_id,
+        int $copy_id,
+        QTRR $qtrR,
+        FormHydrator $formHydrator
+    ): void {
         // Get all tax rates that have been setup for the quote
         $quote_tax_rates = $qtrR->repoQuotequery($quote_id);
         /** @var QuoteTaxRate $quote_tax_rate */
@@ -283,8 +308,10 @@ trait QuoteCopy
             $entity = new QuoteTaxRate();
             $form = new QuoteTaxRateForm();
             if ($formHydrator->populateAndValidate($form, $copy_tax_rate)) {
-                $this->quote_tax_rate_service->saveQuoteTaxRate($entity,
-                    $copy_tax_rate);
+                $this->quote_tax_rate_service->saveQuoteTaxRate(
+                    $entity,
+                    $copy_tax_rate
+                );
             }
         }
     }
@@ -303,9 +330,12 @@ trait QuoteCopy
         return $productIds;
     }
 
-    private function quoteToQuoteQuoteAllowanceCharges(int $quote_id,
-        int $copy_id, ACQR $acqR, FormHydrator $formHydrator): void
-    {
+    private function quoteToQuoteQuoteAllowanceCharges(
+        int $quote_id,
+        int $copy_id,
+        ACQR $acqR,
+        FormHydrator $formHydrator
+    ): void {
         $quote_allowance_charges = $acqR->repoACQquery($quote_id);
         /**
          * @var QuoteAllowanceCharge $quote_allowance_charge
@@ -320,10 +350,12 @@ trait QuoteCopy
             ];
             $quoteAllowanceCharge = new QuoteAllowanceCharge();
             $form = new QuoteAllowanceChargeForm();
-            if ($formHydrator->populateAndValidate($form,
-                    $copy_quote_allowance_charge)) {
-                    $this->qac_Service->saveQuoteAllowanceCharge(
-                        $quoteAllowanceCharge, $copy_quote_allowance_charge);
+            if ($formHydrator->populateAndValidate(
+                $form,
+                $copy_quote_allowance_charge
+            )) {
+                $this->qac_Service->saveQuoteAllowanceCharge(
+                    $quoteAllowanceCharge, $copy_quote_allowance_charge);
             }
         }
     }

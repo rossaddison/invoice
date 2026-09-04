@@ -14,7 +14,7 @@ class GoogleTranslateTypeNotFoundExceptionTest extends TestCase
     public function testExceptionInheritance(): void
     {
         $exception = new GoogleTranslateTypeNotFoundException();
-        
+
         $this->assertInstanceOf(RuntimeException::class, $exception);
         $this->assertInstanceOf(FriendlyExceptionInterface::class, $exception);
     }
@@ -22,20 +22,20 @@ class GoogleTranslateTypeNotFoundExceptionTest extends TestCase
     public function testGetName(): void
     {
         $exception = new GoogleTranslateTypeNotFoundException();
-        
+
         $expectedName = 'There appears to be no language related file selected.';
-        
+
         $this->assertSame($expectedName, $exception->getName());
     }
 
     public function testGetSolution(): void
     {
         $exception = new GoogleTranslateTypeNotFoundException();
-        
+
         $expectedSolution = <<<'SOLUTION'
                 Please try again later.
             SOLUTION;
-        
+
         $this->assertSame($expectedSolution, $exception->getSolution());
     }
 
@@ -43,7 +43,7 @@ class GoogleTranslateTypeNotFoundExceptionTest extends TestCase
     {
         $exception = new GoogleTranslateTypeNotFoundException();
         $name = $exception->getName();
-        
+
         $this->assertStringContainsString('no language', $name);
         $this->assertStringContainsString('file selected', $name);
         $this->assertStringContainsString('appears to be', $name);
@@ -53,7 +53,7 @@ class GoogleTranslateTypeNotFoundExceptionTest extends TestCase
     {
         $exception = new GoogleTranslateTypeNotFoundException();
         $solution = $exception->getSolution();
-        
+
         $this->assertStringContainsString('try again later', $solution);
     }
 
@@ -61,7 +61,7 @@ class GoogleTranslateTypeNotFoundExceptionTest extends TestCase
     {
         $message = 'Language file not found';
         $exception = new GoogleTranslateTypeNotFoundException($message);
-        
+
         $this->assertSame($message, $exception->getMessage());
     }
 
@@ -70,7 +70,7 @@ class GoogleTranslateTypeNotFoundExceptionTest extends TestCase
         $message = 'No language file available';
         $code = 404;
         $exception = new GoogleTranslateTypeNotFoundException($message, $code);
-        
+
         $this->assertSame($message, $exception->getMessage());
         $this->assertSame($code, $exception->getCode());
     }
@@ -79,7 +79,7 @@ class GoogleTranslateTypeNotFoundExceptionTest extends TestCase
     {
         $previousException = new RuntimeException('File not found');
         $exception = new GoogleTranslateTypeNotFoundException('Language file error', 0, $previousException);
-        
+
         $this->assertSame($previousException, $exception->getPrevious());
     }
 
@@ -87,7 +87,7 @@ class GoogleTranslateTypeNotFoundExceptionTest extends TestCase
     {
         $this->expectException(GoogleTranslateTypeNotFoundException::class);
         $this->expectExceptionMessage('File not selected');
-        
+
         throw new GoogleTranslateTypeNotFoundException('File not selected');
     }
 
@@ -104,35 +104,35 @@ class GoogleTranslateTypeNotFoundExceptionTest extends TestCase
     public function testGetNameReturnType(): void
     {
         $exception = new GoogleTranslateTypeNotFoundException();
-        
+
         $this->assertIsString($exception->getName());
     }
 
     public function testGetSolutionReturnType(): void
     {
         $exception = new GoogleTranslateTypeNotFoundException();
-        
+
         $this->assertIsString($exception->getSolution());
     }
 
     public function testGetNameIsNotEmpty(): void
     {
         $exception = new GoogleTranslateTypeNotFoundException();
-        
+
         $this->assertNotEmpty($exception->getName());
     }
 
     public function testGetSolutionIsNotEmpty(): void
     {
         $exception = new GoogleTranslateTypeNotFoundException();
-        
+
         $this->assertNotEmpty($exception->getSolution());
     }
 
     public function testExceptionDefaultValues(): void
     {
         $exception = new GoogleTranslateTypeNotFoundException();
-        
+
         $this->assertSame('', $exception->getMessage());
         $this->assertSame(0, $exception->getCode());
         $this->assertNull($exception->getPrevious());
@@ -141,7 +141,7 @@ class GoogleTranslateTypeNotFoundExceptionTest extends TestCase
     public function testExceptionStackTrace(): void
     {
         $exception = new GoogleTranslateTypeNotFoundException('Stack test');
-        
+
         $this->assertIsArray($exception->getTrace());
         $this->assertIsString($exception->getTraceAsString());
     }
@@ -149,7 +149,7 @@ class GoogleTranslateTypeNotFoundExceptionTest extends TestCase
     public function testExceptionFile(): void
     {
         $exception = new GoogleTranslateTypeNotFoundException();
-        
+
         $this->assertIsString($exception->getFile());
         $this->assertIsInt($exception->getLine());
     }
@@ -157,9 +157,9 @@ class GoogleTranslateTypeNotFoundExceptionTest extends TestCase
     public function testExceptionToString(): void
     {
         $exception = new GoogleTranslateTypeNotFoundException('String test');
-        
+
         $stringRepresentation = (string) $exception;
-        
+
         $this->assertIsString($stringRepresentation);
         $this->assertStringContainsString('GoogleTranslateTypeNotFoundException', $stringRepresentation);
         $this->assertStringContainsString('String test', $stringRepresentation);
@@ -168,7 +168,7 @@ class GoogleTranslateTypeNotFoundExceptionTest extends TestCase
     public function testExceptionImplementsInterface(): void
     {
         $exception = new GoogleTranslateTypeNotFoundException();
-        
+
         $this->assertTrue(method_exists($exception, 'getName'));
         $this->assertTrue(method_exists($exception, 'getSolution'));
     }

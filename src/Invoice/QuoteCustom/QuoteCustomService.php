@@ -25,7 +25,8 @@ final readonly class QuoteCustomService
     private function persist(array $array, QuoteCustom $model): void
     {
         if (isset($array['quote_id'])) {
-            $quote = $this->qR->repoQuoteUnLoadedquery((int) $array['quote_id']
+            $quote = $this->qR->repoQuoteUnLoadedquery(
+                (int) $array['quote_id']
             );
             if ($quote) {
                 $model->setQuote($quote);

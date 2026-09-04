@@ -22,7 +22,7 @@ use Yiisoft\Security\PasswordHasher;
 class User
 {
     use RequireId;
- 
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -62,7 +62,7 @@ class User
     {
         return $this->requireId($this->id, 'User');
     }
-    
+
     public function getLogin(): string
     {
         return $this->login;

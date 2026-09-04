@@ -16,7 +16,7 @@ use DateTimeImmutable;
 class PaymentPeppol
 {
     use RequireId;
-    
+
     #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
@@ -55,7 +55,7 @@ class PaymentPeppol
     {
         return $this->id !== null;
     }
-    
+
     public function setId(int $id): void
     {
         $this->id = $id;

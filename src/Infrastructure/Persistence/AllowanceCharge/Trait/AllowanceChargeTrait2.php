@@ -12,7 +12,6 @@ use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
  */
 trait AllowanceChargeTrait2
 {
-
     public function setBaseAmount(int $base_amount): void
     {
         $this->base_amount = $base_amount;

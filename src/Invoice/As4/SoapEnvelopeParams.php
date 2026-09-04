@@ -30,5 +30,6 @@ final readonly class SoapEnvelopeParams
         public string $payloadContentId,
         /** ISO 8601 timestamp; null = current UTC time */
         public ?string $timestamp = null,
-    ) {}
+    ) {
+    }
 }

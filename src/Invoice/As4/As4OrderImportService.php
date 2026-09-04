@@ -64,7 +64,8 @@ final class As4OrderImportService implements As4PayloadHandlerInterface
         private readonly SalesOrderItemRepository $salesOrderItemRepository,
         private readonly SettingRepositoryInterface $settingRepository,
         private readonly LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function handle(string $payloadXml, string $senderPartyId, string $action): void

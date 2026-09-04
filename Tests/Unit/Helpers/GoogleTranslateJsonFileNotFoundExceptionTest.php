@@ -14,7 +14,7 @@ class GoogleTranslateJsonFileNotFoundExceptionTest extends TestCase
     public function testExceptionInheritance(): void
     {
         $exception = new GoogleTranslateJsonFileNotFoundException();
-        
+
         $this->assertInstanceOf(RuntimeException::class, $exception);
         $this->assertInstanceOf(FriendlyExceptionInterface::class, $exception);
     }
@@ -22,20 +22,20 @@ class GoogleTranslateJsonFileNotFoundExceptionTest extends TestCase
     public function testGetName(): void
     {
         $exception = new GoogleTranslateJsonFileNotFoundException();
-        
+
         $expectedName = 'The Json file that you downloaded at https://console.cloud.google.com/iam-admin/serviceaccounts/details/{unique_project_id}/keys?project={your_project_name} cannot be found in .../src/Invoice/Google_translate_unique_folder.';
-        
+
         $this->assertSame($expectedName, $exception->getName());
     }
 
     public function testGetSolution(): void
     {
         $exception = new GoogleTranslateJsonFileNotFoundException();
-        
+
         $expectedSolution = <<<'SOLUTION'
                 Please try again
             SOLUTION;
-        
+
         $this->assertSame($expectedSolution, $exception->getSolution());
     }
 
@@ -43,7 +43,7 @@ class GoogleTranslateJsonFileNotFoundExceptionTest extends TestCase
     {
         $message = 'JSON file not found';
         $exception = new GoogleTranslateJsonFileNotFoundException($message);
-        
+
         $this->assertSame($message, $exception->getMessage());
     }
 
@@ -52,7 +52,7 @@ class GoogleTranslateJsonFileNotFoundExceptionTest extends TestCase
         $message = 'JSON file not found';
         $code = 404;
         $exception = new GoogleTranslateJsonFileNotFoundException($message, $code);
-        
+
         $this->assertSame($message, $exception->getMessage());
         $this->assertSame($code, $exception->getCode());
     }
@@ -61,7 +61,7 @@ class GoogleTranslateJsonFileNotFoundExceptionTest extends TestCase
     {
         $previousException = new RuntimeException('Previous exception');
         $exception = new GoogleTranslateJsonFileNotFoundException('Current exception', 0, $previousException);
-        
+
         $this->assertSame($previousException, $exception->getPrevious());
     }
 
@@ -69,7 +69,7 @@ class GoogleTranslateJsonFileNotFoundExceptionTest extends TestCase
     {
         $this->expectException(GoogleTranslateJsonFileNotFoundException::class);
         $this->expectExceptionMessage('File not found');
-        
+
         throw new GoogleTranslateJsonFileNotFoundException('File not found');
     }
 
@@ -86,14 +86,14 @@ class GoogleTranslateJsonFileNotFoundExceptionTest extends TestCase
     public function testGetNameReturnType(): void
     {
         $exception = new GoogleTranslateJsonFileNotFoundException();
-        
+
         $this->assertIsString($exception->getName());
     }
 
     public function testGetSolutionReturnType(): void
     {
         $exception = new GoogleTranslateJsonFileNotFoundException();
-        
+
         $this->assertIsString($exception->getSolution());
     }
 
@@ -101,7 +101,7 @@ class GoogleTranslateJsonFileNotFoundExceptionTest extends TestCase
     {
         $exception = new GoogleTranslateJsonFileNotFoundException();
         $name = $exception->getName();
-        
+
         $this->assertStringContainsString('Json file', $name);
         $this->assertStringContainsString('console.cloud.google.com', $name);
         $this->assertStringContainsString('Google_translate_unique_folder', $name);
@@ -111,14 +111,14 @@ class GoogleTranslateJsonFileNotFoundExceptionTest extends TestCase
     {
         $exception = new GoogleTranslateJsonFileNotFoundException();
         $solution = $exception->getSolution();
-        
+
         $this->assertStringContainsString('try again', $solution);
     }
 
     public function testExceptionDefaultValues(): void
     {
         $exception = new GoogleTranslateJsonFileNotFoundException();
-        
+
         $this->assertSame('', $exception->getMessage());
         $this->assertSame(0, $exception->getCode());
         $this->assertNull($exception->getPrevious());
@@ -127,7 +127,7 @@ class GoogleTranslateJsonFileNotFoundExceptionTest extends TestCase
     public function testExceptionStackTrace(): void
     {
         $exception = new GoogleTranslateJsonFileNotFoundException('Stack trace test');
-        
+
         $this->assertIsArray($exception->getTrace());
         $this->assertIsString($exception->getTraceAsString());
     }
@@ -135,7 +135,7 @@ class GoogleTranslateJsonFileNotFoundExceptionTest extends TestCase
     public function testExceptionFile(): void
     {
         $exception = new GoogleTranslateJsonFileNotFoundException();
-        
+
         $this->assertIsString($exception->getFile());
         $this->assertIsInt($exception->getLine());
     }
@@ -143,9 +143,9 @@ class GoogleTranslateJsonFileNotFoundExceptionTest extends TestCase
     public function testExceptionToString(): void
     {
         $exception = new GoogleTranslateJsonFileNotFoundException('String test');
-        
+
         $stringRepresentation = (string) $exception;
-        
+
         $this->assertIsString($stringRepresentation);
         $this->assertStringContainsString('GoogleTranslateJsonFileNotFoundException', $stringRepresentation);
         $this->assertStringContainsString('String test', $stringRepresentation);
@@ -154,7 +154,7 @@ class GoogleTranslateJsonFileNotFoundExceptionTest extends TestCase
     public function testExceptionImplementsInterface(): void
     {
         $exception = new GoogleTranslateJsonFileNotFoundException();
-        
+
         $this->assertTrue(method_exists($exception, 'getName'));
         $this->assertTrue(method_exists($exception, 'getSolution'));
     }

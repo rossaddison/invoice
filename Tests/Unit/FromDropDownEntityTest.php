@@ -10,11 +10,11 @@ use PHPUnit\Framework\TestCase;
 final class FromDropDownEntityTest extends TestCase
 {
     public string $testExampleCom = 'test@example.com';
-    
+
     public function testConstructorWithDefaults(): void
     {
         $fromDropDown = new FromDropDown();
-        
+
         $this->assertFalse($fromDropDown->hasIdentity());
         $this->assertSame('', $fromDropDown->getEmail());
         $this->assertFalse($fromDropDown->getInclude());
@@ -24,7 +24,7 @@ final class FromDropDownEntityTest extends TestCase
     public function testConstructorWithAllParameters(): void
     {
         $fromDropDown = new FromDropDown(1, $this->testExampleCom, true, true);
-        
+
         $this->assertSame(1, $fromDropDown->reqId());
         $this->assertSame($this->testExampleCom, $fromDropDown->getEmail());
         $this->assertTrue($fromDropDown->getInclude());
@@ -35,7 +35,7 @@ final class FromDropDownEntityTest extends TestCase
     {
         $fromDropDown = new FromDropDown();
         $fromDropDown->setId(42);
-        
+
         $this->assertSame(42, $fromDropDown->reqId());
     }
 
@@ -43,7 +43,7 @@ final class FromDropDownEntityTest extends TestCase
     {
         $fromDropDown = new FromDropDown();
         $fromDropDown->setEmail('admin@company.com');
-        
+
         $this->assertSame('admin@company.com', $fromDropDown->getEmail());
     }
 
@@ -51,9 +51,9 @@ final class FromDropDownEntityTest extends TestCase
     {
         $fromDropDown = new FromDropDown();
         $fromDropDown->setInclude(true);
-        
+
         $this->assertTrue($fromDropDown->getInclude());
-        
+
         $fromDropDown->setInclude(false);
         $this->assertFalse($fromDropDown->getInclude());
     }
@@ -62,9 +62,9 @@ final class FromDropDownEntityTest extends TestCase
     {
         $fromDropDown = new FromDropDown();
         $fromDropDown->setDefaultEmail(true);
-        
+
         $this->assertTrue($fromDropDown->getDefaultEmail());
-        
+
         $fromDropDown->setDefaultEmail(false);
         $this->assertFalse($fromDropDown->getDefaultEmail());
     }
@@ -91,7 +91,7 @@ final class FromDropDownEntityTest extends TestCase
     {
         $longEmail = 'very.long.email.address.with.many.dots@very.long.domain.name.example.com';
         $fromDropDown = new FromDropDown(1, $longEmail, true, false);
-        
+
         $this->assertSame($longEmail, $fromDropDown->getEmail());
     }
 
@@ -99,7 +99,7 @@ final class FromDropDownEntityTest extends TestCase
     {
         $specialEmail = 'test+tag@sub-domain.example-site.com';
         $fromDropDown = new FromDropDown(1, $specialEmail, true, false);
-        
+
         $this->assertSame($specialEmail, $fromDropDown->getEmail());
     }
 
@@ -107,7 +107,7 @@ final class FromDropDownEntityTest extends TestCase
     {
         $unicodeEmail = 'tëst@éxample.côm';
         $fromDropDown = new FromDropDown(1, $unicodeEmail, true, false);
-        
+
         $this->assertSame($unicodeEmail, $fromDropDown->getEmail());
     }
 
@@ -127,7 +127,7 @@ final class FromDropDownEntityTest extends TestCase
         $fromDropDown->setEmail('chained@test.com');
         $fromDropDown->setInclude(true);
         $fromDropDown->setDefaultEmail(true);
-        
+
         $this->assertSame(100, $fromDropDown->reqId());
         $this->assertSame('chained@test.com', $fromDropDown->getEmail());
         $this->assertTrue($fromDropDown->getInclude());
@@ -137,7 +137,7 @@ final class FromDropDownEntityTest extends TestCase
     public function testIdStringConversion(): void
     {
         $fromDropDown = new FromDropDown(123, $this->testExampleCom, false, false);
-        
+
         $this->assertIsInt($fromDropDown->reqId());
         $this->assertSame(123, $fromDropDown->reqId());
     }
@@ -145,7 +145,7 @@ final class FromDropDownEntityTest extends TestCase
     public function testBooleanProperties(): void
     {
         $fromDropDown = new FromDropDown(1, $this->testExampleCom, true, false);
-        
+
         // Verify boolean properties return actual booleans
         $this->assertIsBool($fromDropDown->getInclude());
         $this->assertIsBool($fromDropDown->getDefaultEmail());
@@ -160,7 +160,7 @@ final class FromDropDownEntityTest extends TestCase
         $fromDropDown->setEmail('complete@setup.com');
         $fromDropDown->setInclude(true);
         $fromDropDown->setDefaultEmail(true);
-        
+
         $this->assertSame(999, $fromDropDown->reqId());
         $this->assertSame('complete@setup.com', $fromDropDown->getEmail());
         $this->assertTrue($fromDropDown->getInclude());
@@ -170,21 +170,21 @@ final class FromDropDownEntityTest extends TestCase
     public function testEmptyEmailHandling(): void
     {
         $fromDropDown = new FromDropDown(1, '', false, false);
-        
+
         $this->assertSame('', $fromDropDown->getEmail());
     }
 
     public function testBooleanToggling(): void
     {
         $fromDropDown = new FromDropDown(1, 'toggle@test.com', false, false);
-        
+
         // Test include toggling
         $this->assertFalse($fromDropDown->getInclude());
         $fromDropDown->setInclude(true);
         $this->assertTrue($fromDropDown->getInclude());
         $fromDropDown->setInclude(false);
         $this->assertFalse($fromDropDown->getInclude());
-        
+
         // Test default_email toggling
         $this->assertFalse($fromDropDown->getDefaultEmail());
         $fromDropDown->setDefaultEmail(true);
@@ -199,12 +199,12 @@ final class FromDropDownEntityTest extends TestCase
         $defaultIncluded = new FromDropDown(1, 'default@company.com', true, true);
         $this->assertTrue($defaultIncluded->getInclude());
         $this->assertTrue($defaultIncluded->getDefaultEmail());
-        
+
         // Scenario 2: Non-default email that's included
         $nonDefaultIncluded = new FromDropDown(2, 'support@company.com', true, false);
         $this->assertTrue($nonDefaultIncluded->getInclude());
         $this->assertFalse($nonDefaultIncluded->getDefaultEmail());
-        
+
         // Scenario 3: Email that's not included
         $notIncluded = new FromDropDown(3, 'disabled@company.com', false, false);
         $this->assertFalse($notIncluded->getInclude());

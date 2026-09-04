@@ -36,13 +36,32 @@ trait Email
         QuoteEmailStage0Deps $d,
     ): Response {
         $mailerDeps = new MailerHelperCustomDeps(
-            $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
-            $d->custom->pcR, $d->entity->socR, $d->custom->cfR, $d->custom->cvR);
+            $d->custom->ccR,
+            $d->custom->qcR,
+            $d->custom->icR,
+            $d->custom->pcR,
+            $d->entity->socR,
+            $d->custom->cfR,
+            $d->custom->cvR
+        );
         $mailer_helper = new MailerHelper(
-            $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
+            $this->sR,
+            $this->session,
+            $this->translator,
+            $this->logger,
+            $this->mailer,
+            $mailerDeps
+        );
         $template_helper = new TemplateHelper(
-            $this->sR, $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
-            $d->custom->pcR, $d->entity->socR, $d->custom->cfR, $d->custom->cvR);
+            $this->sR,
+            $d->custom->ccR,
+            $d->custom->qcR,
+            $d->custom->icR,
+            $d->custom->pcR,
+            $d->entity->socR,
+            $d->custom->cfR,
+            $d->custom->cvR
+        );
         if (!$mailer_helper->mailerConfigured()) {
             $this->flashMessage('warning', $this->translator->translate('email.not.configured'));
             return $this->webService->getRedirectResponse('quote/index');
@@ -75,11 +94,16 @@ trait Email
             $custom_fields[$table] = $d->custom->cfR->repoTablequery($table);
         }
         if ($template_helper->selectEmailQuoteTemplate() == '') {
-            $this->flashMessage('warning',
-                $this->translator->translate('quote.email.templates.not.configured'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('quote.email.templates.not.configured')
+            );
             return $this->webService->getRedirectResponse(
-                'setting/tabIndex', ['_language' => 'en'],
-                    ['active' => 'quotes'], 'settings[email_quote_template]');
+                'setting/tabIndex',
+                ['_language' => 'en'],
+                ['active' => 'quotes'],
+                'settings[email_quote_template]'
+            );
         }
         $setting_status_email_template =
             $d->entity->etR->repoEmailTemplatequery((int) $template_helper->selectEmailQuoteTemplate()) ?: null;
@@ -110,14 +134,18 @@ trait Email
             'quote' => $quote,
             'pdfTemplates' => $this->emailGetQuoteTemplates('pdf'),
             'templateTags' => $this->webViewRenderer->renderPartialAsString(
-                '//invoice/emailtemplate/template-tags', [
+                '//invoice/emailtemplate/template-tags',
+                [
                     'custom_fields' => $custom_fields,
                     'template_tags_inv' => '',
                     'template_tags_quote' => $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/emailtemplate/template-tags-quote', [
+                        '//invoice/emailtemplate/template-tags-quote',
+                        [
                             'custom_fields_quote_custom' => $custom_fields['quote_custom'],
-                        ]),
-                ]),
+                        ]
+                    ),
+                ]
+            ),
             'form' => new MailerQuoteForm(),
             'custom_fields' => $custom_fields,
         ];
@@ -159,13 +187,32 @@ trait Email
         QuotePdfService $quotePdfService,
     ): bool {
         $template_helper = new TemplateHelper(
-            $this->sR, $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
-            $d->custom->pcR, $d->core->socR, $d->custom->cfR, $d->custom->cvR);
+            $this->sR,
+            $d->custom->ccR,
+            $d->custom->qcR,
+            $d->custom->icR,
+            $d->custom->pcR,
+            $d->core->socR,
+            $d->custom->cfR,
+            $d->custom->cvR
+        );
         $mailerDeps = new MailerHelperCustomDeps(
-            $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
-            $d->custom->pcR, $d->core->socR, $d->custom->cfR, $d->custom->cvR);
+            $d->custom->ccR,
+            $d->custom->qcR,
+            $d->custom->icR,
+            $d->custom->pcR,
+            $d->core->socR,
+            $d->custom->cfR,
+            $d->custom->cvR
+        );
         $mailer_helper = new MailerHelper(
-            $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
+            $this->sR,
+            $this->session,
+            $this->translator,
+            $this->logger,
+            $this->mailer,
+            $mailerDeps
+        );
         $quote_entity = $d->relation->qR->repoCount($quote_id) > 0
             ? $d->relation->qR->repoQuoteUnLoadedquery($quote_id)
             : null;
@@ -195,10 +242,22 @@ trait Email
         $sent = false;
         if ($quote_id) {
             $mailerDeps = new MailerHelperCustomDeps(
-                $d->custom->ccR, $d->custom->qcR, $d->custom->icR,
-                $d->custom->pcR, $d->core->socR, $d->custom->cfR, $d->custom->cvR);
+                $d->custom->ccR,
+                $d->custom->qcR,
+                $d->custom->icR,
+                $d->custom->pcR,
+                $d->core->socR,
+                $d->custom->cfR,
+                $d->custom->cvR
+            );
             $mailer_helper = new MailerHelper(
-                $this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $mailerDeps);
+                $this->sR,
+                $this->session,
+                $this->translator,
+                $this->logger,
+                $this->mailer,
+                $mailerDeps
+            );
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
                 $body['btn_cancel'] = 0;

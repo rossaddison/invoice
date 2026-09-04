@@ -49,7 +49,8 @@ final class GoCardlessPaymentService implements PaymentGatewayInterface
     private function accessToken(): string
     {
         return (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_gocardless_accessToken') ?: '');
+            $this->settings->getSetting('gateway_gocardless_accessToken') ?: ''
+        );
     }
 
     private function environment(): string
@@ -212,7 +213,8 @@ final class GoCardlessPaymentService implements PaymentGatewayInterface
     public function isValidWebhookSignature(string $requestBody, string $signatureHeader): bool
     {
         $secret = (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_gocardless_webhookSecret') ?: '');
+            $this->settings->getSetting('gateway_gocardless_webhookSecret') ?: ''
+        );
         if ($secret === '') {
             return false;
         }

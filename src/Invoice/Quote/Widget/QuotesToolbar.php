@@ -47,7 +47,12 @@ final class QuotesToolbar
             resetColumnWidths:    $resetColumnWidths,
         );
         return self::buildToolbarString(
-            $translator, $urlGenerator, $csrf, $clientCount, $groupBy, $enableGrouping,
+            $translator,
+            $urlGenerator,
+            $csrf,
+            $clientCount,
+            $groupBy,
+            $enableGrouping,
             $buttons,
         );
     }
@@ -149,28 +154,46 @@ final class QuotesToolbar
                 'aria-labelledby' => 'btn-quote-change-status',
             ])
             . Html::openTag('li')
-            . Html::tag('a', '🗋 ' . Html::encode($translator->translate('draft')),
-                ['class' => self::CSS_DROPDOWN_STATUS_ITEM, 'data-status-id' => '1', 'href' => '#'])
+            . Html::tag(
+                'a',
+                '🗋 ' . Html::encode($translator->translate('draft')),
+                ['class' => self::CSS_DROPDOWN_STATUS_ITEM, 'data-status-id' => '1', 'href' => '#']
+            )
             . Html::closeTag('li')
             . Html::openTag('li')
-            . Html::tag('a', '📨 ' . Html::encode($translator->translate('sent')),
-                ['class' => self::CSS_DROPDOWN_STATUS_ITEM, 'data-status-id' => '2', 'href' => '#'])
+            . Html::tag(
+                'a',
+                '📨 ' . Html::encode($translator->translate('sent')),
+                ['class' => self::CSS_DROPDOWN_STATUS_ITEM, 'data-status-id' => '2', 'href' => '#']
+            )
             . Html::closeTag('li')
             . Html::openTag('li')
-            . Html::tag('a', '👀 ' . Html::encode($translator->translate('viewed')),
-                ['class' => self::CSS_DROPDOWN_STATUS_ITEM, 'data-status-id' => '3', 'href' => '#'])
+            . Html::tag(
+                'a',
+                '👀 ' . Html::encode($translator->translate('viewed')),
+                ['class' => self::CSS_DROPDOWN_STATUS_ITEM, 'data-status-id' => '3', 'href' => '#']
+            )
             . Html::closeTag('li')
             . Html::openTag('li')
-            . Html::tag('a', '✅ ' . Html::encode($translator->translate('approved')),
-                ['class' => self::CSS_DROPDOWN_STATUS_ITEM, 'data-status-id' => '4', 'href' => '#'])
+            . Html::tag(
+                'a',
+                '✅ ' . Html::encode($translator->translate('approved')),
+                ['class' => self::CSS_DROPDOWN_STATUS_ITEM, 'data-status-id' => '4', 'href' => '#']
+            )
             . Html::closeTag('li')
             . Html::openTag('li')
-            . Html::tag('a', '❌ ' . Html::encode($translator->translate('rejected')),
-                ['class' => self::CSS_DROPDOWN_STATUS_ITEM, 'data-status-id' => '5', 'href' => '#'])
+            . Html::tag(
+                'a',
+                '❌ ' . Html::encode($translator->translate('rejected')),
+                ['class' => self::CSS_DROPDOWN_STATUS_ITEM, 'data-status-id' => '5', 'href' => '#']
+            )
             . Html::closeTag('li')
             . Html::openTag('li')
-            . Html::tag('a', '🚫 ' . Html::encode($translator->translate('canceled')),
-                ['class' => self::CSS_DROPDOWN_STATUS_ITEM, 'data-status-id' => '6', 'href' => '#'])
+            . Html::tag(
+                'a',
+                '🚫 ' . Html::encode($translator->translate('canceled')),
+                ['class' => self::CSS_DROPDOWN_STATUS_ITEM, 'data-status-id' => '6', 'href' => '#']
+            )
             . Html::closeTag('li')
             . Html::closeTag('ul')
             . Html::closeTag('div')

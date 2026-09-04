@@ -22,5 +22,6 @@ final class StoreCoveHelperNetDeps
         public readonly unpR $unpR,
         public readonly upR $upR,
         public readonly ppR $ppR,
-    ) {}
+    ) {
+    }
 }

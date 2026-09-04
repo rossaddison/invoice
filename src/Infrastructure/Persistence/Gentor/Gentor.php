@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Gentor;
 
 use App\Infrastructure\Persistence\Trait\RequireId;
-
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use App\Infrastructure\Persistence\Gentor\Trait\GentorTrait1;
@@ -17,7 +16,7 @@ class Gentor
     use RequireId;
     use GentorTrait1;
     use GentorTrait2;
- 
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -35,5 +34,7 @@ class Gentor
         private bool $updated_include = false, #[Column(type: 'bool', default: false)]
         private bool $modified_include = false, #[Column(type: 'bool', default: false)]
         private bool $deleted_include = false, #[Column(type: 'bool', default: true)]
-        private bool $flash_include = false) {}
+        private bool $flash_include = false)
+    {
+    }
 }

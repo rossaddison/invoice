@@ -110,7 +110,10 @@ final class PeppolUblXmlCreditNoteTest extends TestCase
         );
 
         $additionalDocumentReference = new AdditionalDocumentReference(
-            'INV123', null, 'Invoice PDF', [],
+            'INV123',
+            null,
+            'Invoice PDF',
+            [],
         );
 
         $delivery = new Delivery(null, [], null, null);
@@ -143,17 +146,24 @@ final class PeppolUblXmlCreditNoteTest extends TestCase
         $peppolUblXml = new PeppolUblXml($s);
 
         $ubl = $peppolUblXml->xml(
-            $graph['header'], $graph['additionalDocumentReference'],
-            $party, $party, $graph['delivery'], $graph['payment'], $graph['financial'],
+            $graph['header'],
+            $graph['additionalDocumentReference'],
+            $party,
+            $party,
+            $graph['delivery'],
+            $graph['payment'],
+            $graph['financial'],
         );
         $xml = $peppolUblXml->output($ubl);
 
         $this->assertMatchesRegularExpression('/^<\?xml[^>]*\?>\s*<Invoice\b/', $xml);
         $this->assertStringContainsString(
-            'xmlns="' . Schema::INVOICE_NS . '"', $xml,
+            'xmlns="' . Schema::INVOICE_NS . '"',
+            $xml,
         );
         $this->assertStringContainsString(
-            '<cbc:InvoiceTypeCode>' . InvoiceTypeCode::INVOICE . '</cbc:InvoiceTypeCode>', $xml,
+            '<cbc:InvoiceTypeCode>' . InvoiceTypeCode::INVOICE . '</cbc:InvoiceTypeCode>',
+            $xml,
         );
         $this->assertStringNotContainsString('<CreditNote', $xml);
         $this->assertStringNotContainsString(Schema::CREDIT_NOTE_NS, $xml);
@@ -167,17 +177,24 @@ final class PeppolUblXmlCreditNoteTest extends TestCase
         $peppolUblXml = new PeppolUblXml($s);
 
         $ubl = $peppolUblXml->xml(
-            $graph['header'], $graph['additionalDocumentReference'],
-            $party, $party, $graph['delivery'], $graph['payment'], $graph['financial'],
+            $graph['header'],
+            $graph['additionalDocumentReference'],
+            $party,
+            $party,
+            $graph['delivery'],
+            $graph['payment'],
+            $graph['financial'],
         );
         $xml = $peppolUblXml->output($ubl);
 
         $this->assertMatchesRegularExpression('/^<\?xml[^>]*\?>\s*<CreditNote\b/', $xml);
         $this->assertStringContainsString(
-            'xmlns="' . Schema::CREDIT_NOTE_NS . '"', $xml,
+            'xmlns="' . Schema::CREDIT_NOTE_NS . '"',
+            $xml,
         );
         $this->assertStringContainsString(
-            '<cbc:InvoiceTypeCode>' . InvoiceTypeCode::CREDIT_NOTE . '</cbc:InvoiceTypeCode>', $xml,
+            '<cbc:InvoiceTypeCode>' . InvoiceTypeCode::CREDIT_NOTE . '</cbc:InvoiceTypeCode>',
+            $xml,
         );
         $this->assertStringNotContainsString('<Invoice ', $xml);
         $this->assertStringNotContainsString(Schema::INVOICE_NS, $xml);

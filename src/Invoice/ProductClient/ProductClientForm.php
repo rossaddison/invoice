@@ -26,8 +26,7 @@ final class ProductClientForm extends FormModel
         ProductClient $productClient,
         ?int $product_id,
         ?int $client_id
-    ): self
-    {
+    ): self {
         $form = new self();
         $form->product_id = $product_id ?? 0;
         $form->client_id = $client_id ?? 0;

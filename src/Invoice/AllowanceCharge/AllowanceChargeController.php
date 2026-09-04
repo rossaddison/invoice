@@ -94,10 +94,13 @@ final class AllowanceChargeController extends BaseController
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $ac = $this->allowanceChargeService->saveAllowanceCharge(
-                    $allowanceCharge, $body);
+                    $allowanceCharge,
+                    $body
+                );
                 $ac->hasIdentity() ? $this->m('CS') : $this->m('CN');
                 return $this->webService->getRedirectResponse(
-                    'allowancecharge/index');
+                    'allowancecharge/index'
+                );
             }
             $parameters['form'] = $form;
             $parameters['errors'] =
@@ -159,10 +162,13 @@ final class AllowanceChargeController extends BaseController
             $form = new AllowanceChargeForm($this->translator);
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $ac = $this->allowanceChargeService->saveAllowanceCharge(
-                    $allowanceCharge, $body);
+                    $allowanceCharge,
+                    $body
+                );
                 $ac->hasIdentity() ? $this->m('CS') : $this->m('CN');
                 return $this->webService->getRedirectResponse(
-                    'allowancecharge/index');
+                    'allowancecharge/index'
+                );
             }
             $parameters['form'] = $form;
             $parameters['errors'] =
@@ -205,7 +211,8 @@ final class AllowanceChargeController extends BaseController
             $allowanceCharge = $this->allowanceCharge($currentRoute, $allowanceChargeRepository);
             if ($allowanceCharge) {
                 $ac = $this->allowanceChargeService->deleteAllowanceCharge(
-                    $allowanceCharge);
+                    $allowanceCharge
+                );
                 $ac->hasIdentity() ? $this->m('DS') : $this->m('DN');
                 return $this->webService->getRedirectResponse('allowancecharge/index');
             }
@@ -233,38 +240,41 @@ final class AllowanceChargeController extends BaseController
     ): Response {
         $allowanceCharge = $this->allowanceCharge($currentRoute, $allowanceChargeRepository);
         $body = $request->getParsedBody() ?? [];
-        
-            if (null !== $allowanceCharge) {
-                $form = AllowanceChargeForm::show($allowanceCharge, $this->translator);
-                $peppolArrays = new PeppolArrays();
-                $allowances = $peppolArrays->getAllowancesSubsetArray();
-                $parameters = [
-                    'title' => $this->translator->translate(
-                        'allowance.or.charge.edit.allowance'),
-                    'actionName' => 'allowancecharge/editAllowance',
-                    'actionArguments' => ['id' => $allowanceCharge->reqId()],
-                    'errors' => [],
-                    'form' => $form,
-                    'taxRates' => $tR->findAllPreloaded(),
-                    'allowances' => $allowances,
-                ];
-                if ($request->getMethod() === Method::POST) {
-                    if (is_array($body)) { // NOSONAR - outer if has additional statements
-                        if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                            $ac = $this->allowanceChargeService->saveAllowanceCharge(
-                                $allowanceCharge, $body);
-                            $ac->hasIdentity() ? $this->m('US') : $this->m('UN');
-                            return $this->webService
-                                        ->getRedirectResponse('allowancecharge/index');
-                        }
-                        $parameters['form'] = $form;
-                        $parameters['errors'] =
-                                $form->getValidationResult()
-                                ->getErrorMessagesIndexedByProperty();
+
+        if (null !== $allowanceCharge) {
+            $form = AllowanceChargeForm::show($allowanceCharge, $this->translator);
+            $peppolArrays = new PeppolArrays();
+            $allowances = $peppolArrays->getAllowancesSubsetArray();
+            $parameters = [
+                'title' => $this->translator->translate(
+                    'allowance.or.charge.edit.allowance'
+                ),
+                'actionName' => 'allowancecharge/editAllowance',
+                'actionArguments' => ['id' => $allowanceCharge->reqId()],
+                'errors' => [],
+                'form' => $form,
+                'taxRates' => $tR->findAllPreloaded(),
+                'allowances' => $allowances,
+            ];
+            if ($request->getMethod() === Method::POST) {
+                if (is_array($body)) { // NOSONAR - outer if has additional statements
+                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                        $ac = $this->allowanceChargeService->saveAllowanceCharge(
+                            $allowanceCharge,
+                            $body
+                        );
+                        $ac->hasIdentity() ? $this->m('US') : $this->m('UN');
+                        return $this->webService
+                                    ->getRedirectResponse('allowancecharge/index');
                     }
+                    $parameters['form'] = $form;
+                    $parameters['errors'] =
+                            $form->getValidationResult()
+                            ->getErrorMessagesIndexedByProperty();
                 }
-                return $this->webViewRenderer->render('_form_allowance', $parameters);
             }
+            return $this->webViewRenderer->render('_form_allowance', $parameters);
+        }
         return $this->webService->getRedirectResponse('allowancecharge/index');
     }
 

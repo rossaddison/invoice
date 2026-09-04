@@ -60,7 +60,8 @@ final readonly class UserInvFormFields
 
         if ($required) {
             $field = $field->required(true)->hint(
-                    $this->translator->translate($hintKey));
+                $this->translator->translate($hintKey)
+            );
         } else {
             $field = $field->required(false);
         }
@@ -72,9 +73,10 @@ final readonly class UserInvFormFields
      * UserInv user selection dropdown (for add form)
      * @param array<array-key, string> $userOptions
      */
-    public function userInvUserSelect(UserInvForm $form,
-            array $userOptions): string
-    {
+    public function userInvUserSelect(
+        UserInvForm $form,
+        array $userOptions
+    ): string {
         return Field::select($form, 'user_id')
             ->label($this->translator->translate('users'))
             ->addInputAttributes([
@@ -143,9 +145,11 @@ final readonly class UserInvFormFields
     /**
      * UserInv checkbox field with consistent styling
      */
-    public function userInvCheckboxField(UserInvForm $form, string $fieldName,
-            string $labelKey): string
-    {
+    public function userInvCheckboxField(
+        UserInvForm $form,
+        string $fieldName,
+        string $labelKey
+    ): string {
         return Field::checkbox($form, $fieldName)
             ->inputLabelAttributes(['class' => 'form-check-label'])
             ->inputClass('form-check-input')
@@ -157,9 +161,12 @@ final readonly class UserInvFormFields
      * UserInv number field (for GLN and listLimit)
      * @psalm-suppress PossiblyUnusedMethod
      */
-    public function userInvNumberField(UserInvForm $form, string $fieldName,
-            string $labelKey, bool $required = false): string
-    {
+    public function userInvNumberField(
+        UserInvForm $form,
+        string $fieldName,
+        string $labelKey,
+        bool $required = false
+    ): string {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
 
@@ -179,7 +186,7 @@ final readonly class UserInvFormFields
             ]);
 
         if ($required) {
-    $field = $field->required(true)->hint($this->translator->translate($hintKey));
+            $field = $field->required(true)->hint($this->translator->translate($hintKey));
         } else {
             $field = $field->required(false);
         }

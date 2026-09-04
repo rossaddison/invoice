@@ -33,7 +33,8 @@ final readonly class InvMarkSentService
         private InvRepository $iR,
         private ISLR $islR,
         private SR $sR,
-    ) {}
+    ) {
+    }
 
     /**
      * @param list<int> $invIds

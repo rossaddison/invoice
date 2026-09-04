@@ -15,7 +15,7 @@ final class PurchaseEntryForm extends FormModel
 {
     #[Required]
     private ?string $date = null;
-    
+
     #[Required]
     #[Length(min: 1, max: 200)]
     private ?string $supplier = '';

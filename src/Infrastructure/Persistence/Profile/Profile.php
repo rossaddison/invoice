@@ -18,7 +18,7 @@ use DateTimeImmutable;
 class Profile
 {
     use RequireId;
- 
+
     #[BelongsTo(target: Company::class, nullable: false)]
     private ?Company $company = null;
 
@@ -60,7 +60,7 @@ class Profile
     {
         return $this->requireId($this->id, 'Profile');
     }
-    
+
     public function hasIdentity(): bool
     {
         return $this->id !== null;

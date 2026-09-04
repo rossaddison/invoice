@@ -26,5 +26,7 @@ namespace App\Invoice\Helpers\Peppol\Ast;
  */
 readonly class VariableReference implements Expression
 {
-    public function __construct(public string $name) {}
+    public function __construct(public string $name)
+    {
+    }
 }

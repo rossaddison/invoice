@@ -25,7 +25,8 @@ class As4RetryEngine
         private readonly LoggerInterface $logger,
         private readonly As4ReceiptParserInterface $receiptParser,
         private readonly As4RetryPolicyInterface $retryPolicy = new As4FixedIntervalRetryPolicy(),
-    ) {}
+    ) {
+    }
 
     /**
      * Process pending messages and retry those ready for retransmission.

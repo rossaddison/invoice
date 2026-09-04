@@ -19,7 +19,8 @@ final class PrometheusMetricsRecorder
 {
     public function __construct(
         private readonly CollectorRegistry $registry,
-    ) {}
+    ) {
+    }
 
     public function recordInvoiceOperation(string $operation, string $status): void
     {

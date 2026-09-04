@@ -28,5 +28,6 @@ readonly class Assertion
         public string     $id,
         /** 'fatal' or 'warning' — maps to Severity::Fatal / Severity::Warning at evaluation time. */
         public string     $flag = 'fatal',
-    ) {}
+    ) {
+    }
 }

@@ -14,7 +14,7 @@ class GoogleTranslateLocaleSettingNotFoundExceptionTest extends TestCase
     public function testExceptionInheritance(): void
     {
         $exception = new GoogleTranslateLocaleSettingNotFoundException();
-        
+
         $this->assertInstanceOf(RuntimeException::class, $exception);
         $this->assertInstanceOf(FriendlyExceptionInterface::class, $exception);
     }
@@ -22,20 +22,20 @@ class GoogleTranslateLocaleSettingNotFoundExceptionTest extends TestCase
     public function testGetName(): void
     {
         $exception = new GoogleTranslateLocaleSettingNotFoundException();
-        
+
         $expectedName = 'Settings...View...Google Translate...Locale has not been chosen.';
-        
+
         $this->assertSame($expectedName, $exception->getName());
     }
 
     public function testGetSolution(): void
     {
         $exception = new GoogleTranslateLocaleSettingNotFoundException();
-        
+
         $expectedSolution = <<<'SOLUTION'
                 Please select a locale. The translation to the eg. ip_lang can then start.
             SOLUTION;
-        
+
         $this->assertSame($expectedSolution, $exception->getSolution());
     }
 
@@ -43,7 +43,7 @@ class GoogleTranslateLocaleSettingNotFoundExceptionTest extends TestCase
     {
         $exception = new GoogleTranslateLocaleSettingNotFoundException();
         $name = $exception->getName();
-        
+
         $this->assertStringContainsString('Settings', $name);
         $this->assertStringContainsString('Google Translate', $name);
         $this->assertStringContainsString('Locale', $name);
@@ -54,7 +54,7 @@ class GoogleTranslateLocaleSettingNotFoundExceptionTest extends TestCase
     {
         $exception = new GoogleTranslateLocaleSettingNotFoundException();
         $solution = $exception->getSolution();
-        
+
         $this->assertStringContainsString('select a locale', $solution);
         $this->assertStringContainsString('translation', $solution);
         $this->assertStringContainsString('ip_lang', $solution);
@@ -64,7 +64,7 @@ class GoogleTranslateLocaleSettingNotFoundExceptionTest extends TestCase
     {
         $message = 'Locale setting missing';
         $exception = new GoogleTranslateLocaleSettingNotFoundException($message);
-        
+
         $this->assertSame($message, $exception->getMessage());
     }
 
@@ -73,7 +73,7 @@ class GoogleTranslateLocaleSettingNotFoundExceptionTest extends TestCase
         $message = 'No locale configured';
         $code = 400;
         $exception = new GoogleTranslateLocaleSettingNotFoundException($message, $code);
-        
+
         $this->assertSame($message, $exception->getMessage());
         $this->assertSame($code, $exception->getCode());
     }
@@ -82,7 +82,7 @@ class GoogleTranslateLocaleSettingNotFoundExceptionTest extends TestCase
     {
         $previousException = new RuntimeException('Configuration error');
         $exception = new GoogleTranslateLocaleSettingNotFoundException('Locale error', 0, $previousException);
-        
+
         $this->assertSame($previousException, $exception->getPrevious());
     }
 
@@ -90,7 +90,7 @@ class GoogleTranslateLocaleSettingNotFoundExceptionTest extends TestCase
     {
         $this->expectException(GoogleTranslateLocaleSettingNotFoundException::class);
         $this->expectExceptionMessage('Locale not found');
-        
+
         throw new GoogleTranslateLocaleSettingNotFoundException('Locale not found');
     }
 
@@ -107,35 +107,35 @@ class GoogleTranslateLocaleSettingNotFoundExceptionTest extends TestCase
     public function testGetNameReturnType(): void
     {
         $exception = new GoogleTranslateLocaleSettingNotFoundException();
-        
+
         $this->assertIsString($exception->getName());
     }
 
     public function testGetSolutionReturnType(): void
     {
         $exception = new GoogleTranslateLocaleSettingNotFoundException();
-        
+
         $this->assertIsString($exception->getSolution());
     }
 
     public function testGetNameIsNotEmpty(): void
     {
         $exception = new GoogleTranslateLocaleSettingNotFoundException();
-        
+
         $this->assertNotEmpty($exception->getName());
     }
 
     public function testGetSolutionIsNotEmpty(): void
     {
         $exception = new GoogleTranslateLocaleSettingNotFoundException();
-        
+
         $this->assertNotEmpty($exception->getSolution());
     }
 
     public function testExceptionDefaultValues(): void
     {
         $exception = new GoogleTranslateLocaleSettingNotFoundException();
-        
+
         $this->assertSame('', $exception->getMessage());
         $this->assertSame(0, $exception->getCode());
         $this->assertNull($exception->getPrevious());
@@ -144,7 +144,7 @@ class GoogleTranslateLocaleSettingNotFoundExceptionTest extends TestCase
     public function testExceptionStackTrace(): void
     {
         $exception = new GoogleTranslateLocaleSettingNotFoundException('Stack test');
-        
+
         $this->assertIsArray($exception->getTrace());
         $this->assertIsString($exception->getTraceAsString());
     }
@@ -152,7 +152,7 @@ class GoogleTranslateLocaleSettingNotFoundExceptionTest extends TestCase
     public function testExceptionFile(): void
     {
         $exception = new GoogleTranslateLocaleSettingNotFoundException();
-        
+
         $this->assertIsString($exception->getFile());
         $this->assertIsInt($exception->getLine());
     }
@@ -160,9 +160,9 @@ class GoogleTranslateLocaleSettingNotFoundExceptionTest extends TestCase
     public function testExceptionToString(): void
     {
         $exception = new GoogleTranslateLocaleSettingNotFoundException('String test');
-        
+
         $stringRepresentation = (string) $exception;
-        
+
         $this->assertIsString($stringRepresentation);
         $this->assertStringContainsString('GoogleTranslateLocaleSettingNotFoundException', $stringRepresentation);
         $this->assertStringContainsString('String test', $stringRepresentation);
@@ -171,7 +171,7 @@ class GoogleTranslateLocaleSettingNotFoundExceptionTest extends TestCase
     public function testExceptionImplementsInterface(): void
     {
         $exception = new GoogleTranslateLocaleSettingNotFoundException();
-        
+
         $this->assertTrue(method_exists($exception, 'getName'));
         $this->assertTrue(method_exists($exception, 'getSolution'));
     }

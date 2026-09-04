@@ -17,7 +17,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 trait ProductTrait4
 {
-
     // Step 3: Get all the productClients that are associated with this product
     public function getProductClients(): ArrayCollection
     {

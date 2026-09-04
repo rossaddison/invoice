@@ -9,7 +9,6 @@ namespace App\Infrastructure\Persistence\EmailTemplate\Trait;
  */
 trait EmailTemplateTrait2
 {
-
     public function getEmailTemplateBcc(): ?string
     {
         return $this->email_template_bcc;

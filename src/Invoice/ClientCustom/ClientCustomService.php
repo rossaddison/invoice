@@ -30,7 +30,8 @@ final readonly class ClientCustomService
             $model->setClientId((int) $array['client_id']) : '';
         isset($array['custom_field_id']) ?
             $model->setCustomFieldId(
-                (int) $array['custom_field_id']) : '';
+                (int) $array['custom_field_id']
+            ) : '';
         isset($array['value']) ?
             $model->setValue((string) $array['value']) : '';
         $this->repository->save($model);
@@ -45,7 +46,8 @@ final readonly class ClientCustomService
         $custom_field = 'custom_field_id';
         if (isset($array[$custom_field])) {
             $model->setCustomField(
-                $this->cfR->repoCustomFieldquery((int) $array[$custom_field]));
+                $this->cfR->repoCustomFieldquery((int) $array[$custom_field])
+            );
         }
     }
 

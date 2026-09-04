@@ -81,7 +81,13 @@ final class BaseControllerTest
         $flash = m::mock(Flash::class);
 
         return new BaseControllerTestHarness(
-            $webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash,
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash,
         );
     }
 
@@ -606,8 +612,10 @@ final class BaseControllerTestHarness extends BaseController
 
     /** @return array{customFields: mixed, customValues: array<array-key, mixed>} */
     public function callFetchCustomFieldsAndValues(
-        CustomFieldRepository $cfR, CustomValueRepository $cvR, string $tableName): array
-    {
+        CustomFieldRepository $cfR,
+        CustomValueRepository $cvR,
+        string $tableName
+    ): array {
         return $this->fetchCustomFieldsAndValues($cfR, $cvR, $tableName);
     }
 
@@ -621,8 +629,10 @@ final class BaseControllerTestHarness extends BaseController
     }
 
     public function callViewPartialDeliveryLocation(
-        string $_language, DeliveryLocationRepository $dlr, ?int $delivery_location_id): string
-    {
+        string $_language,
+        DeliveryLocationRepository $dlr,
+        ?int $delivery_location_id
+    ): string {
         return $this->viewPartialDeliveryLocation($_language, $dlr, $delivery_location_id);
     }
 }

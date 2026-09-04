@@ -27,7 +27,8 @@ final class SalesOrdersGroupingRenderer
             return match ($groupBy) {
                 'client' => $so->getClient()?->getClientFullName() ?? 'Unknown Client',
                 'status' => $soR->getSpecificStatusArrayLabel(
-                    (string) $so->getStatusId()),
+                    (string) $so->getStatusId()
+                ),
                 'month'  => $so->getDateCreated()->format('Y-m'),
                 'year'   => $so->getDateCreated()->format('Y'),
                 'date'   => $so->getDateCreated()->format('Y-m-d'),
@@ -88,7 +89,8 @@ final class SalesOrdersGroupingRenderer
                 $cur = $sR->getSetting('currency_symbol');
                 return \Yiisoft\Html\Html::tr()
                     ->addClass(
-                        'group-header bg-secondary text-white fw-bold group-collapsible')
+                        'group-header bg-secondary text-white fw-bold group-collapsible'
+                    )
                     ->cells(
                         \Yiisoft\Html\Html::td()
                             ->addAttributes(['colspan' => '10'])

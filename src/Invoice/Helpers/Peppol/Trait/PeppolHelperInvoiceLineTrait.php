@@ -36,10 +36,15 @@ trait PeppolHelperInvoiceLineTrait
      * @throws ClientNf
      * @return array
      */
-    private function buildInvoiceLinesArray(Inv $invoice,
-        InvoicePeriod $invoice_period, IIAR $iiaR, cpR $cpR, SOIR $soiR,
-                                                ACIIR $aciiR, unpR $unpR): array
-    {
+    private function buildInvoiceLinesArray(
+        Inv $invoice,
+        InvoicePeriod $invoice_period,
+        IIAR $iiaR,
+        cpR $cpR,
+        SOIR $soiR,
+        ACIIR $aciiR,
+        unpR $unpR
+    ): array {
         $client = $invoice->getClient();
         if (!$client) {
             throw new ClientNf($this->t);
@@ -78,7 +83,9 @@ trait PeppolHelperInvoiceLineTrait
             $price = $item->getPrice() ?? 0.00;
             $discount = $item->getDiscountAmount() ?? 0.00;
             $optionals = $this->buildOptionalInvoiceLineElements(
-                $item, $peppol_po_lineid, $peppol_po_itemid
+                $item,
+                $peppol_po_lineid,
+                $peppol_po_itemid
             );
             $lineNote = $optionals['lineNote'];
             $itemDesc = $optionals['itemDesc'];
@@ -114,10 +121,18 @@ trait PeppolHelperInvoiceLineTrait
                     ...$orderLineRef,
                     $this->lineDocumentReference($invoice),
                     $this->itemLineACs($aciiR, $item_id),
-                    $this->buildInvoiceLineItemElement($item, $itemDesc,
-                        $buyersItemId, $originCountry),
-                    $this->buildInvoiceLinePriceElement($item, $unit_peppol,
-                        $price, $discount),
+                    $this->buildInvoiceLineItemElement(
+                        $item,
+                        $itemDesc,
+                        $buyersItemId,
+                        $originCountry
+                    ),
+                    $this->buildInvoiceLinePriceElement(
+                        $item,
+                        $unit_peppol,
+                        $price,
+                        $discount
+                    ),
                 ],
             ];
         }

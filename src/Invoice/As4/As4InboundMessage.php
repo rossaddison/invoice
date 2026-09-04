@@ -31,9 +31,19 @@ final class As4InboundMessage
         public readonly ?string $errorCategory = null,
         public readonly array $payloads = [],
         public readonly string $xmlBody = ''
-    ) {}
+    ) {
+    }
 
-    public function isReceipt(): bool { return $this->type === 'Receipt'; }
-    public function isError(): bool { return $this->type === 'Error'; }
-    public function isUserMessage(): bool { return $this->type === 'UserMessage'; }
+    public function isReceipt(): bool
+    {
+        return $this->type === 'Receipt';
+    }
+    public function isError(): bool
+    {
+        return $this->type === 'Error';
+    }
+    public function isUserMessage(): bool
+    {
+        return $this->type === 'UserMessage';
+    }
 }

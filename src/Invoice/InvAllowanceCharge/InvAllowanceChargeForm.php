@@ -18,13 +18,13 @@ final class InvAllowanceChargeForm extends FormModel
     private ?float $amount = null;
 
     private ?float $vat_or_tax = null;
-    
+
     private ?int $inv_id = null;
 
     public static function show(
         InvAllowanceCharge $invAllowanceCharge,
-        ?int $inv_id): self
-    {
+        ?int $inv_id
+    ): self {
         $form = new self();
         $form->allowance_charge_id = $invAllowanceCharge->reqAllowanceChargeId();
         $form->amount = $invAllowanceCharge->getAmount();

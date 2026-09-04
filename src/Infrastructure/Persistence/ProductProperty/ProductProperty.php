@@ -14,7 +14,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class ProductProperty
 {
     use RequireId;
-    
+
     #[Column(type: 'primary')]
     public ?int $id = null;
 
@@ -27,10 +27,10 @@ class ProductProperty
         #[Column(type: 'text', nullable: true)]
         public ?string $name = '',
         #[Column(type: 'text', nullable: true)]
-        public ?string $value = '')
-    {
+        public ?string $value = ''
+    ) {
     }
-    
+
     public function reqId(): int
     {
         return $this->requireId($this->id, 'ProductProperty');

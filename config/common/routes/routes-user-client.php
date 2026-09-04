@@ -10,15 +10,13 @@ use Yiisoft\Router\Route;
 
 return [
     RoutePermission::invoiceGroup(
-
-            Route::methods([Method::GET, Method::POST], '/userclient/new/{user_id}')
+        Route::methods([Method::GET, Method::POST], '/userclient/new/{user_id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([UserClientController::class, 'new'])
                 ->name('userclient/new'),
-
-            Route::methods([Method::GET, Method::POST], '/userclient/delete/{id}')
+        Route::methods([Method::GET, Method::POST], '/userclient/delete/{id}')
                 ->name('userclient/delete')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([UserClientController::class, 'delete']),
-        ), // invoice
+    ), // invoice
 ];

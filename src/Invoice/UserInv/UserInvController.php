@@ -346,11 +346,15 @@ final class UserInvController extends BaseController
         if ($userinv) {
             $roles = $this->manager->getRolesByUserId((string) $userinv->reqUserId());
             if ($roles !== []) {
-                $this->flashMessage('warning',
+                $this->flashMessage(
+                    'warning',
                     $translator->translate('user.inv.delete.blocked.roles')
-                    . ' ' . implode(', ', array_keys($roles)));
-                $this->flashMessage('info',
-                    $translator->translate('user.inv.delete.blocked.callback'));
+                    . ' ' . implode(', ', array_keys($roles))
+                );
+                $this->flashMessage(
+                    'info',
+                    $translator->translate('user.inv.delete.blocked.callback')
+                );
                 return $this->webService->getRedirectResponse(self::REDIRECT_USERINV_INDEX);
             }
             $this->userinvService->deleteUserInv($userinv);

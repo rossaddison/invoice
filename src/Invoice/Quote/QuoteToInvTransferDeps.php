@@ -20,5 +20,6 @@ final class QuoteToInvTransferDeps
         public readonly IIAR $iiaR,
         public readonly InvItemAmountService $iiaS,
         public readonly QIAR $qiaR,
-    ) {}
+    ) {
+    }
 }

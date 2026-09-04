@@ -13,7 +13,6 @@ use RequireId;
  */
 trait DeliveryTrait2
 {
-
     public function setDateCreated(DateTimeImmutable $date_created): void
     {
         $this->date_created = $date_created;

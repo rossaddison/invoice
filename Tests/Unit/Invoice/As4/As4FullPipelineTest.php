@@ -125,15 +125,20 @@ class As4FullPipelineTest extends TestCase
         $smpResolver = $this->createStub(As4SmpResolverInterface::class);
         $smpResolver->method('resolve')->willReturn($this->endpoint());
 
-        $signer = new class implements As4EnvelopeSignerInterface {
+        $signer = new class () implements As4EnvelopeSignerInterface {
             #[\Override]
-            public function sign(DOMDocument $envelope): DOMDocument { return $envelope; }
+            public function sign(DOMDocument $envelope): DOMDocument
+            {
+                return $envelope;
+            }
         };
 
-        $logger = new class extends \Psr\Log\AbstractLogger {
+        $logger = new class () extends \Psr\Log\AbstractLogger {
             /** @param mixed $level @param mixed[] $context */
             #[\Override]
-            public function log($level, \Stringable|string $message, array $context = []): void {}
+            public function log($level, \Stringable|string $message, array $context = []): void
+            {
+            }
         };
 
         return new As4MessageDispatcher(

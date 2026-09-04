@@ -35,7 +35,8 @@ final class WebshopAvailabilityMiddleware implements MiddlewareInterface
     public function __construct(
         private readonly SettingRepository $settingRepository,
         private readonly WebControllerService $webService,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function process(

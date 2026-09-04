@@ -14,7 +14,6 @@ use RequireId;
  */
 trait DeliveryLocationTrait1
 {
-
     public function reqId(): int
     {
         return $this->requireId($this->id, 'DeliveryLocation');

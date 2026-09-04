@@ -34,7 +34,9 @@ final readonly class StoreCoveCustomerPartyParser
     private const string KEY_IDENTIFICATION_CODE = 'IdentificationCode';
     private const string KEY_LIST_ID = 'ListId';
 
-    public function __construct(private Translator $t) {}
+    public function __construct(private Translator $t)
+    {
+    }
 
     /**
      * @throws PeppolBuyerPostalAddressNotFoundException
@@ -42,8 +44,10 @@ final readonly class StoreCoveCustomerPartyParser
      * @return array
      */
     public function buildPeppolAccountingCustomerPartyArray(
-                                        Inv $invoice, paR $paR, cpR $cpR): array
-    {
+        Inv $invoice,
+        paR $paR,
+        cpR $cpR
+    ): array {
         $client = $invoice->getClient();
         if ($client) {
             $postaladdress_id = $client->getPostaladdressId();

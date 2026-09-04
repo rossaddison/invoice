@@ -36,7 +36,8 @@ final class QuoteDeletionService
         private QCR $customRepo,
         private QCS $customService,
         private ACQR $allowanceRepo,
-    ) {}
+    ) {
+    }
 
     public function delete(Quote $quote): void
     {
@@ -54,8 +55,8 @@ final class QuoteDeletionService
         /** @var QuoteItem $item */
         foreach ($this->itemRepo->repoQuoteItemIdquery($quoteId) as $item) {
             $itemId = $item->reqId();
-            
-            if (null!== ($amount = $this->itemAmountRepo->repoQuoteItemAmountquery($itemId))) {
+
+            if (null !== ($amount = $this->itemAmountRepo->repoQuoteItemAmountquery($itemId))) {
                 $this->itemAmountRepo->delete($amount);
             }
 

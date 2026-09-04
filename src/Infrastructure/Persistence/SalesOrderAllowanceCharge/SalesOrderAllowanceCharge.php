@@ -7,8 +7,7 @@ namespace App\Infrastructure\Persistence\SalesOrderAllowanceCharge;
 use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\Trait\RequireId;
-use App\Invoice\SalesOrderAllowanceCharge\SalesOrderAllowanceChargeRepository
-    as SOACR;
+use App\Invoice\SalesOrderAllowanceCharge\SalesOrderAllowanceChargeRepository as SOACR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;

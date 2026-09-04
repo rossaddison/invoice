@@ -18,15 +18,15 @@ trait PeppolHelperSupplierTrait
     private function buildSupplierParty(): Party
     {
         $config_company_details = $this->s->getConfigCompanyDetails();
-/**
-* @var string $config_company_details['name']
-*/
+        /**
+        * @var string $config_company_details['name']
+        */
         $supplier_name = $config_company_details['name'];
         $config_peppol = $this->s->getConfigPeppol();
-/**
-* @var string $config_peppol['SupplierPartyIdentificationId']
-* @var string $config_peppol['SupplierPartyIdentificationSchemeId']
-*/
+        /**
+        * @var string $config_peppol['SupplierPartyIdentificationId']
+        * @var string $config_peppol['SupplierPartyIdentificationSchemeId']
+        */
         $supplier_partyIdentificationId =
             $config_peppol['SupplierPartyIdentificationId'];
         $supplier_partyIdentificationSchemeId =

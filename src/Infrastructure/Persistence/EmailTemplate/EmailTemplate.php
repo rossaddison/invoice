@@ -12,7 +12,6 @@ use App\Infrastructure\Persistence\EmailTemplate\Trait\EmailTemplateTrait2;
 #[Entity(repository: \App\Invoice\EmailTemplate\EmailTemplateRepository::class)]
 class EmailTemplate
 {
-
     use EmailTemplateTrait1;
     use EmailTemplateTrait2;
 

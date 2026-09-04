@@ -156,7 +156,7 @@ final readonly class QuoteService
         $model->setDateExpires($s);
         $model->setDiscountAmount(0.00);
     }
-    
+
     public function deleteQuote(Quote $quote): void
     {
         $this->deletionService->delete($quote);

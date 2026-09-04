@@ -62,10 +62,12 @@ class As4SmpResolverTest extends TestCase
                 return $response;
             });
 
-        $logger = new class extends \Psr\Log\AbstractLogger {
+        $logger = new class () extends \Psr\Log\AbstractLogger {
             /** @param mixed $level @param mixed[] $context */
             #[\Override]
-            public function log($level, \Stringable|string $message, array $context = []): void {}
+            public function log($level, \Stringable|string $message, array $context = []): void
+            {
+            }
         };
 
         return new As4SmpResolver($httpClient, $this->factory, $logger, self::SMP_BASE, $transportProfile);

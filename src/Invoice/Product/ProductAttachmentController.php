@@ -83,8 +83,11 @@ final class ProductAttachmentController extends BaseController
                 return $this->webService->getRedirectResponse('product/index');
             }
             $moved = $this->imageAttachmentMoveTo(
-                $file, $targetPath . '/' . $original_file_name,
-                $product_id, $original_file_name, $piR
+                $file,
+                $targetPath . '/' . $original_file_name,
+                $product_id,
+                $original_file_name,
+                $piR
             );
             if ($moved) {
                 $this->flashMessage('info', $this->translator->translate('record.successfully.created'));

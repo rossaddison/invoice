@@ -16,8 +16,8 @@ class PaymentMeans implements XmlSerializable
 
     public function __construct(
         private readonly ?PayeeFinancialAccount $payeeFinancialAccount,
-        private readonly ?string $paymentId = '')
-    {
+        private readonly ?string $paymentId = ''
+    ) {
     }
 
     /**

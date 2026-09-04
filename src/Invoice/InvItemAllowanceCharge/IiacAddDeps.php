@@ -19,5 +19,6 @@ final class IiacAddDeps
         public readonly InvAmountRepository $iaR,
         public readonly InvItemAmountRepository $iiaR,
         public readonly InvTaxRateRepository $itrR,
-    ) {}
+    ) {
+    }
 }

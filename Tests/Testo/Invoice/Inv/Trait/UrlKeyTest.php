@@ -123,7 +123,14 @@ final class UrlKeyTest
             ->andReturn('<div>alert</div>');
 
         return new InvUrlKeyHarness(
-            $webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash, $activeUser,
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash,
+            $activeUser,
         );
     }
 

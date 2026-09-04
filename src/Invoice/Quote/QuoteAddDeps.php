@@ -22,5 +22,6 @@ final class QuoteAddDeps
         public readonly UR $uR,
         public readonly UCR $ucR,
         public readonly UIR $uiR,
-    ) {}
+    ) {
+    }
 }

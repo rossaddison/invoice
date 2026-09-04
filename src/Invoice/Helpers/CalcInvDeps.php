@@ -22,5 +22,6 @@ final class CalcInvDeps
         public readonly IAR $iaR,
         public readonly IR $iR,
         public readonly PYMR $pymR,
-    ) {}
+    ) {
+    }
 }

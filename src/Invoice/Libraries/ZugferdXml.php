@@ -27,13 +27,13 @@ final class ZugferdXml extends AbstractZugferdXml
      * @param iiaR $iiaR
      * @param InvAmount $inv_amount
      */
-    public function __construct(public sR $sR,
+    public function __construct(
+        public sR $sR,
         public Inv $invoice,
         public iiaR $iiaR,
         public InvAmount $inv_amount,
         private readonly Translator $translator,
-    )
-    {
+    ) {
         $this->items = $this->invoice->getItems();
         $this->currencyCode = $this->sR->getSetting('currency_code');
         $this->company = $this->sR->getConfigCompanyDetails();
@@ -244,9 +244,9 @@ final class ZugferdXml extends AbstractZugferdXml
                 $result[$key] = 0.00;
             }
             $item_id = $item->reqId();
-/**
- * @var \App\Infrastructure\Persistence\InvItemAmount\InvItemAmount $inv_item_amount
- */
+            /**
+             * @var \App\Infrastructure\Persistence\InvItemAmount\InvItemAmount $inv_item_amount
+             */
             $inv_item_amount = $this->iiaR->repoInvItemAmountquery($item_id);
 
             $result[$key] += $inv_item_amount->getSubtotal() ?? 0.00;

@@ -11,7 +11,6 @@ use DateTimeImmutable;
  */
 trait PeppolMessageTrait2
 {
-
     public function setSentAt(DateTimeImmutable $sent_at): void
     {
         $this->sent_at = $sent_at;

@@ -53,42 +53,47 @@ trait Add
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if (is_array($body) && $formHydrator->populateFromPostAndValidate($form, $request)) {
-                    // Only clients that were assigned to user accounts were
-                    // made available in dropdown therefore use the 'user client'
-                    // user id
-                    /**
-                     * @var string $body['client_id']
-                     */
-                    $client_id = (int) $body['client_id'];
-                    $user_client = $d->ucR->repoUserquery($client_id);
-                    if (null !== $user_client && null !==
-                            $user_client->getClient()) {
-                        // no warning necessary a user client relationship exists
-                    } else {
-                        $this->flashMessage('danger',
-                            $d->clientRepository->repoClientquery($client_id)
-                                             ->getClientFullName()
-                                    . ': ' . $this->translator->translate(
-                                            'user.client.no.account'));
-                    }
-// Ensure that the client has only one (paying) user account otherwise reject
-// this invoice
-// Related logic: see UserClientRepository function
-// get_not_assigned_to_user which ensures that only clients that have   NOT
-// been assigned to a user account are presented in the dropdown box for
-// available clients. So this line is an extra measure to ensure that the
-// invoice is being made out to the correct payer ie. not more than one user
-// is associated with the client.
+                // Only clients that were assigned to user accounts were
+                // made available in dropdown therefore use the 'user client'
+                // user id
+                /**
+                 * @var string $body['client_id']
+                 */
+                $client_id = (int) $body['client_id'];
+                $user_client = $d->ucR->repoUserquery($client_id);
+                if (null !== $user_client && null !==
+                        $user_client->getClient()) {
+                    // no warning necessary a user client relationship exists
+                } else {
+                    $this->flashMessage(
+                        'danger',
+                        $d->clientRepository->repoClientquery($client_id)
+                                         ->getClientFullName()
+                                . ': ' . $this->translator->translate(
+                                    'user.client.no.account'
+                                )
+                    );
+                }
+                // Ensure that the client has only one (paying) user account otherwise reject
+                // this invoice
+                // Related logic: see UserClientRepository function
+                // get_not_assigned_to_user which ensures that only clients that have   NOT
+                // been assigned to a user account are presented in the dropdown box for
+                // available clients. So this line is an extra measure to ensure that the
+                // invoice is being made out to the correct payer ie. not more than one user
+                // is associated with the client.
 
-$user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
-                    if (null !== $user) {
-                        return $this->handleSaveForUser($user, $inv, $body, $formHydrator, $d);
-                    }
-                    $this->flashMessage('warning', $this->translator->translate(
-                            'user.client.active.no'));
+                $user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
+                if (null !== $user) {
+                    return $this->handleSaveForUser($user, $inv, $body, $formHydrator, $d);
+                }
+                $this->flashMessage('warning', $this->translator->translate(
+                    'user.client.active.no'
+                ));
             }
             $this->flashMessage('warning', $this->translator->translate(
-                    'creation.unsuccessful'));
+                'creation.unsuccessful'
+            ));
             $errors =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         } // POST
@@ -96,7 +101,9 @@ $user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
         if (($origin == 'main') || ($origin == 'dashboard')) {
             // update the errors array with latest errors
             $bootstrap5ModalInv->renderPartialLayoutWithFormAsString(
-                $origin, $errors);
+                $origin,
+                $errors
+            );
             // do not use the layout just get the formParameters
             $parameters = $bootstrap5ModalInv->getFormParameters();
             /**
@@ -111,7 +118,9 @@ $user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
             // ->options(['id' => 'modal-add-'.$type,
             'type' => $type,
             'form' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString(
-                $origin, $errors),
+                $origin,
+                $errors
+            ),
             'return_url_action' => 'add',
         ]);
     }
@@ -136,7 +145,8 @@ $user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
         $model_id = $saved_model?->reqId() ?? 0;
         if ($model_id > 0) {
             $this->flashMessage('info', $this->sR->getSetting(
-                'generate_invoice_number_for_draft') === '1'
+                'generate_invoice_number_for_draft'
+            ) === '1'
                 ? $this->translator->translate('generate.invoice.number.for.draft')
                     . '=>' . $this->translator->translate('yes')
                 : $this->translator->translate('generate.invoice.number.for.draft')

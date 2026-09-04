@@ -21,7 +21,7 @@ class PurchaseEntry
 
     #[Column(type: 'primary')]
     private ?int $id = null;
-    
+
     #[Column(type: 'datetime')]
     private DateTimeImmutable $created_at;
 

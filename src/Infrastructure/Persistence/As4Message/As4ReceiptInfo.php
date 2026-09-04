@@ -21,9 +21,18 @@ class As4ReceiptInfo
     #[Cycle\Column(type: 'datetime', nullable: true)]
     private ?DateTimeImmutable $receiptReceivedAt = null;
 
-    public function getReceiptMessageId(): ?string { return $this->receiptMessageId; }
-    public function getReceiptDigest(): ?string { return $this->receiptDigest; }
-    public function getReceiptReceivedAt(): ?DateTimeImmutable { return $this->receiptReceivedAt; }
+    public function getReceiptMessageId(): ?string
+    {
+        return $this->receiptMessageId;
+    }
+    public function getReceiptDigest(): ?string
+    {
+        return $this->receiptDigest;
+    }
+    public function getReceiptReceivedAt(): ?DateTimeImmutable
+    {
+        return $this->receiptReceivedAt;
+    }
 
     public function markReceived(string $messageId, string $digest): void
     {

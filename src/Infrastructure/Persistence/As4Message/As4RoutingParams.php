@@ -15,5 +15,6 @@ final readonly class As4RoutingParams
         public string $service,
         public string $action,
         public string $receiverEndpoint,
-    ) {}
+    ) {
+    }
 }

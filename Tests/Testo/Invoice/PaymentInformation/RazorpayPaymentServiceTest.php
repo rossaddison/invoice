@@ -27,7 +27,6 @@ use Testo\Test;
 #[Test]
 final class RazorpayPaymentServiceTest
 {
-
     /**
      * @return LoggerInterface&m\MockInterface
      */

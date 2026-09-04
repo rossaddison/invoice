@@ -55,7 +55,10 @@ final readonly class InvService
                 && ($array['status_id'] == 2)) {
             $model->setNumber(
                 (string) $gR->generateNumber(
-                    (int) $array['group_id'], true));
+                    (int) $array['group_id'],
+                    true
+                )
+            );
         }
 
         /**
@@ -78,8 +81,10 @@ final readonly class InvService
          */
         $date_supplied = $array['date_supplied'] ??
                 (new DateTimeImmutable('now'))->format('Y-m-d');
-        $model->setDateSupplied($datetime_supplied::createFromFormat('Y-m-d',
-                $date_supplied) ?: new DateTimeImmutable('1901/01/01'));
+        $model->setDateSupplied($datetime_supplied::createFromFormat(
+            'Y-m-d',
+            $date_supplied
+        ) ?: new DateTimeImmutable('1901/01/01'));
 
 
         $date_tax_point_raw = (string) ($array['date_tax_point'] ?? '');
@@ -212,7 +217,8 @@ final readonly class InvService
         $group = 'group_id';
         if (isset($array[$group])) {
             $model->setGroup(
-                $this->gR->repoGroupQuery((int) $array[$group]));
+                $this->gR->repoGroupQuery((int) $array[$group])
+            );
         }
         // Inv::$user is a BelongsTo(nullable: false) relation -- Cycle's
         // writer needs the actual related object, not just the user_id
@@ -244,33 +250,43 @@ final readonly class InvService
         $model->setDateSupplied(
             $array['date_supplied'] instanceof DateTimeImmutable ?
                 $array['date_supplied'] :
-                new DateTimeImmutable('now'));
+                new DateTimeImmutable('now')
+        );
         $model->setDateTaxPoint(
             $array['date_tax_point'] instanceof DateTimeImmutable ?
                 $array['date_tax_point'] :
-                new DateTimeImmutable('now'));
+                new DateTimeImmutable('now')
+        );
         $model->setTimeCreated((string) $array['time_created']);
         $model->setStandInCode((string) $array['stand_in_code']);
         $model->setNumber((string) $array['number']);
         $model->setDiscountAmount(
-            (float) $array['discount_amount']);
+            (float) $array['discount_amount']
+        );
         $model->setTerms(
             (string) $array['terms'] ?:
                 $this->translator->translate(
-                    'payment.term.general'));
+                    'payment.term.general'
+                )
+        );
         $model->setNote((string) $array['note']);
         $model->setDocumentDescription(
-            (string) $array['document_description']);
+            (string) $array['document_description']
+        );
         $model->setUrlKey((string) $array['url_key']);
         $model->setPaymentMethod(
-            (int) $array['payment_method'] ?: 4);
+            (int) $array['payment_method'] ?: 4
+        );
         $model->setCreditinvoiceParentId(
-            (int) $array['creditinvoice_parent_id'] ?: 0);
+            (int) $array['creditinvoice_parent_id'] ?: 0
+        );
         $model->setDeliveryId((int) $array['delivery_id']);
         $model->setDeliveryLocationId(
-            (int) $array['delivery_location_id']);
+            (int) $array['delivery_location_id']
+        );
         $model->setPostalAddressId(
-            (int) $array['postal_address_id']);
+            (int) $array['postal_address_id']
+        );
         $model->setContractId((int) $array['contract_id']);
         $model->setClientPoNumber((string) ($array['client_po_number'] ?? ''));
         $model->setClientPoPerson((string) ($array['client_po_person'] ?? ''));
@@ -364,7 +380,7 @@ final readonly class InvService
         }
         $this->repository->save($model);
     }
-    
+
     public function deleteInv(Inv $inv): void
     {
         $this->repository->delete($inv);

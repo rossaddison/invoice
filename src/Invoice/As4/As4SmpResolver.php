@@ -36,7 +36,8 @@ final class As4SmpResolver implements As4SmpResolverInterface
         private readonly string $smpBaseUrl,
         /** Transport profile to match in the SMP response */
         private readonly string $transportProfile = As4Constants::PEPPOL_TRANSPORT_PROFILE,
-    ) {}
+    ) {
+    }
 
     /**
      * Resolves the AS4 endpoint for the participant described in $query.

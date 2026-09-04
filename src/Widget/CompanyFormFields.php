@@ -53,7 +53,8 @@ final readonly class CompanyFormFields
 
         if ($required) {
             $field = $field->required(true)->hint(
-                    $this->translator->translate($hintKey));
+                $this->translator->translate($hintKey)
+            );
         } else {
             $field = $field->required(false);
         }
@@ -82,9 +83,12 @@ final readonly class CompanyFormFields
      * Company telephone field
      * @param array<string, string> $extraAttributes
      */
-    public function companyTelephoneField(CompanyForm $form, string $fieldName,
-            string $labelKey, array $extraAttributes = []): string
-    {
+    public function companyTelephoneField(
+        CompanyForm $form,
+        string $fieldName,
+        string $labelKey,
+        array $extraAttributes = []
+    ): string {
         $value = match ($fieldName) {
             'phone' => $form->phone,
             'fax' => $form->fax,
@@ -106,9 +110,11 @@ final readonly class CompanyFormFields
     /**
      * Company checkbox field with consistent styling
      */
-    public function companyCheckboxField(CompanyForm $form, string $fieldName,
-            string $labelKey): string
-    {
+    public function companyCheckboxField(
+        CompanyForm $form,
+        string $fieldName,
+        string $labelKey
+    ): string {
         return Field::checkbox($form, $fieldName)
             ->inputLabelAttributes(['class' => 'form-check-label'])
             ->inputClass('form-check-input')

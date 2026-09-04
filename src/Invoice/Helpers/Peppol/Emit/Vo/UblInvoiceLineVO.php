@@ -32,5 +32,6 @@ readonly class UblInvoiceLineVO
         public ?float  $priceBaseQuantity,
         public ?string $priceBaseQuantityUnitCode,
         public array   $allowanceCharges,
-    ) {}
+    ) {
+    }
 }

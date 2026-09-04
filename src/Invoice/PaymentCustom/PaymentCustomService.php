@@ -28,10 +28,12 @@ final readonly class PaymentCustomService
         $this->persist($model, $array);
         isset($array['payment_id']) ?
             $model->setPaymentId(
-                (int) $array['payment_id']) : '';
+                (int) $array['payment_id']
+            ) : '';
         isset($array['custom_field_id']) ?
             $model->setCustomFieldId(
-                (int) $array['custom_field_id']) : '';
+                (int) $array['custom_field_id']
+            ) : '';
         isset($array['value']) ?
             $model->setValue((string) $array['value']) : '';
 
@@ -45,7 +47,8 @@ final readonly class PaymentCustomService
         $payment = 'payment_id';
         if (isset($array[$payment])) {
             $paymentEntity = $this->pR->repoPaymentquery(
-                (int) $array[$payment]);
+                (int) $array[$payment]
+            );
             if ($paymentEntity) {
                 $model->setPayment($paymentEntity);
             }
@@ -54,7 +57,9 @@ final readonly class PaymentCustomService
         if (isset($array[$custom_field])) {
             $model->setCustomField(
                 $this->cfR->repoCustomFieldquery(
-                    (int) $array[$custom_field]));
+                    (int) $array[$custom_field]
+                )
+            );
         }
     }
 

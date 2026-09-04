@@ -32,8 +32,8 @@ class FamilyCustom
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $custom_field_id = null,
         #[Column(type: 'text', nullable: true)]
-        private ?string $value = null)
-    {
+        private ?string $value = null
+    ) {
     }
 
     public function getFamily(): ?Family
@@ -70,7 +70,7 @@ class FamilyCustom
     {
         $this->id = $id;
     }
-    
+
     public function reqFamilyId(): int
     {
         return $this->requireId($this->family_id, 'Family');

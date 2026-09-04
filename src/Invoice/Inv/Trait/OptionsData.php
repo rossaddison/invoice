@@ -110,7 +110,8 @@ trait OptionsData
          * @var string $value
          */
         foreach ($this->sR->getPaymentTermArray(
-                $this->translator) as $key => $value) {
+            $this->translator
+        ) as $key => $value) {
             $optionsDataPaymentTerm[$key] = $value;
         }
         $optionsDataPostalAddress = [];
@@ -145,7 +146,7 @@ trait OptionsData
             'postalAddress' => $optionsDataPostalAddress,
         ];
     }
-    
+
     /** @psalm-return array<array-key, string> */
     public function optionsDataClientsFilter(IR $iR): array
     {
@@ -293,8 +294,8 @@ trait OptionsData
     public function optionsDataCreditInvNumberGuestFilter(
         SDI
             &DRI $invs,
-        IR $iR): array
-    {
+        IR $iR
+    ): array {
         $optionsData = [];
         /** @var Inv $inv */
         foreach ($invs as $inv) {
@@ -314,8 +315,8 @@ trait OptionsData
 
     public function optionsDataInvNumberGuestFilter(
         SDI
-            &DRI $invs): array
-    {
+            &DRI $invs
+    ): array {
         $optionsDataInvNumbers = [];
         /**
          * @var Inv $inv

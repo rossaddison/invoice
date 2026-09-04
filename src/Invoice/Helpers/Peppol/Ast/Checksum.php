@@ -21,5 +21,6 @@ readonly class Checksum implements Expression
     public function __construct(
         public ChecksumAlgorithm $algorithm,
         public Expression        $value,
-    ) {}
+    ) {
+    }
 }

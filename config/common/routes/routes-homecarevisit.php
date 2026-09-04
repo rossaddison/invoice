@@ -9,10 +9,9 @@ use Yiisoft\Router\Route;
 
 return [
     RoutePermission::invoiceGroup(
-
-            Route::get('/homecarevisit')
+        Route::get('/homecarevisit')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([HomeCareVisitController::class, 'index'])
                 ->name('homecarevisit/index'),
-        ), // invoice
+    ), // invoice
 ];

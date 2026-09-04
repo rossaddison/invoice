@@ -53,7 +53,7 @@ final class QuoteItemForm extends FormModel
         $form->quote_id = $quoteId;
         return $form;
     }
-    
+
     public function getQuoteId(): ?int
     {
         return $this->quote_id;

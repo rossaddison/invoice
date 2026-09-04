@@ -21,5 +21,6 @@ final readonly class As4SmpQuery
         public string $documentTypeId,
         /** Peppol process identifier, e.g. "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0" */
         public string $processId,
-    ) {}
+    ) {
+    }
 }

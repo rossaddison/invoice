@@ -18,8 +18,7 @@ class Price implements XmlSerializable
         private readonly string $baseQuantity,
         private readonly string $unitCodeListId,
         private SettingRepository $s,
-    )
-    {
+    ) {
     }
 
     /**
@@ -41,7 +40,8 @@ class Price implements XmlSerializable
             [
                 'name' => Schema::CBC . 'PriceAmount',
                 'value' => $this->s->currencyConverter(
-                 number_format((float) $this->priceAmount ?: 0.00, 2, '.', '')),
+                    number_format((float) $this->priceAmount ?: 0.00, 2, '.', '')
+                ),
                 'attributes' => [
                     'currencyID' =>
                                 $this->s->getSetting('peppol_document_curency'),

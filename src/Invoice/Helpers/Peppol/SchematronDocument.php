@@ -30,5 +30,6 @@ readonly class SchematronDocument
         public array $namespaces,
         public array $variables,
         public array $rules,
-    ) {}
+    ) {
+    }
 }

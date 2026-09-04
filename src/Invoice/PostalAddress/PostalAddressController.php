@@ -41,8 +41,15 @@ final class PostalAddressController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $webViewRenderer,
-                                                        $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
         $this->postaladdressService = $postaladdressService;
     }
 
@@ -80,9 +87,12 @@ final class PostalAddressController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->postaladdressService->savePostalAddress(
-                        $postalAddress, $body);
+                        $postalAddress,
+                        $body
+                    );
                     $this->flashMessage('success', $this->translator->translate(
-                        'record.successfully.created'));
+                        'record.successfully.created'
+                    ));
                     $url = $origin . '/' . ($action ?: 'index');
                     if ($origin_id) {
                         return $this->webService->getRedirectResponse($url, [
@@ -143,15 +153,18 @@ final class PostalAddressController extends BaseController
      * @param PostalAddressRepository $paR
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute,
-                                        PostalAddressRepository $paR): Response
-    {
+    public function delete(
+        CurrentRoute $currentRoute,
+        PostalAddressRepository $paR
+    ): Response {
         try {
             $postaladdress = $this->postaladdress($currentRoute, $paR);
             if ($postaladdress) {
                 $this->postaladdressService->deletePostalAddress($postaladdress);
-                $this->flashMessage('info',
-                    $this->translator->translate('record.successfully.deleted'));
+                $this->flashMessage(
+                    'info',
+                    $this->translator->translate('record.successfully.deleted')
+                );
                 return $this->webService->getRedirectResponse('postaladdress/index');
             }
             return $this->webService->getRedirectResponse('postaladdress/index');
@@ -174,15 +187,17 @@ final class PostalAddressController extends BaseController
         FormHydrator $formHydrator,
         PostalAddressRepository $postalAddressRepository,
     ): Response {
-        $postalAddress = $this->postaladdress($currentRoute,
-                                                    $postalAddressRepository);
+        $postalAddress = $this->postaladdress(
+            $currentRoute,
+            $postalAddressRepository
+        );
         if ($postalAddress) {
             $queryParams = $request->getQueryParams();
-/**
- * Related logic:
- *  see config/common/routes/routes.php
- *   '/postaladdress/edit/{id}[/{origin}/{origin_id}/{action}]'
- */
+            /**
+             * Related logic:
+             *  see config/common/routes/routes.php
+             *   '/postaladdress/edit/{id}[/{origin}/{origin_id}/{action}]'
+             */
             $origin = (string) ($queryParams['origin'] ?? '');
             $origin_id = (int) ($queryParams['origin_id'] ?? 0);
             $action = (string) ($queryParams['action'] ?? '');
@@ -204,14 +219,19 @@ final class PostalAddressController extends BaseController
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $this->postaladdressService->savePostalAddress(
-                                                        $postalAddress, $body);
-                        $this->flashMessage('success',
-                                $this->translator->translate(
-                                        'record.successfully.created'));
-                                            $url = $origin . '/' . $action;
-// Route::methods([Method::GET, Method::POST],
-//  '/postaladdress/edit/{client_id}[/{origin}/{origin_id}/{action}]')
-/** @psalm-suppress MixedArgumentTypeCoercion */
+                            $postalAddress,
+                            $body
+                        );
+                        $this->flashMessage(
+                            'success',
+                            $this->translator->translate(
+                                'record.successfully.created'
+                            )
+                        );
+                        $url = $origin . '/' . $action;
+                        // Route::methods([Method::GET, Method::POST],
+                        //  '/postaladdress/edit/{client_id}[/{origin}/{origin_id}/{action}]')
+                        /** @psalm-suppress MixedArgumentTypeCoercion */
                         return $origin_id
                             ? $this->webService->getRedirectResponse($url, ['id' => $origin_id])
                             : $this->webService->getRedirectResponse($url);
@@ -236,10 +256,11 @@ final class PostalAddressController extends BaseController
      */
     private function postaladdress(
         CurrentRoute $currentRoute,
-        PostalAddressRepository $paR): ?PostalAddress
-    {
+        PostalAddressRepository $paR
+    ): ?PostalAddress {
         return $paR->repoPostalAddressLoadedquery(
-            (int) $currentRoute->getArgument('id'));
+            (int) $currentRoute->getArgument('id')
+        );
     }
 
     /**
@@ -261,8 +282,10 @@ final class PostalAddressController extends BaseController
         CurrentRoute $currentRoute,
         PostalAddressRepository $postalAddressRepository,
     ): \Psr\Http\Message\ResponseInterface {
-        $postalAddress = $this->postaladdress($currentRoute,
-                                                    $postalAddressRepository);
+        $postalAddress = $this->postaladdress(
+            $currentRoute,
+            $postalAddressRepository
+        );
         if ($postalAddress) {
             $form = PostalAddressForm::show($postalAddress, null);
             $parameters = [

@@ -11,7 +11,6 @@ use RequireId;
  */
 trait CustomFieldTrait2
 {
-
     public function setEmailMinLength(int $min): void
     {
         $this->email_min_length = $min;

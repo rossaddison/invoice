@@ -19,7 +19,6 @@ use DateTimeImmutable;
  */
 trait SalesOrderTrait2
 {
-
     public function hasLinkedInvoice(): bool
     {
         return null !== $this->inv_id && 0 !== $this->inv_id;

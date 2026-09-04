@@ -251,7 +251,12 @@ final class GeneratorGoogleTranslateController extends BaseController
             return "{$locale}: already up to date";
         }
         return $this->translateMergeAndWriteLocale(
-            $translationClient, $projectId, $locale, $targetAppPath, $existing, $missing
+            $translationClient,
+            $projectId,
+            $locale,
+            $targetAppPath,
+            $existing,
+            $missing
         );
     }
 

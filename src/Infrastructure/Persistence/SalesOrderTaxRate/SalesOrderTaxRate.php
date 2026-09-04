@@ -19,7 +19,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class SalesOrderTaxRate
 {
     use RequireId;
- 
+
     #[BelongsTo(target: SalesOrder::class, nullable: false, fkAction: 'NO ACTION')]
     private ?SalesOrder $sales_order = null;
 

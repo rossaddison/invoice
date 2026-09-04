@@ -112,44 +112,44 @@ class PeppolHelper
 
     // ISO 6523 ICD description prefix constants (used 6+ times in getIso6523Icd())
     public const string ICD_A_CODE_IDENTIFYING_THE_PRODUCT_IN_NATIONAL =
-            'A code identifying the product in national ';
+        'A code identifying the product in national ';
     public const string ICD_A_IN_THE_SIO_THE =
-            'a) In the SIO the ';
+        'a) In the SIO the ';
     public const string ICD_FORMS_THE = 'The ICD code forms the ';
     public const string ICD_EDIRA_COMPLIANT = '(EDIRA compliant)';
     public const string ICD_E_INVOICING_PURCHASING_ELECTRONIC_RECEIPTS =
-            'e-invoicing, purchasing, electronic receipts. ';
+        'e-invoicing, purchasing, electronic receipts. ';
     public const string ICD_FINANCIERE_DE_L_ETAT = 'FinanciÃ¨re de lâ€™Etat)';
     public const string ICD_INVOICE_ISSUE_DATE =
-            'Invoice Issue Date/Time ie. Date Created/Issued';
+        'Invoice Issue Date/Time ie. Date Created/Issued';
     public const string ICD_INITIAL_PART_OSI =
-            'initial part of the OSI network addressing and naming ';
+        'initial part of the OSI network addressing and naming ';
     public const string ICD_ISSUING_AGENCY_AIFE_AGENCE_POUR_L_INFORMATIQUE =
-            'Issuing agency: AIFE (Agence pour lâ€™Informatique ';
+        'Issuing agency: AIFE (Agence pour lâ€™Informatique ';
     public const string ICD_ISSUE_INVOICE_DATE =
-            'Invoice Issue Date/Time ie. Date Created/Issued';
+        'Invoice Issue Date/Time ie. Date Created/Issued';
     public const string ICD_PURPOSE_TO_PROVIDE =
-            'Intended Purpose/App. Area: To provide ';
+        'Intended Purpose/App. Area: To provide ';
     public const string ICD_PURPOSE_IDENTIFICATION =
-            'Intended Purpose/App. Area: Identification ';
+        'Intended Purpose/App. Area: Identification ';
     public const string ICD_PURPOSE_FOR_USE_IN_EDI =
-            'Intended Purpose/App. Area: For use in EDI ';
+        'Intended Purpose/App. Area: For use in EDI ';
     public const string ICD_PURPOSE_USED_TO_IDENTIFY =
-            'Intended Purpose/App. Area: Used to identify';
+        'Intended Purpose/App. Area: Used to identify';
     public const string ICD_PURPOSE_ELECTRONIC =
-            'Intended Purpose/App. Area: Electronic ';
+        'Intended Purpose/App. Area: Electronic ';
     public const string ICD_REFERENCE_NUMBER_IDENTIFYING_A =
-            'Reference number identifying a ';
+        'Reference number identifying a ';
     public const string ICD_SCHEME_WILL_BE_USED_FOR_ELECTRONIC_TRADE_PURPOSES_IN =
-            'scheme will be used for electronic trade purposes in ';
+        'scheme will be used for electronic trade purposes in ';
     public const string ICD_TO_BE_USED_FOR =
-            'To be used for ';
+        'To be used for ';
     public const string ICD_THE_ICD_CODE_WILL_FORM =
-            'The ICD code will form ';
+        'The ICD code will form ';
     public const string ICD_TREE_DEPICTED_ADDENDUM_2_ISO_8348 =
-            'tree as depicted in Addendum 2 to ISO 8348. ';
+        'tree as depicted in Addendum 2 to ISO 8348. ';
     public const string ICD_WILL_ALSO = 'The ICD code will also ';
-   
+
     private const string CREDIT_NOTE_GROUP_NAME = 'Credit Note Group';
 
     private readonly DateHelper $datehelper;
@@ -186,7 +186,7 @@ class PeppolHelper
         }
         return $this->creditNoteGroupId > 0 && $invoice->reqGroupId() === $this->creditNoteGroupId;
     }
-    
+
     /** @psalm-suppress UnusedReturnValue */
     private function ensureTempPeppolFolderAndUploadsFolderExist(): Aliases
     {
@@ -235,7 +235,8 @@ class PeppolHelper
         $f = fopen($path, 'wb');
         if (!$f) {
             throw new PeppolHelperException(
-                    sprintf('Unable to create output file %s', $path));
+                sprintf('Unable to create output file %s', $path)
+            );
         }
         $deliveryLocation_ID_scheme =
                 $this->buildDeliveryLocationIDScheme();
@@ -274,50 +275,60 @@ class PeppolHelper
         /** @var float $totals_of_line_items_array['total'] */
         $payableAmount = $totals_of_line_items_array['total'];
 
-// Buyer Reference https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
+        // Buyer Reference https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
         $buyerReference = $this->resolveInitialBuyerReference($invoice, $inv->soR);
         $supplierParty = $this->buildSupplierParty();
         $customerParty = $this->buildCustomerParty($invoice, $inv->paR, $inv->cpR);
         $payment_means_array = $this->buildPeppolPaymentMeansArray();
         $payeeFinancialAccount = $this->buildFinancialAccount(
-                                                        $payment_means_array);
+            $payment_means_array
+        );
         // return the $paymentId (ie. a payment reference id)
         $paymentId =
                 'peppol' . ($invoice->getNumber() ?? 'Number unavailable')
                 .  new DateTime()->format(self::DATE_FORMAT_YMD);
         $payment_terms = $invoice->getTerms();
-// Related logic:
-// https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/
-// When the tax currency code is different and therefore provided,
-// two instances of the tax total must be present,
-// but only one with tax subtotal ie. the elected doc currency code's tax subtotal
+        // Related logic:
+        // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/
+        // When the tax currency code is different and therefore provided,
+        // two instances of the tax total must be present,
+        // but only one with tax subtotal ie. the elected doc currency code's tax subtotal
         $inv_amount = $inv->iaR->repoInvquery($invoice->reqId());
         $supp_tax_cc_tax_amount = (null !== $inv_amount ?
                 $inv_amount->getItemTaxTotal() : 0.00);
         $taxAmounts_item_subtotal = $this->TaxAmounts($supp_tax_cc_tax_amount);
         $taxSubtotal = $this->buildTaxSubtotalArray($invoice, $inv->iiaR, $charge->trR);
         $issueDate = DateTime::createFromImmutable(
-                                            $invoice->getDateCreated());
+            $invoice->getDateCreated()
+        );
         $taxPointDate = DateTime::createFromImmutable(
-                                            $invoice->getDateTaxPoint());
+            $invoice->getDateTaxPoint()
+        );
         $dueDate = DateTime::createFromImmutable(
-                                            $invoice->getDateDue());
+            $invoice->getDateDue()
+        );
         $accountingCost = $this->AccountingCost(
-                                            $invoice, $inv->cpR);
+            $invoice,
+            $inv->cpR
+        );
         $additionalDocumentReferences =
                 $this->AdditionalDocumentReference(
-                                            $invoice, $net->upR);
+                    $invoice,
+                    $net->upR
+                );
         $allowanceCharges = $this->DocumentLevelAllowanceCharges(
-                                            $invoice, $charge->aciR);
-// https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
-// $buyer_fallback_reference derived from ClientPeppol entity => extension table
-// to Client. This is a fallback reference provided by the client on their login
-// side
+            $invoice,
+            $charge->aciR
+        );
+        // https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
+        // $buyer_fallback_reference derived from ClientPeppol entity => extension table
+        // to Client. This is a fallback reference provided by the client on their login
+        // side
         $buyer_fallback_reference = $this->BuyerReference($invoice, $inv->cpR);
-// if no client purchase order person is provided use the
-// $buyer_fallback_reference
+        // if no client purchase order person is provided use the
+        // $buyer_fallback_reference
         $buyerReference = $buyerReference ?: $buyer_fallback_reference;
-// No reference can be made therefore throw an exception
+        // No reference can be made therefore throw an exception
         if (empty($buyerReference)) {
             throw new BuyerRefNf();
         }
@@ -325,21 +336,29 @@ class PeppolHelper
         $id = $invoice->reqId();
         $invoiceLines =
             $this->buildInvoiceLinesArray(
-                $invoice, $invoice_period, $inv->iiaR, $inv->cpR, $charge->soiR,
-                    $charge->aciiR, $net->unpR);
+                $invoice,
+                $invoice_period,
+                $inv->iiaR,
+                $inv->cpR,
+                $charge->soiR,
+                $charge->aciiR,
+                $net->unpR
+            );
         $profileID = 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0';
         $supplierAssignedAccountID = $this->SupplierAssignedAccountId(
-                                                            $invoice, $inv->cpR);
+            $invoice,
+            $inv->cpR
+        );
         $note = $invoice->getNote() ?? '';
         if (null == $note) {
             throw new InvoiceNoteNf($this->t);
         }
         // Resolve PO number and optional SO id; throws SalesOrderNf / BuyerRefNf
         $po_data = $this->resolvePoData($invoice, $inv);
-// https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
-// Only permit a description code if there is no tax point date ie.
-//                           DateTimeImmutable->format('Y-m-d') === 1901/01/01
-// since the tax_point_date and description code are mutually exclusive
+        // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
+        // Only permit a description code if there is no tax point date ie.
+        //                           DateTimeImmutable->format('Y-m-d') === 1901/01/01
+        // since the tax_point_date and description code are mutually exclusive
         $description_code = $this->noTaxPointDate($invoice)
             ? $this->DescriptionCode($invoice, $net->delRepo) : '';
         $peppolHeader = new PeppolInvoiceHeader(
@@ -484,13 +503,14 @@ class PeppolHelper
      * @param UPR $upR
      * @return AdditionalDocumentReference
      */
-    private function additionalDocumentReference(Inv $invoice, upR $upR):
-                                                    AdditionalDocumentReference
+    private function additionalDocumentReference(Inv $invoice, upR $upR): AdditionalDocumentReference
     {
         $url_key = $invoice->getUrlKey();
         $invoice_number = $this->invoiceReferenceId($invoice);
         $inv_attachments = $upR->repoUploadUrlClientquery(
-                                        $url_key, $invoice->reqClientId());
+            $url_key,
+            $invoice->reqClientId()
+        );
         $aliases = $this->s->getCustomerFilesFolderAliases();
         $targetPath = $aliases->get('@customer_files');
         $attachments = [];
@@ -508,11 +528,11 @@ class PeppolHelper
              */
             $path_info_extension = $path_info['extension'];
             if ($path_info_extension === 'pdf') {
-// https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
-//                                              cac-AdditionalDocumentReference/
-// $inv_attachment->reqId() => upload repository id
-// https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
-//      cac-AdditionalDocumentReference/cac-Attachment/cac-ExternalReference/
+                // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
+                //                                              cac-AdditionalDocumentReference/
+                // $inv_attachment->reqId() => upload repository id
+                // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
+                //      cac-AdditionalDocumentReference/cac-Attachment/cac-ExternalReference/
                 $attachments[$inv_attachment->reqId()]
                   = new Attachment(
                       // 'filePath' used to generate file_contents
@@ -556,8 +576,7 @@ class PeppolHelper
      * @param array $payment_means_array
      * @return PayeeFinancialAccount
      */
-    public function buildFinancialAccount(array $payment_means_array):
-        PayeeFinancialAccount
+    public function buildFinancialAccount(array $payment_means_array): PayeeFinancialAccount
     {
         /**
          * @var array $payment_means_array['PayeeFinancialAccount']
@@ -620,12 +639,12 @@ class PeppolHelper
          * @var array $config_peppol['PaymentMeans']
          */
         $config = $config_peppol['PaymentMeans'] ?? [];
-    /**
-     * @var array $config['PayeeFinancialAccount']
-     * @var array $config['PayeeFinancialAccount']['FinancialInstitutionBranch']
-     * @var string $config['PayeeFinancialAccount']['ID']
-     * @var string $config['PayeeFinancialAccount']['Name']
-     */
+        /**
+         * @var array $config['PayeeFinancialAccount']
+         * @var array $config['PayeeFinancialAccount']['FinancialInstitutionBranch']
+         * @var string $config['PayeeFinancialAccount']['ID']
+         * @var string $config['PayeeFinancialAccount']['Name']
+         */
         return [
             'PayeeFinancialAccount' => [
                 // eg. IBAN number
@@ -657,7 +676,8 @@ class PeppolHelper
         if (null !== $client) {
             $client_id = $client->reqId();
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                                                        $client_id);
+                $client_id
+            );
             if (null !== $client_peppol) {
                 return $client_peppol->getBuyerReference();
             }
@@ -670,11 +690,12 @@ class PeppolHelper
      * @param ContractRepo $contractRepo
      * @return string|null
      */
-    public function contractDocumentReference(Inv $invoice,
-                                            ContractRepo $contractRepo): ?string
-    {
+    public function contractDocumentReference(
+        Inv $invoice,
+        ContractRepo $contractRepo
+    ): ?string {
         $contract_id = $invoice->getContractId();
-        if (null!==$contract_id) {
+        if (null !== $contract_id) {
             $contract = $contractRepo->repoContractquery($contract_id);
             if ($contract) {
                 return $contract->getReference();
@@ -757,7 +778,10 @@ class PeppolHelper
             // or date created or payment date
             $input_date = DateTime::createFromImmutable($date_created_or_issued);
             $description_code = $this->getDescriptionCodeForTaxPoint(
-                            $invoice, $date_supplied, $date_created_or_issued);
+                $invoice,
+                $date_supplied,
+                $date_created_or_issued
+            );
         } else {
             // => there IS a need for a visible peppol tax point
             // therefore base the invoice period on the tax point
@@ -768,7 +792,10 @@ class PeppolHelper
         // if the invoice has a delivery period use the delivery period's begin
         // and end date
         $start_end_array = $datehelper->invoicePeriodStartEnd(
-                                        $invoice, $input_date, $this->delRepo);
+            $invoice,
+            $input_date,
+            $this->delRepo
+        );
         $startDate = (string) $start_end_array['StartDate'];
         $endDate = (string) $start_end_array['EndDate'];
         return new InvoicePeriod($startDate, $endDate, $description_code);
@@ -796,12 +823,14 @@ class PeppolHelper
      * @param DateTimeImmutable $date_created
      * @return string
      */
-    public function getDescriptionCodeForTaxPoint(Inv $inv,
-    DateTimeImmutable $date_supplied, DateTimeImmutable $date_created): string
-    {
-// For yii3-i,'Date created' is used interchangeably with 'Date issued'
-// https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL2005/
-// Subset from resources/peppol/uncl2005.php
+    public function getDescriptionCodeForTaxPoint(
+        Inv $inv,
+        DateTimeImmutable $date_supplied,
+        DateTimeImmutable $date_created
+    ): string {
+        // For yii3-i,'Date created' is used interchangeably with 'Date issued'
+        // https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL2005/
+        // Subset from resources/peppol/uncl2005.php
         $uncl2005_subset_array = [
             self::ICD_ISSUE_INVOICE_DATE => '3',
             'Actual Delivery Date/Time ie. Date Supplied' => '35',

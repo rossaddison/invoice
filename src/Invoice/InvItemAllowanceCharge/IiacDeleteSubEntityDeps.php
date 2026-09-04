@@ -15,5 +15,6 @@ final class IiacDeleteSubEntityDeps
         public readonly InvItemAmountRepository $iiaR,
         public readonly InvAllowanceChargeRepository $aciR,
         public readonly InvItemAllowanceChargeRepository $aciiR,
-    ) {}
+    ) {
+    }
 }

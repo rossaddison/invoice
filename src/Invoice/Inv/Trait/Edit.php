@@ -60,20 +60,28 @@ trait Edit
         if ($locale === 'en'
                 && ($this->sR->getLocaleFlags()[$locale] ?? null) === 'gb') {
             $note_on_tax_point = $this->webViewRenderer->renderPartialAsString(
-                '//invoice/info/taxpoint');
+                '//invoice/info/taxpoint'
+            );
         }
         $parameters = [
             'actionName' => 'inv/edit',
             'actionArguments' => ['id' => $inv_id],
             'contractCount' => $loc->contractRepo->repoClientCount(
-                $inv->reqClientId()),
+                $inv->reqClientId()
+            ),
             'customFields' => $this->fetchCustomFieldsAndValues(
-                $form->cfR, $form->cvR, 'inv_custom')['customFields'],
+                $form->cfR,
+                $form->cvR,
+                'inv_custom'
+            )['customFields'],
             'cvH' => new CVH($this->sR, $form->cvR),
             // Applicable to normally building up permanent selection lists
             // eg. dropdowns
             'customValues' => $this->fetchCustomFieldsAndValues(
-                $form->cfR, $form->cvR, 'inv_custom')['customValues'],
+                $form->cfR,
+                $form->cvR,
+                'inv_custom'
+            )['customValues'],
             // There will initially be no custom_values attached to this
             // invoice until they are filled in the field on the form
             'defaultGroupId' => $defaultGroupId,
@@ -115,7 +123,11 @@ trait Edit
             } else {
                 if ((int) ($body['status_id'] ?? 0) === 4) {
                     $this->settleBalanceOnStatusPaid(
-                        $inv_id, $form->iaR, $core, $pay->paymentService, $pay->invRecalculator,
+                        $inv_id,
+                        $form->iaR,
+                        $core,
+                        $pay->paymentService,
+                        $pay->invRecalculator,
                     );
                 }
                 $response = $this->handleEditPost($body, $id, $inv_id, $parameters, $formHydrator, $core);
@@ -128,7 +140,7 @@ trait Edit
             ? $this->webViewRenderer->render('_form_edit', $parameters)
             : $this->webService->getRedirectResponse('inv/index');
     }
-    
+
     /** @param array<string, mixed> $parameters */
     private function handleEditPost(
         array $body,
@@ -214,9 +226,12 @@ trait Edit
         $invRecalculator->recalculate($invId);
     }
 
-    public function editSaveFormFields(array|object|null $body, int $id,
-        FormHydrator $formHydrator, InvEditCoreDeps $core): ?InvForm
-    {
+    public function editSaveFormFields(
+        array|object|null $body,
+        int $id,
+        FormHydrator $formHydrator,
+        InvEditCoreDeps $core
+    ): ?InvForm {
         $inv = $this->inv($id, $core->invRepo, true);
         if ($inv) {
             $client_id = $inv->reqClientId();
@@ -224,8 +239,13 @@ trait Edit
             if (null !== $user) {
                 $form = InvForm::show($inv);
                 if (null !== $body && is_array($body) && $formHydrator->populateAndValidate($form, $body)) {
-                    $this->inv_service->saveInv($user, $inv, $body,
-                        $this->sR, $core->groupRepo);
+                    $this->inv_service->saveInv(
+                        $user,
+                        $inv,
+                        $body,
+                        $this->sR,
+                        $core->groupRepo
+                    );
                 }
                 return $form;
             } // null !== $user

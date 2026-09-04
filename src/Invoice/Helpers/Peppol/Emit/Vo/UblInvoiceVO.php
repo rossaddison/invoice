@@ -59,5 +59,6 @@ readonly class UblInvoiceVO
         public array                  $paymentMeans,
         public ?string                $paymentTermsNote,
         public ?string                $paymentId,
-    ) {}
+    ) {
+    }
 }

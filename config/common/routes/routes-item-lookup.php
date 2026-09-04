@@ -10,30 +10,25 @@ use Yiisoft\Router\Route;
 
 return [
     RoutePermission::invoiceGroup(
-
-            Route::get('/itemlookup')
+        Route::get('/itemlookup')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([ItemLookupController::class, 'index'])
                 ->name('itemlookup/index'),
-
-            Route::methods([Method::GET, Method::POST], '/itemlookup/add')
+        Route::methods([Method::GET, Method::POST], '/itemlookup/add')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([ItemLookupController::class, 'add'])
                 ->name('itemlookup/add'),
-
-            Route::methods([Method::GET, Method::POST], '/itemlookup/edit/{id}')
+        Route::methods([Method::GET, Method::POST], '/itemlookup/edit/{id}')
                 ->name('itemlookup/edit')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([ItemLookupController::class, 'edit']),
-
-            Route::methods([Method::GET, Method::POST], '/itemlookup/delete/{id}')
+        Route::methods([Method::GET, Method::POST], '/itemlookup/delete/{id}')
                 ->name('itemlookup/delete')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([ItemLookupController::class, 'delete']),
-
-            Route::methods([Method::GET, Method::POST], '/itemlookup/view/{id}')
+        Route::methods([Method::GET, Method::POST], '/itemlookup/view/{id}')
                 ->name('itemlookup/view')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([ItemLookupController::class, 'view']),
-        ), // invoice
+    ), // invoice
 ];

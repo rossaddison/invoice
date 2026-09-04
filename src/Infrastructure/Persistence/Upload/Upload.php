@@ -16,7 +16,7 @@ use DateTimeImmutable;
 class Upload
 {
     use RequireId;
-    
+
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 

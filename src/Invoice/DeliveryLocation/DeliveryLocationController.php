@@ -44,8 +44,15 @@ final class DeliveryLocationController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator,
-                                        $webViewRenderer, $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
         $this->delService = $delService;
         $this->factory = $factory;
     }
@@ -89,8 +96,10 @@ final class DeliveryLocationController extends BaseController
 
     public function addInInvoiceFlash(): void
     {
-        $this->flashMessage('info',
-                $this->translator->translate('delivery.location.add.in.invoice'));
+        $this->flashMessage(
+            'info',
+            $this->translator->translate('delivery.location.add.in.invoice')
+        );
     }
 
     /**
@@ -146,24 +155,26 @@ final class DeliveryLocationController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                    $this->delService->saveDeliveryLocation($delivery_location, $body);
-                    $this->flashMessage('success',
-                    $this->translator->translate('record.successfully.created'));
-                    $url = $origin . '/' . $action;
-// Route::methods([Method::GET, Method::POST], '/del/add/{client_id}
-// [/{origin}/{origin_id}/{action}]')
-                    if ($origin_id) {
-// Redirect to client/view: invoice.myhost/invoice/del/add/25/client/25/view
-                        /**
-                         * @psalm-suppress MixedArgumentTypeCoercion
-                         */
-                        return $this->webService->getRedirectResponse($url, [
-                            'id' => $origin_id,
-                            '_language' => $currentRoute->getArgument('_language'),
-                        ]);
-                    }
-                    // Redirect to inv/index
-                    return $this->webService->getRedirectResponse($url);
+                $this->delService->saveDeliveryLocation($delivery_location, $body);
+                $this->flashMessage(
+                    'success',
+                    $this->translator->translate('record.successfully.created')
+                );
+                $url = $origin . '/' . $action;
+                // Route::methods([Method::GET, Method::POST], '/del/add/{client_id}
+                // [/{origin}/{origin_id}/{action}]')
+                if ($origin_id) {
+                    // Redirect to client/view: invoice.myhost/invoice/del/add/25/client/25/view
+                    /**
+                     * @psalm-suppress MixedArgumentTypeCoercion
+                     */
+                    return $this->webService->getRedirectResponse($url, [
+                        'id' => $origin_id,
+                        '_language' => $currentRoute->getArgument('_language'),
+                    ]);
+                }
+                // Redirect to inv/index
+                return $this->webService->getRedirectResponse($url);
             }
             $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -210,19 +221,23 @@ final class DeliveryLocationController extends BaseController
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
-                if (is_array($body) && $formHydrator->populateFromPostAndValidate($form,
-                                                                    $request)) {
-                        $this->delService->saveDeliveryLocation($del, $body);
-                        $this->flashMessage('success',
-                        $this->translator->translate('record.successfully.created'));
-                        $url = $origin . '/' . $action;
-// Route::methods([Method::GET, Method::POST],
-//  '/del/edit/{client_id}[/{origin}/{origin_id}/{action}]')
-// Redirect to client/view or inv/index
-                        /** @psalm-suppress MixedArgumentTypeCoercion */
-                        return $origin_id
-                            ? $this->webService->getRedirectResponse($url, ['id' => $origin_id])
-                            : $this->webService->getRedirectResponse($url);
+                if (is_array($body) && $formHydrator->populateFromPostAndValidate(
+                    $form,
+                    $request
+                )) {
+                    $this->delService->saveDeliveryLocation($del, $body);
+                    $this->flashMessage(
+                        'success',
+                        $this->translator->translate('record.successfully.created')
+                    );
+                    $url = $origin . '/' . $action;
+                    // Route::methods([Method::GET, Method::POST],
+                    //  '/del/edit/{client_id}[/{origin}/{origin_id}/{action}]')
+                    // Redirect to client/view or inv/index
+                    /** @psalm-suppress MixedArgumentTypeCoercion */
+                    return $origin_id
+                        ? $this->webService->getRedirectResponse($url, ['id' => $origin_id])
+                        : $this->webService->getRedirectResponse($url);
                 }
                 $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -246,8 +261,10 @@ final class DeliveryLocationController extends BaseController
             $del = $this->del($currentRoute, $delRepository);
             if ($del) {
                 $this->delService->deleteDeliveryLocation($del);
-                $this->flashMessage('info',
-                    $this->translator->translate('record.successfully.deleted'));
+                $this->flashMessage(
+                    'info',
+                    $this->translator->translate('record.successfully.deleted')
+                );
                 return $this->webService->getRedirectResponse('del/index');
             }
             return $this->webService->getRedirectResponse('del/index');
@@ -269,8 +286,7 @@ final class DeliveryLocationController extends BaseController
         DeliveryLocationRepository $delRepository,
         UCR $ucR,
         UIR $uiR
-    ): Response
-    {
+    ): Response {
         $del = $this->del($currentRoute, $delRepository);
         if ($del) {
             $form = DeliveryLocationForm::show($del);
@@ -292,9 +308,10 @@ final class DeliveryLocationController extends BaseController
         return $this->webService->getRedirectResponse('del/index');
     }
 
-    private function rbacObserver(int $clientId, UCR $ucR, UIR $uiR): bool {
+    private function rbacObserver(int $clientId, UCR $ucR, UIR $uiR): bool
+    {
         $userClient = $ucR->repoUserquery($clientId);
-        if (null!==$userClient) {
+        if (null !== $userClient) {
             $userId = $userClient->reqUserId();
             $userInv = $uiR->repoUserInvUserIdquery($userId);
             if (null !== $userInv && $userInv->getActive()) {
@@ -304,7 +321,8 @@ final class DeliveryLocationController extends BaseController
         return false;
     }
 
-    private function rbacAdmin() : bool {
+    private function rbacAdmin(): bool
+    {
         return $this->userService->hasPermission(Permissions::VIEW_INV)
             && $this->userService->hasPermission(Permissions::EDIT_INV);
     }
@@ -316,9 +334,10 @@ final class DeliveryLocationController extends BaseController
      * @param DeliveryLocationRepository $delRepository
      * @return DeliveryLocation|null
      */
-    private function del(CurrentRoute $currentRoute,
-            DeliveryLocationRepository $delRepository): ?DeliveryLocation
-    {
+    private function del(
+        CurrentRoute $currentRoute,
+        DeliveryLocationRepository $delRepository
+    ): ?DeliveryLocation {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
             return $delRepository->repoDeliveryLocationquery((int) $id);
@@ -331,8 +350,7 @@ final class DeliveryLocationController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function dels(DeliveryLocationRepository $delRepository):
-                                        \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function dels(DeliveryLocationRepository $delRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $delRepository->findAllPreloaded();
     }

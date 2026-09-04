@@ -25,8 +25,8 @@ final class SalesOrderItemAllowanceChargeForm extends FormModel
 
     public function __construct(
         SalesOrderItemAllowanceCharge $salesorderItemAllowanceCharge,
-        private readonly ?int $sales_order_item_id)
-    {
+        private readonly ?int $sales_order_item_id
+    ) {
         $this->sales_order_id =
             (int) $salesorderItemAllowanceCharge->getSalesOrderId();
         $this->allowance_charge_id =

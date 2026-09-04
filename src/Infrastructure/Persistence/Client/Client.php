@@ -55,7 +55,7 @@ class Client
 
     #[Column(type: 'primary')]
     private ?int $id = null;
- 
+
     #[Column(type: 'datetime')]
     private DateTimeImmutable $client_date_created;
 

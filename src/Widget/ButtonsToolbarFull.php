@@ -52,8 +52,10 @@ final readonly class ButtonsToolbarFull
         if (($quoteId = $inv->getQuoteId()) > 0) {
             $primaryButtons[] = $this->createButton(
                 'view-quote',
-                $this->urlGenerator->generate('quote/view',
-                    ['id' => $quoteId]),
+                $this->urlGenerator->generate(
+                    'quote/view',
+                    ['id' => $quoteId]
+                ),
                 'fa-file-text-o',
                 'btn-info',
                 $this->translator->translate('view')
@@ -88,8 +90,10 @@ final readonly class ButtonsToolbarFull
         if ($invEdit) {
             $primaryButtons[] = $this->createButton(
                 'email',
-                $this->urlGenerator->generate('inv/emailStage0',
-                        ['id' => $invId]),
+                $this->urlGenerator->generate(
+                    'inv/emailStage0',
+                    ['id' => $invId]
+                ),
                 'fa-envelope',
                 'btn-info',
                 $this->translator->translate('send.email'),
@@ -149,8 +153,10 @@ final readonly class ButtonsToolbarFull
         if ($invEdit) {
             $primaryButtons[] = $this->createButton(
                 'recurring',
-                $this->urlGenerator->generate('invrecurring/add',
-                    ['inv_id' => $invId]),
+                $this->urlGenerator->generate(
+                    'invrecurring/add',
+                    ['inv_id' => $invId]
+                ),
                 'fa-refresh',
                 'btn-secondary',
                 $this->translator->translate('create.recurring'),
@@ -159,7 +165,11 @@ final readonly class ButtonsToolbarFull
 
         // Get advanced buttons
         $advancedButtons = $this->getAdvancedButtons(
-            $inv, $invEdit, $vat, $canPlaywrightPdf);
+            $inv,
+            $invEdit,
+            $vat,
+            $canPlaywrightPdf
+        );
 
         return $this->renderFullToolbar($primaryButtons, $advancedButtons, $inv);
     }
@@ -245,7 +255,8 @@ final readonly class ButtonsToolbarFull
             // Related logic: src/Service/WebControllerService
             $buttons[] = $this->createButton(
                 'delivery-location',
-                $this->urlGenerator->generate('del/add',
+                $this->urlGenerator->generate(
+                    'del/add',
                     // Arguments
                     [
                         'client_id' => $inv->reqClientId(),
@@ -267,7 +278,8 @@ final readonly class ButtonsToolbarFull
                     //    'peppol.electronic.invoicing'),
                     // HASH
                     //'settings[peppol_document_currency]']);
-                    ''),
+                    ''
+                ),
                 'bi-plus',
                 'btn-outline-info',
                 $this->translator->translate('delivery.location.add'),
@@ -275,11 +287,14 @@ final readonly class ButtonsToolbarFull
 
             // PEPPOL toggle
             $peppolStreamToggle = $this->settingRepository->getSetting(
-                'peppol_xml_stream') === '1';
+                'peppol_xml_stream'
+            ) === '1';
             $buttons[] = $this->createButton(
                 'peppol-toggle',
-                $this->urlGenerator->generate('inv/peppolStreamToggle',
-                    ['id' => $invId]),
+                $this->urlGenerator->generate(
+                    'inv/peppolStreamToggle',
+                    ['id' => $invId]
+                ),
                 $peppolStreamToggle ? 'fa-toggle-on' : 'fa-toggle-off',
                 'btn-outline-info',
                 $this->translator->translate('peppol.stream.toggle'),
@@ -345,8 +360,12 @@ final readonly class ButtonsToolbarFull
         } else {
             $buttons[] = $this->createButton(
                 'modal-pdf-settings',
-                $this->urlGenerator->generate('setting/tabIndex', [],
-                    ['active' => 'invoices'], 'settings[pdf_stream_inv]'),
+                $this->urlGenerator->generate(
+                    'setting/tabIndex',
+                    [],
+                    ['active' => 'invoices'],
+                    'settings[pdf_stream_inv]'
+                ),
                 'fa-desktop',
                 'btn-outline-secondary',
                 $this->translator->translate('pdf.modal') . ' ❌',
@@ -402,7 +421,8 @@ final readonly class ButtonsToolbarFull
     {
         return $inv->reqStatusId() === 1
                 && $this->settingRepository->getSetting(
-                    'enable_invoice_deletion') === '1'
+                    'enable_invoice_deletion'
+                ) === '1'
                 && $inv->getIsReadOnly() === false
                 && $inv->getSoId() <= 0
                 && $invEdit;
@@ -466,8 +486,10 @@ final readonly class ButtonsToolbarFull
     }
 
     private function renderFullToolbar(
-        array $primaryButtons, array $advancedButtons, Inv $inv): string
-    {
+        array $primaryButtons,
+        array $advancedButtons,
+        Inv $inv
+    ): string {
         $string = Html::openTag('div', [
             'class' => 'invoice-actions-toolbar-full',
             'style' =>
@@ -580,8 +602,10 @@ final readonly class ButtonsToolbarFull
 
         $string .=  new Span()
             ->addClass('badge ' . $statusClass)
-            ->attribute('style',
-                'font-size: 0.7rem; padding: 3px 6px; border-radius: 10px;')
+            ->attribute(
+                'style',
+                'font-size: 0.7rem; padding: 3px 6px; border-radius: 10px;'
+            )
             ->content($statusText)
             ->render();
 

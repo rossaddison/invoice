@@ -15,7 +15,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class QuoteItemAllowanceCharge
 {
     use RequireId;
-    
+
     #[BelongsTo(target: AllowanceCharge::class, nullable: false, fkAction: 'NO ACTION')]
     private ?AllowanceCharge $allowance_charge = null;
 
@@ -28,22 +28,34 @@ class QuoteItemAllowanceCharge
     public function __construct(
         #[Column(type: 'primary')]
         private ?int $id = null,
-        #[Column(type: 'integer(11)',
-        nullable: false)]
+        #[Column(
+            type: 'integer(11)',
+            nullable: false
+        )]
         private ?int $quote_id = null,
-        #[Column(type: 'integer(11)',
-        nullable: false)]
+        #[Column(
+            type: 'integer(11)',
+            nullable: false
+        )]
         private ?int $quote_item_id = null,
-        #[Column(type: 'integer(11)',
-        nullable: false)]
+        #[Column(
+            type: 'integer(11)',
+            nullable: false
+        )]
         private ?int $allowance_charge_id = null,
-        #[Column(type: 'decimal(20,2)',
-        nullable: false, default: 0.00)]
+        #[Column(
+            type: 'decimal(20,2)',
+            nullable: false,
+            default: 0.00
+        )]
         private ?float $amount = null,
-        #[Column(type: 'decimal(20,2)',
-        nullable: false, default: 0.00)]
-        private ?float $vat_or_tax = null)
-    {
+        #[Column(
+            type: 'decimal(20,2)',
+            nullable: false,
+            default: 0.00
+        )]
+        private ?float $vat_or_tax = null
+    ) {
     }
 
     public function getAllowanceCharge(): ?AllowanceCharge
@@ -75,12 +87,12 @@ class QuoteItemAllowanceCharge
     {
         $this->quote_item = $quote_item;
     }
-    
+
     public function reqId(): int
     {
         return $this->requireId($this->id, 'QuoteItemAllowanceCharge');
     }
-    
+
     public function hasIdentity(): bool
     {
         return $this->id !== null;

@@ -12,7 +12,6 @@ use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
  */
 trait AllowanceChargeTrait1
 {
-
     public function reqId(): int
     {
         return $this->requireId($this->id, 'AllowanceCharge');

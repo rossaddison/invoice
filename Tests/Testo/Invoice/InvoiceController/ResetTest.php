@@ -94,7 +94,13 @@ final class ResetTest
             ->with('//invoice/layout/alert', m::any())->andReturn('<alerts/>');
 
         $controller = new InvoiceController(
-            $webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash,
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash,
         );
 
         return [$controller, $webService, $webViewRenderer];

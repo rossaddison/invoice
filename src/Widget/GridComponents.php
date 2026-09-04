@@ -22,9 +22,10 @@ final readonly class GridComponents
     /**
      * @psalm-suppress PossiblyUnusedMethod
      */
-    public function __construct(private CurrentRoute $currentRoute,
-            private Translator $translator)
-    {
+    public function __construct(
+        private CurrentRoute $currentRoute,
+        private Translator $translator
+    ) {
     }
 
     /**
@@ -37,10 +38,10 @@ final readonly class GridComponents
         return new Div()
                 ->addClass('row')
                 ->content(
-                     new H5()
+                    new H5()
                         ->addClass('bg-primary text-white p-3 rounded-top')
                         ->content(
-                             new I()
+                            new I()
                             ->addClass('bi bi-receipt')
                             ->content(' ' . $this->translator->translate($translatorString)),
                         ),
@@ -67,7 +68,7 @@ final readonly class GridComponents
         return null !== $route ? new A()
                 ->addAttributes(['type' => 'reset'])
                 ->addClass('btn btn-danger me-1 ajax-loader')
-                ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+                ->content(new I()->addClass('bi bi-bootstrap-reboot'))
                 ->href($generator->generate($route))
                 ->id('btn-reset')
                 ->render() : '';
@@ -125,11 +126,11 @@ final readonly class GridComponents
             // Tooltip date (safe): guard against missing/invalid date
             $dateObj = $invoice->getDateCreated();
 
-             try {
-                 $dateTitle = $dateObj->format('m-d');
-             } catch (\Throwable) {
-                 $dateTitle = '';
-             }
+            try {
+                $dateTitle = $dateObj->format('m-d');
+            } catch (\Throwable) {
+                $dateTitle = '';
+            }
 
 
             $anchorHtml =  new A()
@@ -157,7 +158,7 @@ final readonly class GridComponents
 
         return $html;
     }
-    
+
     /**
      * Purpose: List the clients that have ownership of this product?
      * @param Product $model
@@ -166,9 +167,12 @@ final readonly class GridComponents
      * @param UrlGenerator $urlGenerator
      * @return string
      */
-    public function gridMiniTableOfClientsForProduct(Product $model,
-            int $max_per_row, Translator $translator, UrlGenerator $urlGenerator): string
-    {
+    public function gridMiniTableOfClientsForProduct(
+        Product $model,
+        int $max_per_row,
+        Translator $translator,
+        UrlGenerator $urlGenerator
+    ): string {
         $productClients = $model->getProductClients()->toArray();
         if (empty($productClients)) {
             return '';
@@ -233,8 +237,10 @@ final readonly class GridComponents
      * @return string
      */
     public function gridMiniTableOfInvSentLogsForInv(
-        Inv $model, int $max_per_row, UrlGenerator $urlGenerator): string
-    {
+        Inv $model,
+        int $max_per_row,
+        UrlGenerator $urlGenerator
+    ): string {
         $invSentLogs = $model->getInvSentLogs()->toArray();
         if (empty($invSentLogs)) {
             return '';

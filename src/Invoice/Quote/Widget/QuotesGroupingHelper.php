@@ -94,7 +94,8 @@ final class QuotesGroupingHelper
                 $currencySymbol = $sR->getSetting('currency_symbol');
                 return \Yiisoft\Html\Html::tr()
                     ->addClass(
-                        'group-header bg-secondary text-white fw-bold group-collapsible')
+                        'group-header bg-secondary text-white fw-bold group-collapsible'
+                    )
                     ->cells(
                         \Yiisoft\Html\Html::td()
                             ->addAttributes(['colspan' => (string) $columnCount])

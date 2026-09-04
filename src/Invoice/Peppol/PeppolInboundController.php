@@ -30,7 +30,8 @@ final class PeppolInboundController
         private readonly DataResponseFactoryInterface $factory,
         private readonly Logger $logger,
         private readonly PeppolMessageRepositoryInterface $peppolMessageRepository,
-    ) {}
+    ) {
+    }
 
     public function delivery(Request $request): Response
     {

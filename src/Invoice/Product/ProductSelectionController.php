@@ -88,7 +88,9 @@ final class ProductSelectionController extends BaseController
                 (float) $numberHelper->formatAmount($product->getProductPrice())
             );
             $this->saveProductLookupItemQuote(
-                $order, $product, (int) $quote_id,
+                $order,
+                $product,
+                (int) $quote_id,
                 new ProductLookupQuoteDeps($pR, $trR, $uR, $qiaR, $qiaS),
                 $formHydrator
             );
@@ -134,7 +136,9 @@ final class ProductSelectionController extends BaseController
                     . ': ' . $availableStock . ')';
             }
             $this->saveProductLookupItemInv(
-                $order, $product, (int) $inv_id,
+                $order,
+                $product,
+                (int) $inv_id,
                 new ProductLookupInvDeps($pR, $trR, $uR, $iiaR, $iiR),
                 $formHydrator
             );
@@ -192,9 +196,16 @@ final class ProductSelectionController extends BaseController
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
             $this->quoteitemService->addQuoteItemProduct(
-                $quoteItem, $ajax_content, (string) $quote_id,
+                $quoteItem,
+                $ajax_content,
+                (string) $quote_id,
                 new QiAddProductDeps(
-                    $deps->pR, $deps->qiaR, $deps->qiaS, $deps->uR, $deps->trR, $this->translator
+                    $deps->pR,
+                    $deps->qiaR,
+                    $deps->qiaS,
+                    $deps->uR,
+                    $deps->trR,
+                    $this->translator
                 ),
                 mergeIfExists: true,
             );
@@ -226,11 +237,16 @@ final class ProductSelectionController extends BaseController
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
             $this->invitemService->addInvItemProduct(
-                $invItem, $ajax_content, (string) $inv_id,
+                $invItem,
+                $ajax_content,
+                (string) $inv_id,
                 new IiAddProductDeps(
-                    $deps->pR, $deps->trR,
+                    $deps->pR,
+                    $deps->trR,
                     new iiaS($deps->iiaR, $deps->iiR),
-                    $deps->iiaR, $this->sR, $deps->uR
+                    $deps->iiaR,
+                    $this->sR,
+                    $deps->uR
                 ),
                 mergeIfExists: true,
             );

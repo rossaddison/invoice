@@ -24,8 +24,7 @@ class TaxCategory implements XmlSerializable
     public function __construct(
         array $array,
         private readonly TaxScheme $taxScheme
-    )
-    {
+    ) {
         /**
          * @var string $array['TaxCategory']
          */

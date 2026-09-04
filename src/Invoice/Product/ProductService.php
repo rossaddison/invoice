@@ -63,7 +63,8 @@ final readonly class ProductService
             $model->setProductIccId((string) $apf['product_icc_id']) : '';
         isset($apf['product_country_of_origin_code']) ?
             $model->setProductCountryOfOriginCode(
-                (string) $apf['product_country_of_origin_code']) : '';
+                (string) $apf['product_country_of_origin_code']
+            ) : '';
     }
 
     /**
@@ -91,10 +92,12 @@ final readonly class ProductService
             $model->setProviderName((string) $apf['provider_name']) : '';
         isset($apf['product_additional_item_property_name']) ?
             $model->setProductAdditionalItemPropertyName(
-                (string) $apf['product_additional_item_property_name']) : '';
+                (string) $apf['product_additional_item_property_name']
+            ) : '';
         isset($apf['product_additional_item_property_value']) ?
             $model->setProductAdditionalItemPropertyValue(
-                (string) $apf['product_additional_item_property_value']) : '';
+                (string) $apf['product_additional_item_property_value']
+            ) : '';
     }
 
     private function applyProductPricingAndStockFields(Product $model, array $apf): void
@@ -103,7 +106,8 @@ final readonly class ProductService
             $model->setProductPrice((float) $apf['product_price']) : '';
         isset($apf['product_price_base_quantity']) ?
             $model->setProductPriceBaseQuantity(
-                (float) $apf['product_price_base_quantity']) : '';
+                (float) $apf['product_price_base_quantity']
+            ) : '';
         isset($apf['purchase_price']) ?
             $model->setPurchasePrice((float) $apf['purchase_price']) : '';
         isset($apf['retail_price']) ?
@@ -168,12 +172,15 @@ final readonly class ProductService
         if (isset($array[$tax_rate])) {
             $model->setTaxrate(
                 $this->trR->repoTaxRatequery(
-                    (int) $array[$tax_rate]));
+                    (int) $array[$tax_rate]
+                )
+            );
         }
         $unit = 'unit_id';
         if (isset($array[$unit])) {
             $unitEntity = $this->uR->repoUnitquery(
-                (int) $array[$unit]);
+                (int) $array[$unit]
+            );
             if ($unitEntity) {
                 $model->setUnit($unitEntity);
             }

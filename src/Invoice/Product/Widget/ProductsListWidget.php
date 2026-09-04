@@ -173,7 +173,8 @@ final class ProductsListWidget extends Widget
             ->sortableLinkAttributes(['hx-boost' => 'true', ...$htmxAttrs])
             ->filterFormAttributes(['hx-boost' => 'true', ...$htmxAttrs])
             ->sortableHeaderPrepend(
-                '<div class="float-end text-secondary text-opacity-50">⭥</div>')
+                '<div class="float-end text-secondary text-opacity-50">⭥</div>'
+            )
             ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
             ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
             ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
@@ -261,7 +262,7 @@ final class ProductsListWidget extends Widget
             new DataColumn(
                 'id',
                 header: $t->translate('id'),
-                content: static fn(Product $m): string => Html::encode((string) $m->reqId()),
+                content: static fn (Product $m): string => Html::encode((string) $m->reqId()),
                 withSorting: true,
             ),
             $this->buildFamilyColumn($t, $optionsFam),
@@ -269,7 +270,7 @@ final class ProductsListWidget extends Widget
                 property: 'product_name',
                 header: $t->translate('product.name'),
                 encodeHeader: true,
-                content: static fn(Product $m): string => Html::encode($m->getProductName()),
+                content: static fn (Product $m): string => Html::encode($m->getProductName()),
                 visible: true,
                 withSorting: false,
             ),
@@ -278,7 +279,7 @@ final class ProductsListWidget extends Widget
             new DataColumn(
                 property: 'product_description',
                 header: $t->translate('product.description'),
-                content: static fn(Product $m): string =>
+                content: static fn (Product $m): string =>
                     Html::encode(ucfirst($m->getProductDescription() ?? '')),
                 visible: true,
                 withSorting: true,
@@ -287,7 +288,7 @@ final class ProductsListWidget extends Widget
             new DataColumn(
                 property: 'product_price_base_quantity',
                 header: $t->translate('product.price.base.quantity'),
-                content: static fn(Product $m): string =>
+                content: static fn (Product $m): string =>
                     Html::encode((string) $m->getProductPriceBaseQuantity()),
                 visible: $visible,
                 withSorting: true,
@@ -295,7 +296,7 @@ final class ProductsListWidget extends Widget
             new DataColumn(
                 property: 'product_unit',
                 header: $t->translate('product.unit'),
-                content: static fn(Product $m): string =>
+                content: static fn (Product $m): string =>
                     Html::encode(ucfirst($m->getUnit()?->getUnitName() ?? '')),
                 visible: true,
             ),
@@ -307,7 +308,7 @@ final class ProductsListWidget extends Widget
                 // PeppolHelperInvoiceLineTrait::validateInvItem() throws
                 // the moment this product is used on a Peppol send if
                 // unset, despite the form marking it optional.
-                content: static fn(Product $m): string =>
+                content: static fn (Product $m): string =>
                     $m->getUnitPeppolId() > 0
                         ? Html::encode((string) $m->getUnitPeppolId())
                         : '⚠️ ' . $t->translate('product.peppol.unit.missing'),
@@ -316,7 +317,7 @@ final class ProductsListWidget extends Widget
             new DataColumn(
                 property: 'tax_rate_id',
                 header: $t->translate('tax.rate'),
-                content: static fn(Product $m): string =>
+                content: static fn (Product $m): string =>
                     ($m->getTaxrate()?->reqId() > 0)
                         ? Html::encode($m->getTaxrate()?->getTaxRateName() ?? '')
                         : $t->translate('none'),
@@ -325,7 +326,7 @@ final class ProductsListWidget extends Widget
             ),
             new DataColumn(
                 header: $t->translate('product.property.add'),
-                content: static fn(Product $m): A =>
+                content: static fn (Product $m): A =>
                     Html::a(
                         Html::tag('i', '', ['class' => 'bi-plus dropdown-item text-decoration-none']),
                         $ug->generate('productproperty/add', ['product_id' => $m->reqId()]),
@@ -347,7 +348,7 @@ final class ProductsListWidget extends Widget
             property: 'family_id',
             header: $t->translate('family.name'),
             encodeHeader: true,
-            content: static fn(Product $m): string =>
+            content: static fn (Product $m): string =>
                 Html::encode($m->getFamily()?->getFamilyName() ?? ''),
             /** @psalm-suppress MixedArgumentTypeCoercion */
             filter: DropdownFilter::widget()
@@ -393,7 +394,10 @@ final class ProductsListWidget extends Widget
                     ]
                 );
                 $tableHtml = $gridComps->gridMiniTableOfClientsForProduct(
-                    $m, 4, $t, $ug,
+                    $m,
+                    4,
+                    $t,
+                    $ug,
                 );
                 $collapseHtml = (new Div())
                     ->id($collapseId)
@@ -416,7 +420,7 @@ final class ProductsListWidget extends Widget
             property: 'product_sku',
             header: $t->translate('product.sku'),
             encodeHeader: true,
-            content: static fn(Product $m): string => Html::encode($m->getProductSku()),
+            content: static fn (Product $m): string => Html::encode($m->getProductSku()),
             /** @psalm-suppress MixedArgumentTypeCoercion */
             filter: DropdownFilter::widget()
                 ->addAttributes(['name' => 'product_sku', 'class' => 'native-reset'])
@@ -432,7 +436,7 @@ final class ProductsListWidget extends Widget
         return new DataColumn(
             property: 'product_price',
             header: $t->translate('product.price') . ' ( ' . $sR->getSetting('currency_symbol') . ' ) ',
-            content: static fn(Product $m): string =>
+            content: static fn (Product $m): string =>
                 Html::encode((string) $m->getProductPrice()),
             filter: TextInputFilter::widget()
                 ->addAttributes(['style' => 'max-width: 50px', 'class' => 'native-reset']),
@@ -452,7 +456,7 @@ final class ProductsListWidget extends Widget
             buttons: [
                 new ActionButton(
                     content: '🔎',
-                    url: static fn(Product $m): string =>
+                    url: static fn (Product $m): string =>
                         $ug->generate('product/view', ['id' => $m->reqId()]),
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
@@ -463,7 +467,7 @@ final class ProductsListWidget extends Widget
                 ),
                 new ActionButton(
                     content: '✎',
-                    url: static fn(Product $m): string =>
+                    url: static fn (Product $m): string =>
                         $ug->generate('product/edit', ['id' => $m->reqId()]),
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
@@ -474,7 +478,7 @@ final class ProductsListWidget extends Widget
                 ),
                 new ActionButton(
                     content: '❌',
-                    url: static fn(Product $m): string =>
+                    url: static fn (Product $m): string =>
                         $ug->generate('product/delete', ['id' => $m->reqId()]),
                     attributes: [
                         'title'   => $t->translate('delete'),

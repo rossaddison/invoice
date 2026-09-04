@@ -49,7 +49,6 @@ return [
             Route::get('/fphFeedback/{api}')
                 ->action([HmrcController::class, 'fphFeedback'])
                 ->name('backend/hmrc/fphFeedback'),
-
             Route::methods([Method::GET, Method::POST], '/fphValidate')
                 ->middleware(fn (
                     ResponseFactoryInterface $responseFactory,
@@ -57,7 +56,6 @@ return [
                 ) => new LimitRequestsMiddleware(new Counter($storage, 10, 10), $responseFactory))
                 ->action([HmrcController::class, 'fphValidate'])
                 ->name('backend/hmrc/fphValidate'),
-
             Route::get('/createTestUserIndividual')
                 ->action([HmrcController::class, 'createTestUserIndividual'])
                 ->name('backend/hmrc/createTestUserIndividual'),
@@ -66,11 +64,9 @@ return [
             Route::get('/vatReturnPrepare')
                 ->action([HmrcController::class, 'vatReturnPrepare'])
                 ->name('backend/hmrc/vatReturnPrepare'),
-
             Route::get('/vatObligations')
                 ->action([HmrcController::class, 'vatObligations'])
                 ->name('backend/hmrc/vatObligations'),
-
             Route::methods([Method::GET, Method::POST], '/vatReturnSubmit')
                 ->action([HmrcController::class, 'vatReturnSubmit'])
                 ->name('backend/hmrc/vatReturnSubmit'),

@@ -42,8 +42,15 @@ final class PaymentPeppolController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator,
-                $webViewRenderer, $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
         $this->paymentpeppolService = $paymentpeppolService;
     }
 
@@ -79,9 +86,12 @@ final class PaymentPeppolController extends BaseController
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                 $this->paymentpeppolService->savePaymentPeppol(
-                        $paymentPeppol, $body);
+                    $paymentPeppol,
+                    $body
+                );
                 return $this->webService->getRedirectResponse(
-                    'paymentpeppol/index');
+                    'paymentpeppol/index'
+                );
             }
             $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -99,9 +109,9 @@ final class PaymentPeppolController extends BaseController
      * @return Response
      */
     public function index(
-            CurrentRoute $routeCurrent,
-            PaymentPeppolRepository $paymentpeppolRepository): Response
-    {
+        CurrentRoute $routeCurrent,
+        PaymentPeppolRepository $paymentpeppolRepository
+    ): Response {
         $page = (int) $routeCurrent->getArgument('page', '1');
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $paymentpeppols = $paymentpeppolRepository->findAllPreloaded();
@@ -123,15 +133,18 @@ final class PaymentPeppolController extends BaseController
      * @param PaymentPeppolRepository $paymentpeppolRepository
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute,
-                    PaymentPeppolRepository $paymentpeppolRepository): Response
-    {
+    public function delete(
+        CurrentRoute $currentRoute,
+        PaymentPeppolRepository $paymentpeppolRepository
+    ): Response {
         try {
             $paymentpeppol = $this->paymentpeppol($currentRoute, $paymentpeppolRepository);
             if (null !== $paymentpeppol) {
                 $this->paymentpeppolService->deletePaymentPeppol($paymentpeppol);
-                $this->flashMessage('info',
-                    $this->translator->translate('record.successfully.deleted'));
+                $this->flashMessage(
+                    'info',
+                    $this->translator->translate('record.successfully.deleted')
+                );
                 return $this->webService->getRedirectResponse('paymentpeppol/index');
             }
             return $this->webService->getRedirectResponse('paymentpeppol/index');
@@ -175,9 +188,12 @@ final class PaymentPeppolController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                     $this->paymentpeppolService->savePaymentPeppol(
-                                                    $paymentPeppol, $body);
+                        $paymentPeppol,
+                        $body
+                    );
                     return $this->webService->getRedirectResponse(
-                                                    'paymentpeppol/index');
+                        'paymentpeppol/index'
+                    );
                 }
                 $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -194,9 +210,9 @@ final class PaymentPeppolController extends BaseController
      * @return PaymentPeppol|null
      */
     private function paymentpeppol(
-            CurrentRoute $currentRoute,
-            PaymentPeppolRepository $paymentpeppolRepository): ?PaymentPeppol
-    {
+        CurrentRoute $currentRoute,
+        PaymentPeppolRepository $paymentpeppolRepository
+    ): ?PaymentPeppol {
         $id = (int) $currentRoute->getArgument('id');
         return $paymentpeppolRepository->repoPaymentPeppolLoadedquery($id);
     }
@@ -207,9 +223,8 @@ final class PaymentPeppolController extends BaseController
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
     private function paymentpeppols(
-            PaymentPeppolRepository $paymentpeppolRepository):
-                                        \Yiisoft\Data\Cycle\Reader\EntityReader
-    {
+        PaymentPeppolRepository $paymentpeppolRepository
+    ): \Yiisoft\Data\Cycle\Reader\EntityReader {
         return $paymentpeppolRepository->findAllPreloaded();
     }
 
@@ -225,10 +240,11 @@ final class PaymentPeppolController extends BaseController
         PaymentPeppolRepository $paymentpeppolRepository,
         UCR $ucR,
         UIR $uiR
-    ): \Psr\Http\Message\ResponseInterface
-    {
+    ): \Psr\Http\Message\ResponseInterface {
         $paymentPeppol = $this->paymentpeppol(
-                                        $currentRoute, $paymentpeppolRepository);
+            $currentRoute,
+            $paymentpeppolRepository
+        );
         if ($paymentPeppol) {
             $form = PaymentPeppolForm::show($paymentPeppol);
             $parameters = [
@@ -264,7 +280,8 @@ final class PaymentPeppolController extends BaseController
      * @param UIR $uiR
      * @return bool
      */
-    private function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR) : bool {
+    private function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR): bool
+    {
         $statusId = $inv->reqStatusId();
         // has observer role
         if ($this->userService->hasPermission(Permissions::VIEW_INV)
@@ -275,8 +292,10 @@ final class PaymentPeppolController extends BaseController
             && ($inv->reqUserId() === (int) $this->userService->getUser()?->reqId())
             // the invoice client is associated with the above user
             // the observer user may be paying for more than one client
-            && ($ucR->repoUserClientqueryCount($inv->reqUserId(),
-                $inv->reqClientId()) > 0)) {
+            && ($ucR->repoUserClientqueryCount(
+                $inv->reqUserId(),
+                $inv->reqClientId()
+            ) > 0)) {
             $userInv = $uiR->repoUserInvUserIdquery($statusId);
             // the current observer user is active
             if (null !== $userInv && $userInv->getActive()) {
@@ -286,13 +305,15 @@ final class PaymentPeppolController extends BaseController
         return false;
     }
 
-    private function rbacAccountant() : bool {
+    private function rbacAccountant(): bool
+    {
         return $this->userService->hasPermission(Permissions::VIEW_INV)
             && $this->userService->hasPermission(Permissions::VIEW_PAYMENT)
             && $this->userService->hasPermission(Permissions::EDIT_PAYMENT);
     }
 
-    private function rbacAdmin() : bool {
+    private function rbacAdmin(): bool
+    {
         return $this->userService->hasPermission(Permissions::VIEW_INV)
             && $this->userService->hasPermission(Permissions::EDIT_INV);
     }

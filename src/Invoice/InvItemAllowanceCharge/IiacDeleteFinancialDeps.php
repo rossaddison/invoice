@@ -16,5 +16,6 @@ final class IiacDeleteFinancialDeps
         public readonly InvRepository $iR,
         public readonly InvTaxRateRepository $itrR,
         public readonly PaymentRepository $pymR,
-    ) {}
+    ) {
+    }
 }

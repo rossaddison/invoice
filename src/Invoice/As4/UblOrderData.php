@@ -26,5 +26,6 @@ final readonly class UblOrderData
         public string            $buyerEndpointSchemeId,
         public ?string           $note,
         public array             $lines,
-    ) {}
+    ) {
+    }
 }

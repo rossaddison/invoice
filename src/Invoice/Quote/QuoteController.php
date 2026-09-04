@@ -57,8 +57,20 @@ use Psr\{
 
 final class QuoteController extends BaseController
 {
-    use Add, ChangeStatus, Delete, Edit, Email, Guest, Index, OptionsData, PdfTrait,
-        QuoteCopy, QuoteToInvoice, QuoteToSo, UrlKey, View;
+    use Add;
+    use ChangeStatus;
+    use Delete;
+    use Edit;
+    use Email;
+    use Guest;
+    use Index;
+    use OptionsData;
+    use PdfTrait;
+    use QuoteCopy;
+    use QuoteToInvoice;
+    use QuoteToSo;
+    use UrlKey;
+    use View;
 
     protected string $controllerName = 'invoice/quote';
 
@@ -98,8 +110,13 @@ final class QuoteController extends BaseController
         QuoteControllerUIDeps $ui,
     ) {
         parent::__construct(
-            $base->webService, $base->userService, $base->translator,
-            $base->webViewRenderer, $base->session, $base->sR, $base->flash
+            $base->webService,
+            $base->userService,
+            $base->translator,
+            $base->webViewRenderer,
+            $base->session,
+            $base->sR,
+            $base->flash
         );
         $this->factory                     = $infra->factory;
         $this->htmlResponseFactory         = $infra->htmlResponseFactory;
@@ -129,9 +146,12 @@ final class QuoteController extends BaseController
         $this->numberHelper                = new NumberHelper($this->sR);
     }
 
-    protected function activeUser(int $client_id, UR $uR, UCR $ucR,
-        UIR $uiR): ?User
-    {
+    protected function activeUser(
+        int $client_id,
+        UR $uR,
+        UCR $ucR,
+        UIR $uiR
+    ): ?User {
         $user_client = $ucR->repoUserquery($client_id);
         if (null !== $user_client) {
             $user_client_count = $ucR->repoUserquerycount($client_id);
@@ -148,8 +168,10 @@ final class QuoteController extends BaseController
     }
 
     public function defaultTaxes(
-        Quote $quote, TRR $trR, FormHydrator $formHydrator): void
-    {
+        Quote $quote,
+        TRR $trR,
+        FormHydrator $formHydrator
+    ): void {
         if ($trR->repoCountAll() > 0) {
             $taxrates = $trR->findAllPreloaded();
             /** @var TaxRate $taxRate */
@@ -161,9 +183,11 @@ final class QuoteController extends BaseController
         }
     }
 
-    private function defaultTaxQuote(?TaxRate $taxRate,
-            Quote $quote, FormHydrator $formHydrator): void
-    {
+    private function defaultTaxQuote(
+        ?TaxRate $taxRate,
+        Quote $quote,
+        FormHydrator $formHydrator
+    ): void {
         $quoteTaxRate = new QuoteTaxRate();
         $quoteTaxRateForm = new QuoteTaxRateForm();
         $quote_tax_rate = [];
@@ -185,12 +209,13 @@ final class QuoteController extends BaseController
         if ($formHydrator->populate($quoteTaxRateForm, $quote_tax_rate)
                 && $quoteTaxRateForm->isValid()) {
             $this->quote_tax_rate_service->saveQuoteTaxRate(
-                $quoteTaxRate, $quote_tax_rate);
+                $quoteTaxRate,
+                $quote_tax_rate
+            );
         }
     }
 
-    public function deleteQuoteItem(#[RouteArgument('id')] int $id, QIR $qiR):
-        Response
+    public function deleteQuoteItem(#[RouteArgument('id')] int $id, QIR $qiR): Response
     {
         $quoteId = (string) $this->session->get('quote_id');
         try {
@@ -198,39 +223,56 @@ final class QuoteController extends BaseController
             if ($quoteItem) {
                 $this->quote_item_service->deleteQuoteItem($quoteItem);
                 $this->flashMessage('info', $this->translator->translate(
-                    'record.successfully.deleted'));
-                return $this->webService->getRedirectResponse('quote/view',
-                        ['id' => $quoteId]);
+                    'record.successfully.deleted'
+                ));
+                return $this->webService->getRedirectResponse(
+                    'quote/view',
+                    ['id' => $quoteId]
+                );
             }
             $this->flashMessage(
-                'danger', $this->translator->translate(
-                    'quote.item.cannot.delete'));
+                'danger',
+                $this->translator->translate(
+                    'quote.item.cannot.delete'
+                )
+            );
             return $this->webService->getRedirectResponse(
-                'quote/view', ['id' => $quoteId]);
+                'quote/view',
+                ['id' => $quoteId]
+            );
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger',
-                    $this->translator->translate('quote.item.cannot.delete'));
+            $this->flashMessage(
+                'danger',
+                $this->translator->translate('quote.item.cannot.delete')
+            );
         }
         return $this->factory->createResponse(
-                $this->webViewRenderer->renderPartialAsString(
-            '//invoice/setting/quote_successful',
-            ['heading' => '','message' => $this->translator->translate(
-                'record.successfully.deleted'),'url' => 'quote/view','id' =>
+            $this->webViewRenderer->renderPartialAsString(
+                '//invoice/setting/quote_successful',
+                ['heading' => '','message' => $this->translator->translate(
+                    'record.successfully.deleted'
+                ),'url' => 'quote/view','id' =>
                 $quoteId],
-        ));
+            )
+        );
     }
-    
+
     public function generateQuoteNumberIfApplicable(
-        int $quote_id, QR $qR, SR $sR, GR $gR): void
-    {
+        int $quote_id,
+        QR $qR,
+        SR $sR,
+        GR $gR
+    ): void {
         $quote = $qR->repoQuoteUnloadedquery($quote_id);
         if (!empty($quote) && ($quote->reqStatusId() == 1)
             && ($quote->getNumber() == '')
             // Generate new quote number if applicable
             && (int) $sR->getSetting('generate_quote_number_for_draft') === 0) {
             $quote_number = (string) $qR->getQuoteNumber(
-                $quote->reqGroupId(), $gR);
+                $quote->reqGroupId(),
+                $gR
+            );
             // Set new quote number and save
             $quote->setNumber($quote_number);
             $qR->save($quote);
@@ -281,8 +323,7 @@ final class QuoteController extends BaseController
         return null;
     }
 
-    protected function quotetaxrate(int $id, QTRR $quotetaxrateRepository):
-        ?QuoteTaxRate
+    protected function quotetaxrate(int $id, QTRR $quotetaxrateRepository): ?QuoteTaxRate
     {
         if ($id) {
             $quotetaxrate = $quotetaxrateRepository->repoQuoteTaxRatequery($id);
@@ -293,12 +334,13 @@ final class QuoteController extends BaseController
         }
         return null;
     }
-    
+
     // '#quote_tax_submit' => quote.js
 
-    public function saveQuoteTaxRate(Request $request,
-        FormHydrator $formHydrator): Response
-    {
+    public function saveQuoteTaxRate(
+        Request $request,
+        FormHydrator $formHydrator
+    ): Response {
         $body = $request->getQueryParams();
         $ajax_body = [
             'quote_id' => $body['quote_id'],
@@ -309,12 +351,15 @@ final class QuoteController extends BaseController
         $quoteTaxRate = new QuoteTaxRate();
         $ajax_content = new QuoteTaxRateForm();
         if ($formHydrator->populateAndValidate($ajax_content, $ajax_body)) {
-            $this->quote_tax_rate_service->saveQuoteTaxRate($quoteTaxRate,
-                $ajax_body);
+            $this->quote_tax_rate_service->saveQuoteTaxRate(
+                $quoteTaxRate,
+                $ajax_body
+            );
             $parameters = [
                 'success' => 1,
                 'flash_message' => $this->translator->translate(
-                    'quote.tax.rate.saved'),
+                    'quote.tax.rate.saved'
+                ),
             ];
             //return response to quote.js to reload page at location
             return $this->factory->createResponse(Json::encode($parameters));
@@ -322,12 +367,13 @@ final class QuoteController extends BaseController
         $parameters = [
             'success' => 0,
             'flash_message' => $this->translator->translate(
-                'quote.tax.rate.incomplete.fields'),
+                'quote.tax.rate.incomplete.fields'
+            ),
         ];
         //return response to quote.js to reload page at location
         return $this->factory->createResponse(Json::encode($parameters));
     }
-    
+
     /**
      * Purpose:
      * Prevent browser manipulation and ensure that views are only accessible
@@ -335,7 +381,8 @@ final class QuoteController extends BaseController
      * client requested quote and are an active current user for these client's
      * invoices.
      */
-    protected function rbacObserver(Quote $quote, UCR $ucR, UIR $uiR) : bool {
+    protected function rbacObserver(Quote $quote, UCR $ucR, UIR $uiR): bool
+    {
         $statusId = $quote->reqStatusId();
         if ($statusId > 0
             // has observer role
@@ -347,7 +394,9 @@ final class QuoteController extends BaseController
             && ($quote->reqUserId() === $this->userService->getUser()?->reqId())
             // the quote client is associated with the above user
             && ($ucR->repoUserClientqueryCount(
-                $quote->reqUserId(), $quote->reqClientId()) > 0)) {
+                $quote->reqUserId(),
+                $quote->reqClientId()
+            ) > 0)) {
             $userInv = $uiR->repoUserInvUserIdquery($quote->reqUserId());
             // the current observer user is active
             if (null !== $userInv && $userInv->getActive()) {
@@ -357,14 +406,16 @@ final class QuoteController extends BaseController
         return false;
     }
 
-    protected function rbacAccountant() : bool {
+    protected function rbacAccountant(): bool
+    {
         // has accountant role
         return $this->userService->hasPermission(Permissions::VIEW_INV)
             && ($this->userService->hasPermission(Permissions::VIEW_PAYMENT))
             && ($this->userService->hasPermission(Permissions::EDIT_PAYMENT));
     }
 
-    protected function rbacAdmin() : bool {
+    protected function rbacAdmin(): bool
+    {
         // has observer role
         return $this->userService->hasPermission(Permissions::VIEW_INV)
             && ($this->userService->hasPermission(Permissions::EDIT_INV));

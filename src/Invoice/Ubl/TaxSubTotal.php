@@ -19,8 +19,8 @@ class TaxSubTotal
     // - a subtotal is generated for each tax category.
     public function __construct(
         private readonly array $taxSubtotal,
-        public SettingRepository $s)
-    {
+        public SettingRepository $s
+    ) {
     }
 
     public function loadValuesFromArray(): void
@@ -57,7 +57,8 @@ class TaxSubTotal
                 [
                     'name' => Schema::CBC . 'TaxableAmount',
                     'value' => $this->s->currencyConverter(
-                      number_format($this->taxableAmounts ?: 0.00, 2, '.', '')),
+                        number_format($this->taxableAmounts ?: 0.00, 2, '.', '')
+                    ),
                     'attributes' => [
                         'currencyID' => $this->documentCurrency,
                     ],
@@ -65,7 +66,8 @@ class TaxSubTotal
                 [
                     'name' => Schema::CBC . 'TaxAmount',
                     'value' => $this->s->currencyConverter(
-                           number_format($this->taxAmount ?: 0.00, 2, '.', '')),
+                        number_format($this->taxAmount ?: 0.00, 2, '.', '')
+                    ),
                     'attributes' => [
                         'currencyID' => $this->documentCurrency,
                     ],

@@ -14,5 +14,6 @@ final readonly class QuotesToolbarButtons
         public string $changeStatusDropdown,
         public string $autoFitColumns,
         public string $resetColumnWidths,
-    ) {}
+    ) {
+    }
 }

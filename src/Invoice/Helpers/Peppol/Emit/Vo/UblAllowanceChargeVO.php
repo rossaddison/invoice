@@ -16,5 +16,6 @@ readonly class UblAllowanceChargeVO
         public ?float  $multiplierFactorNumeric,
         public ?string $taxCategoryId,
         public ?float  $taxCategoryPercent,
-    ) {}
+    ) {
+    }
 }

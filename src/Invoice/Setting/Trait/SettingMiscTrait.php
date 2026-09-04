@@ -12,7 +12,6 @@ use Yiisoft\Translator\TranslatorInterface;
 
 trait SettingMiscTrait
 {
-
     /**
      * @return array
      */
@@ -150,7 +149,8 @@ trait SettingMiscTrait
      */
     public function debugMode(bool $debugMode): void
     {
-        if ($debugMode) {            $count = $this->repoCount('debug_mode');
+        if ($debugMode) {
+            $count = $this->repoCount('debug_mode');
             if ($count == 1) {
                 $setting = $this->withKey('debug_mode');
                 if (null !== $setting) {
@@ -186,8 +186,8 @@ trait SettingMiscTrait
      * @param bool $signupAutomaticallyAssignClient
      */
     public function signupAutomaticallyAssignClient(
-                                    bool $signupAutomaticallyAssignClient): void
-    {
+        bool $signupAutomaticallyAssignClient
+    ): void {
         if ($signupAutomaticallyAssignClient == true) {
             $count = $this->repoCount('signup_automatically_assign_client');
             if ($count == 1) {
@@ -319,25 +319,34 @@ trait SettingMiscTrait
      * @return string
      */
     public function gridSummary(
-        OffsetPaginator $paginator, TranslatorInterface $translator,
-                int $max, string $entity_plural, string $status_string): string
-    {
+        OffsetPaginator $paginator,
+        TranslatorInterface $translator,
+        int $max,
+        string $entity_plural,
+        string $status_string
+    ): string {
         $pageSize = $paginator->getCurrentPageSize();
         if ($pageSize > 0) {
             return (string) Html::tag(
                 'b',
-                sprintf($translator->translate('showing.of')
+                sprintf(
+                    $translator->translate('showing.of')
                       . $translator->translate('max')
                       . ' ' . (string) $max . ' '
                       . $entity_plural
                       . $translator->translate('per.page.total')
                       . $entity_plural . ': '
-                      . (string) $paginator->getTotalItems(), $pageSize,
-                                            $paginator->getTotalItems()) . ' ',
+                      . (string) $paginator->getTotalItems(),
+                    $pageSize,
+                    $paginator->getTotalItems()
+                ) . ' ',
                 ['class' => 'card-header bg-warning text-black'],
             ) . (!empty($status_string)
-            ? (string) Html::tag('b', $status_string,
-                    ['class' => 'card-header bg-info text-black']) : '');
+            ? (string) Html::tag(
+                'b',
+                $status_string,
+                ['class' => 'card-header bg-info text-black']
+            ) : '');
         }
         return '';
     }
@@ -363,11 +372,11 @@ trait SettingMiscTrait
         if (empty($data)) {
             return '';
         }
-        
+
         if (preg_match('/^base64:(.*)$/', $this->decryptKey, $matches)) {
             $key = base64_decode($matches[1]);
         }
-        
+
         /** @var mixed $decrypted */
         return Cryptor::Decrypt($data, $key);
     }
@@ -382,7 +391,7 @@ trait SettingMiscTrait
         if (preg_match('/^base64:(.*)$/', $this->decryptKey, $matches)) {
             $key = base64_decode($matches[1]);
         }
-        
+
         /** @var mixed $encrypted */
         return Cryptor::Encrypt($data, $key);
     }

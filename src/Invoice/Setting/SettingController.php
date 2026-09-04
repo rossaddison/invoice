@@ -263,9 +263,11 @@ final class SettingController extends BaseController
             'location' => $this->webViewRenderer->renderPartialAsString($p . 'location'),
             'homecare' => $this->webViewRenderer->renderPartialAsString($p . 'homecare', [
                 'hidden_inv_columns' => array_filter(
-                    explode(',', $this->sR->getSetting('homecare_hidden_inv_columns'))),
+                    explode(',', $this->sR->getSetting('homecare_hidden_inv_columns'))
+                ),
                 'hidden_inv_guest_columns' => array_filter(
-                    explode(',', $this->sR->getSetting('homecare_hidden_inv_guest_columns'))),
+                    explode(',', $this->sR->getSetting('homecare_hidden_inv_guest_columns'))
+                ),
                 'category_secondaries' => $deps->csR->optionsDataCategorySecondaries(),
             ]),
             // two-factor-authentication
@@ -342,11 +344,15 @@ final class SettingController extends BaseController
         $result = $phpVersionCheckService->check();
 
         if ($result->error !== null) {
-            $this->flashMessage('danger',
-                $this->translator->translate('system.updates.check.failed') . ': ' . $result->error);
+            $this->flashMessage(
+                'danger',
+                $this->translator->translate('system.updates.check.failed') . ': ' . $result->error
+            );
         } elseif ($result->isOutdated) {
-            $this->flashMessage($result->isSecurityRelease ? 'danger' : 'warning',
-                $this->translator->translate('system.updates.outdated') . ': ' . (string) $result->latestVersion);
+            $this->flashMessage(
+                $result->isSecurityRelease ? 'danger' : 'warning',
+                $this->translator->translate('system.updates.outdated') . ': ' . (string) $result->latestVersion
+            );
         } else {
             $this->flashMessage('info', $this->translator->translate('system.updates.up.to.date'));
         }
@@ -424,10 +430,13 @@ final class SettingController extends BaseController
      * @param array $settings
      * @param NumberHelper $numberhelper
      */
-    public function tabIndexDebugModeEnsureAllSettingsIncluded(bool $bool,
-            string $key, string $value, array $settings,
-            NumberHelper $numberhelper): void
-    {
+    public function tabIndexDebugModeEnsureAllSettingsIncluded(
+        bool $bool,
+        string $key,
+        string $value,
+        array $settings,
+        NumberHelper $numberhelper
+    ): void {
         if (!$bool) {
             return;
         }
@@ -467,9 +476,11 @@ final class SettingController extends BaseController
             $body = $request->getParsedBody() ?? [];
             $key = (string) ($body['setting_key'] ?? '');
             if ($this->sR->repoCount($key) == 1) {
-                $this->flashMessage('danger',
+                $this->flashMessage(
+                    'danger',
                     $this->translator->translate('setting.duplicate.key')
-                        . $key);
+                        . $key
+                );
                 return $this->webService->getRedirectResponse('setting/debugIndex');
             }
             /**
@@ -565,7 +576,7 @@ final class SettingController extends BaseController
     public function view(CurrentRoute $currentRoute): \Psr\Http\Message\ResponseInterface
     {
         $setting = $this->setting($currentRoute);
-        if (null!==$setting) {
+        if (null !== $setting) {
             $form = SettingForm::show($setting);
             $parameters = [
                 'title' => $this->translator->translate('view'),
@@ -622,8 +633,10 @@ final class SettingController extends BaseController
             }
             if ($this->sR->repoCount($key) > 0) {
                 if ($this->sR->repoCount($key) > 1) {
-                    $this->flashMessage('danger',
-                        $this->translator->translate('setting.duplicate.key') . $key);
+                    $this->flashMessage(
+                        'danger',
+                        $this->translator->translate('setting.duplicate.key') . $key
+                    );
                     return $this->webService->getRedirectResponse('setting/tabIndex');
                 }
                 $this->saveOneSetting($key, $value, $settings, $numberhelper);

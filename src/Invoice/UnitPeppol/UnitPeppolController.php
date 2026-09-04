@@ -92,8 +92,8 @@ final class UnitPeppolController extends BaseController
                 $body['description'] = $enece_array[$key]['Description'];
             }
             if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                    $this->unitpeppolService->saveUnitPeppol($unitPeppol, $body);
-                    return $this->webService->getRedirectResponse('unitpeppol/index');
+                $this->unitpeppolService->saveUnitPeppol($unitPeppol, $body);
+                return $this->webService->getRedirectResponse('unitpeppol/index');
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -134,7 +134,7 @@ final class UnitPeppolController extends BaseController
     ): Response {
         try {
             $unitpeppol = $this->unitpeppol($currentRoute, $unitpeppolRepository);
-            if (null!==$unitpeppol) {
+            if (null !== $unitpeppol) {
                 $this->unitpeppolService->deleteUnitPeppol($unitpeppol);
                 $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('unitpeppol/index');
@@ -165,7 +165,7 @@ final class UnitPeppolController extends BaseController
         $units = $unitRepository->findAllPreloaded();
         $enece = new PeppolUneceRec2011e();
         $enece_array = $enece->getUNECERec2011e();
-        if (null!==$unitPeppol) {
+        if (null !== $unitPeppol) {
             $form = UnitPeppolForm::show($unitPeppol);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
@@ -200,9 +200,10 @@ final class UnitPeppolController extends BaseController
      * @param UnitPeppolRepository $upepR
      * @return UnitPeppol|null
      */
-    private function unitpeppol(CurrentRoute $currentRoute,
-        UnitPeppolRepository $upepR): UnitPeppol|null
-    {
+    private function unitpeppol(
+        CurrentRoute $currentRoute,
+        UnitPeppolRepository $upepR
+    ): UnitPeppol|null {
         return $upepR->repoUnitPeppolLoadedquery((int) $currentRoute->getArgument('id'));
     }
 
@@ -231,7 +232,7 @@ final class UnitPeppolController extends BaseController
         $units = $unitRepository->findAllPreloaded();
         $enece = new PeppolUneceRec2011e();
         $eneceArray = $enece->getUNECERec2011e();
-        if (null!==$unitPeppol) {
+        if (null !== $unitPeppol) {
             $form = UnitPeppolForm::show($unitPeppol);
             $parameters = [
                 'title' => $this->translator->translate('view'),

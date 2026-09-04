@@ -131,7 +131,9 @@ trait Index
                 'soR' => $d->soR,
                 'modal_add_quote' =>
                     $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString(
-                        'quote', []),
+                        'quote',
+                        []
+                    ),
                 'urlCreator' => $urlCreator,
             ];
             if ($request->hasHeader('Hx-Request')) {
@@ -161,8 +163,10 @@ trait Index
             }
             return $this->webViewRenderer->render('index', $parameters);
         }
-        $this->flashMessage('info',
-            $this->translator->translate('user.client.active.no'));
+        $this->flashMessage(
+            'info',
+            $this->translator->translate('user.client.active.no')
+        );
         return $this->webService->getRedirectResponse('client/index');
     }
 
@@ -185,8 +189,7 @@ trait Index
     // Data parsed from quote.js:$(document).on('click',
     // '#client_change_confirm', function () {
 
-    public function modalChangeClient(Request $request, CR $cR):
-        Response
+    public function modalChangeClient(Request $request, CR $cR): Response
     {
         $body = $request->getQueryParams();
         $client = $cR->repoClientquery((int) $body['client_id']);
@@ -227,8 +230,7 @@ trait Index
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function quotes(QR $quoteRepo, int $status):
-        \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function quotes(QR $quoteRepo, int $status): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $quoteRepo->findAllWithStatus($status);
     }

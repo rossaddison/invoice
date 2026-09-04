@@ -34,7 +34,8 @@ final readonly class HomeCareRunSheetExportService
         private RSIR $rsiR,
         private DwR $dwR,
         private SR $sR,
-    ) {}
+    ) {
+    }
 
     /**
      * Idempotent: a run that already has an open (non-Applied) sheet returns

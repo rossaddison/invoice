@@ -20,5 +20,6 @@ readonly class ForExpression implements Expression
         public string     $variable,
         public Expression $in,
         public Expression $return,
-    ) {}
+    ) {
+    }
 }

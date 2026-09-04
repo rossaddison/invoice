@@ -18,5 +18,6 @@ final class QuoteEditFormDeps
         public readonly CVR $cvR,
         public readonly QCR $qcR,
         public readonly UR $uR,
-    ) {}
+    ) {
+    }
 }

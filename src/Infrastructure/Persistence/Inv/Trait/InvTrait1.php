@@ -18,7 +18,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 trait InvTrait1
 {
-
     public function setUser(User $user): void
     {
         $this->user = $user;

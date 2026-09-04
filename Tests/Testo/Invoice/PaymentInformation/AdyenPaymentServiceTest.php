@@ -29,7 +29,6 @@ use Testo\Test;
 #[Test]
 final class AdyenPaymentServiceTest
 {
-
     /**
      * @return LoggerInterface&m\MockInterface
      */

@@ -36,5 +36,6 @@ final class BodyPreviewDeps
         public readonly SocR $socR,
         public readonly SoR $soR,
         public readonly UiR $uiR,
-    ) {}
+    ) {
+    }
 }

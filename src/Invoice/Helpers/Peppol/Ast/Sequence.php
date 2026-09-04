@@ -17,5 +17,7 @@ namespace App\Invoice\Helpers\Peppol\Ast;
 readonly class Sequence implements Expression
 {
     /** @param non-empty-list<Expression> $items */
-    public function __construct(public array $items) {}
+    public function __construct(public array $items)
+    {
+    }
 }

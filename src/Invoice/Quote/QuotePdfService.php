@@ -88,7 +88,10 @@ final readonly class QuotePdfService
             . '_'
             . str_replace(['\\', '/'], '_', $quote->getNumber() ?? (string) random_int(0, 10));
         return $mpdf->pdfCreate(
-            $html, $filename, $stream, $this->s,
+            $html,
+            $filename,
+            $stream,
+            $this->s,
             new PdfCreateContext($quote->getPassword(), null, null, false, false, [], $quote),
         );
     }
@@ -178,7 +181,8 @@ final readonly class QuotePdfService
             ),
         ];
         return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/template/quote/pdf/' . $quoteTemplate, $data,
+            '//invoice/template/quote/pdf/' . $quoteTemplate,
+            $data,
         );
     }
 

@@ -39,10 +39,12 @@ final readonly class InvItemAllowanceChargeService
             $model->setInvId((int) $array['inv_id']) : '';
         isset($array['inv_item_id']) ?
             $model->setInvItemId(
-                (int) $array['inv_item_id']) : '';
+                (int) $array['inv_item_id']
+            ) : '';
         isset($array['allowance_charge_id']) ?
             $model->setAllowanceChargeId(
-                (int) $array['allowance_charge_id']) : '';
+                (int) $array['allowance_charge_id']
+            ) : '';
         isset($array['amount']) ?
             $model->setAmount((int) $array['amount']) : '';
         $model->setVatOrTax($vat_or_tax);
@@ -57,12 +59,15 @@ final readonly class InvItemAllowanceChargeService
         if (isset($array[$ac])) {
             $model->setAllowanceCharge(
                 $this->acR->repoAllowanceChargequery(
-                    (int) $array[$ac]));
+                    (int) $array[$ac]
+                )
+            );
         }
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
-                (int) $array[$inv]);
+                (int) $array[$inv]
+            );
             if ($invEntity) {
                 $model->setInv($invEntity);
             }
@@ -70,7 +75,8 @@ final readonly class InvItemAllowanceChargeService
         $inv_item = 'inv_item_id';
         if (isset($array[$inv_item])) {
             $invItemEntity = $this->iiR->repoInvItemquery(
-                (int) $array[$inv_item]);
+                (int) $array[$inv_item]
+            );
             if ($invItemEntity) {
                 $model->setInvItem($invItemEntity);
             }
@@ -89,7 +95,8 @@ final readonly class InvItemAllowanceChargeService
         // delete the allowance / charge
         $this->repository->delete($model);
         $inv_item_amount = $iiaR->repoInvItemAmountquery(
-            $inv_item_id);
+            $inv_item_id
+        );
         // rebuild the accumulative totals
         // for the inv_item_amount
         if (null !== $inv_item_amount) {
@@ -151,7 +158,8 @@ final readonly class InvItemAllowanceChargeService
             // in the subtotal
             $inv_item_amount->setSubtotal($qpIncAc);
             $inv_item_amount->setDiscount(
-                $current_discount_item_total);
+                $current_discount_item_total
+            );
             $inv_item_amount->setTaxTotal($new_tax_total);
             $overall_total = $qpIncAc
                 - $current_discount_item_total

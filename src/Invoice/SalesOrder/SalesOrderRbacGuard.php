@@ -12,7 +12,9 @@ use App\User\UserService;
 
 final readonly class SalesOrderRbacGuard
 {
-    public function __construct(private UserService $userService) {}
+    public function __construct(private UserService $userService)
+    {
+    }
 
     public function isObserver(SalesOrder $so, UCR $ucR, UIR $uiR): bool
     {

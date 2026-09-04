@@ -46,7 +46,8 @@ class StripePaymentService implements PaymentGatewayInterface
     public function isConfigured(): bool
     {
         $secretKey = (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_stripe_secretKey') ?: '');
+            $this->settings->getSetting('gateway_stripe_secretKey') ?: ''
+        );
         $publishableKey = $this->getPublishableKey();
 
         return $secretKey !== '' && $publishableKey !== '';
@@ -135,7 +136,8 @@ class StripePaymentService implements PaymentGatewayInterface
     public function verifyWebhookSignature(string $payload, string $sigHeader): ?Event
     {
         $webhookSecret = (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_stripe_webhookSecret') ?: '');
+            $this->settings->getSetting('gateway_stripe_webhookSecret') ?: ''
+        );
 
         if ($webhookSecret === '') {
             $this->logger->warning('Stripe webhook received but no webhook secret is configured.');

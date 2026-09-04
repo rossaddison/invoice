@@ -10,5 +10,6 @@ readonly class StartsWith implements Expression
     public function __construct(
         public Expression $string,
         public Expression $prefix,
-    ) {}
+    ) {
+    }
 }
