@@ -140,6 +140,14 @@ reviews:
           before `m::mock(SomeInterface::class)` when the mock is assigned via
           `??=` or passed inline as an argument — Psalm drops the intersection
           type otherwise (recurring gotcha in this suite).
+        - Mocking `final` classes directly with `m::mock(SomeFinalClass::class)`
+          is intentional and safe here, not a bug: testo.php's bootstrap calls
+          `DG\BypassFinals::enable()` globally before any class autoloads,
+          specifically so Mockery can subclass `final` classes. The suite
+          relies on this for 70+ `final` Cycle ORM repository classes with no
+          dedicated interfaces — do not suggest introducing an interface
+          purely to make a class mockable, or flag a passing test that mocks
+          a `final` class as broken.
         - Response-body assertions: prefer Mockery argument-matching
           (`$factory->createResponse(...)->with($expectedJsonString)`) over
           reading a value back out of a mocked response object afterward.

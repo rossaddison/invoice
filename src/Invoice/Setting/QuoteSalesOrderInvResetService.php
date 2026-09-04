@@ -112,14 +112,17 @@ final class QuoteSalesOrderInvResetService
             }
         } finally {
             $this->database->execute('SET FOREIGN_KEY_CHECKS=1');
+            // Invalidate the cache even on a partial drop (a DROP mid-loop
+            // threw) -- not just on success. Leaving the pre-drop cache in
+            // place would let the next request keep reading stale schema
+            // metadata via PhpFileSchemaProvider's MODE_READ_AND_WRITE
+            // read() (it only recompiles when the cache file is missing),
+            // describing tables that no longer exist. Clearing it here
+            // means the next request's schema rebuild self-heals a partial
+            // drop too: SyncTables recreates whatever's still missing,
+            // same as a clean run just interrupted midway.
+            $this->schemaProvider->clear();
         }
-
-        // Force the next request's schema pipeline to rebuild from current
-        // entity definitions instead of reading the (now stale) cache --
-        // see PhpFileSchemaProvider::read(): a missing cache file falls
-        // through to a fresh compile + SyncTables regardless of the
-        // BUILD_DATABASE env flag.
-        $this->schemaProvider->clear();
 
         return $tables;
     }
@@ -154,7 +157,14 @@ final class QuoteSalesOrderInvResetService
         if (!is_dir($directory) && !mkdir($directory, 0755, true) && !is_dir($directory)) {
             throw new DatabaseBackupException('Unable to create backup directory: ' . $directory);
         }
-        $filePath = $directory . '/invoice_pre_reset_' . date('Ymd_His') . '.sql.gz';
+        // date('Ymd_His') alone has 1-second resolution -- two authorized
+        // reset requests landing in the same second would collide on the
+        // same path, and gzopen(..., 'wb9') truncates on write, so the
+        // second request would silently destroy the first request's
+        // pre-reset backup. The random suffix makes collision practically
+        // impossible while keeping the timestamp for human sortability.
+        $filePath = $directory . '/invoice_pre_reset_' . date('Ymd_His')
+            . '_' . bin2hex(random_bytes(4)) . '.sql.gz';
         $this->backupService->writeGzippedDump($filePath);
     }
 }

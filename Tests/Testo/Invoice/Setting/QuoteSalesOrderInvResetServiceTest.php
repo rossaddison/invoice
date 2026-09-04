@@ -78,7 +78,7 @@ final class QuoteSalesOrderInvResetServiceTest
         [$database, $schemaProvider, $backupService, $aliases] = $this->makeDeps();
 
         $backupService->shouldReceive('writeGzippedDump')->once()
-            ->with(m::pattern('/invoice_pre_reset_\d{8}_\d{6}\.sql\.gz$/'))
+            ->with(m::pattern('/invoice_pre_reset_\d{8}_\d{6}_[0-9a-f]{8}\.sql\.gz$/'))
             ->ordered();
 
         $database->shouldReceive('execute')->once()->with('SET FOREIGN_KEY_CHECKS=0')->ordered();
@@ -111,7 +111,7 @@ final class QuoteSalesOrderInvResetServiceTest
     }
 
     #[ExpectException(\RuntimeException::class)]
-    public function dropAndClearSchemaStillReEnablesForeignKeyChecksWhenADropFails(): void
+    public function dropAndClearSchemaStillReEnablesForeignKeyChecksAndClearsTheCacheWhenADropFails(): void
     {
         [$database, $schemaProvider, $backupService, $aliases] = $this->makeDeps();
 
@@ -120,10 +120,13 @@ final class QuoteSalesOrderInvResetServiceTest
         $database->shouldReceive('execute')->once()
             ->with('DROP TABLE IF EXISTS `inv_item_amount`')
             ->andThrow(new \RuntimeException('table is locked'));
-        // The finally block must still re-enable FK checks even though a
-        // drop mid-loop threw.
+        // The finally block must still re-enable FK checks AND clear the
+        // schema cache even though a drop mid-loop threw -- a partial drop
+        // must never leave stale schema metadata in place (CodeRabbit
+        // review comment on PR #1204). The exception itself still
+        // propagates past the finally block, per PHP semantics.
         $database->shouldReceive('execute')->once()->with('SET FOREIGN_KEY_CHECKS=1');
-        $schemaProvider->shouldNotReceive('clear');
+        $schemaProvider->shouldReceive('clear')->once();
 
         $service = new QuoteSalesOrderInvResetService($database, $schemaProvider, $backupService, $aliases);
         $service->dropAndClearSchema();
