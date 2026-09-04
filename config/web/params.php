@@ -12,7 +12,7 @@ use Yiisoft\Router\Middleware\Router;
 use Yiisoft\Session\SessionMiddleware;
 use Yiisoft\User\Login\Cookie\CookieLoginMiddleware;
 use App\Middleware\ContentSecurityPolicyMiddleware;
-use App\Middleware\CsrfRedirectMiddleware;
+use App\Middleware\CsrfExemptMiddleware;
 use App\Middleware\PageOutOfRangeMiddleware;
 use App\Middleware\SecurityHeadersMiddleware;
 use Yiisoft\Yii\Middleware\Locale;
@@ -90,7 +90,7 @@ return [
         SecurityHeadersMiddleware::class,
         PrometheusMiddleware::class,
         SessionMiddleware::class,
-        CsrfRedirectMiddleware::class,
+        CsrfExemptMiddleware::class,
         CookieMiddleware::class,
         CookieLoginMiddleware::class,
         Locale::class,

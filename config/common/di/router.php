@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use App\Middleware\CsrfExemptMiddleware;
+use App\Middleware\CsrfFailureHandler;
 use Yiisoft\Config\Config;
+use Yiisoft\Csrf\CsrfTokenMiddleware;
 use Yiisoft\DataResponse\Middleware\DataResponseMiddleware;
 use Yiisoft\DataResponse\Formatter\JsonFormatter;
 use Yiisoft\Definitions\Reference;
@@ -32,6 +34,14 @@ return [
         'class' => DataResponseMiddleware::class,
         '__construct()' => [
             'formatter' => Reference::to(JsonFormatter::class),
+        ],
+    ],
+    // Without this, CsrfTokenMiddleware falls back to its own default
+    // failure response -- a bare 422 with no styling. See
+    // CsrfFailureHandler's own docblock for the full story.
+    CsrfTokenMiddleware::class => [
+        '__construct()' => [
+            'failureHandler' => Reference::to(CsrfFailureHandler::class),
         ],
     ],
     RouteCollectionInterface::class => static function (RouteCollectorInterface $collector) use ($config) {
