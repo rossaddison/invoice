@@ -323,7 +323,7 @@ jobs:
         # bug (vimeo/psalm#11831) blocking it. Re-enable once that's fixed.
         include:
           - php: '84'
-            alpine: '3.22'
+            alpine: '3.24'
           # - php: '85'
           #   alpine: 'edge'
 
