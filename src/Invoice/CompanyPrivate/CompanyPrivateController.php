@@ -121,7 +121,11 @@ final class CompanyPrivateController extends BaseController
 
             if ($spaceToUnderscore !== null && is_array($body)) {
                 $body['logo_filename'] = $this->processLogoFileUpload(
-                    $file, $targetPath, $targetPublicPath, $spaceToUnderscore);
+                    $file,
+                    $targetPath,
+                    $targetPublicPath,
+                    $spaceToUnderscore
+                );
                 if ($formHydrator->populateAndValidate($form, $body)) {
                     $this->companyPrivateService->saveCompanyPrivate($company_private, $body);
                     $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
@@ -274,7 +278,8 @@ final class CompanyPrivateController extends BaseController
                 // Prepare the after save for the logo_filename field
                 $after_save =
                     $companyprivateRepository->repoCompanyPrivatequery(
-                        $company_private->reqId());
+                        $company_private->reqId()
+                    );
                 if ($after_save) {
                     // A new file upload must pass whitelist validation, then replace the
                     // previous one, or keep the existing file if there's no valid new upload.
@@ -373,9 +378,10 @@ final class CompanyPrivateController extends BaseController
      * @param CompanyPrivateRepository $companyprivateRepository
      * @return CompanyPrivate|null
      */
-    private function companyprivate(CurrentRoute $currentRoute,
-        CompanyPrivateRepository $companyprivateRepository): ?CompanyPrivate
-    {
+    private function companyprivate(
+        CurrentRoute $currentRoute,
+        CompanyPrivateRepository $companyprivateRepository
+    ): ?CompanyPrivate {
         $id = (int) $currentRoute->getArgument('id');
         return $companyprivateRepository->repoCompanyPrivatequery($id);
     }

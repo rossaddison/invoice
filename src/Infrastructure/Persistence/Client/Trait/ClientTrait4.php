@@ -17,7 +17,6 @@ use RequireId;
  */
 trait ClientTrait4
 {
-
     public function getClientLanguage(): ?string
     {
         return $this->client_language;

@@ -198,7 +198,8 @@ final class CheckoutComPaymentService implements PaymentGatewayInterface
     public function webhookSigningKey(): string
     {
         return (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_checkout_com_webhookSecret') ?: '');
+            $this->settings->getSetting('gateway_checkout_com_webhookSecret') ?: ''
+        );
     }
 
     /**
@@ -275,13 +276,15 @@ final class CheckoutComPaymentService implements PaymentGatewayInterface
     private function secretKey(): string
     {
         return (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_checkout_com_secretKey') ?: '');
+            $this->settings->getSetting('gateway_checkout_com_secretKey') ?: ''
+        );
     }
 
     private function publicKey(): string
     {
         return (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_checkout_com_publicKey') ?: '');
+            $this->settings->getSetting('gateway_checkout_com_publicKey') ?: ''
+        );
     }
 
     /**
@@ -294,7 +297,8 @@ final class CheckoutComPaymentService implements PaymentGatewayInterface
     private function processingChannelId(): string
     {
         return (string) $this->settings->decode(
-            $this->settings->getSetting('gateway_checkout_com_processingChannelId') ?: '');
+            $this->settings->getSetting('gateway_checkout_com_processingChannelId') ?: ''
+        );
     }
 
     /**

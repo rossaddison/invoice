@@ -50,15 +50,15 @@ $selectLabel = static function (array $optionsData, int|string|null $value): str
                     $translator->translate('allowance.or.charge'),
                     $selectLabel($optionsDataAllowanceCharges, $form->getAllowanceChargeId()),
                 );
-                ReadOnlyField::render(
-                    $translator->translate('allowance.or.charge.amount'),
-                    $form->getAmount() !== null ? (string) $form->getAmount() : '',
-                );
-                ReadOnlyField::render(
-                    $translator->translate('vat.abbreviation'),
-                    $form->getVatOrTax() !== null ? (string) $form->getVatOrTax() : '',
-                );
-            ?>
+ReadOnlyField::render(
+    $translator->translate('allowance.or.charge.amount'),
+    $form->getAmount() !== null ? (string) $form->getAmount() : '',
+);
+ReadOnlyField::render(
+    $translator->translate('vat.abbreviation'),
+    $form->getVatOrTax() !== null ? (string) $form->getVatOrTax() : '',
+);
+?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

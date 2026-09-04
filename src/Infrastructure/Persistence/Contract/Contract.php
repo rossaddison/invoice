@@ -39,7 +39,7 @@ class Contract
         $this->period_start = new DateTimeImmutable();
         $this->period_end = new DateTimeImmutable();
     }
-    
+
     public function reqId(): int
     {
         return $this->requireId($this->id, 'Contract');

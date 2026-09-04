@@ -81,8 +81,13 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('client.has.user.account'),
-        content: static function (Client $model) use ($canEdit, $ucR, $button,
-                $translator, $urlGenerator): Span {
+        content: static function (Client $model) use (
+            $canEdit,
+            $ucR,
+            $button,
+            $translator,
+            $urlGenerator
+        ): Span {
             return ($ucR->repoUserqueryCount($model->reqId()) !== 0
                     && $canEdit)
                    ? $button::activeLabel($translator)
@@ -118,7 +123,8 @@ $columns = [
         content: static function (Client $model) use ($translator, $urlGenerator): A {
             return (new A())
                 ->content(
-                    Html::tag('button',
+                    Html::tag(
+                        'button',
                         Html::tag('i', '', ['class' => 'bi bi-trash']),
                         [
                             'type' => 'submit',
@@ -134,9 +140,13 @@ $columns = [
     ),
     new DataColumn(
         'invs',
-        content: static function (Client $model) use ($iR, $iaR,
-        $urlGenerator, $gridComponents): string {
-            $clientId = $model->reqId(); 
+        content: static function (Client $model) use (
+            $iR,
+            $iaR,
+            $urlGenerator,
+            $gridComponents
+        ): string {
+            $clientId = $model->reqId();
             $invoices = $iR->findAllWithClient($clientId);
             // Initialize a new empty ArrayCollection without the need to create a new entity
             $model->setInvs();
@@ -166,7 +176,8 @@ $columns = [
 
             // Button that toggles the mini table (uses Bootstrap 5 collapse)
             $buttonHtml = Html::tag(
-                'button', '➡️' . ' ' . Html::encode((string) $invCount),
+                'button',
+                '➡️' . ' ' . Html::encode((string) $invCount),
                 [
                     'type' => 'button',
                     'class' => 'btn btn-sm btn-outline-primary me-2',
@@ -283,29 +294,40 @@ $columns = [
         content: static function (Client $model) use ($iR, $iaR, $s): string {
             $clientId = $model->reqId();
             return Html::encode($s->formatCurrency(
-                $iR->withTotalBalance($clientId, $iaR)));
+                $iR->withTotalBalance($clientId, $iaR)
+            ));
         },
     ),
     new DataColumn(
-        content: static function (Client $model) use ($urlGenerator,
-                                                        $translator, $cpR): A {
-            $addUrl = $urlGenerator->generate('clientpeppol/add',
-                    ['client_id' => $model->reqId()]);
-            $editUrl = $urlGenerator->generate('clientpeppol/edit',
-                    ['client_id' => $model->reqId(), 'origin' => 'edit']);
+        content: static function (Client $model) use (
+            $urlGenerator,
+            $translator,
+            $cpR
+        ): A {
+            $addUrl = $urlGenerator->generate(
+                'clientpeppol/add',
+                ['client_id' => $model->reqId()]
+            );
+            $editUrl = $urlGenerator->generate(
+                'clientpeppol/edit',
+                ['client_id' => $model->reqId(), 'origin' => 'edit']
+            );
             $equal = ($cpR->repoClientCount($model->reqId()) === 0 ? true : false);
             $heading = ($equal ? $translator->translate('client.peppol.add') :
                 $translator->translate('client.peppol.edit'));
             return Html::a(
-                     new I()
+                new I()
                     ->content($equal ? '➕' : '🖉')
                     ->addAttributes(
-                            [
+                        [
                                 'data-bs-toggle' => 'tooltip',
                                 'title' => $heading,
-                            ]),
-                    $equal ? $addUrl : $editUrl, [
-                        'class' => 'text-decoration-none']);
+                            ]
+                    ),
+                $equal ? $addUrl : $editUrl,
+                [
+                        'class' => 'text-decoration-none']
+            );
         },
         encodeContent: false,
     ),
@@ -334,26 +356,34 @@ $toolbarString
             $allVisible
             . $gridComponents->toolbarReset($urlGenerator)
             .  new A()
-            ->href($urlGenerator->generate('client/index',
-                    ['page' => 1, 'active' => 2]))
+            ->href($urlGenerator->generate(
+                'client/index',
+                ['page' => 1, 'active' => 2]
+            ))
             ->addClass('btn ' . ($active == 2 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('all'))
             ->render()
             .  new A()
-            ->href($urlGenerator->generate('client/index',
-                    ['page' => 1, 'active' => 1]))
+            ->href($urlGenerator->generate(
+                'client/index',
+                ['page' => 1, 'active' => 1]
+            ))
             ->addClass('btn ' . ($active == 1 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('active'))
             ->render()
             .  new A()
-            ->href($urlGenerator->generate('client/index',
-                    ['page' => 1, 'active' => 0]))
+            ->href($urlGenerator->generate(
+                'client/index',
+                ['page' => 1, 'active' => 0]
+            ))
             ->addClass('btn ' . ($active == 0 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('inactive'))
             ->render()
             .  new A()
-            ->href($urlGenerator->generate('client/add',
-                    ['origin' => 'main']))
+            ->href($urlGenerator->generate(
+                'client/add',
+                ['origin' => 'main']
+            ))
             ->addClass('btn btn-info')
             ->content('➕')
             ->render(),

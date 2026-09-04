@@ -43,8 +43,15 @@ trait View
         }
         $quoteAllowanceChargeForm = new QuoteAllowanceChargeForm();
         $this->session->set('quote_id', $quote_id);
-        $this->numberHelper->calculateQuote($quote_id, $item->acqR, $item->qiR,
-                $item->qiaR, $core->qtrR, $core->qaR, $core->qR);
+        $this->numberHelper->calculateQuote(
+            $quote_id,
+            $item->acqR,
+            $item->qiR,
+            $item->qiaR,
+            $core->qtrR,
+            $core->qaR,
+            $core->qR
+        );
         $quote_tax_rates = $core->qtrR->repoCount($quote_id) > 0
             ? $core->qtrR->repoQuotequery($quote_id)
             : null;
@@ -63,7 +70,8 @@ trait View
         $vat = $this->sR->getSetting('enable_vat_registration');
         $quoteAmountTotal = $quote_amount->getTotal();
         $customValues = $render->cvR->fixCfValueToCf(
-            $render->cfR->repoTablequery('quote_custom'));
+            $render->cfR->repoTablequery('quote_custom')
+        );
         $parameters = [
             '_language' => $_language,
             'body' => $this->body($quote),
@@ -72,25 +80,34 @@ trait View
             'quote_amount_total' => $quoteAmountTotal,
             'sales_order_number' => $sales_order_number,
             'quoteToolbar' => $this->quoteToolbar->renderWithStatus(
-                $quote, $quoteEdit, $vat, $quoteAmountTotal),
+                $quote,
+                $quoteEdit,
+                $vat,
+                $quoteAmountTotal
+            ),
             'dateHelper' => new DateHelper($this->sR),
             'numberHelper' => $this->numberHelper,
             'view_product_task_tabs' =>
                 $this->viewBuildProductTaskTabs($quote, $quoteEdit, $_language, $id, $core, $item, $render),
             'view_quote_number' =>
                 $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/quote/view_quote_number', ['quote' => $quote]),
+                    '//invoice/quote/view_quote_number',
+                    ['quote' => $quote]
+                ),
             'view_quote_vat_enabled_switch' =>
                 $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/quote/view_quote_vat_enabled_switch'),
+                    '//invoice/quote/view_quote_vat_enabled_switch'
+                ),
             'view_quote_client_details' =>
                 $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/quote/view_quote_client_details', [
+                    '//invoice/quote/view_quote_client_details',
+                    [
                     'clientHelper' => new ClientHelper($this->sR),
                     'countryHelper' => new CountryHelper(),
                     'quote' => $quote,
                     '_language' => $_language,
-                ]),
+                ]
+                ),
             'view_details_box_with_custom_field' =>
                 $this->viewBuildDetailsBoxWithCustomField($quote, $render, $vat, $quote_custom_values, $customValues),
             'view_quote_approve_reject' =>
@@ -100,7 +117,8 @@ trait View
             'fields' => $item->qcR->repoFields((int) $this->session->get('quote_id')),
             'customFields' => $render->cfR->repoTablequery('quote_custom'),
             'customValues' => $render->cvR->fixCfValueToCf(
-                $render->cfR->repoTablequery('quote_custom')),
+                $render->cfR->repoTablequery('quote_custom')
+            ),
             'cvH' => new CVH($this->sR, $render->cvR),
             'quoteCustomValues' => $quote_custom_values,
             'quoteStatuses' => $core->qR->getStatuses($this->translator),
@@ -114,40 +132,54 @@ trait View
                 $this->viewBuildModalAddAllowanceCharge($ui, $quoteAllowanceChargeForm),
             'modal_copy_quote' =>
                 $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/quote/modal_copy_quote', [
+                    '//invoice/quote/modal_copy_quote',
+                    [
                         's' => $this->sR,
                         'quote' => $core->qR->repoQuoteLoadedquery(
-                            (int) $this->session->get('quote_id')),
+                            (int) $this->session->get('quote_id')
+                        ),
                         'clients' => $ui->cR->findAllPreloaded(),
                         'groups' => $ui->gR->findAllPreloaded(),
-                    ]),
+                    ]
+                ),
             'modal_delete_quote' =>
                 $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/quote/modal_delete_quote', [
+                    '//invoice/quote/modal_delete_quote',
+                    [
                         'actionName' => 'quote/delete',
                         'actionArguments' => [
                             '_language' => $_language,
                             'id' => $this->session->get('quote_id')],
-                    ]),
+                    ]
+                ),
             'modal_delete_items' => $this->viewBuildModalDeleteItems($item, $render),
             'modal_quote_to_invoice' =>
                 $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/quote/modal_quote_to_invoice', [
+                    '//invoice/quote/modal_quote_to_invoice',
+                    [
                     'quote' => $quote,
                     'groups' => $ui->gR->findAllPreloaded(),
-                ]),
+                ]
+                ),
             'modal_quote_to_so' =>
                 $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/quote/modal_quote_to_so', [
+                    '//invoice/quote/modal_quote_to_so',
+                    [
                     'quote' => $quote,
                     'groups' => $ui->gR->findAllPreloaded(),
-                ]),
+                ]
+                ),
             'modal_quote_to_pdf' =>
                 $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/quote/modal_quote_to_pdf', ['quote' => $quote]),
+                    '//invoice/quote/modal_quote_to_pdf',
+                    ['quote' => $quote]
+                ),
             'partial_quote_delivery_location' =>
                 $this->viewPartialDeliveryLocation(
-                    $_language, $ui->dlR, $quote->getDeliveryLocationId()),
+                    $_language,
+                    $ui->dlR,
+                    $quote->getDeliveryLocationId()
+                ),
         ];
         return ($this->rbacObserver($quote, $core->ucR, $core->uiR) || $this->rbacAdmin() || $this->rbacAccountant())
             ? $this->webViewRenderer->render('view', $parameters)
@@ -164,12 +196,14 @@ trait View
         QuoteViewRenderDeps $render,
     ): string {
         return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/quote/view_product_task_tabs', [
+            '//invoice/quote/view_product_task_tabs',
+            [
             'quote' => $quote,
             'invEdit' => $quoteEdit,
             'add_quote_product' =>
                 $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/quoteitem/_item_form_product', [
+                    '//invoice/quoteitem/_item_form_product',
+                    [
                 'actionName' => 'quoteitemhtmx/addProduct',
                 'actionArguments' => ['_language' => $_language],
                 'errors' => [],
@@ -179,10 +213,12 @@ trait View
                 'products' => $item->pR->findAllPreloaded(),
                 'units' => $render->uR->findAllPreloaded(),
                 'numberHelper' => new NumberHelper($this->sR),
-            ]),
+            ]
+                ),
             'add_quote_task' =>
                 $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/quoteitem/_item_form_task', [
+                    '//invoice/quoteitem/_item_form_task',
+                    [
                 'actionName' => 'quoteitemhtmx/addTask',
                 'actionArguments' => ['_language' => $_language],
                 'errors' => [],
@@ -191,8 +227,10 @@ trait View
                 'tasks' => $render->taskR->repoTaskStatusquery(1),
                 'taxRates' => $render->trR->findAllPreloaded(),
                 'numberHelper' => new NumberHelper($this->sR),
-            ]),
-        ]);
+            ]
+                ),
+        ]
+        );
     }
 
     private function viewBuildDetailsBoxWithCustomField(
@@ -213,7 +251,8 @@ trait View
                 'customValues' => $customValues,
                 'customFields' => $render->cfR->repoTablequery('quote_custom'),
                 'vat' => $vat,
-            ]);
+            ]
+        );
     }
 
     private function viewBuildViewQuoteApproveReject(
@@ -223,13 +262,15 @@ trait View
         QuoteViewCoreDeps $core,
     ): string {
         return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/quote/view_quote_approve_reject', [
+            '//invoice/quote/view_quote_approve_reject',
+            [
             'quote' => $quote,
             'body' => $this->body($quote),
             'invEdit' => $quoteEdit,
             'quoteStatuses' => $core->qR->getStatuses($this->translator),
             'sales_order_number' => $sales_order_number,
-        ]);
+        ]
+        );
     }
 
     private function viewBuildViewCustomFields(
@@ -238,14 +279,16 @@ trait View
         array $customValues,
     ): string {
         return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/quote/view_custom_fields', [
+            '//invoice/quote/view_custom_fields',
+            [
             'custom_fields' => $render->cfR->repoTablequery('quote_custom'),
             'custom_values' => $customValues,
             'quote_custom_values' => $quote_custom_values,
             'cvH' => new CVH($this->sR, $render->cvR),
             'cvR' => $render->cvR,
             'quoteCustomForm' => new QuoteCustomForm(),
-        ]);
+        ]
+        );
     }
 
     private function viewBuildPartialItemTable(
@@ -258,7 +301,8 @@ trait View
         string $_language,
     ): string {
         return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/quote/partial_item_table', [
+            '//invoice/quote/partial_item_table',
+            [
             'acqiR' => $item->acqiR,
             'packHandleShipTotal' =>
                 $item->acqR->getPackHandleShipTotal($quote->reqId()),
@@ -268,7 +312,8 @@ trait View
             'piR' => $ui->piR,
             'products' => $item->pR->findAllPreloaded(),
             'quoteItems' => $item->qiR->repoQuotequery(
-                    (int) $this->session->get('quote_id')),
+                (int) $this->session->get('quote_id')
+            ),
             'qiaR' => $item->qiaR,
             'quoteTaxRates' => $quote_tax_rates,
             'quoteAmount' => $quote_amount,
@@ -277,7 +322,8 @@ trait View
             'taxRates' => $render->trR->findAllPreloaded(),
             'tasks' => $render->taskR->findAllPreloaded(),
             'units' => $render->uR->findAllPreloaded(),
-        ]);
+        ]
+        );
     }
 
     private function viewBuildModalChooseProducts(
@@ -304,7 +350,8 @@ trait View
                             'products' => $item->pR->findAllPreloadedwithPrice(),
                             'numberHelper' => $this->numberHelper,
                             'translator' => $this->translator,
-                        ]),
+                        ]
+                    ),
             ],
         );
     }
@@ -320,10 +367,12 @@ trait View
                     $this->sR->getSetting('default_item_tax_rate') !== '' ?: 0,
                 'partial_task_table_modal' =>
                     $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/task/partial_task_table_modal', [
+                        '//invoice/task/partial_task_table_modal',
+                        [
                         'tasks' => $render->taskR->repoTaskStatusquery(1),
                         'projectR' => $ui->projectR,
-                    ]),
+                    ]
+                    ),
             ],
         );
     }
@@ -373,17 +422,21 @@ trait View
         QuoteViewRenderDeps $render,
     ): string {
         return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/quote/modal_delete_item', [
+            '//invoice/quote/modal_delete_item',
+            [
             'partial_item_table_modal' =>
                 $this->webViewRenderer->renderPartialAsString(
                     '//invoice/quoteitem/_partial_item_table_modal',
                     [
                         'quoteItems' => $item->qiR->repoQuotequery(
-                            (int) $this->session->get('quote_id')),
+                            (int) $this->session->get('quote_id')
+                        ),
                         'taskR' => $render->taskR,
                         'numberHelper' => new NumberHelper($this->sR),
-                    ]),
-        ]);
+                    ]
+                ),
+        ]
+        );
     }
 
     private function body(Quote $quote): array
@@ -413,18 +466,21 @@ trait View
     }
 
     public function deleteQuoteTaxRate(
-        #[RouteArgument('id')] int $id, QTRR $quotetaxrateRepository):
-        Response
-    {
+        #[RouteArgument('id')] int $id,
+        QTRR $quotetaxrateRepository
+    ): Response {
         try {
             $this->quote_tax_rate_service->deleteQuoteTaxRate(
-                $this->quotetaxrate($id, $quotetaxrateRepository));
+                $this->quotetaxrate($id, $quotetaxrateRepository)
+            );
             $this->flashMessage('info', $this->translator->translate(
-                'record.successfully.deleted'));
+                'record.successfully.deleted'
+            ));
         } catch (\Exception $e) {
             unset($e);
             $this->flashMessage('danger', $this->translator->translate(
-                'quote.tax.rate.cannot.delete'));
+                'quote.tax.rate.cannot.delete'
+            ));
         }
         $quote_id = (string) $this->session->get('quote_id');
         return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);

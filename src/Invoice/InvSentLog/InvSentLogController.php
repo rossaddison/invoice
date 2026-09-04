@@ -40,8 +40,15 @@ final class InvSentLogController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator,
-                                        $webViewRenderer, $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
         $this->invsentlogService = $invsentlogService;
     }
 
@@ -151,7 +158,9 @@ final class InvSentLogController extends BaseController
         && (isset($queryFilterClientId) && ($queryFilterClientId > 0))) {
             $invsentlogs =
             $islR->filterInvNumberWithClient(
-                                    $queryFilterInvNumber, $queryFilterClientId);
+                $queryFilterInvNumber,
+                $queryFilterClientId
+            );
         }
         $paginator = (new OffsetPaginator($invsentlogs))
         ->withPageSize($this->sR->positiveListLimit())
@@ -194,9 +203,12 @@ final class InvSentLogController extends BaseController
      * @param UIR $uiR
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(#[RouteArgument('id')] int $id, ISLR $islR,
-        UCR $ucR, UIR $uiR): \Psr\Http\Message\ResponseInterface
-    {
+    public function view(
+        #[RouteArgument('id')] int $id,
+        ISLR $islR,
+        UCR $ucR,
+        UIR $uiR
+    ): \Psr\Http\Message\ResponseInterface {
         $invsentlog = $this->invsentlog($islR, $id);
         if ($invsentlog) {
             $form = InvSentLogForm::show($invsentlog);
@@ -214,13 +226,15 @@ final class InvSentLogController extends BaseController
         return $this->webService->getRedirectResponse('invsentlog/index');
     }
 
-    private function rbacAccountant() : bool {
+    private function rbacAccountant(): bool
+    {
         return $this->userService->hasPermission(Permissions::VIEW_INV)
             && $this->userService->hasPermission(Permissions::VIEW_PAYMENT)
             && $this->userService->hasPermission(Permissions::EDIT_PAYMENT);
     }
 
-    private function rbacAdmin() : bool {
+    private function rbacAdmin(): bool
+    {
         return $this->userService->hasPermission(Permissions::VIEW_INV)
             && $this->userService->hasPermission(Permissions::EDIT_INV);
     }
@@ -236,7 +250,8 @@ final class InvSentLogController extends BaseController
      * @param UIR $uiR
      * @return bool
      */
-    private function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR) : bool {
+    private function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR): bool
+    {
         $statusId = $inv->reqStatusId();
         // has observer role
         if ($this->userService->hasPermission(Permissions::VIEW_INV)
@@ -247,8 +262,10 @@ final class InvSentLogController extends BaseController
             && ($inv->reqUserId() === $this->userService->getUser()?->reqId())
             // the invoice client is associated with the above user
             // the observer user may be paying for more than one client
-            && ($ucR->repoUserClientqueryCount($inv->reqUserId(),
-                                            $inv->reqClientId()) > 0)) {
+            && ($ucR->repoUserClientqueryCount(
+                $inv->reqUserId(),
+                $inv->reqClientId()
+            ) > 0)) {
             $userInv = $uiR->repoUserInvUserIdquery($statusId);
             // the current observer user is active
             if (null !== $userInv && $userInv->getActive()) {
@@ -309,8 +326,9 @@ final class InvSentLogController extends BaseController
      * @return array
      */
     public function optionsDataGuestInvNumberFilter(
-                                                ISLR $islR, int $user_id): array
-    {
+        ISLR $islR,
+        int $user_id
+    ): array {
         $optionsDataGuestInvNumbers = [];
         // Get all the invoices sent to this user
         // This user may have more than one client

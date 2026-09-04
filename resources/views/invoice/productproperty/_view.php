@@ -35,11 +35,11 @@ use Yiisoft\Html\Html;
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?php
                 ReadOnlyField::render($translator->translate('name'), $form->getName());
-                ReadOnlyField::render($translator->translate('value'), $form->getValue());
-            ?>
+ReadOnlyField::render($translator->translate('value'), $form->getValue());
+?>
             <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Html::label($translator->translate('product.name'))
-                    ->attributes(['class' => 'text-muted mb-0']); ?>
+        ->attributes(['class' => 'text-muted mb-0']); ?>
                 <?= Html::div(
                     Html::a(
                         $form->getProduct()?->getProductName() ?? '',

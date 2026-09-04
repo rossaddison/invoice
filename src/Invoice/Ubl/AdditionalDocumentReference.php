@@ -27,13 +27,12 @@ use Sabre\Xml\XmlSerializable;
 class AdditionalDocumentReference implements XmlSerializable
 {
     public function __construct(
-            private readonly string $id,
-            private readonly ?string $documentType,
-            private readonly ?string $documentDescription,
-            private readonly array $attachments,
-            private readonly bool $ubl_cr_114 = false
-    )
-    {
+        private readonly string $id,
+        private readonly ?string $documentType,
+        private readonly ?string $documentDescription,
+        private readonly array $attachments,
+        private readonly bool $ubl_cr_114 = false
+    ) {
     }
 
     /**

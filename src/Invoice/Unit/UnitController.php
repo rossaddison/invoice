@@ -161,7 +161,7 @@ final class UnitController extends BaseController
     public function view(#[RouteArgument('unit_id')] string $unit_id, UnitRepository $unitRepository): \Psr\Http\Message\ResponseInterface
     {
         $unit = $this->unit((int) $unit_id, $unitRepository);
-        if (null!==$unit) {
+        if (null !== $unit) {
             $form = UnitForm::show($unit);
             $parameters = [
                 'title' => $this->translator->translate('view'),

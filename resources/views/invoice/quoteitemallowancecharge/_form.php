@@ -40,7 +40,7 @@ foreach ($allowance_charges as $allowance_charge) {
             $allowance_charge->getReason(),
             $allowance_charge->getTaxRate()?->getTaxRateName() ?? '',
         ],
-        static fn(string $v): bool => $v !== ''
+        static fn (string $v): bool => $v !== ''
     );
     $optionsDataAllowanceCharge[$id] = $type . ' — ' . implode(' — ', $parts);
     $optionsAttributesAllowanceCharge[$id] = ['style' => $isCharge ? 'color:#dc3545' : 'color:#198754'];

@@ -52,9 +52,9 @@ $col = 'col-12 col-md-6';
 $row = 'row';
 
 echo H::openTag('div', ['class' => 'card']);
- echo H::openTag('div', ['class' => 'card-header']);
-  echo H::encode($this->getTitle());
- echo H::closeTag('div');
+echo H::openTag('div', ['class' => 'card-header']);
+echo H::encode($this->getTitle());
+echo H::closeTag('div');
 
 echo $modal_delete_quote;
 if ($vat === '0') {
@@ -79,80 +79,80 @@ echo H::openTag('input', [
 echo H::closeTag('input');
 
 echo H::openTag('div', ['id' => 'headerbar']);
- echo H::openTag('h1', ['class' => 'headerbar-title']);
-  echo $view_quote_number;
- echo H::closeTag('h1');
- echo H::openTag('div', ['class' => 'headerbar-item float-end']);
-  echo $view_quote_vat_enabled_switch;
-  echo $quoteToolbar;
- echo H::closeTag('div');
+echo H::openTag('h1', ['class' => 'headerbar-title']);
+echo $view_quote_number;
+echo H::closeTag('h1');
+echo H::openTag('div', ['class' => 'headerbar-item float-end']);
+echo $view_quote_vat_enabled_switch;
+echo $quoteToolbar;
+echo H::closeTag('div');
 echo H::closeTag('div');
 
 echo H::openTag('div', ['id' => 'content']);
- echo $alert;
- echo H::openTag('div', ['id' => 'quote_form']);
-  echo H::openTag('div', ['class' => 'quote']);
-   echo H::openTag('div', ['class' => $row]);
-    echo $view_quote_client_details;
-    echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']);
-     echo '<br>';
-    echo H::closeTag('div');
-    echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-7']);
-     echo H::openTag('div', ['class' => 'details-box']);
-      echo H::openTag('div', ['class' => $row]);
-       echo $view_details_box_with_custom_field;
-       echo H::openTag('div', ['class' => $col]);
-        echo $view_quote_approve_reject;
-       echo H::closeTag('div');
-      echo H::closeTag('div');
-     echo H::closeTag('div');
-    echo H::closeTag('div');
-   echo H::closeTag('div');
-  echo H::closeTag('div');
- echo H::closeTag('div');
+echo $alert;
+echo H::openTag('div', ['id' => 'quote_form']);
+echo H::openTag('div', ['class' => 'quote']);
+echo H::openTag('div', ['class' => $row]);
+echo $view_quote_client_details;
+echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']);
+echo '<br>';
+echo H::closeTag('div');
+echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-7']);
+echo H::openTag('div', ['class' => 'details-box']);
+echo H::openTag('div', ['class' => $row]);
+echo $view_details_box_with_custom_field;
+echo H::openTag('div', ['class' => $col]);
+echo $view_quote_approve_reject;
+echo H::closeTag('div');
+echo H::closeTag('div');
+echo H::closeTag('div');
+echo H::closeTag('div');
+echo H::closeTag('div');
+echo H::closeTag('div');
+echo H::closeTag('div');
 
- echo H::openTag('div', [
-     'id' => 'partial_item_table_parameters',
-     'disabled' => true
- ]);
-  echo $partial_item_table;
- echo H::closeTag('div');
+echo H::openTag('div', [
+    'id' => 'partial_item_table_parameters',
+    'disabled' => true
+]);
+echo $partial_item_table;
+echo H::closeTag('div');
 
- echo H::openTag('div', ['class' => $row]);
-  echo H::openTag('div', ['class' => $col]);
-   echo H::openTag('div', ['class' => 'card m-0']);
-    echo H::openTag('div', ['class' => 'card-header']);
-     echo $translator->translate('notes');
-    echo H::closeTag('div');
-    echo H::openTag('div', ['class' => 'card-body']);
-     echo H::openTag('textarea', [
-         'name' => 'notes',
-         'id' => 'notes',
-         'rows' => '3',
-         'disabled' => true,
-         'class' => 'form-control'
-     ]);
-      echo H::encode($body['notes'] ?? '');
-     echo H::closeTag('textarea');
-    echo H::closeTag('div');
-   echo H::closeTag('div');
-   echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']);
-    echo '<br>';
-   echo H::closeTag('div');
-  echo H::closeTag('div');
-  echo H::openTag('div', [
-      'id' => 'view_partial_inv_delivery_location',
-      'class' => $col
-  ]);
-   echo $partial_quote_delivery_location;
-  echo H::closeTag('div');
-  echo H::openTag('div', [
-      'id' => 'view_custom_fields',
-      'class' => $col
-  ]);
-   echo $view_custom_fields;
-  echo H::closeTag('div');
- echo H::closeTag('div');
+echo H::openTag('div', ['class' => $row]);
+echo H::openTag('div', ['class' => $col]);
+echo H::openTag('div', ['class' => 'card m-0']);
+echo H::openTag('div', ['class' => 'card-header']);
+echo $translator->translate('notes');
+echo H::closeTag('div');
+echo H::openTag('div', ['class' => 'card-body']);
+echo H::openTag('textarea', [
+    'name' => 'notes',
+    'id' => 'notes',
+    'rows' => '3',
+    'disabled' => true,
+    'class' => 'form-control'
+]);
+echo H::encode($body['notes'] ?? '');
+echo H::closeTag('textarea');
+echo H::closeTag('div');
+echo H::closeTag('div');
+echo H::openTag('div', ['class' => 'col-12 d-block d-sm-none']);
+echo '<br>';
+echo H::closeTag('div');
+echo H::closeTag('div');
+echo H::openTag('div', [
+    'id' => 'view_partial_inv_delivery_location',
+    'class' => $col
+]);
+echo $partial_quote_delivery_location;
+echo H::closeTag('div');
+echo H::openTag('div', [
+    'id' => 'view_custom_fields',
+    'class' => $col
+]);
+echo $view_custom_fields;
+echo H::closeTag('div');
+echo H::closeTag('div');
 echo H::closeTag('div');
 echo H::closeTag('div');
 echo $modal_add_allowance_charge;

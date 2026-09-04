@@ -99,17 +99,17 @@ class <?= $generator->getCamelcaseCapitalName() . "\n"; ?>
                 . ($relation->getLowercaseName() ?? '') . ' = null;' . "\n";
         echo "\n";
     }
-    // Detect primary key type
-    $primaryType = $TYPE_PRIMARY;
-    foreach ($orm_schema->getColumns() as $col) {
-        if ($col->getAbstractType() === $TYPE_BIG_PRIMARY) {
-            $primaryType = 'bigPrimary';
-            break;
-        }
+// Detect primary key type
+$primaryType = $TYPE_PRIMARY;
+foreach ($orm_schema->getColumns() as $col) {
+    if ($col->getAbstractType() === $TYPE_BIG_PRIMARY) {
+        $primaryType = 'bigPrimary';
+        break;
     }
-    echo "    #[Column(type: '" . $primaryType . "')]" . "\n";
-    echo '    private ?int $id = null;' . "\n";
-    echo "\n";
+}
+echo "    #[Column(type: '" . $primaryType . "')]" . "\n";
+echo '    private ?int $id = null;' . "\n";
+echo "\n";
 ?>
     public function __construct(
 <?php

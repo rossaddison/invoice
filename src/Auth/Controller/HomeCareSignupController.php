@@ -139,7 +139,13 @@ final class HomeCareSignupController
         ['identity' => $identity, 'userId' => $userId, 'pending' => $pending, 'userInv' => $userInv] = $resolved;
 
         $finished = $this->resolveDwellingAndProvisionInvoice(
-            $identity, $userId, $language, $pending, $userInv, $formHydrator, $d,
+            $identity,
+            $userId,
+            $language,
+            $pending,
+            $userInv,
+            $formHydrator,
+            $d,
         );
         if ($finished instanceof Response) {
             return $finished;
@@ -482,8 +488,17 @@ final class HomeCareSignupController
         $invId = 0;
         $d->invService->withTransaction(
             function () use (
-                $user, $inv, $invoiceBody, $form, $formHydrator, $d,
-                $productId, $taxRateId, $unitId, $pending, &$invId
+                $user,
+                $inv,
+                $invoiceBody,
+                $form,
+                $formHydrator,
+                $d,
+                $productId,
+                $taxRateId,
+                $unitId,
+                $pending,
+                &$invId
             ): void {
                 if (!$formHydrator->populateAndValidate($form, $invoiceBody)) {
                     return;

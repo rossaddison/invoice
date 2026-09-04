@@ -16,22 +16,22 @@ $panelHead = ['class' => 'card-header'];
 $panelBody = ['class' => 'card-body'];
 
 echo H::openTag('div', $row); //1
- echo H::openTag('div', $colMd8); //2
-  echo H::openTag('div', $panel); //3
-   echo H::openTag('div', $panelHead); //4
-    echo H::encode($translator->translate('backup.database'));
-   echo H::closeTag('div'); //4
-   echo H::openTag('div', $panelBody); //4
+echo H::openTag('div', $colMd8); //2
+echo H::openTag('div', $panel); //3
+echo H::openTag('div', $panelHead); //4
+echo H::encode($translator->translate('backup.database'));
+echo H::closeTag('div'); //4
+echo H::openTag('div', $panelBody); //4
 
-    echo H::tag('p', H::encode($translator->translate('backup.database.description')), ['class' => 'mb-3']);
+echo H::tag('p', H::encode($translator->translate('backup.database.description')), ['class' => 'mb-3']);
 
-    echo H::a(
-        H::encode($translator->translate('backup.database.download')),
-        $urlGenerator->generate('setting/downloadBackup'),
-        ['class' => 'btn btn-primary'],
-    );
+echo H::a(
+    H::encode($translator->translate('backup.database.download')),
+    $urlGenerator->generate('setting/downloadBackup'),
+    ['class' => 'btn btn-primary'],
+);
 
-   echo H::closeTag('div'); //4
-  echo H::closeTag('div'); //3
- echo H::closeTag('div'); //2
+echo H::closeTag('div'); //4
+echo H::closeTag('div'); //3
+echo H::closeTag('div'); //2
 echo H::closeTag('div'); //1

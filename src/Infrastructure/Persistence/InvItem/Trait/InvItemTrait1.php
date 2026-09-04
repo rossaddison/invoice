@@ -16,7 +16,6 @@ use DateTimeImmutable;
  */
 trait InvItemTrait1
 {
-
     public function reqId(): int
     {
         return $this->requireId($this->id, 'InvItem');

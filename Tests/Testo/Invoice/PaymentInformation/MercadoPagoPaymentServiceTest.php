@@ -27,7 +27,6 @@ use Testo\Test;
 #[Test]
 final class MercadoPagoPaymentServiceTest
 {
-
     /**
      * @return LoggerInterface&m\MockInterface
      */

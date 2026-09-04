@@ -29,7 +29,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName()
         ?? 'quoteitemallowancecharge/index'))
     ->id('btn-reset')
@@ -57,8 +57,7 @@ $columns = [
             $model->getAllowanceCharge()?->getReasonCode() ?? '',
     ),
     new DataColumn(
-        content: static function (QuoteItemAllowanceCharge $model)
-            use ($translator): string {
+        content: static function (QuoteItemAllowanceCharge $model) use ($translator): string {
             if ($model->getAllowanceCharge()?->getIdentifier() == 1) {
                 return  $translator->translate('allowance.or.charge.charge');
             } else {
@@ -73,8 +72,7 @@ $columns = [
     ),
     new DataColumn(
         header: $translator->translate('allowance.or.charge.amount'),
-        content: static function (QuoteItemAllowanceCharge $model)
-            use ($numberHelper): string {
+        content: static function (QuoteItemAllowanceCharge $model) use ($numberHelper): string {
             // show the charge in brackets
             if ($model->getAllowanceCharge()?->getIdentifier() == 0) {
                 return '('
@@ -86,8 +84,7 @@ $columns = [
     ),
     new DataColumn(
         header: $translator->translate('vat'),
-        content: static function (QuoteItemAllowanceCharge $model)
-            use ($numberHelper): string {
+        content: static function (QuoteItemAllowanceCharge $model) use ($numberHelper): string {
             // show the charge in brackets
             if ($model->getAllowanceCharge()?->getIdentifier() == 0) {
                 return '('
@@ -99,28 +96,37 @@ $columns = [
     ),
     new DataColumn(
         header: $translator->translate('edit'),
-        content: static function (QuoteItemAllowanceCharge $model)
-            use ($urlGenerator): A {
+        content: static function (QuoteItemAllowanceCharge $model) use ($urlGenerator): A {
             return Html::a(
                 Html::tag('i', '', ['class' => 'bi bi-pencil']),
-                    $urlGenerator->generate('quoteitemallowancecharge/edit',
-                        ['id' => $model->reqId()]), []);
+                $urlGenerator->generate(
+                    'quoteitemallowancecharge/edit',
+                    ['id' => $model->reqId()]
+                ),
+                []
+            );
         },
     ),
     new DataColumn(
         header: $translator->translate('view'),
-        content: static function (QuoteItemAllowanceCharge $model)
-            use ($urlGenerator): A {
-                return Html::a(Html::tag('i', '',
-                    ['class' => 'bi-eye']),
-                        $urlGenerator->generate('quoteitemallowancecharge/view',
-                            ['id' => $model->reqId()]), []);
+        content: static function (QuoteItemAllowanceCharge $model) use ($urlGenerator): A {
+            return Html::a(
+                Html::tag(
+                    'i',
+                    '',
+                    ['class' => 'bi-eye']
+                ),
+                $urlGenerator->generate(
+                    'quoteitemallowancecharge/view',
+                    ['id' => $model->reqId()]
+                ),
+                []
+            );
         },
     ),
     new DataColumn(
         header: $translator->translate('delete'),
-        content: static function (QuoteItemAllowanceCharge $model)
-            use ($translator, $urlGenerator): A {
+        content: static function (QuoteItemAllowanceCharge $model) use ($translator, $urlGenerator): A {
             return Html::a(
                 Html::tag(
                     'button',
@@ -133,8 +139,10 @@ $columns = [
                         . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
-                $urlGenerator->generate('quoteitemallowancecharge/delete',
-                    ['id' => $model->reqId()]),
+                $urlGenerator->generate(
+                    'quoteitemallowancecharge/delete',
+                    ['id' => $model->reqId()]
+                ),
                 [],
             );
         },
@@ -152,12 +160,15 @@ $gridSummary =  $s->gridSummary(
 
 $toolbarString
     =  new Form()->post(
-        $urlGenerator->generate('quoteitemallowancecharge/index'))
+        $urlGenerator->generate('quoteitemallowancecharge/index')
+    )
                      ->csrf($csrf)
                      ->open()
     .  new A()
-    ->href($urlGenerator->generate('quoteitemallowancecharge/add',
-        ['quote_item_id' => $quote_item_id]))
+    ->href($urlGenerator->generate(
+        'quoteitemallowancecharge/add',
+        ['quote_item_id' => $quote_item_id]
+    ))
     ->addClass('text-decoration-none')
     ->content('➕ ' . $translator->translate('allowance.or.charge.item.add'))
     ->render()
@@ -175,7 +186,8 @@ echo GridView::widget()
     ->bodyRowAttributes(['class' => 'align-middle'])
     ->tableAttributes(
         ['class' => 'table table-striped text-center h-75',
-            'id' => 'table-quoteitemallowancecharge'])
+            'id' => 'table-quoteitemallowancecharge']
+    )
     ->columns(...$columns)
     ->dataReader($paginator)
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])

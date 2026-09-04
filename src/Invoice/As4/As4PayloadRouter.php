@@ -26,7 +26,8 @@ final class As4PayloadRouter implements As4PayloadHandlerInterface
         private readonly As4InvoiceImportService $invoiceImportService,
         private readonly As4OrderImportService $orderImportService,
         private readonly LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function handle(string $payloadXml, string $senderPartyId, string $action): void

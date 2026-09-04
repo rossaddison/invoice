@@ -170,7 +170,8 @@ final class PaymentMethodController extends BaseController
                 'form' => $form,
                 'paymentmethod' =>
                     $paymentmethodRepository->repoPaymentMethodquery(
-                            $payment_method->reqId()),
+                        $payment_method->reqId()
+                    ),
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
@@ -181,8 +182,10 @@ final class PaymentMethodController extends BaseController
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
-            $this->flashMessage('warning',
-                    $this->translator->translate('permission'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('permission')
+            );
             return $this->webService->getRedirectResponse('paymentmethod/index');
         }
         return $canEdit;

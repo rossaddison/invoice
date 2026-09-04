@@ -209,11 +209,11 @@ final class ProfileController extends BaseController
      */
     private function profile(
         CurrentRoute $currentRoute,
-        ProfileRepository $profileRepository): ?Profile
-    {
+        ProfileRepository $profileRepository
+    ): ?Profile {
         $id = (int) $currentRoute->getArgument('id');
         return $profileRepository->repoProfilequery($id);
-        
+
     }
 
     /**

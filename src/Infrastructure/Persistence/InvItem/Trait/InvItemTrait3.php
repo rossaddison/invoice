@@ -16,7 +16,6 @@ use DateTimeImmutable;
  */
 trait InvItemTrait3
 {
-
     public function setDiscountAmount(float $discount_amount): void
     {
         $this->discount_amount = $discount_amount;

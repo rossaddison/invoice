@@ -27,7 +27,8 @@ final class As4InvoiceImportServiceTestFixture
         public readonly InvItemRepositoryInterface&MockObject $invItemRepository,
         public readonly SettingRepositoryInterface&MockObject $settingRepository,
         public readonly LoggerInterface&MockObject $logger,
-    ) {}
+    ) {
+    }
 }
 
 #[AllowMockObjectsWithoutExpectations]

@@ -80,12 +80,12 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?php
                         $phoneDefaultRegionKey = array_search($form->country ?? '', $countries, true);
-                        $phoneDefaultRegion = $phoneDefaultRegionKey === false ? '' : (string) $phoneDefaultRegionKey;
-                    ?>
+$phoneDefaultRegion = $phoneDefaultRegionKey === false ? '' : (string) $phoneDefaultRegionKey;
+?>
                     <?= $formFields->companyTelephoneField($form, 'phone', 'phone', [
-                        'data-e164' => '1',
-                        'data-e164-default-region' => $phoneDefaultRegion,
-                    ]); ?>
+    'data-e164' => '1',
+    'data-e164-default-region' => $phoneDefaultRegion,
+]); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= $formFields->companyTelephoneField($form, 'fax', 'fax'); ?>

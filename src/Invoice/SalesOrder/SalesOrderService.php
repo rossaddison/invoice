@@ -213,15 +213,13 @@ final readonly class SalesOrderService
             }
 
             /** @var SalesOrderItem $item */
-            foreach ($soiR->repoSalesOrderItemIdquery($so_id)
-                as $item
+            foreach ($soiR->repoSalesOrderItemIdquery($so_id) as $item
             ) {
                 $soiS->deleteSalesOrderItem($item);
             }
 
             /** @var SalesOrderTaxRate $so_tax_rate */
-            foreach ($sotrR->repoSalesOrderquery($so_id)
-                as $so_tax_rate
+            foreach ($sotrR->repoSalesOrderquery($so_id) as $so_tax_rate
             ) {
                 $sotrS->deleteSalesOrderTaxRate($so_tax_rate);
             }

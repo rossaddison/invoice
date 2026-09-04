@@ -168,7 +168,8 @@ echo Breadcrumbs::widget()
          label: $translator->translate('set.to.read.only')
              . ' '
              . $iR->getSpecificStatusArrayEmoji(
-                (int) $s->getSetting('read_only_toggle')),
+                 (int) $s->getSetting('read_only_toggle')
+             ),
          url: $urlGenerator->generate(
              $settingTabIndex,
              [],
@@ -217,18 +218,20 @@ echo $modal_copy_inv_multiple;
 // Angular Amount Magnifier Integration
 
 echo H::openTag('div', ['id' => 'angular-amount-magnifier-app']);
- echo H::openTag('app-root');
- echo H::closeTag('app-root');
+echo H::openTag('app-root');
+echo H::closeTag('app-root');
 echo H::closeTag('div');
 
 $filterPromptLabels = json_encode([
     'filter-inv-number'        => '— ' . $translator->translate('number') . ' —',
     'filter-credit-inv-number' => '— ' . $translator->translate(
-        'credit.invoice.for.invoice') . ' —',
+        'credit.invoice.for.invoice'
+    ) . ' —',
     'filter-family-name'       => '— ' . $translator->translate('family.name') .
      ' —',
     'filter-year-month'   => '— ' . $translator->translate(
-        'datetime.immutable.date.created.mySql.format.year.month.filter')  . ' —',
+        'datetime.immutable.date.created.mySql.format.year.month.filter'
+    )  . ' —',
     'filter-status'       => '— ' . $translator->translate('status') . ' —',
     'filter-client'       => '— ' . $translator->translate('client') . ' —',
     'filter-client-group' => '— ' . $translator->translate('client.group') . ' —',

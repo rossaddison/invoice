@@ -29,11 +29,11 @@ trait SalesOrderOptionsTrait
          */
         foreach ($dLocs as $dLoc) {
             $dLocId = $dLoc->reqId();
-              $optionsDataDeliveryLocations[$dLocId] =
-                  ($dLoc->getAddress1() ?? '')
-                      . ', ' . ($dLoc->getAddress2() ?? '') . ', '
-                      . ($dLoc->getCity() ?? '') . ', '
-                      . ($dLoc->getZip() ?? '');
+            $optionsDataDeliveryLocations[$dLocId] =
+                ($dLoc->getAddress1() ?? '')
+                    . ', ' . ($dLoc->getAddress2() ?? '') . ', '
+                    . ($dLoc->getCity() ?? '') . ', '
+                    . ($dLoc->getZip() ?? '');
         }
         $optionsDataGroup = [];
         /**
@@ -48,8 +48,7 @@ trait SalesOrderOptionsTrait
          * @var string $key
          * @var array $status
          */
-        foreach ($salesOrderRepo->getStatuses($this->translator) as
-            $key => $status) {
+        foreach ($salesOrderRepo->getStatuses($this->translator) as $key => $status) {
             $optionsDataSalesOrderStatus[$key] = (string) $status['label'];
         }
         return [

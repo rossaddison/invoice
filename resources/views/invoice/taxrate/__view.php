@@ -46,24 +46,24 @@ $selectLabel = static function (array $optionsData, int|string|null $value): str
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?php
                 ReadOnlyField::render($translator->translate('tax.rate.name'), $form->getTaxRateName());
-                ReadOnlyField::render(
-                    $translator->translate('tax.rate.percent'),
-                    $form->getTaxRatePercent() !== null ? (string) $form->getTaxRatePercent() : '',
-                );
-                ReadOnlyField::render(
-                    $translator->translate('tax.rate.default'),
-                    $translator->translate($form->getTaxRateDefault() === true ? 'yes' : 'no'),
-                );
-                ReadOnlyField::render($translator->translate('tax.rate.code'), $form->getTaxRateCode());
-                ReadOnlyField::render(
-                    $translator->translate('peppol.tax.rate.code'),
-                    $selectLabel($optionsDataPeppolTaxRateCode, $form->getPeppolTaxRateCode()),
-                );
-                ReadOnlyField::render(
-                    $translator->translate('storecove.tax.rate.code'),
-                    $selectLabel($optionsDataStoreCoveTaxType, $form->getStorecoveTaxType()),
-                );
-            ?>
+ReadOnlyField::render(
+    $translator->translate('tax.rate.percent'),
+    $form->getTaxRatePercent() !== null ? (string) $form->getTaxRatePercent() : '',
+);
+ReadOnlyField::render(
+    $translator->translate('tax.rate.default'),
+    $translator->translate($form->getTaxRateDefault() === true ? 'yes' : 'no'),
+);
+ReadOnlyField::render($translator->translate('tax.rate.code'), $form->getTaxRateCode());
+ReadOnlyField::render(
+    $translator->translate('peppol.tax.rate.code'),
+    $selectLabel($optionsDataPeppolTaxRateCode, $form->getPeppolTaxRateCode()),
+);
+ReadOnlyField::render(
+    $translator->translate('storecove.tax.rate.code'),
+    $selectLabel($optionsDataStoreCoveTaxType, $form->getStorecoveTaxType()),
+);
+?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

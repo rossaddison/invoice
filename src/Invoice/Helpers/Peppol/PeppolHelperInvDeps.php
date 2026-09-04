@@ -22,5 +22,6 @@ final class PeppolHelperInvDeps
         public readonly IIR $iiR,
         public readonly paR $paR,
         public readonly cpR $cpR,
-    ) {}
+    ) {
+    }
 }

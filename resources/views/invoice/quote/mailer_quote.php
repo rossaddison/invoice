@@ -165,7 +165,7 @@ echo Html::script($js3)->type('module');
                         ->open() ?>
 
                     <?= $alert ?>
-                    <?php // The below panel is hidden but necessary for the emailtemplate.js to work with the quote dropdown ?>
+                    <?php // The below panel is hidden but necessary for the emailtemplate.js to work with the quote dropdown?>
                     <div class="card" hidden>
                         <?= Html::tag('label', $translator->translate('type'),
                             ['for' => 'email_template_type', 'class' => 'form-label']) ?>
@@ -174,8 +174,8 @@ echo Html::script($js3)->type('module');
                             Html::tag(
                                 'label',
                                 Input::radio('email_template_type', 'invoice')
-                                    ->disabled(true)
-                                    ->id('email_template_type_invoice'),
+                                ->disabled(true)
+                                ->id('email_template_type_invoice'),
                             ),
                             ['class' => 'radio'],
                         ); ?>
@@ -184,8 +184,8 @@ echo Html::script($js3)->type('module');
                             Html::tag(
                                 'label',
                                 Input::radio('email_template_type', 'quote')
-                                    ->id('email_template_type_quote')
-                                    ->attribute('checked', 'checked'),
+                                ->id('email_template_type_quote')
+                                ->attribute('checked', 'checked'),
                             ),
                             ['class' => 'radio'],
                         ); ?>
@@ -212,8 +212,8 @@ echo Html::script($js3)->type('module');
                     <?= Html::tag('label', $translator->translate('from.email'))
                         . str_repeat("&nbsp;", 2)
                         . (($autoTemplate['from_email'] ?? '')
-                            ? $translator->translate('email.source.email.template')
-                            : $translator->translate('email.source.user.account')) ?>
+                        ? $translator->translate('email.source.email.template')
+                        : $translator->translate('email.source.user.account')) ?>
                     <?= Field::email($form, 'from_email')
                         ->addInputAttributes(['value' => $autoTemplate['from_email'] ?? '' ?: Html::encode($userInv->getUser()?->getEmail())])
                         ->addInputAttributes(['class' => 'email-template-from-email form-control'])
@@ -332,9 +332,9 @@ echo Html::script($js3)->type('module');
                                     'div',
                                     Html::tag('i', '', ['class' => 'bi bi-clipboard']),
                                     [
-                                        'class' => 'btn btn-outline-secondary to-clipboard cursor-pointer',
-                                        'data-clipboard-target' => '#quote-guest-url',
-                                        'style' => 'height : 38px',
+                                    'class' => 'btn btn-outline-secondary to-clipboard cursor-pointer',
+                                    'data-clipboard-target' => '#quote-guest-url',
+                                    'style' => 'height : 38px',
                                     ],
                                 ); ?>
                             </div>

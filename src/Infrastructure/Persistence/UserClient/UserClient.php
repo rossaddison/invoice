@@ -15,7 +15,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class UserClient
 {
     use RequireId;
- 
+
     #[BelongsTo(target: User::class, nullable: false)]
     private ?User $user = null;
 
@@ -28,8 +28,8 @@ class UserClient
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $user_id = null,
         #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $client_id = null)
-    {
+        private ?int $client_id = null
+    ) {
     }
 
     public function getUser(): ?User

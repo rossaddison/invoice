@@ -25,140 +25,152 @@ use Yiisoft\Html\Html as H;
  */
 
 echo H::openTag('div', ['class' => 'table-responsive']);
- echo H::openTag('table', ['class' => 'table table-hover table-striped']);
-  echo H::openTag('thead');
-   echo H::openTag('tr');
-    echo H::openTag('th');
-     echo $translator->translate('payment.date');
-    echo H::closeTag('th');
-    echo H::openTag('th');
-     echo $translator->translate('date');
-    echo H::closeTag('th');
-    echo H::openTag('th');
-     echo $translator->translate('invoice');
-    echo H::closeTag('th');
-    echo H::openTag('th');
-     echo $translator->translate('client');
-    echo H::closeTag('th');
-    echo H::openTag('th');
-     echo $translator->translate('amount');
-    echo H::closeTag('th');
-    echo H::openTag('th');
-     echo $translator->translate('payment.method');
-    echo H::closeTag('th');
-    echo H::openTag('th');
-     echo $translator->translate('note');
-    echo H::closeTag('th');
-    echo H::openTag('th');
-     echo $translator->translate('options');
-    echo H::closeTag('th');
-   echo H::closeTag('tr');
-  echo H::closeTag('thead');
-  echo H::openTag('tbody');
-   /**
-    * @var App\Infrastructure\Persistence\Payment\Payment  $payment
-    */
-   foreach ($payments as $payment) {
-       if ($payment->getInv()?->reqClientId() == $client->reqId()) {
-           echo H::openTag('tr');
-            echo H::openTag('td');
-             echo !is_string($paymentDate = $payment->getPaymentDate()) ?
-                                        ($paymentDate->format('Y-m-d')) : '';
-            echo H::closeTag('td');
-            echo H::openTag('td');
-             echo $payment->getInv()?->getDateCreated()?->format('Y-m-d');
-            echo H::closeTag('td');
-            echo H::openTag('td');
-             echo H::openTag('a', [
-                 'href' => $urlGenerator->generate('inv/view',
-                         ['id' => $payment->reqInvId()])
-             ]);
-              echo H::encode($payment->getInv()?->getNumber() ?? '#');
-             echo H::closeTag('a');
-            echo H::closeTag('td');
-            echo H::openTag('td');
-             echo H::openTag('a', [
-                 'href' => $urlGenerator->generate('client/view',
-                         ['id' => (string) $payment->getInv()?->reqClientId()]),
-                 'title' => $translator->translate('view.client')
-             ]);
-              echo H::encode($clientHelper->formatClient(
-                      $payment->getInv()?->getClient()));
-             echo H::closeTag('a');
-            echo H::closeTag('td');
-            echo H::openTag('td', ['class' => 'text-end']);
-             echo $s->formatCurrency($payment->getAmount() ?? 0.00);
-            echo H::closeTag('td');
-            echo H::openTag('td');
-             echo H::encode($payment->getPaymentMethod()?->getName() ?? '');
-            echo H::closeTag('td');
-            echo H::openTag('td');
-             echo H::encode($payment->getNote() ?: '');
-            echo H::closeTag('td');
-            echo H::openTag('td');
-             echo H::openTag('div', ['class' => 'options btn-group']);
-              echo H::openTag('a', [
-                  'class' => 'btn btn-secondary btn-sm dropdown-toggle',
-                  'data-bs-toggle' => 'dropdown',
-                  'href' => '#'
-              ]);
-               echo H::openTag('i', ['class' => 'bi bi-gear']);
-               echo H::closeTag('i');
-               echo ' ' . $translator->translate('options');
-              echo H::closeTag('a');
-              echo H::openTag('ul', ['class' => 'dropdown-menu']);
-               echo H::openTag('li');
-                echo H::openTag('a', [
-                    'class' => 'dropdown-item',
-                    'href' => $urlGenerator->generate('client/view',
-                            ['id' => $payment->getInv()?->reqClientId()]),
-                    'title' => $translator->translate('view.client')
-                ]);
-                 echo H::encode($clientHelper->formatClient(
-                         $payment->getInv()?->getClient()));
-                echo H::closeTag('a');
-                echo H::openTag('a', [
-                    'class' => 'dropdown-item',
-                    'href' => $urlGenerator->generate('payment/edit',
-                            ['id' => $payment->reqId()])
-                ]);
-                 echo H::openTag('i', ['class' => 'bi bi-pencil-square']);
-                 echo H::closeTag('i');
-                 echo $translator->translate('edit');
-                echo H::closeTag('a');
-               echo H::closeTag('li');
-               echo H::openTag('li');
-                echo H::openTag('form', [
-                    'style' => 'display:contents',
-                    'action' => $urlGenerator->generate('payment/delete',
-                            ['id' => $payment->reqId()]),
-                    'method' => 'POST'
-                ]);
-                 echo H::openTag('input', [
-                     'type' => 'hidden',
-                     'id' => '_csrf',
-                     'name' => '_csrf',
-                     'value' => $csrf
-                 ]);
-                 echo H::closeTag('input');
-                 echo H::openTag('button', [
-                     'type' => 'submit',
-                     'class' => 'dropdown-item border-0 bg-transparent w-100 text-start',
-                     'onclick' => "return confirm('"
-                     . $translator->translate('delete.record.warning') . "');"
-                 ]);
-                  echo H::openTag('i', ['class' => 'bi bi-trash']);
-                  echo H::closeTag('i');
-                  echo ' ' . $translator->translate('delete');
-                 echo H::closeTag('button');
-                echo H::closeTag('form');
-               echo H::closeTag('li');
-              echo H::closeTag('ul');
-             echo H::closeTag('div');
-            echo H::closeTag('td');
-           echo H::closeTag('tr');
-       }
-   }
-  echo H::closeTag('tbody');
- echo H::closeTag('table');
+echo H::openTag('table', ['class' => 'table table-hover table-striped']);
+echo H::openTag('thead');
+echo H::openTag('tr');
+echo H::openTag('th');
+echo $translator->translate('payment.date');
+echo H::closeTag('th');
+echo H::openTag('th');
+echo $translator->translate('date');
+echo H::closeTag('th');
+echo H::openTag('th');
+echo $translator->translate('invoice');
+echo H::closeTag('th');
+echo H::openTag('th');
+echo $translator->translate('client');
+echo H::closeTag('th');
+echo H::openTag('th');
+echo $translator->translate('amount');
+echo H::closeTag('th');
+echo H::openTag('th');
+echo $translator->translate('payment.method');
+echo H::closeTag('th');
+echo H::openTag('th');
+echo $translator->translate('note');
+echo H::closeTag('th');
+echo H::openTag('th');
+echo $translator->translate('options');
+echo H::closeTag('th');
+echo H::closeTag('tr');
+echo H::closeTag('thead');
+echo H::openTag('tbody');
+/**
+ * @var App\Infrastructure\Persistence\Payment\Payment  $payment
+ */
+foreach ($payments as $payment) {
+    if ($payment->getInv()?->reqClientId() == $client->reqId()) {
+        echo H::openTag('tr');
+        echo H::openTag('td');
+        echo !is_string($paymentDate = $payment->getPaymentDate()) ?
+                                   ($paymentDate->format('Y-m-d')) : '';
+        echo H::closeTag('td');
+        echo H::openTag('td');
+        echo $payment->getInv()?->getDateCreated()?->format('Y-m-d');
+        echo H::closeTag('td');
+        echo H::openTag('td');
+        echo H::openTag('a', [
+            'href' => $urlGenerator->generate(
+                'inv/view',
+                ['id' => $payment->reqInvId()]
+            )
+        ]);
+        echo H::encode($payment->getInv()?->getNumber() ?? '#');
+        echo H::closeTag('a');
+        echo H::closeTag('td');
+        echo H::openTag('td');
+        echo H::openTag('a', [
+            'href' => $urlGenerator->generate(
+                'client/view',
+                ['id' => (string) $payment->getInv()?->reqClientId()]
+            ),
+            'title' => $translator->translate('view.client')
+        ]);
+        echo H::encode($clientHelper->formatClient(
+            $payment->getInv()?->getClient()
+        ));
+        echo H::closeTag('a');
+        echo H::closeTag('td');
+        echo H::openTag('td', ['class' => 'text-end']);
+        echo $s->formatCurrency($payment->getAmount() ?? 0.00);
+        echo H::closeTag('td');
+        echo H::openTag('td');
+        echo H::encode($payment->getPaymentMethod()?->getName() ?? '');
+        echo H::closeTag('td');
+        echo H::openTag('td');
+        echo H::encode($payment->getNote() ?: '');
+        echo H::closeTag('td');
+        echo H::openTag('td');
+        echo H::openTag('div', ['class' => 'options btn-group']);
+        echo H::openTag('a', [
+            'class' => 'btn btn-secondary btn-sm dropdown-toggle',
+            'data-bs-toggle' => 'dropdown',
+            'href' => '#'
+        ]);
+        echo H::openTag('i', ['class' => 'bi bi-gear']);
+        echo H::closeTag('i');
+        echo ' ' . $translator->translate('options');
+        echo H::closeTag('a');
+        echo H::openTag('ul', ['class' => 'dropdown-menu']);
+        echo H::openTag('li');
+        echo H::openTag('a', [
+            'class' => 'dropdown-item',
+            'href' => $urlGenerator->generate(
+                'client/view',
+                ['id' => $payment->getInv()?->reqClientId()]
+            ),
+            'title' => $translator->translate('view.client')
+        ]);
+        echo H::encode($clientHelper->formatClient(
+            $payment->getInv()?->getClient()
+        ));
+        echo H::closeTag('a');
+        echo H::openTag('a', [
+            'class' => 'dropdown-item',
+            'href' => $urlGenerator->generate(
+                'payment/edit',
+                ['id' => $payment->reqId()]
+            )
+        ]);
+        echo H::openTag('i', ['class' => 'bi bi-pencil-square']);
+        echo H::closeTag('i');
+        echo $translator->translate('edit');
+        echo H::closeTag('a');
+        echo H::closeTag('li');
+        echo H::openTag('li');
+        echo H::openTag('form', [
+            'style' => 'display:contents',
+            'action' => $urlGenerator->generate(
+                'payment/delete',
+                ['id' => $payment->reqId()]
+            ),
+            'method' => 'POST'
+        ]);
+        echo H::openTag('input', [
+            'type' => 'hidden',
+            'id' => '_csrf',
+            'name' => '_csrf',
+            'value' => $csrf
+        ]);
+        echo H::closeTag('input');
+        echo H::openTag('button', [
+            'type' => 'submit',
+            'class' => 'dropdown-item border-0 bg-transparent w-100 text-start',
+            'onclick' => "return confirm('"
+            . $translator->translate('delete.record.warning') . "');"
+        ]);
+        echo H::openTag('i', ['class' => 'bi bi-trash']);
+        echo H::closeTag('i');
+        echo ' ' . $translator->translate('delete');
+        echo H::closeTag('button');
+        echo H::closeTag('form');
+        echo H::closeTag('li');
+        echo H::closeTag('ul');
+        echo H::closeTag('div');
+        echo H::closeTag('td');
+        echo H::closeTag('tr');
+    }
+}
+echo H::closeTag('tbody');
+echo H::closeTag('table');
 echo H::closeTag('div');

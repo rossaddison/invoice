@@ -45,7 +45,8 @@ final class ForgotPasswordController
     ) {
         // withControllerName returns a new instance so reassignment is needed
         $this->webViewRenderer = $webViewRenderer->withControllerName(
-            'forgotpassword');
+            'forgotpassword'
+        );
     }
 
     /**
@@ -145,7 +146,9 @@ final class ForgotPasswordController
     private function resolvePasswordResetToken(int $identityId, tR $tR): string
     {
         $tokenRecord = $tR->findTokenByIdentityIdAndType(
-            $identityId, self::REQUEST_PASSWORD_RESET_TOKEN);
+            $identityId,
+            self::REQUEST_PASSWORD_RESET_TOKEN
+        );
         if (null == $tokenRecord) {
             return $this->requestPasswordResetToken($identityId, $tR);
         }
@@ -201,8 +204,10 @@ final class ForgotPasswordController
         int $identityId,
         tR $tR,
     ): string {
-        $newTokenRecord = new Token($identityId,
-            self::REQUEST_PASSWORD_RESET_TOKEN);
+        $newTokenRecord = new Token(
+            $identityId,
+            self::REQUEST_PASSWORD_RESET_TOKEN
+        );
         $requestPasswordResetToken = '';
         $tR->save($newTokenRecord);
         $tokenString = $newTokenRecord->getToken();

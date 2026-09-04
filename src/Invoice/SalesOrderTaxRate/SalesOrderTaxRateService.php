@@ -28,7 +28,8 @@ final readonly class SalesOrderTaxRateService
             $model->setSalesOrder($sales_order);
             $model->setSalesOrderId($sales_order->reqId());
         }
-        $tax_rate = $this->trR->repoTaxRatequery((int) $array['tax_rate_id']
+        $tax_rate = $this->trR->repoTaxRatequery(
+            (int) $array['tax_rate_id']
         );
         if ($tax_rate) {
             $model->setTaxRate($tax_rate);

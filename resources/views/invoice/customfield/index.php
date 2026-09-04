@@ -73,8 +73,10 @@ $columns = [
     new DataColumn(
         'type',
         header: $translator->translate('values'),
-        content: static function (CustomField $model) use ($custom_value_fields,
-                $urlGenerator): string|A {
+        content: static function (CustomField $model) use (
+            $custom_value_fields,
+            $urlGenerator
+        ): string|A {
             if (in_array($model->getType(), $custom_value_fields)) {
                 return  new A()
                        ->href($urlGenerator->generate('customvalue/field', ['id' => $model->reqId()]))

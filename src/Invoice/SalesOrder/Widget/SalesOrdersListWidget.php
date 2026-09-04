@@ -206,7 +206,8 @@ final class SalesOrdersListWidget extends Widget
             ->sortableLinkAttributes($htmxBoostAttrs)
             ->filterFormAttributes($htmxBoostAttrs)
             ->sortableHeaderPrepend(
-                '<div class="float-end text-secondary text-opacity-50">⭥</div>')
+                '<div class="float-end text-secondary text-opacity-50">⭥</div>'
+            )
             ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
             ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
             ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
@@ -217,8 +218,12 @@ final class SalesOrdersListWidget extends Widget
             ->toolbar($this->buildToolbarString($enableGrouping));
 
         if ($enableGrouping) {
-            $gridView = $groupingRenderer->applyGrouping($gridView, $getGroupValue,
-                $groupTotals, $groupBy);
+            $gridView = $groupingRenderer->applyGrouping(
+                $gridView,
+                $getGroupValue,
+                $groupTotals,
+                $groupBy
+            );
         }
 
         $output = $gridView->render();
@@ -283,7 +288,8 @@ final class SalesOrdersListWidget extends Widget
             ->content(
                 (new Label())
                     ->addClass(
-                        'btn btn-sm btn-outline-secondary active bi bi-collection me-1')
+                        'btn btn-sm btn-outline-secondary active bi bi-collection me-1'
+                    )
                     ->content(' ' . $t->translate('group.by') . ':')
                 . (new Select())
                     ->addClass('form-select form-select-sm')
@@ -401,8 +407,13 @@ final class SalesOrdersListWidget extends Widget
         $t       = $this->translator;
         $vis     = $this->visible;
         $builder = new SalesOrdersColumnBuilder(
-            $ug, $t, $vis, $this->iR,
-            $this->sR, $this->soR, $this->soaR,
+            $ug,
+            $t,
+            $vis,
+            $this->iR,
+            $this->sR,
+            $this->soR,
+            $this->soaR,
             $this->optionsDataClientsDropdownFilter,
         );
         return [
@@ -410,7 +421,7 @@ final class SalesOrdersListWidget extends Widget
             new DataColumn(
                 'id',
                 header: $t->translate('id'),
-                content: static fn(SalesOrder $m): string => (string) $m->reqId(),
+                content: static fn (SalesOrder $m): string => (string) $m->reqId(),
                 visible: $vis,
             ),
             new DataColumn(

@@ -16,10 +16,11 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 final readonly class Button
 {
     private const string HDRBAR_ITEM_FLTEND = 'headerbar-item float-end';
-    
-    public function __construct(private readonly Translator $translator,
-        private readonly UrlGenerator $generator)
-    {
+
+    public function __construct(
+        private readonly Translator $translator,
+        private readonly UrlGenerator $generator
+    ) {
     }
 
     public static function tfaToggleSecret(): string
@@ -144,8 +145,8 @@ final readonly class Button
 
     public static function inactiveWithAddUserAccount(
         UrlGenerator $generator,
-        Translator $translator): Span
-    {
+        Translator $translator
+    ): Span {
         return  new Span()
                 ->content(
                     Html::a(
@@ -156,7 +157,8 @@ final readonly class Button
                             'style' => 'text-decoration:none',
                             'data-bs-toggle' => 'tooltip',
                             'title' => $translator->translate(
-                                    'client.has.not.user.account'),
+                                'client.has.not.user.account'
+                            ),
                         ],
                     ),
                 );

@@ -24,7 +24,8 @@ final readonly class SalesOrderItemAmountService
         );
         if ($sales_order_item) {
             $model->setSalesOrderItem($sales_order_item);
-            $model->setSalesOrderItemId($sales_order_item->reqId()
+            $model->setSalesOrderItemId(
+                $sales_order_item->reqId()
             );
         }
     }

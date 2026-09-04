@@ -36,10 +36,11 @@ final class QuoteRepository extends Select\Repository
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
-    public function __construct(Select $select,
-            private readonly EntityWriter $entityWriter,
-            private readonly Translator $translator)
-    {
+    public function __construct(
+        Select $select,
+        private readonly EntityWriter $entityWriter,
+        private readonly Translator $translator
+    ) {
         parent::__construct($select);
     }
 

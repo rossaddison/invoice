@@ -27,22 +27,28 @@ final readonly class PostalAddressService
             $model->setClientId((int) $array['client_id']) : '';
         isset($array['street_name']) ?
             $model->setStreetName(
-                (string) $array['street_name']) : '';
+                (string) $array['street_name']
+            ) : '';
         isset($array['additional_street_name']) ?
             $model->setAdditionalStreetName(
-                (string) $array['additional_street_name']) : '';
+                (string) $array['additional_street_name']
+            ) : '';
         isset($array['building_number']) ?
             $model->setBuildingNumber(
-                (string) $array['building_number']) : '';
+                (string) $array['building_number']
+            ) : '';
         isset($array['city_name']) ?
             $model->setCityName(
-                (string) $array['city_name']) : '';
+                (string) $array['city_name']
+            ) : '';
         isset($array['postalzone']) ?
             $model->setPostalzone(
-                (string) $array['postalzone']) : '';
+                (string) $array['postalzone']
+            ) : '';
         isset($array['countrysubentity']) ?
             $model->setCountrysubentity(
-                (string) $array['countrysubentity']) : '';
+                (string) $array['countrysubentity']
+            ) : '';
         isset($array['country']) ?
             $model->setCountry((string) $array['country']) : '';
         $this->repository->save($model);

@@ -75,13 +75,13 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                         'id' => 'family_name',
                     ])
                     ->hint($translator->translate('hint.this.field.is.required'));
-                  ?>
+?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?php
-                  // Street order info — read-only; managed via the drag-and-drop page
-                  $sortOrder = isset($family) ? $family->getStreetSortOrder() : null;
-                  ?>
+// Street order info — read-only; managed via the drag-and-drop page
+$sortOrder = isset($family) ? $family->getStreetSortOrder() : null;
+?>
                   <?= Html::openTag('div', ['class' => 'alert alert-light border d-flex align-items-center gap-3 py-2']); ?>
                     <?= Html::tag('i', '', ['class' => 'bi bi-signpost-split fs-5 text-secondary']); ?>
                     <?= Html::openTag('div'); ?>
@@ -93,9 +93,9 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                         &nbsp;&mdash;&nbsp;
                       <?php endif; ?>
                       <?= Html::openTag('a', [
-                          'href'  => $urlGenerator->generate('family/streetOrder'),
-                          'class' => 'alert-link',
-                      ]); ?>
+        'href'  => $urlGenerator->generate('family/streetOrder'),
+        'class' => 'alert-link',
+    ]); ?>
                         <?= Html::encode($translator->translate('street.order.manage.link')) ?>
                       <?= Html::closeTag('a'); ?>
                     <?= Html::closeTag('div'); ?>
@@ -134,7 +134,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                         'rows' => '3',
                     ])
                     ->hint($translator->translate('hint.this.field.is.not.required'));
-                  ?>
+?>
 
                   <!-- Angular Number Picker Container -->
                   <div class="mt-2">
@@ -153,34 +153,35 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'family_productprefix')
-                    ->label($translator->translate('family.product.prefix'))
-                    ->addInputAttributes([
-                        'placeholder' => $translator->translate('family.product.prefix'),
-                        'value' => Html::encode($form->getFamilyProductprefix() ?? ''),
-                        'class' => 'form-control form-control-lg',
-                        'id' => 'family_productprefix',
-                    ])
-                    ->hint($translator->translate('hint.this.field.is.not.required'));
-                  ?>
+  ->label($translator->translate('family.product.prefix'))
+  ->addInputAttributes([
+      'placeholder' => $translator->translate('family.product.prefix'),
+      'value' => Html::encode($form->getFamilyProductprefix() ?? ''),
+      'class' => 'form-control form-control-lg',
+      'id' => 'family_productprefix',
+  ])
+  ->hint($translator->translate('hint.this.field.is.not.required'));
+?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?php
-                    /**
-                     * @var App\Infrastructure\Persistence\CustomField\CustomField $customField
-                     */
-                    foreach ($customFields as $customField): ?>
+  /**
+   * @var App\Infrastructure\Persistence\CustomField\CustomField $customField
+   */
+  foreach ($customFields as $customField): ?>
                         <?php
-                            if ($customField->getLocation() !== 0) {
-                                continue;
-                            }
-                        ?>
+          if ($customField->getLocation() !== 0) {
+              continue;
+          }
+      ?>
                         <?php $cvH->printFieldForForm(
                             $customField,
                             $familyCustomForm,
                             $translator,
                             $urlGenerator,
                             $familyCustomValues,
-                            $customValues); ?>
+                            $customValues
+                        ); ?>
                     <?php endforeach; ?>
                 <?= Html::closeTag('div'); ?>
               <?= Html::closeTag('div'); ?>

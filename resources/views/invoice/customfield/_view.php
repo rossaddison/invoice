@@ -33,26 +33,26 @@ use Yiisoft\Html\Html;
 <?= Html::openTag('div'); ?>
     <?php
         $table = $form->table ?? '';
-        ReadOnlyField::render(
-            $translator->translate('table'),
-            strlen($table) > 0 && isset($custom_tables[$table])
-                ? ucfirst($s->lang((string) $custom_tables[$table]))
-                : '',
-        );
-        ReadOnlyField::render($translator->translate('label'), $form->label);
-        ReadOnlyField::render(
-            $translator->translate('type'),
-            $translator->translate(str_replace('-', '_', strtolower($form->type ?? ''))),
-        );
-        ReadOnlyField::render(
-            $translator->translate('custom.field.location'),
-            $form->location !== null ? (string) $form->location : '',
-        );
-        ReadOnlyField::render(
-            $translator->translate('order'),
-            $form->order !== null ? (string) $form->order : '',
-        );
-    ?>
+ReadOnlyField::render(
+    $translator->translate('table'),
+    strlen($table) > 0 && isset($custom_tables[$table])
+        ? ucfirst($s->lang((string) $custom_tables[$table]))
+        : '',
+);
+ReadOnlyField::render($translator->translate('label'), $form->label);
+ReadOnlyField::render(
+    $translator->translate('type'),
+    $translator->translate(str_replace('-', '_', strtolower($form->type ?? ''))),
+);
+ReadOnlyField::render(
+    $translator->translate('custom.field.location'),
+    $form->location !== null ? (string) $form->location : '',
+);
+ReadOnlyField::render(
+    $translator->translate('order'),
+    $form->order !== null ? (string) $form->order : '',
+);
+?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

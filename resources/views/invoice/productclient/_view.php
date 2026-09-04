@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 
-/** 
- * @var App\Infrastructure\Persistence\Client\Client $client 
+/**
+ * @var App\Infrastructure\Persistence\Client\Client $client
  * @var App\Infrastructure\Persistence\ProductClient\ProductClient $productClient
  * @var App\Infrastructure\Persistence\Product\Product $product
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -102,11 +102,13 @@ use Yiisoft\Html\Tag\A;
                 . ($client->getClientActive() ? 'success' : 'warning')]); ?>
                 <?= Html::openTag('h5', ['class' => 'mb-0 text-white']); ?>
                     <?= $translator->translate('client_details'); ?>
-                    <?= Html::openTag('span',
-                            ['class' => 'badge bg-light text-dark ms-2']); ?>
+                    <?= Html::openTag(
+                        'span',
+                        ['class' => 'badge bg-light text-dark ms-2']
+                    ); ?>
                         <?= $client->getClientActive() ?
-                                $translator->translate('active') :
-                                $translator->translate('inactive'); ?>
+                                    $translator->translate('active') :
+                                    $translator->translate('inactive'); ?>
                     <?= Html::closeTag('span'); ?>
                 <?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?>
@@ -172,7 +174,7 @@ use Yiisoft\Html\Tag\A;
                             <?= Html::closeTag('td'); ?>
                             <?= Html::openTag('td'); ?>
                                 <?= Html::openTag('span',
-                                        ['class' => 'badge bg-info']); ?>
+                                    ['class' => 'badge bg-info']); ?>
                                     <?= Html::encode($client->getClientGroup()); ?>
                                 <?= Html::closeTag('span'); ?>
                             <?= Html::closeTag('td'); ?>
@@ -203,7 +205,8 @@ use Yiisoft\Html\Tag\A;
                             <?= Html::closeTag('strong'); ?>
                             <?= Html::encode(
                                 $productClient->getCreatedAt()->format(
-                                    'Y-m-d H:i:s') ?: 'N/A'); ?>
+                                    'Y-m-d H:i:s'
+                                ) ?: 'N/A'); ?>
                         <?= Html::closeTag('p'); ?>
                     <?= Html::closeTag('div'); ?>
                     <?= Html::openTag('div', ['class' => 'col-md-6']); ?>
@@ -213,7 +216,8 @@ use Yiisoft\Html\Tag\A;
                             <?= Html::closeTag('strong'); ?>
                             <?= Html::encode(
                                 $productClient->getUpdatedAt()->format(
-                                    'Y-m-d H:i:s') ?: 'N/A'); ?>
+                                    'Y-m-d H:i:s'
+                                ) ?: 'N/A'); ?>
                         <?= Html::closeTag('p'); ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
@@ -232,32 +236,38 @@ use Yiisoft\Html\Tag\A;
                 ->addAttributes(['class' => 'btn btn-primary me-2'])
                 ->content($translator->translate('i.edit'))
                 ->href($urlGenerator->generate(
-                    'productclient/edit', ['id' => $productClient->reqId()]))
+                    'productclient/edit',
+                    ['id' => $productClient->reqId()]
+                ))
                 ->render()
-            ?>
+?>
 
             <?=  new A()
-                ->addAttributes(['class' => 'btn btn-secondary me-2'])
-                ->content($translator->translate('back.to.list'))
-                ->href($urlGenerator->generate('productclient/index'))
-                ->render()
-            ?>
+    ->addAttributes(['class' => 'btn btn-secondary me-2'])
+    ->content($translator->translate('back.to.list'))
+    ->href($urlGenerator->generate('productclient/index'))
+    ->render()
+?>
 
             <?=  new A()
-                ->addAttributes(['class' => 'btn btn-info me-2'])
-                ->content($translator->translate('view.product'))
-                ->href($urlGenerator->generate(
-                    'product/view', ['id' => $product->reqId()]))
-                ->render()
-            ?>
+    ->addAttributes(['class' => 'btn btn-info me-2'])
+    ->content($translator->translate('view.product'))
+    ->href($urlGenerator->generate(
+        'product/view',
+        ['id' => $product->reqId()]
+    ))
+    ->render()
+?>
 
             <?=  new A()
-                ->addAttributes(['class' => 'btn btn-info'])
-                ->content($translator->translate('view.client'))
-                ->href($urlGenerator->generate(
-                    'client/view', ['id' => $client->reqId()]))
-                ->render()
-            ?>
+    ->addAttributes(['class' => 'btn btn-info'])
+    ->content($translator->translate('view.client'))
+    ->href($urlGenerator->generate(
+        'client/view',
+        ['id' => $client->reqId()]
+    ))
+    ->render()
+?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

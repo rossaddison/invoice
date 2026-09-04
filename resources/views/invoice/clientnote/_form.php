@@ -56,7 +56,7 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Infrastructure\Persistence\Client\Client $client
  */
 foreach ($clients as $client) {
-    $clientId = $client->reqId(); 
+    $clientId = $client->reqId();
     $optionsDataClient[$clientId] = $client->getClientName()
             . ' '
             . ($client->getClientSurname() ?? '#');
@@ -85,7 +85,8 @@ echo Field::select($form, 'client_id')
                       ])
                       ->value(Html::encode($form->getDateNote() ?? ''))
                       ->hint($translator->translate(
-                            'hint.this.field.is.required')); ?>
+                          'hint.this.field.is.required'
+                      )); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::textarea($form, 'note')
@@ -97,7 +98,7 @@ echo Field::select($form, 'client_id')
                         'id' => 'note',
                     ])
                     ->hint($translator->translate('hint.this.field.is.required'));
-                ?>
+?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

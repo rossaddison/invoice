@@ -23,204 +23,235 @@ use Yiisoft\Router\Route;
 
 return [
     RoutePermission::invoiceGroup(
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/adyenInForm/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/adyenInForm/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([APICLR::class, 'adyenInForm'])
                 ->name('paymentinformation/adyenInForm'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/adyenComplete/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/adyenComplete/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([APICLR::class, 'adyenComplete'])
                 ->name('paymentinformation/adyenComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/goCardlessInForm/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/goCardlessInForm/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([GCPICLR::class, 'goCardlessInForm'])
                 ->name('paymentinformation/goCardlessInForm'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/goCardlessComplete/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/goCardlessComplete/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([GCPICLR::class, 'goCardlessComplete'])
                 ->name('paymentinformation/goCardlessComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/robokassaInForm/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/robokassaInForm/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([RPICLR::class, 'robokassaInForm'])
                 ->name('paymentinformation/robokassaInForm'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/robokassaComplete/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/robokassaComplete/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([RPICLR::class, 'robokassaComplete'])
                 ->name('paymentinformation/robokassaComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/yookassaInForm/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/yookassaInForm/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([YKPICLR::class, 'yookassaInForm'])
                 ->name('paymentinformation/yookassaInForm'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/yookassaComplete/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/yookassaComplete/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([YKPICLR::class, 'yookassaComplete'])
                 ->name('paymentinformation/yookassaComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/paystackInForm/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/paystackInForm/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PSPICLR::class, 'paystackInForm'])
                 ->name('paymentinformation/paystackInForm'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/paystackComplete/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/paystackComplete/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PSPICLR::class, 'paystackComplete'])
                 ->name('paymentinformation/paystackComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/razorpayInForm/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/razorpayInForm/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([RZPICLR::class, 'razorpayInForm'])
                 ->name('paymentinformation/razorpayInForm'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/razorpayComplete/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/razorpayComplete/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([RZPICLR::class, 'razorpayComplete'])
                 ->name('paymentinformation/razorpayComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/mercadoPagoInForm/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/mercadoPagoInForm/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([MERPICLR::class, 'mercadoPagoInForm'])
                 ->name('paymentinformation/mercadoPagoInForm'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/mercadoPagoComplete/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/mercadoPagoComplete/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([MERPICLR::class, 'mercadoPagoComplete'])
                 ->name('paymentinformation/mercadoPagoComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/paypalInForm/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/paypalInForm/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PPPICLR::class, 'paypalInForm'])
                 ->name('paymentinformation/paypalInForm'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/paypalComplete/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/paypalComplete/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PPPICLR::class, 'paypalComplete'])
                 ->name('paymentinformation/paypalComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/squareInForm/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/squareInForm/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([SQPICLR::class, 'squareInForm'])
                 ->name('paymentinformation/squareInForm'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/squareComplete/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/squareComplete/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([SQPICLR::class, 'squareComplete'])
                 ->name('paymentinformation/squareComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/checkoutComInForm/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/checkoutComInForm/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([CKPICLR::class, 'checkoutComInForm'])
                 ->name('paymentinformation/checkoutComInForm'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/checkoutComComplete/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/checkoutComComplete/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([CKPICLR::class, 'checkoutComComplete'])
                 ->name('paymentinformation/checkoutComComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/trueLayerInForm/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/trueLayerInForm/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([TLPICLR::class, 'trueLayerInForm'])
                 ->name('paymentinformation/trueLayerInForm'),
 
-            // No {url_key} here, unlike every other gateway's own Complete()
-            // route — TrueLayer requires the return_uri to exactly match a
-            // Redirect URI pre-registered in Console, so it must be a fixed
-            // URL; the invoice is resolved from the payment_id query
-            // parameter TrueLayer appends automatically instead. See
-            // TrueLayerPaymentController's own class docblock.
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/trueLayerComplete')
-                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
-                ->action([TLPICLR::class, 'trueLayerComplete'])
-                ->name('paymentinformation/trueLayerComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/braintreeComplete/{url_key}')
+        // No {url_key} here, unlike every other gateway's own Complete()
+        // route — TrueLayer requires the return_uri to exactly match a
+        // Redirect URI pre-registered in Console, so it must be a fixed
+        // URL; the invoice is resolved from the payment_id query
+        // parameter TrueLayer appends automatically instead. See
+        // TrueLayerPaymentController's own class docblock.
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/trueLayerComplete'
+        )
+            ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+            ->action([TLPICLR::class, 'trueLayerComplete'])
+            ->name('paymentinformation/trueLayerComplete'),
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/braintreeComplete/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PICLR::class, 'braintreeComplete'])
                 ->name('paymentinformation/braintreeComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/mollieComplete/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/mollieComplete/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PICLR::class, 'mollieComplete'])
                 ->name('paymentinformation/mollieComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/openbankingOauthComplete/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/openbankingOauthComplete/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PICLR::class, 'openbankingOauthComplete'])
                 ->name('paymentinformation/openbankingOauthComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/openbankingTokenComplete/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/openbankingTokenComplete/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PICLR::class, 'openbankingTokenComplete'])
                 ->name('paymentinformation/openbankingTokenComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/stripeComplete/{url_key}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/stripeComplete/{url_key}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PICLR::class, 'stripeComplete'])
                 ->name('paymentinformation/stripeComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/wonderfulComplete/{url_key}/{ref}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/wonderfulComplete/{url_key}/{ref}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PICLR::class, 'wonderfulComplete'])
                 ->name('paymentinformation/wonderfulComplete'),
-
-            Route::methods([Method::GET, Method::POST],
-             '/paymentinformation/tinkComplete/{url_key}/{payment_request_id}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/tinkComplete/{url_key}/{payment_request_id}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PICLR::class, 'tinkComplete'])
                 ->name('paymentinformation/tinkComplete'),
-
-            Route::methods([Method::GET, Method::POST], '/paymentinformation/fetch')
+        Route::methods([Method::GET, Method::POST], '/paymentinformation/fetch')
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PICLR::class, 'fetch'])
                 ->name('paymentinformation/fetch'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/inform/{url_key}/{gateway}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/inform/{url_key}/{gateway}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([PICLR::class, 'inform'])
                 ->name('paymentinformation/inform'),
-
-            Route::methods([Method::GET, Method::POST],
-                    '/paymentinformation/refund/{payment_id}/{gateway}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/refund/{payment_id}/{gateway}'
+        )
                 ->middleware(RoutePermission::check(Permissions::EDIT_PAYMENT))
                 ->action([PRCLR::class, 'refund'])
                 ->name('paymentinformation/refund'),
-        ), // invoice
+    ), // invoice
 
     // Not under RoutePermission::invoiceGroup(): Stripe's servers must be able
     // to POST here with no app session. Secured by Stripe-Signature

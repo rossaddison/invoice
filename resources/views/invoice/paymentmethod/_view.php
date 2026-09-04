@@ -35,11 +35,11 @@ use Yiisoft\Html\Html;
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?php
                 ReadOnlyField::render($translator->translate('name'), $form->getName());
-                ReadOnlyField::render(
-                    $translator->translate('active'),
-                    $translator->translate($form->getActive() === true ? 'yes' : 'no'),
-                );
-            ?>
+ReadOnlyField::render(
+    $translator->translate('active'),
+    $translator->translate($form->getActive() === true ? 'yes' : 'no'),
+);
+?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

@@ -1,7 +1,9 @@
 <?php
+
 declare(strict_types=1);
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\Option;
+
 /**
 * @var App\Invoice\Group\GroupRepository $gR
 * @var App\Invoice\Setting\SettingRepository $s
@@ -10,45 +12,45 @@ use Yiisoft\Html\Tag\Option;
 */
 $settingKey = 'settings[default_client_purchase_order_group]';
 echo H::openTag('div', ['class' => 'row']); //1
- echo H::openTag('div', ['class' => 'col-12 col-md-8 offset-md-2']); //2
-  echo H::openTag('div', ['class' => 'card']); //3
-   echo H::openTag('div', ['class' => 'card-header']); //4
-    echo $translator->translate('salesorders');
-   echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'card-body']); //4
-    echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'mb-3']); //7
-       echo H::openTag('label', [
-        'for' => $settingKey
-       ]);
-        echo $translator->translate('salesorder.default.group');
-       echo H::closeTag('label');
-       $body[$settingKey] =
-       $s->getSetting('default_client_purchase_order_group');
-       echo H::openTag('select', [
-        'name' => $settingKey,
-        'id' => $settingKey,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('')
-         ->content($translator->translate('none'));
-        /**
-        * @var App\Infrastructure\Persistence\Group\Group $invoice_group
-        */
-        foreach ($gR->findAllPreloaded() as $invoice_group) {
-        $selected = $body[$settingKey] == $invoice_group->reqId();
-        echo  new Option()
-         ->value($invoice_group->reqId())
-         ->selected($selected)
-         ->content($invoice_group->getName() ?? '');
-        }
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-   echo H::closeTag('div'); //4
-  echo H::closeTag('div'); //3
- echo H::closeTag('div'); //2
+echo H::openTag('div', ['class' => 'col-12 col-md-8 offset-md-2']); //2
+echo H::openTag('div', ['class' => 'card']); //3
+echo H::openTag('div', ['class' => 'card-header']); //4
+echo $translator->translate('salesorders');
+echo H::closeTag('div'); //4
+echo H::openTag('div', ['class' => 'card-body']); //4
+echo H::openTag('div', ['class' => 'row']); //5
+echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
+echo H::openTag('div', ['class' => 'mb-3']); //7
+echo H::openTag('label', [
+ 'for' => $settingKey
+]);
+echo $translator->translate('salesorder.default.group');
+echo H::closeTag('label');
+$body[$settingKey] =
+$s->getSetting('default_client_purchase_order_group');
+echo H::openTag('select', [
+ 'name' => $settingKey,
+ 'id' => $settingKey,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('')
+ ->content($translator->translate('none'));
+/**
+* @var App\Infrastructure\Persistence\Group\Group $invoice_group
+*/
+foreach ($gR->findAllPreloaded() as $invoice_group) {
+    $selected = $body[$settingKey] == $invoice_group->reqId();
+    echo  new Option()
+     ->value($invoice_group->reqId())
+     ->selected($selected)
+     ->content($invoice_group->getName() ?? '');
+}
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::closeTag('div'); //4
+echo H::closeTag('div'); //3
+echo H::closeTag('div'); //2
 echo H::closeTag('div'); //1

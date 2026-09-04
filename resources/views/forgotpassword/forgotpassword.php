@@ -47,12 +47,12 @@ if ($turnstileSiteKey !== '') {
     ->autofocus()
 ?>
                     <?php if ($turnstileSiteKey !== '') {
-    echo Html::tag('div', '', ['class' => 'cf-turnstile', 'data-sitekey' => $turnstileSiteKey]);
-} ?>
+                        echo Html::tag('div', '', ['class' => 'cf-turnstile', 'data-sitekey' => $turnstileSiteKey]);
+                    } ?>
                     <?= Field::submitButton()
-    ->buttonId('password-reset-token-button')
-    ->name('password-reset-token-button')
-    ->content($translator->translate('layout.submit'))
+                        ->buttonId('password-reset-token-button')
+                        ->name('password-reset-token-button')
+                        ->content($translator->translate('layout.submit'))
 ?>
                     <?=  new Form()->close() ?>
                 </div>

@@ -144,8 +144,7 @@ class SmpResolverTest extends TestCase
 
     public function testResolveThrowsOnNetworkException(): void
     {
-        $networkError = new class ('Connection refused') extends \RuntimeException
-            implements ClientExceptionInterface {};
+        $networkError = new class ('Connection refused') extends \RuntimeException implements ClientExceptionInterface {};
 
         $this->httpClient
             ->method('sendRequest')

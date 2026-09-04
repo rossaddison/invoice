@@ -52,19 +52,19 @@ $selectLabel = static function (array $optionsData, int|string|null $value): str
                         $translator->translate('id'),
                         $selectLabel($optionsDataUnits, $form->getUnitId()),
                     );
-                    ReadOnlyField::render(
-                        $translator->translate('name'),
-                        $form->getName(),
-                    );
-                    ReadOnlyField::render(
-                        $translator->translate('unit.peppol.code'),
-                        $selectLabel($optionsDataEneces, $form->getCode()),
-                    );
-                    ReadOnlyField::render(
-                        $translator->translate('description'),
-                        $form->getDescription(),
-                    );
-                ?>
+ReadOnlyField::render(
+    $translator->translate('name'),
+    $form->getName(),
+);
+ReadOnlyField::render(
+    $translator->translate('unit.peppol.code'),
+    $selectLabel($optionsDataEneces, $form->getCode()),
+);
+ReadOnlyField::render(
+    $translator->translate('description'),
+    $form->getDescription(),
+);
+?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <!-- https://dev.to/dcodeyt/creating-beautiful-html-tables-with-css-428l
                     class styled-table found at C:\wamp64\www\yii3-i\src\Invoice\Asset\invoice\css\yii3i.css

@@ -9,10 +9,9 @@ use Yiisoft\Router\Route;
 
 return [
     RoutePermission::invoiceGroup(
-
-            Route::get('/commonerrors/index')
+        Route::get('/commonerrors/index')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([CommonErrorsController::class, 'index'])
                 ->name('commonerrors/index'),
-        ), // invoice
+    ), // invoice
 ];

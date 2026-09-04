@@ -147,6 +147,6 @@ $divHeight = (string) 250;
             ),
         )
         ->render();
-        ?>
+    ?>
 <?= Html::closeTag('div'); ?>
 <?php } ?>

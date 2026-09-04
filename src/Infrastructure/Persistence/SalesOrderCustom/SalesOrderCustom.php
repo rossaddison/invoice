@@ -29,10 +29,8 @@ class SalesOrderCustom
     public function __construct(
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $sales_order_id = null,
-
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $custom_field_id = null,
-
         #[Column(type: 'text', nullable: true)]
         private string $value = '',
     ) {

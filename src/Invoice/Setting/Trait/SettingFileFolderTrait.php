@@ -10,7 +10,6 @@ use Yiisoft\Files\PathMatcher\PathMatcher;
 
 trait SettingFileFolderTrait
 {
-
     /**
      * @param string $base_dir
      * @param int $level
@@ -69,14 +68,14 @@ trait SettingFileFolderTrait
     {
         $config = $this->getConfigParams();
         $params = $config->get('params');
-    /**
-     * @var array $params['yiisoft/mailer-symfony']
-     * @var string $params['yiisoft/mailer-symfony']['useSendmail']
-     * @var bool $params['yiisoft/mailer-symfony']['esmtpTransport']['enabled']
-     * @var string $params['yiisoft/mailer-symfony']['esmtpTransport']['scheme']
-     * @var string $params['yiisoft/mailer-symfony']['esmtpTransport']['host']
-     * @var string $params['yiisoft/mailer-symfony']['esmtpTransport']['port']
-     */
+        /**
+         * @var array $params['yiisoft/mailer-symfony']
+         * @var string $params['yiisoft/mailer-symfony']['useSendmail']
+         * @var bool $params['yiisoft/mailer-symfony']['esmtpTransport']['enabled']
+         * @var string $params['yiisoft/mailer-symfony']['esmtpTransport']['scheme']
+         * @var string $params['yiisoft/mailer-symfony']['esmtpTransport']['host']
+         * @var string $params['yiisoft/mailer-symfony']['esmtpTransport']['port']
+         */
         return [
             'esmtp_enabled' =>
                 $params['yiisoft/mailer-symfony']['esmtpTransport']['enabled'],
@@ -233,9 +232,10 @@ trait SettingFileFolderTrait
                    ->doNotCheckFilesystem()
                    ->only($invoice_number . '.pdf');
         return $filehelper::findFiles(
-                $aliases->get('@archive_invoice'),
-                ['recursive' => false,
-                    'filter' => $filter]);
+            $aliases->get('@archive_invoice'),
+            ['recursive' => false,
+                    'filter' => $filter]
+        );
     }
 
     /**

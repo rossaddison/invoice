@@ -18,7 +18,7 @@ class ProductRepositoryTest extends TestCase
     {
         // Note: You may need to mock dependencies based on constructor requirements
         $this->expectNotToPerformAssertions(); // Remove this when you add real tests
-        
+
         // Example:
         // $repository = new ProductRepository($mockDependency);
         // $this->assertInstanceOf(ProductRepository::class, $repository);

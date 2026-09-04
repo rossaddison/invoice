@@ -163,16 +163,25 @@ final class CycleOrmAs4MessageRepository extends Select\Repository implements As
             $query = $query->andWhere(['state' => trim((string) $queryParams['state'])]);
         }
         if (!empty($queryParams['message_id'])) {
-            $query = $query->andWhere('message_id', 'like',
-                '%' . trim((string) $queryParams['message_id']) . '%');
+            $query = $query->andWhere(
+                'message_id',
+                'like',
+                '%' . trim((string) $queryParams['message_id']) . '%'
+            );
         }
         if (!empty($queryParams['sender_party_id'])) {
-            $query = $query->andWhere('sender_party_id', 'like',
-                '%' . trim((string) $queryParams['sender_party_id']) . '%');
+            $query = $query->andWhere(
+                'sender_party_id',
+                'like',
+                '%' . trim((string) $queryParams['sender_party_id']) . '%'
+            );
         }
         if (!empty($queryParams['receiver_party_id'])) {
-            $query = $query->andWhere('receiver_party_id', 'like',
-                '%' . trim((string) $queryParams['receiver_party_id']) . '%');
+            $query = $query->andWhere(
+                'receiver_party_id',
+                'like',
+                '%' . trim((string) $queryParams['receiver_party_id']) . '%'
+            );
         }
         return $this->prepareDataReader($query);
     }

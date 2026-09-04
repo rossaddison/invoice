@@ -24,8 +24,8 @@ $this->beginPage();
 </head>
 <body>
 <?php $this->beginBody();
-      $style1px = 'width:15%;text-align:right;border-bottom: 1px solid black;';
-      $style0px = 'width:15%;text-align:right;border-bottom: 0px solid black;';
+$style1px = 'width:15%;text-align:right;border-bottom: 1px solid black;';
+$style0px = 'width:15%;text-align:right;border-bottom: 0px solid black;';
 ?>
 <h3 class="report_title"><?= H::encode($translator->translate('aging')); ?></h3>
 <table>
@@ -85,19 +85,22 @@ $this->beginPage();
             <?= $dueInvoice['invoice_balance'] > 0 ? '<strong>' : ''; ?>
             <?= H::encode($dueInvoice['range_index'] == 1 ?
                     $numberHelper->formatCurrency(
-                        $dueInvoice['invoice_balance']) : ''); ?>
+                        $dueInvoice['invoice_balance']
+                    ) : ''); ?>
         </td>
         <td style="<?= $style1px ?>">
             <?= $dueInvoice['invoice_balance'] > 0 ? '<strong>' : ''; ?>
             <?= H::encode($dueInvoice['range_index'] == 2 ?
                     $numberHelper->formatCurrency(
-                        $dueInvoice['invoice_balance']) : ''); ?>
+                        $dueInvoice['invoice_balance']
+                    ) : ''); ?>
         </td>
         <td style="<?= $style1px ?>">
             <?= $dueInvoice['invoice_balance'] > 0 ? '<strong>' : ''; ?>
             <?= H::encode($dueInvoice['range_index'] == 3 ?
                     $numberHelper->formatCurrency(
-                        $dueInvoice['invoice_balance']) : ''); ?>
+                        $dueInvoice['invoice_balance']
+                    ) : ''); ?>
         </td>
         <td style="<?= $style1px ?>"></td>
     </tr>

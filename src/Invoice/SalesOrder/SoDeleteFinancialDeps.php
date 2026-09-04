@@ -16,5 +16,6 @@ final class SoDeleteFinancialDeps
         public readonly SoTRS $sotrS,
         public readonly SoAR $soaR,
         public readonly SoAS $soaS,
-    ) {}
+    ) {
+    }
 }

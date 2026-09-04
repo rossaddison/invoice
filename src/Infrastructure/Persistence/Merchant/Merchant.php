@@ -17,7 +17,7 @@ use DateTimeImmutable;
 class Merchant
 {
     use RequireId;
- 
+
     #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
@@ -38,8 +38,8 @@ class Merchant
         #[Column(type: 'string(151)', nullable: false)]
         private string $reference = '',
         #[Column(type: 'string(151)', nullable: true)]
-        private ?string $provider_reference = null)
-    {
+        private ?string $provider_reference = null
+    ) {
     }
 
     public function getInv(): ?Inv

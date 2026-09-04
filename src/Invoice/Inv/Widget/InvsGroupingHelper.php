@@ -24,7 +24,8 @@ final class InvsGroupingHelper
                 'client'       => $invoice->getClient()?->getClientFullName()
                     ?? 'Unknown Client',
                 'status'       => $iR->getSpecificStatusArrayLabel(
-                    (string) $invoice->reqStatusId()),
+                    (string) $invoice->reqStatusId()
+                ),
                 'month'        => $invoice->getDateCreated()->format('Y-m'),
                 'year'         => $invoice->getDateCreated()->format('Y'),
                 'date'         => $invoice->getDateCreated()->format('Y-m-d'),
@@ -138,7 +139,8 @@ final class InvsGroupingHelper
                 $cur = $sR->getSetting('currency_symbol');
                 return \Yiisoft\Html\Html::tr()
                     ->addClass(
-                        'group-header bg-secondary text-white fw-bold group-collapsible')
+                        'group-header bg-secondary text-white fw-bold group-collapsible'
+                    )
                     ->cells(
                         \Yiisoft\Html\Html::td()
                             ->addAttributes(['colspan' => (string) $columnCount])

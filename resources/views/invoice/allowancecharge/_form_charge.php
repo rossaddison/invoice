@@ -38,119 +38,117 @@ echo new Form()
     ->csrf($csrf)
     ->id('AllowanceChargeForm')
     ->open();
- echo $button::backSave();
- echo Html::openTag('div', $headerbar); //1
-  echo Html::openTag('h1', $headerbarTitle); //2
-   echo $title;
-  echo Html::closeTag('h1'); //2
- echo Html::closeTag('div'); //1
- echo Html::openTag('div'); //1
-  echo Field::errorSummary($form)
-      ->errors($errors)
-      ->header($translator->translate('error.summary'))
-      ->headerAttributes(['class' => 'header'])
-      ->listAttributes(['class' => 'list'])    
-      ->onlyProperties(...[
-          'id',
-          'reason',
-          'multiplier_factor_numeric',
-          'amount',
-          'base_amount',
-          'tax_rate_id'])
-      ->addListClass('list-group-item list-group-item-warning');
-  echo Html::openTag('div', $row); //2
-   echo Html::openTag('div', $formSwitch); //3
-    echo Field::checkbox($form, 'level')
-        ->inputLabel($translator->translate($ac . 'level'))
-        ->inputLabelAttributes($checkboxLabel)
-        ->inputClass('form-check-input');
-   echo Html::closeTag('div'); //3
-   echo Html::openTag('div', $formGroup); //3
+echo $button::backSave();
+echo Html::openTag('div', $headerbar); //1
+echo Html::openTag('h1', $headerbarTitle); //2
+echo $title;
+echo Html::closeTag('h1'); //2
+echo Html::closeTag('div'); //1
+echo Html::openTag('div'); //1
+echo Field::errorSummary($form)
+    ->errors($errors)
+    ->header($translator->translate('error.summary'))
+    ->headerAttributes(['class' => 'header'])
+    ->listAttributes(['class' => 'list'])
+    ->onlyProperties(...[
+        'id',
+        'reason',
+        'multiplier_factor_numeric',
+        'amount',
+        'base_amount',
+        'tax_rate_id'])
+    ->addListClass('list-group-item list-group-item-warning');
+echo Html::openTag('div', $row); //2
+echo Html::openTag('div', $formSwitch); //3
+echo Field::checkbox($form, 'level')
+    ->inputLabel($translator->translate($ac . 'level'))
+    ->inputLabelAttributes($checkboxLabel)
+    ->inputClass('form-check-input');
+echo Html::closeTag('div'); //3
+echo Html::openTag('div', $formGroup); //3
 
-    $optionsDataReason = [];
-    /**
-     * @var string $value
-     */
-    foreach ($charges as $key => $value) {
-        $optionsDataReason[$value[0]] = Html::encode(ucfirst((string) $key) .
-                '--       ' .
-                $value[0] .
-                '--' .
-                $value[1]);
-    }
-    echo Field::select($form, 'reason')
-        ->label($translator->translate($ac . 'reason'))
-        ->addInputAttributes([
-            'class' => $formControlHtml['class'],
-            'id' => 'reason',
-        ])
-        ->value(Html::encode($form->getReason() ?? ''))
-        ->optionsData($optionsDataReason, true)
-        ->prompt($translator->translate('none'))
-        ->hint($translator->translate('hint.this.field.is.required'));
-   echo Html::closeTag('div'); //3
-   echo Html::openTag('div', $formGroup); //3
-    echo Field::text($form, 'multiplier_factor_numeric')
-        ->label($translator->translate($ac . 'multiplier.factor.numeric'))
-        ->addInputAttributes([
-            'placeholder' => $translator->translate($ac . 'multiplier.factor.numeric'),
-            'class' => $formControlHtml['class'],
-            'id' => 'multiplier_factor_numeric',
-        ])
-        ->value(Html::encode($form->getMultiplierFactorNumeric() ?? '20'))
-        ->hint($translator->translate('hint.this.field.is.required'));
-   echo Html::closeTag('div'); //3
-   echo Html::openTag('div', $formGroup); //3
-    echo Field::text($form, 'amount')
-        ->label($translator->translate($ac . 'amount'))
-        ->addInputAttributes([
-            'placeholder' => $translator->translate($ac . 'amount'),
-            'class' => $formControlHtml['class'],
-            'id' => 'amount',
-        ])
-        ->value(Html::encode($form->getAmount() ?? ''))
-        ->hint($translator->translate('hint.this.field.is.required'));
-   echo Html::closeTag('div'); //3
-   echo Html::openTag('div', $formGroup); //3
-    echo Field::text($form, 'base_amount')
-        ->label($translator->translate($ac . 'base.amount'))
-        ->addInputAttributes([
-            'placeholder' => $translator->translate($ac . 'base.amount'),
-            'class' => $formControlHtml['class'],
-            'id' => 'base_amount',
-        ])
-        ->value(Html::encode($form->getBaseAmount() ?? '1000'))
-        ->hint($translator->translate('hint.this.field.is.required'));
-   echo Html::closeTag('div'); //3
-   echo Html::openTag('div', $formGroup); //3
+$optionsDataReason = [];
+/**
+ * @var string $value
+ */
+foreach ($charges as $key => $value) {
+    $optionsDataReason[$value[0]] = Html::encode(ucfirst((string) $key) .
+            '--       ' .
+            $value[0] .
+            '--' .
+            $value[1]);
+}
+echo Field::select($form, 'reason')
+    ->label($translator->translate($ac . 'reason'))
+    ->addInputAttributes([
+        'class' => $formControlHtml['class'],
+        'id' => 'reason',
+    ])
+    ->value(Html::encode($form->getReason() ?? ''))
+    ->optionsData($optionsDataReason, true)
+    ->prompt($translator->translate('none'))
+    ->hint($translator->translate('hint.this.field.is.required'));
+echo Html::closeTag('div'); //3
+echo Html::openTag('div', $formGroup); //3
+echo Field::text($form, 'multiplier_factor_numeric')
+    ->label($translator->translate($ac . 'multiplier.factor.numeric'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate($ac . 'multiplier.factor.numeric'),
+        'class' => $formControlHtml['class'],
+        'id' => 'multiplier_factor_numeric',
+    ])
+    ->value(Html::encode($form->getMultiplierFactorNumeric() ?? '20'))
+    ->hint($translator->translate('hint.this.field.is.required'));
+echo Html::closeTag('div'); //3
+echo Html::openTag('div', $formGroup); //3
+echo Field::text($form, 'amount')
+    ->label($translator->translate($ac . 'amount'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate($ac . 'amount'),
+        'class' => $formControlHtml['class'],
+        'id' => 'amount',
+    ])
+    ->value(Html::encode($form->getAmount() ?? ''))
+    ->hint($translator->translate('hint.this.field.is.required'));
+echo Html::closeTag('div'); //3
+echo Html::openTag('div', $formGroup); //3
+echo Field::text($form, 'base_amount')
+    ->label($translator->translate($ac . 'base.amount'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate($ac . 'base.amount'),
+        'class' => $formControlHtml['class'],
+        'id' => 'base_amount',
+    ])
+    ->value(Html::encode($form->getBaseAmount() ?? '1000'))
+    ->hint($translator->translate('hint.this.field.is.required'));
+echo Html::closeTag('div'); //3
+echo Html::openTag('div', $formGroup); //3
 
-    $optionsDataTax = [];
-    /**
-     * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
-     */
-    foreach ($taxRates as $taxRate) {
-        $taxRateId = $taxRate->reqId();
-        $optionsDataTax[$taxRateId] = Html::encode(
-            (string) $taxRateId
-            . ':  '
-            . (string) $taxRate->getTaxRateName()
-            . ' '
-            . (string) $taxRate->getTaxRatePercent()
-        );
-    }
-    echo Field::select($form, 'tax_rate_id')
-        ->label($translator->translate('tax.rate'))
-        ->addInputAttributes([
-            'class' => $formControlHtml['class'],
-            'id' => 'tax_rate_id',
-        ])
-        ->value(Html::encode($form->getTaxRateId() ?? ''))
-        ->optionsData($optionsDataTax, true)
-        ->prompt($translator->translate('none'))
-        ->hint($translator->translate('hint.this.field.is.required'));
-   echo Html::closeTag('div'); //3
-  echo Html::closeTag('div'); //2
- echo Html::closeTag('div'); //1
+$optionsDataTax = [];
+/**
+ * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
+ */
+foreach ($taxRates as $taxRate) {
+    $taxRateId = $taxRate->reqId();
+    $optionsDataTax[$taxRateId] = Html::encode(
+        (string) $taxRateId
+        . ':  '
+        . (string) $taxRate->getTaxRateName()
+        . ' '
+        . (string) $taxRate->getTaxRatePercent()
+    );
+}
+echo Field::select($form, 'tax_rate_id')
+    ->label($translator->translate('tax.rate'))
+    ->addInputAttributes([
+        'class' => $formControlHtml['class'],
+        'id' => 'tax_rate_id',
+    ])
+    ->value(Html::encode($form->getTaxRateId() ?? ''))
+    ->optionsData($optionsDataTax, true)
+    ->prompt($translator->translate('none'))
+    ->hint($translator->translate('hint.this.field.is.required'));
+echo Html::closeTag('div'); //3
+echo Html::closeTag('div'); //2
+echo Html::closeTag('div'); //1
 echo new Form()->close();
-
-

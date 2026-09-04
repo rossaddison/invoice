@@ -14,16 +14,14 @@ class Generator
     public static function invoice(
         Invoice $invoice,
         string $currencyId = 'EUR'
-    ): string
-    {
+    ): string {
         return self::write($invoice, 'Invoice', Schema::INVOICE_NS, $currencyId);
     }
 
     public static function creditNote(
         CreditNote $creditNote,
         string $currencyId = 'EUR'
-    ): string
-    {
+    ): string {
         return self::write($creditNote, 'CreditNote', Schema::CREDIT_NOTE_NS, $currencyId);
     }
 
@@ -35,8 +33,7 @@ class Generator
     public static function orderResponse(
         OrderResponse $orderResponse,
         string $currencyId = 'EUR'
-    ): string
-    {
+    ): string {
         return self::write($orderResponse, 'OrderResponse', Schema::ORDER_RESPONSE_NS, $currencyId);
     }
 

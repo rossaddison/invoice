@@ -77,10 +77,10 @@ class WsSecuritySignerTest extends TestCase
     {
         $xpath = new DOMXPath($doc);
         $xpath->registerNamespace('soap', self::NS_SOAP);
-        $xpath->registerNamespace('eb',   self::NS_EB);
+        $xpath->registerNamespace('eb', self::NS_EB);
         $xpath->registerNamespace('wsse', self::NS_WSS);
-        $xpath->registerNamespace('wsu',  self::NS_WSU);
-        $xpath->registerNamespace('ds',   self::NS_DS);
+        $xpath->registerNamespace('wsu', self::NS_WSU);
+        $xpath->registerNamespace('ds', self::NS_DS);
         return $xpath;
     }
 

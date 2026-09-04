@@ -10,37 +10,34 @@ use Yiisoft\Router\Route;
 
 return [
     RoutePermission::invoiceGroup(
-Route::methods([Method::GET, Method::POST],
-                    '/setting/listlimit/{setting_id}/{limit}/{origin}')
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/setting/listlimit/{setting_id}/{limit}/{origin}'
+        )
                 ->middleware(RoutePermission::check(Permissions::VIEW_INV))
                 ->action([SettingToggleController::class, 'listlimit'])
                 ->name('setting/listlimit'),
-
-            Route::methods([Method::GET, Method::POST], '/setting/draft/{setting_id}')
+        Route::methods([Method::GET, Method::POST], '/setting/draft/{setting_id}')
                 ->name('setting/draft')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([SettingToggleController::class,
                     'invDraftHasNumberSwitch']),
-
-            Route::methods([Method::GET, Method::POST], '/setting/autoClient')
+        Route::methods([Method::GET, Method::POST], '/setting/autoClient')
                 ->name('setting/autoClient')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([SettingToggleController::class, 'autoClient']),
-
-            Route::methods([Method::GET, Method::POST], '/setting/markSent/{setting_id}')
+        Route::methods([Method::GET, Method::POST], '/setting/markSent/{setting_id}')
                 ->name('setting/markSent')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([SettingToggleController::class, 'markSent']),
-
-            Route::methods([Method::GET, Method::POST], '/setting/toggleinvsentlogcolumn')
+        Route::methods([Method::GET, Method::POST], '/setting/toggleinvsentlogcolumn')
                 ->name('setting/toggleinvsentlogcolumn')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([SettingToggleController::class,
                     'unhideOrHideToggleInvSentLogColumn']),
-
-            Route::methods([Method::GET, Method::POST], '/setting/visible/{origin}')
+        Route::methods([Method::GET, Method::POST], '/setting/visible/{origin}')
                 ->name('setting/visible')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([SettingToggleController::class, 'visible']),
-        ), // invoice
+    ), // invoice
 ];

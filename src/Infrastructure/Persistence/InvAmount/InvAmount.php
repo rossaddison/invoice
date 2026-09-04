@@ -19,7 +19,7 @@ class InvAmount
     use RequireId;
     use InvAmountTrait1;
     use InvAmountTrait2;
- 
+
     #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
@@ -31,7 +31,7 @@ class InvAmount
         #[Column(type: 'integer(1)', nullable: false, default: 1)]
         private int $sign = 1,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-/** $item_subtotal:  a figure after item discount has been subtracted */
+        /** $item_subtotal:  a figure after item discount has been subtracted */
         private float $item_subtotal = 0.00,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private float $item_tax_total = 0.00,
@@ -42,12 +42,12 @@ class InvAmount
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $tax_total = 0.00,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-/** $total calculated after including invoice discount $inv->getDiscount */
+        /** $total calculated after including invoice discount $inv->getDiscount */
         private ?float $total = 0.00,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $paid = 0.00,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $balance = 0.00)
-    {
+        private ?float $balance = 0.00
+    ) {
     }
 }

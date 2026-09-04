@@ -164,8 +164,7 @@ final class QuoteItemAllowanceChargeRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteItemOriginalquery(int $quote_item_id):
-        ?QuoteItemAllowanceCharge
+    public function repoQuoteItemOriginalquery(int $quote_item_id): ?QuoteItemAllowanceCharge
     {
         $query = $this->select()
                       ->load('allowance_charge')

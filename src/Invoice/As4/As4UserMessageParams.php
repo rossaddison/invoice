@@ -23,5 +23,6 @@ final readonly class As4UserMessageParams
         public string $receiverRole,
         public ?string $refToMessageId = null,
         public array $properties = [],
-    ) {}
+    ) {
+    }
 }

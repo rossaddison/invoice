@@ -14,5 +14,6 @@ final class QiacDeleteFinancialDeps
         public readonly QuoteAmountRepository $qaR,
         public readonly QuoteRepository $qR,
         public readonly QuoteTaxRateRepository $qtrR,
-    ) {}
+    ) {
+    }
 }

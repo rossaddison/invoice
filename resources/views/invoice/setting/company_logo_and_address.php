@@ -108,9 +108,9 @@ echo  new Img()
                         echo '<div><b>' . Html::encode($translator->translate('vat.invoice')) . '</b></div>';
                         echo '<div><br><b>' . $translator->translate('number') . '</b> : ' . Html::encode($document_number) . '</div>';
                         // echo '<div><br><b>'. $translator->translate('client.number').'</b> : '.Html::encode($client_number) .'</div>';
-                    if (strlen($client_purchase_order_number) > 0) {    
-                        echo '<div><b>' . $translator->translate('client.purchase.order.number') .                            '</b> : ' . Html::encode($client_purchase_order_number) . '</div>';
-                    }    
+                        if (strlen($client_purchase_order_number) > 0) {
+                            echo '<div><b>' . $translator->translate('client.purchase.order.number') .                            '</b> : ' . Html::encode($client_purchase_order_number) . '</div>';
+                        }
                         echo '<div><br><b>' . $translator->translate('tax.point') . '</b> : ' . Html::encode($date_tax_point) . '</div>';
                     }
 if ($s->getSetting('enable_vat_registration') === '1' && $isQuote) {

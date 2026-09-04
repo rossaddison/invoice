@@ -51,27 +51,30 @@ $homeCareOfflineShellLabels = json_encode([
 <!DOCTYPE html>
 <?php
 echo new TagHtml()->lang('en'); //0
- echo Html::openTag('head'); //1
-  echo Meta::documentEncoding('utf-8');
-  echo Meta::data('viewport', 'width=device-width, initial-scale=1');
-  echo new Title()->content($translator->translate('homecare.offline.title'));
-  echo new Style()->content($offlineStyle);
- echo Html::closeTag('head'); //1
- echo Html::openTag('body'); //1
-  echo Html::tag('h1', Html::encode($translator->translate('homecare.offline.title'))); //2
-  echo Html::tag('div', '', ['id' => 'homecare-offline-root']); //2
-  echo Html::tag('script', $homeCareOfflineShellLabels,
-   ['type' => 'application/json', 'id' => 'homecare-offline-shell-i18n']); //2
-  // Plain root-relative path — @baseUrl resolves empty in this app's own
-  // config (config/common/params.php), and every other root-relative
-  // asset reference (e.g. @assetsUrl => '@baseUrl/assets') already works
-  // the same way in production, so this deliberately doesn't try to
-  // compute a deployment-path prefix that isn't actually configured
-  // anywhere.
-  // type="module" (not ->defer()) — this bundle uses top-level await
-  // (typescript:S7785), which requires ES module scope; module scripts
-  // are deferred by the HTML spec on their own, so no separate defer is
-  // needed.
-  echo Html::script()->url('/homecare-offline-shell.js')->type('module'); //2
- echo Html::closeTag('body'); //1
+echo Html::openTag('head'); //1
+echo Meta::documentEncoding('utf-8');
+echo Meta::data('viewport', 'width=device-width, initial-scale=1');
+echo new Title()->content($translator->translate('homecare.offline.title'));
+echo new Style()->content($offlineStyle);
+echo Html::closeTag('head'); //1
+echo Html::openTag('body'); //1
+echo Html::tag('h1', Html::encode($translator->translate('homecare.offline.title'))); //2
+echo Html::tag('div', '', ['id' => 'homecare-offline-root']); //2
+echo Html::tag(
+    'script',
+    $homeCareOfflineShellLabels,
+    ['type' => 'application/json', 'id' => 'homecare-offline-shell-i18n']
+); //2
+// Plain root-relative path — @baseUrl resolves empty in this app's own
+// config (config/common/params.php), and every other root-relative
+// asset reference (e.g. @assetsUrl => '@baseUrl/assets') already works
+// the same way in production, so this deliberately doesn't try to
+// compute a deployment-path prefix that isn't actually configured
+// anywhere.
+// type="module" (not ->defer()) — this bundle uses top-level await
+// (typescript:S7785), which requires ES module scope; module scripts
+// are deferred by the HTML spec on their own, so no separate defer is
+// needed.
+echo Html::script()->url('/homecare-offline-shell.js')->type('module'); //2
+echo Html::closeTag('body'); //1
 echo Html::closeTag('html'); //0

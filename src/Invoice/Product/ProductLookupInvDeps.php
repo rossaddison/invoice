@@ -17,5 +17,6 @@ final class ProductLookupInvDeps
         public readonly uR $uR,
         public readonly iiaR $iiaR,
         public readonly iiR $iiR,
-    ) {}
+    ) {
+    }
 }

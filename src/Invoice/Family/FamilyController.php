@@ -59,8 +59,15 @@ final class FamilyController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator,
-                $webViewRenderer, $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
         $this->familyService = $familyService;
         $this->factory = $factory;
         $this->urlGenerator = $urlGenerator;
@@ -161,8 +168,7 @@ final class FamilyController extends BaseController
         cvR $cvR,
         cpR $cpR,
         csR $csR
-    ): Response
-    {
+    ): Response {
         $form = new FamilyForm();
         $familyCustomForm = new FamilyCustomForm();
         $custom = $this->fetchCustomFieldsAndValues($cfR, $cvR, 'family_custom');
@@ -290,8 +296,7 @@ final class FamilyController extends BaseController
         Request $request,
         FamilyEditDeps $deps,
         FormHydrator $formHydrator
-    ): Response
-    {
+    ): Response {
         $family = $this->family((int) $id, $deps->fR);
         if (!$family) {
             return $this->webService->getRedirectResponse('family/index');
@@ -309,9 +314,15 @@ final class FamilyController extends BaseController
             'family' => $family,
             'form' => $form,
             'customFields' => $this->fetchCustomFieldsAndValues(
-                    $deps->cfR, $deps->cvR, 'family_custom')['customFields'],
+                $deps->cfR,
+                $deps->cvR,
+                'family_custom'
+            )['customFields'],
             'customValues' => $this->fetchCustomFieldsAndValues(
-                    $deps->cfR, $deps->cvR, 'family_custom')['customValues'],
+                $deps->cfR,
+                $deps->cvR,
+                'family_custom'
+            )['customValues'],
             'familyCustomValues' => $this->familyCustomValues($familyId, $deps->fcR),
             'familyCustomForm' => $familyCustomForm,
         ];
@@ -417,9 +428,15 @@ final class FamilyController extends BaseController
      * @param cpR $cpR
      * @param csR $csR
      */
-    public function view(#[RouteArgument('id')] string $id, fR $familyRepository,
-        fcR $fcR, cfR $cfR, cvR $cvR, cpR $cpR, csR $csR): Response
-    {
+    public function view(
+        #[RouteArgument('id')] string $id,
+        fR $familyRepository,
+        fcR $fcR,
+        cfR $cfR,
+        cvR $cvR,
+        cpR $cpR,
+        csR $csR
+    ): Response {
         $family = $this->family((int) $id, $familyRepository);
         if ($family) {
             $form = FamilyForm::show($family);
@@ -537,7 +554,14 @@ final class FamilyController extends BaseController
                     continue;
                 }
                 $result = $this->createProductsFromCommalist(
-                    $cl, $pp, (int) $familyId, $taxRateId, $unitId, $productRepository, $productService);
+                    $cl,
+                    $pp,
+                    (int) $familyId,
+                    $taxRateId,
+                    $unitId,
+                    $productRepository,
+                    $productService
+                );
                 $generatedCount += $result['count'];
                 $newProductIds   = array_merge($newProductIds, $result['productIds']);
                 $errors          = array_merge($errors, $result['errors']);
@@ -562,10 +586,12 @@ final class FamilyController extends BaseController
     {
         if ($count > 0 && !empty($newProductIds)) {
             $redirectUrl = $this->urlGenerator->generate(
-                'productclient/associate-multiple', [
+                'productclient/associate-multiple',
+                [
                     'product_ids' => implode(',', $newProductIds),
                     'index'       => '0',
-                ]);
+                ]
+            );
             $data = [
                 'success'      => true,
                 'count'        => $count,

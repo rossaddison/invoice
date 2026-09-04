@@ -17,7 +17,6 @@ use RequireId;
  */
 trait ClientTrait1
 {
-
     /**
      * Returns the database identifier for this Client.
      *

@@ -9,7 +9,6 @@ namespace App\Infrastructure\Persistence\Gentor\Trait;
  */
 trait GentorTrait1
 {
-
     public function reqGentorId(): int
     {
         return $this->requireId($this->id, 'Gentor');

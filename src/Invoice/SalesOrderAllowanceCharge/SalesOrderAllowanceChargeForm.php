@@ -15,7 +15,7 @@ final class SalesOrderAllowanceChargeForm extends FormModel
     private ?int $allowance_charge_id = null;
 
     private ?int $salesorder_id = null;
-    
+
     #[GreaterThan(0)]
     private ?int $amount = null;
 
@@ -23,8 +23,8 @@ final class SalesOrderAllowanceChargeForm extends FormModel
 
     public static function show(
         SalesOrderAllowanceCharge $salesorderAllowanceCharge,
-        ?int $salesorder_id): self
-    {
+        ?int $salesorder_id
+    ): self {
         $form = new self();
         $form->allowance_charge_id =
                 (int) $salesorderAllowanceCharge->getAllowanceChargeId();

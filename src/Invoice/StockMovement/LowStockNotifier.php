@@ -25,7 +25,8 @@ final readonly class LowStockNotifier
     public function __construct(
         private SettingRepository $settingRepository,
         private LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     /**
      * $stockBeforeSale is the product's own stock_quantity read *before*

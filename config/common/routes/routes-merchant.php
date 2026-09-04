@@ -10,30 +10,25 @@ use Yiisoft\Router\Route;
 
 return [
     RoutePermission::invoiceGroup(
-
-            Route::get('/merchant')
+        Route::get('/merchant')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([MerchantController::class, 'index'])
                 ->name('merchant/index'),
-
-            Route::methods([Method::GET, Method::POST], '/merchant/add')
+        Route::methods([Method::GET, Method::POST], '/merchant/add')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([MerchantController::class, 'add'])
                 ->name('merchant/add'),
-
-            Route::methods([Method::GET, Method::POST], '/merchant/edit/{id}')
+        Route::methods([Method::GET, Method::POST], '/merchant/edit/{id}')
                 ->name('merchant/edit')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([MerchantController::class, 'edit']),
-
-            Route::methods([Method::GET, Method::POST], '/merchant/delete/{id}')
+        Route::methods([Method::GET, Method::POST], '/merchant/delete/{id}')
                 ->name('merchant/delete')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([MerchantController::class, 'delete']),
-
-            Route::methods([Method::GET, Method::POST], '/merchant/view/{id}')
+        Route::methods([Method::GET, Method::POST], '/merchant/view/{id}')
                 ->name('merchant/view')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([MerchantController::class, 'view']),
-        ), // invoice
+    ), // invoice
 ];

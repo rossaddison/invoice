@@ -21,8 +21,14 @@ class As4Payload
         $this->soapMessage = $soapMessage;
     }
 
-    public function getSoapMessage(): string { return $this->soapMessage; }
-    public function getPayloadPartIds(): ?string { return $this->payloadPartIds; }
+    public function getSoapMessage(): string
+    {
+        return $this->soapMessage;
+    }
+    public function getPayloadPartIds(): ?string
+    {
+        return $this->payloadPartIds;
+    }
 
     /**
      * @param string[] $partIds

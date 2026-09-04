@@ -30,7 +30,8 @@ use Yiisoft\Html\Tag\Li;
     <?= Html::openTag('h3', ['class' => 'card-title']); ?>
         <?= Html::encode($title) ?>
     <?= Html::closeTag('h3') ?>
-        <?= Html::a('Refresh',
+        <?= Html::a(
+            'Refresh',
             $refresh_url,
             ['class' => 'btn btn-primary btn-sm']
         ) ?>
@@ -57,13 +58,16 @@ use Yiisoft\Html\Tag\Li;
                         <?php
                         $healthStatus = (string)
                             ($health['status'] ?? 'unknown');
-                        $badgeClass = 'badge badge-' .
-                            ($healthStatus === 'healthy' ? 'success' :
-                                ($healthStatus === 'warning' ? 'warning' :
-                                'danger'));
-                        ?>
-                        <?= Html::tag('span', strtoupper($healthStatus),
-                                ['class' => $badgeClass]) ?>
+$badgeClass = 'badge badge-' .
+    ($healthStatus === 'healthy' ? 'success' :
+        ($healthStatus === 'warning' ? 'warning' :
+        'danger'));
+?>
+                        <?= Html::tag(
+                            'span',
+                            strtoupper($healthStatus),
+                            ['class' => $badgeClass]
+                        ) ?>
                     <?= Html::closeTag('h5') ?>
                 <?= Html::closeTag('div') ?>
                 <?= Html::openTag('div', ['class' => 'card-body']) ?>
@@ -150,11 +154,11 @@ use Yiisoft\Html\Tag\Li;
                         <div class="row">
                             <?php
                             $metricTypes = ['counter' => 0, 'gauge' => 0, 'histogram' => 0, 'summary' => 0];
-                            $metricTypesCounter = $metricTypes['counter'];
-                            $metricTypesGauge = $metricTypes['gauge'];
-                            $metricTypesHistogram = $metricTypes['histogram'];
+                        $metricTypesCounter = $metricTypes['counter'];
+                        $metricTypesGauge = $metricTypes['gauge'];
+                        $metricTypesHistogram = $metricTypes['histogram'];
 
-                            ?>
+                        ?>
                             <?= Html::openTag('div', ['class' => 'col-md-3']) ?>
                                 <?= Html::openTag('div', ['class' => 'info-box']) ?>
                                     <?= Html::openTag('span', ['class' => 'info-box-icon bg-info']) ?>
@@ -202,23 +206,23 @@ use Yiisoft\Html\Tag\Li;
                             <?= Html::tag('h6', 'Detailed Metrics') ?>
                             <?= Html::openTag('div', ['class' => 'accordion', 'id' => 'metricsAccordion']) ?>
                                 <?php
-                                    /**
-                                     * @var array $metric
-                                     * @var string $metric['type']
-                                     * @var string $metric['name']
-                                     */
-                                    foreach ($metrics as $index => $metric): ?>
+                                /**
+                                 * @var array $metric
+                                 * @var string $metric['type']
+                                 * @var string $metric['name']
+                                 */
+                                foreach ($metrics as $index => $metric): ?>
                                     <?= Html::openTag('div', ['class' => 'card']) ?>
                                         <?= Html::openTag('div', ['class' => 'card-header', 'id' => 'heading' . (string) $index]) ?>
                                             <?= Html::openTag('h2', ['class' => 'mb-0']) ?>
                                                 <?php
-                                                $metricType = ($metric['type'] ?? 'unknown');
-                                                $metricName = ($metric['name'] ?? 'unknown');
-                                                $chartEmoji = $metricType === 'counter' ? '📊' :
-                                                 ($metricType === 'gauge' ? '⚡' : '📈');
-                                                $buttonContent = $chartEmoji .
-                                                    ' ' . Html::encode($metricName) . ' (' . $metricType . ')';
-                                                ?>
+                                            $metricType = ($metric['type'] ?? 'unknown');
+                                    $metricName = ($metric['name'] ?? 'unknown');
+                                    $chartEmoji = $metricType === 'counter' ? '📊' :
+                                     ($metricType === 'gauge' ? '⚡' : '📈');
+                                    $buttonContent = $chartEmoji .
+                                        ' ' . Html::encode($metricName) . ' (' . $metricType . ')';
+                                    ?>
                                                 <?= Html::button(
                                                     $buttonContent,
                                                     [
@@ -243,15 +247,15 @@ use Yiisoft\Html\Tag\Li;
                                                 <?php
                                                     /** @var mixed $metricValues */
                                                     $metricValues = $metric['values'];
-                                                    if (!empty($metricValues) && is_array($metricValues)): ?>
+                                    if (!empty($metricValues) && is_array($metricValues)): ?>
                                                     <?= Html::tag('h6', 'Values:') ?>
                                                     <?php
-                                                    $metricValuesArrayMap = array_map(fn($value) => (string) $value, $metricValues);
-                                                    $preContent = Html::encode(implode("\n", array_slice($metricValuesArrayMap, 0, 10)));
-                                                    if (count($metricValuesArrayMap) > 10) {
-                                                        $preContent .= "\n... (" . (count($metricValues) - 10) . " more)";
-                                                    }
-                                                    ?>
+                                    $metricValuesArrayMap = array_map(fn ($value) => (string) $value, $metricValues);
+                                        $preContent = Html::encode(implode("\n", array_slice($metricValuesArrayMap, 0, 10)));
+                                        if (count($metricValuesArrayMap) > 10) {
+                                            $preContent .= "\n... (" . (count($metricValues) - 10) . " more)";
+                                        }
+                                        ?>
                                                     <?= Html::tag('pre', $preContent, ['style' => 'max-height: 200px; overflow-y: auto;']) ?>
                                                 <?php endif; ?>
                                             <?= Html::closeTag('div') ?>
@@ -285,7 +289,7 @@ use Yiisoft\Html\Tag\Li;
                             <?= Html::tag('h6', '🖥️ Prometheus Configuration') ?>
                             <?= Html::tag('p', 'Add this job to your prometheus.yml:', ['class' => 'text-muted small']) ?>
                             <?= Html::tag('pre',
-                                    'scrape_configs:
+                                'scrape_configs:
                                     - job_name: \'yii3-invoice-app\'
                                     static_configs:
                                     - targets: [\'localhost:8080\']
@@ -303,18 +307,18 @@ use Yiisoft\Html\Tag\Li;
                                     'System resource usage',
                                     'Application health status'
                                 ];
-                                 new Ul()->class('small')->items( new Li()->content(...$items))->render() ?>
+new Ul()->class('small')->items(new Li()->content(...$items))->render() ?>
                         <?= Html::closeTag('div') ?>
                         <?= Html::openTag('div', ['class' => 'col-md-4']) ?>
                             <?= Html::tag('h6', '💻 Exporters') ?>
                             <?= Html::tag('p', 'Works alongside:', ['class' => 'text-muted small']) ?>
                             <?php
                                 $items = [
-                                    'node_exporter (port 9100)',
-                                    'windows_exporter (port 9182)',
-                                    'Custom application metrics'
+   'node_exporter (port 9100)',
+   'windows_exporter (port 9182)',
+   'Custom application metrics'
                                 ];
-                                 new Ul()->class('small')->items( new Li()->content(...$items))->render() ?>
+new Ul()->class('small')->items(new Li()->content(...$items))->render() ?>
                         <?= Html::closeTag('div') ?>
                     <?= Html::closeTag('div') ?>
                 <?= Html::closeTag('div') ?>

@@ -30,13 +30,13 @@ use Yiisoft\Html\Html;
 <?= Html::openTag('div'); ?>
     <?php
         ReadOnlyField::render($translator->translate('number'), $form->getInv()?->getNumber() ?? '#');
-        ReadOnlyField::render(
-            $translator->translate('email.date'),
-            $form->getDateSent() instanceof \DateTimeImmutable
-                ? $form->getDateSent()->format('l, d-M-y H:i:s T')
-                : '',
-        );
-    ?>
+ReadOnlyField::render(
+    $translator->translate('email.date'),
+    $form->getDateSent() instanceof \DateTimeImmutable
+        ? $form->getDateSent()->format('l, d-M-y H:i:s T')
+        : '',
+);
+?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

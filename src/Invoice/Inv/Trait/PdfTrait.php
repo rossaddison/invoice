@@ -12,7 +12,6 @@ use App\Invoice\Inv\Service\PlaywrightDocumentHtmlBuilder;
 use App\Invoice\Inv\Service\PlaywrightPdfRenderService;
 use App\Invoice\Upload\UploadRepository as UPR;
 use App\Widget\Bootstrap5ModalPdf;
-
 use Yiisoft\{Json\Json, Router\HydratorAttribute\RouteArgument};
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -52,18 +51,20 @@ trait PdfTrait
     {
         if ($this->sR->getSetting('pdf_archive_inv') == '1') {
             return $this->factory->createResponse(
-                    $this->webViewRenderer->renderPartialAsString(
-                '//invoice/setting/pdf_close',
-                ['heading' => '',
+                $this->webViewRenderer->renderPartialAsString(
+                    '//invoice/setting/pdf_close',
+                    ['heading' => '',
                     'message' => $this->translator->translate('pdf.archived.yes')],
-            ));
+                )
+            );
         }
         return $this->factory->createResponse(
-                $this->webViewRenderer->renderPartialAsString(
-            '//invoice/setting/pdf_close',
-            ['heading' => '',
+            $this->webViewRenderer->renderPartialAsString(
+                '//invoice/setting/pdf_close',
+                ['heading' => '',
                 'message' => $this->translator->translate('pdf.archived.no')],
-        ));
+            )
+        );
     }
 
     public function pdfDashboardIncludeCf(

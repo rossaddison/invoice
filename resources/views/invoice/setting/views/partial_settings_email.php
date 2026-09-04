@@ -1,99 +1,101 @@
 <?php
+
 declare(strict_types=1);
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\Option;
+
 /**
 * @var App\Invoice\Setting\SettingRepository $s
 * @var Yiisoft\Translator\TranslatorInterface $translator
 * @var array $body
 */
 echo H::openTag('div', ['class' => 'row']); //1
- echo H::openTag('div', [ //2
-  'class' => 'col-12 col-md-8 offset-md-2'
- ]); //2
-  echo H::openTag('div', ['class' => 'card']); //3
-   echo H::openTag('div', ['class' => 'card-header']); //4
-    echo $translator->translate('email');
-   echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'card-body']); //4
-    echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'mb-3']); //7
-       $sepa = 'settings[email_pdf_attachment]';
-       echo H::openTag('label', ['for' => $sepa]);
-        echo $translator->translate('email.pdf.attachment');
-        echo $s->infoIcon('email_pdf_attachment');
-       echo H::closeTag('label');
-       $body[$sepa] = $s->getSetting('email_pdf_attachment');
-       echo H::openTag('select', [
-        'name' => $sepa,
-        'id' => $sepa,
-        'class' => 'form-select',
-        'data-minimum-results-for-search' => 'Infinity'
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->selected($body[$sepa] === '0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected($body[$sepa] === '1')
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-   echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'card-header']); //4
-    echo $translator->translate('email.send.method');
-   echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'card-body']); //4
-    echo H::openTag('div', ['class' => 'mb-3']); //5
-     $sesm = 'settings[email_send_method]';
-     echo H::openTag('label', ['for' => 'email_send_method']);
-      echo $translator->translate('email.send.method');
-      echo $s->infoIcon('email_send_method');
-     echo H::closeTag('label');
-     echo H::openTag('select', [
-      'name' => $sesm,
-      'id' => 'email_send_method',
-      'class' => 'form-select',
-     ]);
-      echo  new Option()
-       ->value('')
-       ->content($translator->translate('none'));
-      echo  new Option()
-       ->value('symfony')
-       ->selected($s->getSetting('email_send_method') === 'symfony')
-       ->content('eSmtp: Symfony');
-     echo H::closeTag('select');
-    echo H::closeTag('div'); //5
-   echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'card-body']); //4
-    echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'mb-3']); //7
-       echo H::openTag('div', ['class' => 'mb-3']); //8
-        echo H::tag('h6', 'eSMTP Host: ' .
-         (string) $s->configParams()['esmtp_host']);
-       echo H::closeTag('div'); //8
-       echo H::openTag('div', ['class' => 'mb-3']); //8
-        echo H::tag('h6', 'eSMTP Port: ' .
-         (string) $s->configParams()['esmtp_port']);
-       echo H::closeTag('div'); //8
-       echo H::openTag('div', ['class' => 'mb-3']); //8
-        echo H::tag('h6', 'eSMTP Schema: ' . ucfirst(
-         (string) $s->configParams()['esmtp_scheme']
-        ));
-       echo H::closeTag('div'); //8
-       echo H::openTag('div', ['class' => 'mb-3']); //8
-        echo H::tag('h6', 'Use SendMail: ' .
-         $s->configParams()['use_send_mail']);
-       echo H::closeTag('div'); //8
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-   echo H::closeTag('div'); //4
-  echo H::closeTag('div'); //3
- echo H::closeTag('div'); //2
+echo H::openTag('div', [ //2
+ 'class' => 'col-12 col-md-8 offset-md-2'
+]); //2
+echo H::openTag('div', ['class' => 'card']); //3
+echo H::openTag('div', ['class' => 'card-header']); //4
+echo $translator->translate('email');
+echo H::closeTag('div'); //4
+echo H::openTag('div', ['class' => 'card-body']); //4
+echo H::openTag('div', ['class' => 'row']); //5
+echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
+echo H::openTag('div', ['class' => 'mb-3']); //7
+$sepa = 'settings[email_pdf_attachment]';
+echo H::openTag('label', ['for' => $sepa]);
+echo $translator->translate('email.pdf.attachment');
+echo $s->infoIcon('email_pdf_attachment');
+echo H::closeTag('label');
+$body[$sepa] = $s->getSetting('email_pdf_attachment');
+echo H::openTag('select', [
+ 'name' => $sepa,
+ 'id' => $sepa,
+ 'class' => 'form-select',
+ 'data-minimum-results-for-search' => 'Infinity'
+]);
+echo  new Option()
+ ->value('0')
+ ->selected($body[$sepa] === '0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected($body[$sepa] === '1')
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::closeTag('div'); //4
+echo H::openTag('div', ['class' => 'card-header']); //4
+echo $translator->translate('email.send.method');
+echo H::closeTag('div'); //4
+echo H::openTag('div', ['class' => 'card-body']); //4
+echo H::openTag('div', ['class' => 'mb-3']); //5
+$sesm = 'settings[email_send_method]';
+echo H::openTag('label', ['for' => 'email_send_method']);
+echo $translator->translate('email.send.method');
+echo $s->infoIcon('email_send_method');
+echo H::closeTag('label');
+echo H::openTag('select', [
+ 'name' => $sesm,
+ 'id' => 'email_send_method',
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('')
+ ->content($translator->translate('none'));
+echo  new Option()
+ ->value('symfony')
+ ->selected($s->getSetting('email_send_method') === 'symfony')
+ ->content('eSmtp: Symfony');
+echo H::closeTag('select');
+echo H::closeTag('div'); //5
+echo H::closeTag('div'); //4
+echo H::openTag('div', ['class' => 'card-body']); //4
+echo H::openTag('div', ['class' => 'row']); //5
+echo H::openTag('div', ['class' => 'col-12 col-md-6']); //6
+echo H::openTag('div', ['class' => 'mb-3']); //7
+echo H::openTag('div', ['class' => 'mb-3']); //8
+echo H::tag('h6', 'eSMTP Host: ' .
+ (string) $s->configParams()['esmtp_host']);
+echo H::closeTag('div'); //8
+echo H::openTag('div', ['class' => 'mb-3']); //8
+echo H::tag('h6', 'eSMTP Port: ' .
+ (string) $s->configParams()['esmtp_port']);
+echo H::closeTag('div'); //8
+echo H::openTag('div', ['class' => 'mb-3']); //8
+echo H::tag('h6', 'eSMTP Schema: ' . ucfirst(
+    (string) $s->configParams()['esmtp_scheme']
+));
+echo H::closeTag('div'); //8
+echo H::openTag('div', ['class' => 'mb-3']); //8
+echo H::tag('h6', 'Use SendMail: ' .
+ $s->configParams()['use_send_mail']);
+echo H::closeTag('div'); //8
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::closeTag('div'); //4
+echo H::closeTag('div'); //3
+echo H::closeTag('div'); //2
 echo H::closeTag('div'); //1

@@ -27,7 +27,8 @@ final class As4ExponentialBackoffRetryPolicy implements As4RetryPolicyInterface
         private readonly int $maxDelaySeconds = 3600,
         private readonly float $multiplier = 2.0,
         private readonly int $jitterCeiling = 30,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function delaySeconds(int $attemptCount, int $baseIntervalSeconds): int

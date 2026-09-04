@@ -26,7 +26,8 @@ final readonly class ProductPropertyService
         $this->persist($model, $array);
         isset($array['product_id']) ?
             $model->setProductId(
-                (int) $array['product_id']) : '';
+                (int) $array['product_id']
+            ) : '';
         isset($array['name']) ?
             $model->setName((string) $array['name']) : '';
         isset($array['value']) ?
@@ -41,7 +42,8 @@ final readonly class ProductPropertyService
         $product = 'product_id';
         if (isset($array[$product])) {
             $productEntity = $this->pR->repoProductquery(
-                (int) $array[$product]);
+                (int) $array[$product]
+            );
             if ($productEntity) {
                 $model->setProduct($productEntity);
             }

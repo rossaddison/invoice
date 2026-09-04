@@ -6,7 +6,6 @@ namespace App\Invoice\Setting\Trait;
 
 trait SettingStaticPathsTrait
 {
-
     // Add to src/Invoice
     public static function getPlaceholderRelativeUrl(): string
     {

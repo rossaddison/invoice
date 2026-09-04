@@ -76,7 +76,7 @@ final class FormViewConsistencyChecker
     public function formatIssues(array $issues): array
     {
         return array_values(array_map(
-            static fn(array $i): string => sprintf(
+            static fn (array $i): string => sprintf(
                 '%s  ->  $%s  [%s]  — never rendered in any view',
                 basename($i['form']),
                 $i['property'],

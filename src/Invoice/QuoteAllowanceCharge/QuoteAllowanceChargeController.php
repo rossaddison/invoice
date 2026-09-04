@@ -39,8 +39,15 @@ final class QuoteAllowanceChargeController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator,
-            $webViewRenderer, $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
         $this->qacService = $qacService;
     }
 
@@ -78,17 +85,23 @@ final class QuoteAllowanceChargeController extends BaseController
                 $body['quote_id'] = $quote_id;
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $this->qacService->saveQuoteAllowanceCharge(
-                        $quoteAllowanceCharge, $body);
-                    return $this->webService->getRedirectResponse('quote/view',
-                        ['id' => $quote_id]);
+                        $quoteAllowanceCharge,
+                        $body
+                    );
+                    return $this->webService->getRedirectResponse(
+                        'quote/view',
+                        ['id' => $quote_id]
+                    );
                 }
                 $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             } // is_array
         }
-        return $this->webViewRenderer->render('modal_add_allowance_charge_form',
-            $parameters);
+        return $this->webViewRenderer->render(
+            'modal_add_allowance_charge_form',
+            $parameters
+        );
     }
 
     public function index(
@@ -168,18 +181,24 @@ final class QuoteAllowanceChargeController extends BaseController
             if ($quoteAllowanceCharge) {
                 $quoteId = $quoteAllowanceCharge->reqQuoteId();
                 $this->qacService->deleteQuoteAllowanceCharge(
-                    $quoteAllowanceCharge);
+                    $quoteAllowanceCharge
+                );
                 $this->flashMessage('info', $this->translator->translate(
-                    'record.successfully.deleted'));
-                return $this->webService->getRedirectResponse('quote/view',
-                    ['id' => $quoteId]);
+                    'record.successfully.deleted'
+                ));
+                return $this->webService->getRedirectResponse(
+                    'quote/view',
+                    ['id' => $quoteId]
+                );
             }
             return $this->webService->getRedirectResponse(
-                'quoteallowancecharge/index');
+                'quoteallowancecharge/index'
+            );
         } catch (Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse(
-                'quoteallowancecharge/index');
+                'quoteallowancecharge/index'
+            );
         }
     }
 
@@ -201,8 +220,10 @@ final class QuoteAllowanceChargeController extends BaseController
         $quoteAllowanceCharge = $this->quoteallowancecharge($currentRoute, $acqR);
         if ($quoteAllowanceCharge) {
             $quote_id = $quoteAllowanceCharge->reqQuoteId();
-            $form = QuoteAllowanceChargeForm::show($quoteAllowanceCharge,
-                $quote_id);
+            $form = QuoteAllowanceChargeForm::show(
+                $quoteAllowanceCharge,
+                $quote_id
+            );
             $parameters = [
                 'title' => $this->translator->translate('allowance.or.charge'),
                 'actionName' => 'quoteallowancecharge/edit',
@@ -218,9 +239,12 @@ final class QuoteAllowanceChargeController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                     $this->qacService->saveQuoteAllowanceCharge(
-                        $quoteAllowanceCharge, $body);
+                        $quoteAllowanceCharge,
+                        $body
+                    );
                     return $this->webService->getRedirectResponse(
-                        'quoteallowancecharge/index');
+                        'quoteallowancecharge/index'
+                    );
                 }
                 $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -229,7 +253,8 @@ final class QuoteAllowanceChargeController extends BaseController
             return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse(
-            'quoteallowancecharge/index');
+            'quoteallowancecharge/index'
+        );
     }
 
     //For rbac refer to AccessChecker
@@ -239,13 +264,13 @@ final class QuoteAllowanceChargeController extends BaseController
      * @param QuoteAllowanceChargeRepository $qacRepository
      * @return QuoteAllowanceCharge|null
      */
-    private function quoteallowancecharge(CurrentRoute $currentRoute,
-        QuoteAllowanceChargeRepository $qacRepository):
-            ?QuoteAllowanceCharge
-    {
+    private function quoteallowancecharge(
+        CurrentRoute $currentRoute,
+        QuoteAllowanceChargeRepository $qacRepository
+    ): ?QuoteAllowanceCharge {
         $id = (int) $currentRoute->getArgument('id');
         return $qacRepository->repoQuoteAllowanceChargeLoadedquery($id);
-        
+
     }
 
     /**
@@ -253,8 +278,7 @@ final class QuoteAllowanceChargeController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function quoteallowancecharges(acqR $acqR):
-        \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function quoteallowancecharges(acqR $acqR): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $acqR->findAllPreloaded();
     }
@@ -270,11 +294,15 @@ final class QuoteAllowanceChargeController extends BaseController
         AllowanceChargeRepository $allowanceChargeRepository,
     ): \Psr\Http\Message\ResponseInterface {
         $quoteAllowanceCharge = $this->quoteallowancecharge(
-            $currentRoute, $acqR);
+            $currentRoute,
+            $acqR
+        );
         if ($quoteAllowanceCharge) {
             $quote_id = $quoteAllowanceCharge->reqQuoteId();
-            $form = QuoteAllowanceChargeForm::show($quoteAllowanceCharge,
-                $quote_id);
+            $form = QuoteAllowanceChargeForm::show(
+                $quoteAllowanceCharge,
+                $quote_id
+            );
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'quoteallowancecharge/view',

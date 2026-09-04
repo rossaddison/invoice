@@ -36,138 +36,153 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 
 $columns = [
  new DataColumn(
-  header: $translator->translate('status'),
-  content: static function (Quote $model) use ($qR): string {
-   $statusId = (string) $model->reqStatusId();
-   return Html::openTag('span', ['class' => 'badge text-bg-'
-       . $qR->getSpecificStatusArrayClass($statusId)])
-    . Html::encode($qR->getSpecificStatusArrayLabel($statusId))
-    . Html::closeTag('span');
-  },
-  encodeContent: false,
-  withSorting: false,
+     header: $translator->translate('status'),
+     content: static function (Quote $model) use ($qR): string {
+         $statusId = (string) $model->reqStatusId();
+         return Html::openTag('span', ['class' => 'badge text-bg-'
+             . $qR->getSpecificStatusArrayClass($statusId)])
+          . Html::encode($qR->getSpecificStatusArrayLabel($statusId))
+          . Html::closeTag('span');
+     },
+     encodeContent: false,
+     withSorting: false,
  ),
  new DataColumn(
-  header: $translator->translate('quote'),
-  content: static function (Quote $model) use ($urlGenerator, $session,
-          $translator): string {
-   $args = ['_language' => (string) ($session->get('_language') ?? ''),
-       'id' => $model->reqId()];
-   return (string) Html::a(
-    Html::encode(null !== $model->getNumber()
-            ? $model->getNumber()
-            : (string) $model->reqId()),
-    $urlGenerator->generate('quote/view', $args),
-    ['title' => $translator->translate('edit'), 'class' => 'text-decoration-none'],
-   );
-  },
-  encodeContent: false,
-  withSorting: false,
+     header: $translator->translate('quote'),
+     content: static function (Quote $model) use (
+         $urlGenerator,
+         $session,
+         $translator
+     ): string {
+         $args = ['_language' => (string) ($session->get('_language') ?? ''),
+             'id' => $model->reqId()];
+         return (string) Html::a(
+             Html::encode(null !== $model->getNumber()
+                  ? $model->getNumber()
+                  : (string) $model->reqId()),
+             $urlGenerator->generate('quote/view', $args),
+             ['title' => $translator->translate('edit'), 'class' => 'text-decoration-none'],
+         );
+     },
+     encodeContent: false,
+     withSorting: false,
  ),
  new DataColumn(
-  header: $translator->translate('created'),
-  content: static fn (Quote $model): string =>
+     header: $translator->translate('created'),
+     content: static fn (Quote $model): string =>
    $model->getDateCreated()->format('Y-m-d'),
-  withSorting: false,
+     withSorting: false,
  ),
  new DataColumn(
-  header: $translator->translate('due.date'),
-  content: static fn (Quote $model): string =>
+     header: $translator->translate('due.date'),
+     content: static fn (Quote $model): string =>
    $model->getDateExpires()->format('Y-m-d'),
-  withSorting: false,
+     withSorting: false,
  ),
  new DataColumn(
-  header: $translator->translate('client.name'),
-  content: static function (Quote $model) use ($urlGenerator, $session,
-          $clientHelper, $translator): string {
-   $args = ['_language' => (string) ($session->get('_language') ?? ''),
-       'id' => $model->reqClientId()];
-   return (string) Html::a(
-    Html::encode($clientHelper->formatClient($model->getClient())),
-    $urlGenerator->generate('client/view', $args),
-    ['title' => $translator->translate('view.client'),
-        'class' => 'text-decoration-none'],
-   );
-  },
-  encodeContent: false,
-  withSorting: false,
+     header: $translator->translate('client.name'),
+     content: static function (Quote $model) use (
+         $urlGenerator,
+         $session,
+         $clientHelper,
+         $translator
+     ): string {
+         $args = ['_language' => (string) ($session->get('_language') ?? ''),
+             'id' => $model->reqClientId()];
+         return (string) Html::a(
+             Html::encode($clientHelper->formatClient($model->getClient())),
+             $urlGenerator->generate('client/view', $args),
+             ['title' => $translator->translate('view.client'),
+              'class' => 'text-decoration-none'],
+         );
+     },
+     encodeContent: false,
+     withSorting: false,
  ),
  new DataColumn(
-  header: $translator->translate('amount'),
-  content: static function (Quote $model) use ($qaR, $s): string {
-   $quoteId = $model->reqId();
-   $quote_amount = $qaR->repoQuoteAmountCount($quoteId) > 0
-           ? $qaR->repoQuotequery($quoteId) : null;
-   return (string) Html::span(
-    $s->formatCurrency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00),
-    ['class' => 'text-end', 'style' => 'float:right'],
-   );
-  },
-  encodeContent: false,
-  withSorting: false,
+     header: $translator->translate('amount'),
+     content: static function (Quote $model) use ($qaR, $s): string {
+         $quoteId = $model->reqId();
+         $quote_amount = $qaR->repoQuoteAmountCount($quoteId) > 0
+                 ? $qaR->repoQuotequery($quoteId) : null;
+         return (string) Html::span(
+             $s->formatCurrency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00),
+             ['class' => 'text-end', 'style' => 'float:right'],
+         );
+     },
+     encodeContent: false,
+     withSorting: false,
  ),
  new ActionColumn(
-  before: Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']),
-  after: Html::closeTag('div'),
-  buttons: [
+     before: Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']),
+     after: Html::closeTag('div'),
+     buttons: [
    new ActionButton(
-    content: (new I())->addClass('bi bi-pencil-square'),
-    url: static function (Quote $model) use ($urlGenerator, $session): string {
-     return $urlGenerator->generate('quote/view',
-             ['_language' => (string) ($session->get('_language') ?? ''),
-              'id' => $model->reqId()]);
-    },
-    attributes: ['data-bs-toggle' => 'tooltip',
+       content: (new I())->addClass('bi bi-pencil-square'),
+       url: static function (Quote $model) use ($urlGenerator, $session): string {
+           return $urlGenerator->generate(
+               'quote/view',
+               ['_language' => (string) ($session->get('_language') ?? ''),
+                    'id' => $model->reqId()]
+           );
+       },
+       attributes: ['data-bs-toggle' => 'tooltip',
         'title' => $translator->translate('edit'),
         'class' => 'btn btn-outline-warning btn-sm'],
    ),
    new ActionButton(
-    content: (new I())->addClass('bi bi-printer'),
-    url: static function (Quote $model) use ($urlGenerator): string {
-     return $urlGenerator->generate('quote/pdfDashboardExcludeCf',
-             ['id' => $model->reqId()]);
-    },
-    attributes: ['data-bs-toggle' => 'tooltip',
+       content: (new I())->addClass('bi bi-printer'),
+       url: static function (Quote $model) use ($urlGenerator): string {
+           return $urlGenerator->generate(
+               'quote/pdfDashboardExcludeCf',
+               ['id' => $model->reqId()]
+           );
+       },
+       attributes: ['data-bs-toggle' => 'tooltip',
         'title' => $translator->translate('download.pdf'),
         'class' => 'btn btn-outline-secondary btn-sm', 'target' => '_blank'],
    ),
    new ActionButton(
-    content: (new I())->addClass('bi bi-send'),
-    url: static function (Quote $model) use ($urlGenerator, $session): string {
-     return $urlGenerator->generate('quote/emailStage0',
-             ['_language' => (string) ($session->get('_language') ?? ''),
-              'id' => $model->reqId()]);
-    },
-    attributes: ['data-bs-toggle' => 'tooltip',
+       content: (new I())->addClass('bi bi-send'),
+       url: static function (Quote $model) use ($urlGenerator, $session): string {
+           return $urlGenerator->generate(
+               'quote/emailStage0',
+               ['_language' => (string) ($session->get('_language') ?? ''),
+                    'id' => $model->reqId()]
+           );
+       },
+       attributes: ['data-bs-toggle' => 'tooltip',
         'title' => $translator->translate('send.email'),
         'class' => 'btn btn-outline-info btn-sm'],
    ),
    new ActionButton(
-    content: (new I())->addClass('bi bi-trash'),
-    url: static function (Quote $model) use ($urlGenerator, $session): string {
-     $deletable = $model->getSoId() === 0 && $model->getInvId() === 0;
-     if (!$deletable) {
-      return '';
-     }
-     return $urlGenerator->generate('quote/delete',
-             ['_language' => (string) ($session->get('_language') ?? ''),
-              'id' => $model->reqId()]);
-    },
-    attributes: static function (Quote $model) use ($translator): array {
-     $deletable = $model->getSoId() === 0 && $model->getInvId() === 0;
-     if (!$deletable) {
-      return ['class' => 'btn btn-secondary btn-sm disabled',
-          'style' => 'pointer-events:none', 'aria-disabled' => 'true'];
-     }
-     return [
-      'data-bs-toggle' => 'tooltip',
-      'title' => $translator->translate('delete'),
-      'class' => 'btn btn-outline-danger btn-sm',
-      'onclick' => 'return confirm('
-         . (string) json_encode($translator->translate('delete.quote.warning'))
-         . ');',
-     ];
-    },
+       content: (new I())->addClass('bi bi-trash'),
+       url: static function (Quote $model) use ($urlGenerator, $session): string {
+           $deletable = $model->getSoId() === 0 && $model->getInvId() === 0;
+           if (!$deletable) {
+               return '';
+           }
+           return $urlGenerator->generate(
+               'quote/delete',
+               ['_language' => (string) ($session->get('_language') ?? ''),
+                    'id' => $model->reqId()]
+           );
+       },
+       attributes: static function (Quote $model) use ($translator): array {
+           $deletable = $model->getSoId() === 0 && $model->getInvId() === 0;
+           if (!$deletable) {
+               return ['class' => 'btn btn-secondary btn-sm disabled',
+                   'style' => 'pointer-events:none', 'aria-disabled' => 'true'];
+           }
+           return [
+            'data-bs-toggle' => 'tooltip',
+            'title' => $translator->translate('delete'),
+            'class' => 'btn btn-outline-danger btn-sm',
+            'onclick' => 'return confirm('
+               . (string) json_encode($translator->translate('delete.quote.warning'))
+               . ');',
+           ];
+       },
    ),
   ],
  ),
@@ -178,11 +193,11 @@ $paginator = (new OffsetPaginator($quotes))
  ->withCurrentPage(1);
 
 $gridSummary = $s->gridSummary(
- $paginator,
- $translator,
- (int) $s->getSetting('default_list_limit'),
- $translator->translate('quotes'),
- '',
+    $paginator,
+    $translator,
+    (int) $s->getSetting('default_list_limit'),
+    $translator->translate('quotes'),
+    '',
 );
 
 echo GridView::widget()

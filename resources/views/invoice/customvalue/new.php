@@ -90,7 +90,7 @@ use Yiisoft\Html\Tag\Form;
                             'id' => 'custom_field_id'])
                         ->value($custom_field->reqId())
                         ->hideLabel();
-                    ?>
+?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                     <?= Field::text($form, 'value')

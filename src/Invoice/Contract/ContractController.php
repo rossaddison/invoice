@@ -56,9 +56,13 @@ final class ContractController extends BaseController
      * @param iR $iR
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function index(CurrentRoute $currentRoute, contractR $contractR,
-            Request $request, cR $cR, iR $iR): \Psr\Http\Message\ResponseInterface
-    {
+    public function index(
+        CurrentRoute $currentRoute,
+        contractR $contractR,
+        Request $request,
+        cR $cR,
+        iR $iR
+    ): \Psr\Http\Message\ResponseInterface {
         $this->rbac();
         $query_params = $request->getQueryParams();
         /**
@@ -97,10 +101,12 @@ final class ContractController extends BaseController
      * @param cR $cR
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function add(CurrentRoute $currentRoute, Request $request,
-                                            FormHydrator $formHydrator, cR $cR):
-                                    \Psr\Http\Message\ResponseInterface
-    {
+    public function add(
+        CurrentRoute $currentRoute,
+        Request $request,
+        FormHydrator $formHydrator,
+        cR $cR
+    ): \Psr\Http\Message\ResponseInterface {
         $client_id = $currentRoute->getArgument('client_id');
         $contract = new Contract();
         // To pass the client id variable to the form, set it first in the entity
@@ -165,7 +171,8 @@ final class ContractController extends BaseController
                     if (is_array($body)) {
                         $this->contractService->saveContract($contract, $body);
                         return $this->webService->getRedirectResponse(
-                                                                'contract/index');
+                            'contract/index'
+                        );
                     }
                 }
                 $parameters['form'] = $form;
@@ -185,8 +192,10 @@ final class ContractController extends BaseController
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
-            $this->flashMessage('warning',
-                                    $this->translator->translate('permission'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('permission')
+            );
             return $this->webService->getRedirectResponse('contract/index');
         }
         return $canEdit;
@@ -197,15 +206,18 @@ final class ContractController extends BaseController
      * @param contractR $contractRepository
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute,
-                                        contractR $contractRepository): Response
-    {
+    public function delete(
+        CurrentRoute $currentRoute,
+        contractR $contractRepository
+    ): Response {
         try {
             $contract = $this->contract($currentRoute, $contractRepository);
             if ($contract) {
                 $this->contractService->deleteContract($contract);
-                $this->flashMessage('success',
-                    $this->translator->translate('record.successfully.deleted'));
+                $this->flashMessage(
+                    'success',
+                    $this->translator->translate('record.successfully.deleted')
+                );
                 return $this->webService->getRedirectResponse('contract/index');
             }
             return $this->webService->getRedirectResponse('contract/index');
@@ -226,8 +238,8 @@ final class ContractController extends BaseController
         CurrentRoute $currentRoute,
         contractR $contractRepository,
         UCR $ucR,
-        UIR $uiR): \Psr\Http\Message\ResponseInterface
-    {
+        UIR $uiR
+    ): \Psr\Http\Message\ResponseInterface {
         $contract = $this->contract($currentRoute, $contractRepository);
         if ($contract) {
             $form = ContractForm::show($contract);
@@ -238,17 +250,21 @@ final class ContractController extends BaseController
                 'errors' => [],
                 'form' => $form,
             ];
-            if ($this->rbacObserver($contract->reqClientId(),
-                                                                $ucR, $uiR)) {
+            if ($this->rbacObserver(
+                $contract->reqClientId(),
+                $ucR,
+                $uiR
+            )) {
                 return $this->webViewRenderer->render('_view', $parameters);
             }
         }
         return $this->webService->getRedirectResponse('contract/index');
     }
 
-    private function rbacObserver(int $clientId, UCR $ucR, UIR $uiR): bool {
+    private function rbacObserver(int $clientId, UCR $ucR, UIR $uiR): bool
+    {
         $userClient = $ucR->repoUserquery($clientId);
-        if (null!==$userClient) {
+        if (null !== $userClient) {
             $userId = $userClient->reqUserId();
             $userInv = $uiR->repoUserInvUserIdquery($userId);
             if (null !== $userInv && $userInv->getActive()) {
@@ -265,8 +281,7 @@ final class ContractController extends BaseController
      * @param contractR $contractRepository
      * @return Contract
      */
-    private function contract(CurrentRoute $currentRoute, contractR $contractRepository):
-        ?Contract
+    private function contract(CurrentRoute $currentRoute, contractR $contractRepository): ?Contract
     {
         $id = $currentRoute->getArgument('id');
         return $contractRepository->repoContractquery((int) $id);
@@ -280,8 +295,7 @@ final class ContractController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Contract>
      */
-    private function contractsWithSort(contractR $cR, Sort $sort):
-                                    \Yiisoft\Data\Reader\SortableDataInterface
+    private function contractsWithSort(contractR $cR, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
         return $cR->findAllPreloaded()
                   ->withSort($sort);

@@ -40,8 +40,15 @@ final class HomeCareVisitController extends BaseController
         private readonly HomeCareVisitRepositoryInterface $visitRepository,
         private readonly ClientR $clientR,
     ) {
-        parent::__construct($webService, $userService, $translator,
-                $webViewRenderer, $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
     }
 
     public function index(): Response

@@ -6,7 +6,6 @@ namespace App\Invoice\Trait;
 
 trait InvoiceStoreCoveTrait
 {
-
     /**
      * Use curL to call the store_cove api ... 1.1.3. Make your first API call
      * Tab: ERP or Accounting System, NOT: Individual Company, NOT: Reseller or
@@ -30,21 +29,25 @@ trait InvoiceStoreCoveTrait
          * @var mixed $api_key_here
          */
         $api_key_here = $this->sR->decode($this->sR->getSetting(
-                                                'storecove_api_key'));
+            'storecove_api_key'
+        ));
         $site = curl_init();
         if ($site) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
             curl_setopt($site, CURLOPT_POST, true);
             curl_setopt($site, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($site, CURLOPT_HTTPHEADER,
-                    ['Accept: application/json',
+            curl_setopt(
+                $site,
+                CURLOPT_HTTPHEADER,
+                ['Accept: application/json',
                         "Authorization: Bearer $api_key_here",
-                            'Content-Type: application/json']);
+                            'Content-Type: application/json']
+            );
             curl_setopt($site, CURLOPT_HEADER, true);
-/**
- * Related logic: see https://www.storecove.com/docs/#_getting_started 1.1.3.
- * Make your first API call
- */
+            /**
+             * Related logic: see https://www.storecove.com/docs/#_getting_started 1.1.3.
+             * Make your first API call
+             */
             $data = '{"documentTypes": ["invoice"], "network": "peppol",'
                     . ' "metaScheme": "iso6523-actorid-upis",'
                     . ' "scheme": "nl:kvk", "identifier":"60881119"}';
@@ -68,8 +71,7 @@ trait InvoiceStoreCoveTrait
      * Related logic: see https://www.storecove.com/docs/
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function storeCoveCallApiGetLegalEntityId():
-                                            \Psr\Http\Message\ResponseInterface
+    public function storeCoveCallApiGetLegalEntityId(): \Psr\Http\Message\ResponseInterface
     {
         $parameters = [
             'result' => '',
@@ -81,16 +83,20 @@ trait InvoiceStoreCoveTrait
          * @var mixed $api_key_here
          */
         $api_key_here = $this->sR->decode($this->sR->getSetting(
-            'storecove_api_key'));
+            'storecove_api_key'
+        ));
         $site = curl_init();
         if ($site) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
             curl_setopt($site, CURLOPT_POST, true);
             curl_setopt($site, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($site, CURLOPT_HTTPHEADER,
-                    ['Accept: application/json',
+            curl_setopt(
+                $site,
+                CURLOPT_HTTPHEADER,
+                ['Accept: application/json',
                         "Authorization: Bearer $api_key_here",
-                            'Content-Type: application/json']);
+                            'Content-Type: application/json']
+            );
             curl_setopt($site, CURLOPT_HEADER, true);
             $country_code_identifier = 'GB';
             $data = '{"party_name": "Test Party", "line1": "Test Street 1",'
@@ -98,7 +104,8 @@ trait InvoiceStoreCoveTrait
                     . $country_code_identifier . '"}';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
             $message = curl_error($site) ?: $this->translator->translate(
-                         'curl.store.cove.api.get.legal.entity.id.successful');
+                'curl.store.cove.api.get.legal.entity.id.successful'
+            );
             $parameters = [
                 'result' => curl_exec($site),
                 'message' => $message,
@@ -115,8 +122,7 @@ trait InvoiceStoreCoveTrait
      * Related logic: see https://www.storecove.com/docs/
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function storeCoveCallApiLegalEntityIdentifier():
-                                            \Psr\Http\Message\ResponseInterface
+    public function storeCoveCallApiLegalEntityIdentifier(): \Psr\Http\Message\ResponseInterface
     {
         // Obtain from above A)
         // store-cove regex: ^GB(\d{9}(\d{3})?$|^[A-Z]{2}\d{3})$ will match eg.
@@ -133,7 +139,8 @@ trait InvoiceStoreCoveTrait
          * @var mixed $api_key_here
          */
         $api_key_here = $this->sR->decode(
-                            $this->sR->getSetting('storecove_api_key'));
+            $this->sR->getSetting('storecove_api_key')
+        );
         $parameters = [
             'result' => '',
             'message' => '',
@@ -154,7 +161,8 @@ trait InvoiceStoreCoveTrait
                     . $combo_id . '"}';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
             $message = curl_error($site) ?: $this->translator->translate(
-                    'curl.store.cove.api.legal.entity.identifier.successful');
+                'curl.store.cove.api.legal.entity.identifier.successful'
+            );
             $parameters = [
                 'result' => curl_exec($site),
                 'message' => $message,
@@ -170,18 +178,19 @@ trait InvoiceStoreCoveTrait
      * Paste json copy into $data
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function storeCoveSendTestJsonInvoice():
-                                            \Psr\Http\Message\ResponseInterface
+    public function storeCoveSendTestJsonInvoice(): \Psr\Http\Message\ResponseInterface
     {
         $store_cove = 'https://api.storecove.com/api/v2/document_submissions';
         // Remove zeros from '000217668' => integer'
         $legal_entity_id_as_integer = (int) $this->sR->getSetting(
-                                                    'storecove_legal_entity_id');
+            'storecove_legal_entity_id'
+        );
         /**
          * @var mixed $api_key_here
          */
         $api_key_here = $this->sR->decode($this->sR->getSetting(
-                                                    'storecove_api_key'));
+            'storecove_api_key'
+        ));
         $parameters = [
             'result' => '',
             'message' => '',
@@ -269,7 +278,8 @@ trait InvoiceStoreCoveTrait
             }';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
             $message = curl_error($site) ?: $this->translator->translate(
-                    'curl.store.cove.api.send.test.json.invoice.successful');
+                'curl.store.cove.api.send.test.json.invoice.successful'
+            );
             $parameters = [
                 'result' => curl_exec($site),
                 'message' => $message,
@@ -279,15 +289,15 @@ trait InvoiceStoreCoveTrait
         return $this->webViewRenderer->render('curl/api_result', $parameters);
     }
 
-    public function storeCoveSendActualJsonInvoice():
-                                            \Psr\Http\Message\ResponseInterface
+    public function storeCoveSendActualJsonInvoice(): \Psr\Http\Message\ResponseInterface
     {
         $store_cove = 'https://api.storecove.com/api/v2/document_submissions';
         /**
          * @var mixed $api_key_here
          */
         $api_key_here = $this->sR->decode($this->sR->getSetting(
-                                                'storecove_api_key'));
+            'storecove_api_key'
+        ));
         $parameters = [
             'result' => '',
             'message' => '',
@@ -304,14 +314,16 @@ trait InvoiceStoreCoveTrait
                 'Content-Type: application/json']);
             curl_setopt($site, CURLOPT_HEADER, true);
             $legalEntityId = (string) (int) $this->sR->getSetting(
-                                                'storecove_legal_entity_id');
+                'storecove_legal_entity_id'
+            );
             $dualArray = [
                 $this->storeCoveWorldToJson($legalEntityId),
                 $this->storeCoveMainJson(),
             ];
             curl_setopt($site, CURLOPT_POSTFIELDS, $dualArray[1]);
             $message = curl_error($site) ?: $this->translator->translate(
-                          'curl.store.cove.api.setup.legal.entity.successful');
+                'curl.store.cove.api.setup.legal.entity.successful'
+            );
             $parameters = [
                 'result' => curl_exec($site),
                 'message' => $message,
@@ -401,16 +413,16 @@ trait InvoiceStoreCoveTrait
 
     private function storeCoveMainJsonPart1(): string
     {
-            $p = "JVBERi0xLjIgCjkgMCBvYmoKPDwKPj4Kc3RyZWFtCkJULyAzMiBUZiggIFlP";
-            $q = "VVIgVEVYVCBIRVJFICAgKScgRVQKZW5kc3RyZWFtCmVuZG9iago0IDAgb2Jq";
-            $r = "Cjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgNSAwIFIKL0NvbnRlbnRzIDkgMCBS";
-            $s = "Cj4+CmVuZG9iago1IDAgb2JqCjw8Ci9LaWRzIFs0IDAgUiBdCi9Db3VudCAx";
-            $t = "Ci9UeXBlIC9QYWdlcwovTWVkaWFCb3ggWyAwIDAgMjUwIDUwIF0KPj4KZW5k";
-            $u = "b2JqCjMgMCBvYmoKPDwKL1BhZ2VzIDUgMCBSCi9UeXBlIC9DYXRhbG9nCj4+";
-            $v = "CmVuZG9iagp0cmFpbGVyCjw8Ci9Sb290IDMgMCBSCj4+CiUlRU9G";
-            $w = "This is the invoice note. Senders can enter free text.";
-            $x = "This may not be read by the receiver,";
-            $y = "so it is not encouraged to use this.";
+        $p = "JVBERi0xLjIgCjkgMCBvYmoKPDwKPj4Kc3RyZWFtCkJULyAzMiBUZiggIFlP";
+        $q = "VVIgVEVYVCBIRVJFICAgKScgRVQKZW5kc3RyZWFtCmVuZG9iago0IDAgb2Jq";
+        $r = "Cjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgNSAwIFIKL0NvbnRlbnRzIDkgMCBS";
+        $s = "Cj4+CmVuZG9iago1IDAgb2JqCjw8Ci9LaWRzIFs0IDAgUiBdCi9Db3VudCAx";
+        $t = "Ci9UeXBlIC9QYWdlcwovTWVkaWFCb3ggWyAwIDAgMjUwIDUwIF0KPj4KZW5k";
+        $u = "b2JqCjMgMCBvYmoKPDwKL1BhZ2VzIDUgMCBSCi9UeXBlIC9DYXRhbG9nCj4+";
+        $v = "CmVuZG9iagp0cmFpbGVyCjw8Ci9Sb290IDMgMCBSCj4+CiUlRU9G";
+        $w = "This is the invoice note. Senders can enter free text.";
+        $x = "This may not be read by the receiver,";
+        $y = "so it is not encouraged to use this.";
 
         return '{
                 "legalEntityId": 100000099999,

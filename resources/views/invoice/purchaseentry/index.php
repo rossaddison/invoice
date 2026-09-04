@@ -43,59 +43,61 @@ $settingTabIndex = 'setting/tabIndex';
 $notSet          = '⏳';
 
 echo Html::openTag('div', ['class' => 'd-flex align-items-center gap-3 mb-1']);
- echo Breadcrumbs::widget()
-    ->links(
-        BreadcrumbLink::to(
-            label: 'Tax Year Start: Year',
-            url: $urlGenerator->generate(
-                $settingTabIndex,
-                [],
-                ['active' => 'taxes'],
-                'settings[this_tax_year_from_date_year]',
-            ),
-            active: false,
-            attributes: [
-                'data-bs-toggle' => 'tooltip',
-                'title' => $taxYearYear !== '' ? $taxYearYear : $notSet,
-            ],
-            encodeLabel: false,
-        ),
-        BreadcrumbLink::to(
-            label: 'Tax Year Start: Month',
-            url: $urlGenerator->generate(
-                $settingTabIndex,
-                [],
-                ['active' => 'taxes'],
-                'settings[this_tax_year_from_date_month]',
-            ),
-            active: false,
-            attributes: [
-                'data-bs-toggle' => 'tooltip',
-                'title' => $taxYearMonth !== '' ? $taxYearMonth : $notSet,
-            ],
-            encodeLabel: false,
-        ),
-        BreadcrumbLink::to(
-            label: 'Tax Year Start: Day',
-            url: $urlGenerator->generate(
-                $settingTabIndex,
-                [],
-                ['active' => 'taxes'],
-                'settings[this_tax_year_from_date_day]',
-            ),
-            active: false,
-            attributes: [
-                'data-bs-toggle' => 'tooltip',
-                'title' => $taxYearDay !== '' ? $taxYearDay : $notSet,
-            ],
-            encodeLabel: false,
-        ),
-    )
-    ->listId(false)
-    ->render();
- echo Html::a('📋 Locale defaults',
-     $urlGenerator->generate('entry/tax-year-locales'),
-     ['class' => 'btn btn-sm btn-outline-info text-nowrap mb-2', 'hx-boost' => 'false']);
+echo Breadcrumbs::widget()
+   ->links(
+       BreadcrumbLink::to(
+           label: 'Tax Year Start: Year',
+           url: $urlGenerator->generate(
+               $settingTabIndex,
+               [],
+               ['active' => 'taxes'],
+               'settings[this_tax_year_from_date_year]',
+           ),
+           active: false,
+           attributes: [
+               'data-bs-toggle' => 'tooltip',
+               'title' => $taxYearYear !== '' ? $taxYearYear : $notSet,
+           ],
+           encodeLabel: false,
+       ),
+       BreadcrumbLink::to(
+           label: 'Tax Year Start: Month',
+           url: $urlGenerator->generate(
+               $settingTabIndex,
+               [],
+               ['active' => 'taxes'],
+               'settings[this_tax_year_from_date_month]',
+           ),
+           active: false,
+           attributes: [
+               'data-bs-toggle' => 'tooltip',
+               'title' => $taxYearMonth !== '' ? $taxYearMonth : $notSet,
+           ],
+           encodeLabel: false,
+       ),
+       BreadcrumbLink::to(
+           label: 'Tax Year Start: Day',
+           url: $urlGenerator->generate(
+               $settingTabIndex,
+               [],
+               ['active' => 'taxes'],
+               'settings[this_tax_year_from_date_day]',
+           ),
+           active: false,
+           attributes: [
+               'data-bs-toggle' => 'tooltip',
+               'title' => $taxYearDay !== '' ? $taxYearDay : $notSet,
+           ],
+           encodeLabel: false,
+       ),
+   )
+   ->listId(false)
+   ->render();
+echo Html::a(
+    '📋 Locale defaults',
+    $urlGenerator->generate('entry/tax-year-locales'),
+    ['class' => 'btn btn-sm btn-outline-info text-nowrap mb-2', 'hx-boost' => 'false']
+);
 echo Html::closeTag('div');
 
 $sort = Sort::only(['id', 'date', 'supplier'])
@@ -270,15 +272,15 @@ if ($groupBy === 'none') {
     ksort($groups);
 
     echo Html::openTag('div', ['class' => 'card']);
-     echo Html::openTag('div', ['class' => 'card-header d-flex justify-content-between align-items-center']);
-      echo Html::tag('strong', 'Purchase Entries');
-      echo Html::openTag('div', ['class' => 'd-flex gap-2 align-items-center']);
-       echo Html::a('➕ Add Entry', $urlGenerator->generate('entry/add'), ['class' => 'btn btn-info btn-sm', 'hx-boost' => 'false']);
-       echo Html::a('📥 CSV Import', $urlGenerator->generate('entry/csv-import'), ['class' => 'btn btn-outline-secondary btn-sm', 'hx-boost' => 'false']);
-       echo $groupToggle;
-      echo Html::closeTag('div');
-     echo Html::closeTag('div');
-     echo Html::openTag('div', ['class' => 'card-body p-0']);
+    echo Html::openTag('div', ['class' => 'card-header d-flex justify-content-between align-items-center']);
+    echo Html::tag('strong', 'Purchase Entries');
+    echo Html::openTag('div', ['class' => 'd-flex gap-2 align-items-center']);
+    echo Html::a('➕ Add Entry', $urlGenerator->generate('entry/add'), ['class' => 'btn btn-info btn-sm', 'hx-boost' => 'false']);
+    echo Html::a('📥 CSV Import', $urlGenerator->generate('entry/csv-import'), ['class' => 'btn btn-outline-secondary btn-sm', 'hx-boost' => 'false']);
+    echo $groupToggle;
+    echo Html::closeTag('div');
+    echo Html::closeTag('div');
+    echo Html::openTag('div', ['class' => 'card-body p-0']);
 
     if (empty($groups)) {
         echo Html::tag('p', 'No purchase entries yet.', ['class' => 'text-muted text-center py-3']);
@@ -294,47 +296,56 @@ if ($groupBy === 'none') {
         };
 
         echo Html::openTag('table', ['class' => 'table table-sm table-bordered mb-0']);
-         echo Html::openTag('thead', ['class' => 'table-secondary']);
-          echo Html::openTag('tr');
-           echo Html::tag('th', Html::encode($groupHeading), ['colspan' => '4']);
-           echo Html::tag('th', number_format($subtotalEx, 2), ['class' => 'text-end']);
-           echo Html::tag('th', number_format($subtotalVat, 2), ['class' => 'text-end']);
-           echo Html::tag('th', '');
-          echo Html::closeTag('tr');
-          echo Html::openTag('tr', ['class' => 'table-light small']);
-           echo Html::tag('th', 'Date');
-           echo Html::tag('th', 'Supplier');
-           echo Html::tag('th', 'Description', ['colspan' => '2']);
-           echo Html::tag('th', 'Ex-VAT', ['class' => 'text-end']);
-           echo Html::tag('th', 'VAT', ['class' => 'text-end']);
-           echo Html::tag('th', '');
-          echo Html::closeTag('tr');
-         echo Html::closeTag('thead');
-         echo Html::openTag('tbody');
-         foreach ($entries as $entry) {
-             $entryDate = $entry->getDate();
-             echo Html::openTag('tr');
-              echo Html::tag('td', Html::encode($entryDate instanceof DateTimeImmutable ? $entryDate->format('Y-m-d') : ''));
-              echo Html::tag('td', Html::encode($entry->getSupplier()));
-              echo Html::tag('td', Html::encode((string) $entry->getDescription()), ['colspan' => '2']);
-              echo Html::tag('td', number_format($entry->getAmountExVat(), 2), ['class' => 'text-end']);
-              echo Html::tag('td', number_format($entry->getVatAmount(), 2), ['class' => 'text-end']);
-              echo Html::openTag('td', ['class' => 'd-flex gap-1']);
-               echo Html::a('👁', $urlGenerator->generate('entry/view', ['id' => $entry->reqId()]),
-                   ['class' => 'btn btn-xs btn-outline-secondary', 'hx-boost' => 'false']);
-               echo Html::a('✎', $urlGenerator->generate('entry/edit', ['id' => $entry->reqId()]),
-                   ['class' => 'btn btn-xs btn-outline-primary']);
-               echo Html::a('❌', $urlGenerator->generate('entry/delete', ['id' => $entry->reqId()]),
-                   ['class' => 'btn btn-xs btn-outline-danger',
-                    'onclick' => "return confirm('Delete this entry?');"]);
-              echo Html::closeTag('td');
-             echo Html::closeTag('tr');
-         }
-         echo Html::closeTag('tbody');
+        echo Html::openTag('thead', ['class' => 'table-secondary']);
+        echo Html::openTag('tr');
+        echo Html::tag('th', Html::encode($groupHeading), ['colspan' => '4']);
+        echo Html::tag('th', number_format($subtotalEx, 2), ['class' => 'text-end']);
+        echo Html::tag('th', number_format($subtotalVat, 2), ['class' => 'text-end']);
+        echo Html::tag('th', '');
+        echo Html::closeTag('tr');
+        echo Html::openTag('tr', ['class' => 'table-light small']);
+        echo Html::tag('th', 'Date');
+        echo Html::tag('th', 'Supplier');
+        echo Html::tag('th', 'Description', ['colspan' => '2']);
+        echo Html::tag('th', 'Ex-VAT', ['class' => 'text-end']);
+        echo Html::tag('th', 'VAT', ['class' => 'text-end']);
+        echo Html::tag('th', '');
+        echo Html::closeTag('tr');
+        echo Html::closeTag('thead');
+        echo Html::openTag('tbody');
+        foreach ($entries as $entry) {
+            $entryDate = $entry->getDate();
+            echo Html::openTag('tr');
+            echo Html::tag('td', Html::encode($entryDate instanceof DateTimeImmutable ? $entryDate->format('Y-m-d') : ''));
+            echo Html::tag('td', Html::encode($entry->getSupplier()));
+            echo Html::tag('td', Html::encode((string) $entry->getDescription()), ['colspan' => '2']);
+            echo Html::tag('td', number_format($entry->getAmountExVat(), 2), ['class' => 'text-end']);
+            echo Html::tag('td', number_format($entry->getVatAmount(), 2), ['class' => 'text-end']);
+            echo Html::openTag('td', ['class' => 'd-flex gap-1']);
+            echo Html::a(
+                '👁',
+                $urlGenerator->generate('entry/view', ['id' => $entry->reqId()]),
+                ['class' => 'btn btn-xs btn-outline-secondary', 'hx-boost' => 'false']
+            );
+            echo Html::a(
+                '✎',
+                $urlGenerator->generate('entry/edit', ['id' => $entry->reqId()]),
+                ['class' => 'btn btn-xs btn-outline-primary']
+            );
+            echo Html::a(
+                '❌',
+                $urlGenerator->generate('entry/delete', ['id' => $entry->reqId()]),
+                ['class' => 'btn btn-xs btn-outline-danger',
+                 'onclick' => "return confirm('Delete this entry?');"]
+            );
+            echo Html::closeTag('td');
+            echo Html::closeTag('tr');
+        }
+        echo Html::closeTag('tbody');
         echo Html::closeTag('table');
     }
 
-     echo Html::closeTag('div');
+    echo Html::closeTag('div');
     echo Html::closeTag('div');
 }
 

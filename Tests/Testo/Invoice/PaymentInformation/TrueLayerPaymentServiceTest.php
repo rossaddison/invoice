@@ -35,9 +35,9 @@ final class TrueLayerPaymentServiceTest
         /** @var SettingRepository&m\MockInterface $repo */
         $repo = m::mock(SettingRepository::class);
         $e = $repo->shouldReceive('getSetting');
-        $e->andReturnUsing(static fn(string $key): string => $settings[$key] ?? '');
+        $e->andReturnUsing(static fn (string $key): string => $settings[$key] ?? '');
         $e2 = $repo->shouldReceive('decode');
-        $e2->andReturnUsing(static fn(string $value): string => $value);
+        $e2->andReturnUsing(static fn (string $value): string => $value);
 
         return $repo;
     }

@@ -89,10 +89,12 @@ class As4MessageDispatcherTest extends TestCase
 
     private function nullLogger(): \Psr\Log\LoggerInterface
     {
-        return new class extends \Psr\Log\AbstractLogger {
+        return new class () extends \Psr\Log\AbstractLogger {
             /** @param mixed $level @param mixed[] $context */
             #[\Override]
-            public function log($level, \Stringable|string $message, array $context = []): void {}
+            public function log($level, \Stringable|string $message, array $context = []): void
+            {
+            }
         };
     }
 

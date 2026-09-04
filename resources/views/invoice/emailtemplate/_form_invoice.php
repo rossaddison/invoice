@@ -221,7 +221,7 @@ $htmlTagBtnSec = 'html-tag btn btn-secondary';
             <?=  new Span()
         ->addClass($htmlTagBtnSec)
         ->addAttributes(['data-tag-type' => 'text-paragraph'])
-        ->content( new I()->addClass('bi bi-text-paragraph'))
+        ->content(new I()->addClass('bi bi-text-paragraph'))
         ->render();
 ?>
             <?=  new Span()
@@ -233,13 +233,13 @@ $htmlTagBtnSec = 'html-tag btn btn-secondary';
             <?=  new Span()
     ->addClass($htmlTagBtnSec)
     ->addAttributes(['data-tag-type' => 'text-bold'])
-    ->content( new I()->addClass('bi bi-type-bold')->content('b'))
+    ->content(new I()->addClass('bi bi-type-bold')->content('b'))
     ->render();
 ?>
             <?=  new Span()
     ->addClass($htmlTagBtnSec)
     ->addAttributes(['data-tag-type' => 'text-italic'])
-    ->content( new I()->addClass('bi bi-type-italic'))
+    ->content(new I()->addClass('bi bi-type-italic'))
     ->render();
 ?>
         <?= Html::closeTag('div'); ?>
@@ -273,7 +273,7 @@ $htmlTagBtnSec = 'html-tag btn btn-secondary';
             <?=  new Span()
     ->addClass($htmlTagBtnSec)
     ->addAttributes(['data-tag-type' => 'text-code'])
-    ->content( new I()->addClass('bi bi-code-slash'))
+    ->content(new I()->addClass('bi bi-code-slash'))
     ->render();
 ?>
             <?=  new Span()

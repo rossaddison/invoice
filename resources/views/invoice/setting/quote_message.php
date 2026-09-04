@@ -77,7 +77,7 @@ declare(strict_types=1);
 <form method="POST"
       class="form-inline"
       action="<?= $urlGenerator->generate($url,
-        $actionArguments = ['id' => $id]); ?>">
+          $actionArguments = ['id' => $id]); ?>">
     <input type="hidden"
            name="_csrf"
            value="<?= $csrf ?>">

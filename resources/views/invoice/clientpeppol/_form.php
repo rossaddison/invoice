@@ -72,25 +72,28 @@ use Yiisoft\VarDumper\VarDumper;
                                     'client-peppol-label-switch',
                                     $setting,
                                     $translator->translate(
-                                            'peppol.label.switch.on'),
+                                        'peppol.label.switch.on'
+                                    ),
                                     $translator->translate(
-                                            'peppol.label.switch.off'),
+                                        'peppol.label.switch.off'
+                                    ),
                                     'client-peppol-label-switch-id',
                                     '16',
                                 );
-                                ?>
+?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::errorSummary($form)
-                                        ->errors($errors)
-                                        ->header($translator->translate(
-                                                'error.summary'))
-                                        ->onlyCommonErrors()
-                                    ?>
+        ->errors($errors)
+        ->header($translator->translate(
+            'error.summary'
+        ))
+        ->onlyCommonErrors()
+?>
                                 <?= Html::closeTag('div'); ?>
 
                                 <?= Field::hidden($form, 'client_id')
-                                    ->value($form->getClientId() ?? $client_id)
-                                ?>
+->value($form->getClientId() ?? $client_id)
+?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'endpointid')
@@ -99,7 +102,8 @@ use Yiisoft\VarDumper\VarDumper;
                         'class' => 'form-control form-control-lg',
                         'id' => 'endpointid',
                         'placeholder' => $translator->translate(
-                                'client.peppol.endpointid'),
+                            'client.peppol.endpointid'
+                        ),
                         'maxlength' => 100,
                     ])
                     ->value($form->getEndpointid() !== ''
@@ -108,7 +112,7 @@ use Yiisoft\VarDumper\VarDumper;
                                     $pep['endpointid']['eg'] : ''))
                     ->required(true)
                     ->hint($translator->translate('hint.this.field.is.required'))
-                  ?>
+?>
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -117,7 +121,8 @@ use Yiisoft\VarDumper\VarDumper;
                       ['class' => 'text-muted d-block mb-1']); ?>
                   <?= Field::select($form, 'endpointid_schemeid')
                     ->label($translator->translate(
-                            'client.peppol.endpointid.schemeid')
+                        'client.peppol.endpointid.schemeid'
+                    )
                             . $translator->translate('peppol.optional'))
                     ->addInputAttributes([
                         'class' => 'form-control form-control-lg',
@@ -132,70 +137,73 @@ use Yiisoft\VarDumper\VarDumper;
                         array_column($electronic_address_scheme, 'Id'),
                         array_map(
                             /** @param array{Id: string, Name: string, Description: string} $v */
-                            fn($v) => $v['Id']
+                            fn ($v) => $v['Id']
                                 . str_repeat("-", 10) . $v['Name'],
                             $electronic_address_scheme
                         )
                     ))
                     ->required(true)
                     ->hint($translator->translate('hint.this.field.is.required'))
-                  ?>
+?>
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'identificationid')
-                    ->label($translator->translate(
-                            'client.peppol.identificationid'))
-                    ->addInputAttributes([
-                        'class' => 'form-control form-control-lg',
-                        'id' => 'identificationid',
-                        'maxlength' => 100,
-                    ])
-                    ->value($form->getIdentificationid() !== ''
-                            && $form->getIdentificationid() !== null ?
-                            $form->getIdentificationid() :
-                        ($defaults ? $pep['identificationid']['eg'] : ''))
-                    ->required(true)
-                    ->hint($translator->translate('hint.this.field.is.required'))
-                  ?>
+  ->label($translator->translate(
+      'client.peppol.identificationid'
+  ))
+  ->addInputAttributes([
+      'class' => 'form-control form-control-lg',
+      'id' => 'identificationid',
+      'maxlength' => 100,
+  ])
+  ->value($form->getIdentificationid() !== ''
+          && $form->getIdentificationid() !== null ?
+          $form->getIdentificationid() :
+      ($defaults ? $pep['identificationid']['eg'] : ''))
+  ->required(true)
+  ->hint($translator->translate('hint.this.field.is.required'))
+?>
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'identificationid_schemeid')
-                    ->label($translator->translate(
-                            'client.peppol.identificationid.schemeid')
-                            . $translator->translate('peppol.optional'))
-                    ->addInputAttributes([
-                        'class' => 'form-control form-control-lg',
-                        'id' => 'identificationid_schemeid',
-                        'maxlength' => 4,
-                    ])
-                    ->value($form->getIdentificationidSchemeid() !== ''
-                            && $form->getIdentificationidSchemeid() !== null ?
-                            $form->getIdentificationidSchemeid() :
-                        ($defaults ?
-                                $pep['identificationid_schemeid']['eg'] : ''))
-                    ->required(true)
-                    ->hint($translator->translate('hint.this.field.is.required'))
-                  ?>
+  ->label($translator->translate(
+      'client.peppol.identificationid.schemeid'
+  )
+          . $translator->translate('peppol.optional'))
+  ->addInputAttributes([
+      'class' => 'form-control form-control-lg',
+      'id' => 'identificationid_schemeid',
+      'maxlength' => 4,
+  ])
+  ->value($form->getIdentificationidSchemeid() !== ''
+          && $form->getIdentificationidSchemeid() !== null ?
+          $form->getIdentificationidSchemeid() :
+      ($defaults ?
+              $pep['identificationid_schemeid']['eg'] : ''))
+  ->required(true)
+  ->hint($translator->translate('hint.this.field.is.required'))
+?>
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'taxschemecompanyid')
-                    ->label($translator->translate(
-                            'client.peppol.taxschemecompanyid'))
-                    ->addInputAttributes([
-                        'class' => 'form-control form-control-lg',
-                        'id' => 'taxschemecompanyid',
-                        'maxlength' => 100,
-                    ])
-                    ->value($form->getTaxschemecompanyid() !== ''
-                            && $form->getTaxschemecompanyid() !== null ?
-                            $form->getTaxschemecompanyid() : ($defaults ?
-                                    $pep['taxschemecompanyid']['eg'] : ''))
-                    ->required(true)
-                    ->hint($translator->translate('hint.this.field.is.required'))
-                  ?>
+  ->label($translator->translate(
+      'client.peppol.taxschemecompanyid'
+  ))
+  ->addInputAttributes([
+      'class' => 'form-control form-control-lg',
+      'id' => 'taxschemecompanyid',
+      'maxlength' => 100,
+  ])
+  ->value($form->getTaxschemecompanyid() !== ''
+          && $form->getTaxschemecompanyid() !== null ?
+          $form->getTaxschemecompanyid() : ($defaults ?
+                  $pep['taxschemecompanyid']['eg'] : ''))
+  ->required(true)
+  ->hint($translator->translate('hint.this.field.is.required'))
+?>
                 <?= Html::closeTag('div'); ?>
 
                 <?php
@@ -216,59 +224,62 @@ use Yiisoft\VarDumper\VarDumper;
                 // rather than offered as "N/A" — selecting one would submit
                 // that literal placeholder text as if it were a real code.
                 $taxSchemeOptions = [];
-                foreach ($receiver_identifier_array as $rowKey => $row) {
-                    if ($rowKey === -1 || !isset($row['tax']) || $row['tax'] === '') {
-                        continue;
-                    }
-                    $taxSchemeOptions[$row['tax']] = ucfirst(
-                        $row['region'] .
-                        str_repeat(" ", 2) .
-                        str_repeat("-", 10) .
-                        str_repeat(" ", 2) .
-                        $row['country'] .
-                        str_repeat(" ", 2) .
-                        str_repeat("-", 10) .
-                        str_repeat(" ", 2) .
-                        $row['tax']
-                    );
-                }
-                ?>
+foreach ($receiver_identifier_array as $rowKey => $row) {
+    if ($rowKey === -1 || !isset($row['tax']) || $row['tax'] === '') {
+        continue;
+    }
+    $taxSchemeOptions[$row['tax']] = ucfirst(
+        $row['region'] .
+        str_repeat(" ", 2) .
+        str_repeat("-", 10) .
+        str_repeat(" ", 2) .
+        $row['country'] .
+        str_repeat(" ", 2) .
+        str_repeat("-", 10) .
+        str_repeat(" ", 2) .
+        $row['tax']
+    );
+}
+?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                  <?= Html::tag('small',
+                  <?= Html::tag(
+                      'small',
                       'StoreCoveArrays::storeCoveReceiverIdentifierArray()',
-                      ['class' => 'text-muted d-block mb-1']); ?>
+                      ['class' => 'text-muted d-block mb-1']
+                  ); ?>
                   <?= Field::select($form, 'taxschemeid')
-                    ->label($translator->translate('client.peppol.taxschemeid'))
-                    ->addInputAttributes([
-                        'class' => 'form-control form-control-lg',
-                        'id' => 'taxschemeid',
-                    ])
-                    ->value($form->getTaxschemeid() !== ''
-                            && $form->getTaxschemeid() !== null ?
-                            $form->getTaxschemeid() :
-                                ($defaults ? $pep['taxschemeid']['eg'] : ''))
-                    ->optionsData($taxSchemeOptions)
-                    ->required(true)
-                    ->hint($translator->translate('hint.this.field.is.required'))
-                  ?>
+                      ->label($translator->translate('client.peppol.taxschemeid'))
+                      ->addInputAttributes([
+                          'class' => 'form-control form-control-lg',
+                          'id' => 'taxschemeid',
+                      ])
+                      ->value($form->getTaxschemeid() !== ''
+                              && $form->getTaxschemeid() !== null ?
+                              $form->getTaxschemeid() :
+                                  ($defaults ? $pep['taxschemeid']['eg'] : ''))
+                      ->optionsData($taxSchemeOptions)
+                      ->required(true)
+                      ->hint($translator->translate('hint.this.field.is.required'))
+?>
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'legal_entity_registration_name')
-                    ->label($translator->translate(
-                            'client.peppol.legal.entity.registration.name'))
-                    ->addInputAttributes([
-                        'class' => 'form-control form-control-lg',
-                        'id' => 'legal_entity_registration_name',
-                        'maxlength' => 100,
-                    ])
-                    ->value($form->getLegalEntityRegistrationName() !== ''
-                        && $form->getLegalEntityRegistrationName() !== null ?
-                            $form->getLegalEntityRegistrationName() :
+  ->label($translator->translate(
+      'client.peppol.legal.entity.registration.name'
+  ))
+  ->addInputAttributes([
+      'class' => 'form-control form-control-lg',
+      'id' => 'legal_entity_registration_name',
+      'maxlength' => 100,
+  ])
+  ->value($form->getLegalEntityRegistrationName() !== ''
+      && $form->getLegalEntityRegistrationName() !== null ?
+          $form->getLegalEntityRegistrationName() :
                 ($defaults ? $pep['legal_entity_registration_name']['eg'] : ''))
-                    ->required(true)
-                    ->hint($translator->translate('hint.this.field.is.required'))
-                  ?>
+  ->required(true)
+  ->hint($translator->translate('hint.this.field.is.required'))
+?>
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -277,7 +288,8 @@ use Yiisoft\VarDumper\VarDumper;
                       ['class' => 'text-muted d-block mb-1']); ?>
                   <?= Field::select($form, 'legal_entity_companyid')
                     ->label($translator->translate(
-                                        'client.peppol.legal.entity.companyid'))
+                        'client.peppol.legal.entity.companyid'
+                    ))
                     ->addInputAttributes([
                         'class' => 'form-control form-control-lg',
                         'id' => 'legal_entity_companyid',
@@ -290,7 +302,7 @@ use Yiisoft\VarDumper\VarDumper;
                         array_column($iso_6523_array, 'Id'),
                         array_map(
                             /** @param array{Id: string, Name: string, Description: string} $v */
-                            fn($v) => ucfirst(
+                            fn ($v) => ucfirst(
                                 $v['Id'] .
                                 str_repeat(" ", 2) .
                                 str_repeat("-", 10) .
@@ -306,7 +318,7 @@ use Yiisoft\VarDumper\VarDumper;
                     ))
                     ->required(true)
                     ->hint($translator->translate('hint.this.field.is.required'))
-                  ?>
+?>
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
@@ -315,7 +327,8 @@ use Yiisoft\VarDumper\VarDumper;
                       ['class' => 'text-muted d-block mb-1']); ?>
                   <?= Field::select($form, 'legal_entity_companyid_schemeid')
                     ->label($translator->translate(
-                            'client.peppol.legal.entity.companyid.schemeid')
+                        'client.peppol.legal.entity.companyid.schemeid'
+                    )
                             . $translator->translate('peppol.optional'))
                     ->addInputAttributes([
                         'class' => 'form-control form-control-lg',
@@ -329,7 +342,7 @@ use Yiisoft\VarDumper\VarDumper;
                         array_column($iso_6523_array, 'Id'),
                         array_map(
                             /** @param array{Id: string, Name: string, Description: string} $v */
-                            fn($v) => ucfirst(
+                            fn ($v) => ucfirst(
                                 $v['Id'] .
                                 str_repeat(" ", 2) .
                                 str_repeat("-", 10) .
@@ -345,102 +358,110 @@ use Yiisoft\VarDumper\VarDumper;
                     ))
                     ->required(true)
                     ->hint($translator->translate('hint.this.field.is.required'))
-                  ?>
+?>
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'legal_entity_company_legal_form')
-                    ->label($translator->translate(
-                            'client.peppol.legal.entity.company.legal.form'))
-                    ->addInputAttributes([
-                        'class' => 'form-control form-control-lg',
-                        'id' => 'legal_entity_company_legal_form',
-                        'maxlength' => 50,
-                    ])
-                    ->value($form->getLegalEntityCompanyLegalForm() !== '' &&
-                        $form->getLegalEntityCompanyLegalForm() !== null ?
-                            $form->getLegalEntityCompanyLegalForm() :
+  ->label($translator->translate(
+      'client.peppol.legal.entity.company.legal.form'
+  ))
+  ->addInputAttributes([
+      'class' => 'form-control form-control-lg',
+      'id' => 'legal_entity_company_legal_form',
+      'maxlength' => 50,
+  ])
+  ->value($form->getLegalEntityCompanyLegalForm() !== '' &&
+      $form->getLegalEntityCompanyLegalForm() !== null ?
+          $form->getLegalEntityCompanyLegalForm() :
                ($defaults ? $pep['legal_entity_company_legal_form']['eg'] : ''))
-                    ->required(true)
-                    ->hint($translator->translate(
-                                                'hint.this.field.is.required'))
-                  ?>
+  ->required(true)
+  ->hint($translator->translate(
+      'hint.this.field.is.required'
+  ))
+?>
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'financial_institution_branchid')
-                    ->label($translator->translate(
-                                'client.peppol.financial.institution.branchid'))
-                    ->addInputAttributes([
-                        'class' => 'form-control form-control-lg',
-                        'id' => 'financial_institution_branchid',
-                        'maxlength' => 20,
-                    ])
-                    ->value($form->getFinancialInstitutionBranchid() !== ''
-                            && $form->getFinancialInstitutionBranchid()
-                                !== null ?
-                            $form->getFinancialInstitutionBranchid() :
+  ->label($translator->translate(
+      'client.peppol.financial.institution.branchid'
+  ))
+  ->addInputAttributes([
+      'class' => 'form-control form-control-lg',
+      'id' => 'financial_institution_branchid',
+      'maxlength' => 20,
+  ])
+  ->value($form->getFinancialInstitutionBranchid() !== ''
+          && $form->getFinancialInstitutionBranchid()
+              !== null ?
+          $form->getFinancialInstitutionBranchid() :
                 ($defaults ? $pep['financial_institution_branchid']['eg'] : ''))
-                    ->required(true)
-                    ->hint($translator->translate('hint.this.field.is.required'))
-                  ?>
+  ->required(true)
+  ->hint($translator->translate('hint.this.field.is.required'))
+?>
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'accounting_cost')
-                    ->label($translator->translate(
-                                                'client.peppol.accounting.cost'))
-                    ->addInputAttributes([
-                        'class' => 'form-control form-control-lg',
-                        'id' => 'accounting_cost',
-                        'maxlength' => 30,
-                    ])
-                    ->value($form->getAccountingCost() !== '' &&
-                            $form->getAccountingCost() !== null ?
-                            $form->getAccountingCost() : ($defaults ?
-                                    $pep['accounting_cost']['eg'] : ''))
-                    ->required(true)
-                    ->hint($translator->translate('hint.this.field.is.required'))
-                  ?>
+  ->label($translator->translate(
+      'client.peppol.accounting.cost'
+  ))
+  ->addInputAttributes([
+      'class' => 'form-control form-control-lg',
+      'id' => 'accounting_cost',
+      'maxlength' => 30,
+  ])
+  ->value($form->getAccountingCost() !== '' &&
+          $form->getAccountingCost() !== null ?
+          $form->getAccountingCost() : ($defaults ?
+                  $pep['accounting_cost']['eg'] : ''))
+  ->required(true)
+  ->hint($translator->translate('hint.this.field.is.required'))
+?>
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'buyer_reference')
-                    ->label($translator->translate(
-                            'client.peppol.buyer.reference.default')
-                            . ' ' . $translator->translate(
-                                    'client.peppol.buyer.reference.example'))
-                    ->addInputAttributes([
+  ->label($translator->translate(
+      'client.peppol.buyer.reference.default'
+  )
+          . ' ' . $translator->translate(
+              'client.peppol.buyer.reference.example'
+          ))
+  ->addInputAttributes([
                         'class' => 'form-control form-control-lg',
                         'id' => 'buyer_reference',
                         'maxlength' => 20,
                     ])
-                    ->value($form->getBuyerReference() !== '' &&
-                            $form->getBuyerReference() !== null ?
-                            $form->getBuyerReference() :
+  ->value($form->getBuyerReference() !== '' &&
+          $form->getBuyerReference() !== null ?
+          $form->getBuyerReference() :
                         ($defaults ? $pep['buyer_reference']['eg'] : ''))
-                    ->required(true)
-                    ->hint($translator->translate('hint.this.field.is.required'))
-                  ?>
+  ->required(true)
+  ->hint($translator->translate('hint.this.field.is.required'))
+?>
                 <?= Html::closeTag('div'); ?>
 
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                   <?= Field::text($form, 'supplier_assigned_accountid')
-                    ->label($translator->translate(
-                            'client.peppol.supplier.assigned.account.id')
-                            . ' ' . $translator->translate(
-                                    'client.peppol.buyer.reference.example'))
-                    ->addInputAttributes([
+  ->label($translator->translate(
+      'client.peppol.supplier.assigned.account.id'
+  )
+          . ' ' . $translator->translate(
+              'client.peppol.buyer.reference.example'
+          ))
+  ->addInputAttributes([
                         'class' => 'form-control form-control-lg',
                         'id' => 'supplier_assigned_accountid',
                         'maxlength' => 20,
                     ])
-                    ->value($form->getSupplierAssignedAccountId() !== ''
-                            && $form->getSupplierAssignedAccountId() !== null ?
-                            $form->getSupplierAssignedAccountId() : '')
-                    ->required(true)
-                    ->hint($translator->translate('hint.this.field.is.required'))
-                  ?>
+  ->value($form->getSupplierAssignedAccountId() !== ''
+          && $form->getSupplierAssignedAccountId() !== null ?
+          $form->getSupplierAssignedAccountId() : '')
+  ->required(true)
+  ->hint($translator->translate('hint.this.field.is.required'))
+?>
                                 <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('div'); ?>

@@ -72,7 +72,7 @@ use Yiisoft\Html\Tag\Td;
 // Table header
 $headerRow =  new Thead()
     ->rows(
-         new Tr()->dataStrings(['#', $translator->translate('oauth2.backup.recovery.codes')]),
+        new Tr()->dataStrings(['#', $translator->translate('oauth2.backup.recovery.codes')]),
     );
 $rows = [];
 /**
@@ -81,8 +81,8 @@ $rows = [];
  */
 foreach ($codes as $index => $code) {
     $rows[] =  new Tr()->cells(
-         new Td()->content((string) ((int) $index + 1)),
-         new Td()->content(Html::encode($code)),
+        new Td()->content((string) ((int) $index + 1)),
+        new Td()->content(Html::encode($code)),
     );
 }
 
@@ -124,7 +124,7 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
     )
     ->error($error ?? '')
     ->required(true)
-    ->inputClass('form-control form-control-lg',)
+    ->inputClass('form-control form-control-lg', )
     ->label($translator->translate('layout.password.otp.6.8'))
     ->autofocus();
 ?>

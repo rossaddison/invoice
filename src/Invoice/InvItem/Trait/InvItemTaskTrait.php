@@ -33,9 +33,15 @@ trait InvItemTaskTrait
      * @param IIAR $iiar
      * @return int|null
      */
-    public function addInvItemTask(InvItem $model, array $array, string $inv_id,
-                    taskR $taskR, TRR $trr, IIAS $iias, IIAR $iiar): ?int
-    {
+    public function addInvItemTask(
+        InvItem $model,
+        array $array,
+        string $inv_id,
+        taskR $taskR,
+        TRR $trr,
+        IIAS $iias,
+        IIAR $iiar
+    ): ?int {
         // This function is used in task/selection_inv when adding a new task
         // from the modal. Related logic https://github.com/cycle/orm/issues/348
         $tax_rate_id = ((isset($array['tax_rate_id'])) ?
@@ -75,15 +81,17 @@ trait InvItemTaskTrait
         if ($task_id > 0) {
             $this->repository->save($model);
             if (isset($array['quantity'], $array['price'],
-                    $array['discount_amount'])
+                $array['discount_amount'])
                         && null !== $tax_rate_percentage) {
-                $this->saveInvItemAmount($model->reqId(),
-                        (float) $array['quantity'],
-                        (float) $array['price'],
-                        (float) $array['discount_amount'],
-                        $tax_rate_percentage,
-                        $iias,
-                        $iiar);
+                $this->saveInvItemAmount(
+                    $model->reqId(),
+                    (float) $array['quantity'],
+                    (float) $array['price'],
+                    (float) $array['discount_amount'],
+                    $tax_rate_percentage,
+                    $iias,
+                    $iiar
+                );
             }
         }
         return $model->reqId();
@@ -96,9 +104,12 @@ trait InvItemTaskTrait
      * @param taskR $taskR
      * @return int
      */
-    public function saveInvItemTask(InvItem $model, array $array,
-                                    string $inv_id, taskR $taskR): int
-    {
+    public function saveInvItemTask(
+        InvItem $model,
+        array $array,
+        string $inv_id,
+        taskR $taskR
+    ): int {
         if (isset($array['tax_rate_id'])) {
             $currentTaxRate = $model->getTaxRate();
             $model->setTaxRate(

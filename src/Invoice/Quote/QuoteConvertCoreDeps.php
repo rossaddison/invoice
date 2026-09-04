@@ -24,5 +24,6 @@ final class QuoteConvertCoreDeps
         public readonly ACQIR $acqiR,
         public readonly QAR $qaR,
         public readonly QCR $qcR,
-    ) {}
+    ) {
+    }
 }

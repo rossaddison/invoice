@@ -37,7 +37,8 @@ final class As4MessageDispatcher
         /** Sender's Peppol participant ID in "scheme:value" form, e.g. "0088:1234567890123" */
         private readonly string $senderPartyId,
         private readonly LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     /**
      * Dispatches a UBL document to the Peppol receiver identified in $request.

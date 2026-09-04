@@ -22,5 +22,6 @@ final class QuoteConvertItemDeps
         public readonly TASKR $taskR,
         public readonly TRR $trR,
         public readonly UNR $unR,
-    ) {}
+    ) {
+    }
 }

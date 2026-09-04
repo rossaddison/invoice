@@ -139,7 +139,11 @@ final class UrlKeyTest
 
         $base = new SoControllerBaseDeps($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $inv = new SoControllerInvDeps(
-            $invService, $invAllowanceChargeService, $invCustomService, $invItemService, $invTaxRateService,
+            $invService,
+            $invAllowanceChargeService,
+            $invCustomService,
+            $invItemService,
+            $invTaxRateService,
         );
         $misc = new SoControllerMiscDeps($factory, $salesorderService, $salesOrderToolbar);
 

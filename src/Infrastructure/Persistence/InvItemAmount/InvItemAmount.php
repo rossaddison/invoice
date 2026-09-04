@@ -15,7 +15,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class InvItemAmount
 {
     use RequireId;
-    
+
     #[BelongsTo(target: InvItem::class, nullable: true)]
     private ?InvItem $inv_item = null;
 
@@ -35,8 +35,8 @@ class InvItemAmount
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $allowance = 0.00,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $total = 0.00)
-    {
+        private ?float $total = 0.00
+    ) {
     }
 
     public function getInvItem(): ?InvItem
@@ -53,7 +53,7 @@ class InvItemAmount
     {
         return $this->requireId($this->id, 'InvItemAmount');
     }
-    
+
     public function hasIdentity(): bool
     {
         return $this->id !== null;

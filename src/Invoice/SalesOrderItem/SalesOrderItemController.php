@@ -44,8 +44,15 @@ final class SalesOrderItemController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $webViewRenderer,
-                $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
     }
 
     // The observer user will edit the salesorder line items by entering their
@@ -58,7 +65,7 @@ final class SalesOrderItemController extends BaseController
         $so_item = $this->salesorderitem($currentRoute, $d->soiR);
         if ($so_item) {
             $so = $so_item->getSalesOrder();
-            if (null!== $so && ($this->rbacObserver($so, $d->ucR, $d->uiR)
+            if (null !== $so && ($this->rbacObserver($so, $d->ucR, $d->uiR)
              || $this->rbacAccountant()
              || $this->rbacAdmin())) {
                 $so_id = (string) $so_item->reqSalesOrderId();
@@ -87,7 +94,9 @@ final class SalesOrderItemController extends BaseController
                         $this->salesorderitemService->savePeppolPoLineid($so_item, $body);
                         $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse(
-                            'salesorder/view', ['id' => $so_id]);
+                            'salesorder/view',
+                            ['id' => $so_id]
+                        );
                     }
                     $parameters['errors'] =
                             $form->getValidationResult()
@@ -111,7 +120,8 @@ final class SalesOrderItemController extends BaseController
      * @param UIR $uiR
      * @return bool
      */
-    private function rbacObserver(SalesOrder $so, UCR $ucR, UIR $uiR) : bool {
+    private function rbacObserver(SalesOrder $so, UCR $ucR, UIR $uiR): bool
+    {
         $statusId = $so->getStatusId();
         if (null !== $statusId
             // has observer role
@@ -125,7 +135,8 @@ final class SalesOrderItemController extends BaseController
             // the salesorder client is associated with the above user
             && ($ucR->repoUserClientqueryCount(
                 $so->reqUserId(),
-                $so->reqClientId()) > 0)) {
+                $so->reqClientId()
+            ) > 0)) {
             $userInv = $uiR->repoUserInvUserIdquery($so->reqUserId());
             // the current observer user is active
             if (null !== $userInv && $userInv->getActive()) {
@@ -135,13 +146,15 @@ final class SalesOrderItemController extends BaseController
         return false;
     }
 
-    private function rbacAccountant() : bool {
+    private function rbacAccountant(): bool
+    {
         return $this->userService->hasPermission(Permissions::VIEW_INV)
             && $this->userService->hasPermission(Permissions::VIEW_PAYMENT)
             && $this->userService->hasPermission(Permissions::EDIT_PAYMENT);
     }
 
-    private function rbacAdmin() : bool {
+    private function rbacAdmin(): bool
+    {
         return $this->userService->hasPermission(Permissions::VIEW_INV)
             && $this->userService->hasPermission(Permissions::EDIT_INV);
     }
@@ -153,9 +166,10 @@ final class SalesOrderItemController extends BaseController
      * @param SalesOrderItemRepository $salesorderitemRepository
      * @return SalesOrderItem|null
      */
-    private function salesorderitem(CurrentRoute $currentRoute,
-                                SOIR $salesorderitemRepository): ?SalesOrderItem
-    {
+    private function salesorderitem(
+        CurrentRoute $currentRoute,
+        SOIR $salesorderitemRepository
+    ): ?SalesOrderItem {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
             return $salesorderitemRepository->repoSalesOrderItemquery((int)$id);
@@ -181,10 +195,15 @@ final class SalesOrderItemController extends BaseController
      * @param SOIAS $soias
      * @param SOIAR $soiar
      */
-    public function saveSalesOrderItemAmount(int $so_item_id, float $quantity,
-            float $price, float $discount, float $tax_rate_percentage,
-                                                SOIAS $soias, SOIAR $soiar): void
-    {
+    public function saveSalesOrderItemAmount(
+        int $so_item_id,
+        float $quantity,
+        float $price,
+        float $discount,
+        float $tax_rate_percentage,
+        SOIAS $soias,
+        SOIAR $soiar
+    ): void {
         $soias_array = [];
         if ($so_item_id) {
             $soias_array['so_item_id'] = $so_item_id;
@@ -197,8 +216,8 @@ final class SalesOrderItemController extends BaseController
             }
             // VAT
             if ($this->sR->getSetting('enable_vat_registration') === '1') {
-// EARLY SETTLEMENT CASH DISCOUNT MUST BE REMOVED BEFORE VAT DETERMINED
-// Related logic: see https://informi.co.uk/finance/how-vat-affected-discounts
+                // EARLY SETTLEMENT CASH DISCOUNT MUST BE REMOVED BEFORE VAT DETERMINED
+                // Related logic: see https://informi.co.uk/finance/how-vat-affected-discounts
                 $tax_total = (($sub_total - $discount_total)
                         * ($tax_rate_percentage / 100.00));
             }
@@ -208,12 +227,16 @@ final class SalesOrderItemController extends BaseController
             $soias_array['total'] = $sub_total - $discount_total + $tax_total;
             if ($soiar->repoCount($so_item_id) === 0) {
                 $soias->saveSalesOrderItemAmountNoForm(
-                                        new SalesOrderItemAmount(), $soias_array);
+                    new SalesOrderItemAmount(),
+                    $soias_array
+                );
             } else {
                 $so_item_amount = $soiar->repoSalesOrderItemAmountquery($so_item_id);
                 if ($so_item_amount) {
                     $soias->saveSalesOrderItemAmountNoForm(
-                                                    $so_item_amount, $soias_array);
+                        $so_item_amount,
+                        $soias_array
+                    );
                 }
             }
         } // $quote_item_id

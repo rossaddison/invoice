@@ -153,8 +153,8 @@ final class As4NrrValidator
     private function makeXPath(DOMDocument $doc): DOMXPath
     {
         $xpath = new DOMXPath($doc);
-        $xpath->registerNamespace('eb',   self::NS_EB);
-        $xpath->registerNamespace('ds',   self::NS_DS);
+        $xpath->registerNamespace('eb', self::NS_EB);
+        $xpath->registerNamespace('ds', self::NS_DS);
         $xpath->registerNamespace('ebbp', self::NS_EBBP);
         return $xpath;
     }

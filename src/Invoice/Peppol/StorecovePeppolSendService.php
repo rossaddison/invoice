@@ -34,7 +34,8 @@ final class StorecovePeppolSendService implements PeppolSendServiceInterface
     public function __construct(
         private readonly PeppolMessageRepositoryInterface $pmR,
         private readonly SR $sR,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function send(
@@ -83,7 +84,8 @@ final class StorecovePeppolSendService implements PeppolSendServiceInterface
         } catch (StorecoveApiException $e) {
             $message->setStatus('FAILED');
             $message->setErrorMessage(
-                'Storecove HTTP ' . $e->statusCode . ': ' . $e->responseBody);
+                'Storecove HTTP ' . $e->statusCode . ': ' . $e->responseBody
+            );
         } catch (\Throwable $e) {
             $message->setStatus('FAILED');
             $message->setErrorMessage($e->getMessage());

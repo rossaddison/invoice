@@ -37,7 +37,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'salesorder/guest'))
     ->id('btn-reset')
     ->render();
@@ -80,8 +80,10 @@ $statusBar =   new Div()
         )
         . Html::a(
             $soR->getSpecificStatusArrayLabel('2'),
-            $urlGenerator->generate('salesorder/guest',
-                    ['page' => 1, 'status' => 2]),
+            $urlGenerator->generate(
+                'salesorder/guest',
+                ['page' => 1, 'status' => 2]
+            ),
             [
                 'class' => 'btn ' . ($status == 2 ? 'btn-primary' : 'label '
                 . $soR->getSpecificStatusArrayClass(2)),
@@ -89,14 +91,17 @@ $statusBar =   new Div()
                 'data-bs-toggle' => 'tooltip',
                 'title' => $s->getSetting('debug_mode') === '1'
                     ? $translator->translate(
-                      'payment.term.add.additional.terms.at.setting.repository')
+                        'payment.term.add.additional.terms.at.setting.repository'
+                    )
                     : '',
             ],
         )
         . Html::a(
             $soR->getSpecificStatusArrayLabel('3'),
-            $urlGenerator->generate('salesorder/guest',
-                    ['page' => 1, 'status' => 3]),
+            $urlGenerator->generate(
+                'salesorder/guest',
+                ['page' => 1, 'status' => 3]
+            ),
             [
                 'class' => 'btn ' . ($status == 3 ? 'btn-primary' : 'label '
                 . $soR->getSpecificStatusArrayClass(3)),
@@ -180,13 +185,14 @@ $columns = [
     new DataColumn(
         'status_id',
         header: $translator->translate('status'),
-        content: static function (SalesOrder $model) use ($soR):
-        Yiisoft\Html\Tag\CustomTag {
+        content: static function (SalesOrder $model) use ($soR): Yiisoft\Html\Tag\CustomTag {
             if (null !== $model->getStatusId()) {
                 $span = $soR->getSpecificStatusArrayLabel(
-                        (string) $model->getStatusId());
+                    (string) $model->getStatusId()
+                );
                 $class = $soR->getSpecificStatusArrayClass(
-                        (int) $model->getStatusId());
+                    (int) $model->getStatusId()
+                );
                 return Html::tag('span', $span, ['id' => '#so-to-invoice',
                     'class' => 'badge text-bg-' . $class]);
             }
@@ -198,10 +204,13 @@ $columns = [
         'quote_id',
         header: $translator->translate('quote.number'),
         content: static function (SalesOrder $model) use ($urlGenerator): A {
-            return Html::a($model->getQuote()?->getNumber() ?? '#',
+            return Html::a(
+                $model->getQuote()?->getNumber() ?? '#',
                 $urlGenerator->generate('quote/view', [
-                    'id' => $model->reqQuoteId()]), [
-                        'class' => 'text-decoration-none']);
+                    'id' => $model->reqQuoteId()]),
+                [
+                        'class' => 'text-decoration-none']
+            );
         },
         encodeContent: false,
     ),
@@ -209,9 +218,9 @@ $columns = [
         'date_created',
         header: $translator->translate('date.created'),
         content: static function (SalesOrder $model): string {
-/**
- * @psalm-suppress PossiblyInvalidMethodCall $model->getDateCreated()->format('Y-m-d')
- */
+            /**
+             * @psalm-suppress PossiblyInvalidMethodCall $model->getDateCreated()->format('Y-m-d')
+             */
             return $model->getDateCreated() instanceof \DateTimeImmutable ?
                     $model->getDateCreated()->format('Y-m-d') : '';
         },
@@ -235,8 +244,10 @@ $columns = [
         content: function (SalesOrder $model) use ($s, $soaR): string {
             $so_id = $model->reqId();
             $so_amount = (($soaR->repoSalesOrderAmountCount(
-                    $so_id) > 0) ? $soaR->repoSalesOrderquery(
-                            $so_id) : null);
+                $so_id
+            ) > 0) ? $soaR->repoSalesOrderquery(
+                $so_id
+            ) : null);
             return $s->formatCurrency(null !== $so_amount ?
                     $so_amount->getTotal() : 0.00);
         },
@@ -244,9 +255,14 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (SalesOrder $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']),
+            return Html::a(
+                Html::tag('i', '', ['class' => 'bi-eye']),
                 $urlGenerator->generate(
-                        'salesorder/view', ['id' => $model->reqId()]), []);
+                    'salesorder/view',
+                    ['id' => $model->reqId()]
+                ),
+                []
+            );
         },
     ),
 ];
@@ -262,12 +278,14 @@ $gridSummary
 
 $toolbarString
     =  new Form()->post(
-            $urlGenerator->generate('salesorder/guest'))->csrf($csrf)->open()
+        $urlGenerator->generate('salesorder/guest')
+    )->csrf($csrf)->open()
     . $statusBar
     .  new Div()->addClass(
-            'float-end m-3')->content(
-                $toolbarReset . $autoFitColumns . $resetColumnWidths
-            )->encode(false)->render()
+        'float-end m-3'
+    )->content(
+        $toolbarReset . $autoFitColumns . $resetColumnWidths
+    )->encode(false)->render()
     .  new Form()->close();
 
 echo GridView::widget()

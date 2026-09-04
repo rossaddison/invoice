@@ -106,9 +106,11 @@ final class EmailTemplateController extends BaseController
             $body = $request->getParsedBody() ?? [];
             if (null !== $this->userService->getUser() && $formHydrator->populateAndValidate($form, $body) && is_array($body)) {
                 $this->emailTemplateService->saveEmailTemplate($emailTemplate, $body);
-                    $this->flashMessage('info',
-                        $this->translator->translate('email.template.successfully.added'));
-                    return $this->webService->getRedirectResponse('emailtemplate/index');
+                $this->flashMessage(
+                    'info',
+                    $this->translator->translate('email.template.successfully.added')
+                );
+                return $this->webService->getRedirectResponse('emailtemplate/index');
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -155,8 +157,8 @@ final class EmailTemplateController extends BaseController
             $body = $request->getParsedBody() ?? [];
             if (null !== $this->userService->getUser() && $formHydrator->populateAndValidate($form, $body) && is_array($body)) {
                 $this->emailTemplateService->saveEmailTemplate($emailTemplate, $body);
-                    $this->flashMessage('info', $this->translator->translate('email.template.successfully.added'));
-                    return $this->webService->getRedirectResponse('emailtemplate/index');
+                $this->flashMessage('info', $this->translator->translate('email.template.successfully.added'));
+                return $this->webService->getRedirectResponse('emailtemplate/index');
             }
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
@@ -197,17 +199,21 @@ final class EmailTemplateController extends BaseController
                     . 'Language']),
                 'email_template_tags' =>
                     $this->webViewRenderer->renderPartialAsString(
-                            '//invoice/emailtemplate/template-tags-with-inv', [
+                        '//invoice/emailtemplate/template-tags-with-inv',
+                        [
                     'template_tags_inv' =>
                                 $this->webViewRenderer->renderPartialAsString(
-                                    '//invoice/emailtemplate/template-tags-inv', [
+                                    '//invoice/emailtemplate/template-tags-inv',
+                                    [
                         'custom_fields_inv_custom' =>
                             $customfieldRepository->repoTablequery('inv_custom'),
-                    ]),
+                    ]
+                                ),
                     'custom_fields' => [
                         'client_custom' => $customfieldRepository->repoTablequery('client_custom'),
                     ],
-                ]),
+                ]
+                    ),
                 'invoiceTemplates' => $this->sR->getInvoiceTemplates('pdf'),
                 'selected_pdf_template' => $emailTemplate->getEmailTemplatePdfTemplate(),
                 // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
@@ -218,9 +224,9 @@ final class EmailTemplateController extends BaseController
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                        $this->emailTemplateService->saveEmailTemplate($emailTemplate, $body);
-                        $this->flashMessage('info', $this->translator->translate('email.template.successfully.edited'));
-                        return $this->webService->getRedirectResponse('emailtemplate/index');
+                    $this->emailTemplateService->saveEmailTemplate($emailTemplate, $body);
+                    $this->flashMessage('info', $this->translator->translate('email.template.successfully.edited'));
+                    return $this->webService->getRedirectResponse('emailtemplate/index');
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
@@ -276,9 +282,9 @@ final class EmailTemplateController extends BaseController
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                        $this->emailTemplateService->saveEmailTemplate($emailTemplate, $body);
-                        $this->flashMessage('info', $this->translator->translate('email.template.successfully.edited'));
-                        return $this->webService->getRedirectResponse('emailtemplate/index');
+                    $this->emailTemplateService->saveEmailTemplate($emailTemplate, $body);
+                    $this->flashMessage('info', $this->translator->translate('email.template.successfully.edited'));
+                    return $this->webService->getRedirectResponse('emailtemplate/index');
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
@@ -341,7 +347,15 @@ final class EmailTemplateController extends BaseController
             return $this->factory->createResponse(['success' => 0]);
         }
         $templateHelper = new TemplateHelper(
-            $d->sR, $d->ccR, $d->qcR, $d->icR, $d->pcR, $d->socR, $d->cfR, $d->cvR);
+            $d->sR,
+            $d->ccR,
+            $d->qcR,
+            $d->icR,
+            $d->pcR,
+            $d->socR,
+            $d->cfR,
+            $d->cvR
+        );
         $parseDeps = new ParseTemplateDeps($d->cvR, $d->iR, $d->iaR, $d->qR, $d->qaR, $d->soR, $d->uiR);
         $parsed = $templateHelper->parseTemplate($id, $type !== 'quote', $body, $parseDeps);
         return $this->factory->createResponse(['success' => 1, 'body' => $parsed]);
@@ -407,10 +421,11 @@ final class EmailTemplateController extends BaseController
 
     private function emailtemplate(
         CurrentRoute $curR,
-        EmailTemplateRepository $etR): ?EmailTemplate
-    {
+        EmailTemplateRepository $etR
+    ): ?EmailTemplate {
         return $etR->repoEmailTemplatequery(
-            (int) $curR->getArgument('email_template_id'));
+            (int) $curR->getArgument('email_template_id')
+        );
     }
 
     /**

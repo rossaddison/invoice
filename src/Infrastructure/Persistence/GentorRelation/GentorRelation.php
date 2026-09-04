@@ -15,7 +15,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class GentorRelation
 {
     use RequireId;
-    
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 

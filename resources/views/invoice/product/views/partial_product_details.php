@@ -87,7 +87,7 @@ $selectLabel = static function (array $optionsData, int|string|null $value): str
 
         <?php
             $col = ['class' => 'col-md-6 mb-3'];
-        ?>
+?>
         <?= Html::openTag('div', ['id' => 'product-required', 'class' => 'tab-pane active']); ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <?php ReadOnlyField::render($translator->translate('product.name'), $form->product_name, $col); ?>

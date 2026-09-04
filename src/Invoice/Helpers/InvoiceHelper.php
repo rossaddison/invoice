@@ -12,10 +12,11 @@ use Yiisoft\Session\Flash\Flash;
 
 class InvoiceHelper
 {
-    public function __construct(private readonly SR $s,
-            private readonly SessionInterface $session,
-            private readonly TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly SR $s,
+        private readonly SessionInterface $session,
+        private readonly TranslatorInterface $translator
+    ) {
     }
 
     /**

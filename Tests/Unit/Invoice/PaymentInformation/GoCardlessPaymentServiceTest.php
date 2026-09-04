@@ -30,7 +30,7 @@ final class GoCardlessPaymentServiceTest extends TestCase
     {
         $repo = $this->createStub(SettingRepository::class);
         $repo->method('getSetting')->willReturnCallback(
-            static fn(string $key): string => $settings[$key] ?? '',
+            static fn (string $key): string => $settings[$key] ?? '',
         );
         $repo->method('decode')->willReturnArgument(0);
 

@@ -40,78 +40,78 @@ $toolbarReset =
     new A()
         ->addAttributes(['type' => 'reset'])
         ->addClass('btn btn-danger me-1 ajax-loader')
-        ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+        ->content(new I()->addClass('bi bi-bootstrap-reboot'))
         ->href($urlGenerator->generate($currentRoute->getName() ?? 'qa/index'))
         ->id('btn-reset')
         ->render();
 
 echo new Div();
 
-    $columns = [
-        new DataColumn(
-            'id',
-            header: $translator->translate('id'),
-            content: static fn (Qa $model) => Html::encode($model->reqId()),
-            withSorting: true,
+$columns = [
+    new DataColumn(
+        'id',
+        header: $translator->translate('id'),
+        content: static fn (Qa $model) => Html::encode($model->reqId()),
+        withSorting: true,
+    ),
+    new DataColumn(
+        'active',
+        header: $translator->translate('active'),
+        content: static fn (Qa $model) => Html::encode($model->getActive() == '1' ?
+                    ($translator->translate('active')
+                        . ' '
+                        . '✔️') :
+                    $translator->translate('inactive') . ' ' . '❌'),
+    ),
+    new DataColumn(
+        'question',
+        header: $translator->translate('faq.question'),
+        content: static fn (Qa $model) => Html::encode($model->getQuestion()),
+    ),
+    new DataColumn(
+        'answer',
+        header: $translator->translate('faq.answer'),
+        content: static fn (Qa $model) => Html::encode($model->getAnswer()),
+    ),
+    new ActionColumn(buttons: [
+        new ActionButton(
+            content: '🔎',
+            url: function (Qa $model) use ($urlGenerator): string {
+                /** @psalm-suppress InvalidArgument */
+                return $urlGenerator->generate('qa/view', ['id' => $model->reqId()]);
+            },
+            attributes: [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('view'),
+            ]
         ),
-        new DataColumn(
-            'active',
-            header: $translator->translate('active'),
-            content: static fn (Qa $model) => Html::encode($model->getActive() == '1' ?
-                        ($translator->translate('active')
-                            . ' '
-                            . '✔️') : 
-                        $translator->translate('inactive') . ' ' . '❌'),
+        new ActionButton(
+            content: '✎',
+            url: function (Qa $model) use ($urlGenerator): string {
+                /** @psalm-suppress InvalidArgument */
+                return $urlGenerator->generate('qa/edit', ['id' => $model->reqId()]);
+            },
+            attributes: [
+                'data-bs-toggle' => 'tooltip',
+                'title' => $translator->translate('edit'),
+            ]
         ),
-        new DataColumn(
-            'question',
-            header: $translator->translate('faq.question'),
-            content: static fn (Qa $model) => Html::encode($model->getQuestion()),
+        new ActionButton(
+            content: '❌',
+            url: function (Qa $model) use ($urlGenerator): string {
+                /** @psalm-suppress InvalidArgument */
+                return $urlGenerator->generate('qa/delete', ['id' => $model->reqId()]);
+            },
+            attributes: [
+                'title' => $translator->translate('delete'),
+                'onclick' => "return confirm("
+                    . "'"
+                    . $translator->translate('delete.record.warning')
+                    . "');"
+            ]
         ),
-        new DataColumn(
-            'answer',
-            header: $translator->translate('faq.answer'),
-            content: static fn (Qa $model) => Html::encode($model->getAnswer()),
-        ),
-        new ActionColumn(buttons: [
-            new ActionButton(
-                content: '🔎',
-                url: function (Qa $model) use ($urlGenerator): string {
-                    /** @psalm-suppress InvalidArgument */
-                    return $urlGenerator->generate('qa/view', ['id' => $model->reqId()]);
-                },
-                attributes: [
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('view'),
-                ]
-            ),
-            new ActionButton(
-                content: '✎',
-                url: function (Qa $model) use ($urlGenerator): string {
-                    /** @psalm-suppress InvalidArgument */
-                    return $urlGenerator->generate('qa/edit', ['id' => $model->reqId()]);
-                },
-                attributes: [
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => $translator->translate('edit'),
-                ]
-            ),
-            new ActionButton(
-                content: '❌',
-                url: function (Qa $model) use ($urlGenerator): string {
-                    /** @psalm-suppress InvalidArgument */
-                    return $urlGenerator->generate('qa/delete', ['id' => $model->reqId()]);
-                },
-                attributes: [
-                    'title' => $translator->translate('delete'),
-                    'onclick' => "return confirm("
-                        . "'"
-                        . $translator->translate('delete.record.warning')
-                        . "');"
-                ]
-            ),
-        ]),
-    ];
+    ]),
+];
 
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
@@ -150,21 +150,20 @@ $gridSummary = $s->gridSummary(
     $translator->translate('faq'),
     '',
 );
-    echo GridView::widget()
-      ->bodyRowAttributes(['class' => 'align-middle'])
-      ->tableAttributes([
-          'class' => 'table table-striped text-center h-100',
-          'id' => 'table-faq'])
-      ->columns(...$columns)
-      ->dataReader($sortedAndPagedPaginator)
-      ->urlCreator($urlCreator)
-      ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
-      ->header($translator->translate('faq'))
-      ->multiSort(true)
-      ->id('w1774234746-grid')
-      ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-      ->summaryTemplate('<div class="d-flex align-items-center">' . $gridSummary . '</div>')
-      ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
-      ->noResultsText($translator->translate('no.records'))
-      ->toolbar($toolbarString);
-?>
+echo GridView::widget()
+  ->bodyRowAttributes(['class' => 'align-middle'])
+  ->tableAttributes([
+      'class' => 'table table-striped text-center h-100',
+      'id' => 'table-faq'])
+  ->columns(...$columns)
+  ->dataReader($sortedAndPagedPaginator)
+  ->urlCreator($urlCreator)
+  ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
+  ->header($translator->translate('faq'))
+  ->multiSort(true)
+  ->id('w1774234746-grid')
+  ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
+  ->summaryTemplate('<div class="d-flex align-items-center">' . $gridSummary . '</div>')
+  ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
+  ->noResultsText($translator->translate('no.records'))
+  ->toolbar($toolbarString);

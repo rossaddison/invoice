@@ -253,9 +253,9 @@ final class XPathParser
 
         return match ($name) {
             'not' => match (count($args)) {
-                        1 => $args[0] instanceof Exists ? new NotExists($args[0]->path) : new Not($args[0]),
-                        default => throw new XPathParseException('not() requires 1 argument'),
-                     },
+                1 => $args[0] instanceof Exists ? new NotExists($args[0]->path) : new Not($args[0]),
+                default => throw new XPathParseException('not() requires 1 argument'),
+            },
             'exists'          => new Exists($this->oneArg($args, $name)),
             'count'           => new Count($this->oneArg($args, $name)),
             'sum'             => new Sum($this->oneArg($args, $name)),
@@ -284,15 +284,15 @@ final class XPathParser
                                     : throw new XPathParseException('matches() requires 2 arguments'),
             'true'            => new Literal(true),
             'false'           => new Literal(false),
-            'u:gln'              => new Checksum(ChecksumAlgorithm::GLN,            $this->oneArg($args, $name)),
-            'u:mod11'            => new Checksum(ChecksumAlgorithm::Mod11,          $this->oneArg($args, $name)),
-            'u:mod97-0208'       => new Checksum(ChecksumAlgorithm::Mod97BE,        $this->oneArg($args, $name)),
-            'u:checkSEOrgnr'     => new Checksum(ChecksumAlgorithm::SEOrgnr,        $this->oneArg($args, $name)),
-            'u:abn'              => new Checksum(ChecksumAlgorithm::ABN,            $this->oneArg($args, $name)),
-            'u:checkCF'          => new Checksum(ChecksumAlgorithm::CodiceFiscale,  $this->oneArg($args, $name)),
-            'u:checkPIVAseIT'    => new Checksum(ChecksumAlgorithm::PIVAseIT,       $this->oneArg($args, $name)),
-            'u:checkCodiceIPA'   => new Checksum(ChecksumAlgorithm::CodiceIPA,      $this->oneArg($args, $name)),
-            'u:checkDanishCVR'   => new Checksum(ChecksumAlgorithm::DanishCVR,      $this->oneArg($args, $name)),
+            'u:gln'              => new Checksum(ChecksumAlgorithm::GLN, $this->oneArg($args, $name)),
+            'u:mod11'            => new Checksum(ChecksumAlgorithm::Mod11, $this->oneArg($args, $name)),
+            'u:mod97-0208'       => new Checksum(ChecksumAlgorithm::Mod97BE, $this->oneArg($args, $name)),
+            'u:checkSEOrgnr'     => new Checksum(ChecksumAlgorithm::SEOrgnr, $this->oneArg($args, $name)),
+            'u:abn'              => new Checksum(ChecksumAlgorithm::ABN, $this->oneArg($args, $name)),
+            'u:checkCF'          => new Checksum(ChecksumAlgorithm::CodiceFiscale, $this->oneArg($args, $name)),
+            'u:checkPIVAseIT'    => new Checksum(ChecksumAlgorithm::PIVAseIT, $this->oneArg($args, $name)),
+            'u:checkCodiceIPA'   => new Checksum(ChecksumAlgorithm::CodiceIPA, $this->oneArg($args, $name)),
+            'u:checkDanishCVR'   => new Checksum(ChecksumAlgorithm::DanishCVR, $this->oneArg($args, $name)),
             'u:TinVerification'  => new Checksum(ChecksumAlgorithm::TINVerification, $this->oneArg($args, $name)),
             default              => new FunctionCall($name, $args),
         };
@@ -404,12 +404,40 @@ final class XPathParser
             $t    = $this->current();
             $type = $t['type'];
 
-            if ($type === XPathTokenizer::T_LPAREN)                              { $parenDepth++;   $parts[] = '('; $this->pos++; $afterSeparator = true;  continue; }
-            if ($type === XPathTokenizer::T_LBRACKET)                            { $bracketDepth++; $parts[] = '['; $this->pos++; $afterSeparator = true;  continue; }
-            if ($type === XPathTokenizer::T_RPAREN  && $parenDepth   === 0)      { break; }
-            if ($type === XPathTokenizer::T_RPAREN)                              { $parenDepth--;   $parts[] = ')'; $this->pos++; $afterSeparator = false; continue; }
-            if ($type === XPathTokenizer::T_RBRACKET && $bracketDepth === 0)     { break; }
-            if ($type === XPathTokenizer::T_RBRACKET)                            { $bracketDepth--; $parts[] = ']'; $this->pos++; $afterSeparator = false; continue; }
+            if ($type === XPathTokenizer::T_LPAREN) {
+                $parenDepth++;
+                $parts[] = '(';
+                $this->pos++;
+                $afterSeparator = true;
+                continue;
+            }
+            if ($type === XPathTokenizer::T_LBRACKET) {
+                $bracketDepth++;
+                $parts[] = '[';
+                $this->pos++;
+                $afterSeparator = true;
+                continue;
+            }
+            if ($type === XPathTokenizer::T_RPAREN  && $parenDepth   === 0) {
+                break;
+            }
+            if ($type === XPathTokenizer::T_RPAREN) {
+                $parenDepth--;
+                $parts[] = ')';
+                $this->pos++;
+                $afterSeparator = false;
+                continue;
+            }
+            if ($type === XPathTokenizer::T_RBRACKET && $bracketDepth === 0) {
+                break;
+            }
+            if ($type === XPathTokenizer::T_RBRACKET) {
+                $bracketDepth--;
+                $parts[] = ']';
+                $this->pos++;
+                $afterSeparator = false;
+                continue;
+            }
 
             if ($parenDepth > 0 || $bracketDepth > 0) {
                 $parts[] = $this->tokenizer !== null ? $this->tokenizer->tokenToString($t) : '';
@@ -417,12 +445,23 @@ final class XPathParser
                 continue;
             }
 
-            if ($this->tokenizer !== null && $this->tokenizer->isPathStop($t))   { break; }
-            if ($type === XPathTokenizer::T_STAR && !$afterSeparator)            { break; }
-            if ($type === XPathTokenizer::T_PIPE) { $parts[] = ' | '; $this->pos++; $afterSeparator = false; continue; }
+            if ($this->tokenizer !== null && $this->tokenizer->isPathStop($t)) {
+                break;
+            }
+            if ($type === XPathTokenizer::T_STAR && !$afterSeparator) {
+                break;
+            }
+            if ($type === XPathTokenizer::T_PIPE) {
+                $parts[] = ' | ';
+                $this->pos++;
+                $afterSeparator = false;
+                continue;
+            }
 
             $str = $this->tokenizer !== null ? $this->tokenizer->tokenToString($t) : '';
-            if ($str === '') { break; }
+            if ($str === '') {
+                break;
+            }
             $afterSeparator = in_array($type, [XPathTokenizer::T_SLASH, XPathTokenizer::T_DSLASH, XPathTokenizer::T_AT, XPathTokenizer::T_LBRACKET, XPathTokenizer::T_LPAREN], true);
             $parts[] = $str;
             $this->pos++;

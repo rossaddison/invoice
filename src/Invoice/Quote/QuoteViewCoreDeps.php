@@ -22,5 +22,6 @@ final class QuoteViewCoreDeps
         public readonly SOR $soR,
         public readonly UCR $ucR,
         public readonly UIR $uiR,
-    ) {}
+    ) {
+    }
 }

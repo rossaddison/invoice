@@ -45,7 +45,8 @@ abstract class AbstractCalculator
     public function __construct(
         protected readonly DOMXPath $xpath,
         protected readonly TranslatorInterface $t
-    ) {}
+    ) {
+    }
 
     /**
      * Run all validation rules for this calculator.

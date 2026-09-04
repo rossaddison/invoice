@@ -14,5 +14,6 @@ final class SignupDeps
         public readonly tR $tR,
         public readonly uiR $uiR,
         public readonly uR $uR,
-    ) {}
+    ) {
+    }
 }

@@ -28,7 +28,8 @@ final readonly class AllowanceChargeService
             $model->setReason((string) $array['reason']) : '';
         isset($array['multiplier_factor_numeric']) ?
              $model->setMultiplierFactorNumeric(
-                    (int) $array['multiplier_factor_numeric']) : '';
+                 (int) $array['multiplier_factor_numeric']
+             ) : '';
         isset($array['amount']) ?
             $model->setAmount((int) $array['amount']) : '';
         isset($array['base_amount']) ?
@@ -44,7 +45,8 @@ final readonly class AllowanceChargeService
         $tr = 'tax_rate_id';
         if (isset($array[$tr])) {
             $model->setTaxRate(
-                $this->trR->repoTaxRatequery((int) $array[$tr]));
+                $this->trR->repoTaxRatequery((int) $array[$tr])
+            );
         }
         return $model;
     }

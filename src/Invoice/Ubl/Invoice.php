@@ -17,37 +17,37 @@ class Invoice implements XmlSerializable
     // http://www.datypic.com/sc/ubl24/t-ns53_InvoiceType.html
     private ?string $UBLVersionID = '2.4';
     private ?string $customizationID = 'urn:cen.eu:en16931:2017#compliant#urn:'
-            . 'fdc:peppol.eu:2017:poacc:billing:3.0';
+        . 'fdc:peppol.eu:2017:poacc:billing:3.0';
     protected ?int $invoiceTypeCode = InvoiceTypeCode::INVOICE;
     private string $documentCurrencyCode = 'EUR';
 
     public function __construct(
-     private readonly SettingRepository $sR,
-     private readonly ?string $profileID,
-     private readonly ?string $id,
-     private readonly DateTime $issueDate,
-     private readonly ?DateTime $dueDate,
-     private readonly ?string $note,
-     private readonly ?DateTime $taxPointDate,
-     private readonly ?string $accountingCostCode,
-     private readonly ?string $buyerReference,
-     private readonly ?InvoicePeriod $invoicePeriod,
-     private readonly ?OrderReference $orderReference,
-     private readonly ?ContractDocumentReference $contractDocumentReference,
-     private readonly ?AdditionalDocumentReference $additionalDocumentReference,
-     private readonly ?Party $accountingSupplierParty,
-     private readonly ?Party $accountingCustomerParty,
-     private readonly ?Delivery $delivery,
-     private readonly ?PaymentMeans $paymentMeans,
-     private readonly ?PaymentTerms $paymentTerms,
-     private readonly array $allowanceCharges,
-     private readonly array $taxAmounts,
-     private readonly array $taxSubTotal,
-     private readonly ?LegalMonetaryTotal $legalMonetaryTotal,
-     protected array $invoiceLines,
-     private readonly ?bool $isCopyIndicator,
-     private readonly ?string $supplierAssignedAccountID)
-    {
+        private readonly SettingRepository $sR,
+        private readonly ?string $profileID,
+        private readonly ?string $id,
+        private readonly DateTime $issueDate,
+        private readonly ?DateTime $dueDate,
+        private readonly ?string $note,
+        private readonly ?DateTime $taxPointDate,
+        private readonly ?string $accountingCostCode,
+        private readonly ?string $buyerReference,
+        private readonly ?InvoicePeriod $invoicePeriod,
+        private readonly ?OrderReference $orderReference,
+        private readonly ?ContractDocumentReference $contractDocumentReference,
+        private readonly ?AdditionalDocumentReference $additionalDocumentReference,
+        private readonly ?Party $accountingSupplierParty,
+        private readonly ?Party $accountingCustomerParty,
+        private readonly ?Delivery $delivery,
+        private readonly ?PaymentMeans $paymentMeans,
+        private readonly ?PaymentTerms $paymentTerms,
+        private readonly array $allowanceCharges,
+        private readonly array $taxAmounts,
+        private readonly array $taxSubTotal,
+        private readonly ?LegalMonetaryTotal $legalMonetaryTotal,
+        protected array $invoiceLines,
+        private readonly ?bool $isCopyIndicator,
+        private readonly ?string $supplierAssignedAccountID
+    ) {
     }
 
     /**

@@ -47,7 +47,8 @@ final class TypeScriptExpressionEmitter
 {
     public function __construct(
         private readonly TypeScriptVoPathMapper $paths,
-    ) {}
+    ) {
+    }
 
     public function emit(Expression $expr, string $contextVar = 'v'): string // NOSONAR php:S3776
     {
@@ -98,7 +99,7 @@ final class TypeScriptExpressionEmitter
 
     private function emitBinary(BinaryExpression $expr, string $ctx): string
     {
-        $l = $this->emit($expr->left,  $ctx);
+        $l = $this->emit($expr->left, $ctx);
         $r = $this->emit($expr->right, $ctx);
 
         return match ($expr->operator) {
@@ -192,7 +193,7 @@ final class TypeScriptExpressionEmitter
 
     private function emitFunctionCall(FunctionCall $expr, string $ctx): string
     {
-        $args = array_map(fn(Expression $a) => $this->emit($a, $ctx), $expr->arguments);
+        $args = array_map(fn (Expression $a) => $this->emit($a, $ctx), $expr->arguments);
 
         return match ($expr->name) {
             'normalize-space'  => 'String(' . ($args[0] ?? $ctx) . ').trim()',

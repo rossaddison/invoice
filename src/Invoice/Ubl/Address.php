@@ -21,8 +21,7 @@ class Address implements XmlSerializable
         private readonly bool $ubl_cr_155 = false,
         private readonly bool $ubl_cr_218 = false,
         private readonly bool $ubl_cr_367 = false
-    )
-    {
+    ) {
     }
 
     // The getters are used in StoreCoveHelper

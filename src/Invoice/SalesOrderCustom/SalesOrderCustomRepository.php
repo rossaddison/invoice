@@ -21,9 +21,10 @@ final class SalesOrderCustomRepository extends Select\Repository
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
-    public function __construct(Select $select,
-        private readonly EntityWriter $entityWriter)
-    {
+    public function __construct(
+        Select $select,
+        private readonly EntityWriter $entityWriter
+    ) {
         parent::__construct($select);
     }
 
@@ -91,18 +92,20 @@ final class SalesOrderCustomRepository extends Select\Repository
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoFormValuequery(int $sales_order_id,
-            string $custom_field_id): ?SalesOrderCustom
-    {
+    public function repoFormValuequery(
+        int $sales_order_id,
+        string $custom_field_id
+    ): ?SalesOrderCustom {
         $query = $this->select()
                       ->where(['sales_order_id' => $sales_order_id])
                       ->andWhere(['custom_field_id' => $custom_field_id]);
         return  $query->fetchOne();
     }
 
-    public function repoSalesOrderCustomCount(int $sales_order_id,
-            string $custom_field_id): int
-    {
+    public function repoSalesOrderCustomCount(
+        int $sales_order_id,
+        string $custom_field_id
+    ): int {
         $query = $this->select()
                       ->where(['sales_order_id' => $sales_order_id])
                       ->andWhere(['custom_field_id' => $custom_field_id]);

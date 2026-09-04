@@ -78,16 +78,25 @@ trait InvCombinedFilterTrait
         }
         $query = $query->load('invAmount');
         if ($hasTotal) {
-            $query = $query->andWhere('invAmount.total', 'like',
-                (float) $filter->filterInvAmountTotal . '%');
+            $query = $query->andWhere(
+                'invAmount.total',
+                'like',
+                (float) $filter->filterInvAmountTotal . '%'
+            );
         }
         if ($hasPaid) {
-            $query = $query->andWhere('invAmount.paid', 'like',
-                (float) $filter->filterInvAmountPaid . '%');
+            $query = $query->andWhere(
+                'invAmount.paid',
+                'like',
+                (float) $filter->filterInvAmountPaid . '%'
+            );
         }
         if ($hasBalance) {
-            $query = $query->andWhere('invAmount.balance', 'like',
-                (float) $filter->filterInvAmountBalance . '%');
+            $query = $query->andWhere(
+                'invAmount.balance',
+                'like',
+                (float) $filter->filterInvAmountBalance . '%'
+            );
         }
         return $query;
     }
@@ -101,15 +110,23 @@ trait InvCombinedFilterTrait
             $query = $query->andWhere(['client.client_group' => trim($filter->filterClientGroup)]);
         }
         if (isset($filter->filterClientAddress1) && !empty($filter->filterClientAddress1)) {
-            $query = $query->andWhere('client.client_address_1', 'like',
-                trim($filter->filterClientAddress1) . '%');
+            $query = $query->andWhere(
+                'client.client_address_1',
+                'like',
+                trim($filter->filterClientAddress1) . '%'
+            );
         }
         if (isset($filter->filterDateCreatedYearMonth) && !empty($filter->filterDateCreatedYearMonth)) {
             $dateTimeImmutable = \DateTimeImmutable::createFromFormat(
-                'Y-m', $filter->filterDateCreatedYearMonth);
-            $query = $query->andWhere('date_created', 'like',
+                'Y-m',
+                $filter->filterDateCreatedYearMonth
+            );
+            $query = $query->andWhere(
+                'date_created',
+                'like',
                 $dateTimeImmutable instanceof \DateTimeImmutable
-                    ? $dateTimeImmutable->format('Y-m') . '%' : '');
+                    ? $dateTimeImmutable->format('Y-m') . '%' : ''
+            );
         }
         return $query;
     }

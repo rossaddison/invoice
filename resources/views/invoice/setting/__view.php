@@ -34,8 +34,8 @@ use Yiisoft\Html\Html;
 <?= Html::openTag('div'); ?>
     <?php
         ReadOnlyField::render($translator->translate('setting.key'), $form->getSettingKey());
-        ReadOnlyField::render($translator->translate('setting.value'), $form->getSettingValue());
-    ?>
+ReadOnlyField::render($translator->translate('setting.value'), $form->getSettingValue());
+?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

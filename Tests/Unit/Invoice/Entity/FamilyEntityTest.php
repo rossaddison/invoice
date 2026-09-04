@@ -73,7 +73,7 @@ class FamilyEntityTest extends TestCase
         $this->assertSame(3, $f->getStreetSortOrder());
     }
 
-public function testConstructorDefaultsForCategoryIds(): void
+    public function testConstructorDefaultsForCategoryIds(): void
     {
         $f = new Family();
         $this->assertNull($f->getCategoryPrimaryId());
@@ -102,7 +102,7 @@ public function testConstructorDefaultsForCategoryIds(): void
         $f->reqId();
     }
 
-public function testHasIdentityTrueForZeroId(): void
+    public function testHasIdentityTrueForZeroId(): void
     {
         $f = new Family();
         $f->setId(0);

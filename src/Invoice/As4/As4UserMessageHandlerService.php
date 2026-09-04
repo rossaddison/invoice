@@ -15,7 +15,8 @@ final class As4UserMessageHandlerService implements As4UserMessageHandlerInterfa
         private readonly As4ReceiptGeneratorInterface $receiptGenerator,
         private readonly As4PayloadHandlerInterface $payloadHandler,
         private readonly LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function handle(As4InboundMessage $message): string

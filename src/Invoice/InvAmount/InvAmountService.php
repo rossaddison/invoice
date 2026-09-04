@@ -81,7 +81,8 @@ final readonly class InvAmountService
     ): void {
         $this->persist($model, ['inv_id' => $new_inv_id]);
         $basis_invoice = $this->repository->repoInvquery(
-            $basis_inv_id);
+            $basis_inv_id
+        );
         $new_inv_id ? $model->setInvId((int) $new_inv_id) : '';
         $model->setSign(1);
         /** @psalm-suppress PossiblyNullArgument, PossiblyNullReference */
@@ -110,16 +111,20 @@ final readonly class InvAmountService
         $model->setSign(1);
         isset($array['item_subtotal']) ?
             $model->setItemSubtotal(
-                (float) $array['item_subtotal']) : '';
+                (float) $array['item_subtotal']
+            ) : '';
         isset($array['item_tax_total']) ?
             $model->setItemTaxTotal(
-                (float) $array['item_tax_total']) : '';
+                (float) $array['item_tax_total']
+            ) : '';
         isset($array['packhandleship_total']) ?
             $model->setPackhandleshipTotal(
-                (float) $array['packhandleship_total']) : '';
+                (float) $array['packhandleship_total']
+            ) : '';
         isset($array['packhandleship_tax']) ?
             $model->setPackhandleshipTax(
-                (float) $array['packhandleship_tax']) : '';
+                (float) $array['packhandleship_tax']
+            ) : '';
         isset($array['tax_total']) ?
             $model->setTaxTotal((float) $array['tax_total']) : '';
         isset($array['total']) ?
@@ -138,7 +143,8 @@ final readonly class InvAmountService
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
-                (int) $array[$inv]);
+                (int) $array[$inv]
+            );
             if ($invEntity) {
                 $model->setInv($invEntity);
             }

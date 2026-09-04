@@ -108,7 +108,13 @@ final readonly class InvPdfService
             return '';
         }
         $html = $this->renderHtml(
-            $invId, $inv->reqUserId(), $custom, $so, $invAmount, $invCustomValues, $inv,
+            $invId,
+            $inv->reqUserId(),
+            $custom,
+            $so,
+            $invAmount,
+            $invCustomValues,
+            $inv,
         );
         $this->session->set('print_language', '');
         $mpdf = new MpdfHelper($this->translator);
@@ -129,10 +135,18 @@ final readonly class InvPdfService
             . '_'
             . str_replace(['\\', '/'], '_', $inv->getNumber() ?? (string) random_int(0, 10));
         return $mpdf->pdfCreate(
-            $html, $filename, $stream, $this->s,
+            $html,
+            $filename,
+            $stream,
+            $this->s,
             new PdfCreateContext(
-                $inv->getPassword(), $this->itemDeps->iiaR, $invAmount,
-                true, $includeZugferd, $associatedFiles, $inv,
+                $inv->getPassword(),
+                $this->itemDeps->iiaR,
+                $invAmount,
+                true,
+                $includeZugferd,
+                $associatedFiles,
+                $inv,
             ),
         );
     }
@@ -192,10 +206,12 @@ final readonly class InvPdfService
             'cvH' => $cvH,
             'inv_custom_values' => $invCustomValues,
             'top_custom_fields' => $this->webViewRenderer->renderPartialAsString(
-                '//invoice/template/invoice/pdf/top_custom_fields', $customFieldParams,
+                '//invoice/template/invoice/pdf/top_custom_fields',
+                $customFieldParams,
             ),
             'view_custom_fields' => $this->webViewRenderer->renderPartialAsString(
-                '//invoice/template/invoice/pdf/view_custom_fields', $customFieldParams,
+                '//invoice/template/invoice/pdf/view_custom_fields',
+                $customFieldParams,
             ),
             'userinv' => $userinv,
             'company_logo_and_address' => $this->webViewRenderer->renderPartialAsString(
@@ -227,7 +243,8 @@ final readonly class InvPdfService
             ),
         ];
         return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/template/invoice/pdf/' . $invTemplate, $data,
+            '//invoice/template/invoice/pdf/' . $invTemplate,
+            $data,
         );
     }
 

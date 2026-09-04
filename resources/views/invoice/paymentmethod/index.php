@@ -64,8 +64,10 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (PaymentMethod $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('paymentmethod/view',
-                    ['id' => $model->reqId()]);
+                return $urlGenerator->generate(
+                    'paymentmethod/view',
+                    ['id' => $model->reqId()]
+                );
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -75,8 +77,10 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (PaymentMethod $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('paymentmethod/edit',
-                    ['id' => $model->reqId()]);
+                return $urlGenerator->generate(
+                    'paymentmethod/edit',
+                    ['id' => $model->reqId()]
+                );
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -86,8 +90,10 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (PaymentMethod $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('paymentmethod/delete',
-                    ['id' => $model->reqId()]);
+                return $urlGenerator->generate(
+                    'paymentmethod/delete',
+                    ['id' => $model->reqId()]
+                );
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -143,4 +149,3 @@ echo GridView::widget()
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
-

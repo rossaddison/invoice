@@ -265,25 +265,28 @@ final class UserClientRepository extends Select\Repository
      * @param FormHydrator $formHydrator
      * @param UCS $ucS
      */
-    public function assignToUserClient(array $availableClientIds, int $userId,
-        FormHydrator $formHydrator, UCS $ucS): void
-    {
-       /**
-        * @var int $clientId
-        */
-       foreach ($availableClientIds as $clientId) {
-           $userClient = [
-               'user_id' => $userId,
-               'client_id' => $clientId,
-           ];
+    public function assignToUserClient(
+        array $availableClientIds,
+        int $userId,
+        FormHydrator $formHydrator,
+        UCS $ucS
+    ): void {
+        /**
+         * @var int $clientId
+         */
+        foreach ($availableClientIds as $clientId) {
+            $userClient = [
+                'user_id' => $userId,
+                'client_id' => $clientId,
+            ];
 
-           $model = new UserClient();
-           $form = new UserClientForm();
+            $model = new UserClient();
+            $form = new UserClientForm();
 
-           if ($formHydrator->populateAndValidate($form, $userClient)) {
-               $ucS->saveUserClient($model, $userClient);
-           }
-       }
+            if ($formHydrator->populateAndValidate($form, $userClient)) {
+                $ucS->saveUserClient($model, $userClient);
+            }
+        }
     }
 
     /**

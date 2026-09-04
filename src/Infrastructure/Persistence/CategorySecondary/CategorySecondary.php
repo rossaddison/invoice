@@ -15,7 +15,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class CategorySecondary
 {
     use RequireId;
-    
+
     #[BelongsTo(target: CP::class, nullable: true, fkAction: 'NO ACTION')]
     private ?CP $category_primary = null;
 
@@ -28,7 +28,7 @@ class CategorySecondary
         private ?string $name = '',
     ) {
     }
-    
+
     public function reqId(): int
     {
         return $this->requireId($this->id, 'CategorySecondary');

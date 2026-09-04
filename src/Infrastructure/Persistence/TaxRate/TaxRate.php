@@ -29,8 +29,8 @@ class TaxRate
         #[Column(type: 'decimal(5,2)', nullable: false, default_value: 0.00)]
         private ?float $tax_rate_percent = 0.00,
         #[Column(type: 'bool', default: false)]
-        private bool $tax_rate_default = false)
-    {
+        private bool $tax_rate_default = false
+    ) {
     }
 
     public function setTaxRateId(int $tax_rate_id): void

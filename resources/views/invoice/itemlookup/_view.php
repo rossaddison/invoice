@@ -36,12 +36,12 @@ use Yiisoft\Html\Html;
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?php
                 ReadOnlyField::render($translator->translate('name'), $form->getName());
-                ReadOnlyField::render($translator->translate('description'), $form->getDescription());
-                ReadOnlyField::render(
-                    $translator->translate('price'),
-                    $s->formatAmount($form->getPrice() ?? 0.00),
-                );
-            ?>
+ReadOnlyField::render($translator->translate('description'), $form->getDescription());
+ReadOnlyField::render(
+    $translator->translate('price'),
+    $s->formatAmount($form->getPrice() ?? 0.00),
+);
+?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

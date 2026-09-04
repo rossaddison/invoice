@@ -44,8 +44,8 @@ $selectLabel = static function (array $optionsData, int|string|null $value): str
             $translator->translate('category.primary'),
             $selectLabel($category_primarys, $form->getCategoryPrimaryId()),
         );
-        ReadOnlyField::render($translator->translate('name'), $form->getName());
-    ?>
+ReadOnlyField::render($translator->translate('name'), $form->getName());
+?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

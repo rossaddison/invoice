@@ -81,8 +81,10 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (ClientNote $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('clientnote/view',
-                    ['id' => $model->reqId()]);
+                return $urlGenerator->generate(
+                    'clientnote/view',
+                    ['id' => $model->reqId()]
+                );
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -92,8 +94,10 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (ClientNote $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('clientnote/edit',
-                    ['id' => $model->reqId()]);
+                return $urlGenerator->generate(
+                    'clientnote/edit',
+                    ['id' => $model->reqId()]
+                );
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -103,8 +107,10 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (ClientNote $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('clientnote/delete',
-                    ['id' => $model->reqId()]);
+                return $urlGenerator->generate(
+                    'clientnote/delete',
+                    ['id' => $model->reqId()]
+                );
             },
             attributes: [
                 'title' => $translator->translate('delete'),

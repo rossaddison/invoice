@@ -26,11 +26,11 @@ abstract class BaseController
 
     // New property for controller name
     protected string $controllerName = 'base';
-    
+
     private string $spinner = '@views/invoice/layout/fullpage-loader.php';
-    
+
     private string $created = 'record.successfully.created';
-    
+
     private string $createdNot = 'record.successfully.created.not';
 
     public function __construct(
@@ -44,8 +44,9 @@ abstract class BaseController
     ) {
         $this->initializeViewRenderer();
     }
-    
-    protected function m(string $m): ?Flash {
+
+    protected function m(string $m): ?Flash
+    {
         $rs = 'record.successfully';
         $rsc = $rs . '.created';
         $rsd = $rs . '.deleted';
@@ -149,8 +150,8 @@ abstract class BaseController
     protected function fetchCustomFieldsAndValues(
         CustomFieldRepository $cfR,
         CustomValueRepository $cvR,
-        string $tableName): array
-    {
+        string $tableName
+    ): array {
         $customFields = $cfR->repoTablequery($tableName);
         $customValues =
         $cvR->fixCfValueToCf($customFields);
@@ -161,19 +162,19 @@ abstract class BaseController
         ];
     }
 
-/**
- * Process and validate custom fields for any entity type.
- *
- * This centralizes the common custom field validation pattern used across
- * all controllers, eliminating code duplication while maintaining
- * entity-specific behavior through callbacks.
- *
- * @param array|object|null $requestData
- * @param \Yiisoft\FormModel\FormHydrator $formHydrator
- * @param CustomFieldProcessor $processor
- * @param int $entityId
- * @return void
- */
+    /**
+     * Process and validate custom fields for any entity type.
+     *
+     * This centralizes the common custom field validation pattern used across
+     * all controllers, eliminating code duplication while maintaining
+     * entity-specific behavior through callbacks.
+     *
+     * @param array|object|null $requestData
+     * @param \Yiisoft\FormModel\FormHydrator $formHydrator
+     * @param CustomFieldProcessor $processor
+     * @param int $entityId
+     * @return void
+     */
     protected function processCustomFields(
         array|object|null $requestData,
         \Yiisoft\FormModel\FormHydrator $formHydrator,
@@ -190,10 +191,10 @@ abstract class BaseController
         // Handle both direct array format and AJAX format
         $processedCustom = $this->normalizeCustomFieldData($custom);
 
-/**
- * @var int $cfId (PHP may auto-convert numeric strings to int)
- * @var mixed $value
- */
+        /**
+         * @var int $cfId (PHP may auto-convert numeric strings to int)
+         * @var mixed $value
+         */
         foreach ($processedCustom as $cfId => $value) {
             // Check if custom field record already exists
             if ($processor->exists($entityId, $cfId)) {
@@ -223,12 +224,12 @@ abstract class BaseController
         }
     }
 
-/**
- * Normalize custom field data to handle both direct array format and AJAX format.
- *
- * @param array<array-key, mixed> $custom Raw custom field data
- * @return array<string, mixed> Normalized custom field data
- */
+    /**
+     * Normalize custom field data to handle both direct array format and AJAX format.
+     *
+     * @param array<array-key, mixed> $custom Raw custom field data
+     * @return array<string, mixed> Normalized custom field data
+     */
     private function normalizeCustomFieldData(array $custom): array
     {
         if (!isset($custom[0]) || !is_array($custom[0])) {
@@ -281,7 +282,7 @@ abstract class BaseController
             $values[$name] = $itemValue;
         }
     }
-    
+
     /**
      * @param string $_language
      * @param DeliveryLocationRepository $dlr
@@ -289,15 +290,16 @@ abstract class BaseController
      * @return string
      */
     protected function viewPartialDeliveryLocation(
-            string $_language,
-            DeliveryLocationRepository $dlr,
-            ?int $delivery_location_id): string
-    {
+        string $_language,
+        DeliveryLocationRepository $dlr,
+        ?int $delivery_location_id
+    ): string {
         if ($delivery_location_id > 0) {
             $del = $dlr->repoDeliveryLocationquery($delivery_location_id);
             if (null !== $del) {
                 return $this->webViewRenderer->renderPartialAsString(
-                    '//invoice/inv/partial_inv_delivery_location', [
+                    '//invoice/inv/partial_inv_delivery_location',
+                    [
                     'actionName' => 'del/view',
                     'actionArguments' => [
                         '_language' => $_language,
@@ -311,7 +313,8 @@ abstract class BaseController
                     'state' => $del->getZip(),
                     'country' => $del->getCountry(),
                     'global_location_number' => $del->getGlobalLocationNumber(),
-                ]);
+                ]
+                );
             } //null!==$del
         } else {
             return '';

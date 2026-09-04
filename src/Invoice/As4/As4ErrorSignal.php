@@ -31,7 +31,8 @@ final readonly class As4ErrorSignal
         public string $shortDescription,
         /** Detailed description from eb:Description child element */
         public string $description,
-    ) {}
+    ) {
+    }
 
     public function isFailure(): bool
     {

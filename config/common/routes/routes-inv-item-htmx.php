@@ -10,15 +10,13 @@ use Yiisoft\Router\Route;
 
 return [
     RoutePermission::invoiceGroup(
-
-            Route::methods([Method::POST], '/invitemhtmx/addProduct')
+        Route::methods([Method::POST], '/invitemhtmx/addProduct')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvItemHtmxController::class, 'addProduct'])
                 ->name('invitemhtmx/addProduct'),
-
-            Route::methods([Method::POST], '/invitemhtmx/addTask')
+        Route::methods([Method::POST], '/invitemhtmx/addTask')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvItemHtmxController::class, 'addTask'])
                 ->name('invitemhtmx/addTask'),
-        ), // invoice
+    ), // invoice
 ];

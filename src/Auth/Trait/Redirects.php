@@ -14,8 +14,10 @@ trait Redirects
 {
     private function redirectToMain(): ResponseInterface
     {
-        return $this->webService->getRedirectResponse('site/index',
-                ['_language' => 'en']);
+        return $this->webService->getRedirectResponse(
+            'site/index',
+            ['_language' => 'en']
+        );
     }
 
     private function redirectToInvoiceIndex(): ResponseInterface
@@ -25,13 +27,17 @@ trait Redirects
 
     protected function redirectToAdminMustMakeActive(): ResponseInterface
     {
-        return $this->webService->getRedirectResponse('site/adminmustmakeactive',
-                ['_language' => 'en']);
+        return $this->webService->getRedirectResponse(
+            'site/adminmustmakeactive',
+            ['_language' => 'en']
+        );
     }
 
     protected function redirectToEmailNotVerified(): ResponseInterface
     {
-        return $this->webService->getRedirectResponse('site/emailnotverified',
-                ['_language' => 'en']);
+        return $this->webService->getRedirectResponse(
+            'site/emailnotverified',
+            ['_language' => 'en']
+        );
     }
 }

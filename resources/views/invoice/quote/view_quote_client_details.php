@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
-
 use App\Widget\LabelSwitch;
 
 /**
@@ -41,9 +40,9 @@ use App\Widget\LabelSwitch;
         <span class="client-address-country-line">
             <?php
                 $countryName = $quote->getClient()?->getClientCountry();
-                if (null !== $countryName) {
-                    echo '<br>' . $countryHelper->getCountryName($translator->translate('cldr'), $countryName);
-                } ?>
+if (null !== $countryName) {
+    echo '<br>' . $countryHelper->getCountryName($translator->translate('cldr'), $countryName);
+} ?>
         </span>
     </div>
     <hr>

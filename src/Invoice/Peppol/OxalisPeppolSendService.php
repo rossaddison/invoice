@@ -36,7 +36,8 @@ final class OxalisPeppolSendService implements PeppolSendServiceInterface
         private readonly PeppolMessageRepositoryInterface $pmR,
         private readonly string $oxalisBaseUrl,
         private readonly string $senderParticipantId = '',
-    ) {}
+    ) {
+    }
 
     /**
      * Transmit a UBL XML document to a Peppol participant.

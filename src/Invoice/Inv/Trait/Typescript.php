@@ -21,8 +21,7 @@ trait Typescript
     // Invoice\Asset\InvoiceCdnAsset.php OR InvoiceNodeModulesAsset.php
     // Invoice\Asset\rebuild\js\invoice-typescript-iife.min.js
     // src\typescript\invoice.ts handleMarkAsSent
-    public function markAsSent(Request $request, IR $iR, GR $gR):
-        Response
+    public function markAsSent(Request $request, IR $iR, GR $gR): Response
     {
         $data = $request->getQueryParams();
         $parameters = ['success' => 0];
@@ -50,8 +49,10 @@ trait Typescript
                 $parameters['success'] = 1;
             }
         }
-        $this->flashMessage('info',
-            $this->translator->translate('record.successfully.updated'));
+        $this->flashMessage(
+            'info',
+            $this->translator->translate('record.successfully.updated')
+        );
         if ($skippedDoNotSend > 0) {
             $this->flashMessage('warning', $skippedDoNotSend
                 . ' ' . $this->translator->translate('do.not.send.blocksBulkSent'));
@@ -87,8 +88,7 @@ trait Typescript
         return true;
     }
 
-    public function markSentAsDraft(Request $request, IR $iR):
-        Response
+    public function markSentAsDraft(Request $request, IR $iR): Response
     {
         $data = $request->getQueryParams();
         $parameters = ['success' => 0];
@@ -129,10 +129,14 @@ trait Typescript
                     $parameters['success'] = 1;
                 }
             }
-            $this->flashMessage('info',
-             $this->translator->translate('record.successfully.updated'));
-            $this->flashMessage('success',
-             $this->translator->translate('security.disable.read.only.success'));
+            $this->flashMessage(
+                'info',
+                $this->translator->translate('record.successfully.updated')
+            );
+            $this->flashMessage(
+                'success',
+                $this->translator->translate('security.disable.read.only.success')
+            );
         }
         return $this->factory->createResponse(Json::encode($parameters));
     }
@@ -144,9 +148,10 @@ trait Typescript
     }
 
     // invoice\src\typescript\invoice.ts handleAddInvoiceTax
-    public function saveInvTaxRate(Request $request,
-        FormHydrator $formHydrator): Response
-    {
+    public function saveInvTaxRate(
+        Request $request,
+        FormHydrator $formHydrator
+    ): Response {
         $body = $request->getQueryParams();
         $ajax_body = [
             'inv_id' => $body['inv_id'],

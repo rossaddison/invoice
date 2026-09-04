@@ -28,7 +28,8 @@ final readonly class PaymentService
         $this->persist($model, $array);
         isset($array['payment_method_id']) ?
             $model->setPaymentMethodId(
-                (int) $array['payment_method_id']) : '';
+                (int) $array['payment_method_id']
+            ) : '';
 
         $datetime = new \DateTime();
         /**
@@ -54,7 +55,8 @@ final readonly class PaymentService
         $inv = 'inv_id';
         if (isset($ray[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
-                (int) $ray[$inv]);
+                (int) $ray[$inv]
+            );
             if ($invEntity) {
                 $model->setInv($invEntity);
             }
@@ -78,7 +80,8 @@ final readonly class PaymentService
     ): void {
         $this->persist($model, $array);
         $model->setPaymentMethodId(
-            (int) $array['payment_method_id']);
+            (int) $array['payment_method_id']
+        );
         /** @var \DateTime $array['payment_date'] */
         $model->setPaymentDate($array['payment_date']);
         /** @var float $array['amount'] */

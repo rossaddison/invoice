@@ -52,7 +52,7 @@ $currentClientId = $inv->reqClientId();
                         foreach ($clients as $client):
                             $id    = $client->reqId();
                             $isCurrent = ($id === $currentClientId);
-                        ?>
+                            ?>
                         <div class="form-check">
                             <?php if ($isCurrent): ?>
                             <input type="hidden"

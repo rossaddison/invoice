@@ -61,7 +61,10 @@ class As4Message
         $this->timestamps  = new As4Timestamps();
     }
 
-    public function setId(int $id): void { $this->id = $id; }
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
 
     /** @psalm-suppress RedundantPropertyInitializationCheck */
     public function reqId(): int
@@ -78,14 +81,38 @@ class As4Message
         return isset($this->id);
     }
 
-    public function getMessageId(): string { return $this->messageId; }
-    public function getState(): As4MessageState { return As4MessageState::from($this->state); }
-    public function getRouting(): As4Routing { return $this->routing; }
-    public function getPayload(): As4Payload { return $this->payload; }
-    public function getRetryState(): As4RetryState { return $this->retryState; }
-    public function getReceiptInfo(): As4ReceiptInfo { return $this->receiptInfo; }
-    public function getErrorInfo(): As4ErrorInfo { return $this->errorInfo; }
-    public function getTimestamps(): As4Timestamps { return $this->timestamps; }
+    public function getMessageId(): string
+    {
+        return $this->messageId;
+    }
+    public function getState(): As4MessageState
+    {
+        return As4MessageState::from($this->state);
+    }
+    public function getRouting(): As4Routing
+    {
+        return $this->routing;
+    }
+    public function getPayload(): As4Payload
+    {
+        return $this->payload;
+    }
+    public function getRetryState(): As4RetryState
+    {
+        return $this->retryState;
+    }
+    public function getReceiptInfo(): As4ReceiptInfo
+    {
+        return $this->receiptInfo;
+    }
+    public function getErrorInfo(): As4ErrorInfo
+    {
+        return $this->errorInfo;
+    }
+    public function getTimestamps(): As4Timestamps
+    {
+        return $this->timestamps;
+    }
 
     public function markSent(): self
     {

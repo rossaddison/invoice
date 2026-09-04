@@ -190,12 +190,14 @@ if ($vat) {
                             <?= Html::closeTag('div'); ?>
                             <?php
                         } ?>
-                        <?php echo Html::a($translator->translate('contract.add'),
+                        <?php echo Html::a(
+                            $translator->translate('contract.add'),
                             $urlGenerator->generate(
                                 'contract/add',
                                 ['client_id' => $inv->reqClientId()],
                             ),
-                            ['class' => 'btn btn-info btn-lg mt-3']); ?>
+                            ['class' => 'btn btn-info btn-lg mt-3']
+                        ); ?>
                         <?php if ($postalAddressCount > 0) { ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'postal_address_id')

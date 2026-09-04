@@ -56,19 +56,28 @@ trait Storecove
                         );
                         $storecove_array =
                     $storecovehelper->maximumPreJsonPhpObjectForAnInvoice(
-                            $invoice,
-                            new StoreCoveHelperInvDeps(
-                                $core->soR, $core->iiaR, $core->paR, $core->cpR,
-                            ),
-                            new StoreCoveHelperNetDeps(
-                                $net->contractRepo, $net->delRepo,
-                                $net->delPartyRepo, $net->unpR, $net->upR, $ppR,
-                            ),
-                            new StoreCoveHelperChargeDeps(
-                                $charge->aciR, $charge->aciiR,
-                                $charge->soiR, $charge->trR,
-                            ),
-                        );
+                        $invoice,
+                        new StoreCoveHelperInvDeps(
+                            $core->soR,
+                            $core->iiaR,
+                            $core->paR,
+                            $core->cpR,
+                        ),
+                        new StoreCoveHelperNetDeps(
+                            $net->contractRepo,
+                            $net->delRepo,
+                            $net->delPartyRepo,
+                            $net->unpR,
+                            $net->upR,
+                            $ppR,
+                        ),
+                        new StoreCoveHelperChargeDeps(
+                            $charge->aciR,
+                            $charge->aciiR,
+                            $charge->soiR,
+                            $charge->trR,
+                        ),
+                    );
                         echo Json::encode(
                             $storecove_array,
                             JSON_UNESCAPED_SLASHES

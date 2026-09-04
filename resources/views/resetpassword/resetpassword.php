@@ -50,12 +50,12 @@ if ($turnstileSiteKey !== '') {
     ->label($translator->translate('layout.password-verify.new'))
 ?>
                     <?php if ($turnstileSiteKey !== '') {
-    echo Html::tag('div', '', ['class' => 'cf-turnstile', 'data-sitekey' => $turnstileSiteKey]);
-} ?>
+                        echo Html::tag('div', '', ['class' => 'cf-turnstile', 'data-sitekey' => $turnstileSiteKey]);
+                    } ?>
                     <?= Field::submitButton()
-    ->buttonId('resetpassword-button')
-    ->name('resetpassword-button')
-    ->content($translator->translate('layout.submit'))
+                        ->buttonId('resetpassword-button')
+                        ->name('resetpassword-button')
+                        ->content($translator->translate('layout.submit'))
 ?>
                     <?=  new Form()->close() ?>
                 </div>

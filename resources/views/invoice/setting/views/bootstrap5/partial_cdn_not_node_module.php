@@ -12,28 +12,28 @@ use Yiisoft\Html\Tag\Option;
  */
 
 echo H::openTag('div', ['class' => 'border border-1 border-info']); //1
- echo H::openTag('div', ['class' => 'col-12 col-md-6']); //2
-  echo H::openTag('div', ['class' => 'mb-3']); //3
-   echo H::openTag('label', [
-    'for' => 'settings[bootstrap5_cdn_not_node_module]'
-   ]);
-    echo $translator->translate('bootstrap5.cdn.not.node.module');
-   echo H::closeTag('label');
-   $body['settings[bootstrap5_cdn_not_node_module]'] =
-   $s->getSetting('bootstrap5_cdn_not_node_module');
-   echo H::openTag('select', [
-    'name' => 'settings[bootstrap5_cdn_not_node_module]',
-    'id' => 'settings[bootstrap5_cdn_not_node_module]',
-    'class' => 'form-select',
-   ]);
-    echo  new Option()
-     ->value('0')
-     ->content($translator->translate('no'));
-    echo  new Option()
-     ->value('1')
-     ->selected($body['settings[bootstrap5_cdn_not_node_module]'] == '1')
-     ->content($translator->translate('yes'));
-   echo H::closeTag('select');
-  echo H::closeTag('div'); //3
- echo H::closeTag('div'); //2
+echo H::openTag('div', ['class' => 'col-12 col-md-6']); //2
+echo H::openTag('div', ['class' => 'mb-3']); //3
+echo H::openTag('label', [
+ 'for' => 'settings[bootstrap5_cdn_not_node_module]'
+]);
+echo $translator->translate('bootstrap5.cdn.not.node.module');
+echo H::closeTag('label');
+$body['settings[bootstrap5_cdn_not_node_module]'] =
+$s->getSetting('bootstrap5_cdn_not_node_module');
+echo H::openTag('select', [
+ 'name' => 'settings[bootstrap5_cdn_not_node_module]',
+ 'id' => 'settings[bootstrap5_cdn_not_node_module]',
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected($body['settings[bootstrap5_cdn_not_node_module]'] == '1')
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //3
+echo H::closeTag('div'); //2
 echo H::closeTag('div'); //1

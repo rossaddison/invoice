@@ -27,7 +27,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'deliveryparty/index'))
     ->id('btn-reset')
     ->render();

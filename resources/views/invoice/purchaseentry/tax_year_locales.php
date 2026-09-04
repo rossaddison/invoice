@@ -90,105 +90,107 @@ $calendarYear = [
 echo $alert;
 
 echo H::openTag('div', ['class' => 'container mt-4']);
- echo H::openTag('div', ['class' => 'row']);
-  echo H::openTag('div', ['class' => 'col-12 col-lg-10 offset-lg-1']);
+echo H::openTag('div', ['class' => 'row']);
+echo H::openTag('div', ['class' => 'col-12 col-lg-10 offset-lg-1']);
 
-   echo H::openTag('div', ['class' => 'card']);
-    echo H::openTag('div', ['class' => 'card-header d-flex justify-content-between align-items-center']);
-     echo H::tag('strong', 'Tax Year Start Dates by Locale');
-     echo H::a('← Back to Purchase Entries',
-         $urlGenerator->generate('entry/index'),
-         ['class' => 'btn btn-sm btn-outline-secondary']);
-    echo H::closeTag('div');
+echo H::openTag('div', ['class' => 'card']);
+echo H::openTag('div', ['class' => 'card-header d-flex justify-content-between align-items-center']);
+echo H::tag('strong', 'Tax Year Start Dates by Locale');
+echo H::a(
+    '← Back to Purchase Entries',
+    $urlGenerator->generate('entry/index'),
+    ['class' => 'btn btn-sm btn-outline-secondary']
+);
+echo H::closeTag('div');
 
-    echo H::openTag('div', ['class' => 'card-body p-0']);
+echo H::openTag('div', ['class' => 'card-body p-0']);
 
-     echo H::openTag('div', ['class' => 'alert alert-info m-3 mb-0 small']);
-      echo H::tag('strong', 'How this works: ');
-      echo H::encode(
-          'Clicking Apply saves the month and day of the selected locale as your tax year start date. ' .
-          'The year is preserved if already set, or defaults to the current year if not. ' .
-          'You can then adjust the year under Settings → Taxes.'
-      );
-     echo H::closeTag('div');
+echo H::openTag('div', ['class' => 'alert alert-info m-3 mb-0 small']);
+echo H::tag('strong', 'How this works: ');
+echo H::encode(
+    'Clicking Apply saves the month and day of the selected locale as your tax year start date. ' .
+    'The year is preserved if already set, or defaults to the current year if not. ' .
+    'You can then adjust the year under Settings → Taxes.'
+);
+echo H::closeTag('div');
 
-     // Non-calendar-year countries
-     echo H::openTag('div', ['class' => 'card-header bg-warning-subtle fw-semibold mt-3 ms-3 me-3 rounded']);
-      echo '📅 Non-Calendar-Year Start Dates';
-     echo H::closeTag('div');
+// Non-calendar-year countries
+echo H::openTag('div', ['class' => 'card-header bg-warning-subtle fw-semibold mt-3 ms-3 me-3 rounded']);
+echo '📅 Non-Calendar-Year Start Dates';
+echo H::closeTag('div');
 
-     echo H::openTag('table', ['class' => 'table table-sm table-hover mb-0']);
-      echo H::openTag('thead', ['class' => 'table-secondary small']);
-       echo H::openTag('tr');
-        echo H::tag('th', 'Country / Region');
-        echo H::tag('th', 'Tax Year Start');
-        echo H::tag('th', 'Notes');
-        echo H::tag('th', '');
-       echo H::closeTag('tr');
-      echo H::closeTag('thead');
-      echo H::openTag('tbody');
-      foreach ($nonCalendar as [$label, $month, $day, $notes]) {
-          $monthName = date('F', mktime(0, 0, 0, (int) $month, 1));
-          echo H::openTag('tr');
-           echo H::tag('td', H::encode($label), ['class' => 'fw-semibold']);
-           echo H::tag('td', H::encode($day . ' ' . $monthName));
-           echo H::tag('td', H::encode($notes), ['class' => 'text-muted small']);
-           echo H::openTag('td');
-            echo (new Form())
-                ->post($urlGenerator->generate($applyRoute))
-                ->csrf($csrf)
-                ->open();
-             echo H::hiddenInput('month', $month);
-             echo H::hiddenInput('day', $day);
-             echo H::submitButton('Apply')
-                 ->addAttributes(['class' => 'btn btn-sm btn-outline-primary']);
-            echo (new Form())->close();
-           echo H::closeTag('td');
-          echo H::closeTag('tr');
-      }
-      echo H::closeTag('tbody');
-     echo H::closeTag('table');
+echo H::openTag('table', ['class' => 'table table-sm table-hover mb-0']);
+echo H::openTag('thead', ['class' => 'table-secondary small']);
+echo H::openTag('tr');
+echo H::tag('th', 'Country / Region');
+echo H::tag('th', 'Tax Year Start');
+echo H::tag('th', 'Notes');
+echo H::tag('th', '');
+echo H::closeTag('tr');
+echo H::closeTag('thead');
+echo H::openTag('tbody');
+foreach ($nonCalendar as [$label, $month, $day, $notes]) {
+    $monthName = date('F', mktime(0, 0, 0, (int) $month, 1));
+    echo H::openTag('tr');
+    echo H::tag('td', H::encode($label), ['class' => 'fw-semibold']);
+    echo H::tag('td', H::encode($day . ' ' . $monthName));
+    echo H::tag('td', H::encode($notes), ['class' => 'text-muted small']);
+    echo H::openTag('td');
+    echo (new Form())
+        ->post($urlGenerator->generate($applyRoute))
+        ->csrf($csrf)
+        ->open();
+    echo H::hiddenInput('month', $month);
+    echo H::hiddenInput('day', $day);
+    echo H::submitButton('Apply')
+        ->addAttributes(['class' => 'btn btn-sm btn-outline-primary']);
+    echo (new Form())->close();
+    echo H::closeTag('td');
+    echo H::closeTag('tr');
+}
+echo H::closeTag('tbody');
+echo H::closeTag('table');
 
-     // Calendar-year countries
-     echo H::openTag('div', ['class' => 'card-header bg-light fw-semibold mt-3 ms-3 me-3 rounded']);
-      echo '📅 Calendar-Year Start Dates (1 January)';
-     echo H::closeTag('div');
+// Calendar-year countries
+echo H::openTag('div', ['class' => 'card-header bg-light fw-semibold mt-3 ms-3 me-3 rounded']);
+echo '📅 Calendar-Year Start Dates (1 January)';
+echo H::closeTag('div');
 
-     echo H::openTag('table', ['class' => 'table table-sm table-hover mb-0']);
-      echo H::openTag('thead', ['class' => 'table-secondary small']);
-       echo H::openTag('tr');
-        echo H::tag('th', 'Country / Region');
-        echo H::tag('th', 'Tax Year Start');
-        echo H::tag('th', 'Notes');
-        echo H::tag('th', '');
-       echo H::closeTag('tr');
-      echo H::closeTag('thead');
-      echo H::openTag('tbody');
-      foreach ($calendarYear as [$label, $month, $day, $notes]) {
-          $monthName = date('F', mktime(0, 0, 0, (int) $month, 1));
-          echo H::openTag('tr');
-           echo H::tag('td', H::encode($label), ['class' => 'fw-semibold']);
-           echo H::tag('td', H::encode($day . ' ' . $monthName));
-           echo H::tag('td', H::encode($notes), ['class' => 'text-muted small']);
-           echo H::openTag('td');
-            echo (new Form())
-                ->post($urlGenerator->generate($applyRoute))
-                ->csrf($csrf)
-                ->open();
-             echo H::hiddenInput('month', $month);
-             echo H::hiddenInput('day', $day);
-             echo H::submitButton('Apply')
-                 ->addAttributes(['class' => 'btn btn-sm btn-outline-secondary']);
-            echo (new Form())->close();
-           echo H::closeTag('td');
-          echo H::closeTag('tr');
-      }
-      echo H::closeTag('tbody');
-     echo H::closeTag('table');
+echo H::openTag('table', ['class' => 'table table-sm table-hover mb-0']);
+echo H::openTag('thead', ['class' => 'table-secondary small']);
+echo H::openTag('tr');
+echo H::tag('th', 'Country / Region');
+echo H::tag('th', 'Tax Year Start');
+echo H::tag('th', 'Notes');
+echo H::tag('th', '');
+echo H::closeTag('tr');
+echo H::closeTag('thead');
+echo H::openTag('tbody');
+foreach ($calendarYear as [$label, $month, $day, $notes]) {
+    $monthName = date('F', mktime(0, 0, 0, (int) $month, 1));
+    echo H::openTag('tr');
+    echo H::tag('td', H::encode($label), ['class' => 'fw-semibold']);
+    echo H::tag('td', H::encode($day . ' ' . $monthName));
+    echo H::tag('td', H::encode($notes), ['class' => 'text-muted small']);
+    echo H::openTag('td');
+    echo (new Form())
+        ->post($urlGenerator->generate($applyRoute))
+        ->csrf($csrf)
+        ->open();
+    echo H::hiddenInput('month', $month);
+    echo H::hiddenInput('day', $day);
+    echo H::submitButton('Apply')
+        ->addAttributes(['class' => 'btn btn-sm btn-outline-secondary']);
+    echo (new Form())->close();
+    echo H::closeTag('td');
+    echo H::closeTag('tr');
+}
+echo H::closeTag('tbody');
+echo H::closeTag('table');
 
-    echo H::closeTag('div');
-   echo H::closeTag('div');
+echo H::closeTag('div');
+echo H::closeTag('div');
 
-  echo H::closeTag('div');
- echo H::closeTag('div');
+echo H::closeTag('div');
+echo H::closeTag('div');
 echo H::closeTag('div');

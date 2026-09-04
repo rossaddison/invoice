@@ -51,95 +51,95 @@ use Yiisoft\Html\Tag\Form;
                     ->header($translator->translate('error.summary'))
                     ->onlyProperties(...['date_created', 'date_modified'])
                     ->onlyCommonErrors()
-            ?>
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?php
-             Field::hidden($form, 'date_created')
-             ->label($translator->translate('delivery.date.created')
-                     . ' (' . $dateHelper->display() . ')')
-             ->addInputAttributes([
-                 'placeholder' => $translator->translate('delivery.date.created')
-                     . ' (' . $dateHelper->display() . ')',
-                 'id' => 'date_created',
-                 'role' => 'presentation',
-                 'autocomplete' => 'off',
-             ])
-             ->value(!is_string($createdDate = $form->getDateCreated()) ?
-                     $createdDate->format('Y-m-d') : '')
-             ->hint($translator->translate('hint.this.field.is.not.required'));
-             ?>
+ Field::hidden($form, 'date_created')
+ ->label($translator->translate('delivery.date.created')
+         . ' (' . $dateHelper->display() . ')')
+ ->addInputAttributes([
+     'placeholder' => $translator->translate('delivery.date.created')
+         . ' (' . $dateHelper->display() . ')',
+     'id' => 'date_created',
+     'role' => 'presentation',
+     'autocomplete' => 'off',
+ ])
+ ->value(!is_string($createdDate = $form->getDateCreated()) ?
+         $createdDate->format('Y-m-d') : '')
+ ->hint($translator->translate('hint.this.field.is.not.required'));
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?php
         Field::hidden($form, 'date_modified')
         ->label($translator->translate('delivery.date.modified')
-                . ' (' . $dateHelper->display() . ')')
+   . ' (' . $dateHelper->display() . ')')
         ->addInputAttributes([
             'placeholder' => $translator->translate('delivery.date.modified')
-                . ' (' . $dateHelper->display() . ')',
+   . ' (' . $dateHelper->display() . ')',
             'id' => 'date_modified',
             'role' => 'presentation',
             'autocomplete' => 'off',
             'data-action' => 'show-picker',
         ])
         ->value(!is_string($modifiedDate = $form->getDateModified()) ?
-                $modifiedDate->format('Y-m-d') : '')
+   $modifiedDate->format('Y-m-d') : '')
         ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
 
             <?= Html::openTag('div', ['class' => 'mb-3']); ?>
 <?php
-    echo Field::date($form, 'start_date')
-    ->label($translator->translate('delivery.start.date')
-            . ' (' . $dateHelper->display() . ')')
-    ->addInputAttributes(['data-action' => 'show-picker'])        
-    ->value(!is_string($startDate = $form->getStartDate()) ?
-            $startDate->format('Y-m-d') : '')
-    ->required(true) 
-    ->hint($translator->translate('hint.this.field.is.not.required'));
+echo Field::date($form, 'start_date')
+->label($translator->translate('delivery.start.date')
+        . ' (' . $dateHelper->display() . ')')
+->addInputAttributes(['data-action' => 'show-picker'])
+->value(!is_string($startDate = $form->getStartDate()) ?
+        $startDate->format('Y-m-d') : '')
+->required(true)
+->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
 
             <?= Html::openTag('div', ['class' => 'mb-3']); ?>
 <?php
-    echo Field::date($form, 'actual_delivery_date')
-    ->label($translator->translate('delivery.actual.delivery.date')
-            . ' (' . $dateHelper->display() . ')')
-    ->addInputAttributes(['data-action' => 'show-picker'])
-    ->value(!is_string($actualDeliveryDate = $form->getActualDeliveryDate())
-            ? $actualDeliveryDate->format('Y-m-d') : '')
-    ->required(true)
-    ->hint($translator->translate('hint.this.field.is.not.required'));
+echo Field::date($form, 'actual_delivery_date')
+->label($translator->translate('delivery.actual.delivery.date')
+        . ' (' . $dateHelper->display() . ')')
+->addInputAttributes(['data-action' => 'show-picker'])
+->value(!is_string($actualDeliveryDate = $form->getActualDeliveryDate())
+        ? $actualDeliveryDate->format('Y-m-d') : '')
+->required(true)
+->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
 
             <?= Html::openTag('div', ['class' => 'mb-3']); ?>
 <?php
-    echo Field::date($form, 'end_date')
-    ->label($translator->translate('delivery.end.date')
-            . ' (' . $dateHelper->display() . ')')
-    ->addInputAttributes(['data-action' => 'show-picker'])        
-    ->value(!is_string($endDate = $form->getEndDate()) ?
-            $endDate->format('Y-m-d') : '')
-    ->required(true)
-    ->hint($translator->translate('hint.this.field.is.not.required'));
+echo Field::date($form, 'end_date')
+->label($translator->translate('delivery.end.date')
+        . ' (' . $dateHelper->display() . ')')
+->addInputAttributes(['data-action' => 'show-picker'])
+->value(!is_string($endDate = $form->getEndDate()) ?
+        $endDate->format('Y-m-d') : '')
+->required(true)
+->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?php
     if ($del_count > 0) {
         $optionsDataDel = [];
-/**
- * @var App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation $del
- */
+        /**
+         * @var App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation $del
+         */
         foreach ($dels as $del) {
             $optionsDataDel[$del->reqId()] = ($del->getAddress1() ?? '')
                     . ', ' . ($del->getAddress2() ?? '')
                     . ', ' . ($del->getCity() ?? '')
                     . ', ' . ($del->getZip() ?? '');
-            
+
         }
         echo Field::select($form, 'delivery_location_id')
         ->label($translator->translate('delivery.location'))

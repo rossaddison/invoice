@@ -61,9 +61,9 @@ $selectLabel = static function (array $optionsData, int|string|null $value): str
                         $translator->translate('client'),
                         $selectLabel($optionsDataClient, $form->getClientId()),
                     );
-                    ReadOnlyField::render($translator->translate('date'), $form->getDateNote());
-                    ReadOnlyField::render($translator->translate('note'), $form->getNote());
-                ?>
+ReadOnlyField::render($translator->translate('date'), $form->getDateNote());
+ReadOnlyField::render($translator->translate('note'), $form->getNote());
+?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

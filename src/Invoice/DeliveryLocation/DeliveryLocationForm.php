@@ -49,7 +49,7 @@ final class DeliveryLocationForm extends FormModel
 
     #[Length(min: 0, max: 4, skipOnEmpty: true)]
     private ?string $electronic_address_scheme = '';
-    
+
     public static function show(DeliveryLocation $del): self
     {
         $form = new self();
@@ -70,10 +70,10 @@ final class DeliveryLocationForm extends FormModel
         $form->electronic_address_scheme = $del->getElectronicAddressScheme();
         return $form;
     }
-    
+
     public function getDateCreated(): DateTimeImmutable
     {
-        
+
         if ($this->date_created instanceof DateTimeImmutable) {
             return $this->date_created;
         }

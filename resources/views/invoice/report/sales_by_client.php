@@ -31,7 +31,7 @@ $this->beginPage();
 </head>
 <body>
 <?php $this->beginBody();
-      $style0px = 'width:15%;text-align:right;border-bottom: 0px solid black;';
+$style0px = 'width:15%;text-align:right;border-bottom: 0px solid black;';
 ?>
 <h3 class="report_title">
     <?= $translator->translate('sales.by.client'); ?><br/>

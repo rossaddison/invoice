@@ -13,8 +13,7 @@ class Attachment implements XmlSerializable
     public function __construct(
         private ?string $filePath,
         private ?string $externalReference
-    )
-    {
+    ) {
     }
 
     /**

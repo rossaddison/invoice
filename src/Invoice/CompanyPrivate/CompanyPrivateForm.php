@@ -64,7 +64,7 @@ final class CompanyPrivateForm extends FormModel
         $form->end_date = $company_private->getEndDate();
         return $form;
     }
-    
+
     public function getCompanyId(): ?int
     {
         return $this->company_id;

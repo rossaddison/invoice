@@ -76,7 +76,8 @@ if ($clients) {
      */
     foreach ($clients as $client) {
         $optionsDataClient[$client->reqId()] = Html::encode(
-            $clientHelper->formatClient($client));
+            $clientHelper->formatClient($client)
+        );
     }
     echo Field::select($form, 'client_id')
     ->label($translator->translate('client'))

@@ -36,7 +36,8 @@ final readonly class StoreCoveInvoiceLineBuilder
     public function __construct(
         private SRepo $s,
         private Translator $t,
-    ) {}
+    ) {
+    }
 
     /**
      * @param Inv $invoice
@@ -53,8 +54,7 @@ final readonly class StoreCoveInvoiceLineBuilder
         StoreCoveHelperInvDeps $inv,
         StoreCoveHelperNetDeps $net,
         StoreCoveHelperChargeDeps $charge,
-    ): array
-    {
+    ): array {
         $client = $invoice->getClient();
         if ($client) {
             $client_peppol = $inv->cpR->repoClientPeppolLoadedquery($client->reqId());
@@ -81,7 +81,8 @@ final readonly class StoreCoveInvoiceLineBuilder
                             'quantity' => $item->getQuantity(),
                             'quantityUnitCode' => $this->unitCode(
                                 $item->getProduct()?->getUnit()?->reqId(),
-                                $net->unpR),
+                                $net->unpR
+                            ),
                             'tax' => [
                                 'percentage' =>
                    $item->getProduct()?->getTaxRate()?->getTaxRatePercent(),
@@ -212,12 +213,14 @@ final readonly class StoreCoveInvoiceLineBuilder
              *  @var float $sub_array['TaxableAmounts']
              */
             $sub_array['TaxableAmounts'] = (float) $this->s->currencyConverter(
-                                                     $taxable_amount_total);
+                $taxable_amount_total
+            );
             /**
              *  @var float $sub_array['TaxAmount']
              */
             $sub_array['TaxAmount'] = (float) $this->s->currencyConverter(
-                                                        $tax_amount_total);
+                $tax_amount_total
+            );
             /**
              *  @var float $sub_array['TaxCategory']
              */
@@ -280,9 +283,9 @@ final readonly class StoreCoveInvoiceLineBuilder
                 if (null !== $peppol_po_itemid) {
                     return $peppol_po_itemid;
                 }
-throw new PeppolSalesOrderItemPurchaseOrderItemNumberNotExistException($this->t);
+                throw new PeppolSalesOrderItemPurchaseOrderItemNumberNotExistException($this->t);
             } else {
-throw new PeppolSalesOrderItemNotExistException($this->t);
+                throw new PeppolSalesOrderItemNotExistException($this->t);
             }
         }
         return null;
@@ -306,7 +309,8 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                     return $peppol_po_lineid;
                 }
                 throw new PeppolSalesOrderItemPurchaseOrderLineNumberNotExistException(
-                        $this->t);
+                    $this->t
+                );
             } else {
                 throw new PeppolSalesOrderItemNotExistException($this->t);
             }

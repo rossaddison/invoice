@@ -28,7 +28,8 @@ final readonly class QuoteAmountService
     private function persist(array $array, QuoteAmount $model): void
     {
         if (isset($array['quote_id'])) {
-            $quote = $this->qR->repoQuoteUnLoadedquery((int) $array['quote_id']
+            $quote = $this->qR->repoQuoteUnLoadedquery(
+                (int) $array['quote_id']
             );
             if ($quote) {
                 $model->setQuote($quote);

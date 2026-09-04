@@ -11,7 +11,6 @@ use App\Infrastructure\Persistence\Inv\Inv;
  */
 trait InvAmountTrait2
 {
-
     public function setPackhandleshipTax(float $packhandleship_tax): void
     {
         $this->packhandleship_tax = $packhandleship_tax;

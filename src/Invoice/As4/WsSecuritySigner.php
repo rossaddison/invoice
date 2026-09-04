@@ -28,10 +28,10 @@ final class WsSecuritySigner implements As4EnvelopeSignerInterface
 {
     private const string NS_WSS  =
         'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-' // NOSONAR
-            . 'secext-1.0.xsd';
+        . 'secext-1.0.xsd';
     private const string NS_WSU  =
         'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-' // NOSONAR
-            . 'utility-1.0.xsd';
+        . 'utility-1.0.xsd';
     private const string NS_DS   =
         'http://www.w3.org/2000/09/xmldsig#'; // NOSONAR
     private const string NS_SOAP =
@@ -41,15 +41,16 @@ final class WsSecuritySigner implements As4EnvelopeSignerInterface
 
     private const string ENCODING_BASE64 =
         'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-' // NOSONAR
-            . 'security-1.0#Base64Binary';
+        . 'security-1.0#Base64Binary';
     private const string VALUE_TYPE_X509 =
         'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-' // NOSONAR
-            . 'profile-1.0#X509v3';
+        . 'profile-1.0#X509v3';
 
     public function __construct(
         private readonly string $privateKeyPem,
         private readonly string $certificatePem,
-    ) {}
+    ) {
+    }
 
     /**
      * Returns a new signed DOMDocument. The original is not modified.
@@ -69,16 +70,27 @@ final class WsSecuritySigner implements As4EnvelopeSignerInterface
         $security    = $this->requireSecurityHeader($doc);
         $this->addBinarySecurityToken($security, $doc, $tokenId);
 
-        $bodyEl      = $this->requireElement($doc, '//soap:Body',
-            'soap:Body not found in envelope');
-        $messagingEl = $this->requireElement($doc, '//eb:Messaging',
-            'eb:Messaging not found in envelope');
+        $bodyEl      = $this->requireElement(
+            $doc,
+            '//soap:Body',
+            'soap:Body not found in envelope'
+        );
+        $messagingEl = $this->requireElement(
+            $doc,
+            '//eb:Messaging',
+            'eb:Messaging not found in envelope'
+        );
 
         // Append ds:Signature to Security before signing so SignedInfo is
         // canonicalized within the correct document namespace context.
         $signature  = $doc->createElementNS(self::NS_DS, 'ds:Signature');
-        $signedInfo = $this->buildSignedInfo($doc, $bodyEl, $bodyId,
-            $messagingEl, $messagingId);
+        $signedInfo = $this->buildSignedInfo(
+            $doc,
+            $bodyEl,
+            $bodyId,
+            $messagingEl,
+            $messagingId
+        );
         $signature->appendChild($signedInfo);
         $security->appendChild($signature);
 
@@ -101,10 +113,10 @@ final class WsSecuritySigner implements As4EnvelopeSignerInterface
     {
         $xpath = new DOMXPath($doc);
         $xpath->registerNamespace('soap', self::NS_SOAP);
-        $xpath->registerNamespace('eb',   self::NS_EB);
+        $xpath->registerNamespace('eb', self::NS_EB);
         $xpath->registerNamespace('wsse', self::NS_WSS);
-        $xpath->registerNamespace('wsu',  self::NS_WSU);
-        $xpath->registerNamespace('ds',   self::NS_DS);
+        $xpath->registerNamespace('wsu', self::NS_WSU);
+        $xpath->registerNamespace('ds', self::NS_DS);
         return $xpath;
     }
 

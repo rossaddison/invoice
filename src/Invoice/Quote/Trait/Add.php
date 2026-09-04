@@ -60,7 +60,9 @@ trait Add
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $response = $this->handleAddPost(
                     $request->getParsedBody() ?? [],
-                    $quote, $formHydrator, $d
+                    $quote,
+                    $formHydrator,
+                    $d
                 );
                 if (null !== $response) {
                     return $response;
@@ -73,14 +75,18 @@ trait Add
         if ($origin == 'main' || $origin == 'dashboard') {
             // update the errors array with latest errors
             $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString(
-                $origin, $errors);
+                $origin,
+                $errors
+            );
             // do not use the layout just get the formParameters
             $parameters = $bootstrap5ModalQuote->getFormParameters();
             /**
              * @psalm-suppress MixedArgumentTypeCoercion $parameters
              */
             return $this->webViewRenderer->render(
-                'modal_add_quote_form', $parameters);
+                'modal_add_quote_form',
+                $parameters
+            );
         }
         // show the form inside a modal when engaging with a view (quote or client origin)
         $type = ($origin == 'quote') ? 'quote' : 'client';
@@ -90,7 +96,9 @@ trait Add
             'type' => $type,
             'form' =>
                 $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString(
-                    $origin, $errors),
+                    $origin,
+                    $errors
+                ),
             'return_url_action' => 'add',
         ]);
     }
@@ -99,10 +107,15 @@ trait Add
      * Data fed from quote.js->$(document).on('click',
      * '#quote_create_confirm', function () {
      */
-    public function createConfirm(Request $request, FormHydrator $formHydrator,
-        GR $gR, TRR $trR, UR $uR, UCR $ucR, UIR $uiR):
-            Response
-    {
+    public function createConfirm(
+        Request $request,
+        FormHydrator $formHydrator,
+        GR $gR,
+        TRR $trR,
+        UR $uR,
+        UCR $ucR,
+        UIR $uiR
+    ): Response {
         $body = $request->getQueryParams();
         $ajax_body = [
             'inv_id' => null,
@@ -117,7 +130,9 @@ trait Add
             // Note: Clients cannot see draft quotes
             'number' => $this->sR->getSetting('generate_quote_number_for_draft')
                 == '1' ? $gR->generateNumber(
-                    (int) $body['quote_group_id'], true) : '',
+                    (int) $body['quote_group_id'],
+                    true
+                ) : '',
             'discount_amount' => (float) 0,
             'discount_percent' => (float) 0,
             'url_key' => '',
@@ -152,11 +167,12 @@ trait Add
                     $this->performCreateConfirmSave($user, $quote, $ajax_body, $gR, $trR, $formHydrator);
                     $successful = true;
                 }
-            // In the event of the database being manually edited
-            // (highly unlikely) present this warning anyway
+                // In the event of the database being manually edited
+                // (highly unlikely) present this warning anyway
             } elseif ($user_client_count > 1) {
                 $this->flashMessage('warning', $this->translator->translate(
-                    'user.inv.more.than.one.assigned'));
+                    'user.inv.more.than.one.assigned'
+                ));
             }
         }
         //return response to quote.js to reload page at location
@@ -184,10 +200,12 @@ trait Add
                 . ' '
                 . ($user_client->getClient()?->getClientSurname() ?? '');
         } else {
-            $this->flashMessage('danger',
+            $this->flashMessage(
+                'danger',
                 $d->clientRepository->repoClientquery($client_id)
                     ->getClientFullName() . ': '
-                    . $this->translator->translate('user.client.no.account'));
+                    . $this->translator->translate('user.client.no.account')
+            );
         }
         $user = $this->activeUser($client_id, $d->uR, $d->ucR, $d->uiR);
         if (null === $user) {
@@ -197,12 +215,16 @@ trait Add
         $model_id = $saved_model->hasIdentity() ? $saved_model->reqId() : 0;
         if ($model_id > 0) {
             $this->defaultTaxes($quote, $d->trR, $formHydrator);
-            $this->flashMessage('info',
+            $this->flashMessage(
+                'info',
                 $this->sR->getSetting('generate_quote_number_for_draft') === '1'
                     ? $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('yes')
-                    : $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('no'));
-            $this->flashMessage('success',
-                $this->translator->translate('record.successfully.created') . '➡️ ' . $client_fullname);
+                    : $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('no')
+            );
+            $this->flashMessage(
+                'success',
+                $this->translator->translate('record.successfully.created') . '➡️ ' . $client_fullname
+            );
         }
         return $model_id > 0
             ? $this->webService->getRedirectResponse('quote/view', ['id' => $model_id])
@@ -221,9 +243,11 @@ trait Add
         $model_id = $this->quote_service->saveQuote($user, $quote, $ajax_body, $this->sR, $gR)->reqId();
         $this->quote_amount_service->initializeQuoteAmount(new QuoteAmount(), $model_id);
         $this->defaultTaxes($quote, $trR, $formHydrator);
-        $this->flashMessage('info',
+        $this->flashMessage(
+            'info',
             $this->sR->getSetting('generate_quote_number_for_draft') === '1'
                 ? $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('yes')
-                : $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('no'));
+                : $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('no')
+        );
     }
 }

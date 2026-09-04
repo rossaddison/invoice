@@ -36,9 +36,9 @@ $statusBadge = static function (string $status): string {
         <?= Html::tag(
             'p',
             'Which Access Point provider actually sends your Peppol documents, and whether it has a real'
-                . ' confirmed send behind it — not a synthetic ping, since neither provider exposes a'
-                . ' side-effect-free health check the way a payment gateway does. Only one provider is'
-                . ' active at a time (Settings > Peppol Access Point).',
+                        . ' confirmed send behind it — not a synthetic ping, since neither provider exposes a'
+                        . ' side-effect-free health check the way a payment gateway does. Only one provider is'
+                        . ' active at a time (Settings > Peppol Access Point).',
             ['class' => 'lead mb-4'],
         )->render(); ?>
 
@@ -57,16 +57,24 @@ $statusBadge = static function (string $status): string {
                             <?= Html::tag('td', $row['name'], ['data-label' => 'Provider'])->render(); ?>
                             <?= Html::tag('td', $row['sdk_version'] ?? '—',
                                 ['data-label' => 'Version'])->render(); ?>
-                            <?= Html::tag('td',
+                            <?= Html::tag(
+                                'td',
                                 $statusBadge($row['sandbox_status'])
                                 . ($row['sandbox_tested_at'] !== null
-                                    ? Html::tag('div', $row['sandbox_tested_at'],
-                                        ['class' => 'small text-muted'])->render()
-                                    : ''),
-                                ['data-label' => 'Sandbox Tested'])
+                                ? Html::tag(
+                                    'div',
+                                    $row['sandbox_tested_at'],
+                                    ['class' => 'small text-muted']
+                                )->render()
+                                : ''),
+                                ['data-label' => 'Sandbox Tested']
+                            )
                                 ->encode(false)->render(); ?>
-                            <?= Html::tag('td', $row['notes'],
-                                ['class' => 'small text-muted', 'data-label' => 'Notes'])->render(); ?>
+                            <?= Html::tag(
+                                'td',
+                                $row['notes'],
+                                ['class' => 'small text-muted', 'data-label' => 'Notes']
+                            )->render(); ?>
                         <?= Html::closeTag('tr'); ?>
                     <?php endforeach; ?>
                 <?= Html::closeTag('tbody'); ?>
@@ -78,8 +86,8 @@ $statusBadge = static function (string $status): string {
         <?= Html::tag(
             'p',
             'A separate, self-hosted AS4 stack for point-to-point delivery without Peppol PKI or SMP'
-                . ' lookup — used for BIS Advanced Ordering and bilateral connectivity testing. Not'
-                . ' selected via the Access Point Provider setting above; independent of it.',
+            . ' lookup — used for BIS Advanced Ordering and bilateral connectivity testing. Not'
+            . ' selected via the Access Point Provider setting above; independent of it.',
             ['class' => 'text-muted small mb-3'],
         )->render(); ?>
         <?= Html::openTag('div', ['class' => 'table-responsive mb-4']); ?>
@@ -87,13 +95,18 @@ $statusBadge = static function (string $status): string {
                 <?= Html::openTag('tbody'); ?>
                     <?= Html::openTag('tr'); ?>
                         <?= Html::tag('td', 'Bilateral send tested', ['class' => 'fw-semibold'])->render(); ?>
-                        <?= Html::tag('td',
+                        <?= Html::tag(
+                            'td',
                             $statusBadge($as4Bilateral['tested'] ? 'pass' : 'untested')
-                            . ($as4Bilateral['tested_at'] !== null
-                                ? Html::tag('div', $as4Bilateral['tested_at'],
-                                    ['class' => 'small text-muted'])->render()
-                                : ''))
-                            ->encode(false)->render(); ?>
+                                        . ($as4Bilateral['tested_at'] !== null
+                                            ? Html::tag(
+                                                'div',
+                                                $as4Bilateral['tested_at'],
+                                                ['class' => 'small text-muted']
+                                            )->render()
+                                            : '')
+                        )
+                        ->encode(false)->render(); ?>
                     <?= Html::closeTag('tr'); ?>
                     <?php if ($as4Bilateral['peer_party_id'] !== null): ?>
                         <?= Html::openTag('tr'); ?>
@@ -111,8 +124,8 @@ $statusBadge = static function (string $status): string {
             <?= Html::tag(
                 'p',
                 'Not integrated into this app — no send capability exists for these yet, so'
-                    . ' there\'s nothing here for this app itself to have tested. Listed because a real,'
-                    . ' no-sales-call sandbox was confirmed directly against the provider\'s own site.',
+                . ' there\'s nothing here for this app itself to have tested. Listed because a real,'
+                . ' no-sales-call sandbox was confirmed directly against the provider\'s own site.',
                 ['class' => 'text-muted small mb-3'],
             )->render(); ?>
             <?= Html::openTag('div', ['class' => 'table-responsive']); ?>
@@ -127,12 +140,21 @@ $statusBadge = static function (string $status): string {
                     <?= Html::openTag('tbody'); ?>
                         <?php foreach ($referenceProviders as $provider): ?>
                             <?= Html::openTag('tr'); ?>
-                                <?= Html::tag('td', $provider['name'],
-                                    ['data-label' => 'Provider'])->render(); ?>
-                                <?= Html::tag('td', $provider['regions'],
-                                    ['data-label' => 'Regions'])->render(); ?>
-                                <?= Html::tag('td', $provider['notes'],
-                                    ['class' => 'small text-muted', 'data-label' => 'Notes'])->render(); ?>
+                                <?= Html::tag(
+                                    'td',
+                                    $provider['name'],
+                                    ['data-label' => 'Provider']
+                                )->render(); ?>
+                                <?= Html::tag(
+                                    'td',
+                                    $provider['regions'],
+                                    ['data-label' => 'Regions']
+                                )->render(); ?>
+                                <?= Html::tag(
+                                    'td',
+                                    $provider['notes'],
+                                    ['class' => 'small text-muted', 'data-label' => 'Notes']
+                                )->render(); ?>
                             <?= Html::closeTag('tr'); ?>
                         <?php endforeach; ?>
                     <?= Html::closeTag('tbody'); ?>

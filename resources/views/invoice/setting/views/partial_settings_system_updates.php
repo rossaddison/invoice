@@ -50,80 +50,94 @@ $instructions = [
 $platformLabels = ['yii' => 'yii serve (Windows CLI)', 'wamp' => 'WAMP', 'alpine' => 'Alpine Linux', 'linux' => 'Linux (apt)'];
 
 echo H::openTag('div', $row); //1
- echo H::openTag('div', $colMd8); //2
-  echo H::openTag('div', $panel); //3
-   echo H::openTag('div', $panelHead); //4
-    echo H::encode($translator->translate('system.updates'));
-   echo H::closeTag('div'); //4
-   echo H::openTag('div', $panelBody); //4
+echo H::openTag('div', $colMd8); //2
+echo H::openTag('div', $panel); //3
+echo H::openTag('div', $panelHead); //4
+echo H::encode($translator->translate('system.updates'));
+echo H::closeTag('div'); //4
+echo H::openTag('div', $panelBody); //4
 
-    echo H::openTag('dl', ['class' => 'row mb-4']); //5
-     echo H::tag('dt', H::encode($translator->translate('system.updates.current.version')), ['class' => 'col-sm-4']);
-     echo H::tag('dd', H::encode($r->currentVersion), ['class' => 'col-sm-8']);
-     echo H::tag('dt', H::encode($translator->translate('system.updates.latest.version')), ['class' => 'col-sm-4']);
-     echo H::tag('dd', H::encode($r->latestVersion ?? '—'), ['class' => 'col-sm-8']);
-     echo H::tag('dt', H::encode($translator->translate('system.updates.last.checked')), ['class' => 'col-sm-4']);
-     echo H::tag('dd',
-        H::encode($r->checkedAt ?? $translator->translate('system.updates.never.checked')),
-        ['class' => 'col-sm-8']);
-    echo H::closeTag('dl'); //5
+echo H::openTag('dl', ['class' => 'row mb-4']); //5
+echo H::tag('dt', H::encode($translator->translate('system.updates.current.version')), ['class' => 'col-sm-4']);
+echo H::tag('dd', H::encode($r->currentVersion), ['class' => 'col-sm-8']);
+echo H::tag('dt', H::encode($translator->translate('system.updates.latest.version')), ['class' => 'col-sm-4']);
+echo H::tag('dd', H::encode($r->latestVersion ?? '—'), ['class' => 'col-sm-8']);
+echo H::tag('dt', H::encode($translator->translate('system.updates.last.checked')), ['class' => 'col-sm-4']);
+echo H::tag(
+    'dd',
+    H::encode($r->checkedAt ?? $translator->translate('system.updates.never.checked')),
+    ['class' => 'col-sm-8']
+);
+echo H::closeTag('dl'); //5
 
-    if ($r->error !== null) { //5
-        echo H::tag('div',
-            H::encode($translator->translate('system.updates.check.failed')) . ': ' . H::encode($r->error),
-            ['class' => 'alert alert-danger']);
-    } elseif ($r->latestVersion === null) { //5
-        echo H::tag('div', H::encode($translator->translate('system.updates.never.checked')),
-            ['class' => 'alert alert-secondary']);
-    } elseif ($r->isOutdated) { //5
-        $alertClass = $r->isSecurityRelease ? 'alert-danger' : 'alert-warning';
-        $label = $r->isSecurityRelease
-            ? H::encode($translator->translate('system.updates.security.release')) . ' — '
-            : '';
-        echo H::tag('div',
-            $label . H::encode($translator->translate('system.updates.outdated')) . ': ' . H::encode($r->latestVersion),
-            ['class' => 'alert ' . $alertClass]);
-    } else { //5
-        echo H::tag('div', H::encode($translator->translate('system.updates.up.to.date')),
-            ['class' => 'alert alert-success']);
-    } //5
+if ($r->error !== null) { //5
+    echo H::tag(
+        'div',
+        H::encode($translator->translate('system.updates.check.failed')) . ': ' . H::encode($r->error),
+        ['class' => 'alert alert-danger']
+    );
+} elseif ($r->latestVersion === null) { //5
+    echo H::tag(
+        'div',
+        H::encode($translator->translate('system.updates.never.checked')),
+        ['class' => 'alert alert-secondary']
+    );
+} elseif ($r->isOutdated) { //5
+    $alertClass = $r->isSecurityRelease ? 'alert-danger' : 'alert-warning';
+    $label = $r->isSecurityRelease
+        ? H::encode($translator->translate('system.updates.security.release')) . ' — '
+        : '';
+    echo H::tag(
+        'div',
+        $label . H::encode($translator->translate('system.updates.outdated')) . ': ' . H::encode($r->latestVersion),
+        ['class' => 'alert ' . $alertClass]
+    );
+} else { //5
+    echo H::tag(
+        'div',
+        H::encode($translator->translate('system.updates.up.to.date')),
+        ['class' => 'alert alert-success']
+    );
+} //5
 
-    echo H::a(H::encode($translator->translate('system.updates.check.now')),
-        $urlGenerator->generate('setting/checkPhpVersion'),
-        ['class' => 'btn btn-primary mb-4']);
+echo H::a(
+    H::encode($translator->translate('system.updates.check.now')),
+    $urlGenerator->generate('setting/checkPhpVersion'),
+    ['class' => 'btn btn-primary mb-4']
+);
 
-    echo H::tag('p', H::encode($translator->translate('system.updates.select.platform')), ['class' => 'mb-2']);
+echo H::tag('p', H::encode($translator->translate('system.updates.select.platform')), ['class' => 'mb-2']);
 
-    echo H::openTag('div', ['class' => 'btn-group mb-3', 'role' => 'group']); //5
-     foreach ($platformLabels as $platform => $label) { //6
-        echo H::button(H::encode($label), [
-            'type' => 'button',
-            'class' => 'btn btn-outline-secondary',
-            'data-action' => 'toggle-panel',
-            'data-target' => '#system-update-instructions-' . $platform,
-        ]);
-     } //6
-    echo H::closeTag('div'); //5
+echo H::openTag('div', ['class' => 'btn-group mb-3', 'role' => 'group']); //5
+foreach ($platformLabels as $platform => $label) { //6
+    echo H::button(H::encode($label), [
+        'type' => 'button',
+        'class' => 'btn btn-outline-secondary',
+        'data-action' => 'toggle-panel',
+        'data-target' => '#system-update-instructions-' . $platform,
+    ]);
+} //6
+echo H::closeTag('div'); //5
 
-    foreach ($instructions as $platform => $commands) { //5
-        $preId = 'system-update-instructions-text-' . $platform;
-        echo H::openTag('div', [
-            'id' => 'system-update-instructions-' . $platform,
-            'class' => 'card mb-2 d-none',
-        ]); //6
-         echo H::openTag('div', ['class' => 'card-body']); //7
-          echo H::tag('pre', H::encode($commands), ['id' => $preId, 'class' => 'mb-2']);
-          echo H::button(H::encode($translator->translate('copy')), [
-            'type' => 'button',
-            'class' => 'btn btn-sm btn-outline-primary',
-            'data-action' => 'copy-to-clipboard',
-            'data-copy-target' => '#' . $preId,
-          ]);
-         echo H::closeTag('div'); //7
-        echo H::closeTag('div'); //6
-    } //5
+foreach ($instructions as $platform => $commands) { //5
+    $preId = 'system-update-instructions-text-' . $platform;
+    echo H::openTag('div', [
+        'id' => 'system-update-instructions-' . $platform,
+        'class' => 'card mb-2 d-none',
+    ]); //6
+    echo H::openTag('div', ['class' => 'card-body']); //7
+    echo H::tag('pre', H::encode($commands), ['id' => $preId, 'class' => 'mb-2']);
+    echo H::button(H::encode($translator->translate('copy')), [
+      'type' => 'button',
+      'class' => 'btn btn-sm btn-outline-primary',
+      'data-action' => 'copy-to-clipboard',
+      'data-copy-target' => '#' . $preId,
+    ]);
+    echo H::closeTag('div'); //7
+    echo H::closeTag('div'); //6
+} //5
 
-   echo H::closeTag('div'); //4
-  echo H::closeTag('div'); //3
- echo H::closeTag('div'); //2
+echo H::closeTag('div'); //4
+echo H::closeTag('div'); //3
+echo H::closeTag('div'); //2
 echo H::closeTag('div'); //1

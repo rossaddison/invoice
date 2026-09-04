@@ -49,7 +49,7 @@ final class StripeWebhookHandlerTest extends TestCase
     {
         $factory = $this->createStub(DataResponseFactoryInterface::class);
         $factory->method('createResponse')->willReturnCallback(
-            static fn(mixed $data = null): ResponseInterface => new Response(200, [], (string) $data),
+            static fn (mixed $data = null): ResponseInterface => new Response(200, [], (string) $data),
         );
 
         return $factory;
@@ -225,7 +225,7 @@ final class StripeWebhookHandlerTest extends TestCase
 
         $recorder = $this->createMock(OnlinePaymentRecorderService::class);
         $recorder->expects(self::once())->method('record')->with(self::callback(
-            static fn(PaymentRecordContext $ctx): bool => $ctx->response === false && $ctx->invoice_payment_method === 5,
+            static fn (PaymentRecordContext $ctx): bool => $ctx->response === false && $ctx->invoice_payment_method === 5,
         ))->willReturn($this->createStub(ResponseInterface::class));
 
         $iR = $this->createMock(InvRepository::class);

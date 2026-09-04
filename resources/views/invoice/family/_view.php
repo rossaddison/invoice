@@ -55,29 +55,29 @@ $selectLabel = static function (array $optionsData, int|string|null $value): str
                         $translator->translate('family.name'),
                         $form->getFamilyName(),
                     );
-                    ReadOnlyField::render(
-                        $translator->translate('category.primary'),
-                        $selectLabel($categoryPrimaries, $form->getCategoryPrimaryId()),
-                    );
-                    ReadOnlyField::render(
-                        $translator->translate('category.secondary'),
-                        $selectLabel($categorySecondaries, $form->getCategorySecondaryId()),
-                    );
-                    ReadOnlyField::render(
-                        $translator->translate('family.comma.list'),
-                        $form->getFamilyCommalist(),
-                    );
-                    ReadOnlyField::render(
-                        $translator->translate('family.product.prefix'),
-                        $form->getFamilyProductprefix(),
-                    );
-                ?>
+ReadOnlyField::render(
+    $translator->translate('category.primary'),
+    $selectLabel($categoryPrimaries, $form->getCategoryPrimaryId()),
+);
+ReadOnlyField::render(
+    $translator->translate('category.secondary'),
+    $selectLabel($categorySecondaries, $form->getCategorySecondaryId()),
+);
+ReadOnlyField::render(
+    $translator->translate('family.comma.list'),
+    $form->getFamilyCommalist(),
+);
+ReadOnlyField::render(
+    $translator->translate('family.product.prefix'),
+    $form->getFamilyProductprefix(),
+);
+?>
                 <?php
-                $i = 1;
-                /**
-                  * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
-                  */
-                foreach ($custom_fields as $custom_field) : ?>
+$i = 1;
+/**
+  * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
+  */
+foreach ($custom_fields as $custom_field) : ?>
                     <?php if ($custom_field->getLocation() !== 0) {
                         continue;
                     } ?>
@@ -86,12 +86,12 @@ $selectLabel = static function (array $optionsData, int|string|null $value): str
                         <?= Html::openTag('td'); ?>
                     <?php
                         $familyCustomForm = new FamilyCustomForm();
-$cvH->printFieldForView($custom_field, $familyCustomForm, $familyCustomValues);?>
+    $cvH->printFieldForView($custom_field, $familyCustomForm, $familyCustomValues);?>
                         <?= Html::closeTag('td'); ?>
                     <?= Html::closeTag('tr'); ?>
                 <?php
-                    $i = $i + 1;
-                endforeach; ?>
+                        $i = $i + 1;
+endforeach; ?>
               <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
           <?= Html::closeTag('div'); ?>

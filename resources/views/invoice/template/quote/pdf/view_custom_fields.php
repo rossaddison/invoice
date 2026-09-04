@@ -21,11 +21,11 @@ echo H::openTag('div', $row); //0
  * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
  */
 foreach ($custom_fields as $custom_field) {
- if ($custom_field->getLocation() == 1) {
-  continue;
- }
- echo H::openTag('div'); //1
-  $cvH->printFieldForPdf($translator, $quote_custom_values, $custom_field);
- echo H::closeTag('div'); //1
+    if ($custom_field->getLocation() == 1) {
+        continue;
+    }
+    echo H::openTag('div'); //1
+    $cvH->printFieldForPdf($translator, $quote_custom_values, $custom_field);
+    echo H::closeTag('div'); //1
 }
 echo H::closeTag('div'); //0

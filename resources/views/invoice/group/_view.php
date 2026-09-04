@@ -30,19 +30,19 @@ use Yiisoft\Html\Html;
 <?= Html::openTag('div'); ?>
     <?php
         ReadOnlyField::render($translator->translate('name'), $form->getName());
-        ReadOnlyField::render(
-            $translator->translate('identifier.format'),
-            $form->getIdentifierFormat(),
-        );
-        ReadOnlyField::render(
-            $translator->translate('left.pad'),
-            $form->getLeftPad() !== null ? (string) $form->getLeftPad() : '0',
-        );
-        ReadOnlyField::render(
-            $translator->translate('next.id'),
-            $form->getNextId() !== null ? (string) $form->getNextId() : '1',
-        );
-    ?>
+ReadOnlyField::render(
+    $translator->translate('identifier.format'),
+    $form->getIdentifierFormat(),
+);
+ReadOnlyField::render(
+    $translator->translate('left.pad'),
+    $form->getLeftPad() !== null ? (string) $form->getLeftPad() : '0',
+);
+ReadOnlyField::render(
+    $translator->translate('next.id'),
+    $form->getNextId() !== null ? (string) $form->getNextId() : '1',
+);
+?>
     <?= $button::back(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

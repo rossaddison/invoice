@@ -32,7 +32,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate(($routeCurrent->getName() ?? 'postaladdress/index')))
     ->id('btn-reset')
     ->render();
@@ -47,10 +47,11 @@ $columns = [
         'client_id',
         header: $translator->translate('client.name'),
         content: static function (PostalAddress $model) use ($cR): string {
-            if (null!==($clientId = $model->getClientId())) {
+            if (null !== ($clientId = $model->getClientId())) {
                 $clientName = ($cR->repoClientCount($clientId) > 0 ?
                     Html::encode(
-                        ($cR->repoClientquery($clientId))->getClientName()) : '');
+                        ($cR->repoClientquery($clientId))->getClientName()
+                    ) : '');
                 return $clientName;
             } else {
                 return Html::encode('');
@@ -61,7 +62,7 @@ $columns = [
         'client_id',
         header: $translator->translate('client.surname'),
         content: static function (PostalAddress $model) use ($cR): string {
-            if (null!==($clientId = $model->getClientId())) {
+            if (null !== ($clientId = $model->getClientId())) {
                 $clientSurname = ($cR->repoClientCount($clientId) > 0 ?
                     Html::encode(($cR->repoClientquery($clientId))->getClientSurname())
                         : '');
@@ -73,16 +74,17 @@ $columns = [
     new DataColumn(
         'client_id',
         header: $translator->translate('active'),
-        content: static function (PostalAddress $model)
-            use ($cR, $urlGenerator): Yiisoft\Html\Tag\A|string {
-            if (null!==($clientId = $model->getClientId()) && $cR->repoClientCount($clientId) > 0) {
+        content: static function (PostalAddress $model) use ($cR, $urlGenerator): Yiisoft\Html\Tag\A|string {
+            if (null !== ($clientId = $model->getClientId()) && $cR->repoClientCount($clientId) > 0) {
                 $client = $cR->repoClientquery($clientId);
                 if (null !== $client->getPostaladdressId()
                         && $client->getPostaladdressId() > 0) {
                     return 'Postal Address Used';
                 } else {
-                    return Html::a('No Postal address', $urlGenerator->generate('client/edit',
-                        ['id' => $clientId, 'origin' => 'inv']));
+                    return Html::a('No Postal address', $urlGenerator->generate(
+                        'client/edit',
+                        ['id' => $clientId, 'origin' => 'inv']
+                    ));
                 }
             }
             return Html::encode('');
@@ -91,23 +93,35 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (PostalAddress $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']),
-                $urlGenerator->generate('postaladdress/view',
-                    ['id' => $model->reqId()]), []);
+            return Html::a(
+                Html::tag('i', '', ['class' => 'bi-eye']),
+                $urlGenerator->generate(
+                    'postaladdress/view',
+                    ['id' => $model->reqId()]
+                ),
+                []
+            );
         },
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (PostalAddress $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']),
-                $urlGenerator->generate('postaladdress/edit',
-                    ['id' => $model->reqId()]), []);
+            return Html::a(
+                Html::tag('i', '', ['class' => 'bi-eye']),
+                $urlGenerator->generate(
+                    'postaladdress/edit',
+                    ['id' => $model->reqId()]
+                ),
+                []
+            );
         },
     ),
     new DataColumn(
         header: $translator->translate('delete'),
-        content: static function (PostalAddress $model) use ($translator,
-            $urlGenerator): A {
+        content: static function (PostalAddress $model) use (
+            $translator,
+            $urlGenerator
+        ): A {
             return Html::a(
                 Html::tag(
                     'button',
@@ -121,8 +135,10 @@ $columns = [
                         . "');",
                     ],
                 ),
-                    $urlGenerator->generate('postaladdress/delete',
-                        ['id' => $model->reqId()]),
+                $urlGenerator->generate(
+                    'postaladdress/delete',
+                    ['id' => $model->reqId()]
+                ),
                 [],
             );
         },

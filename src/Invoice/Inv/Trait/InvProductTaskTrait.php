@@ -32,8 +32,10 @@ trait InvProductTaskTrait
      * @return EntityReader
      */
     public function repoProductWithInvItemsFromToDate(
-            int $product_id, string $from_date, string $to_date): EntityReader
-    {
+        int $product_id,
+        string $from_date,
+        string $to_date
+    ): EntityReader {
         $query = $this->select()
                       ->distinct()
                       ->with('items')
@@ -52,8 +54,11 @@ trait InvProductTaskTrait
      * @return float
      */
     public function withItemSubtotalFromToUsingProduct(
-            int $product_id, string $from, string $to, IIAR $iiaR): float
-    {
+        int $product_id,
+        string $from,
+        string $to,
+        IIAR $iiaR
+    ): float {
         $invoices =
             $this->repoProductWithInvItemsFromToDate($product_id, $from, $to);
         $sum = 0.00;
@@ -85,10 +90,16 @@ trait InvProductTaskTrait
      * @return float
      */
     public function withItemTaxTotalFromToUsingProduct(
-        int $product_id, string $from, string $to, IIAR $iiaR): float
-    {
+        int $product_id,
+        string $from,
+        string $to,
+        IIAR $iiaR
+    ): float {
         $invoices = $this->repoProductWithInvItemsFromToDate(
-                                                        $product_id, $from, $to);
+            $product_id,
+            $from,
+            $to
+        );
         $sum = 0.00;
         /**
          * @var Inv $invoice
@@ -121,8 +132,11 @@ trait InvProductTaskTrait
      * @return float
      */
     public function withItemTotalFromToUsingProduct(
-                int $product_id, string $from, string $to, IIAR $iiaR): float
-    {
+        int $product_id,
+        string $from,
+        string $to,
+        IIAR $iiaR
+    ): float {
         $invoices =
                 $this->repoProductWithInvItemsFromToDate($product_id, $from, $to);
         $sum = 0.00;
@@ -168,8 +182,10 @@ trait InvProductTaskTrait
      * @return EntityReader
      */
     public function repoTaskWithInvItemsFromToDate(
-                int $task_id, string $from_date, string $to_date): EntityReader
-    {
+        int $task_id,
+        string $from_date,
+        string $to_date
+    ): EntityReader {
         $query = $this->select()
                       ->distinct()
                       ->with('items')
@@ -188,8 +204,11 @@ trait InvProductTaskTrait
      * @return float
      */
     public function withItemSubtotalFromToUsingTask(
-                    int $task_id, string $from, string $to, IIAR $iiaR): float
-    {
+        int $task_id,
+        string $from,
+        string $to,
+        IIAR $iiaR
+    ): float {
         $invoices = $this->repoTaskWithInvItemsFromToDate($task_id, $from, $to);
         $sum = 0.00;
         /**
@@ -220,8 +239,11 @@ trait InvProductTaskTrait
      * @return float
      */
     public function withItemTaxTotalFromToUsingTask(
-                    int $task_id, string $from, string $to, IIAR $iiaR): float
-    {
+        int $task_id,
+        string $from,
+        string $to,
+        IIAR $iiaR
+    ): float {
         $invoices = $this->repoTaskWithInvItemsFromToDate($task_id, $from, $to);
         $sum = 0.00;
         /**
@@ -254,8 +276,11 @@ trait InvProductTaskTrait
      * @return float
      */
     public function withItemTotalFromToUsingTask(
-                    int $task_id, string $from, string $to, IIAR $iiaR): float
-    {
+        int $task_id,
+        string $from,
+        string $to,
+        IIAR $iiaR
+    ): float {
         $invoices = $this->repoTaskWithInvItemsFromToDate($task_id, $from, $to);
         $sum = 0.00;
         /**

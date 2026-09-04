@@ -78,8 +78,10 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (EmailTemplate $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('emailtemplate/view',
-                    ['email_template_id' => $model->reqEmailTemplateId()]);
+                return $urlGenerator->generate(
+                    'emailtemplate/view',
+                    ['email_template_id' => $model->reqEmailTemplateId()]
+                );
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -102,8 +104,10 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (EmailTemplate $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('emailtemplate/delete',
-                    ['email_template_id' => $model->reqEmailTemplateId()]);
+                return $urlGenerator->generate(
+                    'emailtemplate/delete',
+                    ['email_template_id' => $model->reqEmailTemplateId()]
+                );
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -164,4 +168,3 @@ echo GridView::widget()
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
-

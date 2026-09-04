@@ -32,13 +32,13 @@ $this->setTitle('Cart');
     <p class="text-muted">Your cart is empty.</p>
     <?= Html::a('Browse products', $urlGenerator->generate('shop/catalog/index'), ['class' => 'btn btn-primary']) ?>
 <?php else:
-    // Registered here rather than in the storefront layout — nothing
-    // else on the site needs it, and this view's own registration runs
-    // before the layout collects $assetManager->getJsFiles() (see
-    // CartAsset's own docblock).
-    $assetManager->register(CartAsset::class);
-    $this->addJsFiles($assetManager->getJsFiles());
-?>
+        // Registered here rather than in the storefront layout — nothing
+        // else on the site needs it, and this view's own registration runs
+        // before the layout collects $assetManager->getJsFiles() (see
+        // CartAsset's own docblock).
+        $assetManager->register(CartAsset::class);
+        $this->addJsFiles($assetManager->getJsFiles());
+        ?>
 <div
     id="cart-table-wrapper"
     data-csrf-token="<?= Html::encode($csrf->getToken()) ?>"
@@ -61,10 +61,10 @@ $this->setTitle('Cart');
             <td><?= Html::encode($currency->format($item->price)) ?></td>
             <td>
                 <?= new Form()
-                    ->post($urlGenerator->generate('shop/cart/update'))
-                    ->csrf($csrf)
-                    ->addAttributes(['class' => 'd-flex gap-2 js-cart-update-form'])
-                    ->open() ?>
+                            ->post($urlGenerator->generate('shop/cart/update'))
+                            ->csrf($csrf)
+                            ->addAttributes(['class' => 'd-flex gap-2 js-cart-update-form'])
+                            ->open() ?>
                 <?= Html::hiddenInput('product_id', (string) $item->productId) ?>
                 <?= Html::input('number', 'quantity', (string) $item->quantity, ['min' => '0', 'step' => '1', 'class' => 'form-control form-control-sm js-cart-qty', 'style' => 'width: 5rem;']) ?>
                 <button type="submit" class="btn btn-outline-secondary btn-sm">Update</button>
@@ -73,10 +73,10 @@ $this->setTitle('Cart');
             <td class="js-cart-subtotal"><?= Html::encode($currency->format($item->subtotal())) ?></td>
             <td>
                 <?= new Form()
-                    ->post($urlGenerator->generate('shop/cart/remove', ['id' => (string) $item->productId]))
-                    ->csrf($csrf)
-                    ->addAttributes(['class' => 'js-cart-remove-form'])
-                    ->open() ?>
+                            ->post($urlGenerator->generate('shop/cart/remove', ['id' => (string) $item->productId]))
+                            ->csrf($csrf)
+                            ->addAttributes(['class' => 'js-cart-remove-form'])
+                            ->open() ?>
                 <button type="submit" class="btn btn-outline-danger btn-sm">Remove</button>
                 <?= new Form()->close() ?>
             </td>

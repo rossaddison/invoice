@@ -15,8 +15,14 @@ class As4ErrorInfo
     #[Cycle\Column(type: 'text', nullable: true)]
     private ?string $errorDescription = null;
 
-    public function getErrorCode(): ?string { return $this->errorCode; }
-    public function getErrorDescription(): ?string { return $this->errorDescription; }
+    public function getErrorCode(): ?string
+    {
+        return $this->errorCode;
+    }
+    public function getErrorDescription(): ?string
+    {
+        return $this->errorDescription;
+    }
 
     public function set(string $errorCode, string $errorDescription): void
     {

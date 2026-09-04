@@ -83,7 +83,7 @@ use Yiisoft\Html\Tag\A;
 <form method="POST"
       class="form-inline"
       action="<?= $urlGenerator->generate($url,
-              ['url_key' => $url_key, 'gateway' => $gateway]); ?>">
+          ['url_key' => $url_key, 'gateway' => $gateway]); ?>">
        <input type="hidden"
               name="_csrf"
               value="<?= $csrf ?>">
@@ -92,9 +92,9 @@ use Yiisoft\Html\Tag\A;
                <i class="bi bi-arrow-left"></i>
        </button>
        <?php if ($s->getSetting('gateway_'
-               . lcfirst($gateway)
-               . '_sandbox') === '1') {
-                 new A()
+           . lcfirst($gateway)
+           . '_sandbox') === '1') {
+           new A()
                 ->href($sandbox_url)
                 ->content($sandbox_url)
                 ->render();

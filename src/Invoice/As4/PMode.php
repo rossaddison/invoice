@@ -49,30 +49,89 @@ class PMode
         $this->errorConfig   = new PModeErrorConfig();
     }
 
-    public function getParties(): PModeParties { return $this->parties; }
-    public function getSecurity(): PModeSecurity { return $this->security; }
-    public function getReliability(): PModeReliability { return $this->reliability; }
-    public function getReceiptConfig(): PModeReceiptConfig { return $this->receiptConfig; }
-    public function getErrorConfig(): PModeErrorConfig { return $this->errorConfig; }
+    public function getParties(): PModeParties
+    {
+        return $this->parties;
+    }
+    public function getSecurity(): PModeSecurity
+    {
+        return $this->security;
+    }
+    public function getReliability(): PModeReliability
+    {
+        return $this->reliability;
+    }
+    public function getReceiptConfig(): PModeReceiptConfig
+    {
+        return $this->receiptConfig;
+    }
+    public function getErrorConfig(): PModeErrorConfig
+    {
+        return $this->errorConfig;
+    }
 
-    public function getService(): string { return $this->service; }
-    public function getAction(): string { return $this->action; }
+    public function getService(): string
+    {
+        return $this->service;
+    }
+    public function getAction(): string
+    {
+        return $this->action;
+    }
 
-    public function getMep(): string { return $this->mep; }
-    public function setMep(string $mep): self { $this->mep = $mep; return $this; }
+    public function getMep(): string
+    {
+        return $this->mep;
+    }
+    public function setMep(string $mep): self
+    {
+        $this->mep = $mep;
+        return $this;
+    }
 
-    public function getMepBinding(): string { return $this->mepBinding; }
-    public function setMepBinding(string $binding): self { $this->mepBinding = $binding; return $this; }
+    public function getMepBinding(): string
+    {
+        return $this->mepBinding;
+    }
+    public function setMepBinding(string $binding): self
+    {
+        $this->mepBinding = $binding;
+        return $this;
+    }
 
-    public function getMpc(): string { return $this->mpc; }
-    public function setMpc(string $mpc): self { $this->mpc = $mpc; return $this; }
+    public function getMpc(): string
+    {
+        return $this->mpc;
+    }
+    public function setMpc(string $mpc): self
+    {
+        $this->mpc = $mpc;
+        return $this;
+    }
 
-    public function isCompressionEnabled(): bool { return $this->compressionEnabled; }
-    public function setCompressionEnabled(bool $enabled): self { $this->compressionEnabled = $enabled; return $this; }
-    public function getCompressionType(): string { return $this->compressionType; }
+    public function isCompressionEnabled(): bool
+    {
+        return $this->compressionEnabled;
+    }
+    public function setCompressionEnabled(bool $enabled): self
+    {
+        $this->compressionEnabled = $enabled;
+        return $this;
+    }
+    public function getCompressionType(): string
+    {
+        return $this->compressionType;
+    }
 
-    public function isFourCornerEnabled(): bool { return $this->fourCornerEnabled; }
-    public function setFourCornerEnabled(bool $enabled): self { $this->fourCornerEnabled = $enabled; return $this; }
+    public function isFourCornerEnabled(): bool
+    {
+        return $this->fourCornerEnabled;
+    }
+    public function setFourCornerEnabled(bool $enabled): self
+    {
+        $this->fourCornerEnabled = $enabled;
+        return $this;
+    }
 
     /**
      * Convert P-Mode to array for serialization/storage.

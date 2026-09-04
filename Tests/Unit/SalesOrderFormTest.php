@@ -38,7 +38,7 @@ final class SalesOrderFormTest extends TestCase
     {
         // Create very long content (over 65535 characters)
         $longContent = str_repeat('This is a very long sales order content. ', 2000); // ~86,000 chars
-        
+
         $form = $this->createFormWithData([
             'notes' => $longContent,
             'payment_term' => $longContent,
@@ -46,9 +46,9 @@ final class SalesOrderFormTest extends TestCase
             'group_id' => 1,
             'quote_id' => '1'
         ]);
-        
+
         $result = $this->validator->validate($form);
-        
+
         // Should be valid - no length constraints on longText fields
         $this->assertTrue($result->isValid(), 'LongText fields (notes, payment_term) should accept unlimited content');
     }
@@ -65,10 +65,10 @@ final class SalesOrderFormTest extends TestCase
             'group_id' => 1,
             'quote_id' => '1'
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'Number field should fail validation with 101 characters');
-        
+
         // Test valid number field
         $form = $this->createFormWithData([
             'number' => str_repeat('1', 100), // 100 chars - should pass
@@ -76,7 +76,7 @@ final class SalesOrderFormTest extends TestCase
             'group_id' => 1,
             'quote_id' => '1'
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'Number field should pass validation with 100 characters');
     }
@@ -93,10 +93,10 @@ final class SalesOrderFormTest extends TestCase
             'group_id' => 1,
             'quote_id' => '1'
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'client_po_number should fail with 101 characters');
-        
+
         // Test valid client PO fields
         $form = $this->createFormWithData([
             'client_po_number' => str_repeat('P', 100), // 100 chars - should pass
@@ -106,7 +106,7 @@ final class SalesOrderFormTest extends TestCase
             'group_id' => 1,
             'quote_id' => '1'
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'Client PO fields should pass with 100 characters');
     }
@@ -123,10 +123,10 @@ final class SalesOrderFormTest extends TestCase
             'group_id' => 1,
             'quote_id' => '1'
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'url_key should fail with 33 characters');
-        
+
         // Test with 32 characters (should pass)
         $form = $this->createFormWithData([
             'url_key' => str_repeat('a', 32), // 32 chars - should pass
@@ -134,7 +134,7 @@ final class SalesOrderFormTest extends TestCase
             'group_id' => 1,
             'quote_id' => '1'
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'url_key should pass with 32 characters');
     }
@@ -151,10 +151,10 @@ final class SalesOrderFormTest extends TestCase
             'group_id' => 1,
             'quote_id' => '1'
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'password should fail with 91 characters');
-        
+
         // Test with 90 characters (should pass)
         $form = $this->createFormWithData([
             'password' => str_repeat('p', 90), // 90 chars - should pass
@@ -162,7 +162,7 @@ final class SalesOrderFormTest extends TestCase
             'group_id' => 1,
             'quote_id' => '1'
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'password should pass with 90 characters');
     }
@@ -178,37 +178,37 @@ final class SalesOrderFormTest extends TestCase
             'quote_id' => '1',
             'client_id' => null // missing required field
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'Should fail validation without required client_id');
-        
+
         // Test without required group_id
         $form = $this->createFormWithData([
             'client_id' => 1,
             'quote_id' => '1',
             'group_id' => null // missing required field
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'Should fail validation without required group_id');
-        
+
         // Test without required quote_id
         $form = $this->createFormWithData([
             'client_id' => 1,
             'group_id' => 1,
             'quote_id' => null // missing required field
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'Should fail validation without required quote_id');
-        
+
         // Test with all required fields
         $form = $this->createFormWithData([
             'client_id' => 1,
             'group_id' => 1,
             'quote_id' => '1'
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'Should pass validation with all required fields');
     }
@@ -226,10 +226,10 @@ final class SalesOrderFormTest extends TestCase
             'group_id' => 1,
             'quote_id' => '1'
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'Numeric fields should pass with valid values');
-        
+
         // Test status_id outside valid range
         $form = $this->createFormWithData([
             'status_id' => 10, // Outside valid range (1-9)
@@ -237,7 +237,7 @@ final class SalesOrderFormTest extends TestCase
             'group_id' => 1,
             'quote_id' => '1'
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'status_id should fail validation outside range 1-9');
     }
@@ -260,7 +260,7 @@ final class SalesOrderFormTest extends TestCase
             'notes' => '', // Empty longText field
             'payment_term' => '' // Empty longText field
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'Empty optional fields should pass validation');
     }
@@ -271,7 +271,7 @@ final class SalesOrderFormTest extends TestCase
     public function testFormInitializationFromEntity(): void
     {
         $form = SalesOrderForm::show($this->salesOrder);
-        
+
         $this->assertEquals('SO-001', $form->getNumber());
         $this->assertEquals('Test sales order notes', $form->getNotes());
         $this->assertEquals('Net 30 days', $form->getPaymentTerm());
@@ -287,7 +287,7 @@ final class SalesOrderFormTest extends TestCase
     public function testLongTextFieldsPreserveContent(): void
     {
         $specialContent = "Line 1\nLine 2\n\nLine 4 with special chars: @#$%^&*()";
-        
+
         $form = $this->createFormWithData([
             'notes' => $specialContent,
             'payment_term' => $specialContent,
@@ -295,7 +295,7 @@ final class SalesOrderFormTest extends TestCase
             'group_id' => 1,
             'quote_id' => '1'
         ]);
-        
+
         $result = $this->validator->validate($form);
         $this->assertTrue($result->isValid(), 'LongText fields should preserve special content');
         $this->assertEquals($specialContent, $form->getNotes(), 'Notes content should be preserved exactly');
@@ -312,7 +312,7 @@ final class SalesOrderFormTest extends TestCase
         $group = $this->createStub(Group::class);
         $user = $this->createStub(User::class);
         $now = new DateTimeImmutable();
-        
+
         $salesOrder->method('getNumber')->willReturn('SO-001');
         $salesOrder->method('getDateCreated')->willReturn($now);
         $salesOrder->method('reqQuoteId')->willReturn(1);
@@ -331,7 +331,7 @@ final class SalesOrderFormTest extends TestCase
         $salesOrder->method('getClient')->willReturn($client);
         $salesOrder->method('getGroup')->willReturn($group);
         $salesOrder->method('getUser')->willReturn($user);
-        
+
         return $salesOrder;
     }
 
@@ -342,10 +342,10 @@ final class SalesOrderFormTest extends TestCase
     {
         $salesOrder = $this->createMockSalesOrder();
         $form = SalesOrderForm::show($salesOrder);
-        
+
         // Use reflection to set properties for testing
         $reflection = new \ReflectionClass($form);
-        
+
         foreach ($data as $property => $value) {
             if ($reflection->hasProperty($property)) {
                 $prop = $reflection->getProperty($property);
@@ -353,7 +353,7 @@ final class SalesOrderFormTest extends TestCase
                 $prop->setValue($form, $value);
             }
         }
-        
+
         return $form;
     }
 }

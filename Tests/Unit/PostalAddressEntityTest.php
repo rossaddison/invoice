@@ -10,19 +10,19 @@ use PHPUnit\Framework\TestCase;
 final class PostalAddressEntityTest extends TestCase
 {
     public string $mainStreet = 'Main Street';
-    
+
     public string $newYork = 'New York';
-    
+
     public string $oneThousandOne = '10001';
-    
+
     public string $oneToFive = '12345';
-    
+
     public string $testCity = 'Test City';
-    
+
     public function testConstructorWithDefaults(): void
     {
         $postalAddress = new PostalAddress();
-        
+
         $this->assertFalse($postalAddress->hasIdentity());
         $this->assertNull($postalAddress->getClientId());
         $this->assertSame('', $postalAddress->getStreetName());
@@ -47,7 +47,7 @@ final class PostalAddressEntityTest extends TestCase
             'NY',
             'USA'
         );
-        
+
         $this->assertSame(1, $postalAddress->reqId());
         $this->assertSame(123, $postalAddress->getClientId());
         $this->assertSame($this->mainStreet, $postalAddress->getStreetName());
@@ -63,7 +63,7 @@ final class PostalAddressEntityTest extends TestCase
     {
         $postalAddress = new PostalAddress();
         $postalAddress->setId(42);
-        
+
         $this->assertSame(42, $postalAddress->reqId());
     }
 
@@ -71,7 +71,7 @@ final class PostalAddressEntityTest extends TestCase
     {
         $postalAddress = new PostalAddress();
         $postalAddress->setClientId(999);
-        
+
         $this->assertSame(999, $postalAddress->getClientId());
     }
 
@@ -79,7 +79,7 @@ final class PostalAddressEntityTest extends TestCase
     {
         $postalAddress = new PostalAddress();
         $postalAddress->setStreetName('Oak Avenue');
-        
+
         $this->assertSame('Oak Avenue', $postalAddress->getStreetName());
     }
 
@@ -87,7 +87,7 @@ final class PostalAddressEntityTest extends TestCase
     {
         $postalAddress = new PostalAddress();
         $postalAddress->setAdditionalStreetName('Suite 100');
-        
+
         $this->assertSame('Suite 100', $postalAddress->getAdditionalStreetName());
     }
 
@@ -95,7 +95,7 @@ final class PostalAddressEntityTest extends TestCase
     {
         $postalAddress = new PostalAddress();
         $postalAddress->setBuildingNumber('123A');
-        
+
         $this->assertSame('123A', $postalAddress->getBuildingNumber());
     }
 
@@ -103,7 +103,7 @@ final class PostalAddressEntityTest extends TestCase
     {
         $postalAddress = new PostalAddress();
         $postalAddress->setCityName('Los Angeles');
-        
+
         $this->assertSame('Los Angeles', $postalAddress->getCityName());
     }
 
@@ -111,7 +111,7 @@ final class PostalAddressEntityTest extends TestCase
     {
         $postalAddress = new PostalAddress();
         $postalAddress->setPostalzone('90210');
-        
+
         $this->assertSame('90210', $postalAddress->getPostalzone());
     }
 
@@ -119,7 +119,7 @@ final class PostalAddressEntityTest extends TestCase
     {
         $postalAddress = new PostalAddress();
         $postalAddress->setCountrysubentity('California');
-        
+
         $this->assertSame('California', $postalAddress->getCountrysubentity());
     }
 
@@ -127,7 +127,7 @@ final class PostalAddressEntityTest extends TestCase
     {
         $postalAddress = new PostalAddress();
         $postalAddress->setCountry('United States');
-        
+
         $this->assertSame('United States', $postalAddress->getCountry());
     }
 
@@ -135,7 +135,15 @@ final class PostalAddressEntityTest extends TestCase
     {
         // US Address
         $usAddress = new PostalAddress(
-            1, 100, '123 Main St', 'Apt 4B', '123', 'Chicago', '60601', 'IL', 'USA'
+            1,
+            100,
+            '123 Main St',
+            'Apt 4B',
+            '123',
+            'Chicago',
+            '60601',
+            'IL',
+            'USA'
         );
         $this->assertSame('123 Main St', $usAddress->getStreetName());
         $this->assertSame('Chicago', $usAddress->getCityName());
@@ -143,7 +151,15 @@ final class PostalAddressEntityTest extends TestCase
 
         // UK Address
         $ukAddress = new PostalAddress(
-            2, 101, 'Baker Street', 'Flat 2', '221B', 'London', 'NW1 6XE', 'England', 'UK'
+            2,
+            101,
+            'Baker Street',
+            'Flat 2',
+            '221B',
+            'London',
+            'NW1 6XE',
+            'England',
+            'UK'
         );
         $this->assertSame('Baker Street', $ukAddress->getStreetName());
         $this->assertSame('London', $ukAddress->getCityName());
@@ -153,9 +169,17 @@ final class PostalAddressEntityTest extends TestCase
     public function testSpecialCharactersInAddress(): void
     {
         $postalAddress = new PostalAddress(
-            1, 1, 'Römerstraße', 'Haus & Garten', '12-14', 'München', '80331', 'Bayern', 'Deutschland'
+            1,
+            1,
+            'Römerstraße',
+            'Haus & Garten',
+            '12-14',
+            'München',
+            '80331',
+            'Bayern',
+            'Deutschland'
         );
-        
+
         $this->assertSame('Römerstraße', $postalAddress->getStreetName());
         $this->assertSame('München', $postalAddress->getCityName());
         $this->assertSame('Deutschland', $postalAddress->getCountry());
@@ -165,11 +189,19 @@ final class PostalAddressEntityTest extends TestCase
     {
         $longStreet = 'Very Long Street Name That Could Exceed Limits';
         $longCity = 'Very Long City Name That Could Exceed Normal Limits';
-        
+
         $postalAddress = new PostalAddress(
-            1, 1, $longStreet, 'Suite 1000', '9999', $longCity, $this->oneToFive, 'State', 'Country'
+            1,
+            1,
+            $longStreet,
+            'Suite 1000',
+            '9999',
+            $longCity,
+            $this->oneToFive,
+            'State',
+            'Country'
         );
-        
+
         $this->assertSame($longStreet, $postalAddress->getStreetName());
         $this->assertSame($longCity, $postalAddress->getCityName());
     }
@@ -186,7 +218,7 @@ final class PostalAddressEntityTest extends TestCase
         $postalAddress->setPostalzone($this->oneToFive);
         $postalAddress->setCountrysubentity('Test State');
         $postalAddress->setCountry('Test Country');
-        
+
         $this->assertSame(1, $postalAddress->reqId());
         $this->assertSame(100, $postalAddress->getClientId());
         $this->assertSame('Test Street', $postalAddress->getStreetName());
@@ -201,7 +233,7 @@ final class PostalAddressEntityTest extends TestCase
     public function testStringConversions(): void
     {
         $postalAddress = new PostalAddress(123, 456, 'Street', 'Apt', '789', 'City', $this->oneToFive, 'State', 'Country');
-        
+
         $this->assertIsInt($postalAddress->reqId());
         $this->assertIsInt($postalAddress->getClientId());
         $this->assertSame(123, $postalAddress->reqId());
@@ -211,7 +243,7 @@ final class PostalAddressEntityTest extends TestCase
     public function testPublicIdProperty(): void
     {
         $postalAddress = new PostalAddress(999, 1, 'Street', 'Apt', '1', 'City', $this->oneToFive, 'State', 'Country');
-        
+
         // Test that id property is accessible as public
         $this->assertSame(999, $postalAddress->id);
     }
@@ -219,9 +251,17 @@ final class PostalAddressEntityTest extends TestCase
     public function testGetFullAddressMethod(): void
     {
         $postalAddress = new PostalAddress(
-            1, 1, $this->mainStreet, 'Suite 200', '123', $this->newYork, $this->oneThousandOne, 'NY', 'USA'
+            1,
+            1,
+            $this->mainStreet,
+            'Suite 200',
+            '123',
+            $this->newYork,
+            $this->oneThousandOne,
+            'NY',
+            'USA'
         );
-        
+
         $expectedFullAddress = 'Main Street 123, Suite 200, 10001';
         $this->assertSame($expectedFullAddress, $postalAddress->getFullAddress());
     }
@@ -229,7 +269,7 @@ final class PostalAddressEntityTest extends TestCase
     public function testGetFullAddressWithEmptyFields(): void
     {
         $postalAddress = new PostalAddress(1, 1, 'Oak St', '', '45', 'Boston', '02101', 'MA', 'USA');
-        
+
         $expectedFullAddress = 'Oak St 45, , 02101';
         $this->assertSame($expectedFullAddress, $postalAddress->getFullAddress());
     }
@@ -237,7 +277,7 @@ final class PostalAddressEntityTest extends TestCase
     public function testGetFullAddressAllEmpty(): void
     {
         $postalAddress = new PostalAddress();
-        
+
         $expectedFullAddress = ' , , ';
         $this->assertSame($expectedFullAddress, $postalAddress->getFullAddress());
     }
@@ -254,7 +294,7 @@ final class PostalAddressEntityTest extends TestCase
         $postalAddress->setPostalzone('54321');
         $postalAddress->setCountrysubentity('Complete State');
         $postalAddress->setCountry('Complete Country');
-        
+
         $this->assertSame(1000, $postalAddress->reqId());
         $this->assertSame(2000, $postalAddress->getClientId());
         $this->assertSame('Complete Street', $postalAddress->getStreetName());
@@ -269,14 +309,14 @@ final class PostalAddressEntityTest extends TestCase
     public function testNumericalBuildingNumbers(): void
     {
         $postalAddress = new PostalAddress(1, 1, 'Test St', 'Unit A', '999', $this->testCity, '99999', 'State', 'Country');
-        
+
         $this->assertSame('999', $postalAddress->getBuildingNumber());
     }
 
     public function testAlphanumericBuildingNumbers(): void
     {
         $postalAddress = new PostalAddress(1, 1, 'Test St', 'Unit B', '12A', $this->testCity, $this->oneToFive, 'State', 'Country');
-        
+
         $this->assertSame('12A', $postalAddress->getBuildingNumber());
     }
 

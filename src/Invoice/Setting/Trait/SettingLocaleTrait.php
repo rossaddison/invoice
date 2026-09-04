@@ -8,7 +8,6 @@ use App\Invoice\Libraries\Lang;
 
 trait SettingLocaleTrait
 {
-
     /**
      * @return array
      */

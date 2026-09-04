@@ -67,21 +67,24 @@ echo (new Form())
                 'class' => 'items table-primary table table-bordered m-0']); ?>
                 <?= Html::openTag('tbody', ['id' => 'new_inv_item_row']); ?>
                     <?= Html::openTag('tr'); ?>
-                        <?= Html::openTag('td',
-                                ['rowspan' => '2', 'class' => 'td-icon']); ?>
+                        <?= Html::openTag(
+                            'td',
+                            ['rowspan' => '2', 'class' => 'td-icon']
+                        ); ?>
                             <?=  new I()
-                        ->addClass('bi bi-grip-vertical cursor-move'); ?>
+                                ->addClass('bi bi-grip-vertical cursor-move'); ?>
                                 <?php if ($isRecurring) : ?>
                                     <?= Html::tag('br'); ?>
                                         <?=  new I()
-                                    ->addAttributes(
-                                    [
-                                        'title' => $translator->translate('recurring'),
-                                        'class' => 'js-item-recurrence-toggler'
-                                        . ' cursor-pointer'
-                                        . ' bi bi-calendar'
-                                        . ' text-muted',
-                                    ]);
+                                            ->addAttributes(
+                                                [
+                                                'title' => $translator->translate('recurring'),
+                                                'class' => 'js-item-recurrence-toggler'
+                                                . ' cursor-pointer'
+                                                . ' bi bi-calendar'
+                                                . ' text-muted',
+                                    ]
+                                            );
                                     ?>
                                         <?= Html::openTag('input', [
                                             'type' => 'hidden',

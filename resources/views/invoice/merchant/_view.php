@@ -41,18 +41,18 @@ use Yiisoft\Html\Html;
                     $translator->translate('number'),
                     $form->getInv()?->getNumber() ?? $translator->translate('reason.uknown'),
                 );
-                ReadOnlyField::render(
-                    $translator->translate('successful'),
-                    $translator->translate($form->getSuccessful() === true ? 'yes' : 'no'),
-                );
-                ReadOnlyField::render(
-                    $translator->translate('date'),
-                    $form->getDate() instanceof DateTimeImmutable ? $form->getDate()->format('Y-m-d') : '',
-                );
-                ReadOnlyField::render($translator->translate('merchant.driver'), $form->getDriver());
-                ReadOnlyField::render($translator->translate('merchant.response'), $form->getResponse());
-                ReadOnlyField::render($translator->translate('merchant.reference'), $form->getReference());
-            ?>
+ReadOnlyField::render(
+    $translator->translate('successful'),
+    $translator->translate($form->getSuccessful() === true ? 'yes' : 'no'),
+);
+ReadOnlyField::render(
+    $translator->translate('date'),
+    $form->getDate() instanceof DateTimeImmutable ? $form->getDate()->format('Y-m-d') : '',
+);
+ReadOnlyField::render($translator->translate('merchant.driver'), $form->getDriver());
+ReadOnlyField::render($translator->translate('merchant.response'), $form->getResponse());
+ReadOnlyField::render($translator->translate('merchant.reference'), $form->getReference());
+?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

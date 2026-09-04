@@ -164,7 +164,7 @@ echo Html::script($js5)->type('module');
                         ->open() ?>
 
                     <?= $alert ?>
-                    <?php // The below panel is hidden but necessary for the emailtemplate.js to work with the invoice dropdown ?>
+                    <?php // The below panel is hidden but necessary for the emailtemplate.js to work with the invoice dropdown?>
                     <div class="card" hidden>
                         <?= Html::tag('label', $translator->translate('type'),
                             ['for' => 'email_template_type', 'class' => 'form-label']) ?>
@@ -173,8 +173,8 @@ echo Html::script($js5)->type('module');
                             Html::tag(
                                 'label',
                                 Input::radio('email_template_type', 'quote')
-                                    ->disabled(true)
-                                    ->id('email_template_type_quote'),
+                                ->disabled(true)
+                                ->id('email_template_type_quote'),
                             ),
                             ['class' => 'radio'],
                         ); ?>
@@ -183,8 +183,8 @@ echo Html::script($js5)->type('module');
                             Html::tag(
                                 'label',
                                 Input::radio('email_template_type', 'invoice')
-                                    ->id('email_template_type_invoice')
-                                    ->attribute('checked', 'checked'),
+                                ->id('email_template_type_invoice')
+                                ->attribute('checked', 'checked'),
                             ),
                             ['class' => 'radio'],
                         ); ?>
@@ -205,20 +205,20 @@ echo Html::script($js5)->type('module');
                     <?= Field::text($form, 'from_name')
                         ->addInputAttributes(['class' => 'email-template-from-name form-control'])
                         ->addInputAttributes(['value' => strlen((string) $autoTemplate['from_name']) > 0
-                            ? $autoTemplate['from_name']
-                            : Html::encode($userInv->getName())])
+                        ? $autoTemplate['from_name']
+                        : Html::encode($userInv->getName())])
                         ->hideLabel()
                         ->required(true); ?>
 
                     <?= Html::tag('label', $translator->translate('from.email'))
                         . str_repeat("&nbsp;", 2)
                         . ($autoTemplate['from_email']
-                            ? $translator->translate('email.source.email.template')
-                            : $translator->translate('email.source.user.account')) ?>
+                        ? $translator->translate('email.source.email.template')
+                        : $translator->translate('email.source.user.account')) ?>
                     <?= Field::email($form, 'from_email')
                         ->addInputAttributes(['value' => strlen((string) $autoTemplate['from_email']) > 0
-                            ? $autoTemplate['from_email']
-                            : Html::encode($userInv->getUser()?->getEmail())])
+                        ? $autoTemplate['from_email']
+                        : Html::encode($userInv->getUser()?->getEmail())])
                         ->addInputAttributes(['class' => 'email-template-from-email form-control'])
                         ->hideLabel()
                         ->required(true); ?>
@@ -240,8 +240,8 @@ echo Html::script($js5)->type('module');
                         ->addInputAttributes(['id' => 'mailerinvform-subject'])
                         ->addInputAttributes(['class' => 'email-template-subject form-control'])
                         ->addInputAttributes(['value' => strlen((string) $autoTemplate['subject']) > 0
-                            ? $autoTemplate['subject']
-                            : $translator->translate('invoice') . '#' . ($invoice->getNumber() ?? '')])
+                        ? $autoTemplate['subject']
+                        : $translator->translate('invoice') . '#' . ($invoice->getNumber() ?? '')])
                         ->hideLabel()
                         ->required(true); ?>
 
@@ -332,23 +332,23 @@ echo Html::script($js5)->type('module');
                         <div class="mb-3">
                             <div>
                                 <?= Field::text($form, 'guest_url')
-                                    ->readonly(true)
-                                    ->addInputAttributes([
-                                        'id' => 'invoice-guest-url',
-                                        'readonly' => 'true',
-                                        'value' => $urlGenerator->generate(
-                                            'inv/urlKey',
-                                            ['url_key' => $invoice->getUrlKey(), 'gateway' => ''],
-                                        ),
-                                        'class' => 'form-control form-control-lg',
-                                    ]); ?>
+                                ->readonly(true)
+                                ->addInputAttributes([
+                                    'id' => 'invoice-guest-url',
+                                    'readonly' => 'true',
+                                    'value' => $urlGenerator->generate(
+                                        'inv/urlKey',
+                                        ['url_key' => $invoice->getUrlKey(), 'gateway' => ''],
+                                    ),
+                                    'class' => 'form-control form-control-lg',
+                                ]); ?>
                                 <?= Html::tag(
                                     'div',
                                     Html::tag('i', '', ['class' => 'bi bi-clipboard']),
                                     [
-                                        'class' => 'btn btn-outline-secondary to-clipboard cursor-pointer',
-                                        'data-clipboard-target' => '#invoice-guest-url',
-                                        'style' => 'height : 38px',
+                                    'class' => 'btn btn-outline-secondary to-clipboard cursor-pointer',
+                                    'data-clipboard-target' => '#invoice-guest-url',
+                                    'style' => 'height : 38px',
                                     ],
                                 ); ?>
                             </div>

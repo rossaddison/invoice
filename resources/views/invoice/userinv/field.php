@@ -29,12 +29,12 @@ $client_helper = new ClientHelper($s);
     <div class="headerbar-item float-end">
         <div class="btn-group btn-group-sm">
             <a class="btn btn-secondary" href="<?= $urlGenerator->generate(
-                                                            'userinv/index'); ?>">
+                'userinv/index'); ?>">
                 <i class="bi bi-arrow-left"></i> <?= $translator->translate(
-                                                                     'back'); ?>
+                    'back'); ?>
             </a>
             <a class="btn btn-primary" href="<?= $urlGenerator->generate(
-                   'userclient/new', ['user_id' => $userInv->reqUserId()]); ?>">
+                'userclient/new', ['user_id' => $userInv->reqUserId()]); ?>">
                 <i class="bi bi-plus-lg"></i> <?= $translator->translate('new'); ?>
             </a>
         </div>
@@ -47,8 +47,8 @@ $client_helper = new ClientHelper($s);
         <div class="card">
             <div class="card-header">
                 <?= $translator->translate('user')
-                    . ': '
-                    . Html::encode($userInv->getName()); ?>
+                 . ': '
+                 . Html::encode($userInv->getName()); ?>
             </div>
             <div class="card-body table-content">
                 <div class="table-responsive m-0">
@@ -68,23 +68,25 @@ $client_helper = new ClientHelper($s);
                             <tr>
                                 <td>
                                     <a href="<?=
-                                        $urlGenerator->generate(
-                                        'client/view',
-                                        ['id' => $userClient->reqClientId()]); ?>"
+                                     $urlGenerator->generate(
+                                         'client/view',
+                                         ['id' => $userClient->reqClientId()]
+                                     ); ?>"
                                       >
                                         <?php
-                                            $client = $cR->repoClientquery( 
-                                                    $userClient->reqClientId());
-                                    echo $client_helper->formatClient($client);
-                                ?>
+                                         $client = $cR->repoClientquery(
+                                             $userClient->reqClientId());
+        echo $client_helper->formatClient($client);
+        ?>
                                     </a>
                                 </td>
                                 <td>
                                     <form
                                         action="<?=
-                                                    $urlGenerator->generate(
-                                                    'userclient/delete',
-                                                ['id' => $userClient->reqId()]); ?>"
+                            $urlGenerator->generate(
+                                'userclient/delete',
+                                ['id' => $userClient->reqId()]
+                            ); ?>"
                                         method="POST"
                                         enctype="multipart/form-data"
                                         data-bs-toggle="tooltip"
@@ -95,7 +97,7 @@ $client_helper = new ClientHelper($s);
                                         <button type="submit"
                                                 class="btn btn-secondary btn-sm"
                                                 data-confirm="<?= Html::encode($translator->translate(
-                                                'delete.user.client.warning')); ?>">
+                                                    'delete.user.client.warning')); ?>">
                                             <i class="bi-trash">
                                             </i><?= $translator->translate('remove'); ?>
                                         </button>

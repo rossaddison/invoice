@@ -68,27 +68,27 @@ $formatDate = static function (string|DateTimeImmutable $value): string {
                     $translator->translate('delivery.date.created') . ' (' . $dateHelper->display() . ')',
                     $formatDate($form->getDateCreated()),
                 );
-                ReadOnlyField::render(
-                    $translator->translate('delivery.date.modified') . ' (' . $dateHelper->display() . ')',
-                    $formatDate($form->getDateModified()),
-                );
-                ReadOnlyField::render(
-                    $translator->translate('delivery.start.date') . ' (' . $dateHelper->display() . ')',
-                    $formatDate($form->getStartDate()),
-                );
-                ReadOnlyField::render(
-                    $translator->translate('delivery.actual.delivery.date') . ' (' . $dateHelper->display() . ')',
-                    $formatDate($form->getActualDeliveryDate()),
-                );
-                ReadOnlyField::render(
-                    $translator->translate('delivery.end.date') . ' (' . $dateHelper->display() . ')',
-                    $formatDate($form->getEndDate()),
-                );
-                ReadOnlyField::render(
-                    $translator->translate('delivery.location'),
-                    $del_count > 0 ? $selectLabel($optionsDataDel, $form->getDeliveryLocationId()) : '',
-                );
-            ?>
+ReadOnlyField::render(
+    $translator->translate('delivery.date.modified') . ' (' . $dateHelper->display() . ')',
+    $formatDate($form->getDateModified()),
+);
+ReadOnlyField::render(
+    $translator->translate('delivery.start.date') . ' (' . $dateHelper->display() . ')',
+    $formatDate($form->getStartDate()),
+);
+ReadOnlyField::render(
+    $translator->translate('delivery.actual.delivery.date') . ' (' . $dateHelper->display() . ')',
+    $formatDate($form->getActualDeliveryDate()),
+);
+ReadOnlyField::render(
+    $translator->translate('delivery.end.date') . ' (' . $dateHelper->display() . ')',
+    $formatDate($form->getEndDate()),
+);
+ReadOnlyField::render(
+    $translator->translate('delivery.location'),
+    $del_count > 0 ? $selectLabel($optionsDataDel, $form->getDeliveryLocationId()) : '',
+);
+?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

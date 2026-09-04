@@ -39,7 +39,8 @@ final class QuotesColumnBuilder
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly array $optionsDataClientsDropdownFilter,
         private readonly array $optionsDataStatusDropDownFilter,
-    ) {}
+    ) {
+    }
 
     /** @return ColumnInterface[] */
     public function buildColumns(
@@ -54,7 +55,7 @@ final class QuotesColumnBuilder
             new DataColumn(
                 'id',
                 header: $this->translator->translate('id'),
-                content: static fn(Quote $model): string => (string) $model->reqId(),
+                content: static fn (Quote $model): string => (string) $model->reqId(),
                 withSorting: true,
             ),
             $this->buildActionColumn(),
@@ -64,19 +65,19 @@ final class QuotesColumnBuilder
             new DataColumn(
                 'date_created',
                 header: $this->translator->translate('date.created'),
-                content: static fn(Quote $model): string =>
+                content: static fn (Quote $model): string =>
                     $model->getDateCreated()->format('Y-m-d'),
                 withSorting: true,
             ),
             new DataColumn(
                 'date_expires',
-                content: static fn(Quote $model): string =>
+                content: static fn (Quote $model): string =>
                     $model->getDateExpires()->format('Y-m-d'),
                 withSorting: true,
             ),
             new DataColumn(
                 'date_required',
-                content: static fn(Quote $model): string =>
+                content: static fn (Quote $model): string =>
                     $model->getDateRequired()->format('Y-m-d'),
             ),
             $this->buildClientColumn(),
@@ -88,8 +89,7 @@ final class QuotesColumnBuilder
     {
         $translator = $this->translator;
         return new CheckboxColumn(
-            content: static function (Checkbox $input, DataContext $context)
-                use ($translator): string {
+            content: static function (Checkbox $input, DataContext $context) use ($translator): string {
                 $quote = $context->data;
                 if (!$quote instanceof Quote) {
                     return '';
@@ -102,7 +102,8 @@ final class QuotesColumnBuilder
                         'data-bs-toggle' => 'tooltip',
                         'title'          => ($quote->getQuoteAmount()?->getTotal() ?? 0) == 0
                             ? $translator->translate(
-                                'index.checkbox.add.some.items.to.enable')
+                                'index.checkbox.add.some.items.to.enable'
+                            )
                             : '',
                     ])
                     ->value($id)
@@ -123,7 +124,7 @@ final class QuotesColumnBuilder
             buttons: [
                 new ActionButton(
                     content: '🔎',
-                    url: static fn(Quote $model): string =>
+                    url: static fn (Quote $model): string =>
                         $urlGenerator->generate('quote/view', ['id' => $model->reqId()]),
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
@@ -133,7 +134,7 @@ final class QuotesColumnBuilder
                 ),
                 new ActionButton(
                     content: '✎',
-                    url: static fn(Quote $model): string =>
+                    url: static fn (Quote $model): string =>
                         $urlGenerator->generate('quote/edit', ['id' => $model->reqId()]),
                     attributes: [
                         'data-bs-toggle' => 'tooltip',
@@ -142,7 +143,7 @@ final class QuotesColumnBuilder
                     ],
                 ),
                 new ActionButton(
-                    content: static fn(Quote $model): string =>
+                    content: static fn (Quote $model): string =>
                         ($model->getSoId() == 0 && $model->getInvId() == 0) ? '❌' : '🚫',
                     url: static function (Quote $model) use ($urlGenerator): string {
                         return $model->getSoId() == 0 && $model->getInvId() == 0
@@ -247,7 +248,7 @@ final class QuotesColumnBuilder
         return new DataColumn(
             property: 'filterQuoteNumber',
             header: $translator->translate('quote.number'),
-            content: static fn(Quote $model): A =>
+            content: static fn (Quote $model): A =>
                 Html::a(
                     $model->getNumber() ?? '#',
                     $urlGenerator->generate('quote/view', ['id' => $model->reqId()]),

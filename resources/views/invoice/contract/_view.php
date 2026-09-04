@@ -37,21 +37,21 @@ use Yiisoft\Html\Html;
             $translator->translate('client'),
             $form->getClientId() !== null ? (string) $form->getClientId() : '',
         );
-        ReadOnlyField::render($translator->translate('contract.reference'), $form->getReference());
-        ReadOnlyField::render($translator->translate('contract.name'), $form->getName());
-        ReadOnlyField::render(
-            $translator->translate('contract.period.start'),
-            $form->getPeriodStart() instanceof \DateTimeImmutable
-                ? $form->getPeriodStart()->format('Y-m-d')
-                : $form->getPeriodStart(),
-        );
-        ReadOnlyField::render(
-            $translator->translate('contract.period.end'),
-            $form->getPeriodEnd() instanceof \DateTimeImmutable
-                ? $form->getPeriodEnd()->format('Y-m-d')
-                : $form->getPeriodEnd(),
-        );
-    ?>
+ReadOnlyField::render($translator->translate('contract.reference'), $form->getReference());
+ReadOnlyField::render($translator->translate('contract.name'), $form->getName());
+ReadOnlyField::render(
+    $translator->translate('contract.period.start'),
+    $form->getPeriodStart() instanceof \DateTimeImmutable
+        ? $form->getPeriodStart()->format('Y-m-d')
+        : $form->getPeriodStart(),
+);
+ReadOnlyField::render(
+    $translator->translate('contract.period.end'),
+    $form->getPeriodEnd() instanceof \DateTimeImmutable
+        ? $form->getPeriodEnd()->format('Y-m-d')
+        : $form->getPeriodEnd(),
+);
+?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

@@ -19,7 +19,6 @@ use DateTimeImmutable;
  */
 trait SalesOrderTrait1
 {
-
     public function reqId(): int
     {
         return $this->requireId($this->id, 'SalesOrder');

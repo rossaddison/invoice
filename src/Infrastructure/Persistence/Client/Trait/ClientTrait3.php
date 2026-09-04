@@ -17,7 +17,6 @@ use RequireId;
  */
 trait ClientTrait3
 {
-
     public function getClientState(): ?string
     {
         return $this->client_state;

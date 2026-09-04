@@ -36,38 +36,38 @@ use Yiisoft\Html\Html;
             <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?php
                     $companyName = '';
-                    /**
-                     * @var App\Infrastructure\Persistence\Company\Company $company
-                     */
-                    foreach ($companies as $company) {
-                        if ($company->reqId() === $form->getCompanyId()) {
-                            $companyName = $company->getName() ?? '';
-                            break;
-                        }
-                    }
-                ?>
+/**
+ * @var App\Infrastructure\Persistence\Company\Company $company
+ */
+foreach ($companies as $company) {
+    if ($company->reqId() === $form->getCompanyId()) {
+        $companyName = $company->getName() ?? '';
+        break;
+    }
+}
+?>
                 <?php
-                    ReadOnlyField::render(
-                        $translator->translate('profile.property.label.current'),
-                        $translator->translate($form->getCurrent() === 1 ? 'yes' : 'no'),
-                    );
-                    ReadOnlyField::render(
-                        $translator->translate('profile.property.label.company'),
-                        $companyName,
-                    );
-                    ReadOnlyField::render(
-                        $translator->translate('profile.property.label.mobile'),
-                        $form->getMobile(),
-                    );
-                    ReadOnlyField::render(
-                        $translator->translate('profile.property.label.email'),
-                        $form->getEmail(),
-                    );
-                    ReadOnlyField::render(
-                        $translator->translate('profile.property.label.description'),
-                        $form->getDescription(),
-                    );
-                ?>
+    ReadOnlyField::render(
+        $translator->translate('profile.property.label.current'),
+        $translator->translate($form->getCurrent() === 1 ? 'yes' : 'no'),
+    );
+ReadOnlyField::render(
+    $translator->translate('profile.property.label.company'),
+    $companyName,
+);
+ReadOnlyField::render(
+    $translator->translate('profile.property.label.mobile'),
+    $form->getMobile(),
+);
+ReadOnlyField::render(
+    $translator->translate('profile.property.label.email'),
+    $form->getEmail(),
+);
+ReadOnlyField::render(
+    $translator->translate('profile.property.label.description'),
+    $form->getDescription(),
+);
+?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

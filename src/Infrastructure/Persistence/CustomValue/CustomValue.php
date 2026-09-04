@@ -24,7 +24,9 @@ class CustomValue
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $custom_field_id = null,
         #[Column(type: 'text', nullable: false)]
-        private string $value = '') {}
+        private string $value = ''
+    ) {
+    }
 
     public function reqId(): int
     {

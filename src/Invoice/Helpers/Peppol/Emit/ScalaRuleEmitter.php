@@ -32,13 +32,14 @@ final class ScalaRuleEmitter
         'CreditNoteLine' => ['invoiceLines',    'UblInvoiceLineVO'],
         'TaxTotal'       => ['taxTotals',       'UblTaxTotalVO'],
         'TaxSubtotal'    => ['taxSubtotals',    'UblTaxSubtotalVO'],
-        'AllowanceCharge'=> ['allowanceCharges','UblAllowanceChargeVO'],
+        'AllowanceCharge' => ['allowanceCharges','UblAllowanceChargeVO'],
         'PaymentMeans'   => ['paymentMeans',    'UblPaymentMeansVO'],
     ];
 
     public function __construct(
         private readonly ScalaExpressionEmitter $expr,
-    ) {}
+    ) {
+    }
 
     /**
      * Emit a complete Scala source file for all rules in $doc.

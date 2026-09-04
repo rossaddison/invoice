@@ -134,22 +134,24 @@ echo Meta::data('viewport', 'width=device-width, initial-scale=1');
 // worker-src 'self' (config/web/params.php).
 echo new Link()->rel('manifest')->href('/manifest.json');
 echo Meta::data('theme-color', '#1e73b8');
- echo new Style()->content(
+echo new Style()->content(
     ':root {'
     . ' --guest-nav-fs: ' . $bootstrap5LayoutGuestNavbarFontSize . 'px;'
     . ' --guest-nav-ff: ' . $bootstrap5LayoutGuestNavbarFont . ';'
     . ' --guest-input-height: ' . $bootstrap5FormInputHeight . 'px;'
     . ' --guest-form-fs: ' . $bootstrap5FormFontSize . 'px;'
     . ' }'
-  )->render();
+)->render();
 echo Meta::data('robots', 'NOINDEX,NOFOLLOW');
 echo new Title()->content($s->getSetting('custom_title') ?: 'Yii-Invoice');
 $this->head();
 echo Html::closeTag('head');
 echo Html::openTag('body');
-echo Html::tag('Noscript', Html::tag('div',
+echo Html::tag('Noscript', Html::tag(
+    'div',
     $t->translate('please.enable.js'),
-    ['class' => 'alert alert-danger no-margin']));
+    ['class' => 'alert alert-danger no-margin']
+));
 echo Html::openTag('header');
 $this->beginBody();
 echo NavBar::widget()
@@ -185,9 +187,11 @@ if ((null !== $currentPath) && !$isGuest) {
     ->togglerContent($t->translate('client'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($t->translate('view'),
+        DropdownItem::link(
+            $t->translate('view'),
             $urlGenerator->generate('client/guest'),
-            itemAttributes: $itemFontArray),
+            itemAttributes: $itemFontArray
+        ),
     )
     ->render();
 
@@ -197,37 +201,41 @@ if ((null !== $currentPath) && !$isGuest) {
     // not a real destination. $hasQuotesOrSalesOrders covers both in one
     // flag since neither makes sense to show without the other missing.
     if ($hasQuotesOrSalesOrders) {
-    // Quote
-    echo Dropdown::widget()
-    ->addTogglerCssStyle([
-        'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
-        'font-family' => $bootstrap5LayoutGuestNavbarFont,
-    ])
-    ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent($t->translate('quote'))
-    ->togglerSize(ButtonSize::LARGE)
-    ->items(
-        DropdownItem::link($t->translate('view'),
-            $urlGenerator->generate('quote/guest'),
-            itemAttributes: $itemFontArray),
-    )
-    ->render();
+        // Quote
+        echo Dropdown::widget()
+        ->addTogglerCssStyle([
+            'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
+            'font-family' => $bootstrap5LayoutGuestNavbarFont,
+        ])
+        ->togglerVariant(ButtonVariant::INFO)
+        ->togglerContent($t->translate('quote'))
+        ->togglerSize(ButtonSize::LARGE)
+        ->items(
+            DropdownItem::link(
+                $t->translate('view'),
+                $urlGenerator->generate('quote/guest'),
+                itemAttributes: $itemFontArray
+            ),
+        )
+        ->render();
 
-    // SalesOrder
-    echo Dropdown::widget()
-    ->addTogglerCssStyle([
-        'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
-        'font-family' => $bootstrap5LayoutGuestNavbarFont,
-    ])
-    ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent($t->translate('salesorder'))
-    ->togglerSize(ButtonSize::LARGE)
-    ->items(
-        DropdownItem::link($t->translate('view'),
-            $urlGenerator->generate('salesorder/guest'),
-            itemAttributes: $itemFontArray)
-    )
-    ->render();
+        // SalesOrder
+        echo Dropdown::widget()
+        ->addTogglerCssStyle([
+            'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
+            'font-family' => $bootstrap5LayoutGuestNavbarFont,
+        ])
+        ->togglerVariant(ButtonVariant::INFO)
+        ->togglerContent($t->translate('salesorder'))
+        ->togglerSize(ButtonSize::LARGE)
+        ->items(
+            DropdownItem::link(
+                $t->translate('view'),
+                $urlGenerator->generate('salesorder/guest'),
+                itemAttributes: $itemFontArray
+            )
+        )
+        ->render();
     }
 
     // Invoice
@@ -240,9 +248,11 @@ if ((null !== $currentPath) && !$isGuest) {
     ->togglerContent($t->translate('invoice'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($t->translate('view'),
+        DropdownItem::link(
+            $t->translate('view'),
             $urlGenerator->generate('inv/guest'),
-            itemAttributes: $itemFontArray),
+            itemAttributes: $itemFontArray
+        ),
     )
     ->render();
 
@@ -257,12 +267,16 @@ if ((null !== $currentPath) && !$isGuest) {
             . ' ' . $t->translate('payment'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($t->translate('view'),
+        DropdownItem::link(
+            $t->translate('view'),
             $urlGenerator->generate('payment/guest'),
-            itemAttributes: $itemFontArray),
-        DropdownItem::link($t->translate('online.log'),
+            itemAttributes: $itemFontArray
+        ),
+        DropdownItem::link(
+            $t->translate('online.log'),
             $urlGenerator->generate('payment/guestOnlineLog'),
-            itemAttributes: $itemFontArray),
+            itemAttributes: $itemFontArray
+        ),
     )
     ->render();
 
@@ -277,15 +291,21 @@ if ((null !== $currentPath) && !$isGuest) {
             . ' ' . $t->translate('settings'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
-        DropdownItem::link($t->translate('view'),
+        DropdownItem::link(
+            $t->translate('view'),
             $urlGenerator->generate('userinv/guest'),
-            itemAttributes: $itemFontArray),
-        DropdownItem::link($t->translate('password.change'),
+            itemAttributes: $itemFontArray
+        ),
+        DropdownItem::link(
+            $t->translate('password.change'),
             $urlGenerator->generate('auth/change'),
-            itemAttributes: $itemFontArray),
-        DropdownItem::link($t->translate('email.log'),
+            itemAttributes: $itemFontArray
+        ),
+        DropdownItem::link(
+            $t->translate('email.log'),
             $urlGenerator->generate('invsentlog/guest'),
-            itemAttributes: $itemFontArray),
+            itemAttributes: $itemFontArray
+        ),
         DropdownItem::divider(),
         DropdownItem::listContent(
             '<h6 class="dropdown-header"'
@@ -301,7 +321,7 @@ if ((null !== $currentPath) && !$isGuest) {
             . '<div id="page-size-btn-group" class="btn-group btn-group-sm" role="group" aria-label="'
             . Html::encode($t->translate('default.list.limit')) . '">'
             . implode('', array_map(
-                static fn(int $size): string =>
+                static fn (int $size): string =>
                     '<a hx-get="' . Html::encode(str_replace('__SIZE__', (string) $size, $guestPageSizeUrlTemplate)) . '"'
                     . ' hx-swap="none"'
                     . ' href="' . Html::encode(str_replace('__SIZE__', (string) $size, $guestPageSizeUrlTemplate)) . '"'
@@ -331,10 +351,36 @@ if ((null !== $currentPath) && !$isGuest) {
     ->togglerSize(ButtonSize::LARGE)
     ->items(
         // Related logic: config/web/params, src/ViewInjection/LayoutViewInjection
-        $afZA, $arBH, $az, $beBY, $bs, $zhCN, $zhTW, $en,
-        $fil, $fr, $gdGB, $haNG, $heIL, $igNG, $nl, $de,
-        $id, $it, $ja, $pl, $ptBR, $ru, $sk, $sl, $es,
-        $uk, $uz, $vi, $yoNG, $zuZA
+        $afZA,
+        $arBH,
+        $az,
+        $beBY,
+        $bs,
+        $zhCN,
+        $zhTW,
+        $en,
+        $fil,
+        $fr,
+        $gdGB,
+        $haNG,
+        $heIL,
+        $igNG,
+        $nl,
+        $de,
+        $id,
+        $it,
+        $ja,
+        $pl,
+        $ptBR,
+        $ru,
+        $sk,
+        $sl,
+        $es,
+        $uk,
+        $uz,
+        $vi,
+        $yoNG,
+        $zuZA
     )->render();
 }
 
@@ -342,7 +388,7 @@ if (null !== $currentPath && $isGuest) {
     echo Nav::widget()
     ->items(
         NavLink::to(
-             new Label()
+            new Label()
             ->attributes([
                 'class' => 'bi bi-door-open-fill text-success',
             ])
@@ -353,7 +399,7 @@ if (null !== $currentPath && $isGuest) {
             false,
         ),
         NavLink::to(
-             new Label()
+            new Label()
             ->attributes(
                 [
                     'class' => 'bi bi-person-plus-fill',
@@ -397,25 +443,25 @@ if (!$isGuest) {
 echo NavBar::end();
 echo Html::closeTag('header');
 echo Html::openTag('div', ['id' => 'main-area']);
-  echo Html::openTag('main', ['class' => 'container-fluid py-4']);
-  echo $content;
-  echo Html::openTag('div', [
-    'id' => 'fullpage-loader',
-    'style' => 'display: none'
-   ]); //2
-   echo Html::openTag('div', ['class' => 'loader-content']); //3
-    echo new I()
-          ->addAttributes(['id' => 'loader-icon'])
-          ->addClass('bi bi-gear-fill')
-          ->render(); //4
-   echo Html::CloseTag('div'); //3
-  echo Html::closeTag('div'); //2
- echo Html::closeTag('main');
+echo Html::openTag('main', ['class' => 'container-fluid py-4']);
+echo $content;
+echo Html::openTag('div', [
+  'id' => 'fullpage-loader',
+  'style' => 'display: none'
+ ]); //2
+echo Html::openTag('div', ['class' => 'loader-content']); //3
+echo new I()
+      ->addAttributes(['id' => 'loader-icon'])
+      ->addClass('bi bi-gear-fill')
+      ->render(); //4
+echo Html::CloseTag('div'); //3
+echo Html::closeTag('div'); //2
+echo Html::closeTag('main');
 echo Html::closeTag('div');
-  echo Html::openTag('footer', ['class' => 'container-fluid py-4']); //2
-   echo PerformanceMetrics::widget(); //3
-  echo Html::closeTag('footer'); //2
- $this->endBody();
- echo Html::closeTag('body'); //1
+echo Html::openTag('footer', ['class' => 'container-fluid py-4']); //2
+echo PerformanceMetrics::widget(); //3
+echo Html::closeTag('footer'); //2
+$this->endBody();
+echo Html::closeTag('body'); //1
 echo Html::closeTag('html');
 $this->endPage(true);

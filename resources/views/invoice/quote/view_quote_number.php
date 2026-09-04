@@ -13,4 +13,3 @@ $id = $quote->reqId();
 if (null !== $number) {
     echo($number ? '#' . $number : $id);
 }
-?>

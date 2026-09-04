@@ -197,8 +197,9 @@ final class ProductRepository extends Select\Repository implements ProductReposi
      * @psalm-return EntityReader
      */
     public function repoProductWithFamilyIdQuery(
-        string $product_name, int $family_id): EntityReader
-    {
+        string $product_name,
+        int $family_id
+    ): EntityReader {
         $query = $this
             ->select()
             ->load('family')

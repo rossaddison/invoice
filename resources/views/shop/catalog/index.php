@@ -159,7 +159,7 @@ if ($hasPriceRange) {
         <?= Html::openTag('form', ['method' => 'get', 'action' => $urlGenerator->generate('shop/catalog/index')]) ?>
         <?php // Carries the navbar search box's term forward — applying a
         // sidebar filter is meant to narrow the current search results,
-        // not replace them with an unfiltered, unsearched catalog. ?>
+        // not replace them with an unfiltered, unsearched catalog.?>
         <?= Html::hiddenInput('q', $filter->search) ?>
         <fieldset class="mb-3">
             <?php $currencyInfoForFilter = $currency->info(); ?>
@@ -170,7 +170,7 @@ if ($hasPriceRange) {
                 // native-currency price (App\Webshop\Catalog\ProductFilter::apply()) —
                 // converting them too would mean typing a number in one
                 // currency that silently filters in another, so this label
-                // says which currency they're actually in instead. ?>
+                // says which currency they're actually in instead.?>
                 <span class="text-muted fw-normal">(<?= Html::encode($currencyInfoForFilter->native) ?>)</span>
                 <?php endif; ?>
             </legend>
@@ -244,19 +244,19 @@ if ($hasPriceRange) {
         <?php else: ?>
         <?php
         $items = [];
-        foreach (array_chunk($products, $productsPerSlide) as $slideIndex => $slideProducts) {
-            $tiles = array_map($renderTile, $slideProducts);
+            foreach (array_chunk($products, $productsPerSlide) as $slideIndex => $slideProducts) {
+                $tiles = array_map($renderTile, $slideProducts);
 
-            $content = '<div class="bg-dark d-flex align-items-start justify-content-around gap-3 p-4">'
-                . implode('', $tiles) . '</div>';
+                $content = '<div class="bg-dark d-flex align-items-start justify-content-around gap-3 p-4">'
+                    . implode('', $tiles) . '</div>';
 
-            $items[] = CarouselItem::to(
-                content: $content,
-                active: $slideIndex === 0,
-            );
-        }
-        echo Carousel::widget()->items(...$items)->render();
-        ?>
+                $items[] = CarouselItem::to(
+                    content: $content,
+                    active: $slideIndex === 0,
+                );
+            }
+            echo Carousel::widget()->items(...$items)->render();
+            ?>
         <?php endif; ?>
     </section>
 </div>

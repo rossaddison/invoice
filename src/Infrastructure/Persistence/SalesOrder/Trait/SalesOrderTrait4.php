@@ -19,7 +19,6 @@ use DateTimeImmutable;
  */
 trait SalesOrderTrait4
 {
-
     public function getItems(): ArrayCollection
     {
         return $this->items;

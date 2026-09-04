@@ -17,7 +17,7 @@ class PeppolUneceRec2011e
     use PeppolUneceRec2011eTrait3;
     use PeppolUneceRec2011eTrait4;
     use PeppolUneceRec2011eTrait5;
-        public function getUNECERec2011e(): array
+    public function getUNECERec2011e(): array
     {
         return array_merge(
             $this->getUNECERec2011eChunk1(),

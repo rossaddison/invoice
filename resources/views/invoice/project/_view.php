@@ -45,8 +45,8 @@ foreach ($clients as $client) {
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?php
                 ReadOnlyField::render($translator->translate('client'), $clientName);
-                ReadOnlyField::render($translator->translate('project.name'), $form->getName());
-            ?>
+ReadOnlyField::render($translator->translate('project.name'), $form->getName());
+?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

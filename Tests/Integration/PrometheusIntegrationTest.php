@@ -47,7 +47,7 @@ final class PrometheusIntegrationTest extends TestCase
         $this->assertStringContainsString('status="draft"', $result);
         $this->assertStringContainsString('status="sent"', $result);
         $this->assertStringContainsString('status="paid"', $result);
-        
+
         // Check values
         $this->assertStringContainsString('} 5', $result); // draft count
         $this->assertStringContainsString('} 3', $result); // sent count

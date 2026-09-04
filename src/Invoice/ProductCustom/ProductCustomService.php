@@ -28,10 +28,12 @@ final readonly class ProductCustomService
         $this->persist($model, $array);
         $array['product_id'] ?
             $model->setProductId(
-                (int) $array['product_id']) : '';
+                (int) $array['product_id']
+            ) : '';
         $array['custom_field_id'] ?
             $model->setCustomFieldId(
-                (int) $array['custom_field_id']) : '';
+                (int) $array['custom_field_id']
+            ) : '';
         $array['value'] ?
             $model->setValue((string) $array['value']) : '';
         $this->repository->save($model);
@@ -44,7 +46,8 @@ final readonly class ProductCustomService
         $product = 'product_id';
         if (isset($array[$product])) {
             $productEntity = $this->pR->repoProductquery(
-                (int) $array[$product]);
+                (int) $array[$product]
+            );
             if ($productEntity) {
                 $model->setProduct($productEntity);
             }
@@ -52,7 +55,8 @@ final readonly class ProductCustomService
         $custom_field = 'custom_field_id';
         if (isset($array[$custom_field])) {
             $model->setCustomField(
-                $this->cfR->repoCustomFieldquery((int) $array[$custom_field]));
+                $this->cfR->repoCustomFieldquery((int) $array[$custom_field])
+            );
         }
 
     }

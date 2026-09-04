@@ -16,5 +16,6 @@ readonly class Substring implements Expression
         public Expression  $value,
         public Expression  $start,
         public ?Expression $length,
-    ) {}
+    ) {
+    }
 }

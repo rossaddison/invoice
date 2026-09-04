@@ -36,7 +36,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'project/index'))
     ->id('btn-reset')
     ->render();
@@ -102,7 +102,8 @@ $columns = [
                 'class' => 'btn btn-outline-danger btn-sm',
             ],
         ),
-    ]),
+    ]
+    ),
 ];
 
 $paginator = (new OffsetPaginator($projects))

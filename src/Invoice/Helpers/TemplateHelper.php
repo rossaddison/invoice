@@ -130,17 +130,17 @@ final readonly class TemplateHelper
 
     private function resolveQuoteVar(string $var, int $pk, QR $qR, QAR $qaR): string
     {
-        $quote  = $qR->repoCount($pk) > 0            ? $qR->repoQuoteUnloadedquery($pk) : null;
-        $amount = $qaR->repoQuoteAmountCount($pk) > 0 ? $qaR->repoQuotequery($pk)        : null;
+        $quote  = $qR->repoCount($pk) > 0 ? $qR->repoQuoteUnloadedquery($pk) : null;
+        $amount = $qaR->repoQuoteAmountCount($pk) > 0 ? $qaR->repoQuotequery($pk) : null;
         return match ($var) {
-            'quote_item_subtotal' => $amount !== null ? $this->n->formatCurrency($amount->getItemSubtotal())         : '',
-            'quote_tax_total'     => $amount !== null ? $this->n->formatCurrency($amount->getTaxTotal())             : '',
-            'quote_total'         => $amount !== null ? $this->n->formatCurrency($amount->getTotal())                : '',
-            'quote_item_discount' => $quote  !== null ? $this->n->formatCurrency($quote->getDiscountAmount())        : '',
-            'quote_date_created'  => $quote  !== null ? $quote->getDateCreated()->format($this->d->style())          : '',
-            'quote_date_expires'  => $quote  !== null ? $quote->getDateExpires()->format($this->d->style())          : '',
-            'quote_guest_url'     => $quote  !== null ? 'quote/url_key/' . $quote->getUrlKey()                      : '',
-            'quote_number'        => $quote  !== null ? ($quote->getNumber() ?? '')                                  : '',
+            'quote_item_subtotal' => $amount !== null ? $this->n->formatCurrency($amount->getItemSubtotal()) : '',
+            'quote_tax_total'     => $amount !== null ? $this->n->formatCurrency($amount->getTaxTotal()) : '',
+            'quote_total'         => $amount !== null ? $this->n->formatCurrency($amount->getTotal()) : '',
+            'quote_item_discount' => $quote  !== null ? $this->n->formatCurrency($quote->getDiscountAmount()) : '',
+            'quote_date_created'  => $quote  !== null ? $quote->getDateCreated()->format($this->d->style()) : '',
+            'quote_date_expires'  => $quote  !== null ? $quote->getDateExpires()->format($this->d->style()) : '',
+            'quote_guest_url'     => $quote  !== null ? 'quote/url_key/' . $quote->getUrlKey() : '',
+            'quote_number'        => $quote  !== null ? ($quote->getNumber() ?? '') : '',
             default               => '',
         };
     }
@@ -156,18 +156,18 @@ final readonly class TemplateHelper
 
     private function resolveInvoiceVar(string $var, int $pk, IR $iR, IAR $iaR): string
     {
-        $invoice = $iR->repoCount($pk) > 0            ? $iR->repoInvUnloadedquery($pk) : null;
-        $amount  = $iaR->repoInvAmountCount($pk) > 0  ? $iaR->repoInvquery($pk)        : null;
+        $invoice = $iR->repoCount($pk) > 0 ? $iR->repoInvUnloadedquery($pk) : null;
+        $amount  = $iaR->repoInvAmountCount($pk) > 0 ? $iaR->repoInvquery($pk) : null;
         return match ($var) {
-            'invoice_guest_url'      => $invoice !== null ? 'inv/url_key/' . $invoice->getUrlKey()                : '',
-            'invoice_date_due'       => $invoice !== null ? $this->d->dateFromMysql($invoice->getDateDue())       : '',
+            'invoice_guest_url'      => $invoice !== null ? 'inv/url_key/' . $invoice->getUrlKey() : '',
+            'invoice_date_due'       => $invoice !== null ? $this->d->dateFromMysql($invoice->getDateDue()) : '',
             'invoice_date_created'   => $invoice !== null ? $invoice->getDateCreated()->format($this->d->style()) : '',
-            'invoice_number'         => $invoice !== null ? ($invoice->getNumber() ?? '')                         : '',
-            'invoice_item_subtotal'  => $amount  !== null ? $this->n->formatCurrency($amount->getItemSubtotal())  : '',
-            'invoice_item_tax_total' => $amount  !== null ? $this->n->formatCurrency($amount->getItemTaxTotal())  : '',
-            'invoice_total'          => $amount  !== null ? $this->n->formatCurrency($amount->getTotal())         : '',
-            'invoice_paid'           => $amount  !== null ? $this->n->formatCurrency($amount->getPaid())          : '',
-            'invoice_balance'        => $amount  !== null ? $this->n->formatCurrency($amount->getBalance())       : '',
+            'invoice_number'         => $invoice !== null ? ($invoice->getNumber() ?? '') : '',
+            'invoice_item_subtotal'  => $amount  !== null ? $this->n->formatCurrency($amount->getItemSubtotal()) : '',
+            'invoice_item_tax_total' => $amount  !== null ? $this->n->formatCurrency($amount->getItemTaxTotal()) : '',
+            'invoice_total'          => $amount  !== null ? $this->n->formatCurrency($amount->getTotal()) : '',
+            'invoice_paid'           => $amount  !== null ? $this->n->formatCurrency($amount->getPaid()) : '',
+            'invoice_balance'        => $amount  !== null ? $this->n->formatCurrency($amount->getBalance()) : '',
             default                  => '',
         };
     }

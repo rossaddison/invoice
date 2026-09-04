@@ -21,10 +21,11 @@ final class InvRecurringForm extends FormModel
     private mixed $end = '';
 
     private ?int $inv_id = null;
-    
-    public static function show(InvRecurring $invRecurring,
-        ?int $inv_id): self
-    {
+
+    public static function show(
+        InvRecurring $invRecurring,
+        ?int $inv_id
+    ): self {
         $form = new self();
         $form->frequency = $invRecurring->getFrequency();
         $form->start = $invRecurring->getStart();

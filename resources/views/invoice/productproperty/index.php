@@ -27,7 +27,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 $toolbarReset =  new A()
   ->addAttributes(['type' => 'reset'])
   ->addClass('btn btn-danger me-1 ajax-loader')
-  ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+  ->content(new I()->addClass('bi bi-bootstrap-reboot'))
   ->href($urlGenerator->generate($currentRoute->getName() ?? 'productproperty/index '))
   ->id('btn-reset')
   ->render();
@@ -78,8 +78,10 @@ $columns = [
                         . "');",
                     ],
                 ),
-                $urlGenerator->generate('productproperty/delete',
-                        ['id' => $model->reqId()]),
+                $urlGenerator->generate(
+                    'productproperty/delete',
+                    ['id' => $model->reqId()]
+                ),
                 [],
             );
         },

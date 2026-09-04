@@ -10,7 +10,6 @@ use App\Infrastructure\Persistence\
     InvItem\InvItem, InvCustom\InvCustom, InvTaxRate\InvTaxRate,
     Payment\Payment
 };
-
 use App\Invoice\{
     InvAllowanceCharge\InvAllowanceChargeForm, InvCustom\InvCustomForm,
     InvItem\IiAddProductDeps, InvItem\InvItemForm, InvTaxRate\InvTaxRateForm,
@@ -22,7 +21,6 @@ use App\Invoice\{
     Helpers\InvRecalculator,
     Payment\PaymentService,
 };
-
 use Psr\Http\Message\{ResponseFactoryInterface, StreamFactoryInterface};
 use Yiisoft\{
     FormModel\FormHydrator, Html\Html, Json\Json, Security\Random
@@ -77,8 +75,14 @@ trait MultipleCopy
             $opts = new CopyInvOptions(createdDate: (string) ($data['modal_created_date'] ?? ''));
             foreach ($targets as $targetClientId) {
                 if ($this->copyInvToClient(
-                    $invId, $original, $targetClientId, $d, $formHydrator,
-                    $productIds, $opts)) {
+                    $invId,
+                    $original,
+                    $targetClientId,
+                    $d,
+                    $formHydrator,
+                    $productIds,
+                    $opts
+                )) {
                     $anySuccess = true;
                 }
             }
@@ -122,7 +126,13 @@ trait MultipleCopy
             }
             $productIds = $this->collectInvProductIds($invId, $d);
             if ($this->copyInvToClient(
-                $invId, $original, $original->reqClientId(), $d, $formHydrator, $productIds, $opts
+                $invId,
+                $original,
+                $original->reqClientId(),
+                $d,
+                $formHydrator,
+                $productIds,
+                $opts
             )) {
                 $copyCount++;
             }
@@ -233,11 +243,23 @@ trait MultipleCopy
         }
         $this->inv_service->withTransaction(
             function () use (
-                $user, $copy, $invoice_body, $opts, $invId, $original,
-                $d, $formHydrator, $productIds, $targetClientId
+                $user,
+                $copy,
+                $invoice_body,
+                $opts,
+                $invId,
+                $original,
+                $d,
+                $formHydrator,
+                $productIds,
+                $targetClientId
             ): void {
                 $copied = $this->inv_service->copyInv(
-                    $user, $copy, $invoice_body, $this->sR);
+                    $user,
+                    $copy,
+                    $invoice_body,
+                    $this->sR
+                );
                 $copied->setDateCreated($opts->createdDate);
                 $d->iR->save($copied);
                 $copied_id = $copied->reqId();
@@ -292,7 +314,13 @@ trait MultipleCopy
             }
 
             if ($this->copyInvForSpreadsheetRows(
-                $invId, $original, $clientIds, $rows, $d, $formHydrator, $paymentService
+                $invId,
+                $original,
+                $clientIds,
+                $rows,
+                $d,
+                $formHydrator,
+                $paymentService
             )) {
                 $anySuccess = true;
             }
@@ -515,10 +543,14 @@ trait MultipleCopy
             ];
             $invAllowanceCharge = new InvAllowanceCharge();
             $form = new InvAllowanceChargeForm();
-            if ($formHydrator->populateAndValidate($form,
-                    $copy_inv_allowance_charge)) {
+            if ($formHydrator->populateAndValidate(
+                $form,
+                $copy_inv_allowance_charge
+            )) {
                 $this->inv_allowance_charge_service->saveInvAllowanceCharge(
-                     $invAllowanceCharge, $copy_inv_allowance_charge);
+                    $invAllowanceCharge,
+                    $copy_inv_allowance_charge
+                );
             }
         }
     }
@@ -563,8 +595,10 @@ trait MultipleCopy
         $original = $d->iR->repoInvUnloadedquery($inv_id);
         // Accept client_ids[] (multiselect) or fall back to single client_id
         /** @var int[] $clientIds */
-        $clientIds = array_values(array_filter(array_map('intval',
-            (array)($data_inv_js['client_ids'] ?? [$data_inv_js['client_id'] ?? '0']))));
+        $clientIds = array_values(array_filter(array_map(
+            'intval',
+            (array)($data_inv_js['client_ids'] ?? [$data_inv_js['client_id'] ?? '0'])
+        )));
 
         if (null === $original || empty($clientIds)) {
             return null === $original
@@ -579,7 +613,13 @@ trait MultipleCopy
 
         foreach ($clientIds as $clientId) {
             $copy_id = $this->saveInvConfirmCopy(
-                $clientId, $inv_id, $original, $d, $formHydrator, $productIds);
+                $clientId,
+                $inv_id,
+                $original,
+                $d,
+                $formHydrator,
+                $productIds
+            );
             if ($copy_id > 0) {
                 $copyCount++;
                 $lastCopyId = $copy_id;
@@ -638,7 +678,14 @@ trait MultipleCopy
         $copy_id = 0;
         $this->inv_service->withTransaction(
             function () use (
-                $user, $copy, $ajax_body, $invId, $original, $d, $formHydrator, &$copy_id
+                $user,
+                $copy,
+                $ajax_body,
+                $invId,
+                $original,
+                $d,
+                $formHydrator,
+                &$copy_id
             ): void {
                 $this->inv_service->saveInv($user, $copy, $ajax_body, $this->sR, $d->gR);
                 $copy_id = $copy->reqId();
@@ -706,7 +753,14 @@ trait MultipleCopy
         $copy_id = 0;
         $this->inv_service->withTransaction(
             function () use (
-                $user, $copy, $invoice_body, $invId, $templateInvoice, $d, $formHydrator, &$copy_id
+                $user,
+                $copy,
+                $invoice_body,
+                $invId,
+                $templateInvoice,
+                $d,
+                $formHydrator,
+                &$copy_id
             ): void {
                 $this->inv_service->saveInv($user, $copy, $invoice_body, $this->sR, $d->gR);
                 $copy_id = $copy->reqId();
@@ -757,7 +811,9 @@ trait MultipleCopy
             $form = new InvCustomForm();
             if ($formHydrator->populateAndValidate($form, $copyCustom)) {
                 $this->inv_custom_service->saveInvCustom(
-                    $invCustom, $copyCustom);
+                    $invCustom,
+                    $copyCustom
+                );
             }
         }
     }
@@ -815,8 +871,10 @@ trait MultipleCopy
             $form = new InvItemForm();
             if (!$formHydrator->populateAndValidate($form, $copy_item)) {
                 if (!empty($form->getValidationResult()->getErrorMessagesIndexedByProperty())) {
-                    $this->flashMessage('danger',
-                        'You have validation errors on ' . (string) $inv_item->reqId());
+                    $this->flashMessage(
+                        'danger',
+                        'You have validation errors on ' . (string) $inv_item->reqId()
+                    );
                 }
                 continue;
             }
@@ -838,13 +896,20 @@ trait MultipleCopy
             return;
         }
         $newInvItemId = $this->inv_item_service->addInvItemProduct(
-            $invItem, $copyItem, (string) $copyId,
-            new IiAddProductDeps($d->pR, $d->trR, $d->iiaS, $d->iiaR, $this->sR, $d->unR));
+            $invItem,
+            $copyItem,
+            (string) $copyId,
+            new IiAddProductDeps($d->pR, $d->trR, $d->iiaS, $d->iiaR, $this->sR, $d->unR)
+        );
         if (null === $newInvItemId) {
             return;
         }
         $this->inv_item_service->addInvItemAllowanceCharges(
-            (string) $copyId, $originalInvItemId, $newInvItemId, $d->aciiR);
+            (string) $copyId,
+            $originalInvItemId,
+            $newInvItemId,
+            $d->aciiR
+        );
         $this->saveInvItemAmountIfValid($newInvItemId, $invItem, $origItem, $d);
     }
 
@@ -861,13 +926,23 @@ trait MultipleCopy
             return;
         }
         $newInvItemId = $this->inv_item_service->addInvItemTask(
-            $invItem, $copyItem, (string) $copyId,
-            $d->taskR, $d->trR, $d->iiaS, $d->iiaR);
+            $invItem,
+            $copyItem,
+            (string) $copyId,
+            $d->taskR,
+            $d->trR,
+            $d->iiaS,
+            $d->iiaR
+        );
         if (null === $newInvItemId) {
             return;
         }
         $this->inv_item_service->addInvItemAllowanceCharges(
-            (string) $copyId, $originalInvItemId, $newInvItemId, $d->aciiR);
+            (string) $copyId,
+            $originalInvItemId,
+            $newInvItemId,
+            $d->aciiR
+        );
         $this->saveInvItemAmountIfValid($newInvItemId, $invItem, $origItem, $d);
     }
 
@@ -920,7 +995,9 @@ trait MultipleCopy
             $form = new InvTaxRateForm();
             if ($formHydrator->populateAndValidate($form, $copy_tax_rate)) {
                 $this->inv_tax_rate_service->saveInvTaxRate(
-                    $invTaxRate, $copy_tax_rate);
+                    $invTaxRate,
+                    $copy_tax_rate
+                );
             }
         }
     }

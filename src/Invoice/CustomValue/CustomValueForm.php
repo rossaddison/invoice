@@ -32,7 +32,7 @@ final class CustomValueForm extends FormModel
         $form->customfield = $custom_value->getCustomField();
         return $form;
     }
-    
+
     public function getCustomFieldId(): ?int
     {
         return $this->custom_field_id;

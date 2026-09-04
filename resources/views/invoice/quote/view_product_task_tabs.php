@@ -67,22 +67,22 @@ use Yiisoft\Html\Tag\I;
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                 <?= Html::openTag('div'); ?>
                     <?= Html::openTag(
-                            'button',
-                            [
-                                'class' => 'btn btn-primary',
-                                'href' => '#modal-choose-items',
-                                'id' => '#modal-choose-items',
-                                'data-bs-toggle' => 'modal',
-                            ],
-                        );
-                    ?>
+                        'button',
+                        [
+                            'class' => 'btn btn-primary',
+                            'href' => '#modal-choose-items',
+                            'id' => '#modal-choose-items',
+                            'data-bs-toggle' => 'modal',
+                        ],
+                    );
+    ?>
                     <?=  new I()
-                        ->addClass('bi bi-list-ul')
-                        ->addAttributes([
-                            'data-bs-toggle' => 'tooltip',
-                            'title' => $translator->translate('add.product'),
-                        ]);
-                    ?>
+        ->addClass('bi bi-list-ul')
+        ->addAttributes([
+            'data-bs-toggle' => 'tooltip',
+            'title' => $translator->translate('add.product'),
+        ]);
+    ?>
                     <?= $translator->translate('add.product'); ?>
                     <?= Html::closeTag('button'); ?>
                 <?= Html::closeTag('div'); ?>
@@ -93,11 +93,11 @@ use Yiisoft\Html\Tag\I;
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                 <?= Html::openTag('div'); ?>
                     <?= Html::openTag('button', [
-                        'class' => 'btn btn-primary bi bi-ui-checks w-100',
-                        'data-bs-target' => '#modal-choose-tasks-quote',
-                        'id' => 'btn-choose-tasks-quote',
-                        'data-bs-toggle' => 'modal']);
-                    ?>
+        'class' => 'btn btn-primary bi bi-ui-checks w-100',
+        'data-bs-target' => '#modal-choose-tasks-quote',
+        'id' => 'btn-choose-tasks-quote',
+        'data-bs-toggle' => 'modal']);
+    ?>
                     <?= $translator->translate('add.task'); ?>
                     <?= Html::closeTag('button'); ?>
                 <?= Html::closeTag('div'); ?>

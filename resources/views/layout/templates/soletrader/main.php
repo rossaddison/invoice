@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Auth\Asset\AuthAegisTotpKeypadAsset;
-
 use App\Asset\AppCdnAsset as AppCdn;
 use App\Asset\AppNodeModulesAsset as AppNm;
 use App\Widget\PerformanceMetrics;
@@ -144,423 +143,452 @@ $this->setTitle($title);
 echo new TagHtml()
     ->addAttributes(['class' => 'h-100'])
     ->lang($currentRoute->getArgument('_language') ?? 'en');
- echo Html::openTag('head'); //1
-  echo Meta::documentEncoding('utf-8');
-  echo Meta::data('robots', 'INDEX,FOLLOW');
-  echo Meta::data('viewport', 'width=device-width, initial-scale=1');
-  // Search Engine Optimization (SEO)
-  echo Meta::data('description', $companySeoDescription);
-  // Avoid 'ranking splitting' by identifying the real source
-  // Settings ... Company Public Details ... web
-  // Related logic: src\ViewInjection\CommonViewInjection.php
-  echo new Link()->rel('canonical')->href($companyWeb ?:
-    'https://yiiframework.com');
-  if ($bootstrap5CdnNotNodeModule || $appCdnNotNodeModule) {
-      echo new Link()->rel('preconnect')->href('https://cdn.jsdelivr.net');
-      echo new Link()->rel('dns-prefetch')->href('//cdn.jsdelivr.net');
-  }
-   echo new Title()
-       ->content($this->getTitle() ? Html::encode($this->getTitle()) : ''); //3
- $this->head();
- echo Html::closeTag('head'); //1
- echo Html::openTag('body',
-        ['class' =>
-        'cover-container-fluid d-flex w-100 h-100 mx-auto flex-column']); //1
-  echo Html::openTag('header', ['class' => 'mb-auto']); //2
-    $this->beginBody();
-   echo NavBar::widget()
-        ->addClass('navbar navbar-dark navbar-expand-sm')
-        ->addCssStyle([
-            'background' => 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-            'color' => 'white',
-            'font-size' => $bootstrap5LayoutMainNavbarFontSize,
-            'font-family' => $bootstrap5LayoutMainNavbarFont,
-            'font-weight' => 'bold',
-        ])
-        ->addAttributes([])
-        ->brandImage($logoPath)
-        ->brandImageAttributes(['margin' => $companyLogoMargin ?: '10',
-            'width' => $companyLogoWidth ?:
-                ($bootstrap5LayoutMainNavbarFontSize ?: '100'),
-            'height' => $companyLogoHeight ?:
-                ($bootstrap5LayoutMainNavbarFontSize ?: '50')])
-        ->brandText($brandLabel)
-        ->brandAttributes([
-            'style' => 'font-size: '
-                . $bootstrap5LayoutMainNavbarFontSize
-                . 'px; font-family: '
-                . $bootstrap5LayoutMainNavbarFont
-                . '; padding-left: 12px; color: #fff;',
-        ])
-        ->brandUrl($urlGenerator->generate('site/index'))
-        ->container(false)
-        ->containerAttributes([])
-        ->expand(NavBarExpand::LG)
-        ->id('navbar')
-        ->innerContainerAttributes(['class' => 'container-md'])
-        ->placement(NavBarPlacement::STICKY_TOP)
-        ->begin();
-    echo Dropdown::widget()
-         ->addClass('dropdown bi bi-translate')
-         ->addAttributes([
-             'style' => 'font-size: '
-                . $bootstrap5LayoutMainNavbarFontSize . 'px; color: black;',
-             'url' => '#',
-         ])
-         ->addTogglerCssStyle([
-            'font-size' => $bootstrap5LayoutMainNavbarFontSize . 'px',
-            'font-family' => $bootstrap5LayoutMainNavbarFont,
-         ])
-         ->togglerVariant(ButtonVariant::LIGHT)
-         ->togglerContent($currentLocaleFlag)
-         ->togglerSize(ButtonSize::SMALL)
-         ->items(
-             $afZA, $arBH, $az,
-             $beBY, $bs, $zhCN, $zhTW, $en,
-             $fil, $fr, $gdGB, $haNG, $heIL,
-             $igNG, $nl, $de, $id, $it, $ja, $pl, $ptBR,
-             $ru, $sk, $sl, $es, $uk, $uz, $vi, $yoNG, $zuZA
-         )->render();
-    $currentPath = $currentRoute->getUri()?->getPath();
-   echo null !== $currentPath ?
-      Nav::widget()
-      ->addCssStyle([
+echo Html::openTag('head'); //1
+echo Meta::documentEncoding('utf-8');
+echo Meta::data('robots', 'INDEX,FOLLOW');
+echo Meta::data('viewport', 'width=device-width, initial-scale=1');
+// Search Engine Optimization (SEO)
+echo Meta::data('description', $companySeoDescription);
+// Avoid 'ranking splitting' by identifying the real source
+// Settings ... Company Public Details ... web
+// Related logic: src\ViewInjection\CommonViewInjection.php
+echo new Link()->rel('canonical')->href($companyWeb ?:
+  'https://yiiframework.com');
+if ($bootstrap5CdnNotNodeModule || $appCdnNotNodeModule) {
+    echo new Link()->rel('preconnect')->href('https://cdn.jsdelivr.net');
+    echo new Link()->rel('dns-prefetch')->href('//cdn.jsdelivr.net');
+}
+echo new Title()
+    ->content($this->getTitle() ? Html::encode($this->getTitle()) : ''); //3
+$this->head();
+echo Html::closeTag('head'); //1
+echo Html::openTag(
+    'body',
+    ['class' =>
+       'cover-container-fluid d-flex w-100 h-100 mx-auto flex-column']
+); //1
+echo Html::openTag('header', ['class' => 'mb-auto']); //2
+$this->beginBody();
+echo NavBar::widget()
+     ->addClass('navbar navbar-dark navbar-expand-sm')
+     ->addCssStyle([
+         'background' => 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+         'color' => 'white',
+         'font-size' => $bootstrap5LayoutMainNavbarFontSize,
+         'font-family' => $bootstrap5LayoutMainNavbarFont,
+         'font-weight' => 'bold',
+     ])
+     ->addAttributes([])
+     ->brandImage($logoPath)
+     ->brandImageAttributes(['margin' => $companyLogoMargin ?: '10',
+         'width' => $companyLogoWidth ?:
+             ($bootstrap5LayoutMainNavbarFontSize ?: '100'),
+         'height' => $companyLogoHeight ?:
+             ($bootstrap5LayoutMainNavbarFontSize ?: '50')])
+     ->brandText($brandLabel)
+     ->brandAttributes([
+         'style' => 'font-size: '
+             . $bootstrap5LayoutMainNavbarFontSize
+             . 'px; font-family: '
+             . $bootstrap5LayoutMainNavbarFont
+             . '; padding-left: 12px; color: #fff;',
+     ])
+     ->brandUrl($urlGenerator->generate('site/index'))
+     ->container(false)
+     ->containerAttributes([])
+     ->expand(NavBarExpand::LG)
+     ->id('navbar')
+     ->innerContainerAttributes(['class' => 'container-md'])
+     ->placement(NavBarPlacement::STICKY_TOP)
+     ->begin();
+echo Dropdown::widget()
+     ->addClass('dropdown bi bi-translate')
+     ->addAttributes([
+         'style' => 'font-size: '
+            . $bootstrap5LayoutMainNavbarFontSize . 'px; color: black;',
+         'url' => '#',
+     ])
+     ->addTogglerCssStyle([
         'font-size' => $bootstrap5LayoutMainNavbarFontSize . 'px',
         'font-family' => $bootstrap5LayoutMainNavbarFont,
-      ])
-      ->items(
+     ])
+     ->togglerVariant(ButtonVariant::LIGHT)
+     ->togglerContent($currentLocaleFlag)
+     ->togglerSize(ButtonSize::SMALL)
+     ->items(
+         $afZA,
+         $arBH,
+         $az,
+         $beBY,
+         $bs,
+         $zhCN,
+         $zhTW,
+         $en,
+         $fil,
+         $fr,
+         $gdGB,
+         $haNG,
+         $heIL,
+         $igNG,
+         $nl,
+         $de,
+         $id,
+         $it,
+         $ja,
+         $pl,
+         $ptBR,
+         $ru,
+         $sk,
+         $sl,
+         $es,
+         $uk,
+         $uz,
+         $vi,
+         $yoNG,
+         $zuZA
+     )->render();
+$currentPath = $currentRoute->getUri()?->getPath();
+echo null !== $currentPath ?
+   Nav::widget()
+   ->addCssStyle([
+     'font-size' => $bootstrap5LayoutMainNavbarFontSize . 'px',
+     'font-family' => $bootstrap5LayoutMainNavbarFont,
+   ])
+   ->items(
        NavLink::to(
-            new Label()
+           new Label()
            ->attributes([
-               'class' => $debugMode ? 'bi bi-info-circle' : '',
-               'style' => 'font-size: '
-                    . $bootstrap5LayoutMainNavbarFontSize
-                    . 'px; color: cornflowerblue;',
-               'data-bs-toggle' => 'tooltip',
-               'title' => $debugMode ?
-                '..\invoice\resources\views\layout\templates\soletrader\main.php'
-                   . ' && config/common/params.php yiisoft/yii-view layouts' : '',
+            'class' => $debugMode ? 'bi bi-info-circle' : '',
+            'style' => 'font-size: '
+                 . $bootstrap5LayoutMainNavbarFontSize
+                 . 'px; color: cornflowerblue;',
+            'data-bs-toggle' => 'tooltip',
+            'title' => $debugMode ?
+             '..\invoice\resources\views\layout\templates\soletrader\main.php'
+                . ' && config/common/params.php yiisoft/yii-view layouts' : '',
             ]),
-            '',
-            //active
-            $debugMode,
-            //disabled
-            !$debugMode,
-            //encode label
-            false,
-        ),
-        NavLink::to(
-             new Label()
+           '',
+           //active
+           $debugMode,
+           //disabled
+           !$debugMode,
+           //encode label
+           false,
+       ),
+       NavLink::to(
+           new Label()
             ->attributes([
-                'class' => 'bi bi-info-circle-fill text-info',
-                'style' => 'font-size: '
-                    . $bootstrap5LayoutMainNavbarFontSize
-                    . 'px; color: cornflowerblue;',
+             'class' => 'bi bi-info-circle-fill text-info',
+             'style' => 'font-size: '
+                 . $bootstrap5LayoutMainNavbarFontSize
+                 . 'px; color: cornflowerblue;',
             ])
             ->content(str_repeat(' ', 1) . $t->translate('menu.about')),
-            $urlGenerator->generate('site/about'),
-            $isGuest && !$noFrontPageAbout,
-            !$isGuest && $noFrontPageAbout,
-            false,
-            [],
-            [],
-            $isGuest && !$noFrontPageAbout,
-        ),
-        // Same guest-only, no_front_webshop_page-gated visibility as every
-        // other front-page link here (Settings...Front Page) — see
-        // resources/views/invoice/setting/views/partial_settings_front_page.php
-        // and src/ViewInjection/LayoutViewInjection.php's own
-        // noFrontPageWebshop. `shop/catalog/index` sits outside the
-        // `/{_language}` group (config/common/routes/routes-shop.php's
-        // own docblock), so — unlike every other generate() call in this
-        // file — no `_language` argument is needed here.
-        NavLink::to(
-             new Label()
-            ->attributes(['class' => 'bi bi-bag-fill text-white'])
-            ->content(str_repeat(' ', 1) . $t->translate('menu.webshop')),
-            $urlGenerator->generate('shop/catalog/index'),
-            $isGuest && !$noFrontPageWebshop,
-            !$isGuest && $noFrontPageWebshop,
-            false,
-            [],
-            [],
-            $isGuest && !$noFrontPageWebshop,
-        ),
-        NavLink::to(
-             new Label()
+           $urlGenerator->generate('site/about'),
+           $isGuest && !$noFrontPageAbout,
+           !$isGuest && $noFrontPageAbout,
+           false,
+           [],
+           [],
+           $isGuest && !$noFrontPageAbout,
+       ),
+       // Same guest-only, no_front_webshop_page-gated visibility as every
+       // other front-page link here (Settings...Front Page) — see
+       // resources/views/invoice/setting/views/partial_settings_front_page.php
+       // and src/ViewInjection/LayoutViewInjection.php's own
+       // noFrontPageWebshop. `shop/catalog/index` sits outside the
+       // `/{_language}` group (config/common/routes/routes-shop.php's
+       // own docblock), so — unlike every other generate() call in this
+       // file — no `_language` argument is needed here.
+       NavLink::to(
+           new Label()
+           ->attributes(['class' => 'bi bi-bag-fill text-white'])
+           ->content(str_repeat(' ', 1) . $t->translate('menu.webshop')),
+           $urlGenerator->generate('shop/catalog/index'),
+           $isGuest && !$noFrontPageWebshop,
+           !$isGuest && $noFrontPageWebshop,
+           false,
+           [],
+           [],
+           $isGuest && !$noFrontPageWebshop,
+       ),
+       NavLink::to(
+           new Label()
             ->attributes([
-                'class' => 'bi bi-patch-check text-success',
+             'class' => 'bi bi-patch-check text-success',
             ])
             ->content(str_repeat(' ', 1)
-                . $t->translate('menu.accreditations')),
-            $urlGenerator->generate('site/accreditations'),
-            $isGuest && !$noFrontPageAccreditations,
-            !$isGuest && $noFrontPageAccreditations,
-            false,
-            [],
-            [],
-            $isGuest && !$noFrontPageAccreditations,
-        ),
-        NavLink::to(
-             new Label()
+             . $t->translate('menu.accreditations')),
+           $urlGenerator->generate('site/accreditations'),
+           $isGuest && !$noFrontPageAccreditations,
+           !$isGuest && $noFrontPageAccreditations,
+           false,
+           [],
+           [],
+           $isGuest && !$noFrontPageAccreditations,
+       ),
+       NavLink::to(
+           new Label()
             ->attributes(['class' => 'bi bi-images text-warning'])
             ->content(str_repeat(' ', 1) . $t->translate('menu.gallery')),
-            $urlGenerator->generate('site/gallery'),
-            $isGuest && !$noFrontPageGallery,
-            !$isGuest && $noFrontPageGallery,
-            false,
-            [],
-            [],
-            $isGuest && !$noFrontPageGallery,
-        ),
-        NavLink::to(
-             new Label()
+           $urlGenerator->generate('site/gallery'),
+           $isGuest && !$noFrontPageGallery,
+           !$isGuest && $noFrontPageGallery,
+           false,
+           [],
+           [],
+           $isGuest && !$noFrontPageGallery,
+       ),
+       NavLink::to(
+           new Label()
             ->attributes(['class' => 'bi bi-people-fill text-info'])
             ->content(str_repeat(' ', 1) . $t->translate('menu.team')),
-            $urlGenerator->generate('site/team'),
-            $isGuest && !$noFrontPageTeam,
-            !$isGuest && $noFrontPageTeam,
-            false,
-            [],
-            [],
-            $isGuest && !$noFrontPageTeam,
-        ),
-        NavLink::to(
-             new Label()
+           $urlGenerator->generate('site/team'),
+           $isGuest && !$noFrontPageTeam,
+           !$isGuest && $noFrontPageTeam,
+           false,
+           [],
+           [],
+           $isGuest && !$noFrontPageTeam,
+       ),
+       NavLink::to(
+           new Label()
             ->attributes(['class' => 'bi bi-tags-fill text-danger'])
             ->content(str_repeat(' ', 1) . $t->translate('menu.pricing')),
-            $urlGenerator->generate('site/pricing'),
-            $isGuest && !$noFrontPagePricing,
-            !$isGuest && $noFrontPagePricing,
-            false,
-            [],
-            [],
-            $isGuest && !$noFrontPagePricing,
-        ),
-        NavLink::to(
-             new Label()
+           $urlGenerator->generate('site/pricing'),
+           $isGuest && !$noFrontPagePricing,
+           !$isGuest && $noFrontPagePricing,
+           false,
+           [],
+           [],
+           $isGuest && !$noFrontPagePricing,
+       ),
+       NavLink::to(
+           new Label()
             ->attributes(['class' => 'bi bi-credit-card-2-front-fill text-white'])
             ->content(str_repeat(' ', 1)
-                . $t->translate('menu.gateway.status')),
-            $urlGenerator->generate('site/gateway-status'),
-            $isGuest && !$noFrontPageGatewayStatus,
-            !$isGuest && $noFrontPageGatewayStatus,
-            false,
-            [],
-            [],
-            $isGuest && !$noFrontPageGatewayStatus,
-        ),
-        NavLink::to(
-             new Label()
+             . $t->translate('menu.gateway.status')),
+           $urlGenerator->generate('site/gateway-status'),
+           $isGuest && !$noFrontPageGatewayStatus,
+           !$isGuest && $noFrontPageGatewayStatus,
+           false,
+           [],
+           [],
+           $isGuest && !$noFrontPageGatewayStatus,
+       ),
+       NavLink::to(
+           new Label()
             ->attributes(['class' => 'bi bi-diagram-3-fill text-white'])
             ->content(str_repeat(' ', 1)
-                . $t->translate('menu.peppol.status')),
-            $urlGenerator->generate('site/peppol-status'),
-            $isGuest && !$noFrontPagePeppolStatus,
-            !$isGuest && $noFrontPagePeppolStatus,
-            false,
-            [],
-            [],
-            $isGuest && !$noFrontPagePeppolStatus,
-        ),
-        NavLink::to(
-             new Label()
+             . $t->translate('menu.peppol.status')),
+           $urlGenerator->generate('site/peppol-status'),
+           $isGuest && !$noFrontPagePeppolStatus,
+           !$isGuest && $noFrontPagePeppolStatus,
+           false,
+           [],
+           [],
+           $isGuest && !$noFrontPagePeppolStatus,
+       ),
+       NavLink::to(
+           new Label()
             ->attributes(['class' => 'bi bi-file-ruled text-secondary'])
             ->content(str_repeat(' ', 1)
-                . $t->translate('menu.testimonial')),
-            $urlGenerator->generate('site/testimonial'),
-            $isGuest && !$noFrontPageTestimonial,
-            !$isGuest && $noFrontPageTestimonial,
-            false,
-            [],
-            [],
-            $isGuest && !$noFrontPageTestimonial,
-        ),
-        NavLink::to(
-             new Label()
+             . $t->translate('menu.testimonial')),
+           $urlGenerator->generate('site/testimonial'),
+           $isGuest && !$noFrontPageTestimonial,
+           !$isGuest && $noFrontPageTestimonial,
+           false,
+           [],
+           [],
+           $isGuest && !$noFrontPageTestimonial,
+       ),
+       NavLink::to(
+           new Label()
             ->attributes(['class' => 'bi bi-file-text text-light'])
             ->content(str_repeat(' ', 1)
-                . $t->translate('menu.privacy.policy')),
-            $urlGenerator->generate('site/privacypolicy'),
-            $isGuest && !$noFrontPagePrivacyPolicy,
-            !$isGuest && $noFrontPagePrivacyPolicy,
-            false,
-            [],
-            [],
-            $isGuest && !$noFrontPagePrivacyPolicy,
-        ),
-        NavLink::to(
-             new Label()
+             . $t->translate('menu.privacy.policy')),
+           $urlGenerator->generate('site/privacypolicy'),
+           $isGuest && !$noFrontPagePrivacyPolicy,
+           !$isGuest && $noFrontPagePrivacyPolicy,
+           false,
+           [],
+           [],
+           $isGuest && !$noFrontPagePrivacyPolicy,
+       ),
+       NavLink::to(
+           new Label()
             ->attributes(['class' => 'bi bi-file-text-fill text-light'])
             ->content(str_repeat(' ', 1)
-                . $t->translate('menu.terms.of.service')),
-            $urlGenerator->generate('site/termsofservice'),
-            $isGuest && !$noFrontPageTermsOfService,
-            !$isGuest && $noFrontPageTermsOfService,
-            false,
-            [],
-            [],
-            $isGuest && !$noFrontPageTermsOfService,
-        ),
-        NavLink::to(
-             new Label()
+             . $t->translate('menu.terms.of.service')),
+           $urlGenerator->generate('site/termsofservice'),
+           $isGuest && !$noFrontPageTermsOfService,
+           !$isGuest && $noFrontPageTermsOfService,
+           false,
+           [],
+           [],
+           $isGuest && !$noFrontPageTermsOfService,
+       ),
+       NavLink::to(
+           new Label()
             ->attributes(['class' => 'bi bi-person-lines-fill text-primary'])
             ->content(str_repeat(' ', 1)
-                . $t->translate('menu.contact.us')),
-            $urlGenerator->generate('site/contact'),
-            $isGuest && !$noFrontPageContactUs,
-            !$isGuest && $noFrontPageContactUs,
-            false,
-            [],
-            [],
-            $isGuest && !$noFrontPageContactUs,
-        ),
-        NavLink::to(
-             new Label()
+             . $t->translate('menu.contact.us')),
+           $urlGenerator->generate('site/contact'),
+           $isGuest && !$noFrontPageContactUs,
+           !$isGuest && $noFrontPageContactUs,
+           false,
+           [],
+           [],
+           $isGuest && !$noFrontPageContactUs,
+       ),
+       NavLink::to(
+           new Label()
             ->attributes(['class' => 'bi bi-door-open-fill text-white'])
             ->content(str_repeat(' ', 1)
-                . $t->translate('menu.login')),
-            $urlGenerator->generate('auth/login'),
-            $isGuest && !$stopLoggingIn,
-            !$isGuest && $stopLoggingIn,
-            false,
-            [],
-            [],
-            $isGuest && !$stopLoggingIn,
-        ),
-        NavLink::to(
-             new Label()
+             . $t->translate('menu.login')),
+           $urlGenerator->generate('auth/login'),
+           $isGuest && !$stopLoggingIn,
+           !$isGuest && $stopLoggingIn,
+           false,
+           [],
+           [],
+           $isGuest && !$stopLoggingIn,
+       ),
+       NavLink::to(
+           new Label()
             ->attributes([
-                'class' => 'bi bi-person-plus-fill text-warning',
-                'data-bs-toggle' => 'tooltip',
-                'title' => str_repeat(' ', 1)
-                    . $t->translate('setup.create.user'),
+             'class' => 'bi bi-person-plus-fill text-warning',
+             'data-bs-toggle' => 'tooltip',
+             'title' => str_repeat(' ', 1)
+                 . $t->translate('setup.create.user'),
             ])
             ->content(str_repeat(' ', 1) . $t->translate('menu.signup')),
-            $urlGenerator->generate('auth/signup'),
-            $isGuest && !$stopSigningUp,
-            !$isGuest && $stopSigningUp,
-            false,
-            [],
-            [],
-            $isGuest && !$stopSigningUp,
-        ),
-        NavLink::to(
-             new Label()
+           $urlGenerator->generate('auth/signup'),
+           $isGuest && !$stopSigningUp,
+           !$isGuest && $stopSigningUp,
+           false,
+           [],
+           [],
+           $isGuest && !$stopSigningUp,
+       ),
+       NavLink::to(
+           new Label()
             ->attributes([
-                'class' => 'bi bi-house-heart-fill text-danger',
-                'data-bs-toggle' => 'tooltip',
-                'title' => str_repeat(' ', 1)
-                    . $t->translate('homecare.signup.title'),
+             'class' => 'bi bi-house-heart-fill text-danger',
+             'data-bs-toggle' => 'tooltip',
+             'title' => str_repeat(' ', 1)
+                 . $t->translate('homecare.signup.title'),
             ])
             ->content(str_repeat(' ', 1) . $t->translate('homecare.signup.title')),
-            $urlGenerator->generate('homecare/signup'),
-            $isGuest && !$stopHomecareSigningUp,
-            !$isGuest && $stopHomecareSigningUp,
-            false,
-            [],
-            [],
-            $isGuest && !$stopHomecareSigningUp,
-        ),
-        NavLink::to(
-            /**
-             * Only render the logout button if user is an authenticated
-             *  user i.e. not guest
-             */
-            $isGuest && !$stopLoggingIn
-                ? ''
-                :  new Form()
-                    ->post($urlGenerator->generate('auth/logout'))
-                    ->csrf($csrf)
-                    ->open()
-                    . '<div class="mb-1">'
-                    . Button::submit(
-                        (new I())->addClass('bi bi-box-arrow-right me-1')->render()
-                        . Html::encode($t->translate('logout',
-                            ['login' =>
-                                Html::encode(null !== $user ?
-                                    $user->getLogin() : '')])),
-                    )
-                    ->encode(false)
-                    ->addClass('btn btn-outline-danger')
-                    ->addStyle('font-size: '
-                    . $bootstrap5LayoutMainNavbarFontSize
-                    . 'px; padding: '
-                    . ((int) $bootstrap5LayoutMainNavbarFontSize * 0.15)
-                    . 'px '
-                    . ((int) $bootstrap5LayoutMainNavbarFontSize * 0.4) . 'px;')
-                    . '</div>'
-                    .  new Form()->close(),
-            encodeLabel: false,
-        ),
-    )
-    ->styles(NavStyle::NAVBAR) : '';
-   echo NavBar::end();
-  echo Html::closeTag('header'); //2
-  echo Html::openTag('main', ['class' => 'container py-3']); //2
-   /**
-    * Related logic: see ./resources/views/site/index.php
-    */
-   echo $content;
-  echo Html::closeTag('main'); //2
-  echo Html::openTag('footer', ['class' => 'mt-auto py-3',
-      'style' => 'background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%,'
-      . ' #0f3460 100%);']); //2
-   echo Html::openTag('div', ['class' =>
-            'd-flex flex-fill align-items-center container-fluid']); //3
-    echo Html::openTag('div', ['class' => 'd-flex flex-fill float-start']); //4
-     echo new A()
-          ->href($companyWeb)
-          ->addClass('text-decoration-none')
-          ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
-          ->content($brandLabel . ' - ' . date('Y') . ' -' )
-          ->render();
-      echo Html::openTag('div', ['class' => 'ms-2 text-white']); //5
-       echo PerformanceMetrics::widget();
-      echo Html::closeTag('div'); //5
-    echo Html::closeTag('div'); //4
-    echo Html::openTag('div', ['class' => 'float-end']); //4
-     $txtDecorNonePx1 = 'text-decoration-none px-1';
-     echo new A()
-          ->href($companyWeb)
-          ->addClass($txtDecorNonePx1)
-          ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
-          ->content(new I()->addClass('bi bi-github text-white'))
-          ->render();
-     echo new A()
-          ->href($companySlack)
-          ->addClass($txtDecorNonePx1)
-          ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
-          ->content(new I()->addClass('bi bi-slack text-white'))
-          ->render();
-     echo new A()
-          ->href($companyFaceBook)
-          ->addClass($txtDecorNonePx1)
-          ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
-          ->content(new I()->addClass('bi bi-facebook text-white'))
-          ->render();
-     echo new A()
-          ->href($companyTwitter)
-          ->addClass($txtDecorNonePx1)
-          ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
-          ->content(new I()->addClass('bi bi-twitter text-white'))
-          ->render();
-     echo new A()
-          ->href($companyWhatsApp)
-          ->addClass($txtDecorNonePx1)
-          ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
-          ->content(new I()->addClass('bi bi-whatsapp text-white'))
-          ->render();
-     echo new A()
-          ->href($companyLinkedIn)
-          ->addClass($txtDecorNonePx1)
-          ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
-          ->content(new I()->addClass('bi bi-linkedin text-white'))
-          ->render();
-    echo Html::closeTag('div'); //4
-   echo Html::closeTag('div'); //3
-  echo Html::closeTag('footer'); //2
-  echo Html::tag('style', '
+           $urlGenerator->generate('homecare/signup'),
+           $isGuest && !$stopHomecareSigningUp,
+           !$isGuest && $stopHomecareSigningUp,
+           false,
+           [],
+           [],
+           $isGuest && !$stopHomecareSigningUp,
+       ),
+       NavLink::to(
+           /**
+            * Only render the logout button if user is an authenticated
+            *  user i.e. not guest
+            */
+           $isGuest && !$stopLoggingIn
+               ? ''
+               : new Form()
+                   ->post($urlGenerator->generate('auth/logout'))
+                   ->csrf($csrf)
+                   ->open()
+                   . '<div class="mb-1">'
+                   . Button::submit(
+                       (new I())->addClass('bi bi-box-arrow-right me-1')->render()
+                       . Html::encode($t->translate(
+                           'logout',
+                           ['login' =>
+                               Html::encode(null !== $user ?
+                                   $user->getLogin() : '')]
+                       )),
+                   )
+                   ->encode(false)
+                   ->addClass('btn btn-outline-danger')
+                   ->addStyle('font-size: '
+                   . $bootstrap5LayoutMainNavbarFontSize
+                   . 'px; padding: '
+                   . ((int) $bootstrap5LayoutMainNavbarFontSize * 0.15)
+                   . 'px '
+                   . ((int) $bootstrap5LayoutMainNavbarFontSize * 0.4) . 'px;')
+                   . '</div>'
+                   .  new Form()->close(),
+           encodeLabel: false,
+       ),
+   )
+ ->styles(NavStyle::NAVBAR) : '';
+echo NavBar::end();
+echo Html::closeTag('header'); //2
+echo Html::openTag('main', ['class' => 'container py-3']); //2
+/**
+ * Related logic: see ./resources/views/site/index.php
+ */
+echo $content;
+echo Html::closeTag('main'); //2
+echo Html::openTag('footer', ['class' => 'mt-auto py-3',
+    'style' => 'background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%,'
+    . ' #0f3460 100%);']); //2
+echo Html::openTag('div', ['class' =>
+         'd-flex flex-fill align-items-center container-fluid']); //3
+echo Html::openTag('div', ['class' => 'd-flex flex-fill float-start']); //4
+echo new A()
+     ->href($companyWeb)
+     ->addClass('text-decoration-none')
+     ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
+     ->content($brandLabel . ' - ' . date('Y') . ' -')
+     ->render();
+echo Html::openTag('div', ['class' => 'ms-2 text-white']); //5
+echo PerformanceMetrics::widget();
+echo Html::closeTag('div'); //5
+echo Html::closeTag('div'); //4
+echo Html::openTag('div', ['class' => 'float-end']); //4
+$txtDecorNonePx1 = 'text-decoration-none px-1';
+echo new A()
+     ->href($companyWeb)
+     ->addClass($txtDecorNonePx1)
+     ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
+     ->content(new I()->addClass('bi bi-github text-white'))
+     ->render();
+echo new A()
+     ->href($companySlack)
+     ->addClass($txtDecorNonePx1)
+     ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
+     ->content(new I()->addClass('bi bi-slack text-white'))
+     ->render();
+echo new A()
+     ->href($companyFaceBook)
+     ->addClass($txtDecorNonePx1)
+     ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
+     ->content(new I()->addClass('bi bi-facebook text-white'))
+     ->render();
+echo new A()
+     ->href($companyTwitter)
+     ->addClass($txtDecorNonePx1)
+     ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
+     ->content(new I()->addClass('bi bi-twitter text-white'))
+     ->render();
+echo new A()
+     ->href($companyWhatsApp)
+     ->addClass($txtDecorNonePx1)
+     ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
+     ->content(new I()->addClass('bi bi-whatsapp text-white'))
+     ->render();
+echo new A()
+     ->href($companyLinkedIn)
+     ->addClass($txtDecorNonePx1)
+     ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
+     ->content(new I()->addClass('bi bi-linkedin text-white'))
+     ->render();
+echo Html::closeTag('div'); //4
+echo Html::closeTag('div'); //3
+echo Html::closeTag('footer'); //2
+echo Html::tag('style', '
    .navbar { box-shadow: 0 2px 10px rgba(0,0,0,0.4); }
    /* The language dropdown items (below the navbar-toggler) hardcode
       color: black inline, but nothing on this page explicitly sets the
@@ -581,7 +609,7 @@ echo new TagHtml()
    footer a:hover .bi-whatsapp { color: #25d366; }
    footer a:hover .bi-linkedin { color: #0a66c2; }
   ');
-  $this->endBody();
- echo Html::closeTag('body'); //1
+$this->endBody();
+echo Html::closeTag('body'); //1
 echo Html::closeTag('html');
 $this->endPage(true);

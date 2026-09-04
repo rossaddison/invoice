@@ -41,31 +41,31 @@ use Yiisoft\Html\Html;
                     $translator->translate($pAdd . 'street.name'),
                     $form->getStreetName(),
                 );
-                ReadOnlyField::render(
-                    $translator->translate($pAdd . 'additional.street.name'),
-                    $form->getAdditionalStreetName(),
-                );
-                ReadOnlyField::render(
-                    $translator->translate($pAdd . 'building.number'),
-                    $form->getBuildingNumber(),
-                );
-                ReadOnlyField::render(
-                    $translator->translate($pAdd . 'city.name'),
-                    $form->getCityName(),
-                );
-                ReadOnlyField::render(
-                    $translator->translate($pAdd . 'postalzone'),
-                    $form->getPostalzone(),
-                );
-                ReadOnlyField::render(
-                    $translator->translate($pAdd . 'countrysubentity'),
-                    $form->getCountrysubentity(),
-                );
-                ReadOnlyField::render(
-                    $translator->translate($pAdd . 'country'),
-                    $form->getCountry(),
-                );
-            ?>
+ReadOnlyField::render(
+    $translator->translate($pAdd . 'additional.street.name'),
+    $form->getAdditionalStreetName(),
+);
+ReadOnlyField::render(
+    $translator->translate($pAdd . 'building.number'),
+    $form->getBuildingNumber(),
+);
+ReadOnlyField::render(
+    $translator->translate($pAdd . 'city.name'),
+    $form->getCityName(),
+);
+ReadOnlyField::render(
+    $translator->translate($pAdd . 'postalzone'),
+    $form->getPostalzone(),
+);
+ReadOnlyField::render(
+    $translator->translate($pAdd . 'countrysubentity'),
+    $form->getCountrysubentity(),
+);
+ReadOnlyField::render(
+    $translator->translate($pAdd . 'country'),
+    $form->getCountry(),
+);
+?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

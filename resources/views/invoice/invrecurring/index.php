@@ -57,7 +57,7 @@ $columns = [
             return  new A()
                     ->addClass('text-decoration-none')
                     ->content($model->getInv()?->getNumber() ?? '#')
-                    ->href($urlGenerator->generate('inv/view', ['id' => (string) 
+                    ->href($urlGenerator->generate('inv/view', ['id' => (string)
                         $model->reqInvId()]));
         },
         encodeContent: false,

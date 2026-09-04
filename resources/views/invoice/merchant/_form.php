@@ -56,19 +56,19 @@ use Yiisoft\Html\Tag\Form;
             foreach ($invs as $inv) {
                 $invId = $inv->reqId();
                 $optionsDataInv[$invId] =
-                    $inv->getNumber() ?? $translator->translate('number.no');        
+                    $inv->getNumber() ?? $translator->translate('number.no');
             }
-            echo Field::select($form, 'inv_id')
-            ->label($translator->translate('invoice'))
-            ->optionsData($optionsDataInv)
-            ->hint($translator->translate('hint.this.field.is.required'));
-            ?>
+echo Field::select($form, 'inv_id')
+->label($translator->translate('invoice'))
+->optionsData($optionsDataInv)
+->hint($translator->translate('hint.this.field.is.required'));
+?>
             <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::checkbox($form, 'successful')
-                ->inputLabelAttributes(['class' => 'form-check-label'])
-                ->inputClass('form-check-input')
-                ->ariaDescribedBy($translator->translate('successful'))
-           ?>
+    ->inputLabelAttributes(['class' => 'form-check-label'])
+    ->inputClass('form-check-input')
+    ->ariaDescribedBy($translator->translate('successful'))
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3']); ?>
                 <?= Field::date($form, 'date')

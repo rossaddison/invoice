@@ -29,7 +29,8 @@ final readonly class AuthSecurityHelper
         private StorageInterface $rateLimiterStorage,
         private LoggerInterface $logger,
         private SessionInterface $session,
-    ) {}
+    ) {
+    }
 
     public function checkRateLimit(string $key): bool
     {
@@ -38,7 +39,9 @@ final readonly class AuthSecurityHelper
             return !$result->isLimitReached();
         } catch (\Exception $e) {
             $this->logger->log(
-                    LogLevel::ERROR, 'Rate limiter error: ' . $e->getMessage());
+                LogLevel::ERROR,
+                'Rate limiter error: ' . $e->getMessage()
+            );
             return true;
         }
     }
@@ -59,7 +62,9 @@ final readonly class AuthSecurityHelper
             return !$result->isLimitReached();
         } catch (\Exception $e) {
             $this->logger->log(
-                    LogLevel::ERROR, 'Account rate limiter error: ' . $e->getMessage());
+                LogLevel::ERROR,
+                'Account rate limiter error: ' . $e->getMessage()
+            );
             return true;
         }
     }
@@ -85,9 +90,11 @@ final readonly class AuthSecurityHelper
                     $ip = trim($ips[0]);
                 }
 
-                if (filter_var($ip,
-                        FILTER_VALIDATE_IP,
-                        FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                if (filter_var(
+                    $ip,
+                    FILTER_VALIDATE_IP,
+                    FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+                )) {
                     return $ip;
                 }
             }

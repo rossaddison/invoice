@@ -8,7 +8,6 @@ use App\Infrastructure\Persistence\ClientPeppol\ClientPeppol;
 use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\Setting\Setting;
-
 use App\Invoice\{
     ClientPeppol\ClientPeppolRepository as cpR,
     Inv\InvPeppolChargeDeps,
@@ -57,22 +56,37 @@ trait Peppol
 
         // Load the inv's HASONE relation 'invAmount'
         $peppolhelper = new PeppolHelper(
-            $this->sR, $net->delRepo, $invoice->getInvAmount(), $delloc, $this->translator, $core->gR);
+            $this->sR,
+            $net->delRepo,
+            $invoice->getInvAmount(),
+            $delloc,
+            $this->translator,
+            $core->gR
+        );
         try {
             $uploads_temp_peppol_absolute_path_dot_xml =
                 $peppolhelper->generateInvoicePeppolUblXmlTempFile(
                     $invoice,
                     new PeppolHelperInvDeps(
-                        $core->soR, $inv->iaR, $core->iiaR,
-                        $inv->iiR, $core->paR, $core->cpR,
+                        $core->soR,
+                        $inv->iaR,
+                        $core->iiaR,
+                        $inv->iiR,
+                        $core->paR,
+                        $core->cpR,
                     ),
                     new PeppolHelperNetDeps(
-                        $net->contractRepo, $net->delRepo,
-                        $net->delPartyRepo, $net->unpR, $net->upR,
+                        $net->contractRepo,
+                        $net->delRepo,
+                        $net->delPartyRepo,
+                        $net->unpR,
+                        $net->upR,
                     ),
                     new PeppolHelperChargeDeps(
-                        $charge->aciR, $charge->aciiR,
-                        $charge->soiR, $charge->trR,
+                        $charge->aciR,
+                        $charge->aciiR,
+                        $charge->soiR,
+                        $charge->trR,
                     ),
                 );
         } catch (\Throwable $e) {
@@ -84,8 +98,12 @@ trait Peppol
             return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
         }
         $xml = $this->peppolOutput($net->upR, $uploads_temp_peppol_absolute_path_dot_xml);
-        return $this->peppolRespond($id, $xml,
-            $uploads_temp_peppol_absolute_path_dot_xml, new PeppolValidator($this->translator));
+        return $this->peppolRespond(
+            $id,
+            $xml,
+            $uploads_temp_peppol_absolute_path_dot_xml,
+            new PeppolValidator($this->translator)
+        );
     }
 
     /**
@@ -179,15 +197,19 @@ trait Peppol
                 // QueryParameters
                 [
                     'active' => $this->translator->translate(
-                        'peppol.electronic.invoicing')
+                        'peppol.electronic.invoicing'
+                    )
                 ],
                 // Hash String to return to tab_index peppol_document_currency
                 // input box for re-entry
-                'settings[peppol_document_currency]');
+                'settings[peppol_document_currency]'
+            );
         }
-        $this->flashMessage('info',
+        $this->flashMessage(
+            'info',
             $this->translator->translate('peppol.doc.currency.toggle')
-                . ' ' . $documentCurrency);
+                . ' ' . $documentCurrency
+        );
         return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
     } // peppol document currency toggle
 
@@ -219,11 +241,13 @@ trait Peppol
                 }
             } // else
         } // $this->sR->repoCount
-        $this->flashMessage('info',
-            $this->translator->translate('peppol.stream.toggle'));
+        $this->flashMessage(
+            'info',
+            $this->translator->translate('peppol.stream.toggle')
+        );
         return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
     } // peppol stream toggle
-    
+
     private function peppolClientFullySetup(int $client_id, cpR $cpR): bool
     {
         if ($cpR->repoClientCount($client_id) == 1) {
@@ -245,12 +269,17 @@ trait Peppol
     private function flashClientPeppolMissing(int $client_id): void
     {
         $url = $this->webService->generateUrl(
-            'clientpeppol/add', ['client_id' => $client_id]);
-        $this->flashMessage('warning',
+            'clientpeppol/add',
+            ['client_id' => $client_id]
+        );
+        $this->flashMessage(
+            'warning',
             $this->translator->translate('peppol.client.check.missing')
             . ' ' . Html::a(
                 $this->translator->translate('client.peppol.add'),
-                $url)->render());
+                $url
+            )->render()
+        );
     }
 
     /**
@@ -261,12 +290,19 @@ trait Peppol
     private function flashDeliveryLocationMissing(int $invId): void
     {
         $url = $this->webService->generateUrl(
-            'inv/edit', ['id' => $invId], [], 'delivery_location_id');
-        $this->flashMessage('warning',
+            'inv/edit',
+            ['id' => $invId],
+            [],
+            'delivery_location_id'
+        );
+        $this->flashMessage(
+            'warning',
             $this->translator->translate('delivery.location.peppol.output')
             . ' ' . Html::a(
                 $this->translator->translate('delivery.location.peppol.output.fix'),
-                $url)->render());
+                $url
+            )->render()
+        );
     }
 
     /**
@@ -329,25 +365,34 @@ trait Peppol
                 continue;
             }
             $problemLinks[] = $this->clientPeppolFieldLink(
-                $cp, $property, $this->translator->translate($labelKey));
+                $cp,
+                $property,
+                $this->translator->translate($labelKey)
+            );
         }
 
         $endpointFormatProblem = $this->endpointidFormatProblem(
-            $values['endpointid'], $values['endpointid_schemeid']);
+            $values['endpointid'],
+            $values['endpointid_schemeid']
+        );
         if (null !== $endpointFormatProblem) {
             $problemLinks[] = $this->clientPeppolFieldLink(
-                $cp, 'endpointid',
+                $cp,
+                'endpointid',
                 $this->translator->translate('client.peppol.endpointid')
-                . ' — ' . $endpointFormatProblem);
+                . ' — ' . $endpointFormatProblem
+            );
         }
 
         if ($problemLinks === []) {
             return true;
         }
 
-        $this->flashMessage('warning',
+        $this->flashMessage(
+            'warning',
             $this->translator->translate('peppol.client.check')
-            . Html::ul()->items(...$problemLinks)->render());
+            . Html::ul()->items(...$problemLinks)->render()
+        );
         return false;
     }
 
@@ -448,9 +493,11 @@ trait Peppol
         }
         // see https://cwe.mitre.org/data/definitions/79.html — output sanitised via Html::encode in peppolStreamOutput
         $this->flashMessage('info', '📁 ' . $uploadsPath
-            . Html::a(' Ecosio Validator',
+            . Html::a(
+                ' Ecosio Validator',
                 'https://ecosio.com/en/peppol-and-xml-document-validator/',
-                ['target' => '_blank']));
+                ['target' => '_blank']
+            ));
         return $this->webService->getRedirectResponse(self::ROUTE_INV_VIEW, ['id' => $id]);
     }
 
@@ -482,8 +529,10 @@ trait Peppol
         $client_id = $client?->reqId() ?? 0;
 
         if ($client_id <= 0) {
-            $this->flashMessage('warning',
-                $this->translator->translate('peppol.client.check.no.client'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('peppol.client.check.no.client')
+            );
         } elseif ($this->peppolClientFullySetup($client_id, $core->cpR)) {
             $delLocId = $invoice->getDeliveryLocationId();
             $delloc   = $core->dlR->repoDeliveryLocationquery((int) $delLocId);
@@ -507,27 +556,44 @@ trait Peppol
         PeppolSendServiceInterface $peppolSendService,
     ): void {
         $peppolhelper = new PeppolHelper(
-            $this->sR, $net->delRepo, $invoice->getInvAmount(), $delloc, $this->translator, $core->gR);
+            $this->sR,
+            $net->delRepo,
+            $invoice->getInvAmount(),
+            $delloc,
+            $this->translator,
+            $core->gR
+        );
         try {
             $xmlPath = $peppolhelper->generateInvoicePeppolUblXmlTempFile(
                 $invoice,
                 new PeppolHelperInvDeps(
-                    $core->soR, $inv->iaR, $core->iiaR,
-                    $inv->iiR, $core->paR, $core->cpR,
+                    $core->soR,
+                    $inv->iaR,
+                    $core->iiaR,
+                    $inv->iiR,
+                    $core->paR,
+                    $core->cpR,
                 ),
                 new PeppolHelperNetDeps(
-                    $net->contractRepo, $net->delRepo,
-                    $net->delPartyRepo, $net->unpR, $net->upR,
+                    $net->contractRepo,
+                    $net->delRepo,
+                    $net->delPartyRepo,
+                    $net->unpR,
+                    $net->upR,
                 ),
                 new PeppolHelperChargeDeps(
-                    $charge->aciR, $charge->aciiR,
-                    $charge->soiR, $charge->trR,
+                    $charge->aciR,
+                    $charge->aciiR,
+                    $charge->soiR,
+                    $charge->trR,
                 ),
             );
             $ublXml = file_get_contents($xmlPath);
             if ($ublXml === false || strlen($ublXml) === 0) {
-                $this->flashMessage('warning',
-                    $this->translator->translate('peppol.xml.generation.failed'));
+                $this->flashMessage(
+                    'warning',
+                    $this->translator->translate('peppol.xml.generation.failed')
+                );
             } else {
                 $client_id = $invoice->getClient()?->reqId() ?? 0;
                 $cp = $core->cpR->repoClientPeppolLoadedquery($client_id);
@@ -537,14 +603,18 @@ trait Peppol
                     $recipientId = $cp->getEndpointidSchemeid() . ':' . $cp->getEndpointid();
                     $message = $peppolSendService->send($invoice->reqId(), $ublXml, $recipientId);
                     if ($message->getStatus() === 'SENT') {
-                        $this->flashMessage('info',
+                        $this->flashMessage(
+                            'info',
                             '📨 ' . $this->translator->translate('sent')
                             . ' — ' . $this->translator->translate('peppol.message.id')
-                            . ': ' . ($message->getMessageId() ?? ''));
+                            . ': ' . ($message->getMessageId() ?? '')
+                        );
                     } else {
-                        $this->flashMessage('warning',
+                        $this->flashMessage(
+                            'warning',
                             '⚠️ ' . $this->translator->translate('peppol.send.failed')
-                            . ': ' . ($message->getErrorMessage() ?? ''));
+                            . ': ' . ($message->getErrorMessage() ?? '')
+                        );
                     }
                 }
             }
@@ -583,7 +653,8 @@ trait Peppol
             );
             $msg .= ' ' . Html::a(
                 $this->translator->translate('peppol.tax.category.not.found.fix'),
-                $url)->render();
+                $url
+            )->render();
         }
         if ($e instanceof PeppolBuyerPostalAddressNotFoundException
                 && null !== $e->clientId) {
@@ -595,14 +666,16 @@ trait Peppol
             );
             $msg .= ' ' . Html::a(
                 $this->translator->translate('peppol.buyer.postal.address.not.found.fix'),
-                $url)->render();
+                $url
+            )->render();
         }
         return $msg;
     }
 
-    private function peppolOutput(UPR $upR,
-        string $uploads_temp_peppol_absolute_path_dot_xml): false|string
-    {
+    private function peppolOutput(
+        UPR $upR,
+        string $uploads_temp_peppol_absolute_path_dot_xml
+    ): false|string {
         $path_parts = pathinfo($uploads_temp_peppol_absolute_path_dot_xml);
         /**
          * @psalm-suppress PossiblyUndefinedArrayOffset
@@ -620,15 +693,15 @@ trait Peppol
                 /** @var string $ctype */
                 $ctype = $save_ctype ? $allowed_content_type_array[$file_ext] :
                     $upR->getContentTypeDefaultOctetStream();
-    // https://www.php.net/manual/en/function.header.php
-    // Remember that header() must be called before any actual
-    // output is sent, either by normal HTML tags,
-    // blank lines in a file, or from PHP.
-    header('Expires: -1');
-    header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
-    header("Content-Disposition: attachment; filename=\"$original_file_name\"");
-    header('Content-Type: ' . $ctype);
-    header('Content-Length: ' . (string) $file_size);
+                // https://www.php.net/manual/en/function.header.php
+                // Remember that header() must be called before any actual
+                // output is sent, either by normal HTML tags,
+                // blank lines in a file, or from PHP.
+                header('Expires: -1');
+                header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
+                header("Content-Disposition: attachment; filename=\"$original_file_name\"");
+                header('Content-Type: ' . $ctype);
+                header('Content-Length: ' . (string) $file_size);
                 return file_get_contents(
                     $uploads_temp_peppol_absolute_path_dot_xml, true);
             }

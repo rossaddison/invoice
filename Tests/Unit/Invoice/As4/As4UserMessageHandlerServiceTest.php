@@ -23,7 +23,8 @@ final class As4UserMessageHandlerServiceTestFixture
         public readonly As4DuplicateDetectorInterface&MockObject $duplicateDetector,
         public readonly As4ReceiptGeneratorInterface&MockObject $receiptGenerator,
         public readonly As4PayloadHandlerInterface&MockObject $payloadHandler,
-    ) {}
+    ) {
+    }
 }
 
 #[AllowMockObjectsWithoutExpectations]

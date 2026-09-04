@@ -23,8 +23,8 @@ use Yiisoft\Html\Html;
         <?= Html::tag(
             'p',
             'Every payment gateway this project supports, the SDK version currently pinned, and when it was'
-                . ' last tested — sandbox automatically via a weekly check, live only ever by hand. We\'re'
-                . ' building out coverage region by region, starting with Asia.',
+                        . ' last tested — sandbox automatically via a weekly check, live only ever by hand. We\'re'
+                        . ' building out coverage region by region, starting with Asia.',
             ['class' => 'lead mb-4'],
         )->render(); ?>
 

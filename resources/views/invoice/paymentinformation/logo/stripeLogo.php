@@ -9,7 +9,7 @@ echo  new A()
     ->href('https://stripe.com')
     ->target('_blank')
     ->content(
-         new Img()
+        new Img()
               ->src('/img/stripe.png')
               ->width(75)
               ->height(50)

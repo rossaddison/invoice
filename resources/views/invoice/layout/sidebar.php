@@ -55,14 +55,14 @@ echo H::tag('style', '
 ');
 
 echo H::openTag('div', ['class' => 'sidebar']); //1
- echo H::openTag('ul'); //2
-  foreach ($items as $item) {
-   if (!$item['show']) {
-    continue;
-   }
-   $prefix   = explode('/', $item['route'])[0];
-   $isActive = str_starts_with($currentName, $prefix);
-   echo H::openTag('li'); //3
+echo H::openTag('ul'); //2
+foreach ($items as $item) {
+    if (!$item['show']) {
+        continue;
+    }
+    $prefix   = explode('/', $item['route'])[0];
+    $isActive = str_starts_with($currentName, $prefix);
+    echo H::openTag('li'); //3
     echo H::openTag('a', [
      'href'              => $urlGenerator->generate($item['route']),
      'title'             => $translator->translate($item['title']),
@@ -70,10 +70,10 @@ echo H::openTag('div', ['class' => 'sidebar']); //1
      'data-bs-placement' => 'right',
      'style'             => '--sidebar-color: ' . $item['color'],
     ]); //4
-     echo H::openTag('i', ['class' => $item['icon'], 'aria-hidden' => 'true']); //5
-     echo H::closeTag('i'); //5
+    echo H::openTag('i', ['class' => $item['icon'], 'aria-hidden' => 'true']); //5
+    echo H::closeTag('i'); //5
     echo H::closeTag('a'); //4
-   echo H::closeTag('li'); //3
-  }
- echo H::closeTag('ul'); //2
+    echo H::closeTag('li'); //3
+}
+echo H::closeTag('ul'); //2
 echo H::closeTag('div'); //1

@@ -131,8 +131,7 @@ class PeppolSendServiceTest extends TestCase
 
     public function testSendSetsFailedOnNetworkException(): void
     {
-        $networkError = new class ('Connection refused') extends \RuntimeException
-            implements ClientExceptionInterface {};
+        $networkError = new class ('Connection refused') extends \RuntimeException implements ClientExceptionInterface {};
 
         $this->httpClient
             ->method('sendRequest')

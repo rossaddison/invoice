@@ -86,43 +86,43 @@ use Yiisoft\Html\Tag\Form;
  <?= Html::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); ?>
   <?= Html::tag('button', '<i class="bi bi-person-fill me-1"></i>'
           . $translator->translate('personal.information'),
-    ['class' => 'nav-link active bg-primary text-white', 'id' => 'tab-personal',
-     'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-personal',
-     'type' => 'button', 'role' => 'tab'])->encode(false); ?>
+      ['class' => 'nav-link active bg-primary text-white', 'id' => 'tab-personal',
+       'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-personal',
+       'type' => 'button', 'role' => 'tab'])->encode(false); ?>
  <?= Html::closeTag('li'); ?>
 
  <?= Html::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); ?>
   <?= Html::tag('button', '<i class="bi bi-house-fill me-1"></i>'
-          . $translator->translate('address'),
-    ['class' => 'nav-link bg-success text-white', 'id' => 'tab-address',
-     'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-address',
-     'type' => 'button', 'role' => 'tab'])->encode(false); ?>
+            . $translator->translate('address'),
+      ['class' => 'nav-link bg-success text-white', 'id' => 'tab-address',
+       'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-address',
+       'type' => 'button', 'role' => 'tab'])->encode(false); ?>
  <?= Html::closeTag('li'); ?>
 
  <?= Html::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); ?>
   <?= Html::tag('button', '<i class="bi bi-telephone-fill me-1"></i>'
-          . $translator->translate('contact.information')
-          . '➕'
-          . $translator->translate('client.postaladdress'),
-    ['class' => 'nav-link bg-info text-white', 'id' => 'tab-contact',
-     'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-contact',
-     'type' => 'button', 'role' => 'tab'])->encode(false); ?>
+            . $translator->translate('contact.information')
+            . '➕'
+            . $translator->translate('client.postaladdress'),
+      ['class' => 'nav-link bg-info text-white', 'id' => 'tab-contact',
+       'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-contact',
+       'type' => 'button', 'role' => 'tab'])->encode(false); ?>
  <?= Html::closeTag('li'); ?>
 
  <?= Html::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); ?>
   <?= Html::tag('button', '<i class="bi bi-graph-up me-1"></i>'
-          . $translator->translate('demographics'),
-    ['class' => 'nav-link bg-warning text-dark', 'id' => 'tab-demographics',
-     'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-demographics',
-     'type' => 'button', 'role' => 'tab'])->encode(false); ?>
+            . $translator->translate('demographics'),
+      ['class' => 'nav-link bg-warning text-dark', 'id' => 'tab-demographics',
+       'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-demographics',
+       'type' => 'button', 'role' => 'tab'])->encode(false); ?>
  <?= Html::closeTag('li'); ?>
 
  <?= Html::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); ?>
   <?= Html::tag('button', '<i class="bi bi-receipt me-1"></i>'
-          . $translator->translate('tax.information'),
-    ['class' => 'nav-link bg-danger text-white', 'id' => 'tab-tax',
-     'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-tax',
-     'type' => 'button', 'role' => 'tab'])->encode(false); ?>
+            . $translator->translate('tax.information'),
+      ['class' => 'nav-link bg-danger text-white', 'id' => 'tab-tax',
+       'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-tax',
+       'type' => 'button', 'role' => 'tab'])->encode(false); ?>
  <?= Html::closeTag('li'); ?>
 
 <?= Html::closeTag('ul'); ?>
@@ -134,51 +134,51 @@ use Yiisoft\Html\Tag\Form;
  <?= Html::openTag('div', ['class' => 'tab-pane active', 'id' => 'pane-personal', 'role' => 'tabpanel']); ?>
   <?= Html::openTag('div', ['class' => 'd-flex justify-content-end mb-2']); ?>
    <?= Field::checkbox($form, 'client_active')
-    ->inputLabelAttributes([
-        'class' => 'form-check-label',
-        'data-bs-toggle' => 'tooltip',
-        'onclick' => "return confirm(" . "'" . $translator->translate('client.deactivate.warning') . "');",
-        'title' => $translator->translate('client.deactivate.warning'),
-    ])
-    ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('client.active')); ?>
+      ->inputLabelAttributes([
+          'class' => 'form-check-label',
+          'data-bs-toggle' => 'tooltip',
+          'onclick' => "return confirm(" . "'" . $translator->translate('client.deactivate.warning') . "');",
+          'title' => $translator->translate('client.deactivate.warning'),
+      ])
+      ->inputClass('form-check-input')
+      ->ariaDescribedBy($translator->translate('client.active')); ?>
   <?= Html::closeTag('div'); ?>
   <?= $formFields->clientTitleSelect($form, [
-    $translator->translate('client.title.mr'),
-    $translator->translate('client.title.mrs'),
-    $translator->translate('client.title.miss'),
-    $translator->translate('client.title.doctor'),
-    $translator->translate('client.title.professor'),
+      $translator->translate('client.title.mr'),
+      $translator->translate('client.title.mrs'),
+      $translator->translate('client.title.miss'),
+      $translator->translate('client.title.doctor'),
+      $translator->translate('client.title.professor'),
   ]); ?>
   <?= $formFields->clientTextField($form, 'client_name', 'client.name', true); ?>
   <?= $formFields->clientTextField($form, 'client_surname', 'client.surname', false); ?>
   <?= $formFields->clientEmailField($form); ?>
   <?php
-    $mobileDefaultRegionKey = array_search($form->client_country ?? $selectedCountry, $countries, true);
-    $mobileDefaultRegion = $mobileDefaultRegionKey === false ? '' : (string) $mobileDefaultRegionKey;
-  ?>
+      $mobileDefaultRegionKey = array_search($form->client_country ?? $selectedCountry, $countries, true);
+$mobileDefaultRegion = $mobileDefaultRegionKey === false ? '' : (string) $mobileDefaultRegionKey;
+?>
   <?= $formFields->clientTelephoneField($form, 'client_mobile', 'mobile', [
-    'data-e164' => '1',
-    'data-e164-default-region' => $mobileDefaultRegion,
-  ]); ?>
+  'data-e164' => '1',
+  'data-e164-default-region' => $mobileDefaultRegion,
+]); ?>
   <?= $formFields->clientTextField($form, 'client_group', 'client.group', false); ?>
   <?= Field::select($form, 'client_frequency')
-    ->label($translator->translate('client.frequency'))
-    ->addInputAttributes([
-        'value' => Html::encode($form->client_frequency ?? ''),
-        'placeholder' => $translator->translate('client.frequency'),
-        'class' => 'form-select',
-    ])
-    ->optionsData($optionsDataClientFrequencyDropdownFilter)
-    ->required(false); ?>
+  ->label($translator->translate('client.frequency'))
+  ->addInputAttributes([
+      'value' => Html::encode($form->client_frequency ?? ''),
+      'placeholder' => $translator->translate('client.frequency'),
+      'class' => 'form-select',
+  ])
+  ->optionsData($optionsDataClientFrequencyDropdownFilter)
+  ->required(false); ?>
   <?= $formFields->clientTextField($form, 'client_number', 'client.number', false); ?>
   <?php
-    $languageOptions = [];
-    /** @var string $language */
-    foreach ($s->localeLanguageArray() as $language) {
-        $languageOptions[$language] = ucfirst($language);
-    }
-  ?>
+  $languageOptions = [];
+/** @var string $language */
+foreach ($s->localeLanguageArray() as $language) {
+    $languageOptions[$language] = ucfirst($language);
+}
+?>
   <?= $formFields->clientLanguageSelect($form, $languageOptions, $selectedLanguage); ?>
  <?= Html::closeTag('div'); ?>
 
@@ -191,20 +191,22 @@ use Yiisoft\Html\Tag\Form;
   <?= $formFields->clientTextField($form, 'client_state', 'state', false); ?>
   <?= $formFields->clientTextField($form, 'client_zip', 'zip', false); ?>
   <?php
-    $countryOptions = [];
-    /** @var string $country */
-    foreach ($countries as $country) {
-        $countryOptions[$country] = ucfirst($country);
-    }
-  ?>
+  $countryOptions = [];
+/** @var string $country */
+foreach ($countries as $country) {
+    $countryOptions[$country] = ucfirst($country);
+}
+?>
   <?= $formFields->clientCountrySelect($form, $countryOptions, $selectedCountry); ?>
   <?php
-    /** @var App\Infrastructure\Persistence\CustomField\CustomField $customField */
-    foreach ($customFields as $customField):
-        if ($customField->getLocation() !== 1) { continue; }
-        $cvH->printFieldForForm($customField, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
-    endforeach;
-  ?>
+  /** @var App\Infrastructure\Persistence\CustomField\CustomField $customField */
+  foreach ($customFields as $customField):
+      if ($customField->getLocation() !== 1) {
+          continue;
+      }
+      $cvH->printFieldForForm($customField, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
+  endforeach;
+?>
  <?= Html::closeTag('div'); ?>
 
  <!-- Contact Information -->
@@ -212,15 +214,15 @@ use Yiisoft\Html\Tag\Form;
   <?= $formFields->clientTelephoneField($form, 'client_phone', 'phone'); ?>
   <?= $formFields->clientTelephoneField($form, 'client_fax', 'fax'); ?>
   <?= Field::text($form, 'client_telegram_chat_id')
-      ->label($translator->translate('client.telegram.chat.id'))
-      ->addInputAttributes([
-          'placeholder' => $translator->translate('client.telegram.chat.id'),
-          'value' => Html::encode($form->client_telegram_chat_id ?? ''),
-          'class' => 'form-control form-control-lg',
-          'id' => 'client_telegram_chat_id',
-      ])
-      ->required(false)
-      ->hint($translator->translate('hint.this.field.is.not.required')); ?>
+    ->label($translator->translate('client.telegram.chat.id'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('client.telegram.chat.id'),
+        'value' => Html::encode($form->client_telegram_chat_id ?? ''),
+        'class' => 'form-control form-control-lg',
+        'id' => 'client_telegram_chat_id',
+    ])
+    ->required(false)
+    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
   <?= $formFields->clientUrlField($form); ?>
   <?= /**
        * Anchor for the "fix it now" link Inv\Trait\Peppol's
@@ -230,7 +232,7 @@ use Yiisoft\Html\Tag\Form;
        * whatever Field::select() below auto-generates for the
        * 'postaladdress_id' attribute itself, so the two never collide.
        */
-      Html::openTag('div', ['class' => 'mb-3', 'id' => 'postaladdress_field']); ?>
+    Html::openTag('div', ['class' => 'mb-3', 'id' => 'postaladdress_field']); ?>
    <?= Html::label($translator->translate('client.postaladdress.available') . ': ', 'postaladdress_id'); ?>
    <?php /**
     * $origin used to gate both branches here (`&& $origin == 'edit'`), so
@@ -258,19 +260,21 @@ use Yiisoft\Html\Tag\Form;
     */ ?>
    <?php if ($client->hasIdentity() && $postal_address_count > 0): ?>
     <?= Field::select($form, 'postaladdress_id')
-        ->label($translator->translate('client.postaladdress.available'))
-        ->required(false)
-        ->addInputAttributes([
-            'value' => Html::encode($form->postaladdress_id ?? ''),
-            'class' => 'form-select alert alert-warning',
-        ])
-        ->optionsData($optionsDataPostalAddresses); ?>
+      ->label($translator->translate('client.postaladdress.available'))
+      ->required(false)
+      ->addInputAttributes([
+          'value' => Html::encode($form->postaladdress_id ?? ''),
+          'class' => 'form-select alert alert-warning',
+      ])
+      ->optionsData($optionsDataPostalAddresses); ?>
    <?php endif; ?>
    <?php if ($postal_address_count === 0): ?>
     <?php if ($client->hasIdentity()): ?>
-     <?= Html::a($translator->translate('client.postaladdress.add'),
+     <?= Html::a(
+         $translator->translate('client.postaladdress.add'),
          $urlGenerator->generate('postaladdress/add', ['client_id' => $client->reqId(), 'origin' => 'client']),
-         ['class' => 'btn btn-warning btn-lg mt-3']); ?>
+         ['class' => 'btn btn-warning btn-lg mt-3']
+     ); ?>
     <?php else: ?>
      <?php /**
       * A `title` on the disabled <a> itself never shows: pointer-events:none
@@ -281,13 +285,13 @@ use Yiisoft\Html\Tag\Form;
       * [data-bs-toggle="tooltip"] on the page, so no extra JS needed here.
       */ ?>
      <?= Html::openTag('span', [
-         'data-bs-toggle' => 'tooltip',
-         'title' => $translator->translate('client.postaladdress.add.save.first'),
+      'data-bs-toggle' => 'tooltip',
+      'title' => $translator->translate('client.postaladdress.add.save.first'),
      ]); ?>
       <?= Html::a($translator->translate('client.postaladdress.add'), '#', [
-          'class' => 'btn btn-warning btn-lg mt-3 disabled',
-          'style' => 'pointer-events:none',
-          'aria-disabled' => 'true',
+       'class' => 'btn btn-warning btn-lg mt-3 disabled',
+       'style' => 'pointer-events:none',
+       'aria-disabled' => 'true',
       ]); ?>
      <?= Html::closeTag('span'); ?>
     <?php endif; ?>
@@ -296,48 +300,52 @@ use Yiisoft\Html\Tag\Form;
   <?php
     /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */
     foreach ($customFields as $custom_field):
-        if ($custom_field->getLocation() !== 2) { continue; }
+        if ($custom_field->getLocation() !== 2) {
+            continue;
+        }
         $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
     endforeach;
-  ?>
+?>
  <?= Html::closeTag('div'); ?>
 
  <!-- Demographics -->
  <?= Html::openTag('div', ['class' => 'tab-pane', 'id' => 'pane-demographics', 'role' => 'tabpanel']); ?>
   <?= Field::select($form, 'client_gender')
-    ->label($translator->translate('gender'))
-    ->addInputAttributes(['class' => 'form-select'])
-    ->optionsData($optionsDataGender)
-    ->value(Html::encode($form->client_gender ?? 0)); ?>
+  ->label($translator->translate('gender'))
+  ->addInputAttributes(['class' => 'form-select'])
+  ->optionsData($optionsDataGender)
+  ->value(Html::encode($form->client_gender ?? 0)); ?>
   <?= Field::date($form, 'client_birthdate')
-    ->label($translator->translate('birthdate'))
-    ->addInputAttributes([
-        'placeholder'  => $translator->translate('birthdate'),
-        'class'        => 'form-control form-control-lg',
-        'id'           => 'client_birthdate',
-        'role'         => 'presentation',
-        'autocomplete' => 'off',
-        'data-action'      => 'show-picker',
-    ])
-    ->value(Html::encode($form->client_birthdate ?? ''))
-    ->required(false); ?>
+  ->label($translator->translate('birthdate'))
+  ->addInputAttributes([
+      'placeholder'  => $translator->translate('birthdate'),
+      'class'        => 'form-control form-control-lg',
+      'id'           => 'client_birthdate',
+      'role'         => 'presentation',
+      'autocomplete' => 'off',
+      'data-action'      => 'show-picker',
+  ])
+  ->value(Html::encode($form->client_birthdate ?? ''))
+  ->required(false); ?>
   <?= Field::number($form, 'client_age')
-    ->label($translator->translate('client.age'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('client.age'),
-        'value'       => Html::encode($form->client_age ?? '18'),
-        'class'       => 'form-control form-control-lg',
-        'id'          => 'client_age',
-    ])
-    ->required(false)
-    ->step(1); ?>
+  ->label($translator->translate('client.age'))
+  ->addInputAttributes([
+      'placeholder' => $translator->translate('client.age'),
+      'value'       => Html::encode($form->client_age ?? '18'),
+      'class'       => 'form-control form-control-lg',
+      'id'          => 'client_age',
+  ])
+  ->required(false)
+  ->step(1); ?>
   <?php
-    /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */
-    foreach ($customFields as $custom_field):
-        if ($custom_field->getLocation() !== 3) { continue; }
-        $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
-    endforeach;
-  ?>
+  /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */
+  foreach ($customFields as $custom_field):
+      if ($custom_field->getLocation() !== 3) {
+          continue;
+      }
+      $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
+  endforeach;
+?>
  <?= Html::closeTag('div'); ?>
 
  <!-- Tax Information -->
@@ -345,12 +353,14 @@ use Yiisoft\Html\Tag\Form;
   <?= $formFields->clientTextField($form, 'client_vat_id', 'vat.id', false); ?>
   <?= $formFields->clientTextField($form, 'client_tax_code', 'tax.code', false); ?>
   <?php
-    /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */
-    foreach ($customFields as $custom_field):
-        if ($custom_field->getLocation() !== 4) { continue; }
-        $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
-    endforeach;
-  ?>
+  /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */
+  foreach ($customFields as $custom_field):
+      if ($custom_field->getLocation() !== 4) {
+          continue;
+      }
+      $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
+  endforeach;
+?>
   <?php if ($customFields): ?>
    <?= Html::openTag('div', ['class' => 'card mt-3']); ?>
     <?= Html::openTag('div', ['class' => 'card-header bg-secondary text-white']); ?>
@@ -358,12 +368,14 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'card-body']); ?>
      <?php
-        /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */
-        foreach ($customFields as $custom_field):
-            if ($custom_field->getLocation() !== 0) { continue; }
-            $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
-        endforeach;
-     ?>
+      /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */
+      foreach ($customFields as $custom_field):
+          if ($custom_field->getLocation() !== 0) {
+              continue;
+          }
+          $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
+      endforeach;
+      ?>
     <?= Html::closeTag('div'); ?>
    <?= Html::closeTag('div'); ?>
   <?php endif; ?>

@@ -16,5 +16,6 @@ readonly class IfThenElse implements Expression
         public Expression $condition,
         public Expression $then,
         public Expression $else,
-    ) {}
+    ) {
+    }
 }

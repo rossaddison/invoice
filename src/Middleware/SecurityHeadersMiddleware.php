@@ -25,7 +25,9 @@ final class SecurityHeadersMiddleware implements MiddlewareInterface
     /**
      * @param HeaderMap $headers
      */
-    public function __construct(private readonly array $headers) {}
+    public function __construct(private readonly array $headers)
+    {
+    }
 
     #[\Override]
     public function process(

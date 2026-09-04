@@ -36,13 +36,16 @@ final readonly class InvTaxRateService
         // even if it is a zero rate
         isset($array['tax_rate_id']) ?
             $model->setTaxRateId(
-                (int) $array['tax_rate_id']) : '';
+                (int) $array['tax_rate_id']
+            ) : '';
         isset($array['include_item_tax']) ?
             $model->setIncludeItemTax(
-                (int) $array['include_item_tax']) : '';
+                (int) $array['include_item_tax']
+            ) : '';
         isset($array['inv_tax_rate_amount']) ?
             $model->setInvTaxRateAmount(
-                (float) $array['inv_tax_rate_amount']) : '';
+                (float) $array['inv_tax_rate_amount']
+            ) : '';
 
         $this->repository->save($model);
     }
@@ -54,7 +57,8 @@ final readonly class InvTaxRateService
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
-                (int) $array[$inv]);
+                (int) $array[$inv]
+            );
             if ($invEntity) {
                 $model->setInv($invEntity);
             }
@@ -63,7 +67,9 @@ final readonly class InvTaxRateService
         if (isset($array[$tax_rate])) {
             $model->setTaxRate(
                 $this->trR->repoTaxRatequery(
-                    (int) $array[$tax_rate]));
+                    (int) $array[$tax_rate]
+                )
+            );
         }
     }
 
@@ -76,28 +82,32 @@ final readonly class InvTaxRateService
     ): void {
         $basis_invoice_tax_rates =
             $this->repository->repoInvquery(
-                $basis_inv_id);
+                $basis_inv_id
+            );
         /** @var InvTaxRate $basis_invoice_tax_rate */
-        foreach ($basis_invoice_tax_rates
-                 as $basis_invoice_tax_rate) {
+        foreach ($basis_invoice_tax_rates as $basis_invoice_tax_rate) {
             $new_invoice_tax_rate = new InvTaxRate();
             $new_invoice_tax_rate->setInvId(
-                (int) $new_inv_id);
+                (int) $new_inv_id
+            );
             $new_invoice_tax_rate->setTaxRateId(
                 $basis_invoice_tax_rate
-                    ->reqTaxRateId());
+                    ->reqTaxRateId()
+            );
             if ($basis_invoice_tax_rate
                     ->getIncludeItemTax() == 1
                 || ($basis_invoice_tax_rate
                     ->getIncludeItemTax() == 0)) {
                 $new_invoice_tax_rate->setIncludeItemTax(
                     $basis_invoice_tax_rate
-                        ->getIncludeItemTax() ?? 0);
+                        ->getIncludeItemTax() ?? 0
+                );
             }
             $new_invoice_tax_rate->setInvTaxRateAmount(
                 ($basis_invoice_tax_rate
                     ->getInvTaxRateAmount() ?? 0.00)
-                * -1.00);
+                * -1.00
+            );
             $this->repository->save($new_invoice_tax_rate);
         }
     }

@@ -15,5 +15,6 @@ readonly class UblLegalMonetaryTotalVO
         public ?float $chargeTotalAmount,
         public ?float $prepaidAmount,
         public ?float $payableRoundingAmount,
-    ) {}
+    ) {
+    }
 }

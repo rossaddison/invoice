@@ -44,7 +44,8 @@ use Yiisoft\Html\Html;
                     <b><?php echo ($p = $task->getProject()) !== null
                         && $projectR->count($p->reqId()) > 0 ?
                         $projectR->repoProjectquery(
-                            $p->reqId())?->getName() ?? '' : '' ?>
+                            $p->reqId()
+                        )?->getName() ?? '' : '' ?>
                     </b>
                 </td>
                 <td>

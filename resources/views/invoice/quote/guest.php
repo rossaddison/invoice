@@ -39,7 +39,7 @@ $quoteGuest = 'quote/guest';
 $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? $quoteGuest))
     ->id('btn-reset')
     ->render();
@@ -135,8 +135,8 @@ $columns = [
         header: $translator->translate('status'),
         content: static function (Quote $model) use ($qR): Yiisoft\Html\Tag\CustomTag|string {
             $span = $qR->getSpecificStatusArrayLabel((string) $model->reqStatusId());
-                $class = $qR->getSpecificStatusArrayClass((string) $model->reqStatusId());
-                return Html::tag('span', $span, ['id' => '#quote-guest','class' => 'badge text-bg-' . $class]);
+            $class = $qR->getSpecificStatusArrayClass((string) $model->reqStatusId());
+            return Html::tag('span', $span, ['id' => '#quote-guest','class' => 'badge text-bg-' . $class]);
         },
         encodeContent: false,
         withSorting: true,
@@ -194,8 +194,8 @@ $toolbarString
     =  new Form()->post($urlGenerator->generate('quote/guest'))->csrf($csrf)->open()
     . $statusBar
     .  new Div()->addClass('float-end m-3')->content(
-            $toolbarReset . $autoFitColumns . $resetColumnWidths
-       )->encode(false)->render()
+        $toolbarReset . $autoFitColumns . $resetColumnWidths
+    )->encode(false)->render()
     .  new Form()->close();
 
 echo GridView::widget()

@@ -9,14 +9,13 @@ use Yiisoft\Router\Route;
 
 return [
     RoutePermission::invoiceGroup(
-Route::get('/as4/messages')
+        Route::get('/as4/messages')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([As4MessageController::class, 'index'])
                 ->name('as4message/index'),
-
-            Route::get('/as4/messages/view/{id:\d+}')
+        Route::get('/as4/messages/view/{id:\d+}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([As4MessageController::class, 'view'])
                 ->name('as4message/view'),
-        ), // invoice
+    ), // invoice
 ];

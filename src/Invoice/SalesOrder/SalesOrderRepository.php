@@ -170,9 +170,10 @@ final class SalesOrderRepository extends Select\Repository
      * @param int $status_id
      * @return SalesOrder|null
      */
-    public function repoSalesOrderStatusquery(int $salesorder_id,
-            int $status_id): ?SalesOrder
-    {
+    public function repoSalesOrderStatusquery(
+        int $salesorder_id,
+        int $status_id
+    ): ?SalesOrder {
         $query = $this->select()->where(['id' => $salesorder_id])
                                 ->where(['status_id' => $status_id]);
         return  $query->fetchOne() ?: null;
@@ -183,9 +184,10 @@ final class SalesOrderRepository extends Select\Repository
      *
      * @param int $salesorder_id
      */
-    public function repoSalesOrderStatuscount(int $salesorder_id,
-            int $status_id): int
-    {
+    public function repoSalesOrderStatuscount(
+        int $salesorder_id,
+        int $status_id
+    ): int {
         return $this->select()->where(['id' => $salesorder_id])
                                 ->where(['status_id' => $status_id])
                                 ->count();

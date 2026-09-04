@@ -59,9 +59,9 @@ use Yiisoft\Html\Tag\Form;
 
 <!-- Product Information -->
 <?= Html::openTag('div',
-        [ 'class' => 'mb-3',
-            'data-current-index' => Html::encode($currentIndex),
-            'data-total-products' => Html::encode($totalProducts)]); ?>
+    [ 'class' => 'mb-3',
+        'data-current-index' => Html::encode($currentIndex),
+        'data-total-products' => Html::encode($totalProducts)]); ?>
     <?= Html::openTag('h4'); ?>
         <?= $translator->translate('product'); ?>
     <?= Html::closeTag('h4'); ?>
@@ -71,9 +71,9 @@ use Yiisoft\Html\Tag\Form;
                 <?= $translator->translate('product.name'); ?>:
             <?= Html::closeTag('strong'); ?>
             <?= Html::encode(($productRepository->repoProductquery(
-                    $productId))?->getProductName() ??
-                    $translator->translate('product.name'));
-            ?>
+                $productId))?->getProductName() ??
+                $translator->translate('product.name'));
+        ?>
             <?php if ($remainingProducts): ?>
                 <?= Html::openTag('small', ['class' => 'd-block mt-1']); ?>
                     <?= Html::openTag('i', ['class' => 'bi bi-info-circle']); ?>
@@ -95,95 +95,98 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div', ['class' => 'form-check mb-3']); ?>
     <?=  new Input()
          ->attributes([
-            'class' => 'form-check-input',
-            'type' => 'radio',
-            'name' => 'association_type',
-            'id' => 'existing_client',
-            'value' => 'existing',
-            'checked' => true]); ?>
+        'class' => 'form-check-input',
+        'type' => 'radio',
+        'name' => 'association_type',
+        'id' => 'existing_client',
+        'value' => 'existing',
+        'checked' => true]); ?>
         <?= Html::openTag('label', [
-                    'class' => 'form-check-label',
-                    'for' => 'existing_client']); ?>
+                'class' => 'form-check-label',
+                'for' => 'existing_client']); ?>
             <?= $translator->translate('select.existing.client'); ?>
         <?= Html::closeTag('label'); ?>
     <?= Html::closeTag('div'); ?>
 
     <?= Html::openTag('div',
-            ['id' => 'existing-client-section', 'class' => 'mb-3']); ?>
+        ['id' => 'existing-client-section', 'class' => 'mb-3']); ?>
         <?= Field::select($form, 'client_id')
-            ->label($translator->translate('client'))
-            ->addInputAttributes(['class' => 'form-control form-control-lg',])
-            ->prompt($translator->translate('select.existing.client'))
-            ->optionsData($clients)
-            ->render()
-        ?>
+        ->label($translator->translate('client'))
+        ->addInputAttributes(['class' => 'form-control form-control-lg',])
+        ->prompt($translator->translate('select.existing.client'))
+        ->optionsData($clients)
+        ->render()
+?>
     <?= Html::closeTag('div'); ?>
 
     <!-- Option 2: Create New Client -->
     <?= Html::openTag('div', ['class' => 'form-check mb-3']); ?>
         <?= Html::openTag('input', [
-            'class' => 'form-check-input',
-            'type' => 'radio',
-            'name' => 'association_type',
-            'id' => 'new_client',
-            'value' => 'new']); ?>
+    'class' => 'form-check-input',
+    'type' => 'radio',
+    'name' => 'association_type',
+    'id' => 'new_client',
+    'value' => 'new']); ?>
         <?= Html::openTag('label', [
-                    'class' => 'form-check-label',
-                    'for' => 'new_client']); ?>
+            'class' => 'form-check-label',
+            'for' => 'new_client']); ?>
             <?= $translator->translate('create.new.client'); ?>
         <?= Html::closeTag('label'); ?>
     <?= Html::closeTag('div'); ?>
 
     <?= Html::openTag('div', [
-        'id' => 'new-client-section',
-        'class' => 'mb-3',
-        'style' => 'display: none;']); ?>
+'id' => 'new-client-section',
+'class' => 'mb-3',
+'style' => 'display: none;']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div', ['class' => 'col-md-6']); ?>
                 <?= Field::text($form, 'new_client_name')
-                    ->label($translator->translate('name'))
-                    ->addInputAttributes(['class' => 'form-control form-control-lg',])
-                    ->render()
-                ?>
+            ->label($translator->translate('name'))
+            ->addInputAttributes(['class' => 'form-control form-control-lg',])
+            ->render()
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col-md-6']); ?>
                 <?= Field::text($form, 'new_client_surname')
-                    ->label($translator->translate('surname'))
-                    ->addInputAttributes(['class' => 'form-control form-control-lg',])
-                    ->render()
-                ?>
+    ->label($translator->translate('surname'))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->render()
+?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
 
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div', ['class' => 'col-md-6']); ?>
                 <?= Field::email($form, 'new_client_email')
-                    ->label($translator->translate('email'))
-                    ->addInputAttributes(['class' => 'form-control form-control-lg',])
-                    ->render()
-                ?>
+    ->label($translator->translate('email'))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->render()
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col-md-6']); ?>
                 <?= Field::text($form, 'new_client_mobile')
-                    ->label($translator->translate('mobile'))
-                    ->addInputAttributes(['class' => 'form-control form-control-lg',])
-                    ->render()
-                ?>
+    ->label($translator->translate('mobile'))
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
+    ->render()
+?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
 
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'new_client_group')
-                ->label($translator->translate('client_group'))
-                ->addInputAttributes(['class' => 'form-control form-control-lg',
-                    'value' => $suggestedClientGroup])
-                ->render()
-            ?>
+->label($translator->translate('client_group'))
+->addInputAttributes(['class' => 'form-control form-control-lg',
+    'value' => $suggestedClientGroup])
+->render()
+?>
             <?php if ($suggestedClientGroup): ?>
-                <?= Html::openTag('small',
-                        ['class' => 'form-text text-muted']); ?>
+                <?= Html::openTag(
+                    'small',
+                    ['class' => 'form-text text-muted']
+                ); ?>
                     <?php echo $translator->translate(
-                        'suggested.from.previous.selection'); ?>
+                        'suggested.from.previous.selection'
+                    ); ?>
                 <?= Html::closeTag('small'); ?>
             <?php endif; ?>
         <?= Html::closeTag('div'); ?>

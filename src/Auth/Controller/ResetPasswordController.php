@@ -36,7 +36,8 @@ final class ResetPasswordController
     ) {
         // withControllerName returns a new instance so reassignment is needed
         $this->webViewRenderer = $webViewRenderer->withControllerName(
-            'resetpassword');
+            'resetpassword'
+        );
     }
 
     /**

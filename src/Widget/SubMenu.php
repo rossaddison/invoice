@@ -26,8 +26,7 @@ final class SubMenu
         string $navBarFont,
         string $navBarFontSize,
         array $items = [],
-        ): string
-    {
+    ): string {
         $finalString = '';
         /**
          * @var array $levelItem

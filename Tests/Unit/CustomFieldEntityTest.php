@@ -21,7 +21,7 @@ class CustomFieldEntityTest extends TestCase
     public function testConstructorWithDefaults(): void
     {
         $defaultCustomField = new CustomField();
-        
+
         $this->assertFalse($defaultCustomField->hasIdentity());
         $this->assertEquals('', $defaultCustomField->getTable());
         $this->assertEquals('', $defaultCustomField->getLabel());
@@ -55,10 +55,10 @@ class CustomFieldEntityTest extends TestCase
     public function testIdSetterAndGetter(): void
     {
         $this->assertFalse($this->customField->hasIdentity());
-        
+
         $this->customField->setId(42);
         $this->assertSame(42, $this->customField->reqId());
-        
+
         $this->customField->setId(0);
         $this->assertSame(0, $this->customField->reqId());
     }
@@ -66,13 +66,13 @@ class CustomFieldEntityTest extends TestCase
     public function testTableSetterAndGetter(): void
     {
         $this->assertEquals('', $this->customField->getTable());
-        
+
         $this->customField->setTable('client');
         $this->assertEquals('client', $this->customField->getTable());
-        
+
         $this->customField->setTable('invoice');
         $this->assertEquals('invoice', $this->customField->getTable());
-        
+
         $this->customField->setTable('');
         $this->assertEquals('', $this->customField->getTable());
     }
@@ -80,13 +80,13 @@ class CustomFieldEntityTest extends TestCase
     public function testLabelSetterAndGetter(): void
     {
         $this->assertEquals('', $this->customField->getLabel());
-        
+
         $this->customField->setLabel('Project Code');
         $this->assertEquals('Project Code', $this->customField->getLabel());
-        
+
         $this->customField->setLabel('Department');
         $this->assertEquals('Department', $this->customField->getLabel());
-        
+
         $this->customField->setLabel('');
         $this->assertEquals('', $this->customField->getLabel());
     }
@@ -94,13 +94,13 @@ class CustomFieldEntityTest extends TestCase
     public function testTypeSetterAndGetter(): void
     {
         $this->assertEquals('', $this->customField->getType());
-        
+
         $this->customField->setType('TEXT');
         $this->assertEquals('TEXT', $this->customField->getType());
-        
+
         $this->customField->setType('SELECT');
         $this->assertEquals('SELECT', $this->customField->getType());
-        
+
         $this->customField->setType('NUMBER');
         $this->assertEquals('NUMBER', $this->customField->getType());
     }
@@ -108,13 +108,13 @@ class CustomFieldEntityTest extends TestCase
     public function testLocationSetterAndGetter(): void
     {
         $this->assertNull($this->customField->getLocation());
-        
+
         $this->customField->setLocation(1);
         $this->assertEquals(1, $this->customField->getLocation());
-        
+
         $this->customField->setLocation(0);
         $this->assertEquals(0, $this->customField->getLocation());
-        
+
         $this->customField->setLocation(999);
         $this->assertEquals(999, $this->customField->getLocation());
     }
@@ -122,13 +122,13 @@ class CustomFieldEntityTest extends TestCase
     public function testOrderSetterAndGetter(): void
     {
         $this->assertNull($this->customField->getOrder());
-        
+
         $this->customField->setOrder(1);
         $this->assertEquals(1, $this->customField->getOrder());
-        
+
         $this->customField->setOrder(999);
         $this->assertEquals(999, $this->customField->getOrder());
-        
+
         $this->customField->setOrder(0);
         $this->assertEquals(0, $this->customField->getOrder());
     }
@@ -136,10 +136,10 @@ class CustomFieldEntityTest extends TestCase
     public function testRequiredSetterAndGetter(): void
     {
         $this->assertFalse($this->customField->getRequired());
-        
+
         $this->customField->setRequired(true);
         $this->assertTrue($this->customField->getRequired());
-        
+
         $this->customField->setRequired(false);
         $this->assertFalse($this->customField->getRequired());
     }
@@ -147,7 +147,7 @@ class CustomFieldEntityTest extends TestCase
     public function testCommonCustomFieldTypes(): void
     {
         $fieldTypes = ['TEXT', 'SELECT', 'CHECKBOX', 'DATE', 'NUMBER', 'EMAIL', 'URL'];
-        
+
         foreach ($fieldTypes as $type) {
             $this->customField->setType($type);
             $this->assertEquals($type, $this->customField->getType());
@@ -157,7 +157,7 @@ class CustomFieldEntityTest extends TestCase
     public function testCommonTableNames(): void
     {
         $tableNames = ['invoice', 'client', 'quote', 'product', 'user'];
-        
+
         foreach ($tableNames as $table) {
             $this->customField->setTable($table);
             $this->assertEquals($table, $this->customField->getTable());
@@ -168,7 +168,7 @@ class CustomFieldEntityTest extends TestCase
     {
         // Test with label at max length (50 characters)
         $longLabel = str_repeat('A', 50);
-        
+
         $this->customField->setLabel($longLabel);
         $this->assertEquals($longLabel, $this->customField->getLabel());
         $this->assertEquals(50, strlen($this->customField->getLabel()));
@@ -200,7 +200,7 @@ class CustomFieldEntityTest extends TestCase
         $this->customField->setId(123);
         $this->assertIsInt($this->customField->reqId());
         $this->assertSame(123, $this->customField->reqId());
-        
+
         $this->customField->setId(0);
         $this->assertIsInt($this->customField->reqId());
         $this->assertSame(0, $this->customField->reqId());
@@ -260,7 +260,7 @@ class CustomFieldEntityTest extends TestCase
         $this->customField->setLocation(3);
         $this->customField->setOrder(15);
         $this->customField->setRequired(true);
-        
+
         $this->assertSame(777, $this->customField->reqId());
         $this->assertEquals('product', $this->customField->getTable());
         $this->assertEquals('Category', $this->customField->getLabel());

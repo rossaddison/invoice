@@ -85,9 +85,12 @@ final readonly class ClientFormFields
      * Client telephone field
      * @param array<string, string> $extraAttributes
      */
-    public function clientTelephoneField(ClientForm $form, string $fieldName,
-            string $labelKey, array $extraAttributes = []): string
-    {
+    public function clientTelephoneField(
+        ClientForm $form,
+        string $fieldName,
+        string $labelKey,
+        array $extraAttributes = []
+    ): string {
         $value = match ($fieldName) {
             'client_mobile' => $form->client_mobile,
             'client_phone' => $form->client_phone,
@@ -170,9 +173,11 @@ final readonly class ClientFormFields
      * Client language selection dropdown
      * @param array<string, string> $languageOptions
      */
-    public function clientLanguageSelect(ClientForm $form,
-            array $languageOptions, string $selectedLanguage): string
-    {
+    public function clientLanguageSelect(
+        ClientForm $form,
+        array $languageOptions,
+        string $selectedLanguage
+    ): string {
         return Field::select($form, 'client_language')
             ->label($this->translator->translate('language'))
             ->addInputAttributes(['class' => 'form-control form-control-lg',
@@ -188,9 +193,11 @@ final readonly class ClientFormFields
      * Client country select dropdown
      * @param array<string, string> $countryOptions
      */
-    public function clientCountrySelect(ClientForm $form,
-            array $countryOptions, string $selectedCountry): string
-    {
+    public function clientCountrySelect(
+        ClientForm $form,
+        array $countryOptions,
+        string $selectedCountry
+    ): string {
         return Field::select($form, 'client_country')
             ->label($this->translator->translate('country'))
             ->addInputAttributes([

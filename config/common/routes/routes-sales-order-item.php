@@ -10,10 +10,9 @@ use Yiisoft\Router\Route;
 
 return [
     RoutePermission::invoiceGroup(
-
-            Route::methods([Method::GET, Method::POST], '/salesorderitem/edit/{id}')
+        Route::methods([Method::GET, Method::POST], '/salesorderitem/edit/{id}')
                 ->name('salesorderitem/edit')
                 ->middleware(RoutePermission::check(Permissions::VIEW_INV))
                 ->action([SalesOrderItemController::class, 'edit']),
-        ), // invoice
+    ), // invoice
 ];

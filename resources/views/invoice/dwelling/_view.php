@@ -44,14 +44,14 @@ $selectLabel = static function (array $optionsData, int|string|null $value): str
             $translator->translate('dwelling.family'),
             $selectLabel($families, $form->getFamilyId()),
         );
-        ReadOnlyField::render($translator->translate('dwelling.house.number'), (string) $form->getHouseNumberNumeric());
-        ReadOnlyField::render($translator->translate('dwelling.house.number.suffix'), $form->getHouseNumberSuffix() ?? '');
-        ReadOnlyField::render($translator->translate('dwelling.flat.unit'), $form->getFlatUnit() ?? '');
-        ReadOnlyField::render($translator->translate('dwelling.postcode'), $form->getPostcode() ?? '');
-        ReadOnlyField::render($translator->translate('dwelling.latitude'), $form->getLatitude() !== null ? (string) $form->getLatitude() : '');
-        ReadOnlyField::render($translator->translate('dwelling.longitude'), $form->getLongitude() !== null ? (string) $form->getLongitude() : '');
-        ReadOnlyField::render($translator->translate('dwelling.source'), $form->getSource() ?? '');
-    ?>
+ReadOnlyField::render($translator->translate('dwelling.house.number'), (string) $form->getHouseNumberNumeric());
+ReadOnlyField::render($translator->translate('dwelling.house.number.suffix'), $form->getHouseNumberSuffix() ?? '');
+ReadOnlyField::render($translator->translate('dwelling.flat.unit'), $form->getFlatUnit() ?? '');
+ReadOnlyField::render($translator->translate('dwelling.postcode'), $form->getPostcode() ?? '');
+ReadOnlyField::render($translator->translate('dwelling.latitude'), $form->getLatitude() !== null ? (string) $form->getLatitude() : '');
+ReadOnlyField::render($translator->translate('dwelling.longitude'), $form->getLongitude() !== null ? (string) $form->getLongitude() : '');
+ReadOnlyField::render($translator->translate('dwelling.source'), $form->getSource() ?? '');
+?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

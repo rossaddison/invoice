@@ -34,25 +34,25 @@ $ac = 'allowance.or.charge.';
             $translator->translate('allowance.or.charge'),
             $translator->translate($form->getIdentifier() === true ? $ac . 'charge' : $ac . 'allowance'),
         );
-        ReadOnlyField::render(
-            $translator->translate($ac . 'level'),
-            $translator->translate($form->getLevel() === 1 ? 'yes' : 'no'),
-        );
-        ReadOnlyField::render($translator->translate($ac . 'reason.code'), $form->getReasonCode());
-        ReadOnlyField::render($translator->translate($ac . 'reason'), $form->getReason());
-        ReadOnlyField::render(
-            $translator->translate($ac . 'multiplier.factor.numeric'),
-            $form->getMultiplierFactorNumeric() !== null ? (string) $form->getMultiplierFactorNumeric() : '',
-        );
-        ReadOnlyField::render(
-            $translator->translate($ac . 'amount'),
-            $form->getAmount() !== null ? (string) $form->getAmount() : '',
-        );
-        ReadOnlyField::render(
-            $translator->translate($ac . 'base.amount'),
-            $form->getBaseAmount() !== null ? (string) $form->getBaseAmount() : '',
-        );
-    ?>
+ReadOnlyField::render(
+    $translator->translate($ac . 'level'),
+    $translator->translate($form->getLevel() === 1 ? 'yes' : 'no'),
+);
+ReadOnlyField::render($translator->translate($ac . 'reason.code'), $form->getReasonCode());
+ReadOnlyField::render($translator->translate($ac . 'reason'), $form->getReason());
+ReadOnlyField::render(
+    $translator->translate($ac . 'multiplier.factor.numeric'),
+    $form->getMultiplierFactorNumeric() !== null ? (string) $form->getMultiplierFactorNumeric() : '',
+);
+ReadOnlyField::render(
+    $translator->translate($ac . 'amount'),
+    $form->getAmount() !== null ? (string) $form->getAmount() : '',
+);
+ReadOnlyField::render(
+    $translator->translate($ac . 'base.amount'),
+    $form->getBaseAmount() !== null ? (string) $form->getBaseAmount() : '',
+);
+?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

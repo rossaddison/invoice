@@ -49,151 +49,161 @@ $assetManager->register(StripeVersionTenAsset::class);
 
 if ($disable_form === false) {
     echo H::openTag('div', ['class' => 'container py-5 h-100']);
-     echo H::openTag('div',
-        ['class' => 'row d-flex justify-content-center align-items-center h-100']);
-      echo H::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']);
-       echo H::openTag('div',
-               ['class' => 'card border border-dark shadow-2-strong rounded-3']);
-        echo H::openTag('div', ['class' => 'card-header bg-dark text-white']);
-         echo H::openTag('h2', ['class' => 'fw-normal h3 text-center']);
-          echo H::openTag('div', ['class' => 'row gy-4']);
-           echo H::openTag('div', ['class' => 'col-4']);
-            echo H::tag('br');
-            echo $companyLogo;
-           echo H::closeTag('div');
-           echo H::openTag('div', ['class' => 'col-8']);
-            echo $translator->translate('online.payment.for.invoice') . ' # ';
-            echo H::encode($invoice->getNumber() ?? '') . ' => '
-             . H::encode($invoice->getClient()?->getClientName() ?? '') . ' '
-             . H::encode($invoice->getClient()?->getClientSurname() ?? '') . ' '
-             . $numberHelper->formatCurrency($balance);
-           echo H::closeTag('div');
-          echo H::closeTag('div');
-         echo H::closeTag('h2');
-         echo H::openTag('a', [
-             'href' => $urlGenerator->generate('inv/pdfDownloadIncludeCf',
-                     ['url_key' => $inv_url_key]),
-             'class' => 'btn btn-sm btn-primary fw-normal h3 text-center text-decoration-none',
-         ]);
-          echo H::openTag('i', ['class' => 'bi bi-file-pdf']);
-          echo H::closeTag('i');
-          echo ' ' . $translator->translate('download.pdf')
-                  . '=>' . $translator->translate('yes')
-                  . ' ' . $translator->translate('custom.fields');
-         echo H::closeTag('a');
-         echo H::openTag('a', [
-             'href' => $urlGenerator->generate('inv/pdfDownloadExcludeCf',
-                     ['url_key' => $inv_url_key]),
-             'class' => 'btn btn-sm btn-danger fw-normal h3 text-center text-decoration-none',
-         ]);
-          echo H::openTag('i', ['class' => 'bi bi-file-pdf']);
-          echo H::closeTag('i');
-          echo ' ' . $translator->translate('download.pdf')
-                  . '=>' . $translator->translate('no')
-                  . ' ' . $translator->translate('custom.fields');
-         echo H::closeTag('a');
-        echo H::closeTag('div');
+    echo H::openTag(
+        'div',
+        ['class' => 'row d-flex justify-content-center align-items-center h-100']
+    );
+    echo H::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']);
+    echo H::openTag(
+        'div',
+        ['class' => 'card border border-dark shadow-2-strong rounded-3']
+    );
+    echo H::openTag('div', ['class' => 'card-header bg-dark text-white']);
+    echo H::openTag('h2', ['class' => 'fw-normal h3 text-center']);
+    echo H::openTag('div', ['class' => 'row gy-4']);
+    echo H::openTag('div', ['class' => 'col-4']);
+    echo H::tag('br');
+    echo $companyLogo;
+    echo H::closeTag('div');
+    echo H::openTag('div', ['class' => 'col-8']);
+    echo $translator->translate('online.payment.for.invoice') . ' # ';
+    echo H::encode($invoice->getNumber() ?? '') . ' => '
+     . H::encode($invoice->getClient()?->getClientName() ?? '') . ' '
+     . H::encode($invoice->getClient()?->getClientSurname() ?? '') . ' '
+     . $numberHelper->formatCurrency($balance);
+    echo H::closeTag('div');
+    echo H::closeTag('div');
+    echo H::closeTag('h2');
+    echo H::openTag('a', [
+        'href' => $urlGenerator->generate(
+            'inv/pdfDownloadIncludeCf',
+            ['url_key' => $inv_url_key]
+        ),
+        'class' => 'btn btn-sm btn-primary fw-normal h3 text-center text-decoration-none',
+    ]);
+    echo H::openTag('i', ['class' => 'bi bi-file-pdf']);
+    echo H::closeTag('i');
+    echo ' ' . $translator->translate('download.pdf')
+            . '=>' . $translator->translate('yes')
+            . ' ' . $translator->translate('custom.fields');
+    echo H::closeTag('a');
+    echo H::openTag('a', [
+        'href' => $urlGenerator->generate(
+            'inv/pdfDownloadExcludeCf',
+            ['url_key' => $inv_url_key]
+        ),
+        'class' => 'btn btn-sm btn-danger fw-normal h3 text-center text-decoration-none',
+    ]);
+    echo H::openTag('i', ['class' => 'bi bi-file-pdf']);
+    echo H::closeTag('i');
+    echo ' ' . $translator->translate('download.pdf')
+            . '=>' . $translator->translate('no')
+            . ' ' . $translator->translate('custom.fields');
+    echo H::closeTag('a');
+    echo H::closeTag('div');
+    echo H::tag('br');
+    echo H::tag('Div', H::tag('H4', $title));
+    echo H::openTag('div', ['class' => 'text-center']);
+    echo $stripeLogo;
+    echo H::closeTag('div');
+    echo H::tag('br');
+    echo H::openTag('div', ['class' => 'card-body p-5 text-center']);
+    echo H::openTag('form', ['method' => 'post',
+        'enctype' => 'multipart/form-data', 'id' => 'payment-form']);
+    echo $alert;
+    // Stripe injects the payment element here
+    echo H::tag('Div', '', ['id' => 'payment-element']);
+    // Stripe payment message
+    echo H::tag('Div', '', ['id' => 'payment-message', 'class' => 'hidden']);
+    echo H::openTag('button', [
+        'type' => 'submit',
+        'id' => 'submit',
+        'class' => 'btn btn-lg btn-success bi bi-credit-card'
+    ]);
+    echo H::openTag('div', ['class' => 'spinner hidden', 'id' => 'spinner']);
+    echo H::closeTag('div');
+    echo H::openTag('span', ['id' => 'button-text']);
+    echo ' ' . $translator->translate('pay.now')
+            . ': ' . $numberHelper->formatCurrency($balance);
+    echo H::closeTag('span');
+    echo H::closeTag('button');
+    echo H::encode($clientHelper->formatClient($client_on_invoice));
+    echo $partial_client_address;
+    echo H::tag('br');
+    echo H::openTag('div', ['class' => 'table-responsive']);
+    echo H::openTag(
+        'table',
+        ['class' => 'table table-bordered table-condensed m-0']
+    );
+    echo H::openTag('tbody');
+    echo H::openTag('tr');
+    echo H::openTag('th', ['scope' => 'col']);
+    echo $translator->translate('item');
+    echo H::closeTag('th');
+    echo H::openTag('th', ['scope' => 'col']);
+    echo $translator->translate('value');
+    echo H::closeTag('th');
+    echo H::closeTag('tr');
+    echo H::openTag('tr');
+    echo H::openTag('td');
+    echo $translator->translate('date');
+    echo H::closeTag('td');
+    echo H::openTag('td', ['class' => 'text-end']);
+    echo H::encode($invoice->getDateCreated()->format('Y-m-d'));
+    echo H::closeTag('td');
+    echo H::closeTag('tr');
+    echo H::openTag('tr', ['class' => ($is_overdue ? 'overdue' : '')]);
+    echo H::openTag('td');
+    echo $translator->translate('due.date');
+    echo H::closeTag('td');
+    echo H::openTag('td', ['class' => 'text-end']);
+    echo H::encode($invoice->getDateDue()->format('Y-m-d'));
+    echo H::closeTag('td');
+    echo H::closeTag('tr');
+    echo H::openTag('tr', ['class' => ($is_overdue ? 'overdue' : '')]);
+    echo H::openTag('td');
+    echo $translator->translate('total');
+    echo H::closeTag('td');
+    echo H::openTag('td', ['class' => 'text-end']);
+    echo H::encode($numberHelper->formatCurrency($total));
+    echo H::closeTag('td');
+    echo H::closeTag('tr');
+    echo H::openTag('tr', ['class' => ($is_overdue ? 'overdue' : '')]);
+    echo H::openTag('td');
+    echo $translator->translate('balance');
+    echo H::closeTag('td');
+    echo H::openTag('td', ['class' => 'text-end']);
+    echo H::encode($numberHelper->formatCurrency($balance));
+    echo H::closeTag('td');
+    echo H::closeTag('tr');
+    echo H::openTag('tr');
+    echo H::openTag('td');
+    echo $translator->translate('payment.method') . ': ';
+    echo H::closeTag('td');
+    echo H::openTag('td', ['class' => 'text-end']);
+    echo 'Card / Direct Debit - Customer Ready for Payment';
+    echo H::closeTag('td');
+    echo H::closeTag('tr');
+    echo H::closeTag('tbody');
+    echo H::closeTag('table');
+    echo H::closeTag('div');
+    if (!empty($invoice->getTerms())) {
+        echo H::openTag('div', ['class' => 'col-12 text-muted']);
         echo H::tag('br');
-        echo H::tag('Div', H::tag('H4', $title));
-        echo H::openTag('div', ['class' => 'text-center']);
-         echo $stripeLogo;
+        echo H::openTag('h4');
+        echo $translator->translate('terms');
+        echo H::closeTag('h4');
+        $paymentTermArray = $s->getPaymentTermArray($translator);
+        echo H::openTag('div');
+        echo nl2br(H::encode($paymentTermArray[$invoice->getTerms()] ?? ''));
         echo H::closeTag('div');
-        echo H::tag('br');
-        echo H::openTag('div', ['class' => 'card-body p-5 text-center']);
-         echo H::openTag('form', ['method' => 'post',
-             'enctype' => 'multipart/form-data', 'id' => 'payment-form']);
-          echo $alert;
-          // Stripe injects the payment element here
-          echo H::tag('Div', '', ['id' => 'payment-element']);
-          // Stripe payment message
-          echo H::tag('Div', '', ['id' => 'payment-message', 'class' => 'hidden']);
-          echo H::openTag('button', [
-              'type' => 'submit',
-              'id' => 'submit',
-              'class' => 'btn btn-lg btn-success bi bi-credit-card'
-          ]);
-           echo H::openTag('div', ['class' => 'spinner hidden', 'id' => 'spinner']);
-           echo H::closeTag('div');
-           echo H::openTag('span', ['id' => 'button-text']);
-            echo ' ' . $translator->translate('pay.now')
-                    . ': ' . $numberHelper->formatCurrency($balance);
-           echo H::closeTag('span');
-          echo H::closeTag('button');
-          echo H::encode($clientHelper->formatClient($client_on_invoice));
-          echo $partial_client_address;
-          echo H::tag('br');
-          echo H::openTag('div', ['class' => 'table-responsive']);
-           echo H::openTag('table',
-                   ['class' => 'table table-bordered table-condensed m-0']);
-            echo H::openTag('tbody');
-             echo H::openTag('tr');
-              echo H::openTag('th', ['scope' => 'col']);
-                echo $translator->translate('item');
-              echo H::closeTag('th');
-              echo H::openTag('th', ['scope' => 'col']);
-                echo $translator->translate('value');
-              echo H::closeTag('th');
-             echo H::closeTag('tr');
-             echo H::openTag('tr');
-              echo H::openTag('td');
-               echo $translator->translate('date');
-              echo H::closeTag('td');
-              echo H::openTag('td', ['class' => 'text-end']);
-               echo H::encode($invoice->getDateCreated()->format('Y-m-d'));
-              echo H::closeTag('td');
-             echo H::closeTag('tr');
-             echo H::openTag('tr', ['class' => ($is_overdue ? 'overdue' : '')]);
-              echo H::openTag('td');
-               echo $translator->translate('due.date');
-              echo H::closeTag('td');
-              echo H::openTag('td', ['class' => 'text-end']);
-               echo H::encode($invoice->getDateDue()->format('Y-m-d'));
-              echo H::closeTag('td');
-             echo H::closeTag('tr');
-             echo H::openTag('tr', ['class' => ($is_overdue ? 'overdue' : '')]);
-              echo H::openTag('td');
-               echo $translator->translate('total');
-              echo H::closeTag('td');
-              echo H::openTag('td', ['class' => 'text-end']);
-               echo H::encode($numberHelper->formatCurrency($total));
-              echo H::closeTag('td');
-             echo H::closeTag('tr');
-             echo H::openTag('tr', ['class' => ($is_overdue ? 'overdue' : '')]);
-              echo H::openTag('td');
-               echo $translator->translate('balance');
-              echo H::closeTag('td');
-              echo H::openTag('td', ['class' => 'text-end']);
-               echo H::encode($numberHelper->formatCurrency($balance));
-              echo H::closeTag('td');
-             echo H::closeTag('tr');
-             echo H::openTag('tr');
-              echo H::openTag('td');
-               echo $translator->translate('payment.method') . ': ';
-              echo H::closeTag('td');
-              echo H::openTag('td', ['class' => 'text-end']);
-               echo 'Card / Direct Debit - Customer Ready for Payment';
-              echo H::closeTag('td');
-             echo H::closeTag('tr');
-            echo H::closeTag('tbody');
-           echo H::closeTag('table');
-          echo H::closeTag('div');
-          if (!empty($invoice->getTerms())) {
-              echo H::openTag('div', ['class' => 'col-12 text-muted']);
-               echo H::tag('br');
-               echo H::openTag('h4');
-                echo $translator->translate('terms');
-               echo H::closeTag('h4');
-               $paymentTermArray = $s->getPaymentTermArray($translator);
-               echo H::openTag('div');
-                echo nl2br(H::encode($paymentTermArray[$invoice->getTerms()] ?? ''));
-               echo H::closeTag('div');
-              echo H::closeTag('div');
-          }
-         echo H::closeTag('form');
         echo H::closeTag('div');
-       echo H::closeTag('div');
-      echo H::closeTag('div');
-     echo H::closeTag('div');
+    }
+    echo H::closeTag('form');
+    echo H::closeTag('div');
+    echo H::closeTag('div');
+    echo H::closeTag('div');
+    echo H::closeTag('div');
     echo H::closeTag('div');
 }
 // Supply server-side values to the TypeScript payment-stripe module via

@@ -64,7 +64,7 @@ use Yiisoft\Html\Html;
                     </a>
                     <?php } else { ?>
                     <a href="<?= $urlGenerator->generate('client/add',
-                            ['origin' => 'dashboard']); ?>"
+                        ['origin' => 'dashboard']); ?>"
                         class="btn btn-success"
                        >
                         <i class="bi bi-plus-lg"></i>
@@ -83,7 +83,7 @@ use Yiisoft\Html\Html;
                     </a>
                     <?php } else { ?>
                     <a href="<?= $urlGenerator->generate('quote/add',
-                            ['origin' => 'dashboard']);?>"
+                        ['origin' => 'dashboard']);?>"
                        class="btn btn-success"
                       >
                        <i class="bi bi-plus-lg"></i>
@@ -102,7 +102,7 @@ use Yiisoft\Html\Html;
                     </a>
                     <?php } else { ?>
                     <a href="<?= $urlGenerator->generate('inv/add',
-                            ['origin' => 'dashboard']);?>"
+                        ['origin' => 'dashboard']);?>"
                        class="btn btn-success"
                       >
                        <i class="bi bi-plus-lg"></i>
@@ -157,8 +157,8 @@ use Yiisoft\Html\Html;
                         <tr>
                             <td>
                                 <a href="<?= $urlGenerator->generate('quote/index',
-                                        ['page' => 1,
-                                            'status' => (int) $total['href']]); ?>">
+                                    ['page' => 1,
+                                        'status' => (int) $total['href']]); ?>">
                                     <?php echo (string) $total['label']; ?>
                                 </a>
                             </td>
@@ -212,8 +212,8 @@ use Yiisoft\Html\Html;
                         <tr>
                             <td>
                                 <a href="<?= $urlGenerator->generate('inv/index',
-                                        ['page' => 1,
-                                            'status' => (int) $total['href']]); ?>">
+                                    ['page' => 1,
+                                        'status' => (int) $total['href']]); ?>">
                                     <?= (string) $total['label']; ?>
                                 </a>
                             </td>
@@ -275,9 +275,9 @@ use Yiisoft\Html\Html;
                                 <td>
                                 <?php $statusId = $quote->reqStatusId(); ?>
                                     <span class="badge text-bg-<?= $qR->getSpecificStatusArrayClass(
-                                            (string) $statusId); ?>">
+                                        (string) $statusId); ?>">
                                         <?= $qR->getSpecificStatusArrayLabel(
-                                                (string) $statusId); ?>
+                                            (string) $statusId); ?>
                                     </span>
                                 </td>
                                 <td>
@@ -285,9 +285,9 @@ use Yiisoft\Html\Html;
                                 </td>
                                 <td>
                                     <a href="<?= $urlGenerator->generate('quote/view',
-                                            ['id' => $quote->reqId()]); ?>"
+                                        ['id' => $quote->reqId()]); ?>"
                                        title="<?=  (($quote->getNumber() ?? '#') ?:
-                                                    ($quote->reqId() ?: '#')); ?>"
+                                                ($quote->reqId() ?: '#')); ?>"
                                        class="btn btn-secondary"
                                       >
                                             <?= $quote->getNumber() ?? (string) $quote->reqId(); ?>
@@ -295,9 +295,9 @@ use Yiisoft\Html\Html;
                                 </td>
                                 <td>
                                     <a href="<?= $urlGenerator->generate('client/view',
-                                            ['id' => $quote->reqClientId()]); ?>"
+                                        ['id' => $quote->reqClientId()]); ?>"
                                        title="<?=  (($quote->getNumber() ?? '#') ?:
-                                            ($quote->reqId() ?: '#')); ?>"
+                                        ($quote->reqId() ?: '#')); ?>"
                                        class="btn btn-secondary"
                                       >
             <?= Html::encode($clientHelper->formatClient($quote->getClient())); ?>
@@ -310,8 +310,8 @@ use Yiisoft\Html\Html;
                                 </td>
                                 <td class="text-center">
                                     <a href="<?= $urlGenerator->generate(
-                                            'quote/pdfDashboardIncludeCf',
-                                            ['id' => $quote->reqId()]); ?>"
+                                        'quote/pdfDashboardIncludeCf',
+                                        ['id' => $quote->reqId()]); ?>"
                                        title="<?= $translator->translate('download.pdf'); ?>"
                                        class="btn btn-secondary"
                                       >
@@ -320,10 +320,10 @@ use Yiisoft\Html\Html;
                                 </td>
                                 <td class="text-center">
                                     <a href="<?= $urlGenerator->generate(
-                                            'quote/pdfDashboardExcludeCf',
-                                            ['id' => $quote->reqId()]); ?>"
+                                        'quote/pdfDashboardExcludeCf',
+                                        ['id' => $quote->reqId()]); ?>"
                                        title="<?= $translator->translate(
-                                               'download.pdf'); ?>"
+                                           'download.pdf'); ?>"
                                        class="btn btn-secondary"
                                       >
                                        <i class="bi bi-file-pdf"></i>
@@ -393,14 +393,17 @@ use Yiisoft\Html\Html;
                                     <span class="badge text-bg-<?=
                                 $iR->getSpecificStatusArrayClass($statusId); ?>">
                         <?= $iR->getSpecificStatusArrayLabel((string) $statusId);
-    if (null !== $iaR->repoCreditInvoicequery($invoice->reqId())) {
-        $translator->translate('credit.invoice'); }
-    if ($invoice->getIsReadOnly()) { $translator->translate('read.only'); } ?>
+                                if (null !== $iaR->repoCreditInvoicequery($invoice->reqId())) {
+                                    $translator->translate('credit.invoice');
+                                }
+                                if ($invoice->getIsReadOnly()) {
+                                    $translator->translate('read.only');
+                                } ?>
                <?php if (($irR->repoCount($invoice->reqId()) > 0)) { ?>
                                         &nbsp;
                                         <i class="bi bi-arrow-clockwise"
                                            title="<?php $translator->translate(
-                                                   'recurring') ?>"></i>
+                                               'recurring') ?>"></i>
                                             <?php } ?>
                                     </span>
                                 </td>
@@ -412,17 +415,17 @@ use Yiisoft\Html\Html;
                                 </td>
                                 <td>
                                     <a href="<?= $urlGenerator->generate('inv/view',
-                                            ['id' => $invoice->reqId()]); ?>"
+                                        ['id' => $invoice->reqId()]); ?>"
                                        class="btn btn-secondary"
                                       >
                                         <?= ($invoice->getNumber() ?? '#'
-                                               . ($invoice->reqId() ?: '#')); ?>
+                                           . ($invoice->reqId() ?: '#')); ?>
                                     </a>
                                 </td>
                                 <td>
                                     <a href="<?= $urlGenerator->generate(
-                                            'client/view',
-                                            ['id' => $invoice->reqClientId()]); ?>"
+                                        'client/view',
+                                        ['id' => $invoice->reqClientId()]); ?>"
                                         class="btn btn-secondary"
                                        >
      <?= (Html::encode($clientHelper->formatClient($invoice->getClient()))); ?>
@@ -435,10 +438,10 @@ use Yiisoft\Html\Html;
                                 </td>
                                 <td class="text-center">
                                     <a href="<?= $urlGenerator->generate(
-                                            'inv/pdfDashboardIncludeCf',
-                                            ['id' => $invoice->reqId()]); ?>"
+                                        'inv/pdfDashboardIncludeCf',
+                                        ['id' => $invoice->reqId()]); ?>"
                                        title="<?= $translator->translate(
-                                               'download.pdf'); ?>"
+                                           'download.pdf'); ?>"
                                        class="btn btn-secondary"
                                       >
                                        <i class="bi bi-file-pdf"></i>
@@ -446,10 +449,10 @@ use Yiisoft\Html\Html;
                                 </td>
                                 <td class="text-center">
                                     <a href="<?= $urlGenerator->generate(
-                                            'quote/pdfDashboardExcludeCf',
-                                            ['id' => $invoice->reqId()]); ?>"
+                                        'quote/pdfDashboardExcludeCf',
+                                        ['id' => $invoice->reqId()]); ?>"
                                        title="<?= $translator->translate(
-                                               'download.pdf'); ?>"
+                                           'download.pdf'); ?>"
                                        class="btn btn-secondary"
                                       >
                                        <i class="bi bi-file-pdf"></i>
@@ -499,15 +502,15 @@ use Yiisoft\Html\Html;
                                 <tr>
                                     <td>
                                         <a href="<?= $urlGenerator->generate(
-                                                'project/view',
-                                                ['id' => $project->reqId()]); ?>">
+                                            'project/view',
+                                            ['id' => $project->reqId()]); ?>">
                                             <?= Html::encode($project->getName()); ?>
                                         </a>
                                     </td>
                                     <td>
                                         <a href="<?= $urlGenerator->generate(
-                                                'client/view',
-                                                ['id' => $project->getClientId()]); ?>">
+                                            'client/view',
+                                            ['id' => $project->getClientId()]); ?>">
        <?= Html::encode($clientHelper->formatClient($project->getClient())); ?>
                                         </a>
                                     </td>
@@ -517,7 +520,7 @@ use Yiisoft\Html\Html;
                                     <td colspan="6"
                                         class="text-end small">
                                         <a href="<?= $urlGenerator->generate(
-                                                'project/index'); ?>">
+                                            'project/index'); ?>">
                                       <?= $translator->translate('view.all'); ?>
                                         </a>
                                     </td>
@@ -573,8 +576,8 @@ use Yiisoft\Html\Html;
                                     </td>
                                     <td>
                                         <a href="<?= $urlGenerator->generate(
-                                                'task/edit',
-                                                ['id' => $task->reqId()]); ?>">
+                                            'task/edit',
+                                            ['id' => $task->reqId()]); ?>">
                                          <?= Html::encode($task->getName()); ?>
                                         </a>
                                     </td>
@@ -588,8 +591,8 @@ use Yiisoft\Html\Html;
                                     <td>
                                     <?php  if ($task->getProject() !== null) { ?>
                                             <a href="<?= $urlGenerator->generate(
-                                                    'project/view',
-                                         ['id' => $task->reqProjectId()]); ?>">
+                                                'project/view',
+                                                ['id' => $task->reqProjectId()]); ?>">
                                     <?= Html::encode($task->getName()); ?></a>
                                         <?php } ?>
                                     </td>
@@ -599,7 +602,7 @@ use Yiisoft\Html\Html;
                                     <td colspan="6"
                                         class="text-end small">
                                         <a href="<?= $urlGenerator->generate(
-                                                'task/index'); ?>">
+                                            'task/index'); ?>">
                         <?= Html::encode($translator->translate('view.all')); ?>
                                         </a>
                                     </td>

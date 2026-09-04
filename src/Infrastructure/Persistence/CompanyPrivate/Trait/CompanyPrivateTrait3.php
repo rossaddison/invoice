@@ -14,7 +14,6 @@ use RequireId;
  */
 trait CompanyPrivateTrait3
 {
-
     //cycle
     public function getStartDate(): ?DateTimeImmutable
     {

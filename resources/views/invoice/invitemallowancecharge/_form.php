@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
+
 /**
  * @var App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeForm $form
  * @var App\Invoice\Setting\SettingRepository $s
@@ -41,7 +42,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
         <?php
             $optionsDataAllowanceCharge = [];
-            $optionsAttributesAllowanceCharge = [];
+$optionsAttributesAllowanceCharge = [];
 /**
  * @var App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge $allowance_charge
  */
@@ -56,7 +57,7 @@ foreach ($allowance_charges as $allowance_charge) {
             $allowance_charge->getReason(),
             $allowance_charge->getTaxRate()?->getTaxRateName() ?? '',
         ],
-        static fn(string $v): bool => $v !== ''
+        static fn (string $v): bool => $v !== ''
     );
     $id = $allowance_charge->reqId();
     $optionsDataAllowanceCharge[$id] = $type . ' — ' . implode(' — ', $parts);
@@ -69,12 +70,12 @@ foreach ($allowance_charges as $allowance_charge) {
             ['class' => 'small text-muted d-block mb-1']
         ); ?>
         <?= Field::select($form, 'allowance_charge_id')
-    ->label($translator->translate('allowance.or.charge.item.invoice'))
-    ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->optionsData($optionsDataAllowanceCharge, true, $optionsAttributesAllowanceCharge)
-    ->value($form->getAllowanceChargeId())
-    ->prompt($translator->translate('none'))
-    ->hint($translator->translate('hint.this.field.is.required'));
+            ->label($translator->translate('allowance.or.charge.item.invoice'))
+            ->addInputAttributes(['class' => 'form-control form-control-lg',])
+            ->optionsData($optionsDataAllowanceCharge, true, $optionsAttributesAllowanceCharge)
+            ->value($form->getAllowanceChargeId())
+            ->prompt($translator->translate('none'))
+            ->hint($translator->translate('hint.this.field.is.required'));
 ?>
         <?= Field::text($form, 'amount')
     ->label($translator->translate('amount.inv.item')

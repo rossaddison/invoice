@@ -85,10 +85,12 @@ echo (new Form())
                                         . ' cursor-pointer bi bi-calendar text-muted',
                                     ]);
                                     ?>
-                                        <?= Html::openTag('input',
-                                                ['type' => 'hidden',
-                                                    'name' => 'is_recurring',
-                                                    'value' => '/']); ?>
+                                        <?= Html::openTag(
+                                            'input',
+                                            ['type' => 'hidden',
+                                                        'name' => 'is_recurring',
+                                                        'value' => '/']
+                                        ); ?>
                                 <?php endif; ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-text']); ?>
@@ -101,7 +103,7 @@ echo (new Form())
                                    'id' => 'product-no-task'
                                 ]); ?>
                                 <?php
-                                    $optionsDataProduct = [];
+                                        $optionsDataProduct = [];
 /**
  * @var App\Infrastructure\Persistence\Product\Product $product
  */
@@ -227,20 +229,20 @@ foreach ($taxRates as $taxRate) {
                                 <?= Field::text($form, 'peppol_po_itemid')
     ->label($translator->translate('client.peppol.po.item.id'))
     ->value(Html::encode($form->peppol_po_itemid ?? ''));
-?>
+                                ?>
                             <?= Html::closeTag('div'); ?>
                             <?= Html::openTag('div'); ?>
                                 <?= Field::text($form, 'peppol_po_lineid')
-    ->label($translator->translate('client.peppol.po.line.id'))
-    ->value(Html::encode($form->peppol_po_lineid ?? ''));
-?>
+                                    ->label($translator->translate('client.peppol.po.line.id'))
+                                    ->value(Html::encode($form->peppol_po_lineid ?? ''));
+                                ?>
                             <?= Html::closeTag('div'); ?>
                             <?php endif; ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount']); ?>
                             <?= Html::openTag('div'); ?>
                                 <?php
-    $optionsDataProductUnit = [];
+                                    $optionsDataProductUnit = [];
 /**
  * @var App\Infrastructure\Persistence\Unit\Unit $unit
  */

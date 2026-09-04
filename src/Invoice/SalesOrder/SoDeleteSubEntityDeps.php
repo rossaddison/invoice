@@ -18,5 +18,6 @@ final class SoDeleteSubEntityDeps
         public readonly SoCS $socS,
         public readonly SoIR $soiR,
         public readonly SoIS $soiS,
-    ) {}
+    ) {
+    }
 }

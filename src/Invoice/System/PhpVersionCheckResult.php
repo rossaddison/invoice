@@ -17,5 +17,6 @@ final readonly class PhpVersionCheckResult
         public bool $isSecurityRelease,
         public ?string $checkedAt,
         public ?string $error,
-    ) {}
+    ) {
+    }
 }

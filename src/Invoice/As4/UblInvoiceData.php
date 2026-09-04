@@ -21,5 +21,6 @@ final readonly class UblInvoiceData
         public ?string           $buyerReference,
         public array             $lines,
         public string            $documentType,
-    ) {}
+    ) {
+    }
 }

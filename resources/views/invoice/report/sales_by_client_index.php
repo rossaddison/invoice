@@ -44,7 +44,7 @@ $dateRange = ' (' . $dateFmt . ')';
                 <div class="card-body">
                     <form method="POST"
                           action="<?= $urlGenerator->generate($actionName,
-                                  $actionArguments); ?>"
+                              $actionArguments); ?>"
                           enctype="multipart/form-data"
                        <?php echo($s->getSetting('open_reports_in_new_tab') === '1' ?
                             'target="_blank"' : ''); ?>>
@@ -65,7 +65,7 @@ $dateRange = ' (' . $dateFmt . ')';
                                    placeholder="<?= $dateRange;?>"
                                    class="form-control form-control-lg"
                                    value="<?= $body['from_date']
-                                             = $startTaxYear; ?>"
+                                         = $startTaxYear; ?>"
                                    role="presentation"
                                    autocomplete="off"
                                    data-action="show-picker">
@@ -80,8 +80,8 @@ $dateRange = ' (' . $dateFmt . ')';
                                    placeholder="<?= $dateRange;?>"
                                    class="form-control form-control-lg"
                                    value="<?= $body['to_date']
-                                        = (new \DateTimeImmutable('now'))
-                                            ->format('Y-m-d'); ?>"
+                                    = (new \DateTimeImmutable('now'))
+                                        ->format('Y-m-d'); ?>"
                                    role="presentation"
                                    autocomplete="off"
                                    data-action="show-picker">

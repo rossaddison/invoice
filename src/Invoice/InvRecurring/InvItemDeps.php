@@ -22,5 +22,6 @@ final class InvItemDeps
         public readonly ProductRepository $pR,
         public readonly TaxRateRepository $trR,
         public readonly UnitRepository $unR,
-    ) {}
+    ) {
+    }
 }

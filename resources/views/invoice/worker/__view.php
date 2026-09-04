@@ -39,12 +39,12 @@ use Yiisoft\Html\Html;
                     $form->getFirstname(),
                     ['class' => 'col-md-6 mb-3'],
                 );
-                ReadOnlyField::render(
-                    $translator->translate('worker.lastname'),
-                    $form->getLastname(),
-                    ['class' => 'col-md-6 mb-3'],
-                );
-            ?>
+ReadOnlyField::render(
+    $translator->translate('worker.lastname'),
+    $form->getLastname(),
+    ['class' => 'col-md-6 mb-3'],
+);
+?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

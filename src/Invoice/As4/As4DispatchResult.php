@@ -20,7 +20,8 @@ final readonly class As4DispatchResult
         public As4ReceiptSignal|As4ErrorSignal|null $signal,
         /** True when the receiver returned HTTP 200 or 202 */
         public bool $success,
-    ) {}
+    ) {
+    }
 
     /** Returns true when the response contained a failure-severity ebMS3 error signal. */
     public function hasError(): bool

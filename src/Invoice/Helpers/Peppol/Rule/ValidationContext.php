@@ -37,5 +37,6 @@ final class ValidationContext
 
         /** Profile number extracted from cbc:ProfileID (e.g. '01'), or translated 'unknown'. */
         public readonly string|null $profile,
-    ) {}
+    ) {
+    }
 }

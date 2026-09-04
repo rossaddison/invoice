@@ -260,8 +260,10 @@ return [
         ->middleware(RateLimiter::perIp(2, 'forgot_route'))
         ->action([ForgotPasswordController::class, 'forgot'])
         ->name('auth/forgotpassword'),
-    Route::methods([$mG, $mP],
-            '/resetpassword/resetpassword/{token}')
+    Route::methods(
+        [$mG, $mP],
+        '/resetpassword/resetpassword/{token}'
+    )
         // Global path counter — 10 POSTs per 60 s; token gate makes this low-traffic
         ->middleware(RateLimiter::global(10))
         // Per real-IP via CF-Connecting-IP; CAS fail → 429
@@ -303,7 +305,8 @@ return [
                 ->name('api/info/v1')
                 ->action(function (DRFI $responseFactory) {
                     return $responseFactory->createResponse(
-                            ['version' => '1.0', 'author' => 'yiisoft']);
+                        ['version' => '1.0', 'author' => 'yiisoft']
+                    );
                 }),
             Route::get('/info/v2')
                 ->name('api/info/v2')

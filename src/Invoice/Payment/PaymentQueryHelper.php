@@ -14,9 +14,10 @@ use Yiisoft\Router\CurrentRoute;
 
 final class PaymentQueryHelper
 {
-    public static function payment(CurrentRoute $currentRoute,
-                                    PaymentRepository $payR): ?Payment
-    {
+    public static function payment(
+        CurrentRoute $currentRoute,
+        PaymentRepository $payR
+    ): ?Payment {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
             return $payR->repoPaymentquery((int) $id);
@@ -39,9 +40,10 @@ final class PaymentQueryHelper
      * @param Sort $sort
      * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
-    public static function paymentsWithSort(PaymentRepository $payR,
-                                    Sort $sort): SortableDataInterface
-    {
+    public static function paymentsWithSort(
+        PaymentRepository $payR,
+        Sort $sort
+    ): SortableDataInterface {
         return $payR->findAllPreloaded()->withSort($sort);
     }
 
@@ -51,9 +53,11 @@ final class PaymentQueryHelper
      * @param Sort $sort
      * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
-    public static function paymentsWithSortGuest(PaymentRepository $payR,
-                    array $client_id_array, Sort $sort): SortableDataInterface
-    {
+    public static function paymentsWithSortGuest(
+        PaymentRepository $payR,
+        array $client_id_array,
+        Sort $sort
+    ): SortableDataInterface {
         return $payR->findOneUserManyClientsPayments($client_id_array)
                                       ->withSort($sort);
     }
@@ -73,9 +77,10 @@ final class PaymentQueryHelper
      * @param Sort $sort
      * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
-    public static function merchantWithSort(MerchantRepository $merchR,
-                                    Sort $sort): SortableDataInterface
-    {
+    public static function merchantWithSort(
+        MerchantRepository $merchR,
+        Sort $sort
+    ): SortableDataInterface {
         return $merchR->findAllPreloaded()->withSort($sort);
     }
 
@@ -87,8 +92,9 @@ final class PaymentQueryHelper
      */
     public static function merchantWithSortGuest(
         MerchantRepository $merchR,
-            array $client_id_array, Sort $sort): SortableDataInterface
-    {
+        array $client_id_array,
+        Sort $sort
+    ): SortableDataInterface {
         return $merchR->findOneUserManyClientsMerchantResponses($client_id_array)
                                                  ->withSort($sort);
     }
@@ -98,9 +104,10 @@ final class PaymentQueryHelper
      * @param PaymentCustomRepository $pcR
      * @return array
      */
-    public static function paymentCustomValues(int $payment_id,
-                                        PaymentCustomRepository $pcR): array
-    {
+    public static function paymentCustomValues(
+        int $payment_id,
+        PaymentCustomRepository $pcR
+    ): array {
         $custom_field_form_values = [];
         if ($pcR->repoPaymentCount($payment_id) > 0) {
             $payment_custom_fields = $pcR->repoFields($payment_id);

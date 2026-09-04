@@ -13,7 +13,7 @@ use Cycle\Annotated\Annotation\Entity;
 class CategoryPrimary
 {
     use RequireId;
-    
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -23,7 +23,7 @@ class CategoryPrimary
     ) {
         $this->name = $name;
     }
-    
+
     public function reqId(): int
     {
         return $this->requireId($this->id, 'CategoryPrimary');

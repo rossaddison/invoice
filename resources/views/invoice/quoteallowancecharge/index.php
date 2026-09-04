@@ -44,7 +44,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ??
         'quoteallowancecharge/index'))
     ->id('btn-reset')
@@ -60,12 +60,15 @@ $columns = [
     new DataColumn(
         property: 'filterQuoteNumber',
         header: $translator->translate('invoice'),
-        content: static function (QuoteAllowanceCharge $model)
-            use ($urlGenerator): A {
-                return Html::a(
-                    $model->getQuote()?->getNumber() ?? '#',
-                        $urlGenerator->generate('quote/view',
-                            ['id' => $model->reqQuoteId()]), []);
+        content: static function (QuoteAllowanceCharge $model) use ($urlGenerator): A {
+            return Html::a(
+                $model->getQuote()?->getNumber() ?? '#',
+                $urlGenerator->generate(
+                    'quote/view',
+                    ['id' => $model->reqQuoteId()]
+                ),
+                []
+            );
         },
         encodeContent: false,
         filter: $optionsDataQuoteNumberDropDownFilter,
@@ -105,10 +108,11 @@ $columns = [
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
-            url: static function (QuoteAllowanceCharge $model)
-                use ($urlGenerator): string {
-                return $urlGenerator->generate('quoteallowancecharge/view',
-                        ['id' => $model->reqId()]);
+            url: static function (QuoteAllowanceCharge $model) use ($urlGenerator): string {
+                return $urlGenerator->generate(
+                    'quoteallowancecharge/view',
+                    ['id' => $model->reqId()]
+                );
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -117,10 +121,11 @@ $columns = [
         ),
         new ActionButton(
             content: '✎',
-            url: static function (QuoteAllowanceCharge $model)
-                use ($urlGenerator): string {
-                return $urlGenerator->generate('quoteallowancecharge/edit',
-                    ['id' => $model->reqId()]);
+            url: static function (QuoteAllowanceCharge $model) use ($urlGenerator): string {
+                return $urlGenerator->generate(
+                    'quoteallowancecharge/edit',
+                    ['id' => $model->reqId()]
+                );
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -129,22 +134,25 @@ $columns = [
         ),
         new ActionButton(
             content: '❌',
-            url: static function (QuoteAllowanceCharge $model)
-                use ($urlGenerator): string {
-                return $urlGenerator->generate('quoteallowancecharge/delete',
-                     ['id' => $model->reqId()]);
+            url: static function (QuoteAllowanceCharge $model) use ($urlGenerator): string {
+                return $urlGenerator->generate(
+                    'quoteallowancecharge/delete',
+                    ['id' => $model->reqId()]
+                );
             },
             attributes: [
                 'title' => $translator->translate('delete'),
                 'onclick' => "return confirm(" . "'" . $translator->translate(
-                    'delete.record.warning') . "');",
+                    'delete.record.warning'
+                ) . "');",
             ],
         ),
     ]),
 ];
 
 $toolbarString =  new Form()->post(
-    $urlGenerator->generate('quoteallowancecharge/index'))->csrf($csrf)->open()
+    $urlGenerator->generate('quoteallowancecharge/index')
+)->csrf($csrf)->open()
     .  new Div()->addClass('float-end m-3')
                 ->content($toolbarReset)
                 ->encode(false)
@@ -155,7 +163,8 @@ $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 
 $sort = Sort::only(
-    ['id', 'quote_id', 'allowance_charge_id', 'amount', 'vat_or_tax'])
+    ['id', 'quote_id', 'allowance_charge_id', 'amount', 'vat_or_tax']
+)
     ->withOrderString($sortString);
 
 $sortedAndPagedPaginator = (new OffsetPaginator($quoteAllowanceCharges))
@@ -195,7 +204,8 @@ echo GridView::widget()
 ->emptyCellAttributes(['style' => 'color:red'])
 ->id('w937-grid')
 ->paginationWidget(
-    $gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
+    $gridComponents->offsetPaginationWidget($sortedAndPagedPaginator)
+)
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])

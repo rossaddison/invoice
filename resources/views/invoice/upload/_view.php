@@ -48,29 +48,29 @@ $selectLabel = static function (array $optionsData, int|string|null $value): str
                     $translator->translate('clients'),
                     $selectLabel($optionsDataClients, $form->getClientId()),
                 );
-                ReadOnlyField::render(
-                    $translator->translate('upload.url.key'),
-                    $form->getUrlKey(),
-                );
-                ReadOnlyField::render(
-                    $translator->translate('upload.filename.original'),
-                    $form->getFileNameOriginal(),
-                );
-                ReadOnlyField::render(
-                    $translator->translate('upload.filename.new'),
-                    $form->getFileNameNew(),
-                );
-                ReadOnlyField::render(
-                    $translator->translate('upload.description'),
-                    $form->getDescription(),
-                );
-                ReadOnlyField::render(
-                    $translator->translate('date'),
-                    $form->getUploadedDate() instanceof \DateTimeImmutable
-                        ? ($form->getUploadedDate())->format('Y-m-d')
-                        : $form->getUploadedDate(),
-                );
-            ?>
+ReadOnlyField::render(
+    $translator->translate('upload.url.key'),
+    $form->getUrlKey(),
+);
+ReadOnlyField::render(
+    $translator->translate('upload.filename.original'),
+    $form->getFileNameOriginal(),
+);
+ReadOnlyField::render(
+    $translator->translate('upload.filename.new'),
+    $form->getFileNameNew(),
+);
+ReadOnlyField::render(
+    $translator->translate('upload.description'),
+    $form->getDescription(),
+);
+ReadOnlyField::render(
+    $translator->translate('date'),
+    $form->getUploadedDate() instanceof \DateTimeImmutable
+        ? ($form->getUploadedDate())->format('Y-m-d')
+        : $form->getUploadedDate(),
+);
+?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

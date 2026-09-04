@@ -41,7 +41,7 @@ $gridSummary = $s->gridSummary(
 $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'payment/index'))
     ->id('btn-reset')
     ->render();
@@ -68,7 +68,9 @@ $columns = [
                     'gateway' => $gateway,
                 ]);
                 $confirmText = sprintf(
-                    $translator->translate('refund.confirm'), $displayName);
+                    $translator->translate('refund.confirm'),
+                    $displayName
+                );
                 $items .= '<li><a class="dropdown-item" href="'
                     . Html::encode($url) . '" onclick="return confirm(\''
                     . Html::encode($confirmText)
@@ -89,7 +91,8 @@ $columns = [
         property: 'paymentDateFilter',
         header: $translator->translate('payment.date'),
         content: static fn (Payment $model): string|DateTimeImmutable => !is_string(
-                $date = $model->getPaymentDate()) ? $date->format('Y-m-d') : '',
+            $date = $model->getPaymentDate()
+        ) ? $date->format('Y-m-d') : '',
         filter: true,
     ),
     new DataColumn(
@@ -110,10 +113,14 @@ $columns = [
         'inv_id',
         header: $translator->translate('invoice'),
         content: static function (Payment $model) use ($urlGenerator): A {
-            return Html::a($model->getInv()?->getNumber() ?? '',
-                    $urlGenerator->generate('inv/view',
-                            ['id' => $model->reqInvId()]),
-                    ['class' => 'text-decoration-none']);
+            return Html::a(
+                $model->getInv()?->getNumber() ?? '',
+                $urlGenerator->generate(
+                    'inv/view',
+                    ['id' => $model->reqInvId()]
+                ),
+                ['class' => 'text-decoration-none']
+            );
         },
         encodeContent: false,
     ),
@@ -197,7 +204,7 @@ $columns = [
 ];
 
 $toolbarString =  new Form()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open()
-. $canEdit && $canView ?  new A()
+. $canEdit && $canView ? new A()
     ->href($urlGenerator->generate('payment/add'))
     ->addClass('btn btn-info')
     ->content('➕')

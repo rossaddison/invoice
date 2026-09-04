@@ -56,7 +56,7 @@ foreach ($uR->findAllPreloaded() as $user) {
     /**
      * @psalm-suppress PossiblyNullArrayOffset $user->reqId()
      */
-    $optionsDataUser[$user->reqId()] = ucfirst($user->getLogin());    
+    $optionsDataUser[$user->reqId()] = ucfirst($user->getLogin());
 }
 echo Field::select($form, 'user_id')
 ->label($translator->translate('users'))

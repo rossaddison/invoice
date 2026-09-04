@@ -85,8 +85,9 @@ trait InvFilterTrait
     }
 
     public function filterInvNumberAndInvAmountTotal(
-            string $invNumber, float $invAmountTotal): EntityReader
-    {
+        string $invNumber,
+        float $invAmountTotal
+    ): EntityReader {
         $select = $this->select();
         $query = $select
                  ->load('invAmount')
@@ -141,14 +142,16 @@ trait InvFilterTrait
     {
         $select = $this->select()
                        ->load(['client']);
-        $query = $select->where('client.client_address_1', 'like',
-            ltrim(rtrim($clientAddress1)) . '%')
+        $query = $select->where(
+            'client.client_address_1',
+            'like',
+            ltrim(rtrim($clientAddress1)) . '%'
+        )
             ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 
-    public function filterDateCreatedLike(string $format, string $dateCreated):
-        EntityReader
+    public function filterDateCreatedLike(string $format, string $dateCreated): EntityReader
     {
         $select = $this->select();
         $dateTimeImmutable =

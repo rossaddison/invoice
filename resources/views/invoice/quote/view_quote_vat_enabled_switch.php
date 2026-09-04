@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html;
-
 use App\Widget\LabelSwitch;
 
 /**
@@ -20,5 +19,4 @@ $s->getSetting('display_vat_enabled_message') === '1'
         $translator->translate('quote.label.switch.off'),
         'quote-view-label-switch-id',
         '16',
-        ) : '';
-?>
+    ) : '';

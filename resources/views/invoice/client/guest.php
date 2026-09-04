@@ -79,8 +79,10 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator): A {
             return   new A()
                     ->content(Html::encode($model->getClientName()))
-                    ->href($urlGenerator->generate('client/view',
-                        ['id' => $model->reqId()]))
+                    ->href($urlGenerator->generate(
+                        'client/view',
+                        ['id' => $model->reqId()]
+                    ))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -92,8 +94,10 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator): A {
             return   new A()
                     ->content(Html::encode($model->getClientSurname() ?? ''))
-                    ->href($urlGenerator->generate('client/view',
-                        ['id' => $model->reqId()]))
+                    ->href($urlGenerator->generate(
+                        'client/view',
+                        ['id' => $model->reqId()]
+                    ))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -124,7 +128,8 @@ $columns = [
              */
             foreach ($invoices as $invoice) {
                 $invoice_amount = ($iaR->repoInvAmountCount(
-                        $invoice->reqId()) > 0 ?
+                    $invoice->reqId()
+                ) > 0 ?
                         $iaR->repoInvquery($invoice->reqId()) : null);
                 if (null !== $invoice_amount
                         && null !== $invoice_amount->getBalance()
@@ -144,9 +149,13 @@ $columns = [
     ),
     new DataColumn(
         'invs',
-        content: static function (Client $model) use ($iR, $iaR,
-        $urlGenerator, $gridComponents): string {
-            $clientId = $model->reqId(); 
+        content: static function (Client $model) use (
+            $iR,
+            $iaR,
+            $urlGenerator,
+            $gridComponents
+        ): string {
+            $clientId = $model->reqId();
             $invoices = $iR->filterGuestClientIdNotDraft($clientId);
             // Initialize a new empty ArrayCollection without the need to
             // create a new entity
@@ -156,7 +165,8 @@ $columns = [
              */
             foreach ($invoices as $invoice) {
                 $invoice_amount = ($iaR->repoInvAmountCount(
-                        $invoice->reqId()) > 0 ?
+                    $invoice->reqId()
+                ) > 0 ?
                         $iaR->repoInvquery($invoice->reqId()) : null);
                 if (null !== $invoice_amount
                         && null !== $invoice_amount->getBalance()
@@ -183,9 +193,10 @@ $columns = [
             . $s->getSetting('currency_symbol')
             . ')',
         content: static function (Client $model) use ($iR, $iaR, $s): string {
-            $clientId = $model->reqId(); 
+            $clientId = $model->reqId();
             return Html::encode($s->formatCurrency(
-                $iR->withTotalBalance($clientId, $iaR)));
+                $iR->withTotalBalance($clientId, $iaR)
+            ));
         },
     ),
 ];

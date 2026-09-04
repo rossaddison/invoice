@@ -20,80 +20,80 @@ $formGroup = ['class' => 'mb-3'];
 $checkbox = ['class' => 'form-check'];
 
 echo H::openTag('div', $row); //1
- echo H::openTag('div', $colMd8); //2
-  echo H::openTag('div', $panel); //3
-   echo H::openTag('div', $panelHead); //4
-    echo $translator->translate('vat');
-   echo H::closeTag('div'); //4
-   echo H::openTag('div', $panelBody); //4
-    echo H::openTag('div', $row); //5
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('div', $checkbox); //8
-        $enableVat = 'settings[enable_vat_registration]';
-        $body[$enableVat] =
-        $s->getSetting('enable_vat_registration');
-        echo H::openTag('input', [
-          'type' => 'hidden',
-          'name' => $enableVat,
-          'value' => '0'
-         ]);
-         echo H::openTag('input', [
-          'type' => 'checkbox',
-          'class' => 'form-check-input',
-          'id' => 'enable_vat_registration',
-          'name' => $enableVat,
-          'value' => '1',
-          'checked' => ($body[$enableVat] == 1)
-          ? 'checked' : null
-         ]);
-         echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'enable_vat_registration']);
-          echo $translator->translate('enable.vat');
-          echo $s->infoIcon('enable_vat_registration');
-         echo H::closeTag('label');
-       echo H::closeTag('div'); //8
-       echo H::openTag('div', $checkbox); //8
-        $displayMsg = 'settings[display_vat_enabled_message]';
-        $body[$displayMsg] =
-        $s->getSetting('display_vat_enabled_message');
-        echo H::openTag('input', [
-          'type' => 'hidden',
-          'name' => $displayMsg,
-          'id' => 'dvem_hidden',
-          'value' => '0'
-         ]);
-         echo H::openTag('input', [
-          'type' => 'checkbox',
-          'class' => 'form-check-input',
-          'name' =>  $displayMsg,
-          'id' => 'dvem_checkbox',
-          'value' => '1',
-          'checked' => ($body[$displayMsg] == 1)
-          ? 'checked' : null
-         ]);
-         echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'dvem_checkbox']);
-          echo $translator->translate('enable.vat.message');
-         echo H::closeTag('label');
-        echo H::openTag('br');
-        echo H::openTag('br');
-        $vW = 'enable.vat.warning.line.';
-        echo H::openTag('p');
-         echo $translator->translate($vW . '1');
-        echo H::closeTag('p');
-        echo H::openTag('p');
-         echo $translator->translate($vW . '2');
-        echo H::closeTag('p');
-        echo H::openTag('p');
-         echo $translator->translate($vW . '3');
-        echo H::closeTag('p');
-        echo H::openTag('p');
-         echo $translator->translate($vW . '4');
-        echo H::closeTag('p');
-       echo H::closeTag('div'); //8
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-   echo H::closeTag('div'); //4
-  echo H::closeTag('div'); //3
- echo H::closeTag('div'); //2
+echo H::openTag('div', $colMd8); //2
+echo H::openTag('div', $panel); //3
+echo H::openTag('div', $panelHead); //4
+echo $translator->translate('vat');
+echo H::closeTag('div'); //4
+echo H::openTag('div', $panelBody); //4
+echo H::openTag('div', $row); //5
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('div', $checkbox); //8
+$enableVat = 'settings[enable_vat_registration]';
+$body[$enableVat] =
+$s->getSetting('enable_vat_registration');
+echo H::openTag('input', [
+  'type' => 'hidden',
+  'name' => $enableVat,
+  'value' => '0'
+ ]);
+echo H::openTag('input', [
+ 'type' => 'checkbox',
+ 'class' => 'form-check-input',
+ 'id' => 'enable_vat_registration',
+ 'name' => $enableVat,
+ 'value' => '1',
+ 'checked' => ($body[$enableVat] == 1)
+ ? 'checked' : null
+]);
+echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'enable_vat_registration']);
+echo $translator->translate('enable.vat');
+echo $s->infoIcon('enable_vat_registration');
+echo H::closeTag('label');
+echo H::closeTag('div'); //8
+echo H::openTag('div', $checkbox); //8
+$displayMsg = 'settings[display_vat_enabled_message]';
+$body[$displayMsg] =
+$s->getSetting('display_vat_enabled_message');
+echo H::openTag('input', [
+  'type' => 'hidden',
+  'name' => $displayMsg,
+  'id' => 'dvem_hidden',
+  'value' => '0'
+ ]);
+echo H::openTag('input', [
+ 'type' => 'checkbox',
+ 'class' => 'form-check-input',
+ 'name' =>  $displayMsg,
+ 'id' => 'dvem_checkbox',
+ 'value' => '1',
+ 'checked' => ($body[$displayMsg] == 1)
+ ? 'checked' : null
+]);
+echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'dvem_checkbox']);
+echo $translator->translate('enable.vat.message');
+echo H::closeTag('label');
+echo H::openTag('br');
+echo H::openTag('br');
+$vW = 'enable.vat.warning.line.';
+echo H::openTag('p');
+echo $translator->translate($vW . '1');
+echo H::closeTag('p');
+echo H::openTag('p');
+echo $translator->translate($vW . '2');
+echo H::closeTag('p');
+echo H::openTag('p');
+echo $translator->translate($vW . '3');
+echo H::closeTag('p');
+echo H::openTag('p');
+echo $translator->translate($vW . '4');
+echo H::closeTag('p');
+echo H::closeTag('div'); //8
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::closeTag('div'); //4
+echo H::closeTag('div'); //3
+echo H::closeTag('div'); //2
 echo H::closeTag('div'); //1

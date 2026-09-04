@@ -25,7 +25,8 @@ final class As4InvoiceImportService implements As4PayloadHandlerInterface
         private readonly InvItemRepositoryInterface      $invItemRepository,
         private readonly SettingRepositoryInterface $settingRepository,
         private readonly LoggerInterface        $logger,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function handle(string $payloadXml, string $senderPartyId, string $action): void

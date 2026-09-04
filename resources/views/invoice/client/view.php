@@ -67,55 +67,56 @@ $cssBiPlus = 'bi bi-plus';
 echo H::tag('h1', H::encode($title));
 
 echo H::openTag('div', ['id' => 'headerbar']); //0
- echo H::tag('h1', H::encode($clientHelper->formatClient($client)), ['class' => 'headerbar-title']);
- echo H::openTag('div', ['class' => 'headerbar-item float-end']); //1
-  echo H::openTag('div', ['class' => 'btn-group btn-group-sm']); //2
-   echo (new A())
-    ->content(H::tag('i', '', ['class' => 'bi bi-file-earmark-text']) . $translator->translate('create.quote'))
-    ->href('#modal-add-quote')
-    ->encode(false)
-    ->addAttributes(['class' => $cssBtnSuccess, 'data-bs-toggle' => 'modal'])
-    ->render();
-   echo (new A())
-    ->content(H::tag('i', '', ['class' => 'bi bi-file-earmark-text']) . $translator->translate('create.invoice'))
-    ->href('#modal-add-inv')
-    ->encode(false)
-    ->addAttributes(['class' => $cssBtnSuccess, 'data-bs-toggle' => 'modal'])
-    ->render();
-   echo (new A())
-    ->content(H::tag('i', '', ['class' => 'bi bi-arrow-repeat']) . ' ' . $translator->translate('recurring.setup'))
-    ->href($urlGenerator->generate('invrecurring/create-from-productclient', ['client_id' => $clientId]))
-    ->encode(false)
-    ->addAttributes(['class' => 'btn btn-outline-secondary'])
-    ->render();
-   if ($cpR->repoClientCount($clientId) === 0 && ($clientId > 0)) {
+echo H::tag('h1', H::encode($clientHelper->formatClient($client)), ['class' => 'headerbar-title']);
+echo H::openTag('div', ['class' => 'headerbar-item float-end']); //1
+echo H::openTag('div', ['class' => 'btn-group btn-group-sm']); //2
+echo (new A())
+ ->content(H::tag('i', '', ['class' => 'bi bi-file-earmark-text']) . $translator->translate('create.quote'))
+ ->href('#modal-add-quote')
+ ->encode(false)
+ ->addAttributes(['class' => $cssBtnSuccess, 'data-bs-toggle' => 'modal'])
+ ->render();
+echo (new A())
+ ->content(H::tag('i', '', ['class' => 'bi bi-file-earmark-text']) . $translator->translate('create.invoice'))
+ ->href('#modal-add-inv')
+ ->encode(false)
+ ->addAttributes(['class' => $cssBtnSuccess, 'data-bs-toggle' => 'modal'])
+ ->render();
+echo (new A())
+ ->content(H::tag('i', '', ['class' => 'bi bi-arrow-repeat']) . ' ' . $translator->translate('recurring.setup'))
+ ->href($urlGenerator->generate('invrecurring/create-from-productclient', ['client_id' => $clientId]))
+ ->encode(false)
+ ->addAttributes(['class' => 'btn btn-outline-secondary'])
+ ->render();
+if ($cpR->repoClientCount($clientId) === 0 && ($clientId > 0)) {
     echo (new A())
      ->content(H::tag('i', '', ['class' => $cssBiPlus]) . ' ' . $translator->translate('client.peppol.add'))
      ->href($urlGenerator->generate('clientpeppol/add', ['_language' => 'en', 'client_id' => $clientId]))
      ->encode(false)
      ->addAttributes(['class' => 'btn btn-outline-info'])
      ->render();
-   }
-   if ($cpR->repoClientCount($clientId) > 0 && ($clientId > 0)) {
+}
+if ($cpR->repoClientCount($clientId) > 0 && ($clientId > 0)) {
     echo (new A())
      ->content(H::tag('i', '', ['class' => 'bi bi-pencil-square']) . ' ' . $translator->translate('client.peppol.edit'))
      ->href($urlGenerator->generate('clientpeppol/edit', ['client_id' => $clientId]))
      ->encode(false)
      ->addAttributes(['class' => 'btn btn-outline-warning'])
      ->render();
-   }
-   echo (new A())
-    ->content(H::tag('i', '', ['class' => 'bi bi-pencil-square']) . $translator->translate('edit'))
-    ->href($urlGenerator->generate('client/edit', ['id' => $clientId, 'origin' => 'edit']))
-    ->encode(false)
-    ->addAttributes(['class' => 'btn btn-outline-warning'])
-    ->render();
-   echo (new A())
-    ->content(H::tag('i', '', ['class' => $cssBiPlus]) . $translator->translate('client.postaladdress.add'))
-    ->href($urlGenerator->generate(
-       'postaladdress/add',
-       ['client_id' => $clientId],
-       [
+}
+echo (new A())
+ ->content(H::tag('i', '', ['class' => 'bi bi-pencil-square']) . $translator->translate('edit'))
+ ->href($urlGenerator->generate('client/edit', ['id' => $clientId, 'origin' => 'edit']))
+ ->encode(false)
+ ->addAttributes(['class' => 'btn btn-outline-warning'])
+ ->render();
+echo (new A())
+ ->content(H::tag('i', '', ['class' => $cssBiPlus]) . $translator->translate('client.postaladdress.add'))
+ ->href(
+     $urlGenerator->generate(
+         'postaladdress/add',
+         ['client_id' => $clientId],
+         [
         /**
          * Related logic: see Yiisoft\Router\UrlGeneratorInterface function generate $queryParameters
          * Purpose: Use origin and origin_id to generate return url to client view after user has
@@ -126,41 +127,42 @@ echo H::openTag('div', ['id' => 'headerbar']); //0
         'origin_id' => $clientId,
         'action' => 'view',
        ]
-      )
-    )
-    ->encode(false)
-    ->addAttributes(['class' => 'btn btn-outline-primary'])
-    ->render();
-   echo (new A())
-    ->content(H::tag('i', '', ['class' => $cssBiPlus]) . $translator->translate('delivery.location.add'))
-    ->href($urlGenerator->generate(
-       'del/add',
-       ['client_id' => $clientId],
-       ['origin' => 'client', 'origin_id' => $clientId, 'action' => 'view']
-      )
-    )
-    ->encode(false)
-    ->addAttributes(['class' => $cssBtnSuccess])
-    ->render();
-   if ($s->getSetting('homecare_auto_invoice_enabled') === '1') {
+     )
+ )
+ ->encode(false)
+ ->addAttributes(['class' => 'btn btn-outline-primary'])
+ ->render();
+echo (new A())
+ ->content(H::tag('i', '', ['class' => $cssBiPlus]) . $translator->translate('delivery.location.add'))
+ ->href(
+     $urlGenerator->generate(
+         'del/add',
+         ['client_id' => $clientId],
+         ['origin' => 'client', 'origin_id' => $clientId, 'action' => 'view']
+     )
+ )
+ ->encode(false)
+ ->addAttributes(['class' => $cssBtnSuccess])
+ ->render();
+if ($s->getSetting('homecare_auto_invoice_enabled') === '1') {
     echo (new A())
      ->content(H::tag('i', '', ['class' => 'bi bi-qr-code']) . ' ' . $translator->translate('print.qr.code'))
      ->href($urlGenerator->generate('client/printQrCode', ['id' => $clientId]))
      ->encode(false)
      ->addAttributes(['class' => 'btn btn-outline-secondary', 'target' => '_blank'])
      ->render();
-   }
-   echo (new A())
-    ->content(H::tag('i', '', ['class' => 'bi bi-trash']) . ' ' . $translator->translate('delete'))
-    ->href($urlGenerator->generate('client/delete', ['id' => $clientId]))
-    ->encode(false)
-    ->addAttributes([
-     'class' => 'btn btn-outline-danger',
-     'onclick' => 'return confirm(' . H::encode("'" . $translator->translate('delete.client.warning') . "'") . ')',
-    ])
-    ->render();
-  echo H::closeTag('div'); //2
- echo H::closeTag('div'); //1
+}
+echo (new A())
+ ->content(H::tag('i', '', ['class' => 'bi bi-trash']) . ' ' . $translator->translate('delete'))
+ ->href($urlGenerator->generate('client/delete', ['id' => $clientId]))
+ ->encode(false)
+ ->addAttributes([
+  'class' => 'btn btn-outline-danger',
+  'onclick' => 'return confirm(' . H::encode("'" . $translator->translate('delete.client.warning') . "'") . ')',
+ ])
+ ->render();
+echo H::closeTag('div'); //2
+echo H::closeTag('div'); //1
 echo H::closeTag('div'); //0
 
 // Nav tabs
@@ -194,329 +196,337 @@ $tabs = [
  * @var array{id:string,target:string,extra:string,label:string} $tab
  */
 foreach ($tabs as $tab) {
- echo H::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); //1
-  echo H::tag('button', $translator->translate($tab['label']), [
-   'class' => 'nav-link' . $tab['extra'],
-   'id' => $tab['id'],
-   'data-bs-toggle' => 'tab',
-   'data-bs-target' => $tab['target'],
-  ]);
- echo H::closeTag('li'); //1
+    echo H::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); //1
+    echo H::tag('button', $translator->translate($tab['label']), [
+     'class' => 'nav-link' . $tab['extra'],
+     'id' => $tab['id'],
+     'data-bs-toggle' => 'tab',
+     'data-bs-target' => $tab['target'],
+    ]);
+    echo H::closeTag('li'); //1
 }
 echo H::closeTag('ul'); //0
 
 // Tab content
 echo H::openTag('div', ['id' => 'content', 'class' => 'tabs-below p-0']); //0
- echo H::openTag('div', ['class' => 'tab-content p-0']); //1
+echo H::openTag('div', ['class' => 'tab-content p-0']); //1
 
-  // Details tab
-  echo H::openTag('div', ['id' => 'clientDetails', 'class' => 'tab-pane tab-rich-content active']); //2
-   echo $s->getSetting('disable_flash_messages') === '0' ? $alert : '';
-   echo H::openTag('div', ['class' => 'row']); //3
-    echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-6']); //4
-     echo H::tag('h3', H::encode($clientHelper->formatClient($client)));
-     echo H::openTag('p'); //5
-      echo $partial_client_address;
-     echo H::closeTag('p'); //5
-     echo H::openTag('p'); //5
-      echo H::openTag('table', ['class' => 'table table-bordered m-0']); //6
-       $i = 1;
-       /**
-        * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
-        */
-       foreach ($custom_fields as $custom_field) {
-        if ($custom_field->getLocation() !== 1) {
-         continue;
-        }
-        $column = $custom_field->getLabel();
-        $value  = $cvH->formValue($clientCustomValues, $custom_field->reqId());
-        echo H::openTag('tr'); //7
-         echo H::tag('th', H::encode($column), ['id' => 'cf-col' . $i]);
-         echo H::tag('td', H::encode($value), ['id' => 'cf-val' . $i]);
-        echo H::closeTag('tr'); //7
-        $i++;
-       }
-      echo H::closeTag('table'); //6
-     echo H::closeTag('p'); //5
-    echo H::closeTag('div'); //4
-    echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-6']); //4
-     echo H::openTag('table', ['class' => 'table table-bordered m-0']); //5
-      echo H::openTag('tr'); //6
-       echo H::tag('th', $translator->translate('language'), ['id' => 'language']);
-       echo H::tag('td', ucfirst($client->getClientLanguage() ?? ''), ['class' => $cssTdAmount]);
-      echo H::closeTag('tr'); //6
-      echo H::openTag('tr'); //6
-       echo H::tag('th', $translator->translate('total.billed'), ['id' => 'total-billed']);
-       echo H::tag('td', $s->formatCurrency($iR->withTotal($clientId, $iaR)),
-        ['class' => $cssTdAmount]
-       );
-      echo H::closeTag('tr'); //6
-      echo H::openTag('tr'); //6
-       echo H::tag('th', $translator->translate('total.paid'), ['id' => 'total-paid']);
-       echo H::tag('td', $s->formatCurrency($iR->withTotalPaid($clientId, $iaR)),
-        ['class' => $cssTdAmount]
-       );
-      echo H::closeTag('tr'); //6
-      echo H::openTag('tr'); //6
-       echo H::tag('th', $translator->translate('total.balance'), ['id' => 'total-balance']);
-       echo H::tag('td', $s->formatCurrency($iR->withTotalBalance($clientId, $iaR)),
-        ['class' => $cssTdAmount]
-       );
-      echo H::closeTag('tr'); //6
-     echo H::closeTag('table'); //5
-    echo H::closeTag('div'); //4
-   echo H::closeTag('div'); //3
+// Details tab
+echo H::openTag('div', ['id' => 'clientDetails', 'class' => 'tab-pane tab-rich-content active']); //2
+echo $s->getSetting('disable_flash_messages') === '0' ? $alert : '';
+echo H::openTag('div', ['class' => 'row']); //3
+echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-6']); //4
+echo H::tag('h3', H::encode($clientHelper->formatClient($client)));
+echo H::openTag('p'); //5
+echo $partial_client_address;
+echo H::closeTag('p'); //5
+echo H::openTag('p'); //5
+echo H::openTag('table', ['class' => 'table table-bordered m-0']); //6
+$i = 1;
+/**
+ * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
+ */
+foreach ($custom_fields as $custom_field) {
+    if ($custom_field->getLocation() !== 1) {
+        continue;
+    }
+    $column = $custom_field->getLabel();
+    $value  = $cvH->formValue($clientCustomValues, $custom_field->reqId());
+    echo H::openTag('tr'); //7
+    echo H::tag('th', H::encode($column), ['id' => 'cf-col' . $i]);
+    echo H::tag('td', H::encode($value), ['id' => 'cf-val' . $i]);
+    echo H::closeTag('tr'); //7
+    $i++;
+}
+echo H::closeTag('table'); //6
+echo H::closeTag('p'); //5
+echo H::closeTag('div'); //4
+echo H::openTag('div', ['class' => 'col-12 col-sm-6 col-md-6']); //4
+echo H::openTag('table', ['class' => 'table table-bordered m-0']); //5
+echo H::openTag('tr'); //6
+echo H::tag('th', $translator->translate('language'), ['id' => 'language']);
+echo H::tag('td', ucfirst($client->getClientLanguage() ?? ''), ['class' => $cssTdAmount]);
+echo H::closeTag('tr'); //6
+echo H::openTag('tr'); //6
+echo H::tag('th', $translator->translate('total.billed'), ['id' => 'total-billed']);
+echo H::tag(
+    'td',
+    $s->formatCurrency($iR->withTotal($clientId, $iaR)),
+    ['class' => $cssTdAmount]
+);
+echo H::closeTag('tr'); //6
+echo H::openTag('tr'); //6
+echo H::tag('th', $translator->translate('total.paid'), ['id' => 'total-paid']);
+echo H::tag(
+    'td',
+    $s->formatCurrency($iR->withTotalPaid($clientId, $iaR)),
+    ['class' => $cssTdAmount]
+);
+echo H::closeTag('tr'); //6
+echo H::openTag('tr'); //6
+echo H::tag('th', $translator->translate('total.balance'), ['id' => 'total-balance']);
+echo H::tag(
+    'td',
+    $s->formatCurrency($iR->withTotalBalance($clientId, $iaR)),
+    ['class' => $cssTdAmount]
+);
+echo H::closeTag('tr'); //6
+echo H::closeTag('table'); //5
+echo H::closeTag('div'); //4
+echo H::closeTag('div'); //3
 
-   echo H::tag('hr', '');
+echo H::tag('hr', '');
 
-   echo H::openTag('div', ['class' => 'row']); //3
-    echo H::openTag('div', ['class' => $cssColMd6]); //4
-     echo H::openTag('div', ['class' => $cssCardNoMargin]); //5
-      echo H::tag('div', $translator->translate('delivery.location.client'), ['class' => $cssCardHeader]);
-      echo H::openTag('div', ['class' => $cssCardBodyTableContent]); //6
-       echo $delivery_locations;
-      echo H::closeTag('div'); //6
-     echo H::closeTag('div'); //5
-    echo H::closeTag('div'); //4
-   echo H::closeTag('div'); //3
+echo H::openTag('div', ['class' => 'row']); //3
+echo H::openTag('div', ['class' => $cssColMd6]); //4
+echo H::openTag('div', ['class' => $cssCardNoMargin]); //5
+echo H::tag('div', $translator->translate('delivery.location.client'), ['class' => $cssCardHeader]);
+echo H::openTag('div', ['class' => $cssCardBodyTableContent]); //6
+echo $delivery_locations;
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::closeTag('div'); //4
+echo H::closeTag('div'); //3
 
-   echo H::tag('hr', '');
+echo H::tag('hr', '');
 
-   echo H::openTag('div', ['class' => 'row']); //3
-    echo H::openTag('div', ['class' => $cssColMd6]); //4
-     echo H::openTag('div', ['class' => $cssCardNoMargin]); //5
-      echo H::tag('div', $translator->translate('contact.information'), ['class' => $cssCardHeader]);
-      echo H::openTag('div', ['class' => $cssCardBodyTableContent]); //6
-       echo H::openTag('table', ['class' => $cssTableNoMargin]); //7
-        if ($client->getClientEmail()) {
-         echo H::openTag('tr'); //8
-          echo H::tag('th', $translator->translate('email'));
-          echo H::tag('td', H::mailto($client->getClientEmail()));
-         echo H::closeTag('tr'); //8
-        }
-        if (strlen($client->getClientPhone() ?? '') > 0) {
-         echo H::openTag('tr'); //8
-          echo H::tag('th', $translator->translate('phone'));
-          echo H::tag('td', H::encode($client->getClientPhone()));
-         echo H::closeTag('tr'); //8
-        }
-        if (strlen($client->getClientMobile() ?? '') > 0) {
-         echo H::openTag('tr'); //8
-          echo H::tag('th', $translator->translate('mobile'));
-          echo H::tag('td', H::encode($client->getClientMobile()));
-         echo H::closeTag('tr'); //8
-        }
-        if (strlen($client->getClientFax() ?? '') > 0) {
-         echo H::openTag('tr'); //8
-          echo H::tag('th', $translator->translate('fax'));
-          echo H::tag('td', H::encode($client->getClientFax()));
-         echo H::closeTag('tr'); //8
-        }
-        if (strlen($client->getClientWeb() ?? '') > 0) {
-         $clientWeb = $client->getClientWeb() ?? 'https://no_web_page.com';
-         echo H::openTag('tr'); //8
-          echo H::tag('th', $translator->translate('web'));
-          echo H::tag('td',
-           new A()->content($clientWeb)->href($clientWeb)->addAttributes(['target' => '_blank'])->render()
-          );
-         echo H::closeTag('tr'); //8
-        }
-        /**
-         * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
-         */
-        foreach ($custom_fields as $custom_field) {
-         if ($custom_field->getLocation() !== 2) {
-          continue;
-         }
-         $column = $custom_field->getLabel();
-         $value  = $cvH->formValue($clientCustomValues, $custom_field->reqId());
-         echo H::openTag('tr'); //8
-          echo H::tag('th', H::encode($column));
-          echo H::tag('td', H::encode($value));
-         echo H::closeTag('tr'); //8
-        }
-       echo H::closeTag('table'); //7
-      echo H::closeTag('div'); //6
-     echo H::closeTag('div'); //5
-    echo H::closeTag('div'); //4
+echo H::openTag('div', ['class' => 'row']); //3
+echo H::openTag('div', ['class' => $cssColMd6]); //4
+echo H::openTag('div', ['class' => $cssCardNoMargin]); //5
+echo H::tag('div', $translator->translate('contact.information'), ['class' => $cssCardHeader]);
+echo H::openTag('div', ['class' => $cssCardBodyTableContent]); //6
+echo H::openTag('table', ['class' => $cssTableNoMargin]); //7
+if ($client->getClientEmail()) {
+    echo H::openTag('tr'); //8
+    echo H::tag('th', $translator->translate('email'));
+    echo H::tag('td', H::mailto($client->getClientEmail()));
+    echo H::closeTag('tr'); //8
+}
+if (strlen($client->getClientPhone() ?? '') > 0) {
+    echo H::openTag('tr'); //8
+    echo H::tag('th', $translator->translate('phone'));
+    echo H::tag('td', H::encode($client->getClientPhone()));
+    echo H::closeTag('tr'); //8
+}
+if (strlen($client->getClientMobile() ?? '') > 0) {
+    echo H::openTag('tr'); //8
+    echo H::tag('th', $translator->translate('mobile'));
+    echo H::tag('td', H::encode($client->getClientMobile()));
+    echo H::closeTag('tr'); //8
+}
+if (strlen($client->getClientFax() ?? '') > 0) {
+    echo H::openTag('tr'); //8
+    echo H::tag('th', $translator->translate('fax'));
+    echo H::tag('td', H::encode($client->getClientFax()));
+    echo H::closeTag('tr'); //8
+}
+if (strlen($client->getClientWeb() ?? '') > 0) {
+    $clientWeb = $client->getClientWeb() ?? 'https://no_web_page.com';
+    echo H::openTag('tr'); //8
+    echo H::tag('th', $translator->translate('web'));
+    echo H::tag(
+        'td',
+        new A()->content($clientWeb)->href($clientWeb)->addAttributes(['target' => '_blank'])->render()
+    );
+    echo H::closeTag('tr'); //8
+}
+/**
+ * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
+ */
+foreach ($custom_fields as $custom_field) {
+    if ($custom_field->getLocation() !== 2) {
+        continue;
+    }
+    $column = $custom_field->getLabel();
+    $value  = $cvH->formValue($clientCustomValues, $custom_field->reqId());
+    echo H::openTag('tr'); //8
+    echo H::tag('th', H::encode($column));
+    echo H::tag('td', H::encode($value));
+    echo H::closeTag('tr'); //8
+}
+echo H::closeTag('table'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::closeTag('div'); //4
 
-    echo H::openTag('div', ['class' => $cssColMd6]); //4
-     echo H::openTag('div', ['class' => $cssCardNoMargin]); //5
-      echo H::tag('div', $translator->translate('tax.information'), ['class' => $cssCardHeader]);
-      echo H::openTag('div', ['class' => $cssCardBodyTableContent]); //6
-       echo H::openTag('table', ['class' => $cssTableNoMargin]); //7
-        if ($client->getClientVatId()) {
-         echo H::openTag('tr'); //8
-          echo H::tag('th', $translator->translate('vat.id'));
-          echo H::tag('td', H::encode($client->getClientVatId()));
-         echo H::closeTag('tr'); //8
-        }
-        $clientTaxCode = $client->getClientTaxCode() ?? '';
-        if (strlen($clientTaxCode) > 0) {
-         echo H::openTag('tr'); //8
-          echo H::tag('th', $translator->translate('tax.code'));
-          echo H::tag('td', H::encode($clientTaxCode));
-         echo H::closeTag('tr'); //8
-        }
-        /**
-         * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
-         */
-        foreach ($custom_fields as $custom_field) {
-         if ($custom_field->getLocation() !== 4) {
-          continue;
-         }
-         $column = $custom_field->getLabel();
-         $value  = $cvH->formValue($clientCustomValues, $custom_field->reqId());
-         echo H::openTag('tr'); //8
-          echo H::tag('th', H::encode($column));
-          echo H::tag('td', H::encode($value));
-         echo H::closeTag('tr'); //8
-        }
-       echo H::closeTag('table'); //7
-      echo H::closeTag('div'); //6
-     echo H::closeTag('div'); //5
-    echo H::closeTag('div'); //4
-   echo H::closeTag('div'); //3
+echo H::openTag('div', ['class' => $cssColMd6]); //4
+echo H::openTag('div', ['class' => $cssCardNoMargin]); //5
+echo H::tag('div', $translator->translate('tax.information'), ['class' => $cssCardHeader]);
+echo H::openTag('div', ['class' => $cssCardBodyTableContent]); //6
+echo H::openTag('table', ['class' => $cssTableNoMargin]); //7
+if ($client->getClientVatId()) {
+    echo H::openTag('tr'); //8
+    echo H::tag('th', $translator->translate('vat.id'));
+    echo H::tag('td', H::encode($client->getClientVatId()));
+    echo H::closeTag('tr'); //8
+}
+$clientTaxCode = $client->getClientTaxCode() ?? '';
+if (strlen($clientTaxCode) > 0) {
+    echo H::openTag('tr'); //8
+    echo H::tag('th', $translator->translate('tax.code'));
+    echo H::tag('td', H::encode($clientTaxCode));
+    echo H::closeTag('tr'); //8
+}
+/**
+ * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
+ */
+foreach ($custom_fields as $custom_field) {
+    if ($custom_field->getLocation() !== 4) {
+        continue;
+    }
+    $column = $custom_field->getLabel();
+    $value  = $cvH->formValue($clientCustomValues, $custom_field->reqId());
+    echo H::openTag('tr'); //8
+    echo H::tag('th', H::encode($column));
+    echo H::tag('td', H::encode($value));
+    echo H::closeTag('tr'); //8
+}
+echo H::closeTag('table'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::closeTag('div'); //4
+echo H::closeTag('div'); //3
 
-   if ($client->getClientSurname() !== '') {
+if ($client->getClientSurname() !== '') {
     echo H::tag('hr', '');
     echo H::openTag('div', ['class' => 'row']); //3
-     echo H::openTag('div', ['class' => $cssColMd6]); //4
-      echo H::openTag('div', ['class' => 'card']); //5
-       echo H::tag('div', $translator->translate('personal.information'), ['class' => $cssCardHeader]);
-       echo H::openTag('div', ['class' => $cssCardBodyTableContent]); //6
-        echo H::openTag('table', ['class' => $cssTableNoMargin]); //7
-         echo H::openTag('tr'); //8
-          echo H::tag('th', $translator->translate('birthdate'));
-          $clientBirthdate = $client->getClientBirthdate();
-          echo H::tag('td',
-           !is_string($clientBirthdate) && null !== $clientBirthdate
+    echo H::openTag('div', ['class' => $cssColMd6]); //4
+    echo H::openTag('div', ['class' => 'card']); //5
+    echo H::tag('div', $translator->translate('personal.information'), ['class' => $cssCardHeader]);
+    echo H::openTag('div', ['class' => $cssCardBodyTableContent]); //6
+    echo H::openTag('table', ['class' => $cssTableNoMargin]); //7
+    echo H::openTag('tr'); //8
+    echo H::tag('th', $translator->translate('birthdate'));
+    $clientBirthdate = $client->getClientBirthdate();
+    echo H::tag(
+        'td',
+        !is_string($clientBirthdate) && null !== $clientBirthdate
             ? $clientBirthdate->format('Y-m-d') : ''
-          );
-         echo H::closeTag('tr'); //8
-         echo H::openTag('tr'); //8
-          echo H::tag('th', $translator->translate('gender'));
-          $clientGender = $client->getClientGender();
-          echo H::tag('td', $clientHelper->formatGender($clientGender, $translator));
-         echo H::closeTag('tr'); //8
-         /**
-          * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
-          */
-         foreach ($custom_fields as $custom_field) {
-          if ($custom_field->getLocation() !== 3) {
-           continue;
-          }
-          $cvH->printFieldForView($custom_field, $clientCustomForm, $clientCustomValues);
-         }
-        echo H::closeTag('table'); //7
-       echo H::closeTag('div'); //6
-      echo H::closeTag('div'); //5
-     echo H::closeTag('div'); //4
+    );
+    echo H::closeTag('tr'); //8
+    echo H::openTag('tr'); //8
+    echo H::tag('th', $translator->translate('gender'));
+    $clientGender = $client->getClientGender();
+    echo H::tag('td', $clientHelper->formatGender($clientGender, $translator));
+    echo H::closeTag('tr'); //8
+    /**
+     * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
+     */
+    foreach ($custom_fields as $custom_field) {
+        if ($custom_field->getLocation() !== 3) {
+            continue;
+        }
+        $cvH->printFieldForView($custom_field, $clientCustomForm, $clientCustomValues);
+    }
+    echo H::closeTag('table'); //7
+    echo H::closeTag('div'); //6
+    echo H::closeTag('div'); //5
+    echo H::closeTag('div'); //4
     echo H::closeTag('div'); //3
-   }
+}
 
-   if ($custom_fields) {
+if ($custom_fields) {
     echo H::tag('hr', '');
     echo H::openTag('div', ['class' => 'row']); //3
-     echo H::openTag('div', ['class' => $cssColMd6]); //4
-      echo H::openTag('div', ['class' => $cssCardNoMargin]); //5
-       echo H::tag('div', $translator->translate('custom.fields'), ['class' => $cssCardHeader]);
-       echo H::openTag('div', ['class' => $cssCardBodyTableContent]); //6
-        echo H::openTag('table', ['class' => $cssTableNoMargin]); //7
-         $i = 1;
-         /**
-          * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
-          */
-         foreach ($custom_fields as $custom_field) {
-          if ($custom_field->getLocation() !== 0) {
-           continue;
-          }
-          echo H::openTag('tr'); //8
-           echo H::tag('th', '', ['id' => 'client-cf-' . $i]);
-           echo H::openTag('td'); //9
-            $clientCustomForm = new ClientCustomForm();
-            $cvH->printFieldForView($custom_field, $clientCustomForm, $clientCustomValues);
-           echo H::closeTag('td'); //9
-          echo H::closeTag('tr'); //8
-          $i++;
-         }
-        echo H::closeTag('table'); //7
-       echo H::closeTag('div'); //6
-      echo H::closeTag('div'); //5
-     echo H::closeTag('div'); //4
-    echo H::closeTag('div'); //3
-   }
-
-   echo H::tag('hr', '');
-
-   echo H::openTag('div', ['class' => 'row']); //3
     echo H::openTag('div', ['class' => $cssColMd6]); //4
-     echo H::openTag('div', ['class' => $cssCardNoMargin]); //5
-      echo H::tag('div', $translator->translate('notes'), ['class' => $cssCardHeader]);
-      echo H::openTag('div', ['class' => 'card-body']); //6
-       echo H::openTag('div', ['id' => 'notes_list']); //7
-        echo $partial_notes;
-       echo H::closeTag('div'); //7
-       echo new Input()->type('hidden')->name('client_id')->id('client_id')->value((string) $clientId);
-       echo H::openTag('div'); //7
-        echo H::openTag('textarea', [
-         'id' => 'client_note',
-         'class' => 'form-control form-control-lg',
-         'rows' => '2',
-         'style' => 'resize:none',
-        ]); //8
-        echo H::closeTag('textarea'); //8
-        echo H::tag('span', $translator->translate('add.note'), [
-         'id' => 'save_client_note_new',
-         'class' => 'input-text-addon btn btn-info',
-        ]);
-       echo H::closeTag('div'); //7
-      echo H::closeTag('div'); //6
-     echo H::closeTag('div'); //5
+    echo H::openTag('div', ['class' => $cssCardNoMargin]); //5
+    echo H::tag('div', $translator->translate('custom.fields'), ['class' => $cssCardHeader]);
+    echo H::openTag('div', ['class' => $cssCardBodyTableContent]); //6
+    echo H::openTag('table', ['class' => $cssTableNoMargin]); //7
+    $i = 1;
+    /**
+     * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
+     */
+    foreach ($custom_fields as $custom_field) {
+        if ($custom_field->getLocation() !== 0) {
+            continue;
+        }
+        echo H::openTag('tr'); //8
+        echo H::tag('th', '', ['id' => 'client-cf-' . $i]);
+        echo H::openTag('td'); //9
+        $clientCustomForm = new ClientCustomForm();
+        $cvH->printFieldForView($custom_field, $clientCustomForm, $clientCustomValues);
+        echo H::closeTag('td'); //9
+        echo H::closeTag('tr'); //8
+        $i++;
+    }
+    echo H::closeTag('table'); //7
+    echo H::closeTag('div'); //6
+    echo H::closeTag('div'); //5
     echo H::closeTag('div'); //4
-   echo H::closeTag('div'); //3
-  echo H::closeTag('div'); //2 clientDetails
+    echo H::closeTag('div'); //3
+}
 
-  // Tab panes — quotes
-  $tabPanes = [
-   ['id' => 'clientQuotes',              'role' => 'client-quotes-tab',              'content' => $quote_table],
-   ['id' => 'clientQuotesDraft',         'role' => 'client-quotes-draft-tab',        'content' => $quote_draft_table],
-   ['id' => 'clientQuotesSent',          'role' => 'client-quotes-sent-tab',         'content' => $quote_sent_table],
-   ['id' => 'clientQuotesViewed',        'role' => 'client-quotes-viewed-tab',       'content' => $quote_viewed_table],
-   ['id' => 'clientQuotesApproved',      'role' => 'client-quotes-approved-tab',     'content' => $quote_approved_table],
-   ['id' => 'clientQuotesCancelled',     'role' => 'client-quotes-cancelled-tab',    'content' => $quote_cancelled_table],
-   ['id' => 'clientQuotesRejected',      'role' => 'client-quotes-rejected-tab',     'content' => $quote_rejected_table],
-   ['id' => 'clientInvoices',            'role' => 'client-invoices-tab',            'content' => $invoice_table],
-   ['id' => 'clientInvoicesDraft',       'role' => 'client-invoices-draft-tab',      'content' => $invoice_draft_table],
-   ['id' => 'clientInvoicesSent',        'role' => 'client-invoices-sent-tab',       'content' => $invoice_sent_table],
-   ['id' => 'clientInvoicesViewed',      'role' => 'client-invoices-viewed-tab',     'content' => $invoice_viewed_table],
-   ['id' => 'clientInvoicesPaid',        'role' => 'client-invoices-paid-tab',       'content' => $invoice_paid_table],
-   ['id' => 'clientInvoicesOverdue',     'role' => 'client-invoices-overdue-tab',    'content' => $invoice_overdue_table],
-   ['id' => 'clientInvoicesUnpaid',      'role' => 'client-invoices-unpaid-tab',     'content' => $invoice_unpaid_table],
-   ['id' => 'clientInvoicesReminderSent','role' => 'client-invoices-reminder-tab',   'content' => $invoice_reminder_sent_table],
-   ['id' => 'clientInvoicesSevenDay',    'role' => 'client-invoices-seven-day-tab',  'content' => $invoice_seven_day_table],
-   ['id' => 'clientInvoicesLegalClaim',  'role' => 'client-invoices-legal-claim-tab','content' => $invoice_legal_claim_table],
-   ['id' => 'clientInvoicesJudgement',   'role' => 'client-invoices-judgement-tab',  'content' => $invoice_judgement_table],
-   ['id' => 'clientInvoicesOfficer',     'role' => 'client-invoices-officer-tab',    'content' => $invoice_officer_table],
-   ['id' => 'clientInvoicesCredit',      'role' => 'client-invoices-credit-tab',     'content' => $invoice_credit_table],
-   ['id' => 'clientInvoicesWrittenOff',  'role' => 'client-invoices-written-off-tab','content' => $invoice_written_off_table],
-   ['id' => 'clientPayments',            'role' => 'client-payments-tab',            'content' => $payment_table],
-  ];
-  /**
-   * @var array{id:string,role:string,content:string} $pane
-   */
-  foreach ($tabPanes as $pane) {
-   echo H::openTag('div', [
-    'id' => $pane['id'],
-    'class' => 'tab-pane table-content',
-    'role' => 'tabpanel',
-    'aria-labelledby' => $pane['role'],
-   ]); //2
+echo H::tag('hr', '');
+
+echo H::openTag('div', ['class' => 'row']); //3
+echo H::openTag('div', ['class' => $cssColMd6]); //4
+echo H::openTag('div', ['class' => $cssCardNoMargin]); //5
+echo H::tag('div', $translator->translate('notes'), ['class' => $cssCardHeader]);
+echo H::openTag('div', ['class' => 'card-body']); //6
+echo H::openTag('div', ['id' => 'notes_list']); //7
+echo $partial_notes;
+echo H::closeTag('div'); //7
+echo new Input()->type('hidden')->name('client_id')->id('client_id')->value((string) $clientId);
+echo H::openTag('div'); //7
+echo H::openTag('textarea', [
+ 'id' => 'client_note',
+ 'class' => 'form-control form-control-lg',
+ 'rows' => '2',
+ 'style' => 'resize:none',
+]); //8
+echo H::closeTag('textarea'); //8
+echo H::tag('span', $translator->translate('add.note'), [
+ 'id' => 'save_client_note_new',
+ 'class' => 'input-text-addon btn btn-info',
+]);
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::closeTag('div'); //4
+echo H::closeTag('div'); //3
+echo H::closeTag('div'); //2 clientDetails
+
+// Tab panes — quotes
+$tabPanes = [
+ ['id' => 'clientQuotes',              'role' => 'client-quotes-tab',              'content' => $quote_table],
+ ['id' => 'clientQuotesDraft',         'role' => 'client-quotes-draft-tab',        'content' => $quote_draft_table],
+ ['id' => 'clientQuotesSent',          'role' => 'client-quotes-sent-tab',         'content' => $quote_sent_table],
+ ['id' => 'clientQuotesViewed',        'role' => 'client-quotes-viewed-tab',       'content' => $quote_viewed_table],
+ ['id' => 'clientQuotesApproved',      'role' => 'client-quotes-approved-tab',     'content' => $quote_approved_table],
+ ['id' => 'clientQuotesCancelled',     'role' => 'client-quotes-cancelled-tab',    'content' => $quote_cancelled_table],
+ ['id' => 'clientQuotesRejected',      'role' => 'client-quotes-rejected-tab',     'content' => $quote_rejected_table],
+ ['id' => 'clientInvoices',            'role' => 'client-invoices-tab',            'content' => $invoice_table],
+ ['id' => 'clientInvoicesDraft',       'role' => 'client-invoices-draft-tab',      'content' => $invoice_draft_table],
+ ['id' => 'clientInvoicesSent',        'role' => 'client-invoices-sent-tab',       'content' => $invoice_sent_table],
+ ['id' => 'clientInvoicesViewed',      'role' => 'client-invoices-viewed-tab',     'content' => $invoice_viewed_table],
+ ['id' => 'clientInvoicesPaid',        'role' => 'client-invoices-paid-tab',       'content' => $invoice_paid_table],
+ ['id' => 'clientInvoicesOverdue',     'role' => 'client-invoices-overdue-tab',    'content' => $invoice_overdue_table],
+ ['id' => 'clientInvoicesUnpaid',      'role' => 'client-invoices-unpaid-tab',     'content' => $invoice_unpaid_table],
+ ['id' => 'clientInvoicesReminderSent','role' => 'client-invoices-reminder-tab',   'content' => $invoice_reminder_sent_table],
+ ['id' => 'clientInvoicesSevenDay',    'role' => 'client-invoices-seven-day-tab',  'content' => $invoice_seven_day_table],
+ ['id' => 'clientInvoicesLegalClaim',  'role' => 'client-invoices-legal-claim-tab','content' => $invoice_legal_claim_table],
+ ['id' => 'clientInvoicesJudgement',   'role' => 'client-invoices-judgement-tab',  'content' => $invoice_judgement_table],
+ ['id' => 'clientInvoicesOfficer',     'role' => 'client-invoices-officer-tab',    'content' => $invoice_officer_table],
+ ['id' => 'clientInvoicesCredit',      'role' => 'client-invoices-credit-tab',     'content' => $invoice_credit_table],
+ ['id' => 'clientInvoicesWrittenOff',  'role' => 'client-invoices-written-off-tab','content' => $invoice_written_off_table],
+ ['id' => 'clientPayments',            'role' => 'client-payments-tab',            'content' => $payment_table],
+];
+/**
+ * @var array{id:string,role:string,content:string} $pane
+ */
+foreach ($tabPanes as $pane) {
+    echo H::openTag('div', [
+     'id' => $pane['id'],
+     'class' => 'tab-pane table-content',
+     'role' => 'tabpanel',
+     'aria-labelledby' => $pane['role'],
+    ]); //2
     echo $pane['content'];
-   echo H::closeTag('div'); //2
-  }
+    echo H::closeTag('div'); //2
+}
 
- echo H::closeTag('div'); //1
+echo H::closeTag('div'); //1
 echo H::closeTag('div'); //0
 
 /**

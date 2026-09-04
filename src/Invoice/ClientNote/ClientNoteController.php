@@ -39,8 +39,15 @@ final class ClientNoteController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $webViewRenderer,
-                $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
         $this->clientNoteService = $clientNoteService;
     }
 
@@ -140,13 +147,20 @@ final class ClientNoteController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     if ($formHydrator->populateFromPostAndValidate(
-                                                             $form, $request)) {
+                        $form,
+                        $request
+                    )) {
                         $this->clientNoteService->saveClientNote(
-                                                            $client_note, $body);
-                        $this->flashMessage('info',
-                        $this->translator->translate('record.successfully.updated'));
+                            $client_note,
+                            $body
+                        );
+                        $this->flashMessage(
+                            'info',
+                            $this->translator->translate('record.successfully.updated')
+                        );
                         return $this->webService->getRedirectResponse(
-                                                            'clientnote/index');
+                            'clientnote/index'
+                        );
                     }
                     $parameters['form'] = $form;
                     $parameters['error'] =
@@ -171,8 +185,10 @@ final class ClientNoteController extends BaseController
             $client_note = $this->clientnote($currentRoute, $clientnoteRepository);
             if ($client_note) {
                 $this->clientNoteService->deleteClientNote($client_note);
-                $this->flashMessage('info',
-                    $this->translator->translate('record.successfully.deleted'));
+                $this->flashMessage(
+                    'info',
+                    $this->translator->translate('record.successfully.deleted')
+                );
                 return $this->webService->getRedirectResponse('clientnote/index');
             }
             return $this->webService->getRedirectResponse('clientnote/index');
@@ -214,9 +230,10 @@ final class ClientNoteController extends BaseController
         return $this->webService->getRedirectResponse('clientnote/index');
     }
 
-    private function rbacObserver(int $clientId, UCR $ucR, UIR $uiR): bool {
+    private function rbacObserver(int $clientId, UCR $ucR, UIR $uiR): bool
+    {
         $userClient = $ucR->repoUserquery($clientId);
-        if (null!==$userClient) {
+        if (null !== $userClient) {
             $userId = $userClient->reqUserId();
             $userInv = $uiR->repoUserInvUserIdquery($userId);
             if (null !== $userInv && $userInv->getActive()) {
@@ -231,9 +248,10 @@ final class ClientNoteController extends BaseController
      * @param ClientNoteRepository $clientnoteRepository
      * @return ClientNote|null
      */
-    private function clientnote(CurrentRoute $currentRoute,
-                        ClientNoteRepository $clientnoteRepository): ?ClientNote
-    {
+    private function clientnote(
+        CurrentRoute $currentRoute,
+        ClientNoteRepository $clientnoteRepository
+    ): ?ClientNote {
         $id = (int) $currentRoute->getArgument('id');
         return $clientnoteRepository->repoClientNotequery($id);
     }

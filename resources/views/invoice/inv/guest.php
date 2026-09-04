@@ -57,7 +57,7 @@ const NATIVE_RESET_INV_AMOUNT_FILTER = 'native-reset inv-amount-filter';
  * @var string $alert
  * @var string $csrf
  * @var string $label
- * @var string $modal_add_quote 
+ * @var string $modal_add_quote
  * @var string $modalBacsQuickPay
  * @var string $sortString
  * @var string $status
@@ -71,7 +71,7 @@ const NATIVE_RESET_INV_AMOUNT_FILTER = 'native-reset inv-amount-filter';
 $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'inv/guest'))
     ->id('btn-reset')
     ->render();
@@ -110,9 +110,11 @@ $enabledGateways = $s->paymentGatewaysEnabledDriverList();
 // InvsColumnVisibilityTrait on the staff-side inv/index grid.
 $homeCareEnabled = $s->getSetting('homecare_auto_invoice_enabled') === '1';
 /** @var list<string> $hiddenGuestColumns */
-$hiddenGuestColumns = array_values(array_filter(explode(',',
-    $s->getSetting('homecare_hidden_inv_guest_columns'))));
-$isGuestColumnHidden = static fn(string $key): bool =>
+$hiddenGuestColumns = array_values(array_filter(explode(
+    ',',
+    $s->getSetting('homecare_hidden_inv_guest_columns')
+)));
+$isGuestColumnHidden = static fn (string $key): bool =>
     $homeCareEnabled && in_array($key, $hiddenGuestColumns, true);
 
 $columns = [
@@ -124,7 +126,9 @@ $columns = [
                     ->addClass('text-decoration-none')
                     ->content(($model->getNumber() ?? '#') . ' 🔍')
                     ->href($urlGenerator->generate(
-                                        'inv/view', ['id' => $model->reqId()]));
+                        'inv/view',
+                        ['id' => $model->reqId()]
+                    ));
         },
         encodeContent: false,
         filter: DropdownFilter::widget()
@@ -142,7 +146,10 @@ $columns = [
         header: $translator->translate('paid')
             . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
         content: static function (Inv $model) use (
-            $decimalPlaces, $urlGenerator, $enabledGateways, $translator
+            $decimalPlaces,
+            $urlGenerator,
+            $enabledGateways,
+            $translator
         ): string {
             $invAmountPaid  = $model->getInvAmount()->getPaid();
             $invAmountTotal = $model->getInvAmount()->getTotal();
@@ -207,13 +214,17 @@ $columns = [
                 'class' => 'dropdown-menu',
                 'aria-labelledby' => 'dropdownMenuButton'
             ])
-            . Html::openTag('div',
-                ['class' => 'btn-group', 'role' => 'group']),
+            . Html::openTag(
+                'div',
+                ['class' => 'btn-group', 'role' => 'group']
+            ),
         buttons: [
             new ActionButton(
                 url: static function (Inv $inv) use ($urlGenerator): string {
-                    return $urlGenerator->generate('inv/pdfDashboardExcludeCf',
-                            ['id' => $inv->reqId()]);
+                    return $urlGenerator->generate(
+                        'inv/pdfDashboardExcludeCf',
+                        ['id' => $inv->reqId()]
+                    );
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
@@ -224,10 +235,11 @@ $columns = [
                 ],
             ),
             new ActionButton(
-                url: static function (Inv $inv) use ($urlGenerator):
-                string {
-                    return $urlGenerator->generate('inv/pdfDashboardIncludeCf',
-                            ['id' => $inv->reqId()]);
+                url: static function (Inv $inv) use ($urlGenerator): string {
+                    return $urlGenerator->generate(
+                        'inv/pdfDashboardIncludeCf',
+                        ['id' => $inv->reqId()]
+                    );
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
@@ -266,16 +278,16 @@ $columns = [
                         . '<br/>🏛️ ' . $translator->translate('judgement')
                         . '<br/>👮 ' . $translator->translate('enforcement')
                         . '<br/>🛑️ ' . $translator->translate(
-                                                    'credit.invoice.for.invoice')
+                            'credit.invoice.for.invoice'
+                        )
                         . '<br/>❎ ' . $translator->translate('loss'))
                         . '">📊 ' . $translator->translate('status') . '</span>',
         encodeHeader: false,
-        content: static function (Inv $model) use ($iR, $s, $irR, $translator):
-                                                                        string {
+        content: static function (Inv $model) use ($iR, $s, $irR, $translator): string {
             $statusId = $model->reqStatusId();
             $emoji = $iR->getSpecificStatusArrayEmoji($statusId);
             $label = $iR->getSpecificStatusArrayLabel((string) $statusId);
-            
+
             // Add read-only indicator
             if (($model->getIsReadOnly())
                                 && $s->getSetting('disable_read_only') == '0') {
@@ -285,7 +297,7 @@ $columns = [
             if ($irR->repoCount($model->reqId()) > 0) {
                 $label .= ' ' . $translator->translate('recurring') . ' 🔄';
             }
-            
+
             return '<span data-bs-toggle="tooltip" title="'
             . Html::encode($label) . '" class="badge text-bg-'
             . $iR->getSpecificStatusArrayClass($statusId) . '">'
@@ -323,8 +335,10 @@ $columns = [
                 $options .= $option->render();
             }
             return new Form()
-                ->post($urlGenerator->generate('inv/setdonotsend',
-                        ['inv_id' => $model->reqId()]))
+                ->post($urlGenerator->generate(
+                    'inv/setdonotsend',
+                    ['inv_id' => $model->reqId()]
+                ))
                 ->csrf($csrf)
                 ->addAttributes(['class' => 'd-flex gap-1'])
                 ->content(
@@ -351,21 +365,24 @@ $columns = [
             [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('credit.invoice.for.invoice')
-            ])->render(),
+            ]
+        )->render(),
         encodeHeader: false,
         property: 'filterCreditInvNumber',
         content: static function (Inv $model) use ($urlGenerator, $iR): A {
-            if (null!== ($cipId = $model->getCreditinvoiceParentId())) {
+            if (null !== ($cipId = $model->getCreditinvoiceParentId())) {
                 $visible = $iR->repoInvUnLoadedquery($cipId);
                 if (null !== $visible) {
                     $url = ($visible->getNumber() ?? '#') . '💳';
                     return   new A()
                             ->addClass('text-decoration-none')
                             ->content($url)
-                            ->href($urlGenerator->generate('inv/view',
-                                    ['id' => $cipId]));
+                            ->href($urlGenerator->generate(
+                                'inv/view',
+                                ['id' => $cipId]
+                            ));
                 }
-            }            
+            }
             return  new A()->content('')->href('');
         },
         encodeContent: false,
@@ -375,7 +392,8 @@ $columns = [
                     'class'      => NATIVE_RESET_INV_FILTER,
                     'aria-label' => 'Filter by credit note parent invoice',
                     'title'      => $translator->translate(
-                        'credit.invoice.for.invoice'),
+                        'credit.invoice.for.invoice'
+                    ),
                 ])
                 ->optionsData($optionsCreditInvNumberDropDownFilter),
         withSorting: false,
@@ -387,8 +405,7 @@ $columns = [
     new DataColumn(
         property: 'filterClient',
         header: $translator->translate('client'),
-        content: static fn (Inv $model):
-            string => Html::encode($model->getClient()?->getClientFullName()),
+        content: static fn (Inv $model): string => Html::encode($model->getClient()?->getClientFullName()),
         encodeContent: false,
         filter: DropdownFilter::widget()
                 ->addAttributes([
@@ -405,8 +422,7 @@ $columns = [
     new DataColumn(
         'date_created',
         header: $translator->translate('date.created'),
-        content: static fn (Inv $model):
-            string => (!is_string($dateCreated = $model->getDateCreated()) ?
+        content: static fn (Inv $model): string => (!is_string($dateCreated = $model->getDateCreated()) ?
                 $dateCreated->format('Y-m-d') : ''),
         withSorting: false,
         visible: !$isGuestColumnHidden('date_created'),
@@ -464,7 +480,8 @@ $columns = [
                     ->attributes(['class' => $invAmntBal > 0.00 ?
                             'text-danger' : 'text-success'])
                     ->content(Html::encode(
-                            number_format($invAmntBal, $decimalPlaces)));
+                        number_format($invAmntBal, $decimalPlaces)
+                    ));
         },
         encodeContent: false,
         filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
@@ -570,22 +587,28 @@ $homeCareInstallBanner = $worker !== null
     : '';
 
 $toolbarString =  new Form()->post(
-                $urlGenerator->generate('inv/guest'))->csrf($csrf)->open()
+    $urlGenerator->generate('inv/guest')
+)->csrf($csrf)->open()
         .  new Div()->addClass('float-start m-3')->content(
-                 new H4()
+            new H4()
                     ->addClass('me-3 d-inline-block')
-                    ->content($translator->translate('invoice')
-                )
+                    ->content(
+                        $translator->translate('invoice')
+                    )
             .   $toolbarReset
             .   $autoFitColumns
             .   $resetColumnWidths
             .   Button::ascDesc(
-                $urlGenerator, 'client_id', 'warning',
-                $translator->translate('client'), true)
+                $urlGenerator,
+                'client_id',
+                'warning',
+                $translator->translate('client'),
+                true
+            )
             .   $bacsButton
             .   $qrButton
             .   $homeCareOfflineButtons
-                )->encode(false)->render()
+        )->encode(false)->render()
         .  new Form()->close();
 
 $gridSummary = $s->gridSummary(
@@ -615,7 +638,8 @@ echo GridView::widget()
     // can be sorted. It also appears in this state if another column has been
     // sorted
     ->sortableHeaderPrepend(
-                '<div class="float-end text-secondary text-opacity-50">⭥</div>')
+        '<div class="float-end text-secondary text-opacity-50">⭥</div>'
+    )
     // the up arrow will appear if column values are ascending
     ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
     // the down arrow will appear if column values are descending
@@ -625,7 +649,8 @@ echo GridView::widget()
     ->emptyCellAttributes(['style' => 'color:red'])
     ->id('w9-grid')
     ->paginationWidget($gridComponents->offsetPaginationWidget(
-                                                    $sortedAndPagedPaginator))
+        $sortedAndPagedPaginator
+    ))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
     ->summaryTemplate($gridSummary)
     ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
@@ -794,7 +819,8 @@ echo Html::style($invStyle);
 $filterPromptLabels = json_encode([
     'filter-inv-number'        => '— ' . $translator->translate('number') . ' —',
     'filter-credit-inv-number' => '— ' . $translator->translate(
-        'credit.invoice.for.invoice') . ' —',
+        'credit.invoice.for.invoice'
+    ) . ' —',
     'filter-status'            => '— ' . $translator->translate('status') . ' —',
     'filter-client'     => '— ' . $translator->translate('client') . ' —',
 ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);
@@ -819,5 +845,5 @@ echo Html::tag('script', $homeCareOfflineLabels, ['type' => 'application/json', 
 // near-duplicate of the same class in src/typescript/inv-index.ts.
 
 if ($viewPayment && $bacsPaymentService->isCompanyPrivateActive()) {
-   echo $modalBacsQuickPay;
+    echo $modalBacsQuickPay;
 }

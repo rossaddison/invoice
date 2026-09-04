@@ -11,7 +11,6 @@ use RequireId;
  */
 trait CustomFieldTrait1
 {
-
     public function reqId(): int
     {
         return $this->requireId($this->id, 'CustomField');

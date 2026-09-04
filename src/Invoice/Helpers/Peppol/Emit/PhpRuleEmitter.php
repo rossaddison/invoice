@@ -27,13 +27,14 @@ final class PhpRuleEmitter
         'CreditNoteLine' => ['invoiceLines',    'UblInvoiceLineVO'],
         'TaxTotal'       => ['taxTotals',       'UblTaxTotalVO'],
         'TaxSubtotal'    => ['taxSubtotals',    'UblTaxSubtotalVO'],
-        'AllowanceCharge'=> ['allowanceCharges','UblAllowanceChargeVO'],
+        'AllowanceCharge' => ['allowanceCharges','UblAllowanceChargeVO'],
         'PaymentMeans'   => ['paymentMeans',    'UblPaymentMeansVO'],
     ];
 
     public function __construct(
         private readonly PhpExpressionEmitter $expr,
-    ) {}
+    ) {
+    }
 
     /**
      * Emit a complete PHP source file for all rules in $doc.

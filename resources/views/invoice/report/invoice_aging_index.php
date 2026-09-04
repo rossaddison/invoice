@@ -36,7 +36,7 @@ declare(strict_types=1);
                 <div class="card-body">
                     <form method="post"
                           action="<?= $urlGenerator->generate($actionName,
-                                  $actionArguments); ?>"
+                              $actionArguments); ?>"
                         <?php echo($s->getSetting('open_reports_in_new_tab')
                                 === '1' ? 'target="_blank"' : ''); ?>>
 

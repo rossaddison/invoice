@@ -214,49 +214,65 @@ final class PurchaseEntryServiceTest extends TestCase
     public function testUkQ1StartsOnFirstOfApril(): void
     {
         $this->assertSame('Q1 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-04-01'), 4));
+            new DateTimeImmutable('2026-04-01'),
+            4
+        ));
     }
 
     public function testUkQ1EndsOnLastOfJune(): void
     {
         $this->assertSame('Q1 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-06-30'), 4));
+            new DateTimeImmutable('2026-06-30'),
+            4
+        ));
     }
 
     public function testUkQ2StartsOnFirstOfJuly(): void
     {
         $this->assertSame('Q2 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-07-01'), 4));
+            new DateTimeImmutable('2026-07-01'),
+            4
+        ));
     }
 
     public function testUkQ2EndsOnLastOfSeptember(): void
     {
         $this->assertSame('Q2 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-09-30'), 4));
+            new DateTimeImmutable('2026-09-30'),
+            4
+        ));
     }
 
     public function testUkQ3StartsOnFirstOfOctober(): void
     {
         $this->assertSame('Q3 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-10-01'), 4));
+            new DateTimeImmutable('2026-10-01'),
+            4
+        ));
     }
 
     public function testUkQ3EndsOnLastOfDecember(): void
     {
         $this->assertSame('Q3 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-12-31'), 4));
+            new DateTimeImmutable('2026-12-31'),
+            4
+        ));
     }
 
     public function testUkQ4StartsOnFirstOfJanuary(): void
     {
         $this->assertSame('Q4 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2027-01-01'), 4));
+            new DateTimeImmutable('2027-01-01'),
+            4
+        ));
     }
 
     public function testUkQ4EndsOnLastOfMarch(): void
     {
         $this->assertSame('Q4 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2027-03-31'), 4));
+            new DateTimeImmutable('2027-03-31'),
+            4
+        ));
     }
 
     // --- vatQuarterLabel: year boundary edge cases (April start) ---
@@ -264,25 +280,33 @@ final class PurchaseEntryServiceTest extends TestCase
     public function testDecemberBelongsToPriorTaxYearQ3(): void
     {
         $this->assertSame('Q3 2025/2026', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2025-12-15'), 4));
+            new DateTimeImmutable('2025-12-15'),
+            4
+        ));
     }
 
     public function testJanuaryBelongsToPriorTaxYearQ4(): void
     {
         $this->assertSame('Q4 2025/2026', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-01-15'), 4));
+            new DateTimeImmutable('2026-01-15'),
+            4
+        ));
     }
 
     public function testMarchBelongsToPriorTaxYearQ4(): void
     {
         $this->assertSame('Q4 2025/2026', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-03-15'), 4));
+            new DateTimeImmutable('2026-03-15'),
+            4
+        ));
     }
 
     public function testAprilStartsNewTaxYear(): void
     {
         $this->assertSame('Q1 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-04-06'), 4));
+            new DateTimeImmutable('2026-04-06'),
+            4
+        ));
     }
 
     // --- vatQuarterLabel: calendar year (January start, month = 1) ---
@@ -290,25 +314,37 @@ final class PurchaseEntryServiceTest extends TestCase
     public function testCalendarYearQ1JanuaryToMarch(): void
     {
         $this->assertSame('Q1 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-01-01'), 1));
+            new DateTimeImmutable('2026-01-01'),
+            1
+        ));
         $this->assertSame('Q1 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-03-31'), 1));
+            new DateTimeImmutable('2026-03-31'),
+            1
+        ));
     }
 
     public function testCalendarYearQ2AprilToJune(): void
     {
         $this->assertSame('Q2 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-04-01'), 1));
+            new DateTimeImmutable('2026-04-01'),
+            1
+        ));
         $this->assertSame('Q2 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-06-30'), 1));
+            new DateTimeImmutable('2026-06-30'),
+            1
+        ));
     }
 
     public function testCalendarYearQ4OctoberToDecember(): void
     {
         $this->assertSame('Q4 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-10-01'), 1));
+            new DateTimeImmutable('2026-10-01'),
+            1
+        ));
         $this->assertSame('Q4 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-12-31'), 1));
+            new DateTimeImmutable('2026-12-31'),
+            1
+        ));
     }
 
     // --- vatQuarterLabel: Australian tax year (July start, month = 7) ---
@@ -316,41 +352,61 @@ final class PurchaseEntryServiceTest extends TestCase
     public function testAustralianQ1JulyToSeptember(): void
     {
         $this->assertSame('Q1 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-07-01'), 7));
+            new DateTimeImmutable('2026-07-01'),
+            7
+        ));
         $this->assertSame('Q1 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-09-30'), 7));
+            new DateTimeImmutable('2026-09-30'),
+            7
+        ));
     }
 
     public function testAustralianQ2OctoberToDecember(): void
     {
         $this->assertSame('Q2 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-10-01'), 7));
+            new DateTimeImmutable('2026-10-01'),
+            7
+        ));
         $this->assertSame('Q2 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-12-31'), 7));
+            new DateTimeImmutable('2026-12-31'),
+            7
+        ));
     }
 
     public function testAustralianQ3JanuaryToMarch(): void
     {
         $this->assertSame('Q3 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2027-01-01'), 7));
+            new DateTimeImmutable('2027-01-01'),
+            7
+        ));
         $this->assertSame('Q3 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2027-03-31'), 7));
+            new DateTimeImmutable('2027-03-31'),
+            7
+        ));
     }
 
     public function testAustralianQ4AprilToJune(): void
     {
         $this->assertSame('Q4 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2027-04-01'), 7));
+            new DateTimeImmutable('2027-04-01'),
+            7
+        ));
         $this->assertSame('Q4 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2027-06-30'), 7));
+            new DateTimeImmutable('2027-06-30'),
+            7
+        ));
     }
 
     public function testAustralianYearBoundaryJuneThenJuly(): void
     {
         $this->assertSame('Q4 2025/2026', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-06-30'), 7));
+            new DateTimeImmutable('2026-06-30'),
+            7
+        ));
         $this->assertSame('Q1 2026/2027', PurchaseEntryService::vatQuarterLabel(
-            new DateTimeImmutable('2026-07-01'), 7));
+            new DateTimeImmutable('2026-07-01'),
+            7
+        ));
     }
 
     // --- vatQuarterLabel: label format ---

@@ -12,7 +12,8 @@ final readonly class BacsPaymentService
 {
     public function __construct(
         private CpR $cpR
-    ) {}
+    ) {
+    }
 
     public function isCompanyPrivateActive(): bool
     {

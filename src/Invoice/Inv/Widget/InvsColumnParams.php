@@ -32,5 +32,6 @@ final readonly class InvsColumnParams
         public ?QuoteRepository $qR = null,
         public ?SalesOrderRepository $soR = null,
         public ?DeliveryLocationRepository $dlR = null,
-    ) {}
+    ) {
+    }
 }

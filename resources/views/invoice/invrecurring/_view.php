@@ -56,19 +56,19 @@ $formatMaybeDate = static function (string|DateTimeImmutable|null $value): strin
                 <?= Html::closeTag('p'); ?>
                 <?php
                     ReadOnlyField::render($translator->translate('recurring.frequency'), $frequencyLabel);
-                    ReadOnlyField::render(
-                        $translator->translate('start') . ' (' . $dateHelper->display() . ') ',
-                        $formatMaybeDate($form->getStart()),
-                    );
-                    ReadOnlyField::render(
-                        $translator->translate('next') . ' (' . $dateHelper->display() . ') ',
-                        $formatMaybeDate($form->getNext()),
-                    );
-                    ReadOnlyField::render(
-                        $translator->translate('end') . ' (' . $dateHelper->display() . ') ',
-                        $formatMaybeDate($form->getEnd()),
-                    );
-                ?>
+ReadOnlyField::render(
+    $translator->translate('start') . ' (' . $dateHelper->display() . ') ',
+    $formatMaybeDate($form->getStart()),
+);
+ReadOnlyField::render(
+    $translator->translate('next') . ' (' . $dateHelper->display() . ') ',
+    $formatMaybeDate($form->getNext()),
+);
+ReadOnlyField::render(
+    $translator->translate('end') . ' (' . $dateHelper->display() . ') ',
+    $formatMaybeDate($form->getEnd()),
+);
+?>
                 <?= $button::back(); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

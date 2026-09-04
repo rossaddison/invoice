@@ -11,7 +11,6 @@ use RequireId;
  */
 trait PostalAddressTrait2
 {
-
     public function setCountrysubentity(string $countrysubentity): void
     {
         $this->countrysubentity = $countrysubentity;

@@ -35,7 +35,6 @@ use Testo\Test;
 #[Test]
 final class CheckoutComPaymentServiceTest
 {
-
     /**
      * @return LoggerInterface&m\MockInterface
      */

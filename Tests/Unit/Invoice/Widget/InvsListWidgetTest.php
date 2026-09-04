@@ -259,7 +259,7 @@ final class InvsListWidgetTest extends TestCase
         $propIslR = new \ReflectionProperty(InvsListWidget::class, 'islR');
         $this->assertNull($propIrR->getValue($original));
         $this->assertNull($propIslR->getValue($original));
-        $this->assertSame($irR,  $propIrR->getValue($new));
+        $this->assertSame($irR, $propIrR->getValue($new));
         $this->assertSame($islR, $propIslR->getValue($new));
     }
 
@@ -375,10 +375,10 @@ final class InvsListWidgetTest extends TestCase
         $this->assertNotSame($original, $new);
         $propSummary = new \ReflectionProperty(InvsListWidget::class, 'gridSummary');
         $propSort    = new \ReflectionProperty(InvsListWidget::class, 'sortString');
-        $this->assertSame('',    $propSummary->getValue($original));
+        $this->assertSame('', $propSummary->getValue($original));
         $this->assertSame('-id', $propSort->getValue($original));
         $this->assertSame('Showing 1–10 of 50', $propSummary->getValue($new));
-        $this->assertSame('id',  $propSort->getValue($new));
+        $this->assertSame('id', $propSort->getValue($new));
     }
 
     public function testWithFilterOptionsReturnsNewInstanceAndOriginalUnchanged(): void
@@ -422,9 +422,14 @@ final class InvsListWidgetTest extends TestCase
     public function testWithCsrfAcceptsStringableObject(): void
     {
         $stringable = new class ('view-csrf-token') implements \Stringable {
-            public function __construct(private readonly string $value) {}
+            public function __construct(private readonly string $value)
+            {
+            }
             #[\Override]
-            public function __toString(): string { return $this->value; }
+            public function __toString(): string
+            {
+                return $this->value;
+            }
         };
 
         $widget = $this->makeWidget()->withCsrf($stringable);
@@ -574,7 +579,7 @@ final class InvsListWidgetTest extends TestCase
     public function testComputeGroupTotalsReturnsEmptyArrayWhenPaginatorIsEmpty(): void
     {
         $paginator     = $this->makeEmptyPaginator();
-        $getGroupValue = static fn(Inv $_inv): string => 'unused';
+        $getGroupValue = static fn (Inv $_inv): string => 'unused';
 
         $result = InvsGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
@@ -587,12 +592,12 @@ final class InvsListWidgetTest extends TestCase
         $i2        = $this->makeInvMock(total: 200.00, paid: 80.00, balance: 120.00);
         $paginator = new OffsetPaginator(new IterableDataReader([$i1, $i2]));
 
-        $getGroupValue = static fn(Inv $_inv): string => 'All';
+        $getGroupValue = static fn (Inv $_inv): string => 'All';
 
         $result = InvsGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(1, $result);
-        $this->assertSame(2,      $result['All']['count']);
+        $this->assertSame(2, $result['All']['count']);
         $this->assertSame(300.00, $result['All']['total']);
         $this->assertSame(120.00, $result['All']['paid']);
         $this->assertSame(180.00, $result['All']['balance']);
@@ -601,8 +606,8 @@ final class InvsListWidgetTest extends TestCase
     public function testComputeGroupTotalsSeparatesDistinctGroups(): void
     {
         $i1 = $this->makeInvMock(clientFullName: 'Alice', total: 100.00, paid: 100.00, balance: 0.00);
-        $i2 = $this->makeInvMock(clientFullName: 'Bob',   total: 200.00, paid: 50.00,  balance: 150.00);
-        $i3 = $this->makeInvMock(clientFullName: 'Alice', total: 150.00, paid: 75.00,  balance: 75.00);
+        $i2 = $this->makeInvMock(clientFullName: 'Bob', total: 200.00, paid: 50.00, balance: 150.00);
+        $i3 = $this->makeInvMock(clientFullName: 'Alice', total: 150.00, paid: 75.00, balance: 75.00);
 
         $paginator = new OffsetPaginator(new IterableDataReader([$i1, $i2, $i3]));
 
@@ -611,13 +616,13 @@ final class InvsListWidgetTest extends TestCase
         $result = InvsGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
         $this->assertCount(2, $result);
-        $this->assertSame(2,      $result['Alice']['count']);
+        $this->assertSame(2, $result['Alice']['count']);
         $this->assertSame(250.00, $result['Alice']['total']);
         $this->assertSame(175.00, $result['Alice']['paid']);
-        $this->assertSame(75.00,  $result['Alice']['balance']);
-        $this->assertSame(1,      $result['Bob']['count']);
+        $this->assertSame(75.00, $result['Alice']['balance']);
+        $this->assertSame(1, $result['Bob']['count']);
         $this->assertSame(200.00, $result['Bob']['total']);
-        $this->assertSame(50.00,  $result['Bob']['paid']);
+        $this->assertSame(50.00, $result['Bob']['paid']);
         $this->assertSame(150.00, $result['Bob']['balance']);
     }
 
@@ -635,11 +640,11 @@ final class InvsListWidgetTest extends TestCase
         $inv->method('getInvAmount')->willReturn($nullAmount);
 
         $paginator     = new OffsetPaginator(new IterableDataReader([$inv]));
-        $getGroupValue = static fn(Inv $_i): string => 'NullAmounts';
+        $getGroupValue = static fn (Inv $_i): string => 'NullAmounts';
 
         $result = InvsGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 
-        $this->assertSame(1,    $result['NullAmounts']['count']);
+        $this->assertSame(1, $result['NullAmounts']['count']);
         $this->assertSame(0.00, $result['NullAmounts']['total']);
         $this->assertSame(0.00, $result['NullAmounts']['paid']);
         $this->assertSame(0.00, $result['NullAmounts']['balance']);
@@ -649,7 +654,7 @@ final class InvsListWidgetTest extends TestCase
     {
         $inv = $this->makeInvMock(total: 1000.00, paid: 600.00, balance: 400.00);
         $paginator     = new OffsetPaginator(new IterableDataReader([$inv]));
-        $getGroupValue = static fn(Inv $_i): string => 'Check';
+        $getGroupValue = static fn (Inv $_i): string => 'Check';
 
         $result = InvsGroupingHelper::computeGroupTotals($paginator, $getGroupValue);
 

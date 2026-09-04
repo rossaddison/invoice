@@ -64,11 +64,11 @@ $selectLabel = static function (array $optionsData, int|string|null $value): str
                     $translator->translate('allowance.or.charge.item.quote'),
                     $selectLabel($optionsDataAllowanceCharge, $form->getAllowanceChargeId()),
                 );
-                ReadOnlyField::render(
-                    $translator->translate('amount') . '(' . $s->getSetting('currency_symbol') . ')',
-                    $s->formatAmount($form->getAmount() ?? 0.00),
-                );
-            ?>
+ReadOnlyField::render(
+    $translator->translate('amount') . '(' . $s->getSetting('currency_symbol') . ')',
+    $s->formatAmount($form->getAmount() ?? 0.00),
+);
+?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

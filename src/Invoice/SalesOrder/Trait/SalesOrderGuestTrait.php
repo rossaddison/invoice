@@ -39,9 +39,10 @@ trait SalesOrderGuestTrait
      * @param array $user_client
      * @return int
      */
-    public function repoClientGuestCount(int $salesorder_id,
-        array $user_client = []): int
-    {
+    public function repoClientGuestCount(
+        int $salesorder_id,
+        array $user_client = []
+    ): int {
         return $this->select()
                       ->where(['id' => $salesorder_id])
                       ->andWhere(['client_id' => ['in' => new Parameter($user_client)]])

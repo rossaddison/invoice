@@ -205,7 +205,7 @@ final class AdyenWebhookHandlerTest extends TestCase
 
         $recorder = $this->createMock(OnlinePaymentRecorderService::class);
         $recorder->expects(self::once())->method('record')->with(self::callback(
-            static fn(PaymentRecordContext $ctx): bool => $ctx->response === false && $ctx->invoice_payment_method === 5,
+            static fn (PaymentRecordContext $ctx): bool => $ctx->response === false && $ctx->invoice_payment_method === 5,
         ))->willReturn($this->createStub(ResponseInterface::class));
 
         $iR = $this->createMock(InvRepository::class);

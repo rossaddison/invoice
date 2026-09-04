@@ -30,7 +30,9 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 final class ContentSecurityPolicyMiddleware implements MiddlewareInterface
 {
-    public function __construct(private readonly string $policy) {}
+    public function __construct(private readonly string $policy)
+    {
+    }
 
     #[\Override]
     public function process(

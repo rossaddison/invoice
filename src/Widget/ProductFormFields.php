@@ -28,9 +28,11 @@ final readonly class ProductFormFields
      * Family selection dropdown field for products
      * @param array<array-key, array<array-key, string>|string> $familiesData
      */
-    public function familySelect(ProductForm $form, array $familiesData,
-                                             bool $required = true): string
-    {
+    public function familySelect(
+        ProductForm $form,
+        array $familiesData,
+        bool $required = true
+    ): string {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
         $cssClass = $required ? self::REQUIRED_FIELD_CLASS :
@@ -50,9 +52,11 @@ final readonly class ProductFormFields
      * Product type (Product/Service) selection dropdown field for products
      * @param array<array-key, array<array-key, string>|string> $productTypesData
      */
-    public function productTypeSelect(ProductForm $form, array $productTypesData,
-            bool $required = true): string
-    {
+    public function productTypeSelect(
+        ProductForm $form,
+        array $productTypesData,
+        bool $required = true
+    ): string {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
         $cssClass = $required ? self::REQUIRED_FIELD_CLASS :
@@ -72,9 +76,11 @@ final readonly class ProductFormFields
      * Unit selection dropdown field for products
      * @param array<array-key, array<array-key, string>|string> $unitsData
      */
-    public function unitSelect(ProductForm $form, array $unitsData,
-            bool $required = true): string
-    {
+    public function unitSelect(
+        ProductForm $form,
+        array $unitsData,
+        bool $required = true
+    ): string {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
         $cssClass = $required ? self::REQUIRED_FIELD_CLASS :
@@ -94,9 +100,11 @@ final readonly class ProductFormFields
      * Tax rate selection dropdown field for products
      * @param array<array-key, array<array-key, string>|string> $taxRatesData
      */
-    public function taxRateSelect(ProductForm $form, array $taxRatesData,
-            bool $required = true): string
-    {
+    public function taxRateSelect(
+        ProductForm $form,
+        array $taxRatesData,
+        bool $required = true
+    ): string {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
         $cssClass = $required ? self::REQUIRED_FIELD_CLASS :
@@ -154,7 +162,8 @@ final readonly class ProductFormFields
         if ($isPrice && is_numeric($value)) {
             $numericValue = is_float($value) ? $value : (float) $value;
             $value = $this->settingRepository->formatAmount(
-                    $numericValue >= 0.00 ? $numericValue : 0.00);
+                $numericValue >= 0.00 ? $numericValue : 0.00
+            );
         }
 
         // Field::text()->value() strictly requires string|null (confirmed
@@ -186,11 +195,19 @@ final readonly class ProductFormFields
     /**
      * Product price field with proper formatting
      */
-    public function productPriceField(ProductForm $form, string $fieldName,
-            string $labelKey, bool $required = true): string
-    {
-        return $this->productTextField($form, $fieldName, $labelKey,
-                $required, true);
+    public function productPriceField(
+        ProductForm $form,
+        string $fieldName,
+        string $labelKey,
+        bool $required = true
+    ): string {
+        return $this->productTextField(
+            $form,
+            $fieldName,
+            $labelKey,
+            $required,
+            true
+        );
     }
 
     /**
@@ -299,9 +316,11 @@ final readonly class ProductFormFields
      * says so plainly instead.
      * @param array<array-key, array<array-key, string>|string> $unitPeppolsData
      */
-    public function unitPeppolSelect(ProductForm $form, array $unitPeppolsData,
-            bool $required = false): string
-    {
+    public function unitPeppolSelect(
+        ProductForm $form,
+        array $unitPeppolsData,
+        bool $required = false
+    ): string {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'product.peppol.unit.hint';
         $cssClass = $required ? self::REQUIRED_FIELD_CLASS :

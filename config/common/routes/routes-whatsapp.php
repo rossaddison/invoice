@@ -10,12 +10,11 @@ use Yiisoft\Router\Route;
 
 return [
     RoutePermission::invoiceGroup(
-
-            Route::get('/whatsapp')
+        Route::get('/whatsapp')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([WhatsAppController::class, 'index'])
                 ->name('whatsapp/index'),
-        ), // invoice
+    ), // invoice
 
     // Not under RoutePermission::invoiceGroup(): Meta's servers must be able
     // to reach this with no app session, both for the GET verification

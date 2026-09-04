@@ -40,7 +40,8 @@ final class As4OrderImportServiceTestFixture
         public readonly SalesOrderItemRepository&MockObject $salesOrderItemRepository,
         public readonly SettingRepositoryInterface&MockObject $settingRepository,
         public readonly LoggerInterface&MockObject $logger,
-    ) {}
+    ) {
+    }
 }
 
 #[AllowMockObjectsWithoutExpectations]

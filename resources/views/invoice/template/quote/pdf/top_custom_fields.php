@@ -17,10 +17,10 @@ $location = 1;
  * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
  */
 foreach ($custom_fields as $custom_field) {
- if ($custom_field->getLocation() !== $location) {
-  continue;
- }
- echo H::openTag('td'); //0
-  $cvH->printFieldForPdf($translator, $quote_custom_values, $custom_field);
- echo H::closeTag('td'); //0
+    if ($custom_field->getLocation() !== $location) {
+        continue;
+    }
+    echo H::openTag('td'); //0
+    $cvH->printFieldForPdf($translator, $quote_custom_values, $custom_field);
+    echo H::closeTag('td'); //0
 }

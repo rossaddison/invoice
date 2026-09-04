@@ -43,10 +43,10 @@ final class InvRepository extends Select\Repository implements InvRepositoryInte
         Select $select,
         private readonly EntityWriter $entityWriter,
         private readonly Translator $translator
-    )
-    {
+    ) {
         parent::__construct($select->load('client')->where(
-                ['client.client_active' => 1]));
+            ['client.client_active' => 1]
+        ));
     }
 
     /**
@@ -93,8 +93,7 @@ final class InvRepository extends Select\Repository implements InvRepositoryInte
      * @param int $delivery_location_id
      * @return EntityReader
      */
-    public function findAllWithDeliveryLocation(int $delivery_location_id):
-        EntityReader
+    public function findAllWithDeliveryLocation(int $delivery_location_id): EntityReader
     {
         $query = $this->select()
                       ->where(['delivery_location_id' => $delivery_location_id])

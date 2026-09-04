@@ -24,15 +24,16 @@ class ClientNote
     private ?int $id = null;
 
     public function __construct(
-        #[Column(type: 'integer(11)',
-        nullable: false)]
+        #[Column(
+            type: 'integer(11)',
+            nullable: false
+        )]
         private ?int $client_id = null,
         #[Column(type: 'longText', nullable: false)]
         private string $note = '',
         #[Column(type: 'date', nullable: true)]
         private DateTimeImmutable|string|null $date_note = null,
-    )
-    {
+    ) {
     }
 
     public function getClient(): ?Client

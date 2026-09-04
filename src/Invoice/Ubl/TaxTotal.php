@@ -12,8 +12,7 @@ class TaxTotal implements XmlSerializable
 {
     public function __construct(
         private readonly array $doc_and_or_supp_currency_tax
-    )
-    {
+    ) {
     }
 
     /**
@@ -49,7 +48,11 @@ class TaxTotal implements XmlSerializable
                 [
                     'name' => Schema::CBC . 'TaxAmount',
                     'value' => number_format(
-                                    $supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
+                        $supp_tax_cc_tax_amount ?: 0.00,
+                        2,
+                        '.',
+                        ''
+                    ),
                     'attributes' => [
                         'currencyID' => $supp_cc,
                     ],

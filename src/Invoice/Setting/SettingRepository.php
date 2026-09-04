@@ -49,7 +49,7 @@ final class SettingRepository extends Select\Repository implements SettingReposi
     public array $settingsArray = [];
 
     private const string DECRYPT_KEY = 'base64:3iqxXZEG5aR0NPvmE4qubcE/'
-            . 'sn6nuzXKLrZVRMP3/Ak=';
+        . 'sn6nuzXKLrZVRMP3/Ak=';
 
     private string $decryptKey = self::DECRYPT_KEY;
 

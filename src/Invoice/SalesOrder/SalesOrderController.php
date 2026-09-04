@@ -6,19 +6,19 @@ namespace App\Invoice\SalesOrder;
 
 use App\Auth\Permissions;
 use App\Infrastructure\Persistence\{
-        CustomField\CustomField,
-        DeliveryLocation\DeliveryLocation,
-        Inv\Inv,
-        User\User,
-        InvCustom\InvCustom, InvItem\InvItem,
-        InvItemAllowanceCharge\InvItemAllowanceCharge,
-        InvTaxRate\InvTaxRate,
-        InvAllowanceCharge\InvAllowanceCharge,
-        SalesOrder\SalesOrder,
-        SalesOrderAllowanceCharge\SalesOrderAllowanceCharge,
-        SalesOrderCustom\SalesOrderCustom,
-        SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceCharge,
-        SalesOrderTaxRate\SalesOrderTaxRate,
+    CustomField\CustomField,
+    DeliveryLocation\DeliveryLocation,
+    Inv\Inv,
+    User\User,
+    InvCustom\InvCustom, InvItem\InvItem,
+    InvItemAllowanceCharge\InvItemAllowanceCharge,
+    InvTaxRate\InvTaxRate,
+    InvAllowanceCharge\InvAllowanceCharge,
+    SalesOrder\SalesOrder,
+    SalesOrderAllowanceCharge\SalesOrderAllowanceCharge,
+    SalesOrderCustom\SalesOrderCustom,
+    SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceCharge,
+    SalesOrderTaxRate\SalesOrderTaxRate,
 };
 use App\Invoice\{
     BaseController, Client\ClientRepository as CR,
@@ -93,8 +93,13 @@ final class SalesOrderController extends BaseController
         SoControllerMiscDeps $misc,
     ) {
         parent::__construct(
-            $base->webService, $base->userService, $base->translator,
-            $base->webViewRenderer, $base->session, $base->sR, $base->flash
+            $base->webService,
+            $base->userService,
+            $base->translator,
+            $base->webViewRenderer,
+            $base->session,
+            $base->sR,
+            $base->flash
         );
         $this->factory                      = $misc->factory;
         $this->invService                   = $inv->invService;
@@ -283,8 +288,10 @@ final class SalesOrderController extends BaseController
                     $parameters['success'] = 1;
                 }
             }
-            $this->flashMessage('info',
-                $this->translator->translate('record.successfully.updated'));
+            $this->flashMessage(
+                'info',
+                $this->translator->translate('record.successfully.updated')
+            );
         }
         return $this->factory->createResponse(Json::encode($parameters));
     }
@@ -299,9 +306,12 @@ final class SalesOrderController extends BaseController
      * @param UIR $uiR
      * @return Response
      */
-    public function agreeToTerms(CurrentRoute $currentRoute, SoR $soR, UCR $ucR,
-                                                            UIR $uiR): Response
-    {
+    public function agreeToTerms(
+        CurrentRoute $currentRoute,
+        SoR $soR,
+        UCR $ucR,
+        UIR $uiR
+    ): Response {
         $url_key = $currentRoute->getArgument('url_key');
         if (null !== $url_key && $soR->repoUrlKeyGuestCount($url_key) > 0) {
             $so = $soR->repoUrlKeyGuestLoaded($url_key);
@@ -321,7 +331,9 @@ final class SalesOrderController extends BaseController
                         . ' '
                         . $this->translator->translate('record.successfully.updated'));
                 return $this->webService->getRedirectResponse(
-                            'salesorder/view', ['id' => $so_id]);
+                    'salesorder/view',
+                    ['id' => $so_id]
+                );
             }
         }
         return $this->webService->getNotFoundResponse();
@@ -335,9 +347,12 @@ final class SalesOrderController extends BaseController
      * @param UIR $uiR
      * @return Response
      */
-    public function reject(CurrentRoute $currentRoute, SoR $soR,
-                                                    UCR $ucR, UIR $uiR): Response
-    {
+    public function reject(
+        CurrentRoute $currentRoute,
+        SoR $soR,
+        UCR $ucR,
+        UIR $uiR
+    ): Response {
         $url_key = $currentRoute->getArgument('url_key');
         if (null !== $url_key && $soR->repoUrlKeyGuestCount($url_key) > 0) {
             $so = $soR->repoUrlKeyGuestLoaded($url_key);
@@ -354,9 +369,11 @@ final class SalesOrderController extends BaseController
                         '//invoice/setting/salesorder_successful',
                         [
                             'heading' => $soR->getSpecificStatusArrayLabel(
-                                (string) 9),
+                                (string) 9
+                            ),
                             'message' => $this->translator->translate(
-                                'record.successfully.updated'),
+                                'record.successfully.updated'
+                            ),
                             'url' => 'salesorder/view','id' => $so_id,
                         ],
                     ),
@@ -440,7 +457,8 @@ final class SalesOrderController extends BaseController
         }
 
         return $this->factory->createResponse(
-            Json::encode($updated_count > 0
+            Json::encode(
+                $updated_count > 0
                 ? [
                     'success' => 1,
                     'message' => $this->translator->translate('invoice.peppol.saved.successfully'),
@@ -476,7 +494,8 @@ final class SalesOrderController extends BaseController
                     'origin_id' => (string) $so->reqClientId(),
                     'action' => 'edit',
                 ],
-                'optionsData' => $this->optionsData($so->reqClientId(),
+                'optionsData' => $this->optionsData(
+                    $so->reqClientId(),
                     $d->clientRepo,
                     $d->delRepo,
                     $d->gR,
@@ -490,14 +509,19 @@ final class SalesOrderController extends BaseController
                 'dels' => $dels,
                 'terms_and_conditions_file' =>
                     $this->webViewRenderer->renderPartialAsString(
-                            '//invoice/salesorder/terms_and_conditions_file'),
+                        '//invoice/salesorder/terms_and_conditions_file'
+                    ),
                 'terms_and_conditions' =>
                     $d->settingRepository->getTermsAndConditions(),
                 'no_delivery_locations' => $d->delRepo->repoClientCount(
-                    $so->reqClientId()) > 0 ? '' :
+                    $so->reqClientId()
+                ) > 0 ? '' :
                         $this->flashMessage(
-                                'warning', $this->translator->translate(
-                                    'quote.delivery.location.none')),
+                            'warning',
+                            $this->translator->translate(
+                                'quote.delivery.location.none'
+                            )
+                        ),
                 'alert' => $this->alert(),
                 'so' => $so,
                 'cfR' => $d->cfR,
@@ -510,10 +534,14 @@ final class SalesOrderController extends BaseController
                 if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                     $this->salesorderService->saveSo($so, $body);
                     $this->flashMessage(
-                        'success', $this->translator->translate(
-                            'record.successfully.updated'));
+                        'success',
+                        $this->translator->translate(
+                            'record.successfully.updated'
+                        )
+                    );
                     return $this->webService->getRedirectResponse(
-                        'salesorder/index');
+                        'salesorder/index'
+                    );
                 }
                 $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -534,7 +562,8 @@ final class SalesOrderController extends BaseController
             if ($so) {
                 $this->salesorderService->deleteSo($so, $subDeps, $financialDeps);
                 $this->flashMessage('info', $this->translator->translate(
-                    'record.successfully.deleted'));
+                    'record.successfully.deleted'
+                ));
                 return $this->webService->getRedirectResponse('salesorder/index');
             }
             return $this->webService->getRedirectResponse('salesorder/index');
@@ -549,9 +578,10 @@ final class SalesOrderController extends BaseController
      * @param SoCR $salesorder_customR
      * @return array
      */
-    public function salesorderCustomValues(int $so_id,
-                                                SoCR $salesorder_customR): array
-    {
+    public function salesorderCustomValues(
+        int $so_id,
+        SoCR $salesorder_customR
+    ): array {
         // Get all the custom fields that have been registered with this
         // salesorder on creation, retrieve existing values via repo,
         // and populate custom_field_form_values array
@@ -626,7 +656,8 @@ final class SalesOrderController extends BaseController
             'soStatuses'         => $service->core->soR->getStatuses($this->translator),
             'salesOrderCustomValues' => $salesorder_custom_values,
             'partial_item_table' => $this->webViewRenderer->renderPartialAsString(
-                '//invoice/salesorder/partial_item_table', [
+                '//invoice/salesorder/partial_item_table',
+                [
                     'acsoiR'            => $service->relation->acsoiR,
                     'packHandleShipTotal' => $service->relation->acsoR->getPackHandleShipTotal($so->reqId()),
                     'included'          => $this->translator->translate('item.tax.included'),
@@ -645,28 +676,38 @@ final class SalesOrderController extends BaseController
                     'taxRates'          => $service->items->trR->findAllPreloaded(),
                     'tasks'             => $service->items->taskR->findAllPreloaded(),
                     'units'             => $service->items->uR->findAllPreloaded(),
-                ]),
+                ]
+            ),
             'modal_salesorder_to_pdf' => $this->webViewRenderer->renderPartialAsString(
-                '//invoice/salesorder/modal_salesorder_to_pdf', ['so' => $so]),
+                '//invoice/salesorder/modal_salesorder_to_pdf',
+                ['so' => $so]
+            ),
             'modal_so_to_invoice' => $this->webViewRenderer->renderPartialAsString(
-                '//invoice/salesorder/modal_so_to_invoice', ['so' => $so, 'gR' => $service->meta->gR]),
+                '//invoice/salesorder/modal_so_to_invoice',
+                ['so' => $so, 'gR' => $service->meta->gR]
+            ),
             'modal_acknowledge_order_response' => $this->webViewRenderer->renderPartialAsString(
-                '//invoice/salesorder/modal_acknowledge_order_response', ['so' => $so]),
+                '//invoice/salesorder/modal_acknowledge_order_response',
+                ['so' => $so]
+            ),
             'modal_send_order_response_per_line' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/salesorder/modal_send_order_response_per_line',
-                ['so' => $so, 'soiR' => $service->core->soiR]),
+                ['so' => $so, 'soiR' => $service->core->soiR]
+            ),
             // No dedicated "came from Peppol" flag exists on SalesOrder -- a
             // ClientPeppol registration on the client is the closest real
             // signal that sending a response over AS4 is even possible.
             'clientHasPeppol' => $service->meta->cpR->repoClientCount($so->reqClientId()) > 0,
             'view_custom_fields' => $this->webViewRenderer->renderPartialAsString(
-                '//invoice/salesorder/view_custom_fields', [
+                '//invoice/salesorder/view_custom_fields',
+                [
                     'customFields'          => $this->fetchCustomFieldsAndValues($service->meta->cfR, $service->meta->cvR, 'salesorder_custom')['customFields'],
                     'customValues'          => $this->fetchCustomFieldsAndValues($service->meta->cfR, $service->meta->cvR, 'salesorder_custom')['customValues'],
                     'form'                  => $form,
                     'salesOrderCustomValues' => $salesorder_custom_values,
                     'cvH'                   => new CVH($service->meta->settingRepository, $service->meta->cvR),
-                ]),
+                ]
+            ),
             'partial_quote_delivery_location' => null !==
                 ($quote = $service->relation->qR->repoQuoteUnLoadedQuery($so->reqQuoteId()))
                 ? $this->viewPartialDeliveryLocation($_language, $service->relation->dR, $quote->getDeliveryLocationId())
@@ -683,9 +724,10 @@ final class SalesOrderController extends BaseController
     * @param SalesOrderRepository $salesorderRepository
     * @return SalesOrder|null
     */
-    private function salesorder(CurrentRoute $currentRoute,
-                                        SoR $salesorderRepository): ?SalesOrder
-    {
+    private function salesorder(
+        CurrentRoute $currentRoute,
+        SoR $salesorderRepository
+    ): ?SalesOrder {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
             return $salesorderRepository->repoSalesOrderLoadedquery((int) $id);
@@ -693,12 +735,12 @@ final class SalesOrderController extends BaseController
         return null;
     }
 
-     /**
-     * @param int $id
-     * @param SoR $soR
-     * @param bool $unloaded
-     * @return SalesOrder|null
-     */
+    /**
+    * @param int $id
+    * @param SoR $soR
+    * @param bool $unloaded
+    * @return SalesOrder|null
+    */
     private function salesorderunloaded(
         int $id,
         SoR $soR,
@@ -833,7 +875,12 @@ final class SalesOrderController extends BaseController
             && $uiR->repoUserInvUserIdcount((int)
                     $this->userService->getUser()?->reqId()) === 1) {
             $result = $this->renderSalesOrderForGuest(
-                $salesorder, $deps, $salesorder_tax_rates, $url_key, $currentUser);
+                $salesorder,
+                $deps,
+                $salesorder_tax_rates,
+                $url_key,
+                $currentUser
+            );
         }
         return $result ?? $this->webService->getNotFoundResponse();
     }
@@ -865,7 +912,8 @@ final class SalesOrderController extends BaseController
          */
         $user_client = $ucR->repoUserClientqueryCount(
             $this->userService->getUser()?->reqId(),
-            $salesorder->reqClientId()) === 1;
+            $salesorder->reqClientId()
+        ) === 1;
         if (!($user_inv && $user_client && $user_inv->getActive() && $user_inv->getType() == 1)) {
             return null;
         }
@@ -884,11 +932,13 @@ final class SalesOrderController extends BaseController
         $parameters = [
             'renderTemplate' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/template/salesorder/public/'
-                    . ($this->sR->getSetting('public_salesorder_template') ?: 'SalesOrder_Web'), array_merge([
+                    . ($this->sR->getSetting('public_salesorder_template') ?: 'SalesOrder_Web'),
+                array_merge([
                     'isGuest' => $currentUser->isGuest(),
                     'terms_and_conditions_file' =>
                         $this->webViewRenderer->renderPartialAsString(
-                            '//invoice/salesorder/terms_and_conditions_file'),
+                            '//invoice/salesorder/terms_and_conditions_file'
+                        ),
                     'alert' => $this->alert(),
                     'salesorder' => $salesorder,
                     'soiaR' => $soiaR,
@@ -902,7 +952,8 @@ final class SalesOrderController extends BaseController
                     'userInv' => $uiR->repoUserInvUserIdcount($salesorder->reqUserId()) > 0
                         ? $uiR->repoUserInvUserIdquery($salesorder->reqUserId())
                         : null,
-                ], PublicDocumentAssetHelper::resolve($deps->assetManager, $deps->aliases))),
+                ], PublicDocumentAssetHelper::resolve($deps->assetManager, $deps->aliases))
+            ),
         ];
         return $this->webViewRenderer->render('url_key', $parameters);
     }

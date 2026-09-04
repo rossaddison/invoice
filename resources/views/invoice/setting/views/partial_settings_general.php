@@ -57,926 +57,926 @@ $kBccMails = 'settings[bcc_mails_to_admin]';
 $kCronKey = 'settings[cron_key]';
 
 echo H::openTag('div', $row); //1
- echo H::openTag('div', $colMd8); //2
-  echo H::openTag('div', $panel); //3
-   echo H::openTag('div', $panelHead); //4
-    echo $translator->translate('general');
-   echo H::closeTag('div'); //4
-   echo H::openTag('div', $panelBody); //4
-    echo H::openTag('div', $row); //5
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kStopLoggingIn
-       ]);
-        echo $translator->translate('stop.logging.in');
-       echo H::closeTag('label');
-       $body[$kStopLoggingIn] =
-       $s->getSetting('stop_logging_in');
-       echo H::openTag('select', [
-        'name' => $kStopLoggingIn,
-        'id' => $kStopLoggingIn,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected($body[$kStopLoggingIn] == '1')
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kStopSigningUp
-       ]);
-        echo $translator->translate('stop.signing.up');
-       echo H::closeTag('label');
-       $body[$kStopSigningUp] =
-       $s->getSetting('stop_signing_up');
-       echo H::openTag('select', [
-        'name' => $kStopSigningUp,
-        'id' => $kStopSigningUp,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected($body[$kStopSigningUp] == '1')
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kStopHomecareSigningUp
-       ]);
-        echo $translator->translate('stop.homecare.signing.up');
-        echo $s->infoIcon('stop_homecare_signing_up');
-       echo H::closeTag('label');
-       $body[$kStopHomecareSigningUp] =
-       $s->getSetting('stop_homecare_signing_up');
-       echo H::openTag('select', [
-        'name' => $kStopHomecareSigningUp,
-        'id' => $kStopHomecareSigningUp,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected($body[$kStopHomecareSigningUp] == '1')
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kAppCdn
-       ]);
-        echo $translator->translate('app.cdn.not.node.module');
-       echo H::closeTag('label');
-       $body[$kAppCdn] =
-       $s->getSetting('app_cdn_not_node_module');
-       echo H::openTag('select', [
-        'name' => $kAppCdn,
-        'id' => $kAppCdn,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected($body[$kAppCdn] == '1')
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kInvCdn
-       ]);
-        echo $translator->translate('inv.cdn.not.node.module');
-       echo H::closeTag('label');
-       $body[$kInvCdn] =
-       $s->getSetting('inv_cdn_not_node_module');
-       echo H::openTag('select', [
-        'name' => $kInvCdn,
-        'id' => $kInvCdn,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected($body[$kInvCdn] == '1')
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kInstallTest
-       ]);
-        echo $translator->translate('test.data.install');
-        echo $s->infoIcon('install_test_data');
-       echo H::closeTag('label');
-       $body[$kInstallTest] =
-       $s->getSetting('install_test_data');
-       echo H::openTag('select', [
-        'name' => $kInstallTest,
-        'id' => $kInstallTest,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected($body[$kInstallTest] == '1')
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kUseTest
-       ]);
-        echo $translator->translate('test.data.use');
-       echo H::closeTag('label');
-       $body[$kUseTest] =
-       $s->getSetting('use_test_data');
-       echo H::openTag('select', [
-        'name' => $kUseTest,
-        'id' => $kUseTest,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected($body[$kUseTest] == '1')
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kDefaultLanguage
-       ]);
-        echo $translator->translate('language');
-        echo $s->infoIcon('default_language');
-       echo H::closeTag('label');
-       $body[$kDefaultLanguage] =
-       $s->getSetting('default_language');
-       echo H::openTag('select', [
-        'name' => $kDefaultLanguage,
-        'id' => $kDefaultLanguage,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('none'));
-        /**
-        * @var string $language
-        */
-        foreach ($languages as $language) {
-        echo  new Option()
-         ->value($language)
-         ->selected(
-          $body[$kDefaultLanguage] == $language
-         )
-         ->content(ucfirst($language));
-        }
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kTimeZone
-       ]);
-        echo $translator->translate('time.zone');
-        echo $s->infoIcon('time_zone');
-       echo H::closeTag('label');
-       $body[$kTimeZone] = $s->getSetting('time_zone');
-       echo H::openTag('select', [
-        'name' => $kTimeZone,
-        'id' => $kTimeZone,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('none'));
-        /**
-        * @var string $value
-        */
-        foreach ($time_zones as $value) {
-        echo  new Option()
-         ->value($value)
-         ->selected($body[$kTimeZone] == $value)
-         ->content($value);
-        }
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-    echo H::openTag('div', $row); //5
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kDefaultCountry
-       ]);
-        echo $translator->translate('default.country');
-        echo $s->infoIcon('default_country');
-       echo H::closeTag('label');
-       $body[$kDefaultCountry] =
-       $s->getSetting('default_country');
-       echo H::openTag('select', [
-        'name' => $kDefaultCountry,
-        'id' => $kDefaultCountry,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('none'));
-        echo  new Option()
-         ->value('')
-         ->content($translator->translate('none'));
-        /**
-        * @var string $cldr
-        * @var string $country
-        */
-        foreach ($countries as $cldr => $country) {
-        echo  new Option()
-         ->value($cldr)
-         ->selected(
-          $body[$kDefaultCountry] == $cldr
-         )
-         ->content($country);
-        }
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => 'default_list_limit'
-       ]);
-        echo $translator->translate('default.list.limit');
-        echo $s->infoIcon('default_list_limit');
-       echo H::closeTag('label');
-       $body[$kDefaultListLimit] =
-       $s->getSetting('default_list_limit');
-       echo H::openTag('input', [
-        'type' => 'number',
-        'name' => $kDefaultListLimit,
-        'id' => 'default_list_limit',
-        'class' => 'form-control',
-        'minlength' => '1',
-        'min' => '1',
-        'required' => true,
-        'value' => $body[$kDefaultListLimit]
-       ]);
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kDisableFlash
-       ]);
-        echo $translator->translate('disable.flash.messages');
-       echo H::closeTag('label');
-       $body[$kDisableFlash] =
-       $s->getSetting('disable_flash_messages');
-       echo H::openTag('select', [
-        'name' => $kDisableFlash,
-        'id' => $kDisableFlash,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected(
-          $body[$kDisableFlash] == '1'
-         )
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kSignupAssignClient
-       ]);
-        echo $translator->translate('assign.client.on.signup');
-       echo H::closeTag('label');
-       $body[$kSignupAssignClient] =
-       $s->getSetting('signup_automatically_assign_client');
-       echo H::openTag('select', [
-        'name' => $kSignupAssignClient,
-        'id' => $kSignupAssignClient,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected(
-          $body[$kSignupAssignClient] == '1'
-        )
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kSignupAgeMin
-       ]);
-        echo $translator->translate(
-         'assign.client.on.signup.default.age.minimum.eighteen'
-        );
-       echo H::closeTag('label');
-       $body[$kSignupAgeMin] =
-       $s->getSetting('signup_default_age_minimum_eighteen');
-       echo H::openTag('select', [
-        'name' => $kSignupAgeMin,
-        'id' => $kSignupAgeMin,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected(
-          $body[$kSignupAgeMin] == '1'
-        )
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-   echo H::closeTag('div'); //4
-  echo H::closeTag('div'); //3
-  echo H::openTag('div', $panel); //3
-   echo H::openTag('div', $panelHead); //4
-    echo $translator->translate('currency.and.number.settings');
-   echo H::closeTag('div'); //4
-   echo H::openTag('div', $panelBody); //4
-    echo H::openTag('div', $row); //5
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kCurrencySymbol
-       ]);
-        echo $translator->translate('currency.symbol');
-        echo $s->infoIcon('currency_symbol');
-       echo H::closeTag('label');
-       $body[$kCurrencySymbol] =
-       $s->getSetting('currency_symbol');
-       echo H::openTag('input', [
-        'type' => 'text',
-        'name' => $kCurrencySymbol,
-        'id' => $kCurrencySymbol,
-        'class' => 'form-control',
-        'value' => $body[$kCurrencySymbol]
-       ]);
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kCurrencySymbolPlacement
-       ]);
-        echo $translator->translate(
-         'currency.symbol.placement'
-        );
-        echo $s->infoIcon('currency_symbol_placement');
-       echo H::closeTag('label');
-       $body[$kCurrencySymbolPlacement] =
-       $s->getSetting('currency_symbol_placement');
-       echo H::openTag('select', [
-        'name' => $kCurrencySymbolPlacement,
-        'id' => $kCurrencySymbolPlacement,
-        'class' => 'form-select',
-        'data-minimum-results-for-search' => 'Infinity'
-       ]);
-        echo  new Option()
-         ->value('before')
-         ->selected(
-          $body[$kCurrencySymbolPlacement] == 'before'
-        )
-         ->content($translator->translate('before.amount'));
-        echo  new Option()
-         ->value('after')
-         ->selected(
-          $body[$kCurrencySymbolPlacement] == 'after'
-        )
-         ->content($translator->translate('after.amount'));
-        echo  new Option()
-         ->value('afterspace')
-         ->selected(
-          $body[$kCurrencySymbolPlacement] == 'afterspace'
-        )
-         ->content(
-          $translator->translate('after.amount.space')
-         );
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-    echo H::openTag('div', $row); //5
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kCurrencyCode
-       ]);
-        echo $translator->translate('currency.code');
-        echo $s->infoIcon('currency_code');
-       echo H::closeTag('label');
-       $body[$kCurrencyCode] =
-       $s->getSetting('currency_code');
-       echo H::openTag('select', [
-        'name' => $kCurrencyCode,
-        'id' => $kCurrencyCode,
-        'class' => 'form-select form-select-sm'
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('none'));
-        /**
-        * @var string $key
-        * @var string $val
-        */
-        foreach (array_keys($gateway_currency_codes) as $key) {
-        echo  new Option()
-         ->value($key)
-         ->selected(
-          $body[$kCurrencyCode] == $key
-         )
-         ->content($key);
-        }
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kTaxDecimal
-       ]);
-        echo $translator->translate(
-         'tax.rate.decimal.places'
-        );
-        echo $s->infoIcon('tax_rate_decimal_places');
-       echo H::closeTag('label');
-       $body[$kTaxDecimal] =
-       $s->getSetting('tax_rate_decimal_places');
-       echo H::openTag('select', [
-        'name' => $kTaxDecimal,
-        'id' => $kTaxDecimal,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('none'));
-        echo  new Option()
-         ->value('2')
-         ->selected(
-          $body[$kTaxDecimal] == '2'
-         )
-         ->content('2');
-        echo  new Option()
-         ->value('3')
-         ->selected(
-          $body[$kTaxDecimal] == '3'
-         )
-         ->content('3');
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-    echo H::openTag('div', $row); //5
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kNumberFormat
-       ]);
-        echo $translator->translate('number.format');
-        echo $s->infoIcon('number_format');
-       echo H::closeTag('label');
-       $body[$kNumberFormat] =
-       $s->getSetting('number_format');
-       echo H::openTag('select', [
-        'name' => $kNumberFormat,
-        'id' => $kNumberFormat,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('none'));
-        /**
-        * @var string $key
-        * @var array $value
-        * @var string $value['label']
-        */
-        foreach ($number_formats as $key => $value) {
-        echo  new Option()
-         ->value($key)
-         ->selected(
-          $body[$kNumberFormat] ==
+echo H::openTag('div', $colMd8); //2
+echo H::openTag('div', $panel); //3
+echo H::openTag('div', $panelHead); //4
+echo $translator->translate('general');
+echo H::closeTag('div'); //4
+echo H::openTag('div', $panelBody); //4
+echo H::openTag('div', $row); //5
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kStopLoggingIn
+]);
+echo $translator->translate('stop.logging.in');
+echo H::closeTag('label');
+$body[$kStopLoggingIn] =
+$s->getSetting('stop_logging_in');
+echo H::openTag('select', [
+ 'name' => $kStopLoggingIn,
+ 'id' => $kStopLoggingIn,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected($body[$kStopLoggingIn] == '1')
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kStopSigningUp
+]);
+echo $translator->translate('stop.signing.up');
+echo H::closeTag('label');
+$body[$kStopSigningUp] =
+$s->getSetting('stop_signing_up');
+echo H::openTag('select', [
+ 'name' => $kStopSigningUp,
+ 'id' => $kStopSigningUp,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected($body[$kStopSigningUp] == '1')
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kStopHomecareSigningUp
+]);
+echo $translator->translate('stop.homecare.signing.up');
+echo $s->infoIcon('stop_homecare_signing_up');
+echo H::closeTag('label');
+$body[$kStopHomecareSigningUp] =
+$s->getSetting('stop_homecare_signing_up');
+echo H::openTag('select', [
+ 'name' => $kStopHomecareSigningUp,
+ 'id' => $kStopHomecareSigningUp,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected($body[$kStopHomecareSigningUp] == '1')
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kAppCdn
+]);
+echo $translator->translate('app.cdn.not.node.module');
+echo H::closeTag('label');
+$body[$kAppCdn] =
+$s->getSetting('app_cdn_not_node_module');
+echo H::openTag('select', [
+ 'name' => $kAppCdn,
+ 'id' => $kAppCdn,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected($body[$kAppCdn] == '1')
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kInvCdn
+]);
+echo $translator->translate('inv.cdn.not.node.module');
+echo H::closeTag('label');
+$body[$kInvCdn] =
+$s->getSetting('inv_cdn_not_node_module');
+echo H::openTag('select', [
+ 'name' => $kInvCdn,
+ 'id' => $kInvCdn,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected($body[$kInvCdn] == '1')
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kInstallTest
+]);
+echo $translator->translate('test.data.install');
+echo $s->infoIcon('install_test_data');
+echo H::closeTag('label');
+$body[$kInstallTest] =
+$s->getSetting('install_test_data');
+echo H::openTag('select', [
+ 'name' => $kInstallTest,
+ 'id' => $kInstallTest,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected($body[$kInstallTest] == '1')
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kUseTest
+]);
+echo $translator->translate('test.data.use');
+echo H::closeTag('label');
+$body[$kUseTest] =
+$s->getSetting('use_test_data');
+echo H::openTag('select', [
+ 'name' => $kUseTest,
+ 'id' => $kUseTest,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected($body[$kUseTest] == '1')
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kDefaultLanguage
+]);
+echo $translator->translate('language');
+echo $s->infoIcon('default_language');
+echo H::closeTag('label');
+$body[$kDefaultLanguage] =
+$s->getSetting('default_language');
+echo H::openTag('select', [
+ 'name' => $kDefaultLanguage,
+ 'id' => $kDefaultLanguage,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('none'));
+/**
+* @var string $language
+*/
+foreach ($languages as $language) {
+    echo  new Option()
+     ->value($language)
+     ->selected(
+         $body[$kDefaultLanguage] == $language
+     )
+     ->content(ucfirst($language));
+}
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kTimeZone
+]);
+echo $translator->translate('time.zone');
+echo $s->infoIcon('time_zone');
+echo H::closeTag('label');
+$body[$kTimeZone] = $s->getSetting('time_zone');
+echo H::openTag('select', [
+ 'name' => $kTimeZone,
+ 'id' => $kTimeZone,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('none'));
+/**
+* @var string $value
+*/
+foreach ($time_zones as $value) {
+    echo  new Option()
+     ->value($value)
+     ->selected($body[$kTimeZone] == $value)
+     ->content($value);
+}
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::openTag('div', $row); //5
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kDefaultCountry
+]);
+echo $translator->translate('default.country');
+echo $s->infoIcon('default_country');
+echo H::closeTag('label');
+$body[$kDefaultCountry] =
+$s->getSetting('default_country');
+echo H::openTag('select', [
+ 'name' => $kDefaultCountry,
+ 'id' => $kDefaultCountry,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('none'));
+echo  new Option()
+ ->value('')
+ ->content($translator->translate('none'));
+/**
+* @var string $cldr
+* @var string $country
+*/
+foreach ($countries as $cldr => $country) {
+    echo  new Option()
+     ->value($cldr)
+     ->selected(
+         $body[$kDefaultCountry] == $cldr
+     )
+     ->content($country);
+}
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => 'default_list_limit'
+]);
+echo $translator->translate('default.list.limit');
+echo $s->infoIcon('default_list_limit');
+echo H::closeTag('label');
+$body[$kDefaultListLimit] =
+$s->getSetting('default_list_limit');
+echo H::openTag('input', [
+ 'type' => 'number',
+ 'name' => $kDefaultListLimit,
+ 'id' => 'default_list_limit',
+ 'class' => 'form-control',
+ 'minlength' => '1',
+ 'min' => '1',
+ 'required' => true,
+ 'value' => $body[$kDefaultListLimit]
+]);
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kDisableFlash
+]);
+echo $translator->translate('disable.flash.messages');
+echo H::closeTag('label');
+$body[$kDisableFlash] =
+$s->getSetting('disable_flash_messages');
+echo H::openTag('select', [
+ 'name' => $kDisableFlash,
+ 'id' => $kDisableFlash,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected(
+     $body[$kDisableFlash] == '1'
+ )
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kSignupAssignClient
+]);
+echo $translator->translate('assign.client.on.signup');
+echo H::closeTag('label');
+$body[$kSignupAssignClient] =
+$s->getSetting('signup_automatically_assign_client');
+echo H::openTag('select', [
+ 'name' => $kSignupAssignClient,
+ 'id' => $kSignupAssignClient,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected(
+     $body[$kSignupAssignClient] == '1'
+ )
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kSignupAgeMin
+]);
+echo $translator->translate(
+    'assign.client.on.signup.default.age.minimum.eighteen'
+);
+echo H::closeTag('label');
+$body[$kSignupAgeMin] =
+$s->getSetting('signup_default_age_minimum_eighteen');
+echo H::openTag('select', [
+ 'name' => $kSignupAgeMin,
+ 'id' => $kSignupAgeMin,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected(
+     $body[$kSignupAgeMin] == '1'
+ )
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::closeTag('div'); //4
+echo H::closeTag('div'); //3
+echo H::openTag('div', $panel); //3
+echo H::openTag('div', $panelHead); //4
+echo $translator->translate('currency.and.number.settings');
+echo H::closeTag('div'); //4
+echo H::openTag('div', $panelBody); //4
+echo H::openTag('div', $row); //5
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kCurrencySymbol
+]);
+echo $translator->translate('currency.symbol');
+echo $s->infoIcon('currency_symbol');
+echo H::closeTag('label');
+$body[$kCurrencySymbol] =
+$s->getSetting('currency_symbol');
+echo H::openTag('input', [
+ 'type' => 'text',
+ 'name' => $kCurrencySymbol,
+ 'id' => $kCurrencySymbol,
+ 'class' => 'form-control',
+ 'value' => $body[$kCurrencySymbol]
+]);
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kCurrencySymbolPlacement
+]);
+echo $translator->translate(
+    'currency.symbol.placement'
+);
+echo $s->infoIcon('currency_symbol_placement');
+echo H::closeTag('label');
+$body[$kCurrencySymbolPlacement] =
+$s->getSetting('currency_symbol_placement');
+echo H::openTag('select', [
+ 'name' => $kCurrencySymbolPlacement,
+ 'id' => $kCurrencySymbolPlacement,
+ 'class' => 'form-select',
+ 'data-minimum-results-for-search' => 'Infinity'
+]);
+echo  new Option()
+ ->value('before')
+ ->selected(
+     $body[$kCurrencySymbolPlacement] == 'before'
+ )
+ ->content($translator->translate('before.amount'));
+echo  new Option()
+ ->value('after')
+ ->selected(
+     $body[$kCurrencySymbolPlacement] == 'after'
+ )
+ ->content($translator->translate('after.amount'));
+echo  new Option()
+ ->value('afterspace')
+ ->selected(
+     $body[$kCurrencySymbolPlacement] == 'afterspace'
+ )
+ ->content(
+     $translator->translate('after.amount.space')
+ );
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::openTag('div', $row); //5
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kCurrencyCode
+]);
+echo $translator->translate('currency.code');
+echo $s->infoIcon('currency_code');
+echo H::closeTag('label');
+$body[$kCurrencyCode] =
+$s->getSetting('currency_code');
+echo H::openTag('select', [
+ 'name' => $kCurrencyCode,
+ 'id' => $kCurrencyCode,
+ 'class' => 'form-select form-select-sm'
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('none'));
+/**
+* @var string $key
+* @var string $val
+*/
+foreach (array_keys($gateway_currency_codes) as $key) {
+    echo  new Option()
+     ->value($key)
+     ->selected(
+         $body[$kCurrencyCode] == $key
+     )
+     ->content($key);
+}
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kTaxDecimal
+]);
+echo $translator->translate(
+    'tax.rate.decimal.places'
+);
+echo $s->infoIcon('tax_rate_decimal_places');
+echo H::closeTag('label');
+$body[$kTaxDecimal] =
+$s->getSetting('tax_rate_decimal_places');
+echo H::openTag('select', [
+ 'name' => $kTaxDecimal,
+ 'id' => $kTaxDecimal,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('none'));
+echo  new Option()
+ ->value('2')
+ ->selected(
+     $body[$kTaxDecimal] == '2'
+ )
+ ->content('2');
+echo  new Option()
+ ->value('3')
+ ->selected(
+     $body[$kTaxDecimal] == '3'
+ )
+ ->content('3');
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::openTag('div', $row); //5
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kNumberFormat
+]);
+echo $translator->translate('number.format');
+echo $s->infoIcon('number_format');
+echo H::closeTag('label');
+$body[$kNumberFormat] =
+$s->getSetting('number_format');
+echo H::openTag('select', [
+ 'name' => $kNumberFormat,
+ 'id' => $kNumberFormat,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('none'));
+/**
+* @var string $key
+* @var array $value
+* @var string $value['label']
+*/
+foreach ($number_formats as $key => $value) {
+    echo  new Option()
+     ->value($key)
+     ->selected(
+         $body[$kNumberFormat] ==
           $value['label']
-         )
-         ->content(
-          $translator->translate($value['label'])
-         );
-        }
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-   echo H::closeTag('div'); //4
-  echo H::closeTag('div'); //3
-  echo H::openTag('div', $panel); //3
-   echo H::openTag('div', $panelHead); //4
-    echo $translator->translate('dashboard');
-   echo H::closeTag('div'); //4
-   echo H::openTag('div', $panelBody); //4
-    echo H::openTag('div', $row); //5
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kQuotePeriod
-       ]);
-        echo $translator->translate('quote.overview.period');
-        echo $s->infoIcon('quote_overview_period');
-       echo H::closeTag('label');
-       $body[$kQuotePeriod] =
-       $s->getSetting('quote_overview_period');
-       echo H::openTag('select', [
-        'name' => $kQuotePeriod,
-        'id' => $kQuotePeriod,
-        'class' => 'form-select',
-        'data-minimum-results-for-search' => 'Infinity'
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('none'));
-        echo  new Option()
-         ->value('this-month')
-         ->selected(
-          $body[$kQuotePeriod] == 'this-month'
-        )
-         ->content($translator->translate('this.month'));
-        echo  new Option()
-         ->value('last-month')
-         ->selected(
-          $body[$kQuotePeriod] == 'last-month'
-        )
-         ->content($translator->translate('last.month'));
-        echo  new Option()
-         ->value('this-quarter')
-         ->selected(
-          $body[$kQuotePeriod] == 'this-quarter'
-        )
-         ->content($translator->translate('this.quarter'));
-        echo  new Option()
-         ->value('last-quarter')
-         ->selected(
-          $body[$kQuotePeriod] == 'last-quarter'
-        )
-         ->content($translator->translate('last.quarter'));
-        echo  new Option()
-         ->value('this-year')
-         ->selected(
-          $body[$kQuotePeriod] == 'this-year'
-        )
-         ->content($translator->translate('this.year'));
-        echo  new Option()
-         ->value('last-year')
-         ->selected(
-          $body[$kQuotePeriod] == 'last-year'
-        )
-         ->content($translator->translate('last.year'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kInvoicePeriod
-       ]);
-        echo $translator->translate('overview.period');
-        echo $s->infoIcon('invoice_overview_period');
-       echo H::closeTag('label');
-       $body[$kInvoicePeriod] =
-       $s->getSetting('invoice_overview_period');
-       echo H::openTag('select', [
-        'name' => $kInvoicePeriod,
-        'id' => $kInvoicePeriod,
-        'class' => 'form-select',
-        'data-minimum-results-for-search' => 'Infinity'
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('none'));
-        echo  new Option()
-         ->value('this-month')
-         ->selected(
-          $body[$kInvoicePeriod] == 'this-month'
-        )
-         ->content($translator->translate('this.month'));
-        echo  new Option()
-         ->value('last-month')
-         ->selected(
-          $body[$kInvoicePeriod] == 'last-month'
-        )
-         ->content($translator->translate('last.month'));
-        echo  new Option()
-         ->value('this-quarter')
-         ->selected(
-          $body[$kInvoicePeriod] == 'this-quarter'
-        )
-         ->content($translator->translate('this.quarter'));
-        echo  new Option()
-         ->value('last-quarter')
-         ->selected(
-          $body[$kInvoicePeriod] == 'last-quarter'
-        )
-         ->content($translator->translate('last.quarter'));
-        echo  new Option()
-         ->value('this-year')
-         ->selected(
-          $body[$kInvoicePeriod] == 'this-year'
-        )
-         ->content($translator->translate('this.year'));
-        echo  new Option()
-         ->value('last-year')
-         ->selected(
-          $body[$kInvoicePeriod] == 'last-year'
-        )
-         ->content($translator->translate('last.year'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-    echo H::openTag('div', $row); //5
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => 'disable_quickactions'
-       ]);
-        echo $translator->translate('disable.quickactions');
-        echo $s->infoIcon('disable_quickactions');
-       echo H::closeTag('label');
-       $body[$kDisableQuickactions] =
-       $s->getSetting('disable_quickactions');
-       echo H::openTag('select', [
-        'name' => $kDisableQuickactions,
-        'class' => 'form-select',
-        'id' => 'disable_quickactions',
-        'data-minimum-results-for-search' => 'Infinity'
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected(
-          $body[$kDisableQuickactions] == '1'
-         )
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-   echo H::closeTag('div'); //4
-  echo H::closeTag('div'); //3
-  echo H::openTag('div', $panel); //3
-   echo H::openTag('div', $panelHead); //4
-    echo $translator->translate('interface');
-   echo H::closeTag('div'); //4
-   echo H::openTag('div', $panelBody); //4
-    echo H::openTag('div', $row); //5
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kDisableSidebar
-       ]);
-        echo $translator->translate('disable.sidebar');
-        echo $s->infoIcon('disable_sidebar');
-       echo H::closeTag('label');
-       $body[$kDisableSidebar] =
-       $s->getSetting('disable_sidebar');
-       echo H::openTag('select', [
-        'name' => $kDisableSidebar,
-        'id' => $kDisableSidebar,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected(
-          $body[$kDisableSidebar] == '1'
-         )
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kCustomTitle
-       ]);
-        echo $translator->translate('custom.title');
-        echo $s->infoIcon('custom_title');
-       echo H::closeTag('label');
-       $body[$kCustomTitle] =
-       $s->getSetting('custom_title');
-       echo H::openTag('input', [
-        'type' => 'text',
-        'name' => $kCustomTitle,
-        'id' => $kCustomTitle,
-        'class' => 'form-control',
-        'value' => $body[$kCustomTitle]
-       ]);
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-    echo H::openTag('div', $row); //5
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => 'monospace_amounts'
-       ]);
-        echo $translator->translate(
-         'monospaced.font.for.amounts'
-        );
-        echo $s->infoIcon('monospace_amounts');
-       echo H::closeTag('label');
-       $body[$kMonospaceAmounts] =
-       $s->getSetting('monospace_amounts');
-       echo H::openTag('select', [
-        'name' => $kMonospaceAmounts,
-        'class' => 'form-select',
-        'id' => 'monospace_amounts'
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected(
-          $body[$kMonospaceAmounts] == '1'
-         )
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-       echo H::openTag('p', ['class' => 'form-text']);
-        echo $translator->translate('example') . ': ';
-        echo H::openTag('span', [
-         'style' => 'font-family: Monaco, Lucida Console, ' .
-         'monospace'
-        ]);
-         echo $s->formatCurrency(123456.78);
-        echo H::closeTag('span');
-       echo H::closeTag('p');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kOpenReports
-       ]);
-        echo $translator->translate(
-         'open.reports.in.new.tab'
-        );
-        echo $s->infoIcon('open_reports_in_new_tab');
-       echo H::closeTag('label');
-       $body[$kOpenReports] =
-       $s->getSetting('open_reports_in_new_tab');
-       echo H::openTag('select', [
-        'name' => $kOpenReports,
-        'id' => $kOpenReports,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected(
-          $body[$kOpenReports] == '1'
-         )
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-   echo H::closeTag('div'); //4
-  echo H::closeTag('div'); //3
-  echo H::openTag('div', $panel); //3
-   echo H::openTag('div', $panelHead); //4
-    echo $translator->translate('system.settings');
-   echo H::closeTag('div'); //4
-   echo H::openTag('div', $panelBody); //4
-    echo H::openTag('div', $row); //5
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kBccMails
-       ]);
-        echo $translator->translate('bcc.mails.to.admin');
-        echo $s->infoIcon('bcc_mails_to_admin');
-       echo H::closeTag('label');
-       $body[$kBccMails] =
-       $s->getSetting('bcc_mails_to_admin');
-       echo H::openTag('select', [
-        'name' => $kBccMails,
-        'id' => $kBccMails,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected(
-          $body[$kBccMails] == '1'
-         )
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-     // Not $colMd6 (its col-md-6 sibling, bcc_mails_to_admin, is a plain
-     // Yes/No dropdown and doesn't need the room) — a 32-character hex
-     // value plus the pe-5 reserved for the regenerate button genuinely
-     // doesn't fit in a half-width column at normal font size; confirmed
-     // live: the tail of the key was clipped, which first looked like a
-     // z-index/stacking problem but was actually the input just not
-     // being wide enough. col-12 wraps this field onto its own full-
-     // width row below (Bootstrap's grid: 6 + 12 > 12 columns).
-     echo H::openTag('div', ['class' => 'col-12']); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label', [
-        'for' => $kCronKey
-       ]);
-        echo $translator->translate('cron.key');
-        echo $s->infoIcon('cron_key');
-       echo H::closeTag('label');
-       // Same position-relative + position-absolute/top-50/end-0/
-       // translate-middle-y technique as the password-reveal-toggle
-       // field just above in partial_settings_online_payment.php — puts
-       // the button inside the input visually via plain Bootstrap
-       // utility classes, not .input-group (that component has
-       // repeatedly caused layout problems in this app; this exact
-       // field is one of the past incidents — never use it here).
-       // pe-5 gives the input enough right-padding that its own text
-       // never sits under the button, and z-3 (Bootstrap's z-index:3
-       // utility) makes sure the button itself always stacks above the
-       // input's own text layer regardless of any inherited stacking
-       // context — confirmed live: without it the 32-char cron key value
-       // could still render underneath the button's edge.
-       echo H::openTag('div', ['class' => 'position-relative']); //8
-        echo H::openTag('input', [
-         'type' => 'text',
-         'name' => $kCronKey,
-         'id' => $kCronKey,
-         'class' => 'cron_key form-control pe-5',
-         'value' => (string) ($body[$kCronKey] ??
-         $s->getSetting('cron_key'))
-        ]);
-        echo Button::widget()
-             ->label('<i class="bi bi-recycle" aria-hidden="true"></i>', false)
-             ->class('btn', 'btn-primary', 'position-absolute', 'top-50', 'end-0', 'translate-middle-y', 'z-3')
-             ->attribute('type', 'button')
-             ->id('btn_generate_cron_key')
-             ->render();
-       echo H::closeTag('div'); //8
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-   echo H::closeTag('div'); //4
-  echo H::closeTag('div'); //3
- echo H::closeTag('div'); //2
+     )
+     ->content(
+         $translator->translate($value['label'])
+     );
+}
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::closeTag('div'); //4
+echo H::closeTag('div'); //3
+echo H::openTag('div', $panel); //3
+echo H::openTag('div', $panelHead); //4
+echo $translator->translate('dashboard');
+echo H::closeTag('div'); //4
+echo H::openTag('div', $panelBody); //4
+echo H::openTag('div', $row); //5
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kQuotePeriod
+]);
+echo $translator->translate('quote.overview.period');
+echo $s->infoIcon('quote_overview_period');
+echo H::closeTag('label');
+$body[$kQuotePeriod] =
+$s->getSetting('quote_overview_period');
+echo H::openTag('select', [
+ 'name' => $kQuotePeriod,
+ 'id' => $kQuotePeriod,
+ 'class' => 'form-select',
+ 'data-minimum-results-for-search' => 'Infinity'
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('none'));
+echo  new Option()
+ ->value('this-month')
+ ->selected(
+     $body[$kQuotePeriod] == 'this-month'
+ )
+ ->content($translator->translate('this.month'));
+echo  new Option()
+ ->value('last-month')
+ ->selected(
+     $body[$kQuotePeriod] == 'last-month'
+ )
+ ->content($translator->translate('last.month'));
+echo  new Option()
+ ->value('this-quarter')
+ ->selected(
+     $body[$kQuotePeriod] == 'this-quarter'
+ )
+ ->content($translator->translate('this.quarter'));
+echo  new Option()
+ ->value('last-quarter')
+ ->selected(
+     $body[$kQuotePeriod] == 'last-quarter'
+ )
+ ->content($translator->translate('last.quarter'));
+echo  new Option()
+ ->value('this-year')
+ ->selected(
+     $body[$kQuotePeriod] == 'this-year'
+ )
+ ->content($translator->translate('this.year'));
+echo  new Option()
+ ->value('last-year')
+ ->selected(
+     $body[$kQuotePeriod] == 'last-year'
+ )
+ ->content($translator->translate('last.year'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kInvoicePeriod
+]);
+echo $translator->translate('overview.period');
+echo $s->infoIcon('invoice_overview_period');
+echo H::closeTag('label');
+$body[$kInvoicePeriod] =
+$s->getSetting('invoice_overview_period');
+echo H::openTag('select', [
+ 'name' => $kInvoicePeriod,
+ 'id' => $kInvoicePeriod,
+ 'class' => 'form-select',
+ 'data-minimum-results-for-search' => 'Infinity'
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('none'));
+echo  new Option()
+ ->value('this-month')
+ ->selected(
+     $body[$kInvoicePeriod] == 'this-month'
+ )
+ ->content($translator->translate('this.month'));
+echo  new Option()
+ ->value('last-month')
+ ->selected(
+     $body[$kInvoicePeriod] == 'last-month'
+ )
+ ->content($translator->translate('last.month'));
+echo  new Option()
+ ->value('this-quarter')
+ ->selected(
+     $body[$kInvoicePeriod] == 'this-quarter'
+ )
+ ->content($translator->translate('this.quarter'));
+echo  new Option()
+ ->value('last-quarter')
+ ->selected(
+     $body[$kInvoicePeriod] == 'last-quarter'
+ )
+ ->content($translator->translate('last.quarter'));
+echo  new Option()
+ ->value('this-year')
+ ->selected(
+     $body[$kInvoicePeriod] == 'this-year'
+ )
+ ->content($translator->translate('this.year'));
+echo  new Option()
+ ->value('last-year')
+ ->selected(
+     $body[$kInvoicePeriod] == 'last-year'
+ )
+ ->content($translator->translate('last.year'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::openTag('div', $row); //5
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => 'disable_quickactions'
+]);
+echo $translator->translate('disable.quickactions');
+echo $s->infoIcon('disable_quickactions');
+echo H::closeTag('label');
+$body[$kDisableQuickactions] =
+$s->getSetting('disable_quickactions');
+echo H::openTag('select', [
+ 'name' => $kDisableQuickactions,
+ 'class' => 'form-select',
+ 'id' => 'disable_quickactions',
+ 'data-minimum-results-for-search' => 'Infinity'
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected(
+     $body[$kDisableQuickactions] == '1'
+ )
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::closeTag('div'); //4
+echo H::closeTag('div'); //3
+echo H::openTag('div', $panel); //3
+echo H::openTag('div', $panelHead); //4
+echo $translator->translate('interface');
+echo H::closeTag('div'); //4
+echo H::openTag('div', $panelBody); //4
+echo H::openTag('div', $row); //5
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kDisableSidebar
+]);
+echo $translator->translate('disable.sidebar');
+echo $s->infoIcon('disable_sidebar');
+echo H::closeTag('label');
+$body[$kDisableSidebar] =
+$s->getSetting('disable_sidebar');
+echo H::openTag('select', [
+ 'name' => $kDisableSidebar,
+ 'id' => $kDisableSidebar,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected(
+     $body[$kDisableSidebar] == '1'
+ )
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kCustomTitle
+]);
+echo $translator->translate('custom.title');
+echo $s->infoIcon('custom_title');
+echo H::closeTag('label');
+$body[$kCustomTitle] =
+$s->getSetting('custom_title');
+echo H::openTag('input', [
+ 'type' => 'text',
+ 'name' => $kCustomTitle,
+ 'id' => $kCustomTitle,
+ 'class' => 'form-control',
+ 'value' => $body[$kCustomTitle]
+]);
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::openTag('div', $row); //5
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => 'monospace_amounts'
+]);
+echo $translator->translate(
+    'monospaced.font.for.amounts'
+);
+echo $s->infoIcon('monospace_amounts');
+echo H::closeTag('label');
+$body[$kMonospaceAmounts] =
+$s->getSetting('monospace_amounts');
+echo H::openTag('select', [
+ 'name' => $kMonospaceAmounts,
+ 'class' => 'form-select',
+ 'id' => 'monospace_amounts'
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected(
+     $body[$kMonospaceAmounts] == '1'
+ )
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::openTag('p', ['class' => 'form-text']);
+echo $translator->translate('example') . ': ';
+echo H::openTag('span', [
+ 'style' => 'font-family: Monaco, Lucida Console, ' .
+ 'monospace'
+]);
+echo $s->formatCurrency(123456.78);
+echo H::closeTag('span');
+echo H::closeTag('p');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kOpenReports
+]);
+echo $translator->translate(
+    'open.reports.in.new.tab'
+);
+echo $s->infoIcon('open_reports_in_new_tab');
+echo H::closeTag('label');
+$body[$kOpenReports] =
+$s->getSetting('open_reports_in_new_tab');
+echo H::openTag('select', [
+ 'name' => $kOpenReports,
+ 'id' => $kOpenReports,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected(
+     $body[$kOpenReports] == '1'
+ )
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::closeTag('div'); //4
+echo H::closeTag('div'); //3
+echo H::openTag('div', $panel); //3
+echo H::openTag('div', $panelHead); //4
+echo $translator->translate('system.settings');
+echo H::closeTag('div'); //4
+echo H::openTag('div', $panelBody); //4
+echo H::openTag('div', $row); //5
+echo H::openTag('div', $colMd6); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kBccMails
+]);
+echo $translator->translate('bcc.mails.to.admin');
+echo $s->infoIcon('bcc_mails_to_admin');
+echo H::closeTag('label');
+$body[$kBccMails] =
+$s->getSetting('bcc_mails_to_admin');
+echo H::openTag('select', [
+ 'name' => $kBccMails,
+ 'id' => $kBccMails,
+ 'class' => 'form-select',
+]);
+echo  new Option()
+ ->value('0')
+ ->content($translator->translate('no'));
+echo  new Option()
+ ->value('1')
+ ->selected(
+     $body[$kBccMails] == '1'
+ )
+ ->content($translator->translate('yes'));
+echo H::closeTag('select');
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+// Not $colMd6 (its col-md-6 sibling, bcc_mails_to_admin, is a plain
+// Yes/No dropdown and doesn't need the room) — a 32-character hex
+// value plus the pe-5 reserved for the regenerate button genuinely
+// doesn't fit in a half-width column at normal font size; confirmed
+// live: the tail of the key was clipped, which first looked like a
+// z-index/stacking problem but was actually the input just not
+// being wide enough. col-12 wraps this field onto its own full-
+// width row below (Bootstrap's grid: 6 + 12 > 12 columns).
+echo H::openTag('div', ['class' => 'col-12']); //6
+echo H::openTag('div', $formGroup); //7
+echo H::openTag('label', [
+ 'for' => $kCronKey
+]);
+echo $translator->translate('cron.key');
+echo $s->infoIcon('cron_key');
+echo H::closeTag('label');
+// Same position-relative + position-absolute/top-50/end-0/
+// translate-middle-y technique as the password-reveal-toggle
+// field just above in partial_settings_online_payment.php — puts
+// the button inside the input visually via plain Bootstrap
+// utility classes, not .input-group (that component has
+// repeatedly caused layout problems in this app; this exact
+// field is one of the past incidents — never use it here).
+// pe-5 gives the input enough right-padding that its own text
+// never sits under the button, and z-3 (Bootstrap's z-index:3
+// utility) makes sure the button itself always stacks above the
+// input's own text layer regardless of any inherited stacking
+// context — confirmed live: without it the 32-char cron key value
+// could still render underneath the button's edge.
+echo H::openTag('div', ['class' => 'position-relative']); //8
+echo H::openTag('input', [
+ 'type' => 'text',
+ 'name' => $kCronKey,
+ 'id' => $kCronKey,
+ 'class' => 'cron_key form-control pe-5',
+ 'value' => (string) ($body[$kCronKey] ??
+ $s->getSetting('cron_key'))
+]);
+echo Button::widget()
+     ->label('<i class="bi bi-recycle" aria-hidden="true"></i>', false)
+     ->class('btn', 'btn-primary', 'position-absolute', 'top-50', 'end-0', 'translate-middle-y', 'z-3')
+     ->attribute('type', 'button')
+     ->id('btn_generate_cron_key')
+     ->render();
+echo H::closeTag('div'); //8
+echo H::closeTag('div'); //7
+echo H::closeTag('div'); //6
+echo H::closeTag('div'); //5
+echo H::closeTag('div'); //4
+echo H::closeTag('div'); //3
+echo H::closeTag('div'); //2
 echo H::closeTag('div'); //1

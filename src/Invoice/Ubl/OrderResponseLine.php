@@ -23,7 +23,8 @@ class OrderResponseLine implements XmlSerializable
         private readonly string $lineStatusCode,
         private readonly ?string $orderLineReferenceLineId,
         private readonly ?string $itemName,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function xmlSerialize(Writer $writer): void

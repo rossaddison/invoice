@@ -36,7 +36,7 @@ class PostalAddress
         #[Column(type: 'string(50)', nullable: false)]
         private string $countrysubentity = '',
         #[Column(type: 'string(50)', nullable: false)]
-        private string $country = '')
-    {
+        private string $country = ''
+    ) {
     }
 }

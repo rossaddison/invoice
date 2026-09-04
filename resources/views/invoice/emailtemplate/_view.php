@@ -29,15 +29,15 @@ use Yiisoft\Html\Html;
 <?= Html::openTag('div'); ?>
     <?php
         ReadOnlyField::render($translator->translate('title'), $form->getEmailTemplateTitle());
-        ReadOnlyField::render($translator->translate('type'), $form->getEmailTemplateType());
-        ReadOnlyField::render($translator->translate('body'), $form->getEmailTemplateBody());
-        ReadOnlyField::render($translator->translate('subject'), $form->getEmailTemplateSubject());
-        ReadOnlyField::render($translator->translate('from.name'), $form->getEmailTemplateFromName());
-        ReadOnlyField::render($translator->translate('from.email'), $form->getEmailTemplateFromEmail());
-        ReadOnlyField::render($translator->translate('cc'), $form->getEmailTemplateCc());
-        ReadOnlyField::render($translator->translate('bcc'), $form->getEmailTemplateBcc());
-        ReadOnlyField::render($translator->translate('pdf.template'), $form->getEmailTemplatePdfTemplate());
-    ?>
+ReadOnlyField::render($translator->translate('type'), $form->getEmailTemplateType());
+ReadOnlyField::render($translator->translate('body'), $form->getEmailTemplateBody());
+ReadOnlyField::render($translator->translate('subject'), $form->getEmailTemplateSubject());
+ReadOnlyField::render($translator->translate('from.name'), $form->getEmailTemplateFromName());
+ReadOnlyField::render($translator->translate('from.email'), $form->getEmailTemplateFromEmail());
+ReadOnlyField::render($translator->translate('cc'), $form->getEmailTemplateCc());
+ReadOnlyField::render($translator->translate('bcc'), $form->getEmailTemplateBcc());
+ReadOnlyField::render($translator->translate('pdf.template'), $form->getEmailTemplatePdfTemplate());
+?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

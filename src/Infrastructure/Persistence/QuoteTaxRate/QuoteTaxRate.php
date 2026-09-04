@@ -15,7 +15,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class QuoteTaxRate
 {
     use RequireId;
-    
+
     #[BelongsTo(target: Quote::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Quote $quote = null;
 
@@ -25,19 +25,29 @@ class QuoteTaxRate
     public function __construct(
         #[Column(type: 'primary')]
         private ?int $id = null,
-        #[Column(type: 'integer(11)',
-        nullable: false)]
+        #[Column(
+            type: 'integer(11)',
+            nullable: false
+        )]
         private ?int $quote_id = null,
-        #[Column(type: 'integer(11)',
-        nullable: false)]
+        #[Column(
+            type: 'integer(11)',
+            nullable: false
+        )]
         private ?int $tax_rate_id = null,
-        #[Column(type: 'integer(1)',
-        nullable: false, default: 0)]
+        #[Column(
+            type: 'integer(1)',
+            nullable: false,
+            default: 0
+        )]
         private ?int $include_item_tax = null,
-        #[Column(type: 'decimal(20,2)',
-        nullable: false, default: 0.00)]
-        private ?float $quote_tax_rate_amount = 0.00)
-    {
+        #[Column(
+            type: 'decimal(20,2)',
+            nullable: false,
+            default: 0.00
+        )]
+        private ?float $quote_tax_rate_amount = 0.00
+    ) {
     }
 
     public function getQuote(): ?Quote
@@ -59,12 +69,12 @@ class QuoteTaxRate
     {
         $this->tax_rate = $tax_rate;
     }
-    
+
     public function reqId(): int
     {
         return $this->requireId($this->id, 'QuoteTaxRate');
     }
-    
+
     public function hasIdentity(): bool
     {
         return $this->id !== null;

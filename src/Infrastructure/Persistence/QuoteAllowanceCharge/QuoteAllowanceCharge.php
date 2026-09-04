@@ -15,7 +15,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class QuoteAllowanceCharge
 {
     use RequireId;
-    
+
     #[BelongsTo(
         target: AllowanceCharge::class,
         nullable: false,
@@ -43,7 +43,7 @@ class QuoteAllowanceCharge
         private ?float $vat_or_tax = null,
     ) {
     }
-    
+
     public function reqId(): int
     {
         return $this->requireId($this->id, 'QuoteAllowanceCharge');

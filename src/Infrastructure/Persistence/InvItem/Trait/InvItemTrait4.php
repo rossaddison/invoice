@@ -16,7 +16,6 @@ use DateTimeImmutable;
  */
 trait InvItemTrait4
 {
-
     public function setNote(string $note): void
     {
         $this->note = $note;

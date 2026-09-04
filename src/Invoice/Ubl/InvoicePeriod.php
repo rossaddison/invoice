@@ -13,8 +13,7 @@ class InvoicePeriod implements XmlSerializable
         private readonly string $startDate,
         private readonly string $endDate,
         private readonly string $descriptionCode
-    )
-    {
+    ) {
     }
 
     /**

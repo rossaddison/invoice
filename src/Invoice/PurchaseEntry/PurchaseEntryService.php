@@ -17,8 +17,10 @@ final readonly class PurchaseEntryService
     {
         $datetime = new \DateTimeImmutable();
         if (isset($body['date'])) {
-            $date = \DateTimeImmutable::createFromFormat('Y-m-d',
-                (string) $body['date']) ?: $datetime;
+            $date = \DateTimeImmutable::createFromFormat(
+                'Y-m-d',
+                (string) $body['date']
+            ) ?: $datetime;
             $entry->setDate($date);
         }
         $entry->setSupplier((string) ($body['supplier'] ?? ''));

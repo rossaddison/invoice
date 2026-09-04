@@ -60,7 +60,8 @@ final readonly class ContractService
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
-                $this->cR->repoClientquery((int) $array[$client]));
+                $this->cR->repoClientquery((int) $array[$client])
+            );
         }
     }
 

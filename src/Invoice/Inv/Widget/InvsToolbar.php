@@ -163,33 +163,48 @@ final class InvsToolbar
             . Html::openTag('div', ['class' => 'modal-dialog'])
             . Html::openTag('div', ['class' => 'modal-content'])
             . Html::openTag('div', ['class' => 'modal-header'])
-            . Html::tag('h5', '💰 ' . Html::encode($t->translate('quick.pay')),
-                ['class' => 'modal-title'])
+            . Html::tag(
+                'h5',
+                '💰 ' . Html::encode($t->translate('quick.pay')),
+                ['class' => 'modal-title']
+            )
             . Html::tag('button', '', ['type' => 'button', 'class' => 'btn-close',
                 'data-bs-dismiss' => 'modal', 'aria-label' => 'Close'])
             . Html::closeTag('div')
             . Html::openTag('div', ['class' => 'modal-body'])
             . Html::openTag('div', ['class' => 'mb-3'])
-            . Html::tag('label', Html::encode($t->translate('payment.date')),
-                ['class' => 'form-label', 'for' => 'bulk-quick-pay-date'])
+            . Html::tag(
+                'label',
+                Html::encode($t->translate('payment.date')),
+                ['class' => 'form-label', 'for' => 'bulk-quick-pay-date']
+            )
             . Html::tag('input', '', ['type' => 'date', 'id' => 'bulk-quick-pay-date',
                 'class' => 'form-control', 'value' => $today, 'required' => true,
                 'data-action' => 'show-picker'])
             . Html::closeTag('div')
             . Html::openTag('div', ['class' => 'mb-3'])
-            . Html::tag('label', Html::encode($t->translate('bank.ref')),
-                ['class' => 'form-label', 'for' => 'bulk-quick-pay-note'])
+            . Html::tag(
+                'label',
+                Html::encode($t->translate('bank.ref')),
+                ['class' => 'form-label', 'for' => 'bulk-quick-pay-note']
+            )
             . Html::tag('input', '', ['type' => 'text', 'id' => 'bulk-quick-pay-note',
                 'class' => 'form-control', 'placeholder' => Html::encode($t->translate('bank.ref'))])
             . Html::closeTag('div')
             . Html::closeTag('div')
             . Html::openTag('div', ['class' => 'modal-footer'])
-            . Html::tag('button', Html::encode($t->translate('cancel')),
+            . Html::tag(
+                'button',
+                Html::encode($t->translate('cancel')),
                 ['type' => 'button', 'class' => 'btn btn-secondary',
-                    'data-bs-dismiss' => 'modal'])
-            . Html::tag('button', '💰 ' . Html::encode($t->translate('quick.pay')),
+                    'data-bs-dismiss' => 'modal']
+            )
+            . Html::tag(
+                'button',
+                '💰 ' . Html::encode($t->translate('quick.pay')),
                 ['type' => 'button', 'class' => 'btn btn-success',
-                    'id' => 'bulk-quick-pay-confirm'])
+                    'id' => 'bulk-quick-pay-confirm']
+            )
             . Html::closeTag('div')
             . Html::closeTag('div')
             . Html::closeTag('div')
@@ -210,29 +225,44 @@ final class InvsToolbar
             . Html::openTag('div', ['class' => 'modal-dialog'])
             . Html::openTag('div', ['class' => 'modal-content'])
             . Html::openTag('div', ['class' => 'modal-header'])
-            . Html::tag('h5', '📅 ' . Html::encode($t->translate('copy.all.to.date')),
-                ['class' => 'modal-title'])
+            . Html::tag(
+                'h5',
+                '📅 ' . Html::encode($t->translate('copy.all.to.date')),
+                ['class' => 'modal-title']
+            )
             . Html::tag('button', '', ['type' => 'button', 'class' => 'btn-close',
                 'data-bs-dismiss' => 'modal', 'aria-label' => 'Close'])
             . Html::closeTag('div')
             . Html::openTag('div', ['class' => 'modal-body'])
-            . Html::tag('p', Html::encode($t->translate('copy.all.to.date.warning')),
-                ['class' => 'text-danger'])
+            . Html::tag(
+                'p',
+                Html::encode($t->translate('copy.all.to.date.warning')),
+                ['class' => 'text-danger']
+            )
             . Html::openTag('div', ['class' => 'mb-3'])
-            . Html::tag('label', Html::encode($t->translate('copy.all.to.date.new.date')),
-                ['class' => 'form-label', 'for' => 'copy-all-to-date-date'])
+            . Html::tag(
+                'label',
+                Html::encode($t->translate('copy.all.to.date.new.date')),
+                ['class' => 'form-label', 'for' => 'copy-all-to-date-date']
+            )
             . Html::tag('input', '', ['type' => 'date', 'id' => 'copy-all-to-date-date',
                 'class' => 'form-control', 'value' => $today, 'required' => true,
                 'data-action' => 'show-picker'])
             . Html::closeTag('div')
             . Html::closeTag('div')
             . Html::openTag('div', ['class' => 'modal-footer'])
-            . Html::tag('button', Html::encode($t->translate('cancel')),
+            . Html::tag(
+                'button',
+                Html::encode($t->translate('cancel')),
                 ['type' => 'button', 'class' => 'btn btn-secondary',
-                    'data-bs-dismiss' => 'modal'])
-            . Html::tag('button', '📅 ' . Html::encode($t->translate('copy.all.to.date')),
+                    'data-bs-dismiss' => 'modal']
+            )
+            . Html::tag(
+                'button',
+                '📅 ' . Html::encode($t->translate('copy.all.to.date')),
                 ['type' => 'button', 'class' => 'btn btn-success',
-                    'id' => 'copy-all-to-date-confirm'])
+                    'id' => 'copy-all-to-date-confirm']
+            )
             . Html::closeTag('div')
             . Html::closeTag('div')
             . Html::closeTag('div')
@@ -245,7 +275,8 @@ final class InvsToolbar
             ? new A()
                 ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
                     'title' => Html::encode(
-                        $p->translator->translate('security.disable.read.only.info')),
+                        $p->translator->translate('security.disable.read.only.info')
+                    ),
                     'disabled' => 'disabled', 'style' => 'text-decoration:none'])
                 ->addClass('btn btn-success')
                 ->content('☑️' . $p->translator->translate('draft') . $p->iR->getSpecificStatusArrayEmoji(1))
@@ -335,7 +366,8 @@ final class InvsToolbar
         $templateOptions = '';
         /** @var EmailTemplate $tpl */
         foreach ($p->etR->repoEmailTemplateType('invoice') as $tpl) {
-            $templateOptions .= Html::tag('option',
+            $templateOptions .= Html::tag(
+                'option',
                 $tpl->getEmailTemplateTitle() ?? '',
                 ['value' => (string) $tpl->reqEmailTemplateId()],
             )->render();
@@ -344,7 +376,8 @@ final class InvsToolbar
         $fromOptions = '';
         /** @var FromDropDown $from */
         foreach ($p->fdR->findAllPreloaded() as $from) {
-            $fromOptions .= Html::tag('option',
+            $fromOptions .= Html::tag(
+                'option',
                 Html::encode($from->getEmail()),
                 ['value' => (string) $from->reqId()],
             )->render();
@@ -353,22 +386,30 @@ final class InvsToolbar
         $fromAddUrl = $p->urlGenerator->generate('from/add', ['returnUrl' => 'batchEmail']);
 
         $fromRow = Html::openTag('div', ['class' => 'mb-3'])
-            . Html::tag('label', Html::encode($t->translate('from.email.address')),
-                ['class' => 'form-label', 'for' => 'batch-email-from'])
+            . Html::tag(
+                'label',
+                Html::encode($t->translate('from.email.address')),
+                ['class' => 'form-label', 'for' => 'batch-email-from']
+            )
             . Html::openTag('div', ['class' => 'd-flex gap-2 align-items-center'])
             . Html::openTag('select', ['id' => 'batch-email-from', 'class' => 'form-select'])
             . $fromOptions
             . Html::closeTag('select')
-            . Html::tag('a', '➕',
+            . Html::tag(
+                'a',
+                '➕',
                 ['href' => $fromAddUrl, 'class' => 'btn btn-outline-secondary flex-shrink-0',
-                    'title' => Html::encode($t->translate('add'))])
+                    'title' => Html::encode($t->translate('add'))]
+            )
             . Html::closeTag('div')
             . ($fromOptions === ''
-                ? Html::tag('small',
+                ? Html::tag(
+                    'small',
                     Html::encode($t->translate('from.email.address')) . ': '
                     . Html::encode($t->translate('not.set')) . ' — '
                     . Html::encode($t->translate('add')) . ' ➕',
-                    ['class' => 'text-warning'])
+                    ['class' => 'text-warning']
+                )
                 : '')
             . Html::closeTag('div');
 
@@ -377,8 +418,11 @@ final class InvsToolbar
             . Html::openTag('div', ['class' => 'modal-dialog modal-lg'])
             . Html::openTag('div', ['class' => 'modal-content'])
             . Html::openTag('div', ['class' => 'modal-header'])
-            . Html::tag('h5', '📧 ' . Html::encode($t->translate('email.client')),
-                ['class' => 'modal-title'])
+            . Html::tag(
+                'h5',
+                '📧 ' . Html::encode($t->translate('email.client')),
+                ['class' => 'modal-title']
+            )
             . Html::tag('button', '', ['type' => 'button', 'class' => 'btn-close',
                 'data-bs-dismiss' => 'modal', 'aria-label' => 'Close'])
             . Html::closeTag('div')
@@ -401,9 +445,11 @@ final class InvsToolbar
             . Html::closeTag('table')
             . $fromRow
             . Html::openTag('div', ['class' => 'mb-3'])
-            . Html::tag('label',
+            . Html::tag(
+                'label',
                 Html::encode($t->translate('email.template')),
-                ['class' => 'form-label', 'for' => 'batch-email-template'])
+                ['class' => 'form-label', 'for' => 'batch-email-template']
+            )
             . Html::openTag('select', ['id' => 'batch-email-template', 'class' => 'form-select'])
             . $templateOptions
             . Html::closeTag('select')
@@ -411,12 +457,18 @@ final class InvsToolbar
             . Html::closeTag('div')
             . Html::closeTag('div')
             . Html::openTag('div', ['class' => 'modal-footer'])
-            . Html::tag('button', Html::encode($t->translate('cancel')),
+            . Html::tag(
+                'button',
+                Html::encode($t->translate('cancel')),
                 ['type' => 'button', 'class' => 'btn btn-secondary',
-                    'data-bs-dismiss' => 'modal'])
-            . Html::tag('button', '📧 ' . Html::encode($t->translate('email.client')),
+                    'data-bs-dismiss' => 'modal']
+            )
+            . Html::tag(
+                'button',
+                '📧 ' . Html::encode($t->translate('email.client')),
                 ['type' => 'button', 'class' => 'btn btn-primary d-none',
-                    'id' => 'batch-email-confirm'])
+                    'id' => 'batch-email-confirm']
+            )
             . Html::closeTag('div')
             . Html::closeTag('div')
             . Html::closeTag('div')

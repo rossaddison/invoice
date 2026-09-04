@@ -38,8 +38,15 @@ final class QuoteItemHtmxController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator,
-            $webViewRenderer, $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
     }
 
     public function addProduct(
@@ -60,7 +67,9 @@ final class QuoteItemHtmxController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->quoteItemService->addQuoteItemProduct(
-                        new QuoteItem(), $body, (string) $quote_id,
+                        new QuoteItem(),
+                        $body,
+                        (string) $quote_id,
                         new QiAddProductDeps($d->pR, $d->qiar, new QIAS($d->qiar, $d->qiR), $d->uR, $d->trR, $this->translator),
                         mergeIfExists: true,
                     );
@@ -71,7 +80,8 @@ final class QuoteItemHtmxController extends BaseController
         }
 
         return $this->webService->getRedirectResponse(
-            'quote/view', ['id' => (string) $quote_id]
+            'quote/view',
+            ['id' => (string) $quote_id]
         );
     }
 
@@ -93,8 +103,13 @@ final class QuoteItemHtmxController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->quoteItemService->addQuoteItemTask(
-                        new QuoteItem(), $body, $quote_id,
-                        $d->taskR, $d->qiar, new QIAS($d->qiar, $d->qiR), $d->trR,
+                        new QuoteItem(),
+                        $body,
+                        $quote_id,
+                        $d->taskR,
+                        $d->qiar,
+                        new QIAS($d->qiar, $d->qiR),
+                        $d->trR,
                     );
                     return $this->renderPartial($quote_id, $d);
                 }
@@ -103,7 +118,8 @@ final class QuoteItemHtmxController extends BaseController
         }
 
         return $this->webService->getRedirectResponse(
-            'quote/view', ['id' => (string) $quote_id]
+            'quote/view',
+            ['id' => (string) $quote_id]
         );
     }
 

@@ -15,7 +15,8 @@ final readonly class AuthTfaHelper
     public function __construct(
         private SettingRepository $sR,
         private RecoveryCodeService $recoveryCodeService,
-    ) {}
+    ) {
+    }
 
     public function isValidTotpCode(string $code): bool
     {

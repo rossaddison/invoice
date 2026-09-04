@@ -21,5 +21,6 @@ final class InvCronUserDeps
         public readonly UserClientRepository $uclR,
         public readonly UserInvRepository $uiR,
         public readonly UserRepository $userRepository,
-    ) {}
+    ) {
+    }
 }

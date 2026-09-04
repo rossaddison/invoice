@@ -61,7 +61,7 @@ $statuses = [
 $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'task/index'))
     ->id('btn-reset')
     ->render();
@@ -77,9 +77,10 @@ $columns = [
         header: $translator->translate('project'),
         content: static function (Task $model) use ($prjctR): string {
             return Html::encode(
-                    ($p = $model->getProject()) !== null
+                ($p = $model->getProject()) !== null
                     && $prjctR->count($p->reqId()) > 0 ?
-                    $prjctR->repoProjectquery($p->reqId())?->getName() ?? '' : '');
+                    $prjctR->repoProjectquery($p->reqId())?->getName() ?? '' : ''
+            );
         },
     ),
     new DataColumn(

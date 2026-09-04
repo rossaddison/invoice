@@ -28,7 +28,8 @@ final class As4ReceiveControllerTestFixture
         public readonly As4Receiver&MockObject $receiver,
         public readonly As4UserMessageHandlerInterface&MockObject $userMessageHandler,
         public readonly As4MessageRepositoryInterface&MockObject $repository,
-    ) {}
+    ) {
+    }
 }
 
 #[AllowMockObjectsWithoutExpectations]

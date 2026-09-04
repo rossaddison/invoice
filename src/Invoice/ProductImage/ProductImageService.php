@@ -31,22 +31,27 @@ final readonly class ProductImageService
         $model->setUploadedDate(
             $datetime_created::createFromFormat(
                 'Y-m-d',
-                (string) $array['uploaded_date'])
+                (string) $array['uploaded_date']
+            )
             ?: new \DateTimeImmutable('now'),
         );
 
         isset($array['product_id']) ?
             $model->setProductId(
-                (int) $array['product_id']) : '';
+                (int) $array['product_id']
+            ) : '';
         isset($array['file_name_original']) ?
             $model->setFileNameOriginal(
-                (string) $array['file_name_original']) : '';
+                (string) $array['file_name_original']
+            ) : '';
         isset($array['file_name_new']) ?
             $model->setFileNameNew(
-                (string) $array['file_name_new']) : '';
+                (string) $array['file_name_new']
+            ) : '';
         isset($array['description']) ?
             $model->setDescription(
-                (string) $array['description']) : '';
+                (string) $array['description']
+            ) : '';
 
         $this->repository->save($model);
     }
@@ -58,7 +63,8 @@ final readonly class ProductImageService
         $product = 'product_id';
         if (isset($array[$product])) {
             $productEntity = $this->pR->repoProductquery(
-                (int) $array[$product]);
+                (int) $array[$product]
+            );
             if ($productEntity) {
                 $model->setProduct($productEntity);
             }

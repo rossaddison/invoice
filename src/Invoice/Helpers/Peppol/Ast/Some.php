@@ -23,5 +23,6 @@ readonly class Some implements Expression
         public string     $variable,
         public Expression $in,
         public Expression $satisfies,
-    ) {}
+    ) {
+    }
 }

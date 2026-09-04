@@ -64,22 +64,22 @@ foreach ($paymentMethods as $paymentMethod) {
                     $translator->translate('payment.method'),
                     $selectLabel($optionsDataPaymentMethod, $form->getPaymentMethodId()),
                 );
-                ReadOnlyField::render(
-                    $translator->translate('invoice'),
-                    $form->getInv()?->getNumber() ?? $translator->translate('number.no'),
-                );
-                ReadOnlyField::render(
-                    $translator->translate('date'),
-                    $form->getPaymentDate() instanceof DateTimeImmutable
-                        ? $form->getPaymentDate()->format('Y-m-d')
-                        : '',
-                );
-                ReadOnlyField::render($translator->translate('note'), $form->getNote());
-                ReadOnlyField::render(
-                    $translator->translate('amount'),
-                    $form->getAmount() !== null ? (string) $form->getAmount() : '',
-                );
-            ?>
+ReadOnlyField::render(
+    $translator->translate('invoice'),
+    $form->getInv()?->getNumber() ?? $translator->translate('number.no'),
+);
+ReadOnlyField::render(
+    $translator->translate('date'),
+    $form->getPaymentDate() instanceof DateTimeImmutable
+        ? $form->getPaymentDate()->format('Y-m-d')
+        : '',
+);
+ReadOnlyField::render($translator->translate('note'), $form->getNote());
+ReadOnlyField::render(
+    $translator->translate('amount'),
+    $form->getAmount() !== null ? (string) $form->getAmount() : '',
+);
+?>
             <?= Html::openTag('div'); ?>
                 <?= $viewCustomFields; ?>
             <?= Html::closeTag('div'); ?>

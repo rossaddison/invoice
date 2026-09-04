@@ -217,7 +217,9 @@ final class ProductImageController extends BaseController
                 'actionName' => 'productimage/view',
                 'actionArguments' => ['id' => $productImage->reqId()],
                 'form' => ProductImageForm::show(
-                    $productImage, $productImage->reqProductId()),
+                    $productImage,
+                    $productImage->reqProductId()
+                ),
                 'productimage' => $productimageRepository->repoProductImagequery($productImage->reqId()),
             ];
             return $this->webViewRenderer->render('_view', $parameters);
@@ -230,11 +232,13 @@ final class ProductImageController extends BaseController
      * @param ProductImageRepository $productimageRepository
      * @return ProductImage|null
      */
-    public function productimage(CurrentRoute $currentRoute,
-        ProductImageRepository $productimageRepository): ?ProductImage
-    {
+    public function productimage(
+        CurrentRoute $currentRoute,
+        ProductImageRepository $productimageRepository
+    ): ?ProductImage {
         return $productimageRepository->repoProductImagequery(
-            (int) $currentRoute->getArgument('id'));
+            (int) $currentRoute->getArgument('id')
+        );
     }
 
     /**

@@ -16,7 +16,6 @@ use DateTimeImmutable;
  */
 trait InvItemTrait2
 {
-
     public function setTaxRateId(int $tax_rate_id): void
     {
         $this->tax_rate_id = $tax_rate_id;

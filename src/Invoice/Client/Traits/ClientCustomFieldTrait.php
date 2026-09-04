@@ -54,9 +54,12 @@ trait ClientCustomFieldTrait
      * @param ccR $ccR
      * @return Response
      */
-    public function customFields(FormHydrator $formHydrator, array $body,
-            int $cId, ccR $ccR): Response
-    {
+    public function customFields(
+        FormHydrator $formHydrator,
+        array $body,
+        int $cId,
+        ccR $ccR
+    ): Response {
         if (empty($body['custom'])) {
             return $this->factory->createResponse(Json::encode(['success' => 0]));
         }
@@ -64,7 +67,9 @@ trait ClientCustomFieldTrait
         $raw = $body['custom'];
         $this->persistCustomFieldEntries(
             $this->buildCustomFieldDbArray($raw),
-            $cId, $ccR, $formHydrator
+            $cId,
+            $ccR,
+            $formHydrator
         );
         return $this->factory->createResponse(Json::encode(['success' => 1]));
     }
@@ -77,9 +82,11 @@ trait ClientCustomFieldTrait
      * @param ccR $ccR
      * @return Response
      */
-    public function saveCustom(FormHydrator $formHydrator,
-                                        Request $request, ccR $ccR): Response
-    {
+    public function saveCustom(
+        FormHydrator $formHydrator,
+        Request $request,
+        ccR $ccR
+    ): Response {
         $body = $request->getQueryParams();
         if (empty($body['custom'])) {
             return $this->factory->createResponse(Json::encode(['success' => 0]));
@@ -89,7 +96,9 @@ trait ClientCustomFieldTrait
         $cId = (int) $this->session->get('client_id');
         $this->persistCustomFieldEntries(
             $this->buildCustomFieldDbArray($raw),
-            $cId, $ccR, $formHydrator
+            $cId,
+            $ccR,
+            $formHydrator
         );
         return $this->factory->createResponse(Json::encode(['success' => 1]));
     }
@@ -134,7 +143,10 @@ trait ClientCustomFieldTrait
      * @return void
      */
     private function persistCustomFieldEntries(
-        array $dbArray, int $cId, ccR $ccR, FormHydrator $formHydrator
+        array $dbArray,
+        int $cId,
+        ccR $ccR,
+        FormHydrator $formHydrator
     ): void {
         foreach ($dbArray as $key => $value) {
             $clientCustom = [

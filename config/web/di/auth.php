@@ -31,13 +31,15 @@ return [
         assert($repository instanceof \Cycle\ORM\RepositoryInterface);
         return $repository;
     },
-    CookieMiddleware::class => static fn (CookieLogin $cookieLogin,
-        LoggerInterface $logger) => new CookieMiddleware(
-            $logger,
-            new CookieEncryptor($secretKey),
-            new CookieSigner($secretKey),
-            [$cookieLogin->getCookieName() => CookieMiddleware::SIGN],
-        ),
+    CookieMiddleware::class => static fn (
+        CookieLogin $cookieLogin,
+        LoggerInterface $logger
+    ) => new CookieMiddleware(
+        $logger,
+        new CookieEncryptor($secretKey),
+        new CookieSigner($secretKey),
+        [$cookieLogin->getCookieName() => CookieMiddleware::SIGN],
+    ),
         CurrentUser::class => [
             'withSession()' => [Reference::to(SessionInterface::class)],
             'withAccessChecker()' => [Reference::to(AccessCheckerInterface::class)],

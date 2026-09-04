@@ -14,7 +14,7 @@ class GoogleTranslateDiffEmptyExceptionTest extends TestCase
     public function testExceptionInheritance(): void
     {
         $exception = new GoogleTranslateDiffEmptyException();
-        
+
         $this->assertInstanceOf(RuntimeException::class, $exception);
         $this->assertInstanceOf(FriendlyExceptionInterface::class, $exception);
     }
@@ -22,20 +22,20 @@ class GoogleTranslateDiffEmptyExceptionTest extends TestCase
     public function testGetName(): void
     {
         $exception = new GoogleTranslateDiffEmptyException();
-        
+
         $expectedName = 'The diff array that has been built is empty. The existing target locale app.php already has all the necessary keys of the source app.php.';
-        
+
         $this->assertSame($expectedName, $exception->getName());
     }
 
     public function testGetSolution(): void
     {
         $exception = new GoogleTranslateDiffEmptyException();
-        
+
         $expectedSolution = <<<'SOLUTION'
                There is no need to translate
             SOLUTION;
-        
+
         $this->assertSame($expectedSolution, $exception->getSolution());
     }
 
@@ -43,7 +43,7 @@ class GoogleTranslateDiffEmptyExceptionTest extends TestCase
     {
         $message = 'Custom error message';
         $exception = new GoogleTranslateDiffEmptyException($message);
-        
+
         $this->assertSame($message, $exception->getMessage());
     }
 
@@ -52,7 +52,7 @@ class GoogleTranslateDiffEmptyExceptionTest extends TestCase
         $message = 'Custom error message';
         $code = 404;
         $exception = new GoogleTranslateDiffEmptyException($message, $code);
-        
+
         $this->assertSame($message, $exception->getMessage());
         $this->assertSame($code, $exception->getCode());
     }
@@ -61,7 +61,7 @@ class GoogleTranslateDiffEmptyExceptionTest extends TestCase
     {
         $previousException = new RuntimeException('Previous exception');
         $exception = new GoogleTranslateDiffEmptyException('Current exception', 0, $previousException);
-        
+
         $this->assertSame($previousException, $exception->getPrevious());
     }
 
@@ -69,7 +69,7 @@ class GoogleTranslateDiffEmptyExceptionTest extends TestCase
     {
         $this->expectException(GoogleTranslateDiffEmptyException::class);
         $this->expectExceptionMessage('Test message');
-        
+
         throw new GoogleTranslateDiffEmptyException('Test message');
     }
 
@@ -86,35 +86,35 @@ class GoogleTranslateDiffEmptyExceptionTest extends TestCase
     public function testGetNameReturnType(): void
     {
         $exception = new GoogleTranslateDiffEmptyException();
-        
+
         $this->assertIsString($exception->getName());
     }
 
     public function testGetSolutionReturnType(): void
     {
         $exception = new GoogleTranslateDiffEmptyException();
-        
+
         $this->assertIsString($exception->getSolution());
     }
 
     public function testGetNameIsNotEmpty(): void
     {
         $exception = new GoogleTranslateDiffEmptyException();
-        
+
         $this->assertNotEmpty($exception->getName());
     }
 
     public function testGetSolutionIsNotEmpty(): void
     {
         $exception = new GoogleTranslateDiffEmptyException();
-        
+
         $this->assertNotEmpty($exception->getSolution());
     }
 
     public function testExceptionDefaultValues(): void
     {
         $exception = new GoogleTranslateDiffEmptyException();
-        
+
         $this->assertSame('', $exception->getMessage());
         $this->assertSame(0, $exception->getCode());
         $this->assertNull($exception->getPrevious());
@@ -123,7 +123,7 @@ class GoogleTranslateDiffEmptyExceptionTest extends TestCase
     public function testExceptionStackTrace(): void
     {
         $exception = new GoogleTranslateDiffEmptyException('Stack trace test');
-        
+
         $this->assertIsArray($exception->getTrace());
         $this->assertIsString($exception->getTraceAsString());
     }
@@ -131,7 +131,7 @@ class GoogleTranslateDiffEmptyExceptionTest extends TestCase
     public function testExceptionFile(): void
     {
         $exception = new GoogleTranslateDiffEmptyException();
-        
+
         $this->assertIsString($exception->getFile());
         $this->assertIsInt($exception->getLine());
     }
@@ -139,9 +139,9 @@ class GoogleTranslateDiffEmptyExceptionTest extends TestCase
     public function testExceptionToString(): void
     {
         $exception = new GoogleTranslateDiffEmptyException('String conversion test');
-        
+
         $stringRepresentation = (string) $exception;
-        
+
         $this->assertIsString($stringRepresentation);
         $this->assertStringContainsString('GoogleTranslateDiffEmptyException', $stringRepresentation);
         $this->assertStringContainsString('String conversion test', $stringRepresentation);
@@ -150,7 +150,7 @@ class GoogleTranslateDiffEmptyExceptionTest extends TestCase
     public function testExceptionImplementsInterface(): void
     {
         $exception = new GoogleTranslateDiffEmptyException();
-        
+
         $this->assertTrue(method_exists($exception, 'getName'));
         $this->assertTrue(method_exists($exception, 'getSolution'));
     }

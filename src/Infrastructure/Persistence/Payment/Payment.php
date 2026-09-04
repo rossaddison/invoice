@@ -17,7 +17,7 @@ use DateTimeImmutable;
 class Payment
 {
     use RequireId;
-    
+
     #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
@@ -37,8 +37,8 @@ class Payment
         #[Column(type: 'decimal(20,2)', nullable: true, default: 0.00)]
         private ?float $amount = 0.00,
         #[Column(type: 'longText', nullable: false)]
-        private string $note = '')
-    {
+        private string $note = ''
+    ) {
     }
 
     public function getInv(): ?Inv

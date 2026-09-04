@@ -105,8 +105,12 @@ $columns = [
             if ($m == 0 && $base > 0) {
                 return '— Fixed <span class="badge bg-danger" title="R042: percentage required">R042</span>';
             }
-            if ($m === 0)   { return '— Fixed'; }
-            if ($m === 100) { return '100 % (= Base)'; }
+            if ($m === 0) {
+                return '— Fixed';
+            }
+            if ($m === 100) {
+                return '100 % (= Base)';
+            }
             return $m . ' %';
         },
         encodeContent: false,

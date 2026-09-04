@@ -23,10 +23,16 @@ $btnLink = 'btn btn-link';
 ?>
 <div class="text-end mb-2">
     <?= Html::a('API v1 Info', $urlGenerator->generate('api/info/v1'),
-            ['class' => $btnLink]) ?>
-    <?= Html::a('API v2 Info', $urlGenerator->generate('api/info/v2'),
-            ['class' => $btnLink]) ?>
-    <?= Html::a('API Users List Data', $urlGenerator->generate('api/user/index'),
-            ['class' => $btnLink]) ?>
+        ['class' => $btnLink]) ?>
+    <?= Html::a(
+        'API v2 Info',
+        $urlGenerator->generate('api/info/v2'),
+        ['class' => $btnLink]
+    ) ?>
+    <?= Html::a(
+        'API Users List Data',
+        $urlGenerator->generate('api/user/index'),
+        ['class' => $btnLink]
+    ) ?>
 </div>
 <?= UsersListWidget::widget()->withPaginator($paginator)->withSR($s) ?>

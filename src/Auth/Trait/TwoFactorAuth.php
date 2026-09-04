@@ -89,14 +89,20 @@ trait TwoFactorAuth
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
                 $result = $this->processSetupVerification(
-                    $pendingUserId, $body, $translator, $userRepository);
+                    $pendingUserId,
+                    $body,
+                    $translator,
+                    $userRepository
+                );
                 if ($result !== null) {
                     $response = $result;
                 }
             }
         } else {
-            $this->logger->log(LogLevel::WARNING,
-                'Rate limit reached for 2FA setup from IP: ' . $clientIp);
+            $this->logger->log(
+                LogLevel::WARNING,
+                'Rate limit reached for 2FA setup from IP: ' . $clientIp
+            );
         }
         return $response;
     }
@@ -138,7 +144,13 @@ trait TwoFactorAuth
         $response = null;
         if ($request->getMethod() === Method::POST) {
             $response = $this->handleVerifyLoginPost(
-                $request, $translator, $userRepository, $vuid, $form, $codes);
+                $request,
+                $translator,
+                $userRepository,
+                $vuid,
+                $form,
+                $codes
+            );
         }
         return $response ?? $this->webViewRenderer->render('verify', $parameters);
     }
@@ -165,7 +177,13 @@ trait TwoFactorAuth
             $error = $translator->translate($tfa . '.invalid.code.format');
         } else {
             $result = $this->verifySetupTotp(
-                $inputCode, $tempSecret, $pendingUserId, $user, $userRepository, $translator);
+                $inputCode,
+                $tempSecret,
+                $pendingUserId,
+                $user,
+                $userRepository,
+                $translator
+            );
             if ($result === null) {
                 return $this->webService->getRedirectResponse('auth/verifyLogin');
             }
@@ -243,8 +261,10 @@ trait TwoFactorAuth
         $rateLimitKey = 'auth_verify_' . hash('sha256', $clientIp);
         /** Related logic: see config/web/di/rate-limit.php */
         if (!$this->secHelper->checkRateLimit($rateLimitKey)) {
-            $this->logger->log(LogLevel::WARNING,
-                'Rate limit reached for 2FA verification from IP: ' . $clientIp);
+            $this->logger->log(
+                LogLevel::WARNING,
+                'Rate limit reached for 2FA verification from IP: ' . $clientIp
+            );
             return $this->webViewRenderer->render('verify', [
                 'error' => $translator->translate($tfa . '.rate.limit.reached'),
                 'formModel' => $form,
@@ -346,8 +366,10 @@ trait TwoFactorAuth
 
     private function redirectToOneTimePasswordError(): ResponseInterface
     {
-        return $this->webService->getRedirectResponse('site/onetimepassworderror',
-            ['_language' => 'en']);
+        return $this->webService->getRedirectResponse(
+            'site/onetimepassworderror',
+            ['_language' => 'en']
+        );
     }
 
     private function clearTfaOnLogout(?string $userId, UserRepository $uR, UserInvRepository $uiR): void

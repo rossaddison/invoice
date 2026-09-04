@@ -155,7 +155,11 @@ final class QuoteItemServiceTest
         $deps = new QiAddProductDeps($depsPR, $depsQiar, $depsQias, $depsUR, $depsTRR, $translator);
 
         $service->addQuoteItemProduct(
-            $model, ['product_id' => '9', 'quantity' => '2'], '200', $deps, mergeIfExists: true,
+            $model,
+            ['product_id' => '9', 'quantity' => '2'],
+            '200',
+            $deps,
+            mergeIfExists: true,
         );
 
         Assert::same(3.0, $existing->getQuantity());

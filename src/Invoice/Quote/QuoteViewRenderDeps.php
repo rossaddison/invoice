@@ -22,5 +22,6 @@ final class QuoteViewRenderDeps
         public readonly FR $fR,
         public readonly UNR $uR,
         public readonly TASKR $taskR,
-    ) {}
+    ) {
+    }
 }

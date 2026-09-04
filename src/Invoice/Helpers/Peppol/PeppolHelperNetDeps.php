@@ -20,5 +20,6 @@ final class PeppolHelperNetDeps
         public readonly DelPartyRepo $delPartyRepo,
         public readonly unpR $unpR,
         public readonly upR $upR,
-    ) {}
+    ) {
+    }
 }

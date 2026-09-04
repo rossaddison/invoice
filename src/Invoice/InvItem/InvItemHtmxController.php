@@ -39,8 +39,15 @@ final class InvItemHtmxController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator,
-            $webViewRenderer, $session, $sR, $flash);
+        parent::__construct(
+            $webService,
+            $userService,
+            $translator,
+            $webViewRenderer,
+            $session,
+            $sR,
+            $flash
+        );
     }
 
     public function addProduct(
@@ -62,7 +69,9 @@ final class InvItemHtmxController extends BaseController
                 if (is_array($body)) {
                     $stockWarning = $this->stockWarningFor($body, $d->pR);
                     $this->invItemService->addInvItemProduct(
-                        new InvItem(), $body, (string) $inv_id,
+                        new InvItem(),
+                        $body,
+                        (string) $inv_id,
                         new IiAddProductDeps($d->pR, $d->trR, new IIAS($d->iiaR, $d->iiR), $d->iiaR, $this->sR, $d->uR),
                         mergeIfExists: true,
                     );
@@ -73,7 +82,8 @@ final class InvItemHtmxController extends BaseController
         }
 
         return $this->webService->getRedirectResponse(
-            'inv/view', ['id' => (string) $inv_id]
+            'inv/view',
+            ['id' => (string) $inv_id]
         );
     }
 
@@ -120,8 +130,13 @@ final class InvItemHtmxController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->invItemService->addInvItemTask(
-                        new InvItem(), $body, (string) $inv_id,
-                        $d->taskR, $d->trR, new IIAS($d->iiaR, $d->iiR), $d->iiaR,
+                        new InvItem(),
+                        $body,
+                        (string) $inv_id,
+                        $d->taskR,
+                        $d->trR,
+                        new IIAS($d->iiaR, $d->iiR),
+                        $d->iiaR,
                     );
                     return $this->renderPartial($inv_id, $d);
                 }
@@ -130,7 +145,8 @@ final class InvItemHtmxController extends BaseController
         }
 
         return $this->webService->getRedirectResponse(
-            'inv/view', ['id' => (string) $inv_id]
+            'inv/view',
+            ['id' => (string) $inv_id]
         );
     }
 
@@ -138,7 +154,8 @@ final class InvItemHtmxController extends BaseController
     {
         $numberHelper = new NumberHelper($this->sR);
         $numberHelper->calculateInv(
-            $inv_id, new CalcInvDeps($d->aciR, $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR),
+            $inv_id,
+            new CalcInvDeps($d->aciR, $d->iiR, $d->iiaR, $d->itrR, $d->iaR, $d->iR, $d->pymR),
         );
 
         $invAmount = $d->iaR->repoInvAmountquery($inv_id);

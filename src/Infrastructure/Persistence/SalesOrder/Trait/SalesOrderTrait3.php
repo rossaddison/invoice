@@ -19,7 +19,6 @@ use DateTimeImmutable;
  */
 trait SalesOrderTrait3
 {
-
     public function getClientPoNumber(): ?string
     {
         return $this->client_po_number;

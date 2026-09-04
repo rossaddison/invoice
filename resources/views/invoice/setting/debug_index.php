@@ -51,7 +51,7 @@ echo Html::closeTag('div');
 $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'setting/debugIndex'))
     ->id('btn-reset')
     ->render();
@@ -60,7 +60,7 @@ $toolbarFilter =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('setting_filters_submit')
     ->addClass('btn btn-info me-1')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href('#setting_filters_submit')
     ->id('setting_filters_submit')
     ->render();

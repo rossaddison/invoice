@@ -30,7 +30,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 $toolbarReset =  new A()
   ->addAttributes(['type' => 'reset'])
   ->addClass('btn btn-danger me-1 ajax-loader')
-  ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+  ->content(new I()->addClass('bi bi-bootstrap-reboot'))
   ->href($urlGenerator->generate($currentRoute->getName() ?? 'delivery/index'))
   ->id('btn-reset')
   ->render();
@@ -45,36 +45,45 @@ $columns = [
         'start_date',
         header: $translator->translate('start.date'),
         content: static fn (Delivery $model) => Html::encode(
-                ($model->getStartDate())?->format('Y-m-d') ?? ''),
+            ($model->getStartDate())?->format('Y-m-d') ?? ''
+        ),
     ),
     new DataColumn(
         'actual_delivery_date',
         header: $translator->translate('delivery.actual.delivery.date'),
         content: static fn (Delivery $model) => Html::encode(
-                ($model->getActualDeliveryDate())?->format('Y-m-d') ?? ''),
+            ($model->getActualDeliveryDate())?->format('Y-m-d') ?? ''
+        ),
     ),
     new DataColumn(
         'end_date',
         header: $translator->translate('end.date'),
         content: static fn (Delivery $model) => Html::encode(
-                ($model->getEndDate())?->format('Y-m-d') ?? ''),
+            ($model->getEndDate())?->format('Y-m-d') ?? ''
+        ),
     ),
     new DataColumn(
-        content: static function (Delivery $model) use ($urlGenerator,
-                                                        $translator): string {
-            return Html::a($translator->translate('back'),
-                    $urlGenerator->generate('inv/edit',
-                            ['id' => $model->getInvId()]),
-                    ['class' => 'text-decoration-none'])->render();
+        content: static function (Delivery $model) use (
+            $urlGenerator,
+            $translator
+        ): string {
+            return Html::a(
+                $translator->translate('back'),
+                $urlGenerator->generate(
+                    'inv/edit',
+                    ['id' => $model->getInvId()]
+                ),
+                ['class' => 'text-decoration-none']
+            )->render();
         },
         encodeContent: false
     ),
     new DataColumn(
         'delivery_location_id',
         header: $translator->translate('delivery.location.global.location.number'),
-        content: static fn (Delivery $model):
-        string => Html::encode(
-                $model->getDeliveryLocation()?->getGlobalLocationNumber()),
+        content: static fn (Delivery $model): string => Html::encode(
+            $model->getDeliveryLocation()?->getGlobalLocationNumber()
+        ),
     ),
 ];
 
@@ -88,9 +97,11 @@ $gridSummary = $s->gridSummary(
 
 $toolbarString
     =  new Form()->post($urlGenerator->generate(
-            'delivery/index'))->csrf($csrf)->open()
+        'delivery/index'
+    ))->csrf($csrf)->open()
     .  new Div()->addClass('float-end m-3')->content(
-            $toolbarReset)->encode(false)->render()
+        $toolbarReset
+    )->encode(false)->render()
     .  new Form()->close();
 
 echo GridView::widget()
@@ -113,12 +124,15 @@ echo GridView::widget()
 $pageSize = $paginator->getCurrentPageSize();
 if ($pageSize > 0) {
     echo Html::p(
-        sprintf($translator->translate('index.footer.showing')
+        sprintf(
+            $translator->translate('index.footer.showing')
                 . ' deliveries: Max '
                 . (string) $max
                 . ' deliveries per page: Total Deliveries '
                 . (string) $paginator->getTotalItems(),
-                $pageSize, $paginator->getTotalItems()),
+            $pageSize,
+            $paginator->getTotalItems()
+        ),
         ['class' => 'text-muted'],
     );
 } else {

@@ -29,7 +29,7 @@ class UserInv
     use UserInvTrait2;
     use UserInvTrait3;
     use UserInvTrait4;
-    
+
     #[BelongsTo(target: User::class, nullable: false)]
     private ?User $user = null;
 

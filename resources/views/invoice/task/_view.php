@@ -74,30 +74,30 @@ foreach ($statuses as $key => $status) {
 <?= Html::openTag('div'); ?>
     <?php
         ReadOnlyField::render($translator->translate('name'), $form->getName());
-        ReadOnlyField::render($translator->translate('description'), $form->getDescription());
-        ReadOnlyField::render(
-            $translator->translate('project'),
-            $selectLabel($projects, $form->getProjectId()),
-        );
-        ReadOnlyField::render(
-            $translator->translate('tax.rate'),
-            $selectLabel($taxRates, $form->getTaxRateId()),
-        );
-        ReadOnlyField::render(
-            $translator->translate('price'),
-            $s->formatAmount($form->getPrice() ?? 0.00),
-        );
-        ReadOnlyField::render(
-            $translator->translate('task.finish.date'),
-            $form->getFinishDate() instanceof \DateTimeImmutable
-                ? $form->getFinishDate()->format('Y-m-d')
-                : (is_string($form->getFinishDate()) ? $form->getFinishDate() : ''),
-        );
-        ReadOnlyField::render(
-            $translator->translate('status'),
-            $selectLabel($optionsDataStatus, $form->getStatus()),
-        );
-    ?>
+ReadOnlyField::render($translator->translate('description'), $form->getDescription());
+ReadOnlyField::render(
+    $translator->translate('project'),
+    $selectLabel($projects, $form->getProjectId()),
+);
+ReadOnlyField::render(
+    $translator->translate('tax.rate'),
+    $selectLabel($taxRates, $form->getTaxRateId()),
+);
+ReadOnlyField::render(
+    $translator->translate('price'),
+    $s->formatAmount($form->getPrice() ?? 0.00),
+);
+ReadOnlyField::render(
+    $translator->translate('task.finish.date'),
+    $form->getFinishDate() instanceof \DateTimeImmutable
+        ? $form->getFinishDate()->format('Y-m-d')
+        : (is_string($form->getFinishDate()) ? $form->getFinishDate() : ''),
+);
+ReadOnlyField::render(
+    $translator->translate('status'),
+    $selectLabel($optionsDataStatus, $form->getStatus()),
+);
+?>
 <?= Html::closeTag('div'); ?>
 <?= $button::back(); ?>
 <?= Html::closeTag('div'); ?>

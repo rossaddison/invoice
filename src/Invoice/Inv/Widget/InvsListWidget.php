@@ -74,7 +74,8 @@ final class InvsListWidget extends Widget
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly TranslatorInterface $translator,
         private readonly GridComponents $gridComponents,
-    ) {}
+    ) {
+    }
 
     // -------------------------------------------------------------------------
     // Immutable setters
@@ -289,7 +290,8 @@ final class InvsListWidget extends Widget
         ));
 
         $columnCount = count(array_filter(
-            $columns, static fn(ColumnInterface $col): bool => $col->isVisible()
+            $columns,
+            static fn (ColumnInterface $col): bool => $col->isVisible()
         ));
 
         $tableClass = ($this->visible ? 'table-responsive' : 'table')
@@ -308,7 +310,8 @@ final class InvsListWidget extends Widget
             ->sortableLinkAttributes(['hx-boost' => 'true', ...$htmxAttrs])
             ->filterFormAttributes(['hx-boost' => 'true', ...$htmxAttrs])
             ->sortableHeaderPrepend(
-                '<div class="float-end text-secondary text-opacity-50">⭥</div>')
+                '<div class="float-end text-secondary text-opacity-50">⭥</div>'
+            )
             ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
             ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
             ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
@@ -342,8 +345,13 @@ final class InvsListWidget extends Widget
 
         if ($enableGrouping) {
             $gridView = InvsGroupingHelper::applyGrouping(
-                $gridView, $getGroupValue, $groupTotals,
-                $this->decimalPlaces, $groupBy, $columnCount, $this->sR
+                $gridView,
+                $getGroupValue,
+                $groupTotals,
+                $this->decimalPlaces,
+                $groupBy,
+                $columnCount,
+                $this->sR
             );
         }
 
@@ -376,7 +384,9 @@ final class InvsListWidget extends Widget
         if ($total > 0) {
             /** @var list<Inv> $allItems */
             $allItems = iterator_to_array($paginator->withPageSize($total)->read());
-            usort($allItems, static fn (Inv $a, Inv $b): int =>
+            usort(
+                $allItems,
+                static fn (Inv $a, Inv $b): int =>
                 strcmp(
                     InvsGroupingHelper::groupSortKey($groupBy, $getGroupValue($a)),
                     InvsGroupingHelper::groupSortKey($groupBy, $getGroupValue($b)),

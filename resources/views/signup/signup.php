@@ -33,76 +33,76 @@ if ($turnstileSiteKey !== '') {
     );
 }
 echo H::openTag('div', ['class' => (string) $class[1]]);
- echo H::openTag('div', ['class' => (string) $class[2]]);
-  echo H::openTag('div', ['class' => (string) $class[3]]);
-   echo H::openTag('div', ['class' => (string) $class[4]]);
-    echo H::openTag('div', ['class' => (string) $class[5]]);
-     echo H::openTag('h1', ['class' => (string) $class[6]]);
-      echo H::encode($this->getTitle());
-     echo H::closeTag('h1');
-    echo H::closeTag('div');
-    echo H::openTag('div', ['class' => (string) $class[7]]);
-    $authChoice = AuthChoice::widget();
-    /**
-     * @var string $provider
-     * @var array $idpList[$provider]
-     * @var array $info
-     * @var bool $info['noflag']
-     */
-    foreach ($idpList as $provider => $info) {
-        $noContinueButton = $info['noflag'];
-        if ($noContinueButton == false) {
-            echo '<br><br>';
-            echo $authChoice->absoluteButtons(
-                $request,
-                $idpList[$provider],
-                $provider
-            );
-        }
-    };
-    $btn = new Button($translator, $urlGenerator);
-    if ((strlen($openBankingAuthUrl ?: '') > 0)
-            && !$noOpenBankingContinueButton) {
+echo H::openTag('div', ['class' => (string) $class[2]]);
+echo H::openTag('div', ['class' => (string) $class[3]]);
+echo H::openTag('div', ['class' => (string) $class[4]]);
+echo H::openTag('div', ['class' => (string) $class[5]]);
+echo H::openTag('h1', ['class' => (string) $class[6]]);
+echo H::encode($this->getTitle());
+echo H::closeTag('h1');
+echo H::closeTag('div');
+echo H::openTag('div', ['class' => (string) $class[7]]);
+$authChoice = AuthChoice::widget();
+/**
+ * @var string $provider
+ * @var array $idpList[$provider]
+ * @var array $info
+ * @var bool $info['noflag']
+ */
+foreach ($idpList as $provider => $info) {
+    $noContinueButton = $info['noflag'];
+    if ($noContinueButton == false) {
         echo '<br><br>';
-        $btn->openBanking($openBankingAuthUrl, $selectedOpenBankingProvider);
-    };
-    echo H::closeTag('div');
-    echo H::openTag('div', ['class' => (string) $class[10]]);
-    echo  new Form()
-    ->post($urlGenerator->generate('auth/signup'))
-    ->csrf($csrf)
-    ->id('signupForm')
-    ->open();
-    echo F::text($formModel, 'login')
-    ->label($translator->translate('layout.login'))
-    ->autofocus();
-    echo F::email($formModel, 'email')
-    ->label($translator->translate('email'))
-    ->autofocus();
-    echo F::password($formModel, 'password')
-    ->addInputAttributes(['autocomplete' => 'current-password'])
-    ->label($translator->translate('layout.password'));
-    echo F::password($formModel, 'passwordVerify')
-    ->addInputAttributes(['autocomplete' => 'current-password'])
-    ->label($translator->translate('layout.password-verify.new'));
-    echo F::checkbox($formModel, 'consentPeriodicInvoice')
-    ->label($translator->translate('consent.periodic.invoice'));
-    echo F::checkbox($formModel, 'consentTelegramOutstanding')
-    ->label($translator->translate('consent.telegram.outstanding'));
-    echo F::errorSummary($formModel)
-    ->errors($errors)
-    ->header($translator->translate('error.summary'));
-    if ($turnstileSiteKey !== '') {
-        echo H::tag('div', '', ['class' => 'cf-turnstile', 'data-sitekey' => $turnstileSiteKey]);
+        echo $authChoice->absoluteButtons(
+            $request,
+            $idpList[$provider],
+            $provider
+        );
     }
-    echo F::submitButton()
-    ->buttonId('register-button')
-    ->buttonClass((string) $class[15])
-    ->name('register-button')
-    ->content($translator->translate('layout.submit'));
-    echo  new Form()->close();
-    echo H::closeTag('div'); // 5
-   echo H::closeTag('div'); // 4
-  echo H::closeTag('div'); // 3
- echo H::closeTag('div'); // 2
+};
+$btn = new Button($translator, $urlGenerator);
+if ((strlen($openBankingAuthUrl ?: '') > 0)
+        && !$noOpenBankingContinueButton) {
+    echo '<br><br>';
+    $btn->openBanking($openBankingAuthUrl, $selectedOpenBankingProvider);
+};
+echo H::closeTag('div');
+echo H::openTag('div', ['class' => (string) $class[10]]);
+echo  new Form()
+->post($urlGenerator->generate('auth/signup'))
+->csrf($csrf)
+->id('signupForm')
+->open();
+echo F::text($formModel, 'login')
+->label($translator->translate('layout.login'))
+->autofocus();
+echo F::email($formModel, 'email')
+->label($translator->translate('email'))
+->autofocus();
+echo F::password($formModel, 'password')
+->addInputAttributes(['autocomplete' => 'current-password'])
+->label($translator->translate('layout.password'));
+echo F::password($formModel, 'passwordVerify')
+->addInputAttributes(['autocomplete' => 'current-password'])
+->label($translator->translate('layout.password-verify.new'));
+echo F::checkbox($formModel, 'consentPeriodicInvoice')
+->label($translator->translate('consent.periodic.invoice'));
+echo F::checkbox($formModel, 'consentTelegramOutstanding')
+->label($translator->translate('consent.telegram.outstanding'));
+echo F::errorSummary($formModel)
+->errors($errors)
+->header($translator->translate('error.summary'));
+if ($turnstileSiteKey !== '') {
+    echo H::tag('div', '', ['class' => 'cf-turnstile', 'data-sitekey' => $turnstileSiteKey]);
+}
+echo F::submitButton()
+->buttonId('register-button')
+->buttonClass((string) $class[15])
+->name('register-button')
+->content($translator->translate('layout.submit'));
+echo  new Form()->close();
+echo H::closeTag('div'); // 5
+echo H::closeTag('div'); // 4
+echo H::closeTag('div'); // 3
+echo H::closeTag('div'); // 2
 echo H::closeTag('div'); // 1

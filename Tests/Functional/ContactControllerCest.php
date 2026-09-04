@@ -9,7 +9,7 @@ use Tests\Support\FunctionalTester;
 class ContactControllerCest
 {
     public string $interest = '/interest';
-    
+
     public string $testUser = 'Test User';
 
     public function testInterestPageLoads(FunctionalTester $tester): void
@@ -28,7 +28,7 @@ class ContactControllerCest
         $tester->wantTo('test contact form validation');
         $tester->amOnPage($this->interest);
         $tester->seeResponseCodeIs(200);
-        
+
         // Submit empty form to test validation
         if ($tester->seeElement('form')) {
             $tester->submitForm('form', []);
@@ -42,7 +42,7 @@ class ContactControllerCest
         $tester->wantTo('test contact form with valid data');
         $tester->amOnPage($this->interest);
         $tester->seeResponseCodeIs(200);
-        
+
         // Try to submit form with valid data
         if ($tester->seeElement('form')) {
             $tester->submitForm('form', [
@@ -61,7 +61,7 @@ class ContactControllerCest
         $tester->wantTo('test contact form with invalid email');
         $tester->amOnPage($this->interest);
         $tester->seeResponseCodeIs(200);
-        
+
         // Submit form with invalid email
         if ($tester->seeElement('form')) {
             $tester->submitForm('form', [
@@ -80,7 +80,7 @@ class ContactControllerCest
         $tester->wantTo('test contact form with missing required fields');
         $tester->amOnPage($this->interest);
         $tester->seeResponseCodeIs(200);
-        
+
         // Submit form with only partial data
         if ($tester->seeElement('form')) {
             $tester->submitForm('form', [

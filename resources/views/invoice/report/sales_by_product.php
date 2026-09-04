@@ -41,8 +41,8 @@ $this->beginPage();
         /**
          * @var array $result
          */
-        foreach ($results as $result) { 
-         $style = 'width:15%;text-align:right;border-bottom: 0px solid black;'; ?>
+        foreach ($results as $result) {
+            $style = 'width:15%;text-align:right;border-bottom: 0px solid black;'; ?>
         <tr>
             <td><?= H::encode(($result['product_name'])); ?></td>
             <td style="<?= $style ?>">

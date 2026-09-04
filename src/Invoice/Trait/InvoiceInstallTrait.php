@@ -25,7 +25,6 @@ use Yiisoft\Security\Random;
 
 trait InvoiceInstallTrait
 {
-
     /**
      * @param SettingRepository $sR
      */
@@ -317,8 +316,11 @@ trait InvoiceInstallTrait
             // must be set back to No
             // Only show this message if we are in Non-production debug mode
             $sR->getSetting('debug_mode') == '1' ? $this->flashMessage(
-                'warning', $this->translator->translate(
-                                    'install.test.data.exists.already')) : '';
+                'warning',
+                $this->translator->translate(
+                    'install.test.data.exists.already'
+                )
+            ) : '';
             $setting = $sR->withKey('install_test_data');
             if (null !== $setting) {
                 $setting->setSettingValue('0');
@@ -331,9 +333,10 @@ trait InvoiceInstallTrait
      * @param array $default_settings
      * @param SettingRepository $sR
      */
-    private function installDefaultSettings(array $default_settings,
-        SettingRepository $sR): void
-    {
+    private function installDefaultSettings(
+        array $default_settings,
+        SettingRepository $sR
+    ): void {
         $this->removeAllSettings($sR);
         /**
          * @var string $key
@@ -355,10 +358,13 @@ trait InvoiceInstallTrait
      * @param ProductRepository $pR
      * @param ClientRepository $cR
      */
-    private function installTestData(TaxRateRepository $trR,
-        UnitRepository $uR, FamilyRepository $fR, ProductRepository $pR,
-            ClientRepository $cR): void
-    {
+    private function installTestData(
+        TaxRateRepository $trR,
+        UnitRepository $uR,
+        FamilyRepository $fR,
+        ProductRepository $pR,
+        ClientRepository $cR
+    ): void {
         $this->install($trR, $uR, $fR, $pR, $cR);
     }
 
@@ -369,9 +375,13 @@ trait InvoiceInstallTrait
      * @param ProductRepository $pR
      * @param ClientRepository $cR
      */
-    private function install(TaxRateRepository $trR, UnitRepository $uR,
-        FamilyRepository $fR, ProductRepository $pR, ClientRepository $cR): void
-    {
+    private function install(
+        TaxRateRepository $trR,
+        UnitRepository $uR,
+        FamilyRepository $fR,
+        ProductRepository $pR,
+        ClientRepository $cR
+    ): void {
         // Tax
         $this->installZeroRate($trR);
         $this->installStandardRate($trR);
@@ -540,8 +550,8 @@ trait InvoiceInstallTrait
      * @param GroupRepository $gR
      */
     private function installDefaultInvoiceAndQuoteGroup(
-                                                    GroupRepository $gR): void
-    {
+        GroupRepository $gR
+    ): void {
         foreach ([
             ['Invoice Group',    'INV{{{id}}}'],
             ['Quote Group',      'QUO{{{id}}}'],
@@ -563,8 +573,8 @@ trait InvoiceInstallTrait
      * @param PaymentMethodRepository $pmR
      */
     private function installDefaultPaymentMethods(
-                                            PaymentMethodRepository $pmR): void
-    {
+        PaymentMethodRepository $pmR
+    ): void {
         // 1
         $pm_cash = new PaymentMethod();
         $pm_cash->setName('Cash');
@@ -593,7 +603,8 @@ trait InvoiceInstallTrait
         // 6
         $customer_ready = new PaymentMethod();
         $customer_ready->setName(
-                            'Card / Direct Debit - Customer Ready for Payment');
+            'Card / Direct Debit - Customer Ready for Payment'
+        );
         $customer_ready->setActive(true);
         $pmR->save($customer_ready);
         // 7
@@ -627,9 +638,12 @@ trait InvoiceInstallTrait
      * @param ProductRepository $pR
      * @param ClientRepository $cR
      */
-    private function testDataDelete(UnitRepository $uR, FamilyRepository $fR,
-                            ProductRepository $pR, ClientRepository $cR): void
-    {
+    private function testDataDelete(
+        UnitRepository $uR,
+        FamilyRepository $fR,
+        ProductRepository $pR,
+        ClientRepository $cR
+    ): void {
         // Products
         $product = ($pR->withName('Tuch Padd') ?? null);
         null !== $product ? $pR->delete($product) : null;

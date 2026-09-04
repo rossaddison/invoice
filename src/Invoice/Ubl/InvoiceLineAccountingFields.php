@@ -11,9 +11,13 @@ final class InvoiceLineAccountingFields
         private ?string $unitCodeListId = null,
         private ?string $accountingCostCode = null,
         private ?string $accountingCost = null,
-    ) {}
+    ) {
+    }
 
-    public function getUnitCode(): string { return $this->unitCode; }
+    public function getUnitCode(): string
+    {
+        return $this->unitCode;
+    }
 
     public function setUnitCode(string $unitCode): self
     {
@@ -21,7 +25,10 @@ final class InvoiceLineAccountingFields
         return $this;
     }
 
-    public function getUnitCodeListId(): ?string { return $this->unitCodeListId; }
+    public function getUnitCodeListId(): ?string
+    {
+        return $this->unitCodeListId;
+    }
 
     public function setUnitCodeListId(?string $unitCodeListId): self
     {
@@ -29,7 +36,10 @@ final class InvoiceLineAccountingFields
         return $this;
     }
 
-    public function getAccountingCostCode(): ?string { return $this->accountingCostCode; }
+    public function getAccountingCostCode(): ?string
+    {
+        return $this->accountingCostCode;
+    }
 
     public function setAccountingCostCode(?string $accountingCostCode): self
     {
@@ -37,7 +47,10 @@ final class InvoiceLineAccountingFields
         return $this;
     }
 
-    public function getAccountingCost(): ?string { return $this->accountingCost; }
+    public function getAccountingCost(): ?string
+    {
+        return $this->accountingCost;
+    }
 
     public function setAccountingCost(?string $accountingCost): self
     {

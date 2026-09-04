@@ -15,5 +15,6 @@ final readonly class UblInvoiceLineData
         public float  $lineExtensionAmount,
         public string $peppolPoItemId,
         public string $peppolPoLineId,
-    ) {}
+    ) {
+    }
 }

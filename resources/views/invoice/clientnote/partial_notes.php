@@ -39,7 +39,7 @@ use Yiisoft\Html\Html;
         </div>
         <div class="card-footer text-muted">
             <?= (!is_string($dateNote = $client_note->getDateNote())
-                    && null!==$dateNote) ?
+                    && null !== $dateNote) ?
                             $dateNote->format('Y-m-d') : ''; ?>
         </div>
     </div>

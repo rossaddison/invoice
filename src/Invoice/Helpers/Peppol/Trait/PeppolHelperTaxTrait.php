@@ -117,8 +117,10 @@ trait PeppolHelperTaxTrait
      * @return array
      */
     private function buildTaxSubtotalArray(
-                                     Inv $invoice, IIAR $iiaR, TRR $trR): array
-    {
+        Inv $invoice,
+        IIAR $iiaR,
+        TRR $trR
+    ): array {
         $array = [];
         $item_tax_rates = [];
         $taxable_amount_total = 0;

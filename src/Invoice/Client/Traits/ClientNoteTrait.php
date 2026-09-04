@@ -45,9 +45,11 @@ trait ClientNoteTrait
      * @param cnS $cnS
      * @return Response
      */
-    public function saveClientNoteNew(Request $request,
-                                FormHydrator $formHydrator, cnS $cnS): Response
-    {
+    public function saveClientNoteNew(
+        Request $request,
+        FormHydrator $formHydrator,
+        cnS $cnS
+    ): Response {
         $body = $request->getQueryParams();
         /**
          * @var string $body['client_id']

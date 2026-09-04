@@ -355,7 +355,7 @@ final class FamilyStreetOrderTest extends TestCase
     public function testValidIdsAreExtracted(): void
     {
         $rawIds = ['5', '12', '99'];
-        $ids    = array_values(array_filter(array_map('intval', $rawIds), fn(int $id): bool => $id > 0));
+        $ids    = array_values(array_filter(array_map('intval', $rawIds), fn (int $id): bool => $id > 0));
 
         $this->assertSame([5, 12, 99], $ids);
     }
@@ -363,7 +363,7 @@ final class FamilyStreetOrderTest extends TestCase
     public function testZeroIdsAreFiltered(): void
     {
         $rawIds = ['0', '5', '0'];
-        $ids    = array_values(array_filter(array_map('intval', $rawIds), fn(int $id): bool => $id > 0));
+        $ids    = array_values(array_filter(array_map('intval', $rawIds), fn (int $id): bool => $id > 0));
 
         $this->assertSame([5], $ids);
     }
@@ -371,7 +371,7 @@ final class FamilyStreetOrderTest extends TestCase
     public function testNegativeIdsAreFiltered(): void
     {
         $rawIds = ['-1', '3', '-99'];
-        $ids    = array_values(array_filter(array_map('intval', $rawIds), fn(int $id): bool => $id > 0));
+        $ids    = array_values(array_filter(array_map('intval', $rawIds), fn (int $id): bool => $id > 0));
 
         $this->assertSame([3], $ids);
     }
@@ -379,7 +379,7 @@ final class FamilyStreetOrderTest extends TestCase
     public function testEmptyInputProducesEmptyIdList(): void
     {
         $rawIds = [];
-        $ids    = array_values(array_filter(array_map('intval', $rawIds), fn(int $id): bool => $id > 0));
+        $ids    = array_values(array_filter(array_map('intval', $rawIds), fn (int $id): bool => $id > 0));
 
         $this->assertSame([], $ids);
     }
@@ -387,7 +387,7 @@ final class FamilyStreetOrderTest extends TestCase
     public function testAllZerosProducesEmptyIdList(): void
     {
         $rawIds = ['0', '0', '0'];
-        $ids    = array_values(array_filter(array_map('intval', $rawIds), fn(int $id): bool => $id > 0));
+        $ids    = array_values(array_filter(array_map('intval', $rawIds), fn (int $id): bool => $id > 0));
 
         $this->assertSame([], $ids);
     }
@@ -415,7 +415,7 @@ final class FamilyStreetOrderTest extends TestCase
 
     public function testPositionBadgesForFiveItems(): void
     {
-        $badges = array_map(fn(int $i): string => (string) ($i + 1), range(0, 4));
+        $badges = array_map(fn (int $i): string => (string) ($i + 1), range(0, 4));
 
         $this->assertSame(['1', '2', '3', '4', '5'], $badges);
     }

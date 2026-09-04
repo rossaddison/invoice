@@ -43,8 +43,10 @@ $columns = [
                         'class' => 'dropdown-item',
                     ],
                 ),
-                $urlGenerator->generate('inv/downloadFile',
-                        ['upload_id' => $model->reqId(), '_language' => 'en']),
+                $urlGenerator->generate(
+                    'inv/downloadFile',
+                    ['upload_id' => $model->reqId(), '_language' => 'en']
+                ),
                 [],
             );
         },
@@ -63,8 +65,10 @@ $columns = [
                         'class' => 'dropdown-item',
                     ],
                 ),
-                $urlGenerator->generate('upload/edit',
-                        ['id' => $model->reqId(), '_language' => 'en']),
+                $urlGenerator->generate(
+                    'upload/edit',
+                    ['id' => $model->reqId(), '_language' => 'en']
+                ),
                 [],
             );
         },
@@ -87,8 +91,10 @@ $columns = [
                             . "');",
                     ],
                 ),
-                $urlGenerator->generate('upload/delete',
-                        ['id' => $model->reqId(), '_language' => 'en']),
+                $urlGenerator->generate(
+                    'upload/delete',
+                    ['id' => $model->reqId(), '_language' => 'en']
+                ),
                 [],
             );
         },

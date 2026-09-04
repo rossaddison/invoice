@@ -38,7 +38,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'taxrate/index'))
     ->id('btn-reset')
     ->render();
@@ -54,13 +54,15 @@ $columns = [
         'tax_rate_name',
         header: $translator->translate('tax.rate.name'),
         content: static fn (TaxRate $model) => Html::encode(
-            $model->getTaxRateName()),
+            $model->getTaxRateName()
+        ),
     ),
     new DataColumn(
         'tax_rate_percent',
         header: $translator->translate('tax.rate.percent'),
         content: static fn (TaxRate $model) => Html::encode(
-            $model->getTaxRatePercent()),
+            $model->getTaxRatePercent()
+        ),
     ),
     new DataColumn(
         'peppol_tax_rate_code',
@@ -76,22 +78,26 @@ $columns = [
         'storecove_tax_type',
         header: $translator->translate('storecove.tax.rate.code'),
         content: static fn (TaxRate $model) => Html::encode(
-                ucfirst(str_replace('_', ' ', $model->getStorecoveTaxType()))),
+            ucfirst(str_replace('_', ' ', $model->getStorecoveTaxType()))
+        ),
     ),
     new DataColumn(
         'tax_rate_default',
         header: $translator->translate('default'),
         content: static fn (TaxRate $model) => Html::encode(
-                $model->getTaxRateDefault() == '1' ?
+            $model->getTaxRateDefault() == '1' ?
                 ($translator->translate('active') . ' ' . '✔️') :
-         $translator->translate('inactive') . ' ' . '❌'),
+         $translator->translate('inactive') . ' ' . '❌'
+        ),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (TaxRate $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('taxrate/view',
-                    ['tax_rate_id' => $model->reqId()]);
+                return $urlGenerator->generate(
+                    'taxrate/view',
+                    ['tax_rate_id' => $model->reqId()]
+                );
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -101,8 +107,10 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (TaxRate $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('taxrate/edit',
-                    ['tax_rate_id' => $model->reqId()]);
+                return $urlGenerator->generate(
+                    'taxrate/edit',
+                    ['tax_rate_id' => $model->reqId()]
+                );
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -112,8 +120,10 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (TaxRate $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('taxrate/delete',
-                    ['tax_rate_id' => $model->reqId()]);
+                return $urlGenerator->generate(
+                    'taxrate/delete',
+                    ['tax_rate_id' => $model->reqId()]
+                );
             },
             attributes: [
                 'title' => $translator->translate('delete'),

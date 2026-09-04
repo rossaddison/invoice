@@ -253,8 +253,15 @@ final class TaskController extends BaseController
             'order' => $order,
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
-            $this->invitemService->addInvItemTask($invItem, $ajax_content,
-                    (string) $inv_id, $d->taskR, $d->trR, new iiaS($d->iiaR, $d->iiR), $d->iiaR);
+            $this->invitemService->addInvItemTask(
+                $invItem,
+                $ajax_content,
+                (string) $inv_id,
+                $d->taskR,
+                $d->trR,
+                new iiaS($d->iiaR, $d->iiR),
+                $d->iiaR
+            );
         }
     }
 

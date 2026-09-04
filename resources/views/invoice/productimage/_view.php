@@ -40,19 +40,19 @@ use Yiisoft\Html\Html;
                             ? ($form->getUploadedDate())->format('Y-m-d')
                             : $form->getUploadedDate(),
                     );
-                    ReadOnlyField::render(
-                        $translator->translate('upload.filename.original'),
-                        $form->getFileNameOriginal(),
-                    );
-                    ReadOnlyField::render(
-                        $translator->translate('upload.filename.new'),
-                        $form->getFileNameNew(),
-                    );
-                    ReadOnlyField::render(
-                        $translator->translate('upload.description'),
-                        $form->getDescription(),
-                    );
-                ?>
+ReadOnlyField::render(
+    $translator->translate('upload.filename.original'),
+    $form->getFileNameOriginal(),
+);
+ReadOnlyField::render(
+    $translator->translate('upload.filename.new'),
+    $form->getFileNameNew(),
+);
+ReadOnlyField::render(
+    $translator->translate('upload.description'),
+    $form->getDescription(),
+);
+?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

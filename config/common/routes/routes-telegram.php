@@ -10,57 +10,47 @@ use Yiisoft\Router\Route;
 
 return [
     RoutePermission::invoiceGroup(
-
-            Route::get('/telegram')
+        Route::get('/telegram')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([TelegramController::class, 'index'])
                 ->name('telegram/index'),
-
-            Route::get('/telegram/deleteWebhook')
+        Route::get('/telegram/deleteWebhook')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([TelegramController::class, 'deleteWebhook'])
                 ->name('telegram/deleteWebhook'),
-
-            Route::get('/telegram/getWebhookinfo')
+        Route::get('/telegram/getWebhookinfo')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([TelegramController::class, 'getWebhookinfo'])
                 ->name('telegram/getWebhookinfo'),
-
-            Route::get('/telegram/setWebhook')
+        Route::get('/telegram/setWebhook')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([TelegramController::class, 'setWebhook'])
                 ->name('telegram/setWebhook'),
-
-            Route::get('/telegram/getUpdates')
+        Route::get('/telegram/getUpdates')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([TelegramController::class, 'getUpdates'])
                 ->name('telegram/getUpdates'),
-
-            Route::get('/telegram/send-invoice/{inv_id:\d+}')
+        Route::get('/telegram/send-invoice/{inv_id:\d+}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([TelegramController::class, 'sendInvoice'])
                 ->name('telegram/sendInvoice'),
-
-            Route::get('/telegram/invoice-link/{inv_id:\d+}')
+        Route::get('/telegram/invoice-link/{inv_id:\d+}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([TelegramController::class, 'createInvoiceLink'])
                 ->name('telegram/invoiceLink'),
-
-            Route::get('/telegram/send-pdf/{inv_id:\d+}')
+        Route::get('/telegram/send-pdf/{inv_id:\d+}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([TelegramController::class, 'sendPdf'])
                 ->name('telegram/sendPdf'),
-
-            Route::get('/telegram/send-location')
+        Route::get('/telegram/send-location')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([TelegramController::class, 'sendLocation'])
                 ->name('telegram/sendLocation'),
-
-            Route::get('/telegram/refund-stars/{payment_id:\d+}')
+        Route::get('/telegram/refund-stars/{payment_id:\d+}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([TelegramController::class, 'refundStars'])
                 ->name('telegram/refundStars'),
-        ), // invoice
+    ), // invoice
 
     // Not under RoutePermission::invoiceGroup(): Telegram's servers must be
     // able to POST here with no app session. Secured by

@@ -142,16 +142,24 @@ class As4SecurityHandler
         $ephemeralKeyPair = sodium_crypto_box_keypair();
         $ephemeralPublicKey = sodium_crypto_box_publickey($ephemeralKeyPair);
 
-        $sharedSecret = sodium_crypto_box($ephemeralPublicKey,
-            $this->encryptionPublicKeyX25519, $ephemeralKeyPair);
+        $sharedSecret = sodium_crypto_box(
+            $ephemeralPublicKey,
+            $this->encryptionPublicKeyX25519,
+            $ephemeralKeyPair
+        );
 
         $salt = random_bytes(32);
         $info = 'test-info-data';
         $derivedKey = $this->hkdfDerive($sharedSecret, $salt, $info, 16);
 
         $encryptedKeyId = 'EK-' . $this->generateUuid();
-        $encryptedKey = $this->createEncryptedKeyElement($doc, $encryptedKeyId,
-            $ephemeralPublicKey, $salt, $info);
+        $encryptedKey = $this->createEncryptedKeyElement(
+            $doc,
+            $encryptedKeyId,
+            $ephemeralPublicKey,
+            $salt,
+            $info
+        );
         $wssHeader->appendChild($encryptedKey);
 
         $encryptedParts = [];
@@ -330,8 +338,11 @@ class As4SecurityHandler
 
         $keyInfo = $doc->createElementNS(As4Constants::XMLDSIG_NS, 'ds:KeyInfo');
         $strRef = $doc->createElementNS(As4Constants::WSS_NS, 'wsse:SecurityTokenReference');
-        $strRef->setAttributeNS(As4Constants::WSS11_NS, 'wsse11:TokenType',
-            'https://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#EncryptedKey');
+        $strRef->setAttributeNS(
+            As4Constants::WSS11_NS,
+            'wsse11:TokenType',
+            'https://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#EncryptedKey'
+        );
         $ref = $doc->createElementNS(As4Constants::WSS_NS, 'wsse:Reference');
         $ref->setAttribute('URI', '#' . $encryptedKeyId);
         $strRef->appendChild($ref);
