@@ -158,6 +158,7 @@ trait Index
                         ->withSortString($sortString)
                         ->withOptionsDataClientsDropdownFilter($this->optionsDataClients($d->quoteRepo))
                         ->withOptionsDataStatusDropDownFilter($this->optionsDataStatuses($d->quoteRepo))
+                        ->withStickyHeader($this->sR->getSetting('grid_sticky_header') == '1')
                         ->render()
                 );
             }

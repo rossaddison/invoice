@@ -57,6 +57,7 @@ use Yiisoft\Html\Tag\Meta;
  * @var string $bootstrap5OffcanvasPlacement
  * @var string $bootstrap5LayoutInvoiceNavbarFont
  * @var string $bootstrap5LayoutInvoiceNavbarFontSize
+ * @var bool $bootstrap5LayoutInvoiceNavbarSticky
  * @var int $bootstrap5FormInputHeight
  * @var int $bootstrap5FormFontSize
  * @var string $brandLabel
@@ -150,6 +151,12 @@ echo Html::openTag('html',
     . ' --inv-nav-ff: ' . $bootstrap5LayoutInvoiceNavbarFont . ';'
     . ' --inv-input-height: ' . $bootstrap5FormInputHeight . 'px;'
     . ' --inv-form-fs: ' . $bootstrap5FormFontSize . 'px;'
+    // Read by any sticky-positioned content below the navbar (e.g.
+    // inv/index's sticky grid header, overrides.css) so it sticks just
+    // under a sticky navbar instead of being covered by it. 0 when the
+    // navbar itself isn't sticky, since nothing needs to clear it then.
+    . ' --sticky-content-top: '
+    . ($bootstrap5LayoutInvoiceNavbarSticky ? 'var(--navbar-height)' : '0px') . ';'
     . ' }'
   )->render();
  echo Html::openTag('title'); //1
@@ -179,7 +186,7 @@ echo $bootstrap5OffcanvasEnable ? Offcanvas::widget()
             . strtolower($bootstrap5OffcanvasPlacement) . ' offcanvas')
         ->begin() : '';
 
-echo NavBar::widget()
+$navBar = NavBar::widget()
 //->addClass('navbar bg-body-tertiary')
 ->brandImage($logoPath)
 ->brandImageAttributes(
@@ -194,8 +201,26 @@ echo NavBar::widget()
     'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
     'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
 ])
-->id('navbar')
-->begin();
+->id('navbar');
+
+// Bootstrap's own .sticky-top utility (position: sticky; top: 0;
+// z-index: 1020) -- Settings > Bootstrap5 > Layout Invoice Navbar
+// Sticky, off by default so existing installs keep today's behaviour
+// until an admin opts in. Sits comfortably below Offcanvas's own
+// backdrop/panel z-index (1040+), so no stacking conflict when both
+// are enabled together.
+//
+// bg-body-tertiary alongside it: the navbar has no background class at
+// all otherwise (see the commented-out addClass() just above), so with
+// sticky-top applied, page content visibly scrolls up underneath a
+// transparent bar instead of being covered by it -- confirmed live
+// 2026-09-04. Only added when sticky is actually on, since a
+// non-sticky transparent navbar was never reported as a problem.
+if ($bootstrap5LayoutInvoiceNavbarSticky) {
+    $navBar = $navBar->addClass('sticky-top', 'bg-body-tertiary');
+}
+
+echo $navBar->begin();
 
 // Logout
 echo  new Form()
@@ -1044,7 +1069,58 @@ if ((null !== $currentPath) && !$isGuest) {
                 ))
                 . '</div></div>'
             ),
-            DropdownItem::divider(),    
+            // One shared setting for every grid (Invoice/Quote/SalesOrder/
+            // Product), not its own field per grid in Settings > Invoices
+            // -- see SettingToggleController::gridStickyHeader()'s own
+            // docblock. Same immediate-save UX as the page-size picker
+            // just above: hx-get + hx-swap="none" persists it in the
+            // background: the checkbox's own native click already shows
+            // the new state instantly, so there's nothing to swap.
+            DropdownItem::listContent(
+                '<h6 class="dropdown-header"'
+                . ' style="font-size:' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;"'
+                . ' data-bs-toggle="tooltip" data-bs-placement="right"'
+                . ' title="' . Html::encode($t->translate('grid.sticky.header.hint')) . '">'
+                . (new I())->addClass('bi bi-pin-angle')->render()
+                . ' ' . Html::encode($t->translate('grid.sticky.header'))
+                . '</h6>'
+            ),
+            DropdownItem::listContent(
+                '<div class="px-3 py-1">'
+                . '<div class="form-check form-switch">'
+                . '<input type="checkbox" class="form-check-input" role="switch"'
+                . ' id="grid-sticky-header-toggle"'
+                . ' hx-get="' . Html::encode($urlGenerator->generate('setting/gridStickyHeader', ['origin' => 'inv'])) . '"'
+                . ' hx-swap="none"'
+                . ($s->getSetting('grid_sticky_header') == '1' ? ' checked' : '')
+                . '></div></div>'
+            ),
+            // Pulled out of Settings > Bootstrap5 (see
+            // SettingToggleController::navbarSticky()'s own docblock) and
+            // placed adjacent to the grid-header toggle just above --
+            // same shared immediate-save UX, same underlying setting key
+            // LayoutViewInjection already reads into
+            // $bootstrap5LayoutInvoiceNavbarSticky further up this file.
+            DropdownItem::listContent(
+                '<h6 class="dropdown-header"'
+                . ' style="font-size:' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;"'
+                . ' data-bs-toggle="tooltip" data-bs-placement="right"'
+                . ' title="' . Html::encode($t->translate('bootstrap5.layout.invoice.navbar.sticky.hint')) . '">'
+                . (new I())->addClass('bi bi-pin-angle')->render()
+                . ' ' . Html::encode($t->translate('bootstrap5.layout.invoice.navbar.sticky'))
+                . '</h6>'
+            ),
+            DropdownItem::listContent(
+                '<div class="px-3 py-1">'
+                . '<div class="form-check form-switch">'
+                . '<input type="checkbox" class="form-check-input" role="switch"'
+                . ' id="navbar-sticky-toggle"'
+                . ' hx-get="' . Html::encode($urlGenerator->generate('setting/navbarSticky', ['origin' => 'inv'])) . '"'
+                . ' hx-swap="none"'
+                . ($bootstrap5LayoutInvoiceNavbarSticky ? ' checked' : '')
+                . '></div></div>'
+            ),
+            DropdownItem::divider(),
             DropdownItem::link($t->translate('view'),
                 $urlGenerator->generate('setting/tabIndex'),
                 itemAttributes: $itemFontArray),

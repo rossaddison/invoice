@@ -25,6 +25,8 @@ final class SettingToggleController extends BaseController
 {
     protected string $controllerName = 'invoice/setting';
 
+    private const string INDEX_SUFFIX = '/index';
+
     public function __construct(
         SessionInterface $session,
         sR $sR,
@@ -71,12 +73,67 @@ final class SettingToggleController extends BaseController
         if ($setting) {
             $setting->setSettingValue($setting->getSettingValue() === '0' ? '1' : '0');
             $this->sR->save($setting);
-            return $this->webService->getRedirectResponse($origin . '/index');
+            return $this->webService->getRedirectResponse($origin . self::INDEX_SUFFIX);
         }
         $new_setting = new Setting();
         $new_setting->setSettingKey('columns_all_visible');
         $this->sR->save($new_setting);
-        return $this->webService->getRedirectResponse($origin . '/index');
+        return $this->webService->getRedirectResponse($origin . self::INDEX_SUFFIX);
+    }
+
+    /**
+     * One shared setting ('grid_sticky_header'), not one per grid: toggled
+     * here from the navbar's gear dropdown (next to the page-size picker,
+     * same immediate-save-no-page-reload UX -- see that dropdown's own
+     * hx-get + hx-swap="none" pattern in resources/views/layout/
+     * invoice.php) rather than added to Settings > Invoices as its own
+     * form field, applies uniformly to every grid that supports it
+     * (Invoice/Quote/SalesOrder/Product all read the same key -- see
+     * InvsListWidget::withGridDisplayOptions()'s docblock for the
+     * pattern each *ListWidget follows). $origin only decides the
+     * redirect target for a no-JS fallback; hx-swap="none" discards the
+     * response body either way when JS is available.
+     */
+    public function gridStickyHeader(#[RouteArgument('origin')] string $origin): Response
+    {
+        $setting = $this->sR->withKey('grid_sticky_header');
+        if ($setting) {
+            $setting->setSettingValue($setting->getSettingValue() === '0' ? '1' : '0');
+            $this->sR->save($setting);
+            return $this->webService->getRedirectResponse($origin . self::INDEX_SUFFIX);
+        }
+        $new_setting = new Setting();
+        $new_setting->setSettingKey('grid_sticky_header');
+        $new_setting->setSettingValue('1');
+        $this->sR->save($new_setting);
+        return $this->webService->getRedirectResponse($origin . self::INDEX_SUFFIX);
+    }
+
+    /**
+     * 'bootstrap5_layout_invoice_navbar_sticky' -- pulled out of
+     * Settings > Bootstrap5 (resources/views/invoice/setting/views/
+     * bootstrap5/partial_navbar_invoice.php no longer has this field)
+     * and placed adjacent to gridStickyHeader()'s own toggle in the
+     * navbar's gear dropdown instead, same immediate-save UX. The
+     * *read* side is unchanged -- LayoutViewInjection::
+     * resolveBootstrapSettings() still feeds this key straight into
+     * resources/views/layout/invoice.php's $bootstrap5LayoutInvoiceNavbarSticky,
+     * which is what actually applies the sticky-top class; only the
+     * form field this setting used to live behind moved.
+     */
+    public function navbarSticky(#[RouteArgument('origin')] string $origin): Response
+    {
+        $setting = $this->sR->withKey('bootstrap5_layout_invoice_navbar_sticky');
+        if ($setting) {
+            $setting->setSettingValue($setting->getSettingValue() === '0' ? '1' : '0');
+            $this->sR->save($setting);
+            return $this->webService->getRedirectResponse($origin . self::INDEX_SUFFIX);
+        }
+        $new_setting = new Setting();
+        $new_setting->setSettingKey('bootstrap5_layout_invoice_navbar_sticky');
+        $new_setting->setSettingValue('1');
+        $this->sR->save($new_setting);
+        return $this->webService->getRedirectResponse($origin . self::INDEX_SUFFIX);
     }
 
     public function unhideOrHideToggleInvSentLogColumn(): Response
@@ -102,7 +159,7 @@ final class SettingToggleController extends BaseController
             $setting->setSettingValue((string) $limit);
             $this->sR->save($setting);
         }
-        return $this->webService->getRedirectResponse($origin !== 'setting' ? $origin . '/index' : 'setting/debugIndex');
+        return $this->webService->getRedirectResponse($origin !== 'setting' ? $origin . self::INDEX_SUFFIX : 'setting/debugIndex');
     }
 
     private function toggleSettingToInvIndex(CurrentRoute $currentRoute): Response

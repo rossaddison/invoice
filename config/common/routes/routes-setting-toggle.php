@@ -39,5 +39,13 @@ return [
                 ->name('setting/visible')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([SettingToggleController::class, 'visible']),
+        Route::methods([Method::GET, Method::POST], '/setting/gridStickyHeader/{origin}')
+                ->name('setting/gridStickyHeader')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([SettingToggleController::class, 'gridStickyHeader']),
+        Route::methods([Method::GET, Method::POST], '/setting/navbarSticky/{origin}')
+                ->name('setting/navbarSticky')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([SettingToggleController::class, 'navbarSticky']),
     ), // invoice
 ];

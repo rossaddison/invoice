@@ -47,6 +47,7 @@ final class ProductsListWidget extends Widget
     private array $optionsDataProductsDropdownFilter = [];
     /** @psalm-var array<array-key, array<array-key, string>|string> */
     private array $optionsDataFamiliesDropdownFilter = [];
+    private bool $stickyHeader = false;
 
     public function __construct(
         private readonly CurrentRoute $currentRoute,
@@ -125,6 +126,20 @@ final class ProductsListWidget extends Widget
         return $new;
     }
 
+    /**
+     * The shared 'grid_sticky_header' setting -- see
+     * SettingToggleController::gridStickyHeader()'s docblock for why
+     * this is one setting for every grid, not one per grid, and
+     * src/Invoice/Asset/invoice/css/overrides.css for the CSS rule this
+     * class enables by name.
+     */
+    public function withStickyHeader(bool $stickyHeader): static
+    {
+        $new = clone $this;
+        $new->stickyHeader = $stickyHeader;
+        return $new;
+    }
+
     // -------------------------------------------------------------------------
     // Render
     // -------------------------------------------------------------------------
@@ -161,7 +176,8 @@ final class ProductsListWidget extends Widget
             ->containerAttributes(['id' => self::DOM_ID, 'class' => 'position-relative'])
             ->bodyRowAttributes(['class' => 'align-middle'])
             ->tableAttributes([
-                'class' => ($visible ? 'table-responsive' : 'table') . ' table-striped text-center h-75',
+                'class' => ($visible ? 'table-responsive' : 'table') . ' table-striped text-center h-75'
+                    . ($this->stickyHeader ? ' sticky-grid-header' : ''),
                 'id'    => 'table-product',
             ])
             ->columns(...$columns)

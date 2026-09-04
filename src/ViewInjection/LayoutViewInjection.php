@@ -110,6 +110,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'bootstrap5OffcanvasPlacement' => $bs['bootstrap5OffcanvasPlacement'],
             'bootstrap5LayoutInvoiceNavbarFont' => $bs['bootstrap5LayoutInvoiceNavbarFont'],
             'bootstrap5LayoutInvoiceNavbarFontSize' => $bs['bootstrap5LayoutInvoiceNavbarFontSize'],
+            'bootstrap5LayoutInvoiceNavbarSticky' => $bs['bootstrap5LayoutInvoiceNavbarSticky'],
             'bootstrap5LayoutGuestNavbarFont' => $bs['bootstrap5LayoutGuestNavbarFont'],
             'bootstrap5LayoutGuestNavbarFontSize' => $bs['bootstrap5LayoutGuestNavbarFontSize'],
             'bootstrap5LayoutMainNavbarFont' => $bs['bootstrap5LayoutMainNavbarFont'],
@@ -254,6 +255,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
      *     bootstrap5OffcanvasEnable: bool,
      *     bootstrap5LayoutInvoiceNavbarFont: string,
      *     bootstrap5LayoutInvoiceNavbarFontSize: string,
+     *     bootstrap5LayoutInvoiceNavbarSticky: bool,
      *     bootstrap5LayoutGuestNavbarFont: string,
      *     bootstrap5LayoutGuestNavbarFontSize: string,
      *     bootstrap5LayoutMainNavbarFont: string,
@@ -292,6 +294,8 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                 $s->getSetting('bootstrap5_layout_invoice_navbar_font') ?: 'Arial',
             'bootstrap5LayoutInvoiceNavbarFontSize' =>
                 $s->getSetting('bootstrap5_layout_invoice_navbar_font_size') ?: '10',
+            'bootstrap5LayoutInvoiceNavbarSticky' =>
+                $s->getSetting('bootstrap5_layout_invoice_navbar_sticky') == '1',
             'bootstrap5LayoutGuestNavbarFont' =>
                 $s->getSetting('bootstrap5_layout_guest_navbar_font') ?: 'Arial',
             'bootstrap5LayoutGuestNavbarFontSize' =>

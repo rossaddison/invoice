@@ -173,7 +173,11 @@ trait Index
                         )
                         ->withGroupBy($filter->groupBy ?? 'none')
                         ->withClientCount($list->clientRepo->count())
-                        ->withGridDisplayOptions($gridSummary, $sortString)
+                        ->withGridDisplayOptions(
+                            $gridSummary,
+                            $sortString,
+                            $this->sR->getSetting('grid_sticky_header') == '1'
+                        )
                         ->withFilterOptions(new InvsFilterOptions([
                             'invNumber'       => $this->optionsDataInvNumberFilter($list->invRepo),
                             'creditInvNumber' => $this->optionsDataCreditInvNumberFilter($list->invRepo),

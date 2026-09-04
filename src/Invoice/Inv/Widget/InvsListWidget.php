@@ -68,6 +68,7 @@ final class InvsListWidget extends Widget
     private string $gridSummary = '';
     private string $sortString = '-id';
     private ?InvsFilterOptions $filterOptions = null;
+    private bool $stickyHeader = false;
 
     public function __construct(
         private readonly CurrentRoute $currentRoute,
@@ -190,11 +191,27 @@ final class InvsListWidget extends Widget
         return $new;
     }
 
-    public function withGridDisplayOptions(string $gridSummary, string $sortString): static
-    {
+    /**
+     * $stickyHeader: the shared 'grid_sticky_header' setting, toggled from
+     * the navbar's gear dropdown (SettingToggleController::gridStickyHeader(),
+     * not the Settings tab form) and applied uniformly across every grid
+     * that supports it (Invoice/Quote/SalesOrder/Product). Adds a
+     * 'sticky-grid-header' class to the table element; the actual
+     * position:sticky rule lives in src/Invoice/Asset/invoice/css/
+     * overrides.css, generic across all of them rather than scoped to
+     * #table-invoice specifically. Bundled onto this setter rather than
+     * its own withStickyHeader() to stay within this class's own
+     * 20-method S1448 limit (see class docblock).
+     */
+    public function withGridDisplayOptions(
+        string $gridSummary,
+        string $sortString,
+        bool $stickyHeader = false,
+    ): static {
         $new = clone $this;
-        $new->gridSummary = $gridSummary;
-        $new->sortString  = $sortString;
+        $new->gridSummary  = $gridSummary;
+        $new->sortString   = $sortString;
+        $new->stickyHeader = $stickyHeader;
         return $new;
     }
 
@@ -295,7 +312,8 @@ final class InvsListWidget extends Widget
         ));
 
         $tableClass = ($this->visible ? 'table-responsive' : 'table')
-            . ' table-bordered table-striped h-75 resizable-grid';
+            . ' table-bordered table-striped h-75 resizable-grid'
+            . ($this->stickyHeader ? ' sticky-grid-header' : '');
 
         $gridView = GridView::widget()
             ->containerAttributes(['id' => self::DOM_ID, 'class' => 'position-relative'])

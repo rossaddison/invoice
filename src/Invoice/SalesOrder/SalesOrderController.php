@@ -241,6 +241,7 @@ final class SalesOrderController extends BaseController
                     ->withStatus($status)
                     ->withSalesOrderToolbar($this->salesOrderToolbar->render())
                     ->withOptionsDataClientsDropdownFilter($optionsDataClientsDropdownFilter)
+                    ->withStickyHeader($this->sR->getSetting('grid_sticky_header') == '1')
                     ->render()
             );
         }

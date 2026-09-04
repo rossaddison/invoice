@@ -47,6 +47,7 @@ final class SalesOrdersListWidget extends Widget
     private string $sortString = '-id';
     private int $status = 0;
     private string $salesOrderToolbar = '';
+    private bool $stickyHeader = false;
     /** @psalm-var array<array-key, array<array-key, string>|string> */
     private array $optionsDataClientsDropdownFilter = [];
 
@@ -153,6 +154,20 @@ final class SalesOrdersListWidget extends Widget
         return $new;
     }
 
+    /**
+     * The shared 'grid_sticky_header' setting -- see
+     * SettingToggleController::gridStickyHeader()'s docblock for why
+     * this is one setting for every grid, not one per grid, and
+     * src/Invoice/Asset/invoice/css/overrides.css for the CSS rule this
+     * class enables by name.
+     */
+    public function withStickyHeader(bool $stickyHeader): static
+    {
+        $new = clone $this;
+        $new->stickyHeader = $stickyHeader;
+        return $new;
+    }
+
     // -------------------------------------------------------------------------
     // Render
     // -------------------------------------------------------------------------
@@ -195,7 +210,8 @@ final class SalesOrdersListWidget extends Widget
         $gridView = GridView::widget()
             ->containerAttributes(['id' => self::DOM_ID, 'class' => 'position-relative'])
             ->bodyRowAttributes(['class' => 'align-middle'])
-            ->tableAttributes(['class' => 'table table-striped text-center h-75 resizable-grid',
+            ->tableAttributes(['class' => 'table table-striped text-center h-75 resizable-grid'
+                . ($this->stickyHeader ? ' sticky-grid-header' : ''),
                 'id' => 'table-salesorder'])
             ->columns(...$columns)
             ->columnGrouping(true)

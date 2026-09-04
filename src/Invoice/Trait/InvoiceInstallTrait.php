@@ -62,6 +62,16 @@ trait InvoiceInstallTrait
             'bootstrap5_alert_close_button_font_size' => '10',
             'bootstrap5_layout_invoice_navbar_font' => 'Arial',
             'bootstrap5_layout_invoice_navbar_font_size' => '10',
+            // Off by default — matches bootstrap5_offcanvas_enable's own
+            // default; existing installs keep today's non-sticky navbar
+            // until an admin opts in.
+            'bootstrap5_layout_invoice_navbar_sticky' => 0,
+            // Off by default, same reasoning. Shared across every grid's
+            // sticky-header opt-in (Invoice/Quote/SalesOrder/Product),
+            // toggled from the navbar's gear dropdown -- see
+            // SettingToggleController::gridStickyHeader(), not the
+            // Settings tab form.
+            'grid_sticky_header' => 0,
             'bootstrap5_layout_guest_navbar_font' => 'Arial',
             'bootstrap5_layout_guest_navbar_font_size' => '10',
             'bootstrap5_layout_main_navbar_font' => 'Arial',

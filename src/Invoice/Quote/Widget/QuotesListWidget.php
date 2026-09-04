@@ -43,6 +43,7 @@ final class QuotesListWidget extends Widget
     private int $clientCount = 0;
     private string $gridSummary = '';
     private string $sortString = '-id';
+    private bool $stickyHeader = false;
     /** @psalm-var array<array-key, array<array-key, string>|string> */
     private array $optionsDataClientsDropdownFilter = [];
     /** @psalm-var array<array-key, array<array-key, string>|string> */
@@ -132,6 +133,20 @@ final class QuotesListWidget extends Widget
         return $new;
     }
 
+    /**
+     * The shared 'grid_sticky_header' setting -- see
+     * SettingToggleController::gridStickyHeader()'s docblock for why
+     * this is one setting for every grid, not one per grid, and
+     * src/Invoice/Asset/invoice/css/overrides.css for the CSS rule this
+     * class enables by name.
+     */
+    public function withStickyHeader(bool $stickyHeader): static
+    {
+        $new = clone $this;
+        $new->stickyHeader = $stickyHeader;
+        return $new;
+    }
+
     /** @psalm-param array<array-key, array<array-key, string>|string> $optionsData */
     public function withOptionsDataClientsDropdownFilter(array $optionsData): static
     {
@@ -204,7 +219,8 @@ final class QuotesListWidget extends Widget
         ));
 
         $tableClass = ($this->visible ? 'table-responsive' : 'table')
-            . ' table-bordered table-striped h-75 resizable-grid';
+            . ' table-bordered table-striped h-75 resizable-grid'
+            . ($this->stickyHeader ? ' sticky-grid-header' : '');
 
         $gridView = GridView::widget()
             ->containerAttributes(['id' => self::DOM_ID, 'class' => 'position-relative'])
