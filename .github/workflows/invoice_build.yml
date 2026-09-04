@@ -91,9 +91,70 @@ jobs:
           path: vendor
           retention-days: 1
 
+  # Same idea as `install` above, but for npm: node_modules doesn't depend
+  # on which PHP version is running, only on the OS (some packages here --
+  # esbuild, @playwright/test -- ship platform-specific native binaries),
+  # so it's built once per OS and shared with every job that needs it on
+  # that OS, instead of `sonar` plus all 4 `tests` matrix legs each running
+  # their own `npm ci` (5 installs down to 2). node_modules here is
+  # comparable in size to vendor/ (~1.1GB / ~19.5k files vs ~564MB / ~37k
+  # files), which the artifact approach already handles fine above, so the
+  # same mechanism is used rather than introducing a second one.
+  install-node-ubuntu:
+    name: Install npm dependencies (ubuntu)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install npm dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Upload node_modules artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: node_modules-ubuntu
+          path: node_modules
+          retention-days: 1
+
+  install-node-windows:
+    name: Install npm dependencies (windows)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install npm dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Upload node_modules artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: node_modules-windows
+          path: node_modules
+          retention-days: 1
+
   sonar:
     name: SonarCloud
-    needs: [install]
+    needs: [install, install-node-ubuntu]
     runs-on: ubuntu-latest
     if: github.actor != 'dependabot[bot]'
     steps:
@@ -126,11 +187,12 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: '24'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
 
-      - name: Install npm dependencies
-        run: npm ci --ignore-scripts
+      - name: Download node_modules artifact
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: node_modules-ubuntu
+          path: node_modules
 
       - name: Generate TypeScript coverage
         run: npm run test:coverage
@@ -144,13 +206,15 @@ jobs:
 
   tests:
     name: PHP ${{ matrix.php }}-${{ matrix.os }}
-    # Only needs `install` (the shared vendor/ artifact), not `sonar` --
-    # this job doesn't consume anything sonar produces. It used to wait
-    # for sonar to finish first regardless, which serialised roughly a
-    # full extra SonarCloud run's worth of wall-clock time in front of
-    # every matrix leg, including both windows-latest ones, for no actual
-    # dependency reason.
-    needs: [install]
+    # Needs `install` (the shared vendor/ artifact) and both node_modules
+    # artifact jobs (each matrix leg picks whichever OS one it needs via
+    # matrix.node-artifact below). Deliberately not `sonar` -- this job
+    # doesn't consume anything sonar produces. It used to wait for sonar to
+    # finish first regardless, which serialised roughly a full extra
+    # SonarCloud run's worth of wall-clock time in front of every matrix
+    # leg, including both windows-latest ones, for no actual dependency
+    # reason.
+    needs: [install, install-node-ubuntu, install-node-windows]
 
     env:
       extensions: apcu, fileinfo, pdo, pdo_sqlite, intl, gd, openssl, dom, json, mbstring, curl, uopz, sodium, ctype
@@ -173,15 +237,19 @@ jobs:
           - os: ubuntu-latest
             php: '8.4'
             experimental: false
+            node-artifact: node_modules-ubuntu
           - os: ubuntu-latest
             php: '8.5'
             experimental: false
+            node-artifact: node_modules-ubuntu
           - os: windows-latest
             php: '8.4'
             experimental: false
+            node-artifact: node_modules-windows
           - os: windows-latest
             php: '8.5'
             experimental: false
+            node-artifact: node_modules-windows
 
     steps:
       - name: Checkout
@@ -208,11 +276,12 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: '24'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
 
-      - name: Install dependencies with npm
-        run: npm ci --ignore-scripts
+      - name: Download node_modules artifact
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: ${{ matrix.node-artifact }}
+          path: node_modules
 
   tests-alpine:
     name: PHP ${{ matrix.php }}-alpine${{ matrix.alpine }}
