@@ -91,9 +91,83 @@ jobs:
           path: vendor
           retention-days: 1
 
+  # Same idea as `install` above, but for npm: node_modules doesn't depend
+  # on which PHP version is running, only on the OS (some packages here --
+  # esbuild, @playwright/test -- ship platform-specific native binaries),
+  # so it's built once per OS and shared with every job that needs it on
+  # that OS, instead of `sonar` plus all 4 `tests` matrix legs each running
+  # their own `npm ci` (5 installs down to 2).
+  #
+  # Shared via actions/cache/save + actions/cache/restore, NOT
+  # upload-artifact/download-artifact like vendor/ above. Confirmed live
+  # 2026-09-04, in order: (1) upload-artifact's include-hidden-files
+  # defaults to false and silently drops node_modules/.bin (npm's
+  # per-package executable shims live there, in a dot-directory -- unlike
+  # Composer's vendor/bin, which isn't hidden); (2) fixing that, the zip
+  # transport doesn't preserve the executable bit either
+  # ("Permission denied" once .bin existed but wasn't +x); (3) fixing
+  # that too, some shims (e.g. vitest) are themselves a real file that
+  # does a path-relative import of its own package's other files (e.g.
+  # `./dist/cli.js`) -- upload-artifact's zip dereferences/copies that
+  # file's *content* to wherever `.bin/` sits in the archive, so the
+  # relative import breaks once it's no longer sitting next to the rest
+  # of its own package. None of that affects actions/cache: it archives
+  # with tar, not zip, which round-trips symlinks, permissions, and
+  # relative layout correctly -- the officially recommended mechanism for
+  # exactly this "share node_modules across jobs" case.
+  install-node-ubuntu:
+    name: Install npm dependencies (ubuntu)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install npm dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Save node_modules cache
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: node_modules
+          key: node-modules-ubuntu-${{ hashFiles('package-lock.json') }}
+
+  install-node-windows:
+    name: Install npm dependencies (windows)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install npm dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Save node_modules cache
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: node_modules
+          key: node-modules-windows-${{ hashFiles('package-lock.json') }}
+
   sonar:
     name: SonarCloud
-    needs: [install]
+    needs: [install, install-node-ubuntu]
     runs-on: ubuntu-latest
     if: github.actor != 'dependabot[bot]'
     steps:
@@ -126,11 +200,18 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: '24'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
 
-      - name: Install npm dependencies
-        run: npm ci --ignore-scripts
+      # fail-on-cache-miss: this restore is expected to always hit, since
+      # `needs: [install-node-ubuntu]` above guarantees that job's save
+      # already ran -- a miss means something is actually wrong (e.g. the
+      # key stopped matching), and should fail loudly here rather than
+      # silently running against an empty node_modules/.
+      - name: Restore node_modules cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: node_modules
+          key: node-modules-ubuntu-${{ hashFiles('package-lock.json') }}
+          fail-on-cache-miss: true
 
       - name: Generate TypeScript coverage
         run: npm run test:coverage
@@ -144,13 +225,14 @@ jobs:
 
   tests:
     name: PHP ${{ matrix.php }}-${{ matrix.os }}
-    # Only needs `install` (the shared vendor/ artifact), not `sonar` --
-    # this job doesn't consume anything sonar produces. It used to wait
-    # for sonar to finish first regardless, which serialised roughly a
-    # full extra SonarCloud run's worth of wall-clock time in front of
-    # every matrix leg, including both windows-latest ones, for no actual
-    # dependency reason.
-    needs: [install]
+    # Needs `install` (the shared vendor/ artifact) and both node_modules
+    # cache jobs (each matrix leg restores whichever OS one it needs via
+    # matrix.node-os below). Deliberately not `sonar` -- this job doesn't
+    # consume anything sonar produces. It used to wait for sonar to finish
+    # first regardless, which serialised roughly a full extra SonarCloud
+    # run's worth of wall-clock time in front of every matrix leg,
+    # including both windows-latest ones, for no actual dependency reason.
+    needs: [install, install-node-ubuntu, install-node-windows]
 
     env:
       extensions: apcu, fileinfo, pdo, pdo_sqlite, intl, gd, openssl, dom, json, mbstring, curl, uopz, sodium, ctype
@@ -173,15 +255,19 @@ jobs:
           - os: ubuntu-latest
             php: '8.4'
             experimental: false
+            node-os: ubuntu
           - os: ubuntu-latest
             php: '8.5'
             experimental: false
+            node-os: ubuntu
           - os: windows-latest
             php: '8.4'
             experimental: false
+            node-os: windows
           - os: windows-latest
             php: '8.5'
             experimental: false
+            node-os: windows
 
     steps:
       - name: Checkout
@@ -208,11 +294,17 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: '24'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
 
-      - name: Install dependencies with npm
-        run: npm ci --ignore-scripts
+      # See sonar's identical step for why fail-on-cache-miss is set --
+      # `needs: [install-node-ubuntu, install-node-windows]` above
+      # guarantees a matching save already happened, so a miss here means
+      # something is actually wrong.
+      - name: Restore node_modules cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: node_modules
+          key: node-modules-${{ matrix.node-os }}-${{ hashFiles('package-lock.json') }}
+          fail-on-cache-miss: true
 
   tests-alpine:
     name: PHP ${{ matrix.php }}-alpine${{ matrix.alpine }}
