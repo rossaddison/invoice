@@ -30,6 +30,15 @@ jobs:
           fi
           echo "base=${BASE_REF}" >> $GITHUB_OUTPUT
 
+      # This project's composer.json references several rossaddison/* forks
+      # as VCS (not Packagist) repositories; resolving them hits GitHub's
+      # API and needs auth to avoid the unauthenticated rate limit, same as
+      # every other workflow in this repo that installs Composer deps.
+      - name: Set up Composer GitHub auth
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: composer config --global --auth github-oauth.github.com "$GITHUB_TOKEN"
+
       - name: Install composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 

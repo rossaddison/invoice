@@ -27,6 +27,15 @@ concurrency:
   group: benchmark
   cancel-in-progress: false  # never cancel a running benchmark mid-write
 
+# The repo's default GITHUB_TOKEN permission is read-only (Settings >
+# Actions > General > Workflow permissions), so the "Commit results" step's
+# `git push` gets a 403 without this explicit opt-in — scoped to just
+# contents:write, not a repo-wide setting change. Same latent gap
+# gateway-status.yml's own identical commit-back step already documents
+# and fixes; applying the same fix here.
+permissions:
+  contents: write
+
 jobs:
   benchmark:
     name: Yii3-i Benchmarks · PHP ${{ matrix.php }}
