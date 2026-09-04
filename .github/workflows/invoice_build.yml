@@ -96,10 +96,10 @@ jobs:
   # esbuild, @playwright/test -- ship platform-specific native binaries),
   # so it's built once per OS and shared with every job that needs it on
   # that OS, instead of `sonar` plus all 4 `tests` matrix legs each running
-  # their own `npm ci` (5 installs down to 2). node_modules here is
-  # comparable in size to vendor/ (~1.1GB / ~19.5k files vs ~564MB / ~37k
-  # files), which the artifact approach already handles fine above, so the
-  # same mechanism is used rather than introducing a second one.
+  # their own `npm ci` (5 installs down to 2). ~350MB / ~18.7k files per
+  # clean `npm ci`, a similar scale to vendor/'s ~564MB / ~37k files, which
+  # the artifact approach already handles fine above, so the same
+  # mechanism is used rather than introducing a second one.
   install-node-ubuntu:
     name: Install npm dependencies (ubuntu)
     runs-on: ubuntu-latest
@@ -119,12 +119,22 @@ jobs:
       - name: Install npm dependencies
         run: npm ci --ignore-scripts
 
+      # include-hidden-files: actions/upload-artifact defaults this to
+      # false, which silently drops dotfiles -- and npm's per-package
+      # executable shims live in node_modules/.bin, a dot-directory.
+      # Confirmed live 2026-09-04: without this, the artifact uploaded
+      # clean (no error, no warning) but .bin was entirely absent from it,
+      # so every job downloading it failed on the first `npm run` script
+      # that needed a binary (e.g. `sh: 1: vitest: not found`). vendor/
+      # above doesn't hit this because Composer's bin dir is named `bin`,
+      # not `.bin`.
       - name: Upload node_modules artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: node_modules-ubuntu
           path: node_modules
           retention-days: 1
+          include-hidden-files: true
 
   install-node-windows:
     name: Install npm dependencies (windows)
@@ -145,12 +155,16 @@ jobs:
       - name: Install npm dependencies
         run: npm ci --ignore-scripts
 
+      # See install-node-ubuntu's identical step above for why this needs
+      # include-hidden-files: true (npm's node_modules/.bin is a
+      # dot-directory, dropped silently by upload-artifact's default).
       - name: Upload node_modules artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: node_modules-windows
           path: node_modules
           retention-days: 1
+          include-hidden-files: true
 
   sonar:
     name: SonarCloud
