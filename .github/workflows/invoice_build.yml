@@ -208,6 +208,14 @@ jobs:
           name: node_modules-ubuntu
           path: node_modules
 
+      # The zip round-trip through upload/download-artifact doesn't
+      # preserve the executable bit -- confirmed live 2026-09-04, once
+      # .bin itself survived (see include-hidden-files above), every
+      # shim in it came back as a regular non-executable file
+      # ("sh: 1: vitest: Permission denied", not "not found").
+      - name: Restore node_modules/.bin executable permissions
+        run: chmod -R +x node_modules/.bin
+
       - name: Generate TypeScript coverage
         run: npm run test:coverage
 
@@ -296,6 +304,16 @@ jobs:
         with:
           name: ${{ matrix.node-artifact }}
           path: node_modules
+
+      # See sonar's identical step for why this is needed (the artifact
+      # zip round-trip drops the executable bit on everything in .bin).
+      # This job doesn't run any npm scripts today, so nothing here
+      # currently depends on it, but skip it on Windows regardless --
+      # chmod isn't a pwsh command and there is no executable-bit concept
+      # on that filesystem to restore in the first place.
+      - name: Restore node_modules/.bin executable permissions
+        if: runner.os != 'Windows'
+        run: chmod -R +x node_modules/.bin
 
   tests-alpine:
     name: PHP ${{ matrix.php }}-alpine${{ matrix.alpine }}
