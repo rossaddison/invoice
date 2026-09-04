@@ -53,7 +53,14 @@ jobs:
           # that detection logic never actually fired on a real style
           # violation until now.
           output=$(php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --verbose) || true
-          echo "$output" | tee fixer-output.txt
+          # Plain echo, not `tee fixer-output.txt`: nothing later in this
+          # workflow reads that file back -- $output already goes to the
+          # step's own log -- and peter-evans/create-pull-request stages
+          # everything in the working tree by default, so an untracked
+          # debug file left lying around here rides along into the PR
+          # alongside the real style fixes. Confirmed live 2026-09-04: PR
+          # #1214 needed a follow-up commit to remove exactly that.
+          echo "$output"
           # Determine if any files were fixed based on output
           if echo "$output" | grep -qE "Fixed all files in|Fixed [1-9][0-9]* files with"; then
             echo "has_changes=true" >> $GITHUB_ENV
