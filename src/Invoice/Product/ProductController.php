@@ -322,6 +322,7 @@ final class ProductController extends BaseController
                     ->withSortString($sortString)
                     ->withOptionsDataProductsDropdownFilter($optionsDataProductsDropdownFilter)
                     ->withOptionsDataFamiliesDropdownFilter($optionsDataFamiliesDropdownFilter)
+                    ->withStickyHeader($this->sR->getSetting('grid_sticky_header') == '1')
                     ->render()
             );
         }

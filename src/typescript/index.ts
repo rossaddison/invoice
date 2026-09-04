@@ -35,6 +35,7 @@ import { initE164PhoneFields } from './phone-e164.js';
 import { initHomeCareOffline } from './homecare-offline.js';
 import { initHomeCareInstallPrompt } from './homecare-install-prompt.js';
 import { initCompanyPrivate } from './company-private.js';
+import { initStickyNavbarOffset } from './sticky-navbar-offset.js';
 
 declare global {
     // var (not `interface Window`) — see htmx.ts for why.
@@ -87,6 +88,7 @@ class InvoiceApp {
         initHtmxHooks();
         initCustomFieldPosition();
         initTabHashRestore();
+        initStickyNavbarOffset();
         initJavascriptAnalysisFaq();
         initCodeceptionChecklistFaq();
         initE164PhoneFields();

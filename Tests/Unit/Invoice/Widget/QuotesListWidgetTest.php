@@ -315,6 +315,17 @@ final class QuotesListWidgetTest extends TestCase
         $this->assertSame('id', $prop->getValue($new));
     }
 
+    public function testWithStickyHeaderReturnsNewInstance(): void
+    {
+        $original = $this->makeWidget();
+        $new = $original->withStickyHeader(true);
+
+        $this->assertNotSame($original, $new);
+        $prop = new \ReflectionProperty(QuotesListWidget::class, 'stickyHeader');
+        $this->assertFalse($prop->getValue($original));
+        $this->assertTrue($prop->getValue($new));
+    }
+
     public function testWithOptionsDataClientsDropdownFilterReturnsNewInstance(): void
     {
         $original = $this->makeWidget();

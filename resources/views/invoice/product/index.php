@@ -36,4 +36,5 @@ echo ProductsListWidget::widget()
     ->withSortString($sortString)
     ->withOptionsDataProductsDropdownFilter($optionsDataProductsDropdownFilter)
     ->withOptionsDataFamiliesDropdownFilter($optionsDataFamiliesDropdownFilter)
+    ->withStickyHeader($s->getSetting('grid_sticky_header') == '1')
     ->render();

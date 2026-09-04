@@ -196,7 +196,7 @@ echo InvsListWidget::widget()
     ->withVisibleInvSentLogColumn($visibleToggleInvSentLogColumn)
     ->withGroupBy($groupBy ?? 'none')
     ->withClientCount($clientCount)
-    ->withGridDisplayOptions($gridSummary, $sortString)
+    ->withGridDisplayOptions($gridSummary, $sortString, $s->getSetting('grid_sticky_header') == '1')
     ->withFilterOptions(new InvsFilterOptions([
         'invNumber'       => $optionsInvNumberDropDownFilter,
         'creditInvNumber' => $optionsCreditInvNumberDropDownFilter,

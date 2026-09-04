@@ -154,6 +154,7 @@ echo QuotesListWidget::widget()
     ->withSortString($sortString)
     ->withOptionsDataClientsDropdownFilter($optionsDataClientsDropdownFilter)
     ->withOptionsDataStatusDropDownFilter($optionsDataStatusDropDownFilter)
+    ->withStickyHeader($s->getSetting('grid_sticky_header') == '1')
     ->render();
 
 echo $modal_add_quote;

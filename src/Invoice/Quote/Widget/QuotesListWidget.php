@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\Quote\Quote;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\Setting\SettingRepository as SR;
+use App\Widget\StickyGridHeaderTrait;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Router\CurrentRoute;
@@ -30,6 +31,8 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
  */
 final class QuotesListWidget extends Widget
 {
+    use StickyGridHeaderTrait;
+
     private const string DOM_ID = 'QuotesGridView';
 
     private ?OffsetPaginator $paginator = null;
@@ -204,7 +207,8 @@ final class QuotesListWidget extends Widget
         ));
 
         $tableClass = ($this->visible ? 'table-responsive' : 'table')
-            . ' table-bordered table-striped h-75 resizable-grid';
+            . ' table-bordered table-striped h-75 resizable-grid'
+            . ($this->stickyHeader ? ' sticky-grid-header' : '');
 
         $gridView = GridView::widget()
             ->containerAttributes(['id' => self::DOM_ID, 'class' => 'position-relative'])

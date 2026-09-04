@@ -9,6 +9,7 @@ use App\Invoice\ProductClient\ProductClientRepository as PcR;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Widget\GridComponents;
 use App\Widget\NoOpFilterFactory;
+use App\Widget\StickyGridHeaderTrait;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Html\Html;
@@ -33,6 +34,8 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
 
 final class ProductsListWidget extends Widget
 {
+    use StickyGridHeaderTrait;
+
     private const string DOM_ID = 'ProductsGridView';
     private const string ROUTE_INDEX = 'product/index';
 
@@ -161,7 +164,8 @@ final class ProductsListWidget extends Widget
             ->containerAttributes(['id' => self::DOM_ID, 'class' => 'position-relative'])
             ->bodyRowAttributes(['class' => 'align-middle'])
             ->tableAttributes([
-                'class' => ($visible ? 'table-responsive' : 'table') . ' table-striped text-center h-75',
+                'class' => ($visible ? 'table-responsive' : 'table') . ' table-striped text-center h-75'
+                    . ($this->stickyHeader ? ' sticky-grid-header' : ''),
                 'id'    => 'table-product',
             ])
             ->columns(...$columns)

@@ -171,6 +171,11 @@ return [
     'Layout Invoice Navbar Font',
   'bootstrap5.layout.invoice.navbar.font.size' =>
     'Layout Invoice Navbar Font Size',
+  'bootstrap5.layout.invoice.navbar.sticky' => 'Sticky Navbar',
+  'bootstrap5.layout.invoice.navbar.sticky.hint' =>
+    'Keeps the top navbar pinned in place while the page scrolls'
+    . ' underneath it. Saved immediately — effect visible on your next'
+    . ' page load.',
   'bootstrap5.layout.main.navbar.font' =>
     'Layout Main Navbar Font',
   'bootstrap5.layout.main.navbar.font.size' =>
@@ -1187,6 +1192,11 @@ return [
   'invalid.subscriber.number' => 'Invalid Subscriber Number',
   'inv.cdn.not.node.module' => 'Use InvoiceCdnAsset'
     . ' (Not InvoiceNodeModulesAsset)',
+  'grid.sticky.header' => 'Sticky Grid Header',
+  'grid.sticky.header.hint' =>
+    'Keeps column headers pinned to the top while scrolling a long'
+    . ' Invoice, Quote, Sales Order or Product list. Saved immediately —'
+    . ' effect visible when you visit a list.',
   'invoice' => 'Invoice',
   'invoice.to.html' => 'Invoice to Html',
   'invoice.created.from.quote' => 'Invoice created from quote',

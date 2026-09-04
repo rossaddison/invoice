@@ -9,6 +9,7 @@ use App\Invoice\Inv\InvRepository as InvRepo;
 use App\Invoice\SalesOrder\SalesOrderRepository as SoR;
 use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as SoAR;
 use App\Invoice\Setting\SettingRepository as SR;
+use App\Widget\StickyGridHeaderTrait;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Html\Html;
@@ -32,6 +33,8 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
 
 final class SalesOrdersListWidget extends Widget
 {
+    use StickyGridHeaderTrait;
+
     private const string DOM_ID = 'SalesOrdersGridView';
     private const string ROUTE_INDEX = 'salesorder/index';
 
@@ -195,7 +198,8 @@ final class SalesOrdersListWidget extends Widget
         $gridView = GridView::widget()
             ->containerAttributes(['id' => self::DOM_ID, 'class' => 'position-relative'])
             ->bodyRowAttributes(['class' => 'align-middle'])
-            ->tableAttributes(['class' => 'table table-striped text-center h-75 resizable-grid',
+            ->tableAttributes(['class' => 'table table-striped text-center h-75 resizable-grid'
+                . ($this->stickyHeader ? ' sticky-grid-header' : ''),
                 'id' => 'table-salesorder'])
             ->columns(...$columns)
             ->columnGrouping(true)

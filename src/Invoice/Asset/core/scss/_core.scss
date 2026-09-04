@@ -16,12 +16,20 @@
 
 html {
   min-height: 100vh;
+  // Moved here from body: a `position: sticky` element's containing block
+  // is its nearest scrolling ancestor, and `overflow` set to anything but
+  // `visible` on body turns body itself into that scrolling ancestor
+  // instead of the viewport -- breaking sticky positioning on body's
+  // direct children (e.g. the navbar) in every major browser. Same net
+  // effect either way (no horizontal scroll, a permanent vertical
+  // scrollbar so page-height changes don't shift layout), just applied to
+  // the actual root scrolling element instead of body.
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 body {
   min-height: 100vh;
-  overflow-x: hidden;
-  overflow-y: scroll;
 }
 
 img {

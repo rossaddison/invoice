@@ -31,6 +31,48 @@
 
 .sidebar li a:hover { color: #fff; background-color: #000; }
 
+/* Sticky invoice navbar (Settings > Bootstrap5 > Layout Invoice Navbar
+   Sticky) — components.css's own `.navbar { position: relative }` (also
+   labelled "From style.css", loaded right before this file) ties with
+   Bootstrap's `.sticky-top { position: sticky }` on specificity, and
+   wins on source order, silently cancelling position: sticky outright.
+   Two classes here (0,0,2,0) beats components.css's single class
+   (0,0,1,0) regardless of load order, so this actually sticks. */
+.navbar.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+}
+
+/* Sticky grid header — shared by every list grid that opts in via the
+   'grid_sticky_header' setting (toggled from the navbar's gear dropdown,
+   SettingToggleController::gridStickyHeader() — see that method's own
+   docblock for why this is one setting for every grid, not one per
+   grid): Invoice, Quote, SalesOrder and Product all render their table
+   with this class when it's on (each *ListWidget's own withXxx() call,
+   see InvsListWidget::withGridDisplayOptions() for the pattern).
+   Deliberately NOT scoped to a specific #table-id -- components.css's
+   `.resizable-grid thead th { position: relative }` (also loaded before
+   this file) ties on specificity with this rule either way (one class +
+   two elements, both sides), and overrides.css loading last already
+   wins that tie regardless of ID scoping.
+   top: var(--sticky-content-top) (set in resources/views/layout/
+   invoice.php) sticks the header just below the navbar when Layout
+   Invoice Navbar Sticky is also on, instead of underneath it; it's 0px
+   when the navbar isn't sticky. z-index 2 sits above scrolled body rows
+   but below .col-resize-handle's own z-index 3, so column resizing
+   still works normally on a stuck header (only relevant for the grids
+   that also have 'resizable-grid' -- Product doesn't, harmlessly no-op
+   there). Background is set explicitly rather than relying on
+   --bs-table-bg's default, matching the headerRowAttributes 'bg-info'
+   every one of these tables already renders with. */
+.sticky-grid-header thead th {
+  position: sticky;
+  top: var(--sticky-content-top, 0px);
+  z-index: 2;
+  background-color: var(--bs-info);
+}
+
 /* form-floating fix — base.css sets html { font-size: 10px } which shrinks
    Bootstrap 5 rem values (3.5rem → 35px instead of 56px, label transforms too short).
    Uses --inv-input-height and --inv-form-fs CSS vars emitted by LayoutViewInjection

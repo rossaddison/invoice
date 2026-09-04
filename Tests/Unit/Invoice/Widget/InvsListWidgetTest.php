@@ -367,18 +367,29 @@ final class InvsListWidgetTest extends TestCase
         $this->assertSame(7, $prop->getValue($new));
     }
 
-    public function testWithGridDisplayOptionsReturnsNewInstanceAndSetsBothProps(): void
+    public function testWithGridDisplayOptionsReturnsNewInstanceAndSetsAllProps(): void
     {
         $original = $this->makeWidget();
-        $new      = $original->withGridDisplayOptions('Showing 1–10 of 50', 'id');
+        $new      = $original->withGridDisplayOptions('Showing 1–10 of 50', 'id', true);
 
         $this->assertNotSame($original, $new);
         $propSummary = new \ReflectionProperty(InvsListWidget::class, 'gridSummary');
         $propSort    = new \ReflectionProperty(InvsListWidget::class, 'sortString');
+        $propSticky  = new \ReflectionProperty(InvsListWidget::class, 'stickyHeader');
         $this->assertSame('', $propSummary->getValue($original));
         $this->assertSame('-id', $propSort->getValue($original));
+        $this->assertFalse($propSticky->getValue($original));
         $this->assertSame('Showing 1–10 of 50', $propSummary->getValue($new));
         $this->assertSame('id', $propSort->getValue($new));
+        $this->assertTrue($propSticky->getValue($new));
+    }
+
+    public function testWithGridDisplayOptionsStickyHeaderDefaultsFalse(): void
+    {
+        $new = $this->makeWidget()->withGridDisplayOptions('', '-id');
+
+        $prop = new \ReflectionProperty(InvsListWidget::class, 'stickyHeader');
+        $this->assertFalse($prop->getValue($new));
     }
 
     public function testWithFilterOptionsReturnsNewInstanceAndOriginalUnchanged(): void

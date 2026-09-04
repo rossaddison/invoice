@@ -70,4 +70,5 @@ echo SalesOrdersListWidget::widget()
     ->withStatus($status)
     ->withSalesOrderToolbar($salesOrderToolbar)
     ->withOptionsDataClientsDropdownFilter($optionsDataClientsDropdownFilter)
+    ->withStickyHeader($s->getSetting('grid_sticky_header') == '1')
     ->render();

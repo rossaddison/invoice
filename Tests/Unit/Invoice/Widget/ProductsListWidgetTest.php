@@ -206,6 +206,17 @@ final class ProductsListWidgetTest extends TestCase
         $this->assertSame('product_name', $prop->getValue($new));
     }
 
+    public function testWithStickyHeaderReturnsNewInstance(): void
+    {
+        $original = $this->makeWidget();
+        $new      = $original->withStickyHeader(true);
+
+        $this->assertNotSame($original, $new);
+        $prop = new \ReflectionProperty(ProductsListWidget::class, 'stickyHeader');
+        $this->assertFalse($prop->getValue($original));
+        $this->assertTrue($prop->getValue($new));
+    }
+
     public function testWithOptionsDataProductsDropdownFilterReturnsNewInstance(): void
     {
         $original = $this->makeWidget();
