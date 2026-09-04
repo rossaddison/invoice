@@ -111,17 +111,29 @@ final class QuoteSalesOrderInvResetService
                 $this->database->execute("DROP TABLE IF EXISTS `{$table}`");
             }
         } finally {
-            $this->database->execute('SET FOREIGN_KEY_CHECKS=1');
-            // Invalidate the cache even on a partial drop (a DROP mid-loop
-            // threw) -- not just on success. Leaving the pre-drop cache in
-            // place would let the next request keep reading stale schema
-            // metadata via PhpFileSchemaProvider's MODE_READ_AND_WRITE
-            // read() (it only recompiles when the cache file is missing),
-            // describing tables that no longer exist. Clearing it here
-            // means the next request's schema rebuild self-heals a partial
-            // drop too: SyncTables recreates whatever's still missing,
-            // same as a clean run just interrupted midway.
-            $this->schemaProvider->clear();
+            // Nested try/finally: SET FOREIGN_KEY_CHECKS=1 can itself throw
+            // (lost connection, deadlock, etc.), and a throw from the first
+            // statement in a finally block skips the rest of that same
+            // block -- clear() would never run. Nesting it in its own
+            // finally guarantees clear() still fires even if the
+            // FK-restore itself fails, on top of the DROP-loop-failure
+            // case this was originally written for.
+            try {
+                $this->database->execute('SET FOREIGN_KEY_CHECKS=1');
+            } finally {
+                // Invalidate the cache after ANY attempted drop -- full,
+                // partial, or one where even the FK-restore failed -- not
+                // just on complete success. Leaving the pre-drop cache in
+                // place would let the next request keep reading stale
+                // schema metadata via PhpFileSchemaProvider's
+                // MODE_READ_AND_WRITE read() (it only recompiles when the
+                // cache file is missing), describing tables that no longer
+                // exist. Clearing it here means the next request's schema
+                // rebuild self-heals a partial drop too: SyncTables
+                // recreates whatever's still missing, same as a clean run
+                // just interrupted midway.
+                $this->schemaProvider->clear();
+            }
         }
 
         return $tables;

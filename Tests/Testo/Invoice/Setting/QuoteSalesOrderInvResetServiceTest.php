@@ -132,6 +132,32 @@ final class QuoteSalesOrderInvResetServiceTest
         $service->dropAndClearSchema();
     }
 
+    #[ExpectException(\RuntimeException::class)]
+    public function dropAndClearSchemaStillClearsTheCacheWhenTheForeignKeyRestoreItselfFails(): void
+    {
+        // Distinct from the drop-fails case above: every DROP succeeds,
+        // but SET FOREIGN_KEY_CHECKS=1 -- the FIRST statement in the outer
+        // finally block -- throws. A throw from a finally block's first
+        // statement skips the rest of that same block, so without the
+        // nested try/finally clear() would never run here even though the
+        // drop loop itself was clean (CodeRabbit review comment on
+        // PR #1204's follow-up fix).
+        [$database, $schemaProvider, $backupService, $aliases] = $this->makeDeps();
+
+        $backupService->shouldReceive('writeGzippedDump')->once();
+        $database->shouldReceive('execute')->once()->with('SET FOREIGN_KEY_CHECKS=0');
+        foreach (QuoteSalesOrderInvResetService::tables() as $table) {
+            $database->shouldReceive('execute')->once()->with("DROP TABLE IF EXISTS `{$table}`");
+        }
+        $database->shouldReceive('execute')->once()
+            ->with('SET FOREIGN_KEY_CHECKS=1')
+            ->andThrow(new \RuntimeException('lost connection'));
+        $schemaProvider->shouldReceive('clear')->once();
+
+        $service = new QuoteSalesOrderInvResetService($database, $schemaProvider, $backupService, $aliases);
+        $service->dropAndClearSchema();
+    }
+
     public function resetAutoIncrementRunsAlterTableForEveryGivenTable(): void
     {
         [$database, $schemaProvider, $backupService, $aliases] = $this->makeDeps();
