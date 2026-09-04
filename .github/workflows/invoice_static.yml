@@ -105,8 +105,14 @@ jobs:
           #   alpine: 'edge'
 
     steps:
-      - name: Install glibc compatibility layer
-        run: apk add --no-cache gcompat
+      # See invoice_build.yml's tests-alpine job for why both packages are
+      # needed here -- gcompat for actions/checkout and actions/cache's
+      # Node runtime, tar because Alpine's default BusyBox /bin/tar doesn't
+      # support the --posix flag actions/cache always invokes (confirmed
+      # live 2026-09-04: this job's own cache-save step failing with
+      # exactly that error).
+      - name: Install glibc compatibility layer and GNU tar
+        run: apk add --no-cache gcompat tar
 
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7

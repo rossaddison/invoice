@@ -103,8 +103,16 @@ jobs:
       # actions/checkout and actions/cache are Node-based Actions; the Node
       # runtime GitHub injects into the container is glibc-linked, which
       # will not execute on musl libc without this compatibility layer.
-      - name: Install glibc compatibility layer
-        run: apk add --no-cache gcompat
+      # tar: actions/cache always invokes `tar --posix` to build/restore its
+      # archive. Alpine's default /bin/tar is BusyBox's minimal tar, which
+      # doesn't support --posix at all ("unrecognized option: posix") --
+      # confirmed live 2026-09-04, the cache-save step failing with exactly
+      # that error on every run. Installing the real tar package replaces
+      # what /bin/tar resolves to (Alpine's /bin is a symlink into /usr/bin
+      # since the usrmerge Alpine adopted a few releases back), which is
+      # GNU tar and does support --posix.
+      - name: Install glibc compatibility layer and GNU tar
+        run: apk add --no-cache gcompat tar
 
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7

@@ -30,13 +30,29 @@ jobs:
           fi
           echo "base=${BASE_REF}" >> $GITHUB_OUTPUT
 
+      # This project's composer.json references several rossaddison/* forks
+      # as VCS (not Packagist) repositories; resolving them hits GitHub's
+      # API and needs auth to avoid the unauthenticated rate limit, same as
+      # every other workflow in this repo that installs Composer deps.
+      - name: Set up Composer GitHub auth
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: composer config --global --auth github-oauth.github.com "$GITHUB_TOKEN"
+
       - name: Install composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
       - name: Run PHP CS Fixer dry-run and capture output
         id: csfixer
         run: |
-          output=$(php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --verbose)
+          # --dry-run exits 8 (non-zero) whenever it finds files that would
+          # be changed -- normal, expected behaviour, not a real failure --
+          # but GitHub Actions runs this script under `bash -e`, so without
+          # `|| true` that non-zero exit kills the step immediately, before
+          # any of the has_changes detection below ever runs. This is why
+          # that detection logic never actually fired on a real style
+          # violation until now.
+          output=$(php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --verbose) || true
           echo "$output" | tee fixer-output.txt
           # Determine if any files were fixed based on output
           if echo "$output" | grep -qE "Fixed all files in|Fixed [1-9][0-9]* files with"; then

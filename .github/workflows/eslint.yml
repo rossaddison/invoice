@@ -30,9 +30,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      # npm ci, not npm install -- installs exactly what's in the committed
+      # package-lock.json rather than potentially drifting from it, matching
+      # every other npm-installing workflow in this repo.
       - name: Install ESLint
-        run: |
-          npm install
+        run: npm ci --ignore-scripts
 
       - name: Run ESLint
         run: npx eslint .
@@ -42,8 +51,12 @@ jobs:
           --output-file eslint-results.sarif
         continue-on-error: true
 
+      # Same github/codeql-action release codeql.yml's init/analyze steps
+      # use (all three ship together in lockstep) -- was pinned to an
+      # untagged commit on the action's main branch instead of a stable
+      # release.
       - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@5914b031b1259655378c213b97722d425209e2d8 # main
+        uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4
         with:
           sarif_file: eslint-results.sarif
           wait-for-processing: true

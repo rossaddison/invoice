@@ -11,8 +11,8 @@ on:
 # (Settings > Actions > General > Workflow permissions), so the
 # "Commit results" step's `git push` gets a 403 without this explicit
 # opt-in — scoped to just contents:write, not a repo-wide setting
-# change. benchmark.yml's identical commit-back step likely has the
-# same latent gap; not touched here, flagged separately.
+# change. benchmark.yml's identical commit-back step had the same latent
+# gap, confirmed and fixed there too.
 permissions:
   contents: write
 
