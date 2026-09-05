@@ -602,16 +602,18 @@ $urlCreator->__invoke([], $order);
 
 echo $homeCareInstallBanner;
 
-// Same shared 'grid_sticky_header' setting the four staff-facing grids
-// (Invoice/Quote/SalesOrder/Product) already toggle from the navbar's
-// gear dropdown -- see docs/STICKY_NAVBAR_AND_GRID_HEADER_SEPTEMBER_2026.md.
-// This view builds its own GridView directly rather than through one of
-// the *ListWidget classes those four use, so the class is appended here
-// inline instead of via a withStickyHeader()-style setter; the shared
-// '.sticky-grid-header thead th' rule in overrides.css isn't scoped to
-// any one #table-id and already matches this grid's own bg-info header
-// row (headerRowAttributes below), so no new CSS is needed.
-$stickyGridHeaderClass = $s->getSetting('grid_sticky_header') === '1' ? ' sticky-grid-header' : '';
+// Per-observer preference (UserInv.sticky_grid_header), not the
+// admin-controlled shared 'grid_sticky_header' setting the four
+// staff-facing grids (Invoice/Quote/SalesOrder/Product) toggle from the
+// navbar's gear dropdown -- see
+// docs/STICKY_NAVBAR_AND_GRID_HEADER_SEPTEMBER_2026.md's "per-observer"
+// section. This view builds its own GridView directly rather than
+// through one of the *ListWidget classes those four use, so the class is
+// appended here inline instead of via a withStickyHeader()-style setter;
+// the shared '.sticky-grid-header thead th' rule in overrides.css isn't
+// scoped to any one #table-id and already matches this grid's own
+// bg-info header row (headerRowAttributes below), so no new CSS is needed.
+$stickyGridHeaderClass = $userInv->getStickyGridHeader() ? ' sticky-grid-header' : '';
 
 echo GridView::widget()
     ->bodyRowAttributes(['class' => 'align-middle'])

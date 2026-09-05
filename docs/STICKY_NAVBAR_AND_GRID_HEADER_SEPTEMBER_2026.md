@@ -141,41 +141,93 @@ design was settled.
   self::INDEX_SUFFIX` — caught by re-reading the file immediately after
   running it, fixed before it was ever committed.
 
-## Extended to the guest-facing layout
+## Extended to the guest-facing layout — per-observer, not admin-shared
 
 `resources/views/layout/guest.php`'s own `NavBar::widget()` had a
 *hardcoded* `->placement(NavBarPlacement::STICKY_TOP)` — always sticky,
-regardless of the shared `bootstrap5_layout_invoice_navbar_sticky` setting
-staff could toggle for `invoice.php`. There's no real reason a guest
-customer's navbar should behave differently from staff's own — same
-"one setting, not four" reasoning `grid_sticky_header` already
-established — so it now reads the exact same shared setting
-(`$bootstrap5LayoutInvoiceNavbarSticky`, already globally injected via
-`LayoutViewInjection` regardless of layout) and applies `.sticky-top`
-conditionally, mirroring `invoice.php`'s own pattern exactly (`placement()`
-is a thin wrapper over `addClass()`, confirmed from the widget's own
-source, so the two are truly equivalent). `guest.php` gained the same
-`--sticky-content-top` custom property `invoice.php` already declares — no
-new CSS was needed at all: `.navbar.sticky-top`/`.sticky-grid-header thead
-th` in `overrides.css`, and the `html`-not-`body` overflow fix, are all
-global rules `guest.php` already inherits via the same `InvoiceCdnAsset`/
-`InvoiceNodeModulesAsset` bundles `invoice.php` uses, and
-`initStickyNavbarOffset()` was already active on guest pages (`index.ts`
-calls it unconditionally, and `inv/guest.php` already invokes
-`InvoiceApp.initInvIndex('table-invoice-guest', ...)` from the same
-bundle).
+regardless of anyone's preference. The first attempt at fixing this
+reused the same admin-controlled shared settings the four staff grids
+use (`bootstrap5_layout_invoice_navbar_sticky`/`grid_sticky_header`),
+reasoning "one setting, not four" the same way `grid_sticky_header`
+itself was justified. That reasoning doesn't hold on the guest side: an
+admin and an anonymous-to-them customer/observer are different people
+making a personal display choice, not one admin deciding a house style
+for every staff grid — corrected before merge to a genuine **per-observer
+self-service preference** instead, mirroring the exact pattern this app
+already uses for the observer's own list-size choice
+(`UserInv.listLimit` + `UserInvController::guestlimit()` +
+`Widget\PageSizeLimiter::buttonsGuest()`).
 
-The guest-facing invoice list itself (`resources/views/invoice/inv/
-guest.php` — HomeCare workers and ordinary client observers both land
-here, reached via `Guest.php`'s own `guest()` action) builds its
-`GridView` directly rather than through one of the four `*ListWidget`
-classes the staff grids use, so the `sticky-grid-header` class is appended
-to its `tableAttributes` inline instead of via a `withStickyHeader()`-
-style setter — same shared `grid_sticky_header` setting, same
-already-`bg-info` header row the shared CSS rule matches, no per-view CSS
-needed. Unlike the four staff grids, this view has no separate
-HTMX-partial-refresh path to also update (`guest()` always does a full
-page render), so there was only the one call site.
+- **Two new `UserInv` boolean columns**, `sticky_navbar`/
+  `sticky_grid_header` (`UserInv.php`/`Trait\UserInvTrait4.php`) — same
+  `#[Column(type: 'bool', typecast: 'bool', default: false)]` shape as
+  every other observer-facing boolean already on this entity
+  (`consent_periodic_invoice`, `active`, ...). Default `false`, matching
+  both this entity's own convention and the admin-side settings' own
+  installer default (`InvoiceInstallTrait.php`: both `0`) — no visual
+  change for an existing install until an observer opts in themselves.
+- **Two new toggle actions**, `UserInvController::guestStickyNavbar()`/
+  `guestStickyGridHeader()`, an exact mirror of `guestlimit()`'s own
+  shape (load the observer's own `UserInv` by id, flip the field, save,
+  redirect back to `$origin . '/guest'`) — sharing one private
+  `toggleGuestBooleanPreference(int, string, uiR, \Closure)` helper
+  between the two rather than duplicating the load/save/redirect
+  boilerplate twice, the same duplication concern that already drove
+  `SettingToggleController::toggleBooleanSettingCreatingAtOne()`'s own
+  extraction on the admin-setting side of this feature. Two new routes,
+  `userinv/guestStickyNavbar` / `userinv/guestStickyGridHeader`
+  (`routes-user-inv.php`), same `RoutePermission::check(Permissions::
+  EDIT_USER_INV)` gate as `userinv/guestlimit`.
+- **Resolved in `LayoutViewInjection::resolveUserState()`**, not
+  `GuestLayoutViewParameters` — that class has no `UrlGenerator`/
+  `CurrentRoute` to build a toggle link from, and `resolveUserState()`
+  already resolves this exact observer's own `UserInv` row for the
+  identical page-size-preference purpose immediately above it, so the
+  two new values are computed alongside it in the same guarded block
+  (`!$isGuest && $user !== null`) rather than a second lookup.
+  `guestStickyNavbar`/`guestStickyGridHeader` (current on/off state) and
+  `guestStickyNavbarToggleUrl`/`guestStickyGridHeaderToggleUrl` (the
+  link to flip it) are exposed to every layout, `guest.php` included,
+  the same way `guestPageSizeUrlTemplate` already is.
+- **`guest.php`** now reads `$guestStickyNavbar` (not the old shared
+  setting) for both the `.sticky-top` class and the `--sticky-content-top`
+  CSS variable, and gained two ON/OFF link-button pairs in the existing
+  Settings gear dropdown, right below the list-size buttons — plain
+  `<a href>` links (not `hx-get`, unlike the list-size buttons: both
+  preferences are read while this layout builds its own `<head>`/navbar
+  markup server-side, so a full page reload is genuinely needed to see
+  the new state, not just a background save). Empty toggle URLs
+  (anonymous visitor, no `UserInv` row) simply render inert `href=""`
+  buttons rather than being hidden outright — harmless, matches how the
+  Settings dropdown itself is only shown to a logged-in observer anyway
+  (`if (... && !$isGuest)`).
+- **`inv/guest.php`** now reads `$userInv->getStickyGridHeader()` instead
+  of `$s->getSetting('grid_sticky_header')` — `$userInv` was already an
+  existing view var here (`Guest.php`'s own `renderGuestView()` already
+  passes the observer's own `UserInv` for the list-size preference), so
+  no new plumbing was needed to reach the content view, unlike the
+  layout-level navbar preference above.
+- New translation keys: `on`/`off` (reused by both button pairs),
+  `sticky.navbar`/`sticky.navbar.hint`, `sticky.grid.header`/
+  `sticky.grid.header.hint`.
+- The admin-controlled `bootstrap5_layout_invoice_navbar_sticky`/
+  `grid_sticky_header` settings and their gear-dropdown toggles on
+  `invoice.php` are untouched — staff keep their own shared setting for
+  the four staff grids and `invoice.php`'s own navbar; only the
+  guest-facing layout and `inv/guest.php`'s grid moved to a per-observer
+  model.
+
+A real SonarCloud `new_duplicated_lines_density` gate failure (8.75%,
+threshold 3%) surfaced on the PR for this redesign — not the already-known
+`new_coverage` gap, a genuine finding: the two new route definitions
+repeated `routes-user-inv.php`'s existing `Route::methods(...)->name(...)
+->middleware(...)->action(...)` shape once too often, and that same shape
+already ran nine times in a row for the admin `userinv/*` CRUD/role
+routes. Fixed by extracting two small closures at the top of the file,
+`$adminUserInvRoute`/`$guestUserInvRoute` (one per `RoutePermission`
+gate), and reducing all thirteen route definitions in the file to one
+call each — same paths, names, and actions, byte-for-byte, confirmed via
+`php yii router/list`.
 
 ## Verified
 
@@ -206,3 +258,20 @@ Testo Unit suite 1256/1256 unaffected. No CSS/JS changes needed at all —
 purely reusing the existing shared settings, rules, and TypeScript module.
 Not yet independently live-browser-confirmed for the guest layout
 specifically.
+
+The per-observer redesign above: `php -l` clean on every touched file;
+full-project `vendor/bin/psalm --no-cache --no-progress` — "No errors
+found!" (exit 0, same 201 pre-existing informational issues, unchanged).
+Full Testo Unit suite 1256/1256, count unchanged — the two new controller
+actions weren't given dedicated Testo coverage, following the exact same
+pre-existing-gap reasoning already documented above for
+`gridStickyHeader()`/`navbarSticky()` (`guestlimit()` itself, the pattern
+these two mirror, has never had test coverage either). New
+`Tests/Unit/Invoice/Entity/UserInvEntityTest.php` coverage for the two new
+fields (`testStickyNavbarDefaultsFalse`/`testSetAndGetStickyNavbar`/
+`testStickyGridHeaderDefaultsFalse`/`testSetAndGetStickyGridHeader`) — full
+file 18/18. No schema migration run against a live database — this
+checkout has no DB configured (same limitation already noted above), so
+the new `sticky_navbar`/`sticky_grid_header` columns need a
+`BUILD_DATABASE`-driven Cycle ORM schema sync on first deploy, same as
+any other new entity column. Not yet independently live-browser-confirmed.

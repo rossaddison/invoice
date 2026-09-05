@@ -83,4 +83,24 @@ trait UserInvTrait4
     {
         $this->telegram_chat_id = $telegram_chat_id;
     }
+
+    public function getStickyNavbar(): bool
+    {
+        return (bool) $this->sticky_navbar;
+    }
+
+    public function setStickyNavbar(bool $sticky): void
+    {
+        $this->sticky_navbar = $sticky;
+    }
+
+    public function getStickyGridHeader(): bool
+    {
+        return (bool) $this->sticky_grid_header;
+    }
+
+    public function setStickyGridHeader(bool $sticky): void
+    {
+        $this->sticky_grid_header = $sticky;
+    }
 }
