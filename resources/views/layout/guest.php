@@ -32,7 +32,6 @@ use Yiisoft\Bootstrap5\ButtonVariant;
 use Yiisoft\Bootstrap5\Nav;
 use Yiisoft\Bootstrap5\NavBar;
 use Yiisoft\Bootstrap5\NavBarExpand;
-use Yiisoft\Bootstrap5\NavBarPlacement;
 use Yiisoft\Bootstrap5\NavLink;
 use Yiisoft\Bootstrap5\NavStyle;
 
@@ -48,6 +47,17 @@ use Yiisoft\Bootstrap5\NavStyle;
  * @var bool $bootstrap5CdnNotNodeModule
  * @var bool $appCdnNotNodeModule
  * @var bool $invCdnNotNodeModule
+ * @var bool $bootstrap5LayoutInvoiceNavbarSticky Same shared setting
+ *     `resources/views/layout/invoice.php`'s own gear-dropdown toggle
+ *     controls (`bootstrap5_layout_invoice_navbar_sticky` — the "Invoice"
+ *     in the key name is a naming leftover from where the toggle was
+ *     first placed, not a scoping restriction; `SettingToggleController::
+ *     navbarSticky()` always toggles this one key regardless of which
+ *     layout's dropdown called it). Deliberately not a separate
+ *     guest-only setting — there's no real reason a staff admin would
+ *     want a sticky navbar on `invoice.php` but not on the guest-facing
+ *     `guest.php`, the same reasoning `grid_sticky_header` below already
+ *     established for "sticky headers on invoices but not quotes".
  * @var string $bootstrap5LayoutGuestNavbarFont
  * @var string $bootstrap5LayoutGuestNavbarFontSize
  * @var int $bootstrap5FormInputHeight
@@ -140,6 +150,17 @@ echo Meta::data('theme-color', '#1e73b8');
     . ' --guest-nav-ff: ' . $bootstrap5LayoutGuestNavbarFont . ';'
     . ' --guest-input-height: ' . $bootstrap5FormInputHeight . 'px;'
     . ' --guest-form-fs: ' . $bootstrap5FormFontSize . 'px;'
+    // Read by any sticky-positioned content below the navbar (e.g.
+    // inv/guest's sticky grid header, overrides.css) so it sticks just
+    // under a sticky navbar instead of being covered by it — same
+    // reasoning as invoice.php's own identical declaration. 0 when the
+    // navbar itself isn't sticky, since nothing needs to clear it then;
+    // initStickyNavbarOffset() (src/typescript/sticky-navbar-offset.ts,
+    // already active here — guest.php loads the same invoice-typescript-
+    // iife.js bundle invoice.php does) overwrites this fallback with a
+    // live measurement once JS runs.
+    . ' --sticky-content-top: '
+    . ($bootstrap5LayoutInvoiceNavbarSticky ? 'var(--navbar-height)' : '0px') . ';'
     . ' }'
   )->render();
 echo Meta::data('robots', 'NOINDEX,NOFOLLOW');
@@ -152,7 +173,7 @@ echo Html::tag('Noscript', Html::tag('div',
     ['class' => 'alert alert-danger no-margin']));
 echo Html::openTag('header');
 $this->beginBody();
-echo NavBar::widget()
+$navBar = NavBar::widget()
     ->addAttributes([])
     //->addClass('navbar navbar-light bg-light navbar-expand-sm text-white')
     ->addClass('navbar bg-body-tertiary')
@@ -169,9 +190,20 @@ echo NavBar::widget()
     ])
     ->expand(NavBarExpand::LG)
     ->id('navbar')
-    ->innerContainerAttributes(['class' => 'container-md'])
-    ->placement(NavBarPlacement::STICKY_TOP)
-    ->begin();
+    ->innerContainerAttributes(['class' => 'container-md']);
+
+// Bootstrap's own .sticky-top utility class -- see this file's own
+// @var docblock for $bootstrap5LayoutInvoiceNavbarSticky. Unlike
+// invoice.php's own identical conditional, bg-body-tertiary doesn't
+// need to move inside this "if" here -- it's already applied
+// unconditionally above, so a non-sticky guest navbar was never at
+// risk of the transparent-bar issue invoice.php's own docblock
+// describes.
+if ($bootstrap5LayoutInvoiceNavbarSticky) {
+    $navBar = $navBar->addClass('sticky-top');
+}
+
+echo $navBar->begin();
 
 $currentPath = $currentRoute->getUri()?->getPath();
 if ((null !== $currentPath) && !$isGuest) {
