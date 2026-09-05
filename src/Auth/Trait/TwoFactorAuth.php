@@ -34,6 +34,16 @@ trait TwoFactorAuth
         UserRepository $userRepository,
     ): ResponseInterface {
         $userId = (int) $this->session->get('pending_2fa_user_id');
+        // 'pending_2fa_user_id' can be legitimately absent -- a direct/
+        // bookmarked/stale-session GET to this route rather than one
+        // reached via handleTfaPath()'s own redirect -- in which case
+        // (int) null casts to 0 and findById() (non-nullable by contract:
+        // "$id has been checked for persistence => cannot be null") would
+        // otherwise crash with an uncaught TypeError instead of failing
+        // gracefully like every other guarded path in this trait.
+        if ($userId <= 0) {
+            return $this->redirectToOneTimePasswordError();
+        }
         $user = $userRepository->findById($userId);
         $email = $user->getEmail();
         if (strlen($email) > 0) {
@@ -117,6 +127,15 @@ trait TwoFactorAuth
         UserRepository $userRepository,
     ): ResponseInterface {
         $vuid = (int) $this->session->get('verified_2fa_user_id');
+        // Same reasoning as showSetup() above: a direct/bookmarked/stale-
+        // session GET here (this is exactly what
+        // https://yii3i.online/verifyLogin's real "Return value must be
+        // of type ... User, null returned" TypeError turned out to be)
+        // must fail gracefully, not crash findById()'s non-nullable
+        // contract.
+        if ($vuid <= 0) {
+            return $this->redirectToOneTimePasswordError();
+        }
         $form = new TwoFactorAuthenticationVerifyLoginForm($translator);
         $codes = [];
         $user = $userRepository->findById($vuid);
