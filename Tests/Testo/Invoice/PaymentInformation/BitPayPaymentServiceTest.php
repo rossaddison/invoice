@@ -275,11 +275,7 @@ final class BitPayPaymentServiceTest
         $service = $this->makeService(new MockHandler([]));
 
         $body = json_encode(['id' => 'inv-123', 'status' => 'complete'], JSON_THROW_ON_ERROR);
-        $canonical = json_encode(
-            json_decode($body, true, 512, JSON_THROW_ON_ERROR),
-            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
-        );
-        $signature = base64_encode(hash_hmac('sha256', (string) $canonical, 'pos-token-123', true));
+        $signature = base64_encode(hash_hmac('sha256', $body, 'pos-token-123', true));
 
         Assert::true($service->verifyWebhookSignature($body, $signature));
     }

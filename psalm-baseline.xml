@@ -127,11 +127,11 @@
     </NoValue>
     <UnevaluatedCode>
       <code><![CDATA[$rawBody = '{not valid json';]]></code>
-      <code><![CDATA[$rawBody = json_encode(['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'complete'], JSON_THROW_ON_ERROR);]]></code>
-      <code><![CDATA[$rawBody = json_encode(['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'complete'], JSON_THROW_ON_ERROR);]]></code>
-      <code><![CDATA[$rawBody = json_encode(['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'confirmed'], JSON_THROW_ON_ERROR);]]></code>
-      <code><![CDATA[$rawBody = json_encode(['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'paid'], JSON_THROW_ON_ERROR);]]></code>
-      <code><![CDATA[$rawBody = json_encode(['id' => 'inv-123', 'orderId' => 'unknown-key', 'status' => 'complete'], JSON_THROW_ON_ERROR);]]></code>
+      <code><![CDATA[$rawBody = json_encode(['data' => ['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'complete']], JSON_THROW_ON_ERROR);]]></code>
+      <code><![CDATA[$rawBody = json_encode(['data' => ['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'complete']], JSON_THROW_ON_ERROR);]]></code>
+      <code><![CDATA[$rawBody = json_encode(['data' => ['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'confirmed']], JSON_THROW_ON_ERROR);]]></code>
+      <code><![CDATA[$rawBody = json_encode(['data' => ['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'paid']], JSON_THROW_ON_ERROR);]]></code>
+      <code><![CDATA[$rawBody = json_encode(['data' => ['id' => 'inv-123', 'orderId' => 'unknown-key', 'status' => 'complete']], JSON_THROW_ON_ERROR);]]></code>
       <code><![CDATA[$response = $handler->handle($this->makeRequest($rawBody, $this->sign($rawBody)));]]></code>
       <code><![CDATA[$response = $handler->handle($this->makeRequest($rawBody, $this->sign($rawBody)));]]></code>
       <code><![CDATA[$response = $handler->handle($this->makeRequest($rawBody, $this->sign($rawBody)));]]></code>
