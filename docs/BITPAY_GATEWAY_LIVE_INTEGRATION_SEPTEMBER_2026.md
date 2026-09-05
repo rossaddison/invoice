@@ -64,10 +64,12 @@ level with a new `renderGuardFailure()` (reusing the same `payment_message`
 partial every gateway's own `*Complete()` action already renders
 successfully) — no changes needed in any of the 10 consuming controllers,
 since `resolveConfiguredInvoiceWithBalance()`'s own public signature didn't
-change. Found this only because the user pushed back directly: *"So a
-developer downloads my app and faces the same page. He will not have a
-bloody clue what is going on"* — treated as a real architectural finding,
-not shortcut around.
+change. Found this only because the initial, narrower fix (BitPay's own
+`createPayment()` failure specifically) was pushed back on as a shortcut —
+what actually matters to a developer setting this gateway up for the first
+time is seeing *why* it failed at all, regardless of which gateway or
+which guard clause is responsible — so the project-wide root cause was
+tracked down and fixed properly instead.
 
 **BitPay's redirect-URL allow-list — undocumented, found via 3 live
 rounds**: BitPay's own OpenAPI schema says nothing about pre-registering a
