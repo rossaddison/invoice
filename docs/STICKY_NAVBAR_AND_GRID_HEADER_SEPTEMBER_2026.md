@@ -217,6 +217,18 @@ already uses for the observer's own list-size choice
   guest-facing layout and `inv/guest.php`'s grid moved to a per-observer
   model.
 
+A real SonarCloud `new_duplicated_lines_density` gate failure (8.75%,
+threshold 3%) surfaced on the PR for this redesign — not the already-known
+`new_coverage` gap, a genuine finding: the two new route definitions
+repeated `routes-user-inv.php`'s existing `Route::methods(...)->name(...)
+->middleware(...)->action(...)` shape once too often, and that same shape
+already ran nine times in a row for the admin `userinv/*` CRUD/role
+routes. Fixed by extracting two small closures at the top of the file,
+`$adminUserInvRoute`/`$guestUserInvRoute` (one per `RoutePermission`
+gate), and reducing all thirteen route definitions in the file to one
+call each — same paths, names, and actions, byte-for-byte, confirmed via
+`php yii router/list`.
+
 ## Verified
 
 `php -l` clean on every touched file. Targeted `vendor/bin/psalm

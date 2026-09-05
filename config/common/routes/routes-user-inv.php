@@ -8,6 +8,27 @@ use App\Middleware\RoutePermission;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\Route;
 
+// Two shape-identical route families below (each differing only in
+// path/name/action) -- extracted rather than repeated, per this repo's
+// own stated priority on reducing SonarQube string/code duplication
+// (see CLAUDE.md). $adminUserInvRoute: the admin userinv/* CRUD/role
+// actions, gated by EDIT_INV. $guestUserInvRoute: the observer's own
+// self-service actions (view/edit their own UserInv row, list-size and
+// sticky-navbar/grid-header preferences), gated by EDIT_USER_INV instead
+// -- an observer manages their own preferences, not the admin userinv/*
+// CRUD screens.
+$adminUserInvRoute = static fn(string $path, string $name, string $action): Route =>
+    Route::methods([Method::GET, Method::POST], $path)
+        ->name($name)
+        ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+        ->action([UserInvController::class, $action]);
+
+$guestUserInvRoute = static fn(string $path, string $name, string $action): Route =>
+    Route::methods([Method::GET, Method::POST], $path)
+        ->name($name)
+        ->middleware(RoutePermission::check(Permissions::EDIT_USER_INV))
+        ->action([UserInvController::class, $action]);
+
 return [
     RoutePermission::invoiceGroup(
 
@@ -28,67 +49,36 @@ return [
             ->name('userinv/edit')
             ->middleware(RoutePermission::check(Permissions::EDIT_INV))
             ->action([UserInvController::class, 'edit']),
-        Route::methods([Method::GET, Method::POST], '/userinv/guest')
-                ->name('userinv/guest')
-                ->middleware(RoutePermission::check(Permissions::EDIT_USER_INV))
-                ->action([UserInvController::class, 'guest']),
-        Route::methods(
-            [Method::GET, Method::POST],
-            '/userinv/guestlimit/{userinv_id}/{limit}/{origin}'
-        )
-                ->name('userinv/guestlimit')
-                ->middleware(RoutePermission::check(Permissions::EDIT_USER_INV))
-                ->action([UserInvController::class, 'guestlimit']),
-        Route::methods(
-            [Method::GET, Method::POST],
-            '/userinv/gueststickynavbar/{userinv_id}/{origin}'
-        )
-                ->name('userinv/guestStickyNavbar')
-                ->middleware(RoutePermission::check(Permissions::EDIT_USER_INV))
-                ->action([UserInvController::class, 'guestStickyNavbar']),
-        Route::methods(
-            [Method::GET, Method::POST],
-            '/userinv/gueststickygridheader/{userinv_id}/{origin}'
-        )
-                ->name('userinv/guestStickyGridHeader')
-                ->middleware(RoutePermission::check(Permissions::EDIT_USER_INV))
-                ->action([UserInvController::class, 'guestStickyGridHeader']),
-        Route::methods([Method::GET, Method::POST], '/userinv/client/{id}')
-                ->name('userinv/client')
-                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
-                ->action([UserInvController::class, 'client']),
-        Route::methods([Method::GET, Method::POST], '/userinv/delete/{id}')
-                ->name('userinv/delete')
-                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
-                ->action([UserInvController::class, 'delete']),
-        Route::methods([Method::GET, Method::POST], '/userinv/view/{id}')
-                ->name('userinv/view')
-                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
-                ->action([UserInvController::class, 'view']),
-        Route::methods([Method::GET, Method::POST], '/userinv/accountant/{user_id}')
-                ->name('userinv/accountant')
-                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
-                ->action([UserInvController::class, 'assignAccountantRole']),
-        Route::methods([Method::GET, Method::POST], '/userinv/revoke/{user_id}')
-                ->name('userinv/revoke')
-                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
-                ->action([UserInvController::class, 'revokeAllRoles']),
-        Route::methods([Method::GET, Method::POST], '/userinv/observer/{user_id}')
-                ->name('userinv/observer')
-                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
-                ->action([UserInvController::class, 'assignObserverRole']),
-        Route::methods([Method::GET, Method::POST], '/userinv/sync-rbac-link/{user_id}')
-                ->name('userinv/sync-rbac-link')
-                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
-                ->action([UserInvController::class, 'syncRbacLink']),
-        Route::methods([Method::GET, Method::POST], '/userinv/admin/{user_id}')
-                ->name('userinv/admin')
-                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
-                ->action([UserInvController::class, 'assignAdminRole']),
-        Route::methods([Method::GET, Method::POST], '/userinv/worker/{user_id}')
-                ->name('userinv/worker')
-                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
-                ->action([UserInvController::class, 'assignWorkerRole']),
+
+        // Guest self-service -- see App\Invoice\UserInv\UserInvController::
+        // guest()/guestlimit()/guestStickyNavbar()/guestStickyGridHeader().
+        $guestUserInvRoute('/userinv/guest', 'userinv/guest', 'guest'),
+        $guestUserInvRoute(
+            '/userinv/guestlimit/{userinv_id}/{limit}/{origin}',
+            'userinv/guestlimit',
+            'guestlimit',
+        ),
+        $guestUserInvRoute(
+            '/userinv/gueststickynavbar/{userinv_id}/{origin}',
+            'userinv/guestStickyNavbar',
+            'guestStickyNavbar',
+        ),
+        $guestUserInvRoute(
+            '/userinv/gueststickygridheader/{userinv_id}/{origin}',
+            'userinv/guestStickyGridHeader',
+            'guestStickyGridHeader',
+        ),
+
+        // Admin userinv/* CRUD and role-assignment actions.
+        $adminUserInvRoute('/userinv/client/{id}', 'userinv/client', 'client'),
+        $adminUserInvRoute('/userinv/delete/{id}', 'userinv/delete', 'delete'),
+        $adminUserInvRoute('/userinv/view/{id}', 'userinv/view', 'view'),
+        $adminUserInvRoute('/userinv/accountant/{user_id}', 'userinv/accountant', 'assignAccountantRole'),
+        $adminUserInvRoute('/userinv/revoke/{user_id}', 'userinv/revoke', 'revokeAllRoles'),
+        $adminUserInvRoute('/userinv/observer/{user_id}', 'userinv/observer', 'assignObserverRole'),
+        $adminUserInvRoute('/userinv/sync-rbac-link/{user_id}', 'userinv/sync-rbac-link', 'syncRbacLink'),
+        $adminUserInvRoute('/userinv/admin/{user_id}', 'userinv/admin', 'assignAdminRole'),
+        $adminUserInvRoute('/userinv/worker/{user_id}', 'userinv/worker', 'assignWorkerRole'),
     ), // invoice
 
     // Not under RoutePermission::invoiceGroup(): a brand-new invitee clicking
