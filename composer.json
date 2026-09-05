@@ -79,6 +79,7 @@
         "psr/log": "^3.0.2",
         "ramsey/uuid": ">=4.9.3",
         "robrichards/xmlseclibs": "^3.1.5",
+        "rossaddison/bitpay-client": "dev-master",
         "rossaddison/openbanking-client": "dev-main",
         "rossaddison/requirements": "dev-master",
         "rossaddison/storecove-client": "dev-master",
@@ -254,6 +255,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/rossaddison/data-cycle"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/rossaddison/bitpay-client"
         },
         {
             "type": "vcs",

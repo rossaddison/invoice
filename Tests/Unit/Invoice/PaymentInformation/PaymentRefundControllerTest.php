@@ -11,6 +11,7 @@ use App\Invoice\Payment\PaymentRepository;
 use App\Invoice\PaymentInformation\PaymentRefundController;
 use App\Invoice\PaymentInformation\PaymentRefundResult;
 use App\Invoice\PaymentInformation\Service\AdyenPaymentService;
+use App\Invoice\PaymentInformation\Service\BitPayPaymentService;
 use App\Invoice\PaymentInformation\Service\BraintreePaymentService;
 use App\Invoice\PaymentInformation\Service\CheckoutComPaymentService;
 use App\Invoice\PaymentInformation\Service\GoCardlessPaymentService;
@@ -143,6 +144,7 @@ final class PaymentRefundControllerTest extends TestCase
             $this->createStub(SquarePaymentService::class),
             $this->createStub(CheckoutComPaymentService::class),
             $this->createStub(TrueLayerPaymentService::class),
+            $this->createStub(BitPayPaymentService::class),
         );
     }
 

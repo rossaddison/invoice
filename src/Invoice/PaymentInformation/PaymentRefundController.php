@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\Payment\Payment;
 use App\Invoice\Merchant\MerchantRepository;
 use App\Invoice\Payment\PaymentRepository;
 use App\Invoice\PaymentInformation\Service\AdyenPaymentService;
+use App\Invoice\PaymentInformation\Service\BitPayPaymentService;
 use App\Invoice\PaymentInformation\Service\BraintreePaymentService;
 use App\Invoice\PaymentInformation\Service\CheckoutComPaymentService;
 use App\Invoice\PaymentInformation\Service\GoCardlessPaymentService;
@@ -66,6 +67,7 @@ final class PaymentRefundController
         private readonly SquarePaymentService $squarePaymentService,
         private readonly CheckoutComPaymentService $checkoutComPaymentService,
         private readonly TrueLayerPaymentService $trueLayerPaymentService,
+        private readonly BitPayPaymentService $bitPayPaymentService,
     ) {
     }
 
@@ -170,6 +172,7 @@ final class PaymentRefundController
             'square'     => $this->squarePaymentService->refund($reference, $amount),
             'checkout_com' => $this->checkoutComPaymentService->refund($reference, $amount),
             'truelayer'  => $this->trueLayerPaymentService->refund($reference, $amount),
+            'bitpay'     => $this->bitPayPaymentService->refund($reference, $amount),
             default      => null,
         };
     }

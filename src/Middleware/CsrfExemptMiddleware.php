@@ -32,6 +32,7 @@ final class CsrfExemptMiddleware implements MiddlewareInterface
         '/paymentinformation/squareWebhook',
         '/paymentinformation/checkoutComWebhook',
         '/paymentinformation/trueLayerWebhook',
+        '/paymentinformation/bitPayWebhook',
         '/whatsapp/webhook',
         '/telegram/webhook',
         // Bilateral/Peppol AS4 trading partners POST directly to this

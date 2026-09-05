@@ -169,4 +169,16 @@ final class PaymentGatewayButton
     {
         return self::squareIconButton('mercado_pago');
     }
+
+    /**
+     * BitPay -- not in Simple Icons (checked live, 404 on every plausible
+     * slug) or Wikimedia Commons -- sourced directly from bitpay.com's own
+     * page <head> (apple-touch-icon link tag, hosted on their own
+     * framerusercontent.com CDN), same reasoning as
+     * checkoutCom()/robokassa()/truelayer()/mercadoPago() above. 180x180 PNG.
+     */
+    public static function bitpay(): string
+    {
+        return self::squareIconButton('bitpay', 'png');
+    }
 }

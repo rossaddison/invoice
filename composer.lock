@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9167a54b586d407104ecebf2513e7fa2",
+    "content-hash": "cbe90952e2a8ed4a1739465add37c100",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -8689,6 +8689,71 @@
                 "source": "https://github.com/robrichards/xmlseclibs/tree/3.1.5"
             },
             "time": "2026-03-13T10:31:56+00:00"
+        },
+        {
+            "name": "rossaddison/bitpay-client",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rossaddison/bitpay-client.git",
+                "reference": "64d38c8fc55389d294b46d7bca4d52762ded1ec3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rossaddison/bitpay-client/zipball/64d38c8fc55389d294b46d7bca4d52762ded1ec3",
+                "reference": "64d38c8fc55389d294b46d7bca4d52762ded1ec3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "guzzlehttp/guzzle": ">=7.15.5",
+                "guzzlehttp/psr7": ">=2.13.1",
+                "php": "8.4 - 9.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.95.23",
+                "phpunit/phpunit": ">=13.1.4",
+                "vimeo/psalm": ">=6.16.1"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RossAddison\\BitPayClient\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "RossAddison\\BitPayClient\\Test\\": "test/"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ross Addison",
+                    "homepage": "https://github.com/rossaddison"
+                }
+            ],
+            "description": "Hand-written PHP client for the BitPay API (POS facade), for use by rossaddison/invoice",
+            "homepage": "https://github.com/rossaddison/bitpay-client",
+            "keywords": [
+                "api",
+                "bitcoin",
+                "bitpay",
+                "cryptocurrency",
+                "gateway",
+                "payment",
+                "sdk"
+            ],
+            "support": {
+                "source": "https://github.com/rossaddison/bitpay-client",
+                "issues": "https://github.com/rossaddison/bitpay-client/issues"
+            },
+            "time": "2026-09-05T08:49:35+00:00"
         },
         {
             "name": "rossaddison/openbanking-client",
@@ -28291,6 +28356,7 @@
     "stability-flags": {
         "cebe/markdown": 20,
         "roave/security-advisories": 20,
+        "rossaddison/bitpay-client": 20,
         "rossaddison/openbanking-client": 20,
         "rossaddison/requirements": 20,
         "rossaddison/storecove-client": 20,
