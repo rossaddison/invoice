@@ -355,5 +355,47 @@ correctly; the CSS chain itself (`.navbar.sticky-top` in
 in all three of `_core.scss`/`base.css`/`style.css`, load order with
 `overrides.css` genuinely last in `InvoiceCdnAsset`/
 `InvoiceNodeModulesAsset`) was re-checked byte-for-byte and found intact
-and unmodified — the on/off-button bug above was the actual root cause,
-not a CSS regression.
+and unmodified.
+
+## Fourth real bug: `<header>` gave `position: sticky` nowhere to stick
+
+The button fix above was real but not the whole story — reported again
+as still "not working" on both localhost and production after it
+shipped, with the real served HTML pasted back showing `sticky-top`
+genuinely present in the nav's class list and the "On" button correctly
+highlighted. The actual defect was structural, not a class/state bug at
+all: `guest.php` wraps its `NavBar` in an explicit `<header>...</header>`
+containing nothing else, and `position: sticky` is bounded by its
+element's own *containing block* — a `<header>` that only ever contains
+the navbar is exactly the navbar's own height, giving `position: sticky`
+zero room to actually stay pinned. It unsticks and scrolls away the
+instant that tiny `<header>` box itself scrolls out of view, which is
+immediate. `invoice.php`'s own navbar (confirmed working since the
+original staff-side feature) has never had a `<header>` wrapper — `
+$navBar->begin()` there is a direct child of `<body>`, which spans the
+full page height and gives `position: sticky` somewhere real to stick.
+
+Found and confirmed with a real headless-browser test (Playwright,
+Chromium) against a minimal page loading the actual *published*
+production stylesheets (`https://yii3i.online/assets/<hash>/...`), not
+just static reading: `getComputedStyle(nav).position` correctly reported
+`"sticky"` throughout, yet the element's `getBoundingClientRect().top`
+still moved 1:1 with `window.scrollTo()` — proof the browser was honoring
+the CSS declaration but structurally unable to act on it. Removing the
+`<header>` wrapper (`nav` becomes a direct child of `<body>`, matching
+`invoice.php` exactly) and re-running the identical scroll test on the
+same real CSS confirmed the fix: the bounding rect stayed at `0` instead
+of tracking the scroll. Checked for fallout from removing `<header>`
+first: no CSS rule in any loaded stylesheet selects on a page-level
+`header` element or a `header`-relative combinator (`header + `/`header
+~`/`header nav`/`header .navbar`) — the few matches for those patterns
+are all unrelated `.card-header`/`.message-header`/`.group-header`
+component classes — and `initStickyNavbarOffset()`'s own selector
+(`nav.navbar.sticky-top`) has no `<header>` dependency either.
+
+Verified: `php -l` clean, full-project Psalm clean, full Testo Unit
+suite 1256/1256 unaffected (a pure view-template structural change, no
+PHP logic touched). The two throwaway Playwright scripts and test HTML
+file used to confirm this live were deleted immediately after use, per
+this repo's own established "throwaway command, run once, then delete"
+convention.
