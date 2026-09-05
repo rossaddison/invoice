@@ -56,11 +56,7 @@ final class BitPayWebhookHandlerTest
 
     private function sign(string $rawBody): string
     {
-        $canonical = json_encode(
-            json_decode($rawBody, true, 512, JSON_THROW_ON_ERROR),
-            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
-        );
-        return base64_encode(hash_hmac('sha256', (string) $canonical, self::POS_TOKEN, true));
+        return base64_encode(hash_hmac('sha256', $rawBody, self::POS_TOKEN, true));
     }
 
     private function makeBitPaySettingRepository(): SettingRepository&m\MockInterface

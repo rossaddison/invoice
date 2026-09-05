@@ -203,48 +203,14 @@ final class BitPayPaymentService implements PaymentGatewayInterface
     /**
      * Delegates to `BitPayClient::verifyWebhookSignature()` — see that
      * method's own docblock (and `rossaddison/bitpay-client`'s README) for
-     * the full ground-truthing of the `x-signature` HMAC algorithm, and the
-     * one caveat that isn't independently confirmed against a real
-     * BitPay-signed webhook.
+     * the full ground-truthing of the `x-signature` HMAC algorithm
+     * (raw-body HMAC-SHA256, base64-encoded — confirmed live 2026-09-05
+     * against real BitPay-signed webhook deliveries, after an earlier
+     * parse-then-reencode revision was proven wrong the same way).
      */
     public function verifyWebhookSignature(string $rawBody, string $signatureHeader): bool
     {
-        $result = $this->client()->verifyWebhookSignature($rawBody, $signatureHeader);
-        if (!$result) {
-            $this->logSignatureDiagnostics($rawBody, $signatureHeader);
-        }
-        return $result;
-    }
-
-    /**
-     * TEMPORARY — remove once the real formula is confirmed against a live
-     * BitPay-signed webhook (see `RossAddison\BitPayClient\BitPayClient::
-     * verifyWebhookSignature()`'s own docblock: the reencode-based formula
-     * it implements was never independently confirmed, and confirmed live
-     * 2026-09-05 to reject every real BitPay webhook delivery). Logs
-     * several candidate HMAC formulas against the SAME real raw body and
-     * received signature so the actual correct one can be identified from
-     * a real retry, rather than guessed a third time.
-     */
-    private function logSignatureDiagnostics(string $rawBody, string $signatureHeader): void
-    {
-        $token = $this->posToken();
-        $reencoded = $this->reencodeForDiagnostics($rawBody);
-
-        $candidates = [
-            'raw_base64' => base64_encode(hash_hmac('sha256', $rawBody, $token, true)),
-            'raw_hex' => hash_hmac('sha256', $rawBody, $token),
-        ];
-        if (is_string($reencoded)) {
-            $candidates['reencoded_base64'] = base64_encode(hash_hmac('sha256', $reencoded, $token, true));
-            $candidates['reencoded_hex'] = hash_hmac('sha256', $reencoded, $token);
-        }
-
-        $this->logger->warning('BitPay webhook signature diagnostics.', [
-            'received_signature' => $signatureHeader,
-            'candidates' => $candidates,
-            'raw_body' => $rawBody,
-        ]);
+        return $this->client()->verifyWebhookSignature($rawBody, $signatureHeader);
     }
 
     private function client(): BitPayClient
@@ -259,30 +225,6 @@ final class BitPayPaymentService implements PaymentGatewayInterface
     private function posToken(): string
     {
         return (string) $this->settings->decode($this->settings->getSetting('gateway_bitpay_posToken') ?: '');
-    }
-
-    /**
-     * TEMPORARY — see `logSignatureDiagnostics()`'s own docblock. Parses
-     * then re-encodes $rawBody with JSON_UNESCAPED_SLASHES|
-     * JSON_UNESCAPED_UNICODE — the same transform `BitPayClient::
-     * verifyWebhookSignature()` applies — or returns null when $rawBody
-     * isn't a JSON object/array.
-     */
-    private function reencodeForDiagnostics(string $rawBody): ?string
-    {
-        try {
-            $decoded = json_decode($rawBody, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException) {
-            return null;
-        }
-
-        if (!is_array($decoded)) {
-            return null;
-        }
-
-        $reencoded = json_encode($decoded, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-
-        return $reencoded !== false ? $reencoded : null;
     }
 
     /**

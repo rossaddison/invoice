@@ -8696,12 +8696,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/bitpay-client.git",
-                "reference": "64d38c8fc55389d294b46d7bca4d52762ded1ec3"
+                "reference": "d95f25bb710743dc725d9c0cd0ca1ab7a75aa703"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/bitpay-client/zipball/64d38c8fc55389d294b46d7bca4d52762ded1ec3",
-                "reference": "64d38c8fc55389d294b46d7bca4d52762ded1ec3",
+                "url": "https://api.github.com/repos/rossaddison/bitpay-client/zipball/d95f25bb710743dc725d9c0cd0ca1ab7a75aa703",
+                "reference": "d95f25bb710743dc725d9c0cd0ca1ab7a75aa703",
                 "shasum": ""
             },
             "require": {
@@ -8753,7 +8753,7 @@
                 "source": "https://github.com/rossaddison/bitpay-client",
                 "issues": "https://github.com/rossaddison/bitpay-client/issues"
             },
-            "time": "2026-09-05T08:49:35+00:00"
+            "time": "2026-09-05T16:42:55+00:00"
         },
         {
             "name": "rossaddison/openbanking-client",
