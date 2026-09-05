@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Auth\Permissions;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvAmount\InvAmount;
 use App\Invoice\{
     InvAllowanceCharge\InvAllowanceChargeForm, InvItem\InvItemForm,
@@ -13,6 +14,7 @@ use App\Invoice\{
     CustomField\CustomFieldRepository as CFR,
     Inv\InvAttachmentsForm,
     Inv\InvForm,
+    Inv\InvViewComputedDeps,
     Inv\InvViewService,
     InvCustom\InvCustomForm,
     InvItem\InvItemRepository as IIR,
@@ -71,126 +73,22 @@ trait View
                     (int) $this->session->get('inv_id'),
                     $service->core->icR
                 );
-                $is_recurring = $service->core->irR->repoCount((int) $this->session->get('inv_id')) > 0;
-                $show_buttons = $this->displayEditDeleteButtons($read_only);
-                $url_key = $inv->getUrlKey();
-                $client_id = $inv->reqClientId();
-                $delivery_location_id = $inv->getDeliveryLocationId();
-                $bootstrap5ModalTranslatorMessageWithoutAction =
-                    new Bootstrap5ModalTranslatorMessageWithoutAction(
-                        $this->webViewRenderer,
-                    );
-                $parameters = [
-                    'aciR' => $service->allowance->aciR,
-                    'alert' => $this->alert(),
-                    'custom_fields' => $service->meta->cfR->repoTablequery('inv_custom'),
-                    'custom_values' =>
-                    $service->meta->cvR->fixCfValueToCf(
-                        $service->meta->cfR->repoTablequery('inv_custom')
-                    ),
-                    'cvH' => new CVH($this->sR, $service->meta->cvR),
-                    'enabled_gateways' => $enabled_gateways,
-                    'fields' => $service->core->icR->repoFields(
-                        (int) $this->session->get('inv_id')
-                    ),
-                    'form' => InvForm::show($inv),
-                    'iaR' => $service->core->iaR,
-                    'inv' => $inv,
-                    'invEdit' => $this->userService->hasPermission(
-                        Permissions::EDIT_INV
-                    ),
-                    'inv_custom_values' => $inv_custom_values,
-                    'isRecurring' => $is_recurring,
-                    'inv_statuses' => $service->core->iR->getStatuses($this->translator),
-                    'paymentCfExist' =>
-                        $service->meta->cfR->repoTableCountquery('payment_custom') > 0,
-                    'paymentEdit' => $this->userService->hasPermission(
-                        Permissions::EDIT_PAYMENT
-                    ),
-                    'paymentView' => $this->userService->hasPermission(
-                        Permissions::VIEW_PAYMENT
-                    ),
-                    'email_templates_invoice' => $service->meta->etR->findAllPreloaded(),
-                    'invoice_groups' => $service->core->gR->findAllPreloaded(),
-                    'payment_methods' => $service->meta->pmR->findAllWithActive(1),
-                    'payments' => $service->core->pymR->repoCount(
-                        (int) $this->session->get('inv_id')
-                    ) > 0 ?
-                            $service->core->pymR->repoInvquery(
-                                (int) $this->session->get('inv_id')
-                            ) : null,
-                    'peppol_doc_currency_toggle' =>
-                        $this->sR->getSetting('peppol_doc_currency_toggle'),
-                    'peppol_stream_toggle' =>
-                        $this->sR->getSetting('peppol_xml_stream'),
-                    'readOnly' => $read_only,
-                    'sales_order_number' => $sales_order_number,
-                    'showButtons' => $show_buttons,
-                    'title' => $this->translator->translate('view'),
-                    'add_inv_item_product' =>
-                        $this->viewBuildAddItemProductPartial($_language, $service),
-                    'add_inv_item_task' =>
-                        $this->viewBuildAddItemTaskPartial($_language, $service, $is_recurring),
-                    'modal_choose_items' => $this->viewBuildModalChooseItemsPartial($service),
-                    'modal_choose_tasks' => $this->viewBuildModalChooseTasksPartial($head, $service),
-                    'modal_add_inv_tax' => $this->viewBuildModalAddInvTaxPartial($service),
-                    'modal_add_allowance_charge' =>
-                        $this->viewBuildModalAddAllowanceChargePartial($service, $invAllowanceChargeForm),
-                    'modal_copy_inv' => $this->viewBuildModalCopyInvPartial($service),
-                    'partial_item_table' => $this->viewPartialItemTable(
-                        $show_buttons,
-                        $id,
-                        $service,
-                        $inv_amount,
-                    ),
-                    'modal_delete_inv' =>
-                        $this->viewModalDeleteInv($_language),
-                    'modal_delete_items' => $this->viewModalDeleteItems($service->items->iiR),
-                    'modal_change_client' =>
-                        $this->viewModalChangeClient($id, $service->relation->cR, $service->core->iR),
-                    'modal_inv_to_pdf' => $this->viewModalInvToPdf($id, $service->core->iR),
-                    'modal_inv_to_modal_pdf' =>
-                        $this->viewModalInvToModalPdf($id, $service->core->iR),
-                    'modal_pdf' => $this->viewModalPdf(),
-                    'modal_inv_to_html' =>
-                        $this->viewModalInvToHtml($id, $service->core->iR),
-                    'modal_create_credit' =>
-                        $this->viewModalCreateCredit($id, $service->core->gR, $service->core->iR),
-                    'view_custom_fields' =>
-                        $this->viewCustomFields($service->meta->cfR, $service->meta->cvR, $inv_custom_values),
-                    'partial_inv_attachments' =>
-                        $this->viewPartialInvAttachments(
-                            $_language,
-                            $url_key,
-                            $client_id,
-                            $service->relation->upR
-                        ),
-                    'partial_inv_delivery_location' =>
-                            $this->viewPartialDeliveryLocation(
-                                $_language,
-                                $service->relation->dlR,
-                                (int) $delivery_location_id
-                            ),
-                    'modal_message_no_payment_method' =>
-                        $bootstrap5ModalTranslatorMessageWithoutAction
-                        ->renderPartialLayoutWithTranslatorMessageAsString(
-                            $this->translator->translate('payment.method'),
-                            $this->translator->translate(
-                                'payment.information.payment.method.required'
-                            ),
-                            'inv',
-                        ),
-                    'buttonsToolbarFull' => $this->buttonsToolbarFull->render(
-                        $inv,
-                        $service->core->iaR,
-                        $this->userService->hasPermission(Permissions::EDIT_INV),
-                        $read_only,
-                        $this->sR->getSetting('enable_vat_registration'),
-                        $service->meta->cfR->repoTableCountquery('payment_custom') > 0,
-                        $this->rbacAdmin()
-                            || $this->rbacObserver($inv, $service->relation->ucR, $service->relation->uiR),
-                    ),
-                ];
+                $computed = new InvViewComputedDeps(
+                    enabled_gateways: $enabled_gateways,
+                    sales_order_number: $sales_order_number,
+                    invAllowanceChargeForm: $invAllowanceChargeForm,
+                    read_only: $read_only,
+                    inv_custom_values: $inv_custom_values,
+                    is_recurring: $service->core->irR->repoCount((int) $this->session->get('inv_id')) > 0,
+                    show_buttons: $this->displayEditDeleteButtons($read_only),
+                    url_key: $inv->getUrlKey(),
+                    client_id: $inv->reqClientId(),
+                    delivery_location_id: $inv->getDeliveryLocationId(),
+                    bootstrap5ModalTranslatorMessageWithoutAction:
+                        new Bootstrap5ModalTranslatorMessageWithoutAction($this->webViewRenderer),
+                    inv_amount: $inv_amount,
+                );
+                $parameters = $this->buildViewParameters($id, $_language, $head, $inv, $service, $computed);
                 if ($this->rbacObserver($inv, $service->relation->ucR, $service->relation->uiR)
                     || $this->rbacAdmin()
                     || $this->rbacAccountant()) {
@@ -200,6 +98,134 @@ trait View
             return $this->webService->getNotFoundResponse();
         }
         return $this->webService->getNotFoundResponse();
+    }
+
+    /**
+     * The view-data array for view() — extracted alongside
+     * InvViewComputedDeps so view() itself stays under SonarQube's
+     * php:S138 150-line ceiling; see that class's own docblock for why
+     * $computed exists at all.
+     * @return array<string, mixed>
+     */
+    private function buildViewParameters(
+        int $id,
+        string $_language,
+        WebViewRenderer $head,
+        Inv $inv,
+        InvViewService $service,
+        InvViewComputedDeps $computed,
+    ): array {
+        return [
+            'aciR' => $service->allowance->aciR,
+            'alert' => $this->alert(),
+            'custom_fields' => $service->meta->cfR->repoTablequery('inv_custom'),
+            'custom_values' =>
+            $service->meta->cvR->fixCfValueToCf(
+                $service->meta->cfR->repoTablequery('inv_custom')
+            ),
+            'cvH' => new CVH($this->sR, $service->meta->cvR),
+            'enabled_gateways' => $computed->enabled_gateways,
+            'fields' => $service->core->icR->repoFields(
+                (int) $this->session->get('inv_id')
+            ),
+            'form' => InvForm::show($inv),
+            'iaR' => $service->core->iaR,
+            'inv' => $inv,
+            'invEdit' => $this->userService->hasPermission(
+                Permissions::EDIT_INV
+            ),
+            'inv_custom_values' => $computed->inv_custom_values,
+            'isRecurring' => $computed->is_recurring,
+            'inv_statuses' => $service->core->iR->getStatuses($this->translator),
+            'paymentCfExist' =>
+                $service->meta->cfR->repoTableCountquery('payment_custom') > 0,
+            'paymentEdit' => $this->userService->hasPermission(
+                Permissions::EDIT_PAYMENT
+            ),
+            'paymentView' => $this->userService->hasPermission(
+                Permissions::VIEW_PAYMENT
+            ),
+            'email_templates_invoice' => $service->meta->etR->findAllPreloaded(),
+            'invoice_groups' => $service->core->gR->findAllPreloaded(),
+            'payment_methods' => $service->meta->pmR->findAllWithActive(1),
+            'payments' => $service->core->pymR->repoCount(
+                (int) $this->session->get('inv_id')
+            ) > 0 ?
+                    $service->core->pymR->repoInvquery(
+                        (int) $this->session->get('inv_id')
+                    ) : null,
+            'peppol_doc_currency_toggle' =>
+                $this->sR->getSetting('peppol_doc_currency_toggle'),
+            'peppol_stream_toggle' =>
+                $this->sR->getSetting('peppol_xml_stream'),
+            'readOnly' => $computed->read_only,
+            'sales_order_number' => $computed->sales_order_number,
+            'showButtons' => $computed->show_buttons,
+            'title' => $this->translator->translate('view'),
+            'add_inv_item_product' =>
+                $this->viewBuildAddItemProductPartial($_language, $service),
+            'add_inv_item_task' =>
+                $this->viewBuildAddItemTaskPartial($_language, $service, $computed->is_recurring),
+            'modal_choose_items' => $this->viewBuildModalChooseItemsPartial($service),
+            'modal_choose_tasks' => $this->viewBuildModalChooseTasksPartial($head, $service),
+            'modal_add_inv_tax' => $this->viewBuildModalAddInvTaxPartial($service),
+            'modal_add_allowance_charge' =>
+                $this->viewBuildModalAddAllowanceChargePartial($service, $computed->invAllowanceChargeForm),
+            'modal_copy_inv' => $this->viewBuildModalCopyInvPartial($service),
+            'partial_item_table' => $this->viewPartialItemTable(
+                $computed->show_buttons,
+                $id,
+                $service,
+                $computed->inv_amount,
+            ),
+            'modal_delete_inv' =>
+                $this->viewModalDeleteInv($_language),
+            'modal_delete_items' => $this->viewModalDeleteItems($service->items->iiR),
+            'modal_change_client' =>
+                $this->viewModalChangeClient($id, $service->relation->cR, $service->core->iR),
+            'modal_inv_to_pdf' => $this->viewModalInvToPdf($id, $service->core->iR),
+            'modal_inv_to_modal_pdf' =>
+                $this->viewModalInvToModalPdf($id, $service->core->iR),
+            'modal_pdf' => $this->viewModalPdf(),
+            'modal_inv_to_html' =>
+                $this->viewModalInvToHtml($id, $service->core->iR),
+            'modal_create_credit' =>
+                $this->viewModalCreateCredit($id, $service->core->gR, $service->core->iR),
+            'view_custom_fields' =>
+                $this->viewCustomFields($service->meta->cfR, $service->meta->cvR, $computed->inv_custom_values),
+            'partial_inv_attachments' =>
+                $this->viewPartialInvAttachments(
+                    $_language,
+                    $computed->url_key,
+                    $computed->client_id,
+                    $service->relation->upR
+                ),
+            'partial_inv_delivery_location' =>
+                    $this->viewPartialDeliveryLocation(
+                        $_language,
+                        $service->relation->dlR,
+                        (int) $computed->delivery_location_id
+                    ),
+            'modal_message_no_payment_method' =>
+                $computed->bootstrap5ModalTranslatorMessageWithoutAction
+                ->renderPartialLayoutWithTranslatorMessageAsString(
+                    $this->translator->translate('payment.method'),
+                    $this->translator->translate(
+                        'payment.information.payment.method.required'
+                    ),
+                    'inv',
+                ),
+            'buttonsToolbarFull' => $this->buttonsToolbarFull->render(
+                $inv,
+                $service->core->iaR,
+                $this->userService->hasPermission(Permissions::EDIT_INV),
+                $computed->read_only,
+                $this->sR->getSetting('enable_vat_registration'),
+                $service->meta->cfR->repoTableCountquery('payment_custom') > 0,
+                $this->rbacAdmin()
+                    || $this->rbacObserver($inv, $service->relation->ucR, $service->relation->uiR),
+            ),
+        ];
     }
 
     private function viewBuildAddItemProductPartial(

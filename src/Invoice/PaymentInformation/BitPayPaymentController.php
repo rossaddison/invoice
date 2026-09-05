@@ -187,7 +187,7 @@ final class BitPayPaymentController
         return $this->bitPayWebhookHandler->handle($request);
     }
 
-    private function loadInvoice(CurrentRoute $currentRoute): Response|Inv
+    private function loadInvoice(CurrentRoute $currentRoute): Response|Inv // NOSONAR: php:S1144 — called via PaymentGatewayGuardTrait::resolveConfiguredInvoiceWithBalance()'s $this->loadInvoice(...), which this analyzer doesn't trace across the trait
     {
         $urlKey = $currentRoute->getArgument('url_key');
         $invoice = null !== $urlKey ? $this->iR->repoUrlKeyGuestLoaded($urlKey) : null;
