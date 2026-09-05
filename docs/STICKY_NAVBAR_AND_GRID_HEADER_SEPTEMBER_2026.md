@@ -229,6 +229,33 @@ gate), and reducing all thirteen route definitions in the file to one
 call each — same paths, names, and actions, byte-for-byte, confirmed via
 `php yii router/list`.
 
+A real live crash surfaced right after this shipped:
+`Yiisoft\Router\RouteNotFoundException: Cannot generate URI for route
+"invoice/guest"` on clicking the sticky-navbar toggle from
+`invoice/index` (the staff/observer dashboard, unrelated to `inv/*` the
+Invoice document list). Root cause, shared with the pre-existing
+`guestlimit()`/`PageSizeLimiter` page-size buttons this feature's own
+buttons were modeled on: the redirect target was guessed from the
+*current* route name's first `/`-segment (`$guestOrigin`) on the
+assumption the observer is always on one of the "X/guest" content pages
+(`inv/guest`, `client/guest`, ...) when clicking — true for a button
+embedded in one of *those* pages, false for one embedded in the shared
+guest layout's own menu, which renders on every guest page, `invoice/*`
+dashboard pages (a real, distinct route-name namespace, unrelated to
+`inv/*`) and `auth/change` included. `LayoutViewInjection::
+resolveUserState()` now also computes the observer's actual current path
+(`CurrentRoute::getUri()?->getPath()`) and passes it as a `redirect`
+query parameter alongside the existing `origin`-based route arguments on
+all three toggle URLs (page-size included, fixed at the same time since
+it's the identical defect in code already being touched); `guestlimit()`/
+`toggleGuestBooleanPreference()` now prefer
+`WebControllerService::getRedirectToSameOriginPathResponse()` (the same
+open-redirect-safe helper `Webshop\Delivery\DeliveryController` already
+uses for "redirect back to wherever the visitor actually was") over the
+`$origin`-derived guess when a `redirect` value is present, keeping the
+old behaviour only as a fallback for a stale/bookmarked toggle URL
+predating this fix.
+
 ## Verified
 
 `php -l` clean on every touched file. Targeted `vendor/bin/psalm
@@ -275,3 +302,14 @@ checkout has no DB configured (same limitation already noted above), so
 the new `sticky_navbar`/`sticky_grid_header` columns need a
 `BUILD_DATABASE`-driven Cycle ORM schema sync on first deploy, same as
 any other new entity column. Not yet independently live-browser-confirmed.
+
+Two real production crashes surfaced live once deployed, both fixed
+same-day: (1) the schema-sync gap flagged above actually hit — a real
+`Typed property ...UserInv::$sticky_navbar must not be accessed before
+initialization` on yii3i.online, confirming the columns hadn't been
+synced yet; (2) the `RouteNotFoundException` described above, found by
+actually clicking the new sticky-navbar button live from the
+`invoice/index` dashboard. The redirect-target fix: `php -l` clean,
+full-project Psalm clean (exit 0, 201 pre-existing informational issues
+unchanged), full Testo Unit suite 1256/1256 unaffected, `php yii
+router/list` confirms all three guest routes still register correctly.
