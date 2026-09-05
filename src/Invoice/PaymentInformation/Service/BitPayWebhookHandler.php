@@ -15,13 +15,18 @@ use Psr\Log\LoggerInterface as Logger;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 
 /**
- * Receives BitPay's IPN/webhook notification — a JSON POST body carrying
- * the invoice's own fields flat at the top level (`id`, `orderId`,
- * `status`, ...), no `event`/`data` envelope, confirmed directly against
- * BitPay's own IPN payload documentation. Signed via the `x-signature`
- * header — see `BitPayPaymentService::verifyWebhookSignature()` /
- * `RossAddison\BitPayClient\BitPayClient::verifyWebhookSignature()`'s own
- * docblock for exactly how that's ground-truthed (and its one
+ * Receives BitPay's IPN/webhook notification. The real payload — confirmed
+ * live 2026-09-05 against actual deliveries, contradicting what BitPay's
+ * own legacy IPN documentation prose describes (a flat body with no
+ * envelope) — is `{"data": {id, orderId, status, price, currency, ...},
+ * "event": {name, code, timestamp}}`. `event.name` fires per status
+ * transition (`invoice_paidInFull`, `invoice_confirmed`,
+ * `invoice_completed`, ...); this handler ignores it and always re-checks
+ * via `BitPayPaymentService::verifyPayment()` regardless, so which event
+ * fired doesn't matter, only `data.id`/`data.orderId`. Signed via the
+ * `x-signature` header — see `BitPayPaymentService::verifyWebhookSignature()`
+ * / `RossAddison\BitPayClient\BitPayClient::verifyWebhookSignature()`'s
+ * own docblock for exactly how that's ground-truthed (and its one
  * not-independently-confirmed caveat).
  *
  * Like every other signed-webhook gateway in this app, the signature is
@@ -64,15 +69,15 @@ final class BitPayWebhookHandler
         }
 
         try {
-            /** @var array{id?: string, orderId?: string} $payload */
+            /** @var array{data?: array{id?: string, orderId?: string}} $payload */
             $payload = json_decode($rawBody, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
             $this->logger->warning('BitPay webhook: malformed JSON body.', ['error' => $e->getMessage()]);
             return $this->factory->createResponse('bad request')->withStatus(400);
         }
 
-        $invoiceId = $payload['id'] ?? '';
-        $invoiceUrlKey = $payload['orderId'] ?? '';
+        $invoiceId = $payload['data']['id'] ?? '';
+        $invoiceUrlKey = $payload['data']['orderId'] ?? '';
 
         if ($invoiceId !== '') {
             $this->markInvoicePaidIfVerified($invoiceId, $invoiceUrlKey);

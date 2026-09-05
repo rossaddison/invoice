@@ -120,7 +120,7 @@ final class BitPayWebhookHandlerTest
             $this->makeLoggerSpy(),
         );
 
-        $rawBody = json_encode(['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'complete'], JSON_THROW_ON_ERROR);
+        $rawBody = json_encode(['data' => ['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'complete']], JSON_THROW_ON_ERROR);
         $response = $handler->handle($this->makeRequest($rawBody, 'not-the-real-signature'));
 
         Assert::same(400, $response->getStatusCode());
@@ -202,7 +202,7 @@ final class BitPayWebhookHandlerTest
             $this->makeLoggerSpy(),
         );
 
-        $rawBody = json_encode(['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'paid'], JSON_THROW_ON_ERROR);
+        $rawBody = json_encode(['data' => ['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'paid']], JSON_THROW_ON_ERROR);
         $response = $handler->handle($this->makeRequest($rawBody, $this->sign($rawBody)));
 
         Assert::same(200, $response->getStatusCode());
@@ -253,7 +253,7 @@ final class BitPayWebhookHandlerTest
             $this->makeLoggerSpy(),
         );
 
-        $rawBody = json_encode(['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'complete'], JSON_THROW_ON_ERROR);
+        $rawBody = json_encode(['data' => ['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'complete']], JSON_THROW_ON_ERROR);
         $response = $handler->handle($this->makeRequest($rawBody, $this->sign($rawBody)));
 
         Assert::same(200, $response->getStatusCode());
@@ -291,7 +291,7 @@ final class BitPayWebhookHandlerTest
             $this->makeLoggerSpy(),
         );
 
-        $rawBody = json_encode(['id' => 'inv-123', 'orderId' => 'unknown-key', 'status' => 'complete'], JSON_THROW_ON_ERROR);
+        $rawBody = json_encode(['data' => ['id' => 'inv-123', 'orderId' => 'unknown-key', 'status' => 'complete']], JSON_THROW_ON_ERROR);
         $response = $handler->handle($this->makeRequest($rawBody, $this->sign($rawBody)));
 
         Assert::same(200, $response->getStatusCode());
@@ -332,7 +332,7 @@ final class BitPayWebhookHandlerTest
         // BitPay's own IPN fires on every status transition, not just
         // 'complete' — the webhook body's own status is never trusted
         // regardless of what it says (see this class's own docblock).
-        $rawBody = json_encode(['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'confirmed'], JSON_THROW_ON_ERROR);
+        $rawBody = json_encode(['data' => ['id' => 'inv-123', 'orderId' => 'abc123', 'status' => 'confirmed']], JSON_THROW_ON_ERROR);
         $response = $handler->handle($this->makeRequest($rawBody, $this->sign($rawBody)));
 
         Assert::same(200, $response->getStatusCode());
