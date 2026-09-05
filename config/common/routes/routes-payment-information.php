@@ -192,9 +192,23 @@ return [
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([BPPICLR::class, 'bitPayInForm'])
                 ->name('paymentinformation/bitPayInForm'),
+        // No {url_key} here, unlike every other gateway's own Complete()
+        // route and unlike bitPayInForm's own route above — BitPay's
+        // redirect-URL allow-list (Dashboard > Settings > URL Redirect
+        // Allow List) requires an exact, fixed URL registered in advance;
+        // confirmed live 2026-09-05 that a per-invoice path segment was
+        // rejected ("invalid redirectURL: url not whitelisted") and a
+        // trailing wildcard was rejected outright too (silently reverted
+        // to the same generic "Account not setup completely yet." shown
+        // for an empty allow-list, suggesting the allow-list doesn't
+        // recognise wildcard syntax at all). Same fundamental constraint
+        // as TrueLayer's own fixed return_uri elsewhere in this file, for
+        // an unrelated underlying reason. The invoice itself is resolved
+        // from the ?url_key= query string BitPayPaymentController appends
+        // when building this URL — see its own docblock.
         Route::methods(
             [Method::GET, Method::POST],
-            '/paymentinformation/bitPayComplete/{url_key}'
+            '/paymentinformation/bitPayComplete'
         )
                 ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
                 ->action([BPPICLR::class, 'bitPayComplete'])

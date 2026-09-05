@@ -34,13 +34,31 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
  * Like Paystack/GoCardless/Robokassa/YooKassa, BitPay's own hosted checkout
  * page IS the entire "in-form" step — there's no local payment-entry view
  * to render, just a 302 straight to the invoice URL
- * `BitPayPaymentService::createPayment()` returns. Unlike TrueLayer,
- * `redirectUrl`/`notificationUrl` are both generated per-invoice here and
- * passed straight through to BitPay at invoice-creation time — BitPay's
- * POS facade has no pre-registration requirement on either URL (confirmed
- * directly against BitPay's own OpenAPI reference), so there's no need for
- * a fixed Setting value the way TrueLayer's Console-registered return_uri
- * requires.
+ * `BitPayPaymentService::createPayment()` returns.
+ *
+ * `notificationUrl` is fixed (no `{url_key}`, generated straight from the
+ * route) since `BitPayWebhookHandler` resolves the invoice from the
+ * webhook body's own `orderId` field regardless. `redirectUrl`, by
+ * contrast, is ALSO built from a fixed route now — confirmed live
+ * 2026-09-05 that BitPay's redirect-URL allow-list (Dashboard > Settings >
+ * URL Redirect Allow List) rejects a per-invoice path segment
+ * ("invalid redirectURL: url not whitelisted") and doesn't support
+ * wildcards either (a `/*`-suffixed entry silently behaved identically to
+ * an empty allow-list, i.e. the generic "Account not setup completely
+ * yet." reappeared rather than a more specific rejection) — the exact
+ * fixed-URL constraint this class's own earlier docblock incorrectly
+ * assumed didn't apply here, based only on the OpenAPI schema not
+ * mentioning one. `$urlKey` is instead appended as a `?url_key=` query
+ * string onto that fixed URL — the working assumption is that allow-list
+ * matching, like OAuth redirect_uri matching generally, is on the URL up
+ * to the query string; not yet independently re-confirmed against a real
+ * BitPay redirect (the exact rejection message above was only seen for
+ * path-segment and wildcard variants, not a query-string one). If this
+ * assumption turns out wrong too, the fallback is what TrueLayer already
+ * does: a fully bare fixed URL with the invoice resolved purely from the
+ * webhook, `bitPayComplete()` reduced to a generic (non-invoice-specific)
+ * "thanks, check your invoice" page. `bitPayComplete()` reads `url_key`
+ * from `$request->getQueryParams()`, not a route argument.
  *
  * `bitPayComplete()` is read-only, the same pattern as
  * `PaystackPaymentController::paystackComplete()`: the invoice is only ever
@@ -117,7 +135,8 @@ final class BitPayPaymentController
             $balance,
             $this->sR->getSetting('currency_code') ?: 'GBP',
             $urlKey,
-            $this->urlGenerator->generateAbsolute('paymentinformation/bitPayComplete', ['url_key' => $urlKey]),
+            $this->urlGenerator->generateAbsolute('paymentinformation/bitPayComplete')
+                . '?url_key=' . rawurlencode($urlKey),
             $this->urlGenerator->generateAbsolute('paymentinformation/bitPayWebhook'),
             $invoice->getClient()?->getClientEmail() ?? '',
         );
@@ -144,14 +163,14 @@ final class BitPayPaymentController
      * Customer returns here from BitPay's hosted invoice page —
      * read-only, see this class's own docblock.
      */
-    public function bitPayComplete(CurrentRoute $currentRoute): Response
+    public function bitPayComplete(Request $request): Response
     {
-        $invoice = $this->loadInvoice($currentRoute);
-        if ($invoice instanceof Response) {
-            return $invoice;
+        $urlKey = (string) ($request->getQueryParams()['url_key'] ?? '');
+        $invoice = $urlKey !== '' ? $this->iR->repoUrlKeyGuestLoaded($urlKey) : null;
+        if (null === $invoice) {
+            return $this->webService->getNotFoundResponse();
         }
 
-        $urlKey = $invoice->getUrlKey();
         /** @var InvAmount $invoiceAmountRecord */
         $invoiceAmountRecord = $this->iaR->repoInvquery($invoice->reqId());
         $isPaid = 0.00 === ($invoiceAmountRecord->getBalance() ?? 0.00);
