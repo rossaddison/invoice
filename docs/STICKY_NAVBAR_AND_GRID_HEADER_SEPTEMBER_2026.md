@@ -141,6 +141,42 @@ design was settled.
   self::INDEX_SUFFIX` — caught by re-reading the file immediately after
   running it, fixed before it was ever committed.
 
+## Extended to the guest-facing layout
+
+`resources/views/layout/guest.php`'s own `NavBar::widget()` had a
+*hardcoded* `->placement(NavBarPlacement::STICKY_TOP)` — always sticky,
+regardless of the shared `bootstrap5_layout_invoice_navbar_sticky` setting
+staff could toggle for `invoice.php`. There's no real reason a guest
+customer's navbar should behave differently from staff's own — same
+"one setting, not four" reasoning `grid_sticky_header` already
+established — so it now reads the exact same shared setting
+(`$bootstrap5LayoutInvoiceNavbarSticky`, already globally injected via
+`LayoutViewInjection` regardless of layout) and applies `.sticky-top`
+conditionally, mirroring `invoice.php`'s own pattern exactly (`placement()`
+is a thin wrapper over `addClass()`, confirmed from the widget's own
+source, so the two are truly equivalent). `guest.php` gained the same
+`--sticky-content-top` custom property `invoice.php` already declares — no
+new CSS was needed at all: `.navbar.sticky-top`/`.sticky-grid-header thead
+th` in `overrides.css`, and the `html`-not-`body` overflow fix, are all
+global rules `guest.php` already inherits via the same `InvoiceCdnAsset`/
+`InvoiceNodeModulesAsset` bundles `invoice.php` uses, and
+`initStickyNavbarOffset()` was already active on guest pages (`index.ts`
+calls it unconditionally, and `inv/guest.php` already invokes
+`InvoiceApp.initInvIndex('table-invoice-guest', ...)` from the same
+bundle).
+
+The guest-facing invoice list itself (`resources/views/invoice/inv/
+guest.php` — HomeCare workers and ordinary client observers both land
+here, reached via `Guest.php`'s own `guest()` action) builds its
+`GridView` directly rather than through one of the four `*ListWidget`
+classes the staff grids use, so the `sticky-grid-header` class is appended
+to its `tableAttributes` inline instead of via a `withStickyHeader()`-
+style setter — same shared `grid_sticky_header` setting, same
+already-`bg-info` header row the shared CSS rule matches, no per-view CSS
+needed. Unlike the four staff grids, this view has no separate
+HTMX-partial-refresh path to also update (`guest()` always does a full
+page render), so there was only the one call site.
+
 ## Verified
 
 `php -l` clean on every touched file. Targeted `vendor/bin/psalm
@@ -162,3 +198,11 @@ checkout) — every fix in the three-bug chain above was instead verified
 by reading back the user's own pasted HTML and this repo's actual
 published `public/assets/<hash>/...` files after each round, and the
 final result was confirmed working live by the user directly.
+
+The guest-layout extension above: `php -l` clean on both touched files,
+`vendor/bin/psalm --no-cache` clean both in isolation and on a full-project
+re-run (201 pre-existing informational issues unchanged, 0 errors), full
+Testo Unit suite 1256/1256 unaffected. No CSS/JS changes needed at all —
+purely reusing the existing shared settings, rules, and TypeScript module.
+Not yet independently live-browser-confirmed for the guest layout
+specifically.
