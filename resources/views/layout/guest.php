@@ -55,12 +55,18 @@ use Yiisoft\Bootstrap5\NavStyle;
  *     "per-observer" section. Always `false` for an anonymous visitor
  *     (`$isGuest`), since there's no `UserInv` row to read a preference
  *     from.
- * @var string $guestStickyNavbarToggleUrl Empty for an anonymous visitor —
- *     see `$guestStickyNavbar` above.
+ * @var string $guestStickyNavbarOnUrl Empty for an anonymous visitor —
+ *     see `$guestStickyNavbar` above. Two distinct URLs, not one shared
+ *     toggle URL: both buttons linking to the same "flip whatever it
+ *     currently is" endpoint was a real bug (clicking "off" while
+ *     already off turned it back on) found from a live "not working"
+ *     report.
+ * @var string $guestStickyNavbarOffUrl
  * @var bool $guestStickyGridHeader Same per-observer reasoning as
  *     `$guestStickyNavbar` above, for `inv/guest.php`'s own grid header
  *     row rather than this layout's navbar.
- * @var string $guestStickyGridHeaderToggleUrl
+ * @var string $guestStickyGridHeaderOnUrl
+ * @var string $guestStickyGridHeaderOffUrl
  * @var string $bootstrap5LayoutGuestNavbarFont
  * @var string $bootstrap5LayoutGuestNavbarFontSize
  * @var int $bootstrap5FormInputHeight
@@ -367,10 +373,10 @@ if ((null !== $currentPath) && !$isGuest) {
             '<div class="px-3 py-1">'
             . '<div class="btn-group btn-group-sm" role="group" aria-label="'
             . Html::encode($t->translate('sticky.navbar')) . '">'
-            . '<a href="' . Html::encode($guestStickyNavbarToggleUrl) . '"'
+            . '<a href="' . Html::encode($guestStickyNavbarOnUrl) . '"'
             . ' class="btn ' . ($guestStickyNavbar ? 'btn-success' : 'btn-outline-secondary') . '">'
             . Html::encode($t->translate('on')) . '</a>'
-            . '<a href="' . Html::encode($guestStickyNavbarToggleUrl) . '"'
+            . '<a href="' . Html::encode($guestStickyNavbarOffUrl) . '"'
             . ' class="btn ' . (!$guestStickyNavbar ? 'btn-success' : 'btn-outline-secondary') . '">'
             . Html::encode($t->translate('off')) . '</a>'
             . '</div></div>'
@@ -388,10 +394,10 @@ if ((null !== $currentPath) && !$isGuest) {
             '<div class="px-3 py-1">'
             . '<div class="btn-group btn-group-sm" role="group" aria-label="'
             . Html::encode($t->translate('sticky.grid.header')) . '">'
-            . '<a href="' . Html::encode($guestStickyGridHeaderToggleUrl) . '"'
+            . '<a href="' . Html::encode($guestStickyGridHeaderOnUrl) . '"'
             . ' class="btn ' . ($guestStickyGridHeader ? 'btn-success' : 'btn-outline-secondary') . '">'
             . Html::encode($t->translate('on')) . '</a>'
-            . '<a href="' . Html::encode($guestStickyGridHeaderToggleUrl) . '"'
+            . '<a href="' . Html::encode($guestStickyGridHeaderOffUrl) . '"'
             . ' class="btn ' . (!$guestStickyGridHeader ? 'btn-success' : 'btn-outline-secondary') . '">'
             . Html::encode($t->translate('off')) . '</a>'
             . '</div></div>'

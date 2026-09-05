@@ -313,3 +313,47 @@ actually clicking the new sticky-navbar button live from the
 full-project Psalm clean (exit 0, 201 pre-existing informational issues
 unchanged), full Testo Unit suite 1256/1256 unaffected, `php yii
 router/list` confirms all three guest routes still register correctly.
+
+## Third real bug: the on/off buttons were a flip, not a set
+
+Reported next as "sticky navbar not working" on both localhost and
+production, once the two crashes above were out of the way. The actual
+defect: `guestStickyNavbar()`/`guestStickyGridHeader()` were written as
+a stateless *toggle* (`setStickyNavbar(!$userInv->getStickyNavbar())`),
+but the menu renders two separate "on"/"off" buttons that both linked to
+that exact same toggle URL — confirmed by grepping the view for both
+`<a>` tags and finding `$guestStickyNavbarToggleUrl` used identically
+twice. Clicking "off" while the preference was already off flipped it
+back *on*; clicking "on" again after that flipped it back off. The
+visible highlighted button and the actual saved value could silently
+disagree the moment a click landed on the already-current state,
+matching "not working" exactly — a user pressing the button they wanted
+sometimes got the opposite result with no visible error.
+
+Fixed to set an explicit value instead of flipping, the same shape
+`guestlimit()`'s own per-value buttons already use for list size: the
+routes gained a `{value}` path segment
+(`/userinv/gueststickynavbar/{userinv_id}/{value}/{origin}`), the
+controller actions take `#[RouteArgument('value')] string $value` and
+call a renamed `setGuestBooleanPreference()` (was
+`toggleGuestBooleanPreference()`) with `$value === '1'` rather than a
+flip closure, and `LayoutViewInjection::resolveUserState()` now
+generates two distinct URLs per toggle
+(`guestStickyNavbarOnUrl`/`guestStickyNavbarOffUrl`, and the grid-header
+equivalents) instead of one shared toggle URL — the "on" button always
+links to `value=1`, "off" always to `value=0`, regardless of the
+preference's current state.
+
+Verified: `php -l` clean on every touched file, full-project Psalm
+clean, full Testo Unit suite 1256/1256 unaffected, `php yii router/list`
+confirms both sticky routes still register with the new `{value}`
+segment. Confirmed locally via a direct database query
+(`user_inv.sticky_navbar`/`sticky_grid_header` for a real seeded
+`observer` test account) that the columns and values round-trip
+correctly; the CSS chain itself (`.navbar.sticky-top` in
+`overrides.css`, the `html`-not-`body` overflow fix present identically
+in all three of `_core.scss`/`base.css`/`style.css`, load order with
+`overrides.css` genuinely last in `InvoiceCdnAsset`/
+`InvoiceNodeModulesAsset`) was re-checked byte-for-byte and found intact
+and unmodified — the on/off-button bug above was the actual root cause,
+not a CSS regression.

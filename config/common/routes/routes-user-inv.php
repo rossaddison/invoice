@@ -59,12 +59,12 @@ return [
             'guestlimit',
         ),
         $guestUserInvRoute(
-            '/userinv/gueststickynavbar/{userinv_id}/{origin}',
+            '/userinv/gueststickynavbar/{userinv_id}/{value}/{origin}',
             'userinv/guestStickyNavbar',
             'guestStickyNavbar',
         ),
         $guestUserInvRoute(
-            '/userinv/gueststickygridheader/{userinv_id}/{origin}',
+            '/userinv/gueststickygridheader/{userinv_id}/{value}/{origin}',
             'userinv/guestStickyGridHeader',
             'guestStickyGridHeader',
         ),
