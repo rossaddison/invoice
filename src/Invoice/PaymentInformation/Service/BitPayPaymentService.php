@@ -52,6 +52,22 @@ use RossAddison\BitPayClient\Model\CreateInvoiceRequest;
  */
 final class BitPayPaymentService implements PaymentGatewayInterface
 {
+    /**
+     * The human-readable reason `createPayment()` last failed for, if any —
+     * read by `BitPayPaymentController::bitPayInForm()` so the person
+     * setting up this gateway (almost always the site admin testing it,
+     * not a paying customer, since a broken gateway wouldn't be enabled
+     * for real customers yet) sees *why* it failed, not just a generic
+     * "please try again" — the same gap every gateway in this app
+     * otherwise has (the real reason only ever reached `runtime/logs/
+     * app.log`, confirmed live 2026-09-05 against a real BitPay sandbox
+     * account whose merchant setup wasn't yet complete: BitPay's own
+     * `POST /invoices` responded 500 with `{"error":"Account not setup
+     * completely yet."}`, and the only visible symptom otherwise was a
+     * bare not-found page with zero diagnostic value).
+     */
+    private string $lastErrorMessage = '';
+
     public function __construct(
         private readonly SettingRepository $settings,
         private readonly LoggerInterface $logger,
@@ -63,6 +79,16 @@ final class BitPayPaymentService implements PaymentGatewayInterface
          */
         private readonly ?HttpClientInterface $httpClient = null,
     ) {
+    }
+
+    /**
+     * The reason `createPayment()` last returned null, or '' if it hasn't
+     * failed (yet) on this instance. See this class's own property
+     * docblock for why this exists.
+     */
+    public function lastErrorMessage(): string
+    {
+        return $this->lastErrorMessage;
     }
 
     #[\Override]
@@ -114,12 +140,14 @@ final class BitPayPaymentService implements PaymentGatewayInterface
                 buyerEmail: $buyerEmail !== '' ? $buyerEmail : null,
             ));
         } catch (BitPayApiException $e) {
+            $this->lastErrorMessage = $this->extractApiErrorMessage($e);
             $this->logger->error('BitPay createInvoice failed.', [
                 'error' => $e->getMessage(),
                 'status_code' => $e->statusCode,
             ]);
             return null;
         } catch (GuzzleException $e) {
+            $this->lastErrorMessage = $e->getMessage();
             $this->logger->error('BitPay createInvoice failed (transport).', ['error' => $e->getMessage()]);
             return null;
         }
@@ -196,5 +224,28 @@ final class BitPayPaymentService implements PaymentGatewayInterface
     private function posToken(): string
     {
         return (string) $this->settings->decode($this->settings->getSetting('gateway_bitpay_posToken') ?: '');
+    }
+
+    /**
+     * BitPay's own error responses are consistently `{"error": "..."}` —
+     * confirmed live, e.g. `{"error":"Account not setup completely yet."}`
+     * for a merchant account with an unfinished setup step. Falls back to
+     * the exception's own generic "BitPay API responded {status}: {body}"
+     * message when the body isn't that shape (or isn't valid JSON at all),
+     * so `lastErrorMessage()` is never empty on a real failure.
+     */
+    private function extractApiErrorMessage(BitPayApiException $e): string
+    {
+        try {
+            $decoded = json_decode($e->responseBody, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return $e->getMessage();
+        }
+
+        if (!is_array($decoded) || !isset($decoded['error']) || !is_string($decoded['error']) || $decoded['error'] === '') {
+            return $e->getMessage();
+        }
+
+        return $decoded['error'];
     }
 }

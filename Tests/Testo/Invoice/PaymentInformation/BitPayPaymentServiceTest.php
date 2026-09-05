@@ -167,11 +167,48 @@ final class BitPayPaymentServiceTest
     public function createPaymentReturnsNullWhenBitPayRejectsTheRequest(): void
     {
         $mock = new MockHandler([
-            new Response(422, [], json_encode(['error' => ['message' => 'invalid currency']], JSON_THROW_ON_ERROR)),
+            new Response(422, [], json_encode(['error' => 'invalid currency'], JSON_THROW_ON_ERROR)),
         ]);
         $service = $this->makeService($mock);
 
         Assert::null($service->createPayment(10.0, 'XXX', 'abc123', 'https://x/return', 'https://x/webhook'));
+    }
+
+    /**
+     * BitPay's own error responses are flat `{"error": "..."}` — confirmed
+     * live 2026-09-05 against a real sandbox account whose merchant setup
+     * wasn't yet complete (`{"error":"Account not setup completely
+     * yet."}`). lastErrorMessage() extracting that cleanly, rather than the
+     * generic "BitPay API responded 500: {...}" wrapper, is what lets
+     * BitPayPaymentController surface a genuinely actionable reason instead
+     * of a bare not-found page — see this class's own docblock for why
+     * that matters (every gateway in this app previously only logged the
+     * real reason, never showed it).
+     */
+    public function lastErrorMessageExtractsBitPaysOwnErrorFieldAfterAFailedCreatePayment(): void
+    {
+        $mock = new MockHandler([
+            new Response(500, [], json_encode(['error' => 'Account not setup completely yet.'], JSON_THROW_ON_ERROR)),
+        ]);
+        $service = $this->makeService($mock);
+
+        Assert::same('', $service->lastErrorMessage());
+
+        $service->createPayment(10.0, 'GBP', 'abc123', 'https://x/return', 'https://x/webhook');
+
+        Assert::same('Account not setup completely yet.', $service->lastErrorMessage());
+    }
+
+    public function lastErrorMessageFallsBackToTheGenericMessageForAnUnrecognisedErrorShape(): void
+    {
+        $mock = new MockHandler([
+            new Response(500, [], 'not json at all'),
+        ]);
+        $service = $this->makeService($mock);
+
+        $service->createPayment(10.0, 'GBP', 'abc123', 'https://x/return', 'https://x/webhook');
+
+        Assert::true(str_contains($service->lastErrorMessage(), 'BitPay API responded 500'));
     }
 
     public function createPaymentReturnsNullWhenTheHttpCallFails(): void

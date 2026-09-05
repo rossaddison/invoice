@@ -54,6 +54,17 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
  * `payment_message`'s existing "processing" state (rather than a forced
  * synchronous re-check the invoice usually isn't ready to pass yet) is the
  * honest thing to show here.
+ *
+ * `bitPayInForm()`'s failure flash includes BitPay's own error reason
+ * (`BitPayPaymentService::lastErrorMessage()`), not just a generic "please
+ * try again" — found live 2026-09-05 that a real sandbox merchant account
+ * with an unfinished setup step failed invoice creation with a bare
+ * not-found page and zero visible explanation, the exact reason
+ * (`"Account not setup completely yet."`) only ever reaching
+ * `runtime/logs/app.log`. Every other gateway in this app has the same
+ * generic-message-only gap; fixing it here first rather than leaving a
+ * first-time integrator with no way to diagnose a real BitPay-side setup
+ * problem without reading server logs they may not have access to.
  */
 final class BitPayPaymentController
 {
@@ -110,7 +121,13 @@ final class BitPayPaymentController
             $invoice->getClient()?->getClientEmail() ?? '',
         );
         if (null === $result) {
-            $this->flashMessage('warning', 'Unable to start the BitPay payment — please try again shortly.');
+            $reason = $this->bitPayPaymentService->lastErrorMessage();
+            $this->flashMessage(
+                'warning',
+                $reason !== ''
+                    ? "Unable to start the BitPay payment — BitPay said: \"{$reason}\"."
+                    : 'Unable to start the BitPay payment — please try again shortly.',
+            );
             return $this->webService->getNotFoundResponse();
         }
 
