@@ -190,6 +190,17 @@ step_28_update_node() {
     echo "If Apache can't find node after an update, point NODE_BINARY in .env at \`which node\`."
 }
 
+step_29_clear_assets_cache() {
+    cd "$APP_ROOT" || return
+    echo "Yii3's AssetManager publishes CSS/JS with a content hash into"
+    echo "public/assets/<hash>/... the first time each bundle is requested."
+    echo "Only public/assets/.gitignore itself is tracked in git -- everything"
+    echo "else there is safe to delete and republishes automatically on the"
+    echo "next request."
+    confirm "Delete $APP_ROOT/public/assets/*?" || return
+    run rm -rf "$APP_ROOT/public/assets/"*
+}
+
 show_menu() {
     cat <<'EOF'
 
@@ -223,6 +234,7 @@ show_menu() {
 26) Clear the Yii3 route cache
 27) Backup the database (mysqldump + gzip)
 28) Update Node via apk
+29) Clear the published assets cache (public/assets/*)
  q) Quit
 ===================================================================
 EOF
@@ -260,6 +272,7 @@ while true; do
         26) step_26_clear_route_cache ;;
         27) step_27_backup_database ;;
         28) step_28_update_node ;;
+        29) step_29_clear_assets_cache ;;
         q|Q) echo "Bye."; exit 0 ;;
         *) echo "Unknown choice: $choice" ;;
     esac

@@ -39,6 +39,7 @@ sh bin/alpine-menu.sh</pre>
  <li><a href="#route-cache">Route cache</a></li>
  <li><a href="#backup">Database backup</a></li>
  <li><a href="#node">Updating Node.js</a></li>
+ <li><a href="#assets-cache">Published assets cache</a></li>
 </ol>
 
 <hr>
@@ -188,5 +189,17 @@ node -v</pre>
  PDF button) can't find it after an update, point <code>NODE_BINARY</code>
  in <code>.env</code> at its absolute path (<code>which node</code>)
  rather than relying on <code>PATH</code>.</p>
+
+<h5 id="assets-cache">14. Published assets cache</h5>
+<p>Yii3's AssetManager publishes CSS/JS with a content hash into
+ <code>public/assets/&lt;hash&gt;/...</code> the first time each asset
+ bundle is requested. Useful to force a clean republish after a
+ suspicious asset-related issue, or if a stale publish somehow persists
+ across a deploy:</p>
+<pre>rm -rf /var/www/invoice/public/assets/*</pre>
+<p>Only <code>public/assets/.gitignore</code> itself is tracked in git
+ (confirmed via <code>git ls-files public/assets</code>) &mdash;
+ everything else there is safe to delete and republishes automatically
+ on the next request.</p>
 
 </div>
