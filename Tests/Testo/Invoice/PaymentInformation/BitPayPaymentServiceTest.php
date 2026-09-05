@@ -37,7 +37,7 @@ final class BitPayPaymentServiceTest
         return $mock;
     }
 
-    private function makeSettingRepository(bool $sandbox = false): SettingRepository&m\MockInterface
+    private function makeBitPaySettingRepository(bool $sandbox = false): SettingRepository&m\MockInterface
     {
         /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
@@ -56,7 +56,7 @@ final class BitPayPaymentServiceTest
     private function makeService(MockHandler $mock, bool $sandbox = false): BitPayPaymentService
     {
         return new BitPayPaymentService(
-            $this->makeSettingRepository($sandbox),
+            $this->makeBitPaySettingRepository($sandbox),
             $this->makeLoggerInterfaceSpy(),
             $this->makeHttpClient($mock),
         );

@@ -238,7 +238,8 @@ final class BitPayPaymentService implements PaymentGatewayInterface
     {
         try {
             $decoded = json_decode($e->responseBody, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException) {
+        } catch (\JsonException $jsonException) {
+            $this->logger->warning('BitPay error body was not valid JSON.', ['error' => $jsonException->getMessage()]);
             return $e->getMessage();
         }
 

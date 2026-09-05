@@ -63,7 +63,7 @@ final class BitPayWebhookHandlerTest
         return base64_encode(hash_hmac('sha256', (string) $canonical, self::POS_TOKEN, true));
     }
 
-    private function makeSettingRepository(): SettingRepository&m\MockInterface
+    private function makeBitPaySettingRepository(): SettingRepository&m\MockInterface
     {
         /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
@@ -90,7 +90,7 @@ final class BitPayWebhookHandlerTest
         $httpClient = new HttpClient(['handler' => HandlerStack::create($mock)]);
 
         return new BitPayPaymentService(
-            $this->makeSettingRepository(),
+            $this->makeBitPaySettingRepository(),
             $this->makeLoggerSpy(),
             $httpClient,
         );
@@ -111,7 +111,7 @@ final class BitPayWebhookHandlerTest
 
         $handler = new BitPayWebhookHandler(
             $this->makePaymentService(new MockHandler([])),
-            $this->makeSettingRepository(),
+            $this->makeBitPaySettingRepository(),
             $iR,
             $iaR,
             $invPaymentSettlementService,
@@ -141,7 +141,7 @@ final class BitPayWebhookHandlerTest
 
         $handler = new BitPayWebhookHandler(
             $this->makePaymentService(new MockHandler([])),
-            $this->makeSettingRepository(),
+            $this->makeBitPaySettingRepository(),
             $iR,
             $iaR,
             $invPaymentSettlementService,
@@ -193,7 +193,7 @@ final class BitPayWebhookHandlerTest
 
         $handler = new BitPayWebhookHandler(
             $this->makePaymentService($mock),
-            $this->makeSettingRepository(),
+            $this->makeBitPaySettingRepository(),
             $iR,
             $iaR,
             $invPaymentSettlementService,
@@ -244,7 +244,7 @@ final class BitPayWebhookHandlerTest
 
         $handler = new BitPayWebhookHandler(
             $this->makePaymentService($mock),
-            $this->makeSettingRepository(),
+            $this->makeBitPaySettingRepository(),
             $iR,
             $iaR,
             $invPaymentSettlementService,
@@ -282,7 +282,7 @@ final class BitPayWebhookHandlerTest
 
         $handler = new BitPayWebhookHandler(
             $this->makePaymentService($mock),
-            $this->makeSettingRepository(),
+            $this->makeBitPaySettingRepository(),
             $iR,
             $iaR,
             $invPaymentSettlementService,
@@ -320,7 +320,7 @@ final class BitPayWebhookHandlerTest
 
         $handler = new BitPayWebhookHandler(
             $this->makePaymentService($mock),
-            $this->makeSettingRepository(),
+            $this->makeBitPaySettingRepository(),
             $iR,
             $iaR,
             $invPaymentSettlementService,
