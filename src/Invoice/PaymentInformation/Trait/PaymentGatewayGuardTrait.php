@@ -25,10 +25,13 @@ use Yiisoft\Router\CurrentRoute;
  * renders successfully) rather than flashMessage() + getNotFoundResponse()
  * — that response has no body and never goes through this app's view
  * renderer at all, so the flash was silently never shown, for every
- * gateway using this trait (found live 2026-09-05, chasing the identical
+ * gateway using this trait (found live 2026-09-05, chasing an identical
  * bug in BitPayPaymentController's own createPayment() failure path,
- * which doesn't go through this trait at all but has the exact same
- * flash-then-bare-404 shape).
+ * which doesn't go through this trait's own guard chain at all but has
+ * the exact same flash-then-bare-404 shape). `renderGuardFailure()` is
+ * deliberately reused directly by `BitPayPaymentController::bitPayInForm()`
+ * for that unrelated failure too, rather than a second near-duplicate
+ * rendering implementation — its own docblock explains why.
  *
  * Requires the consuming class to have: a private loadInvoice(CurrentRoute):
  * Response|Inv method (every gateway controller already does), $webService

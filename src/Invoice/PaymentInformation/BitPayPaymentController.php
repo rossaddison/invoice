@@ -55,16 +55,17 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
  * synchronous re-check the invoice usually isn't ready to pass yet) is the
  * honest thing to show here.
  *
- * `bitPayInForm()`'s failure flash includes BitPay's own error reason
+ * `bitPayInForm()`'s failure page includes BitPay's own error reason
  * (`BitPayPaymentService::lastErrorMessage()`), not just a generic "please
  * try again" — found live 2026-09-05 that a real sandbox merchant account
  * with an unfinished setup step failed invoice creation with a bare
  * not-found page and zero visible explanation, the exact reason
  * (`"Account not setup completely yet."`) only ever reaching
- * `runtime/logs/app.log`. Every other gateway in this app has the same
- * generic-message-only gap; fixing it here first rather than leaving a
- * first-time integrator with no way to diagnose a real BitPay-side setup
- * problem without reading server logs they may not have access to.
+ * `runtime/logs/app.log`. It renders via
+ * `PaymentGatewayGuardTrait::renderGuardFailure()` — the same rendering
+ * path that trait's own guards use, rather than a second near-duplicate
+ * implementation; see that trait's own docblock for why a real rendered
+ * page, not `flashMessage()` + `getNotFoundResponse()`, is needed at all.
  */
 final class BitPayPaymentController
 {
@@ -121,46 +122,22 @@ final class BitPayPaymentController
             $invoice->getClient()?->getClientEmail() ?? '',
         );
         if (null === $result) {
-            return $this->renderCreatePaymentFailure($urlKey);
+            $reason = $this->bitPayPaymentService->lastErrorMessage();
+            // Reuses PaymentGatewayGuardTrait's own renderGuardFailure() —
+            // the exact same "render a real page instead of a bare
+            // getNotFoundResponse()" fix that trait's own guards needed
+            // (see that trait's own docblock) applies identically here,
+            // so this deliberately doesn't duplicate that rendering logic
+            // a second time.
+            return $this->renderGuardFailure(
+                $invoice,
+                $this->bitPayPaymentService,
+                'BitPay',
+                $reason !== '' ? "BitPay said: \"{$reason}\"" : 'Please try again shortly.',
+            );
         }
 
         return $this->responseFactory->createResponse(302)->withHeader('Location', $result['url']);
-    }
-
-    /**
-     * Renders a real page for `createPayment()` failures instead of a bare
-     * `getNotFoundResponse()` — that response has no body and never goes
-     * through this app's view renderer at all, so a flash message set
-     * right before returning it is silently never shown (confirmed live
-     * 2026-09-05: the flash was being set correctly, with BitPay's own
-     * error reason, but the customer/admin saw nothing — not even after a
-     * refresh, since a bare 404 has nothing stored server-side to re-render
-     * on a subsequent request either). Reuses the same `payment_message`
-     * partial `bitPayComplete()` already renders successfully — passing
-     * the reason directly as the `message` string sidesteps the Flash
-     * session mechanism entirely, rather than trying to diagnose why it
-     * wasn't rendering.
-     */
-    private function renderCreatePaymentFailure(string $urlKey): Response
-    {
-        $reason = $this->bitPayPaymentService->lastErrorMessage();
-
-        $view_data = [
-            'render' => $this->webViewRenderer->renderPartialAsString(
-                '//invoice/paymentinformation/payment_message',
-                [
-                    'heading' => 'Unable to start the BitPay payment',
-                    'message' => $reason !== ''
-                        ? "BitPay said: \"{$reason}\""
-                        : 'Please try again shortly.',
-                    'url' => 'inv/urlKey',
-                    'url_key' => $urlKey,
-                    'gateway' => 'BitPay',
-                    'sandbox_url' => $this->sR->sandboxUrlArray()['bitpay'],
-                ],
-            ),
-        ];
-        return $this->webViewRenderer->render('payment_completion_page', $view_data);
     }
 
     /**
