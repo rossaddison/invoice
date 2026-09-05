@@ -106,9 +106,11 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         return [
             'guestPageSizeUrlTemplate' => $userState['guestPageSizeUrlTemplate'],
             'guestCurrentPageSize' => $userState['guestCurrentPageSize'],
-            'guestStickyNavbarToggleUrl' => $userState['guestStickyNavbarToggleUrl'],
+            'guestStickyNavbarOnUrl' => $userState['guestStickyNavbarOnUrl'],
+            'guestStickyNavbarOffUrl' => $userState['guestStickyNavbarOffUrl'],
             'guestStickyNavbar' => $userState['guestStickyNavbar'],
-            'guestStickyGridHeaderToggleUrl' => $userState['guestStickyGridHeaderToggleUrl'],
+            'guestStickyGridHeaderOnUrl' => $userState['guestStickyGridHeaderOnUrl'],
+            'guestStickyGridHeaderOffUrl' => $userState['guestStickyGridHeaderOffUrl'],
             'guestStickyGridHeader' => $userState['guestStickyGridHeader'],
             'bootstrap5OffcanvasEnable' => $bs['bootstrap5OffcanvasEnable'],
             'bootstrap5OffcanvasPlacement' => $bs['bootstrap5OffcanvasPlacement'],
@@ -383,9 +385,11 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         // since that class has no urlGenerator/currentRoute to build the
         // toggle URL from, and this method already resolves the same
         // observer's own UserInv row for the identical page-size purpose above.
-        $guestStickyNavbarToggleUrl = '';
+        $guestStickyNavbarOnUrl = '';
+        $guestStickyNavbarOffUrl = '';
         $guestStickyNavbar = false;
-        $guestStickyGridHeaderToggleUrl = '';
+        $guestStickyGridHeaderOnUrl = '';
+        $guestStickyGridHeaderOffUrl = '';
         $guestStickyGridHeader = false;
         if (!$isGuest && $user !== null) {
             $userInv = $this->userInvRepository->repoUserInvUserIdquery($user->reqId());
@@ -404,7 +408,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                 // argument -- these routes' own {origin} path segment stays
                 // for backward compatibility with a stale/bookmarked toggle
                 // URL) and validated same-origin server-side in
-                // UserInvController::toggleGuestBooleanPreference()/
+                // UserInvController::setGuestBooleanPreference()/
                 // guestlimit() before it's ever redirected to, since it's
                 // still request-derived.
                 $currentPath = $this->currentRoute->getUri()?->getPath() ?? '';
@@ -414,13 +418,33 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                     'origin' => $guestOrigin,
                 ], ['redirect' => $currentPath]);
                 $guestCurrentPageSize = $userInv->getListLimit() ?? 10;
-                $guestStickyNavbarToggleUrl = $this->urlGenerator->generate('userinv/guestStickyNavbar', [
+                // Two distinct URLs, one per explicit value -- not one
+                // shared "flip whatever it currently is" toggle URL. Both
+                // on/off buttons linking to the same toggle endpoint was a
+                // real bug: clicking "off" while already off turned the
+                // preference back *on*, confirmed live as the actual cause
+                // of a "sticky navbar not working" report. Same
+                // explicit-value shape guestlimit()'s own per-value buttons
+                // already use above.
+                $guestStickyNavbarOnUrl = $this->urlGenerator->generate('userinv/guestStickyNavbar', [
                     'userinv_id' => $userInv->reqId(),
+                    'value' => '1',
+                    'origin' => $guestOrigin,
+                ], ['redirect' => $currentPath]);
+                $guestStickyNavbarOffUrl = $this->urlGenerator->generate('userinv/guestStickyNavbar', [
+                    'userinv_id' => $userInv->reqId(),
+                    'value' => '0',
                     'origin' => $guestOrigin,
                 ], ['redirect' => $currentPath]);
                 $guestStickyNavbar = $userInv->getStickyNavbar();
-                $guestStickyGridHeaderToggleUrl = $this->urlGenerator->generate('userinv/guestStickyGridHeader', [
+                $guestStickyGridHeaderOnUrl = $this->urlGenerator->generate('userinv/guestStickyGridHeader', [
                     'userinv_id' => $userInv->reqId(),
+                    'value' => '1',
+                    'origin' => $guestOrigin,
+                ], ['redirect' => $currentPath]);
+                $guestStickyGridHeaderOffUrl = $this->urlGenerator->generate('userinv/guestStickyGridHeader', [
+                    'userinv_id' => $userInv->reqId(),
+                    'value' => '0',
                     'origin' => $guestOrigin,
                 ], ['redirect' => $currentPath]);
                 $guestStickyGridHeader = $userInv->getStickyGridHeader();
@@ -437,9 +461,11 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'status' => $status,
             'guestPageSizeUrlTemplate' => $guestPageSizeUrlTemplate,
             'guestCurrentPageSize' => $guestCurrentPageSize,
-            'guestStickyNavbarToggleUrl' => $guestStickyNavbarToggleUrl,
+            'guestStickyNavbarOnUrl' => $guestStickyNavbarOnUrl,
+            'guestStickyNavbarOffUrl' => $guestStickyNavbarOffUrl,
             'guestStickyNavbar' => $guestStickyNavbar,
-            'guestStickyGridHeaderToggleUrl' => $guestStickyGridHeaderToggleUrl,
+            'guestStickyGridHeaderOnUrl' => $guestStickyGridHeaderOnUrl,
+            'guestStickyGridHeaderOffUrl' => $guestStickyGridHeaderOffUrl,
             'guestStickyGridHeader' => $guestStickyGridHeader,
         ];
     }

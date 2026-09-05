@@ -272,12 +272,15 @@ final class UserInvController extends BaseController
     }
 
     /**
-     * Per-observer preference toggle, not the admin-controlled shared
+     * Per-observer preference, not the admin-controlled shared
      * 'bootstrap5_layout_invoice_navbar_sticky' setting --
      * see docs/STICKY_NAVBAR_AND_GRID_HEADER_SEPTEMBER_2026.md.
+     * Sets an explicit value rather than flipping the current one --
+     * see setGuestBooleanPreference()'s own docblock for why.
      * Related logic: see ..\resources\views\layout\guest.php
      * Related logic: see App\ViewInjection\LayoutViewInjection::resolveUserState()
      * @param int $userInvId
+     * @param string $value
      * @param string $origin
      * @param string|null $redirect
      * @param uiR $uiR
@@ -286,29 +289,33 @@ final class UserInvController extends BaseController
     public function guestStickyNavbar(
         #[RouteArgument('userinv_id')]
         int $userInvId,
+        #[RouteArgument('value')]
+        string $value,
         #[RouteArgument('origin')]
         string $origin,
         uiR $uiR,
         #[Query('redirect')]
         ?string $redirect = null,
     ): Response {
-        return $this->toggleGuestBooleanPreference(
+        return $this->setGuestBooleanPreference(
             $userInvId,
+            $value,
             $origin,
             $redirect,
             $uiR,
-            static function (UserInv $userInv): void {
-                $userInv->setStickyNavbar(!$userInv->getStickyNavbar());
+            static function (UserInv $userInv, bool $value): void {
+                $userInv->setStickyNavbar($value);
             },
         );
     }
 
     /**
-     * Per-observer preference toggle, not the admin-controlled shared
+     * Per-observer preference, not the admin-controlled shared
      * 'grid_sticky_header' setting -- same reasoning as guestStickyNavbar()
      * above.
      * Related logic: see ..\resources\views\invoice\inv\guest.php
      * @param int $userInvId
+     * @param string $value
      * @param string $origin
      * @param string|null $redirect
      * @param uiR $uiR
@@ -317,29 +324,44 @@ final class UserInvController extends BaseController
     public function guestStickyGridHeader(
         #[RouteArgument('userinv_id')]
         int $userInvId,
+        #[RouteArgument('value')]
+        string $value,
         #[RouteArgument('origin')]
         string $origin,
         uiR $uiR,
         #[Query('redirect')]
         ?string $redirect = null,
     ): Response {
-        return $this->toggleGuestBooleanPreference(
+        return $this->setGuestBooleanPreference(
             $userInvId,
+            $value,
             $origin,
             $redirect,
             $uiR,
-            static function (UserInv $userInv): void {
-                $userInv->setStickyGridHeader(!$userInv->getStickyGridHeader());
+            static function (UserInv $userInv, bool $value): void {
+                $userInv->setStickyGridHeader($value);
             },
         );
     }
 
     /**
-     * Shared by guestStickyNavbar()/guestStickyGridHeader() -- flips a
-     * boolean then redirects back, sharing one load/save/redirect shape
-     * (the exact SonarCloud duplication shape
+     * Shared by guestStickyNavbar()/guestStickyGridHeader() -- sets a
+     * boolean to an explicit value then redirects back, sharing one
+     * load/save/redirect shape (the exact SonarCloud duplication shape
      * SettingToggleController::toggleBooleanSettingCreatingAtOne() was
      * already extracted for on the admin-setting side of this feature).
+     *
+     * Explicit `$value`, not a flip-in-place toggle: both the "on" and
+     * "off" buttons in guest.php's own menu used to link to the exact
+     * same toggle URL, so clicking "off" while already off turned the
+     * preference back *on* -- confirmed live as the actual cause of a
+     * "sticky navbar not working" report (the buttons never reliably set
+     * either state; the visible on/off highlight and the real saved value
+     * could silently disagree the moment a click landed on the "wrong"
+     * -- i.e. already-current -- state). Same explicit-value shape
+     * `guestlimit()` above already uses for the analogous list-size
+     * buttons, each linking to its own distinct value rather than one
+     * shared "next value" endpoint.
      *
      * Redirect target: prefers `$redirect` (the observer's actual current
      * page, filled in by LayoutViewInjection::resolveUserState() from
@@ -353,18 +375,19 @@ final class UserInvController extends BaseController
      * click. `$origin` stays as a same-shape fallback only for a stale
      * bookmarked/cached toggle URL predating this fix.
      * @param int $userInvId
+     * @param string $value
      * @param string $origin
      * @param string|null $redirect
      * @param uiR $uiR
-     * @param \Closure(UserInv):void $toggle
+     * @param \Closure(UserInv, bool):void $set
      * @return Response
      */
-    private function toggleGuestBooleanPreference(int $userInvId, string $origin, ?string $redirect, uiR $uiR, \Closure $toggle): Response
+    private function setGuestBooleanPreference(int $userInvId, string $value, string $origin, ?string $redirect, uiR $uiR, \Closure $set): Response
     {
         if ($userInvId > 0) {
             $userInv = $uiR->repoUserInvquery($userInvId);
             if (null !== $userInv) {
-                $toggle($userInv);
+                $set($userInv, $value === '1');
                 $uiR->save($userInv);
             }
         }
