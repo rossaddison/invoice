@@ -1121,14 +1121,15 @@ if ((in_array($inv->reqStatusId(), [2, 3])
             ]);
              echo H::openTag('i', ['class' => $biDash]);
              echo H::closeTag('i');
-             // All 14 of this app's integrated gateways now have a logo
+             // All 15 of this app's integrated gateways now have a logo
              // (braintree/stripe/mollie already had one; paypal/adyen/
              // square/razorpay added via Simple Icons, simpleicons.org --
              // CC0 icon glyphs; gocardless/paystack/yookassa via Wikimedia
-             // Commons; checkout_com/robokassa/truelayer/mercado_pago
-             // sourced directly from each company's own site -- each used
-             // per its own company's brand guidelines to identify their
-             // payment method). The match arms below must use the exact
+             // Commons; checkout_com/robokassa/truelayer/mercado_pago/bitpay
+             // sourced directly from each company's own site (bitpay isn't
+             // in Simple Icons or Wikimedia Commons either, checked live) --
+             // each used per its own company's brand guidelines to identify
+             // their payment method). The match arms below must use the exact
              // keys activePaymentGateways() (SettingPaymentTrait.php)
              // declares -- ucfirst($gateway) only uppercases the first
              // character, so e.g. 'GoCardless'/'Checkout_Com'/'TrueLayer'/
@@ -1153,6 +1154,7 @@ if ((in_array($inv->reqStatusId(), [2, 3])
                 'Robokassa' => PaymentGatewayButton::robokassa(),
                 'TrueLayer' => PaymentGatewayButton::truelayer(),
                 'Mercado_Pago' => PaymentGatewayButton::mercadoPago(),
+                'BitPay' => PaymentGatewayButton::bitpay(),
                 default => ' ' . H::encode(ucfirst($gateway)),
              };
 

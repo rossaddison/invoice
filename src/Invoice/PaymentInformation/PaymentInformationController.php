@@ -501,6 +501,12 @@ final class PaymentInformationController
                         'paymentinformation/trueLayerInForm',
                         ['url_key' => $ctx->url_key],
                     ),
+                    // BitPay has its own dedicated BitPayPaymentController
+                    // — same reasoning as every other dedicated gateway controller above.
+                    'BitPay' => $this->webService->getRedirectResponse(
+                        'paymentinformation/bitPayInForm',
+                        ['url_key' => $ctx->url_key],
+                    ),
                     default      => null,
                 };
                 if ($gatewayResponse !== null) {

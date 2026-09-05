@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Auth\Permissions;
 use App\Invoice\PaymentInformation\AdyenPaymentController as APICLR;
+use App\Invoice\PaymentInformation\BitPayPaymentController as BPPICLR;
 use App\Invoice\PaymentInformation\CheckoutComPaymentController as CKPICLR;
 use App\Invoice\PaymentInformation\GoCardlessPaymentController as GCPICLR;
 use App\Invoice\PaymentInformation\MercadoPagoPaymentController as MERPICLR;
@@ -184,6 +185,20 @@ return [
             ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
             ->action([TLPICLR::class, 'trueLayerComplete'])
             ->name('paymentinformation/trueLayerComplete'),
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/bitPayInForm/{url_key}'
+        )
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([BPPICLR::class, 'bitPayInForm'])
+                ->name('paymentinformation/bitPayInForm'),
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/paymentinformation/bitPayComplete/{url_key}'
+        )
+                ->middleware(RoutePermission::check(Permissions::VIEW_PAYMENT))
+                ->action([BPPICLR::class, 'bitPayComplete'])
+                ->name('paymentinformation/bitPayComplete'),
         Route::methods(
             [Method::GET, Method::POST],
             '/paymentinformation/braintreeComplete/{url_key}'
@@ -374,4 +389,13 @@ return [
     Route::methods([Method::POST], '/paymentinformation/trueLayerWebhook')
         ->action([TLPICLR::class, 'trueLayerWebhook'])
         ->name('paymentinformation/trueLayerWebhook'),
+
+    // Not under RoutePermission::invoiceGroup(): BitPay's servers must be
+    // able to POST here with no app session. Secured by x-signature HMAC
+    // verification in the handler, not RBAC — see
+    // BitPayPaymentService::verifyWebhookSignature() and
+    // App\Middleware\CsrfExemptMiddleware.
+    Route::methods([Method::POST], '/paymentinformation/bitPayWebhook')
+        ->action([BPPICLR::class, 'bitPayWebhook'])
+        ->name('paymentinformation/bitPayWebhook'),
 ];

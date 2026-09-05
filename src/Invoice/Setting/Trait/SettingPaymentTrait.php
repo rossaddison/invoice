@@ -34,6 +34,7 @@ trait SettingPaymentTrait
             'Square' => $this->squareGatewayFields(),
             'Stripe' => $this->stripeGatewayFields(),
             'TrueLayer' => $this->trueLayerGatewayFields(),
+            'BitPay' => $this->bitPayGatewayFields(),
         ];
     }
 
@@ -51,6 +52,9 @@ trait SettingPaymentTrait
     {
         return [
             'adyen' => 'https://ca-test.adyen.com/ca/ui/developers/api-credentials/',
+            // Sandbox API Tokens page — where a POS token is generated
+            // (Add New Token, "Require Authentication" left unchecked).
+            'bitpay' => 'https://test.bitpay.com/dashboard/merchant/api-tokens',
             'gocardless' => 'https://manage-sandbox.gocardless.com/sign-in?redirect=%2Fdevelopers',
             'mollie' => 'https://my.mollie.com/dashboard/login?lang=en',
             // Lands on the sandbox Apps & Credentials list — Client
@@ -556,6 +560,41 @@ trait SettingPaymentTrait
     }
 
     /**
+     * BitPay — a cryptocurrency (Bitcoin and other chains) gateway, this
+     * app's first non-fiat integration. Built against the hand-written
+     * `rossaddison/bitpay-client` package's POS facade (a single token, no
+     * ECDSA client-identity key-pairing) rather than BitPay's own official
+     * SDK — `bitpay/sdk` requires `symfony/console ^7.3.1` across its
+     * entire published version history, which conflicts outright with this
+     * app's own root `>=8.1.6` no-ceiling pin, confirmed via
+     * `composer require bitpay/sdk --dry-run --with-all-dependencies`. See
+     * BitPayPaymentService's own docblock for the full ground-truthing.
+     * Single posToken field: like Mollie/YooKassa/Paystack, test vs live
+     * mode is which token is pasted in (from test.bitpay.com vs bitpay.com
+     * respectively), not a separate credential shape — 'sandbox' selects
+     * which base URL BitPayPaymentService talks to, a real code branch
+     * (like PayPal/Square), not just documentation, since BitPay's test
+     * environment is genuinely a separate host (test.bitpay.com).
+     * Refunds are always reported unsupported — BitPay's `/refunds`
+     * endpoint requires the merchant facade (ECDSA key-pairing), which
+     * this POS-facade-only integration doesn't implement; a BitPay refund
+     * must be issued manually via the merchant dashboard.
+     */
+    private function bitPayGatewayFields(): array
+    {
+        return [
+            'posToken' => [
+                'type' => 'password',
+                'label' => 'POS Token',
+            ],
+            'sandbox' => [
+                'type' => 'checkbox',
+                'label' => 'Sandbox (uses test.bitpay.com)',
+            ],
+        ];
+    }
+
+    /**
      * @return (int|string)[]
      *
      * @psalm-return list<array-key>
@@ -619,6 +658,10 @@ trait SettingPaymentTrait
             // vs api.truelayer.com, its own Console app/credentials) —
             // same conceptual shape as PayPal/Square above.
             'truelayer' => 'https://console.truelayer.com/',
+            // Genuinely separate sandbox environment (test.bitpay.com vs
+            // bitpay.com, its own POS token) — same conceptual shape as
+            // PayPal/Square/TrueLayer above.
+            'bitpay' => 'https://test.bitpay.com/dashboard',
         ];
     }
 
