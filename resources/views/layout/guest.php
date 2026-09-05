@@ -180,7 +180,23 @@ echo Html::openTag('body');
 echo Html::tag('Noscript', Html::tag('div',
     $t->translate('please.enable.js'),
     ['class' => 'alert alert-danger no-margin']));
-echo Html::openTag('header');
+// Deliberately no <header> wrapper around the NavBar -- position: sticky
+// is bounded by its element's own containing block (the nearest
+// ancestor box), and a <header> containing nothing but the navbar is
+// exactly the navbar's own height, giving position: sticky zero room to
+// actually stay pinned: it unsticks and scrolls away the instant that
+// tiny <header> box itself scrolls out of view, which is immediately.
+// Confirmed live and empirically (a real headless-browser scroll test
+// against the real published CSS: getComputedStyle reported
+// position: sticky throughout, but the element's bounding rect still
+// moved 1:1 with scroll) as the actual root cause of a "sticky navbar
+// not working" report -- the on/off-button value bug fixed alongside
+// this was real too, but insufficient on its own. invoice.php's own
+// navbar (confirmed working) has never had a <header> wrapper -- it's a
+// direct child of <body>, which spans the full page height and gives
+// position: sticky somewhere to actually stick. Matched here instead of
+// giving <header> a stretched height, since that's what's already
+// proven to work.
 $this->beginBody();
 $navBar = NavBar::widget()
     ->addAttributes([])
@@ -486,7 +502,6 @@ if (!$isGuest) {
     . new Form()->close();
 }
 echo NavBar::end();
-echo Html::closeTag('header');
 echo Html::openTag('div', ['id' => 'main-area']);
   echo Html::openTag('main', ['class' => 'container-fluid py-4']);
   echo $content;
