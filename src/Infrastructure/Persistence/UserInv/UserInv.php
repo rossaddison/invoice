@@ -100,6 +100,23 @@ class UserInv
         private ?bool $consent_telegram_outstanding = false,
         #[Column(type: 'string(100)', nullable: true)]
         private ?string $telegram_chat_id = null,
+        /**
+         * Per-observer preference, not the admin-controlled shared
+         * 'bootstrap5_layout_invoice_navbar_sticky' setting -- see
+         * docs/STICKY_NAVBAR_AND_GRID_HEADER_SEPTEMBER_2026.md's "per-observer"
+         * section. Whether this observer's own navbar (resources/views/layout/
+         * guest.php) stays pinned while the page scrolls.
+         */
+        #[Column(type: 'bool', typecast: 'bool', default: false)]
+        private ?bool $sticky_navbar = false,
+        /**
+         * Per-observer preference, not the admin-controlled shared
+         * 'grid_sticky_header' setting -- same reasoning as sticky_navbar
+         * above. Whether this observer's own inv/guest grid header row
+         * stays pinned while the page scrolls.
+         */
+        #[Column(type: 'bool', typecast: 'bool', default: false)]
+        private ?bool $sticky_grid_header = false,
     ) {
         $this->date_created = new DateTimeImmutable();
         $this->date_modified = new DateTimeImmutable();

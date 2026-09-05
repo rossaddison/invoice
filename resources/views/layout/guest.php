@@ -47,17 +47,20 @@ use Yiisoft\Bootstrap5\NavStyle;
  * @var bool $bootstrap5CdnNotNodeModule
  * @var bool $appCdnNotNodeModule
  * @var bool $invCdnNotNodeModule
- * @var bool $bootstrap5LayoutInvoiceNavbarSticky Same shared setting
+ * @var bool $guestStickyNavbar Per-observer preference (not the
+ *     admin-controlled `bootstrap5_layout_invoice_navbar_sticky` setting
  *     `resources/views/layout/invoice.php`'s own gear-dropdown toggle
- *     controls (`bootstrap5_layout_invoice_navbar_sticky` — the "Invoice"
- *     in the key name is a naming leftover from where the toggle was
- *     first placed, not a scoping restriction; `SettingToggleController::
- *     navbarSticky()` always toggles this one key regardless of which
- *     layout's dropdown called it). Deliberately not a separate
- *     guest-only setting — there's no real reason a staff admin would
- *     want a sticky navbar on `invoice.php` but not on the guest-facing
- *     `guest.php`, the same reasoning `grid_sticky_header` below already
- *     established for "sticky headers on invoices but not quotes".
+ *     controls for staff) — see App\ViewInjection\LayoutViewInjection::
+ *     resolveUserState() and docs/STICKY_NAVBAR_AND_GRID_HEADER_SEPTEMBER_2026.md's
+ *     "per-observer" section. Always `false` for an anonymous visitor
+ *     (`$isGuest`), since there's no `UserInv` row to read a preference
+ *     from.
+ * @var string $guestStickyNavbarToggleUrl Empty for an anonymous visitor —
+ *     see `$guestStickyNavbar` above.
+ * @var bool $guestStickyGridHeader Same per-observer reasoning as
+ *     `$guestStickyNavbar` above, for `inv/guest.php`'s own grid header
+ *     row rather than this layout's navbar.
+ * @var string $guestStickyGridHeaderToggleUrl
  * @var string $bootstrap5LayoutGuestNavbarFont
  * @var string $bootstrap5LayoutGuestNavbarFontSize
  * @var int $bootstrap5FormInputHeight
@@ -160,7 +163,7 @@ echo Meta::data('theme-color', '#1e73b8');
     // iife.js bundle invoice.php does) overwrites this fallback with a
     // live measurement once JS runs.
     . ' --sticky-content-top: '
-    . ($bootstrap5LayoutInvoiceNavbarSticky ? 'var(--navbar-height)' : '0px') . ';'
+    . ($guestStickyNavbar ? 'var(--navbar-height)' : '0px') . ';'
     . ' }'
   )->render();
 echo Meta::data('robots', 'NOINDEX,NOFOLLOW');
@@ -193,13 +196,12 @@ $navBar = NavBar::widget()
     ->innerContainerAttributes(['class' => 'container-md']);
 
 // Bootstrap's own .sticky-top utility class -- see this file's own
-// @var docblock for $bootstrap5LayoutInvoiceNavbarSticky. Unlike
-// invoice.php's own identical conditional, bg-body-tertiary doesn't
-// need to move inside this "if" here -- it's already applied
-// unconditionally above, so a non-sticky guest navbar was never at
-// risk of the transparent-bar issue invoice.php's own docblock
-// describes.
-if ($bootstrap5LayoutInvoiceNavbarSticky) {
+// @var docblock for $guestStickyNavbar. Unlike invoice.php's own
+// identical conditional, bg-body-tertiary doesn't need to move inside
+// this "if" here -- it's already applied unconditionally above, so a
+// non-sticky guest navbar was never at risk of the transparent-bar
+// issue invoice.php's own docblock describes.
+if ($guestStickyNavbar) {
     $navBar = $navBar->addClass('sticky-top');
 }
 
@@ -341,6 +343,57 @@ if ((null !== $currentPath) && !$isGuest) {
                     . $size . '</a>',
                 [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25, 50, 100, 200]
             ))
+            . '</div></div>'
+        ),
+        DropdownItem::divider(),
+        // Per-observer sticky-navbar/sticky-grid-header preferences --
+        // see this file's own @var docblocks and
+        // docs/STICKY_NAVBAR_AND_GRID_HEADER_SEPTEMBER_2026.md's
+        // "per-observer" section. A plain link (not htmx, unlike the
+        // page-size buttons above): both preferences are read while
+        // building this layout's own <head>/navbar markup server-side,
+        // so a full page reload is needed for the new state to actually
+        // show, not just persisted in the background.
+        DropdownItem::listContent(
+            '<h6 class="dropdown-header"'
+            . ' style="font-size:' . $bootstrap5LayoutGuestNavbarFontSize . 'px;"'
+            . ' data-bs-toggle="tooltip" data-bs-placement="right"'
+            . ' title="' . Html::encode($t->translate('sticky.navbar.hint')) . '">'
+            . (new I())->addClass('bi bi-pin-angle')->render()
+            . ' ' . Html::encode($t->translate('sticky.navbar'))
+            . '</h6>'
+        ),
+        DropdownItem::listContent(
+            '<div class="px-3 py-1">'
+            . '<div class="btn-group btn-group-sm" role="group" aria-label="'
+            . Html::encode($t->translate('sticky.navbar')) . '">'
+            . '<a href="' . Html::encode($guestStickyNavbarToggleUrl) . '"'
+            . ' class="btn ' . ($guestStickyNavbar ? 'btn-success' : 'btn-outline-secondary') . '">'
+            . Html::encode($t->translate('on')) . '</a>'
+            . '<a href="' . Html::encode($guestStickyNavbarToggleUrl) . '"'
+            . ' class="btn ' . (!$guestStickyNavbar ? 'btn-success' : 'btn-outline-secondary') . '">'
+            . Html::encode($t->translate('off')) . '</a>'
+            . '</div></div>'
+        ),
+        DropdownItem::listContent(
+            '<h6 class="dropdown-header"'
+            . ' style="font-size:' . $bootstrap5LayoutGuestNavbarFontSize . 'px;"'
+            . ' data-bs-toggle="tooltip" data-bs-placement="right"'
+            . ' title="' . Html::encode($t->translate('sticky.grid.header.hint')) . '">'
+            . (new I())->addClass('bi bi-table')->render()
+            . ' ' . Html::encode($t->translate('sticky.grid.header'))
+            . '</h6>'
+        ),
+        DropdownItem::listContent(
+            '<div class="px-3 py-1">'
+            . '<div class="btn-group btn-group-sm" role="group" aria-label="'
+            . Html::encode($t->translate('sticky.grid.header')) . '">'
+            . '<a href="' . Html::encode($guestStickyGridHeaderToggleUrl) . '"'
+            . ' class="btn ' . ($guestStickyGridHeader ? 'btn-success' : 'btn-outline-secondary') . '">'
+            . Html::encode($t->translate('on')) . '</a>'
+            . '<a href="' . Html::encode($guestStickyGridHeaderToggleUrl) . '"'
+            . ' class="btn ' . (!$guestStickyGridHeader ? 'btn-success' : 'btn-outline-secondary') . '">'
+            . Html::encode($t->translate('off')) . '</a>'
             . '</div></div>'
         ),
     )

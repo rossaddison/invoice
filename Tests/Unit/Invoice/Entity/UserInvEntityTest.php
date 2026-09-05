@@ -111,4 +111,30 @@ class UserInvEntityTest extends TestCase
         $ui->setUserId(2);
         $this->assertSame(2, $ui->reqUserId());
     }
+
+    public function testStickyNavbarDefaultsFalse(): void
+    {
+        $ui = new UserInv();
+        $this->assertFalse($ui->getStickyNavbar());
+    }
+
+    public function testSetAndGetStickyNavbar(): void
+    {
+        $ui = new UserInv();
+        $ui->setStickyNavbar(true);
+        $this->assertTrue($ui->getStickyNavbar());
+    }
+
+    public function testStickyGridHeaderDefaultsFalse(): void
+    {
+        $ui = new UserInv();
+        $this->assertFalse($ui->getStickyGridHeader());
+    }
+
+    public function testSetAndGetStickyGridHeader(): void
+    {
+        $ui = new UserInv();
+        $ui->setStickyGridHeader(true);
+        $this->assertTrue($ui->getStickyGridHeader());
+    }
 }

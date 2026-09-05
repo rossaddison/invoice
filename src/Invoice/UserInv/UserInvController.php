@@ -257,6 +257,86 @@ final class UserInvController extends BaseController
     }
 
     /**
+     * Per-observer preference toggle, not the admin-controlled shared
+     * 'bootstrap5_layout_invoice_navbar_sticky' setting --
+     * see docs/STICKY_NAVBAR_AND_GRID_HEADER_SEPTEMBER_2026.md.
+     * Related logic: see ..\resources\views\layout\guest.php
+     * Related logic: see App\ViewInjection\LayoutViewInjection::resolveUserState()
+     * @param int $userInvId
+     * @param string $origin
+     * @param uiR $uiR
+     * @return Response
+     */
+    public function guestStickyNavbar(
+        #[RouteArgument('userinv_id')]
+        int $userInvId,
+        #[RouteArgument('origin')]
+        string $origin,
+        uiR $uiR,
+    ): Response {
+        return $this->toggleGuestBooleanPreference(
+            $userInvId,
+            $origin,
+            $uiR,
+            static function (UserInv $userInv): void {
+                $userInv->setStickyNavbar(!$userInv->getStickyNavbar());
+            },
+        );
+    }
+
+    /**
+     * Per-observer preference toggle, not the admin-controlled shared
+     * 'grid_sticky_header' setting -- same reasoning as guestStickyNavbar()
+     * above.
+     * Related logic: see ..\resources\views\invoice\inv\guest.php
+     * @param int $userInvId
+     * @param string $origin
+     * @param uiR $uiR
+     * @return Response
+     */
+    public function guestStickyGridHeader(
+        #[RouteArgument('userinv_id')]
+        int $userInvId,
+        #[RouteArgument('origin')]
+        string $origin,
+        uiR $uiR,
+    ): Response {
+        return $this->toggleGuestBooleanPreference(
+            $userInvId,
+            $origin,
+            $uiR,
+            static function (UserInv $userInv): void {
+                $userInv->setStickyGridHeader(!$userInv->getStickyGridHeader());
+            },
+        );
+    }
+
+    /**
+     * Shared by guestStickyNavbar()/guestStickyGridHeader() -- same origin-
+     * based redirect shape as guestlimit() above, but flipping a boolean
+     * rather than setting a limit value, so the two toggle actions don't
+     * duplicate this (the exact SonarCloud duplication shape
+     * SettingToggleController::toggleBooleanSettingCreatingAtOne() was
+     * already extracted for on the admin-setting side of this feature).
+     * @param int $userInvId
+     * @param string $origin
+     * @param uiR $uiR
+     * @param \Closure(UserInv):void $toggle
+     * @return Response
+     */
+    private function toggleGuestBooleanPreference(int $userInvId, string $origin, uiR $uiR, \Closure $toggle): Response
+    {
+        if ($userInvId > 0) {
+            $userInv = $uiR->repoUserInvquery($userInvId);
+            if (null !== $userInv) {
+                $toggle($userInv);
+                $uiR->save($userInv);
+            }
+        }
+        return $this->webService->getRedirectResponse(strlen($origin) > 0 ? $origin . '/guest' : 'client/guest');
+    }
+
+    /**
      * @param Request $request
      * @param int $id
      * @param FormHydrator $formHydrator

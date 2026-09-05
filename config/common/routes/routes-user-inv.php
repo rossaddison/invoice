@@ -39,6 +39,20 @@ return [
                 ->name('userinv/guestlimit')
                 ->middleware(RoutePermission::check(Permissions::EDIT_USER_INV))
                 ->action([UserInvController::class, 'guestlimit']),
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/userinv/gueststickynavbar/{userinv_id}/{origin}'
+        )
+                ->name('userinv/guestStickyNavbar')
+                ->middleware(RoutePermission::check(Permissions::EDIT_USER_INV))
+                ->action([UserInvController::class, 'guestStickyNavbar']),
+        Route::methods(
+            [Method::GET, Method::POST],
+            '/userinv/gueststickygridheader/{userinv_id}/{origin}'
+        )
+                ->name('userinv/guestStickyGridHeader')
+                ->middleware(RoutePermission::check(Permissions::EDIT_USER_INV))
+                ->action([UserInvController::class, 'guestStickyGridHeader']),
         Route::methods([Method::GET, Method::POST], '/userinv/client/{id}')
                 ->name('userinv/client')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))

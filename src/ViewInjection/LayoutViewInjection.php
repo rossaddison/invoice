@@ -106,6 +106,10 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         return [
             'guestPageSizeUrlTemplate' => $userState['guestPageSizeUrlTemplate'],
             'guestCurrentPageSize' => $userState['guestCurrentPageSize'],
+            'guestStickyNavbarToggleUrl' => $userState['guestStickyNavbarToggleUrl'],
+            'guestStickyNavbar' => $userState['guestStickyNavbar'],
+            'guestStickyGridHeaderToggleUrl' => $userState['guestStickyGridHeaderToggleUrl'],
+            'guestStickyGridHeader' => $userState['guestStickyGridHeader'],
             'bootstrap5OffcanvasEnable' => $bs['bootstrap5OffcanvasEnable'],
             'bootstrap5OffcanvasPlacement' => $bs['bootstrap5OffcanvasPlacement'],
             'bootstrap5LayoutInvoiceNavbarFont' => $bs['bootstrap5LayoutInvoiceNavbarFont'],
@@ -372,6 +376,17 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
 
         $guestPageSizeUrlTemplate = '';
         $guestCurrentPageSize = 10;
+        // Per-observer preferences (not the admin-controlled shared
+        // 'bootstrap5_layout_invoice_navbar_sticky'/'grid_sticky_header'
+        // settings) -- see docs/STICKY_NAVBAR_AND_GRID_HEADER_SEPTEMBER_2026.md.
+        // Resolved here rather than in App\ViewInjection\GuestLayoutViewParameters
+        // since that class has no urlGenerator/currentRoute to build the
+        // toggle URL from, and this method already resolves the same
+        // observer's own UserInv row for the identical page-size purpose above.
+        $guestStickyNavbarToggleUrl = '';
+        $guestStickyNavbar = false;
+        $guestStickyGridHeaderToggleUrl = '';
+        $guestStickyGridHeader = false;
         if (!$isGuest && $user !== null) {
             $userInv = $this->userInvRepository->repoUserInvUserIdquery($user->reqId());
             if ($userInv !== null) {
@@ -384,6 +399,16 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                     'origin' => $guestOrigin,
                 ]);
                 $guestCurrentPageSize = $userInv->getListLimit() ?? 10;
+                $guestStickyNavbarToggleUrl = $this->urlGenerator->generate('userinv/guestStickyNavbar', [
+                    'userinv_id' => $userInv->reqId(),
+                    'origin' => $guestOrigin,
+                ]);
+                $guestStickyNavbar = $userInv->getStickyNavbar();
+                $guestStickyGridHeaderToggleUrl = $this->urlGenerator->generate('userinv/guestStickyGridHeader', [
+                    'userinv_id' => $userInv->reqId(),
+                    'origin' => $guestOrigin,
+                ]);
+                $guestStickyGridHeader = $userInv->getStickyGridHeader();
             }
         }
 
@@ -397,6 +422,10 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'status' => $status,
             'guestPageSizeUrlTemplate' => $guestPageSizeUrlTemplate,
             'guestCurrentPageSize' => $guestCurrentPageSize,
+            'guestStickyNavbarToggleUrl' => $guestStickyNavbarToggleUrl,
+            'guestStickyNavbar' => $guestStickyNavbar,
+            'guestStickyGridHeaderToggleUrl' => $guestStickyGridHeaderToggleUrl,
+            'guestStickyGridHeader' => $guestStickyGridHeader,
         ];
     }
 
