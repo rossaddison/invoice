@@ -7,6 +7,7 @@ namespace App\Invoice\Quote\Trait;
 use App\Auth\Permissions;
 use App\Infrastructure\Persistence\Quote\Quote;
 use App\Invoice\{
+    Quote\QuoteViewComputedDeps,
     Quote\QuoteViewCoreDeps,
     Quote\QuoteViewItemDeps,
     Quote\QuoteViewRenderDeps,
@@ -66,29 +67,60 @@ trait View
             return $this->webService->getNotFoundResponse();
         }
         $quote_custom_values = $this->quoteCustomValues($quote_id, $item->qcR);
-        $quoteEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
-        $vat = $this->sR->getSetting('enable_vat_registration');
-        $quoteAmountTotal = $quote_amount->getTotal();
         $customValues = $render->cvR->fixCfValueToCf(
             $render->cfR->repoTablequery('quote_custom')
         );
-        $parameters = [
+        $computed = new QuoteViewComputedDeps(
+            quoteEdit: $this->userService->hasPermission(Permissions::EDIT_INV),
+            quoteAmountTotal: $quote_amount->getTotal(),
+            salesOrderNumber: $sales_order_number,
+            vat: $this->sR->getSetting('enable_vat_registration'),
+            quoteTaxRates: $quote_tax_rates,
+            quoteAmount: $quote_amount,
+            quoteCustomValues: $quote_custom_values,
+            customValues: $customValues,
+            quoteAllowanceChargeForm: $quoteAllowanceChargeForm,
+        );
+        $parameters = $this->buildViewParameters($id, $_language, $quote, $core, $item, $render, $ui, $computed);
+        return ($this->rbacObserver($quote, $core->ucR, $core->uiR) || $this->rbacAdmin() || $this->rbacAccountant())
+            ? $this->webViewRenderer->render('view', $parameters)
+            : $this->webService->getNotFoundResponse();
+    }
+
+    /**
+     * The view-data array for view() — extracted alongside
+     * QuoteViewComputedDeps so view() itself stays under SonarQube's
+     * php:S138 150-line ceiling; see that class's own docblock for why
+     * $computed exists at all.
+     * @return array<string, mixed>
+     */
+    private function buildViewParameters(
+        int $id,
+        string $_language,
+        Quote $quote,
+        QuoteViewCoreDeps $core,
+        QuoteViewItemDeps $item,
+        QuoteViewRenderDeps $render,
+        QuoteViewUIDeps $ui,
+        QuoteViewComputedDeps $computed,
+    ): array {
+        return [
             '_language' => $_language,
             'body' => $this->body($quote),
             'alert' => $this->alert(),
-            'invEdit' => $quoteEdit,
-            'quote_amount_total' => $quoteAmountTotal,
-            'sales_order_number' => $sales_order_number,
+            'invEdit' => $computed->quoteEdit,
+            'quote_amount_total' => $computed->quoteAmountTotal,
+            'sales_order_number' => $computed->salesOrderNumber,
             'quoteToolbar' => $this->quoteToolbar->renderWithStatus(
                 $quote,
-                $quoteEdit,
-                $vat,
-                $quoteAmountTotal
+                $computed->quoteEdit,
+                $computed->vat,
+                $computed->quoteAmountTotal
             ),
             'dateHelper' => new DateHelper($this->sR),
             'numberHelper' => $this->numberHelper,
             'view_product_task_tabs' =>
-                $this->viewBuildProductTaskTabs($quote, $quoteEdit, $_language, $id, $core, $item, $render),
+                $this->viewBuildProductTaskTabs($quote, $computed->quoteEdit, $_language, $id, $core, $item, $render),
             'view_quote_number' =>
                 $this->webViewRenderer->renderPartialAsString(
                     '//invoice/quote/view_quote_number',
@@ -109,27 +141,41 @@ trait View
                 ]
                 ),
             'view_details_box_with_custom_field' =>
-                $this->viewBuildDetailsBoxWithCustomField($quote, $render, $vat, $quote_custom_values, $customValues),
+                $this->viewBuildDetailsBoxWithCustomField(
+                    $quote,
+                    $render,
+                    $computed->vat,
+                    $computed->quoteCustomValues,
+                    $computed->customValues
+                ),
             'view_quote_approve_reject' =>
-                $this->viewBuildViewQuoteApproveReject($quote, $quoteEdit, $sales_order_number, $core),
+                $this->viewBuildViewQuoteApproveReject($quote, $computed->quoteEdit, $computed->salesOrderNumber, $core),
             'view_custom_fields' =>
-                $this->viewBuildViewCustomFields($render, $quote_custom_values, $customValues),
+                $this->viewBuildViewCustomFields($render, $computed->quoteCustomValues, $computed->customValues),
             'fields' => $item->qcR->repoFields((int) $this->session->get('quote_id')),
             'customFields' => $render->cfR->repoTablequery('quote_custom'),
             'customValues' => $render->cvR->fixCfValueToCf(
                 $render->cfR->repoTablequery('quote_custom')
             ),
             'cvH' => new CVH($this->sR, $render->cvR),
-            'quoteCustomValues' => $quote_custom_values,
+            'quoteCustomValues' => $computed->quoteCustomValues,
             'quoteStatuses' => $core->qR->getStatuses($this->translator),
             'quote' => $quote,
             'partial_item_table' =>
-                $this->viewBuildPartialItemTable($quote, $item, $render, $ui, $quote_tax_rates, $quote_amount, $_language),
+                $this->viewBuildPartialItemTable(
+                    $quote,
+                    $item,
+                    $render,
+                    $ui,
+                    $computed->quoteTaxRates,
+                    $computed->quoteAmount,
+                    $_language
+                ),
             'modal_choose_products' => $this->viewBuildModalChooseProducts($item, $render),
             'modal_choose_tasks' => $this->viewBuildModalChooseTasks($render, $ui),
             'modal_add_quote_tax' => $this->viewBuildModalAddQuoteTax($render),
             'modal_add_allowance_charge' =>
-                $this->viewBuildModalAddAllowanceCharge($ui, $quoteAllowanceChargeForm),
+                $this->viewBuildModalAddAllowanceCharge($ui, $computed->quoteAllowanceChargeForm),
             'modal_copy_quote' =>
                 $this->webViewRenderer->renderPartialAsString(
                     '//invoice/quote/modal_copy_quote',
@@ -181,9 +227,6 @@ trait View
                     $quote->getDeliveryLocationId()
                 ),
         ];
-        return ($this->rbacObserver($quote, $core->ucR, $core->uiR) || $this->rbacAdmin() || $this->rbacAccountant())
-            ? $this->webViewRenderer->render('view', $parameters)
-            : $this->webService->getNotFoundResponse();
     }
 
     private function viewBuildProductTaskTabs(

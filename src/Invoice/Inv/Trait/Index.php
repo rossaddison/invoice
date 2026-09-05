@@ -7,6 +7,7 @@ namespace App\Invoice\Inv\Trait;
 use App\Invoice\{
     CategorySecondary\CategorySecondaryRepository as CSR,
     Inv\HomeCareRunContext,
+    Inv\InvIndexComputedDeps,
     Inv\InvIndexFilter,
     Inv\InvIndexListDeps,
     Inv\InvIndexNavDeps,
@@ -87,111 +88,23 @@ trait Index
             $this->markSentFlash($_language);
             $this->homeCareRunFlash($nav->csR);
 
-            $gridSummary = $this->indexGridSummary($paginator, $pageSize, $label);
-
-            $defaultInvoiceGroup = $this->indexDefaultInvoiceGroup($list);
-            $defaultInvoicePaymentMethod = $this->indexDefaultInvoicePaymentMethod($nav);
-
-            $parameters = [
-                'alert'              => $this->alert(),
-                'clientCount'        => $list->clientRepo->count(),
-                'decimalPlaces'      =>
-                    (int) $this->sR->getSetting('tax_rate_decimal_places'),
-                'defaultInvoiceGroup'         => $defaultInvoiceGroup,
-                'defaultInvoicePaymentMethod' => $defaultInvoicePaymentMethod,
-                'groupBy'            => $filter->groupBy,
-                'gridSummary'        => $gridSummary,
-                'iR'                 => $list->invRepo,
-                'irR'                => $list->irR,
-                'islR'               => $list->islR,
-                'inv_statuses'       => $inv_statuses,
-
-                'paginator'          => $paginator,
-                'qR'                 => $nav->qR,
-                'dlR'                => $nav->dlR,
-                'soR'                => $nav->soR,
-                'wR'                 => $nav->wR,
-                'csR'                => $nav->csR,
-                'dwR'                => $nav->dwR,
-                'sortString'         => $sortString,
-                'status'             => $effectiveStatus,
-                'visible'            => $visible !== '0',
-                'visibleToggleInvSentLogColumn' =>
-                    $visibleToggleInvSentLogColumn !== '0',
-                'optionsClientsDropDownFilter' =>
-                    $this->optionsDataClientsFilter($list->invRepo),
-                'optionsClientGroupDropDownFilter' =>
-                    $this->optionsDataClientGroupFilter($list->clientRepo),
-                'optionsInvNumberDropDownFilter' =>
-                    $this->optionsDataInvNumberFilter($list->invRepo),
-                'optionsCreditInvNumberDropDownFilter' =>
-                    $this->optionsDataCreditInvNumberFilter($list->invRepo),
-                'optionsFamilyNameDropDownFilter' =>
-                    $this->optionsDataFamilyNameFilter($list->invRepo),
-                'optionsYearMonthDropDownFilter' =>
-                    $this->optionsDataYearMonthFilter(),
-                'optionsStatusDropDownFilter' =>
-                    $this->optionsDataStatusFilter($list->invRepo),
-                'optionsCategorySecondaryRunDropDownFilter' =>
-                    $nav->csR->optionsDataCategorySecondaries(),
-                'modal_add_inv' =>
-                    $bootstrap5ModalInv->renderPartialLayoutWithFormAsString(
-                        'inv',
-                        []
-                    ),
-                'modal_create_recurring_multiple' =>
-                    $this->indexModalCreateRecurringMultiple($list->irR),
-                'modal_copy_inv_multiple' =>
-                    $this->indexModalCopyInvMultiple(
-                        $list->clientRepo->repoUserClient(
-                            $nav->ucR->getClientsWithUserAccounts()
-                        )
-                    ),
-                'etR'                => $nav->etR,
-                'fdR'                => $nav->fdR,
-            ];
+            $computed = new InvIndexComputedDeps(
+                paginator: $paginator,
+                inv_statuses: $inv_statuses,
+                gridSummary: $this->indexGridSummary($paginator, $pageSize, $label),
+                defaultInvoiceGroup: $this->indexDefaultInvoiceGroup($list),
+                defaultInvoicePaymentMethod: $this->indexDefaultInvoicePaymentMethod($nav),
+                sortString: $sortString,
+                effectiveStatus: $effectiveStatus,
+                visible: $visible !== '0',
+                visibleToggleInvSentLogColumn: $visibleToggleInvSentLogColumn !== '0',
+            );
 
             if ($request->hasHeader('Hx-Request')) {
-                return $this->htmlResponseFactory->createResponse(
-                    InvsListWidget::widget()
-                        ->withPaginator($paginator)
-                        ->withIR($list->invRepo)
-                        ->withLogRepositories($list->irR, $list->islR)
-                        ->withRelationRepositories($nav->qR, $nav->soR, $nav->dlR)
-                        ->withSR($this->sR)
-                        ->withEmailRepositories($nav->etR, $nav->fdR)
-                        ->withWorkerRepository($nav->wR)
-                        ->withCategorySecondaryRepository($nav->csR)
-                        ->withDwellingRepository($nav->dwR)
-                        ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
-                        ->withDecimalPlaces(
-                            (int) $this->sR->getSetting('tax_rate_decimal_places')
-                        )
-                        ->withVisible($visible !== '0')
-                        ->withVisibleInvSentLogColumn(
-                            $visibleToggleInvSentLogColumn !== '0'
-                        )
-                        ->withGroupBy($filter->groupBy ?? 'none')
-                        ->withClientCount($list->clientRepo->count())
-                        ->withGridDisplayOptions(
-                            $gridSummary,
-                            $sortString,
-                            $this->sR->getSetting('grid_sticky_header') == '1'
-                        )
-                        ->withFilterOptions(new InvsFilterOptions([
-                            'invNumber'       => $this->optionsDataInvNumberFilter($list->invRepo),
-                            'creditInvNumber' => $this->optionsDataCreditInvNumberFilter($list->invRepo),
-                            'familyName'      => $this->optionsDataFamilyNameFilter($list->invRepo),
-                            'clients'         => $this->optionsDataClientsFilter($list->invRepo),
-                            'clientGroup'     => $this->optionsDataClientGroupFilter($list->clientRepo),
-                            'yearMonth'       => $this->optionsDataYearMonthFilter(),
-                            'status'          => $this->optionsDataStatusFilter($list->invRepo),
-                            'categorySecondaryRun' => $nav->csR->optionsDataCategorySecondaries(),
-                        ]))
-                        ->render()
-                );
+                return $this->renderIndexHtmxResponse($request, $list, $nav, $filter, $computed);
             }
 
+            $parameters = $this->buildIndexParameters($list, $nav, $filter, $bootstrap5ModalInv, $computed);
             return $this->webViewRenderer->render('index', $parameters);
         }
         $this->flashMessage(
@@ -199,6 +112,132 @@ trait Index
             $this->translator->translate('user.client.active.no')
         );
         return $this->webService->getRedirectResponse('client/index');
+    }
+
+    /**
+     * The HTMX-partial-refresh branch of index() (in-place pagination/
+     * sorting) — extracted alongside buildIndexParameters() so index()
+     * itself stays under SonarQube's php:S138 150-line ceiling; see
+     * InvIndexComputedDeps's own docblock for why $computed exists at all.
+     */
+    private function renderIndexHtmxResponse(
+        Request $request,
+        InvIndexListDeps $list,
+        InvIndexNavDeps $nav,
+        InvIndexFilter $filter,
+        InvIndexComputedDeps $computed,
+    ): Response {
+        return $this->htmlResponseFactory->createResponse(
+            InvsListWidget::widget()
+                ->withPaginator($computed->paginator)
+                ->withIR($list->invRepo)
+                ->withLogRepositories($list->irR, $list->islR)
+                ->withRelationRepositories($nav->qR, $nav->soR, $nav->dlR)
+                ->withSR($this->sR)
+                ->withEmailRepositories($nav->etR, $nav->fdR)
+                ->withWorkerRepository($nav->wR)
+                ->withCategorySecondaryRepository($nav->csR)
+                ->withDwellingRepository($nav->dwR)
+                ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
+                ->withDecimalPlaces(
+                    (int) $this->sR->getSetting('tax_rate_decimal_places')
+                )
+                ->withVisible($computed->visible)
+                ->withVisibleInvSentLogColumn(
+                    $computed->visibleToggleInvSentLogColumn
+                )
+                ->withGroupBy($filter->groupBy ?? 'none')
+                ->withClientCount($list->clientRepo->count())
+                ->withGridDisplayOptions(
+                    $computed->gridSummary,
+                    $computed->sortString,
+                    $this->sR->getSetting('grid_sticky_header') == '1'
+                )
+                ->withFilterOptions(new InvsFilterOptions([
+                    'invNumber'       => $this->optionsDataInvNumberFilter($list->invRepo),
+                    'creditInvNumber' => $this->optionsDataCreditInvNumberFilter($list->invRepo),
+                    'familyName'      => $this->optionsDataFamilyNameFilter($list->invRepo),
+                    'clients'         => $this->optionsDataClientsFilter($list->invRepo),
+                    'clientGroup'     => $this->optionsDataClientGroupFilter($list->clientRepo),
+                    'yearMonth'       => $this->optionsDataYearMonthFilter(),
+                    'status'          => $this->optionsDataStatusFilter($list->invRepo),
+                    'categorySecondaryRun' => $nav->csR->optionsDataCategorySecondaries(),
+                ]))
+                ->render()
+        );
+    }
+
+    /**
+     * The view-data array for index()'s normal (non-HTMX) render path —
+     * see renderIndexHtmxResponse()'s own docblock for why this is
+     * extracted, and InvIndexComputedDeps's for why $computed exists.
+     * @return array<string, mixed>
+     */
+    private function buildIndexParameters(
+        InvIndexListDeps $list,
+        InvIndexNavDeps $nav,
+        InvIndexFilter $filter,
+        Bootstrap5ModalInv $bootstrap5ModalInv,
+        InvIndexComputedDeps $computed,
+    ): array {
+        return [
+            'alert'              => $this->alert(),
+            'clientCount'        => $list->clientRepo->count(),
+            'decimalPlaces'      =>
+                (int) $this->sR->getSetting('tax_rate_decimal_places'),
+            'defaultInvoiceGroup'         => $computed->defaultInvoiceGroup,
+            'defaultInvoicePaymentMethod' => $computed->defaultInvoicePaymentMethod,
+            'groupBy'            => $filter->groupBy,
+            'gridSummary'        => $computed->gridSummary,
+            'iR'                 => $list->invRepo,
+            'irR'                => $list->irR,
+            'islR'               => $list->islR,
+            'inv_statuses'       => $computed->inv_statuses,
+
+            'paginator'          => $computed->paginator,
+            'qR'                 => $nav->qR,
+            'dlR'                => $nav->dlR,
+            'soR'                => $nav->soR,
+            'wR'                 => $nav->wR,
+            'csR'                => $nav->csR,
+            'dwR'                => $nav->dwR,
+            'sortString'         => $computed->sortString,
+            'status'             => $computed->effectiveStatus,
+            'visible'            => $computed->visible,
+            'visibleToggleInvSentLogColumn' =>
+                $computed->visibleToggleInvSentLogColumn,
+            'optionsClientsDropDownFilter' =>
+                $this->optionsDataClientsFilter($list->invRepo),
+            'optionsClientGroupDropDownFilter' =>
+                $this->optionsDataClientGroupFilter($list->clientRepo),
+            'optionsInvNumberDropDownFilter' =>
+                $this->optionsDataInvNumberFilter($list->invRepo),
+            'optionsCreditInvNumberDropDownFilter' =>
+                $this->optionsDataCreditInvNumberFilter($list->invRepo),
+            'optionsFamilyNameDropDownFilter' =>
+                $this->optionsDataFamilyNameFilter($list->invRepo),
+            'optionsYearMonthDropDownFilter' =>
+                $this->optionsDataYearMonthFilter(),
+            'optionsStatusDropDownFilter' =>
+                $this->optionsDataStatusFilter($list->invRepo),
+            'optionsCategorySecondaryRunDropDownFilter' =>
+                $nav->csR->optionsDataCategorySecondaries(),
+            'modal_add_inv' =>
+                $bootstrap5ModalInv->renderPartialLayoutWithFormAsString(
+                    'inv',
+                    []
+                ),
+            'modal_create_recurring_multiple' =>
+                $this->indexModalCreateRecurringMultiple($list->irR),
+            'modal_copy_inv_multiple' =>
+                $this->indexModalCopyInvMultiple(
+                    $list->clientRepo->repoUserClient(
+                        $nav->ucR->getClientsWithUserAccounts()
+                    )
+                ),
+            'etR'                => $nav->etR,
+            'fdR'                => $nav->fdR,
+        ];
     }
 
     /**
