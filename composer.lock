@@ -18287,12 +18287,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/rate-limiter.git",
-                "reference": "274b9a2c4e41f065f3d184164fe6204b2bd1b091"
+                "reference": "43e8fc56605498f5047740c132d519e3ee28b61f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/rate-limiter/zipball/274b9a2c4e41f065f3d184164fe6204b2bd1b091",
-                "reference": "274b9a2c4e41f065f3d184164fe6204b2bd1b091",
+                "url": "https://api.github.com/repos/yiisoft/rate-limiter/zipball/43e8fc56605498f5047740c132d519e3ee28b61f",
+                "reference": "43e8fc56605498f5047740c132d519e3ee28b61f",
                 "shasum": ""
             },
             "require": {
@@ -18360,7 +18360,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-08-09T15:12:24+00:00"
+            "time": "2026-09-04T14:43:17+00:00"
         },
         {
             "name": "yiisoft/rbac",
@@ -19822,12 +19822,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "c5ddd7e40a8bc32640a089796dd0a716a831adff"
+                "reference": "0d4206471e204508b08c87e76f938890b6a2c7f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/c5ddd7e40a8bc32640a089796dd0a716a831adff",
-                "reference": "c5ddd7e40a8bc32640a089796dd0a716a831adff",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/0d4206471e204508b08c87e76f938890b6a2c7f7",
+                "reference": "0d4206471e204508b08c87e76f938890b6a2c7f7",
                 "shasum": ""
             },
             "require": {
@@ -19908,7 +19908,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-09-02T13:08:05+00:00"
+            "time": "2026-09-04T14:45:22+00:00"
         },
         {
             "name": "yiisoft/yii-event",
@@ -22581,16 +22581,16 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "6.11.0",
+            "version": "6.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jsonrainbow/json-schema.git",
-                "reference": "7e420a943a6fbc95e60e3cf67acfbee85b3b4da7"
+                "reference": "8ef236a1a37df364b518b7411a4b5bb95b040d79"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/7e420a943a6fbc95e60e3cf67acfbee85b3b4da7",
-                "reference": "7e420a943a6fbc95e60e3cf67acfbee85b3b4da7",
+                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/8ef236a1a37df364b518b7411a4b5bb95b040d79",
+                "reference": "8ef236a1a37df364b518b7411a4b5bb95b040d79",
                 "shasum": ""
             },
             "require": {
@@ -22640,9 +22640,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jsonrainbow/json-schema/issues",
-                "source": "https://github.com/jsonrainbow/json-schema/tree/6.11.0"
+                "source": "https://github.com/jsonrainbow/json-schema/tree/6.12.0"
             },
-            "time": "2026-08-21T10:30:42+00:00"
+            "time": "2026-09-04T12:54:20+00:00"
         },
         {
             "name": "marc-mabe/php-enum",
