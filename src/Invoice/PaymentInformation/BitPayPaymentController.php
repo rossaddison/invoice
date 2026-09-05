@@ -121,17 +121,46 @@ final class BitPayPaymentController
             $invoice->getClient()?->getClientEmail() ?? '',
         );
         if (null === $result) {
-            $reason = $this->bitPayPaymentService->lastErrorMessage();
-            $this->flashMessage(
-                'warning',
-                $reason !== ''
-                    ? "Unable to start the BitPay payment — BitPay said: \"{$reason}\"."
-                    : 'Unable to start the BitPay payment — please try again shortly.',
-            );
-            return $this->webService->getNotFoundResponse();
+            return $this->renderCreatePaymentFailure($urlKey);
         }
 
         return $this->responseFactory->createResponse(302)->withHeader('Location', $result['url']);
+    }
+
+    /**
+     * Renders a real page for `createPayment()` failures instead of a bare
+     * `getNotFoundResponse()` — that response has no body and never goes
+     * through this app's view renderer at all, so a flash message set
+     * right before returning it is silently never shown (confirmed live
+     * 2026-09-05: the flash was being set correctly, with BitPay's own
+     * error reason, but the customer/admin saw nothing — not even after a
+     * refresh, since a bare 404 has nothing stored server-side to re-render
+     * on a subsequent request either). Reuses the same `payment_message`
+     * partial `bitPayComplete()` already renders successfully — passing
+     * the reason directly as the `message` string sidesteps the Flash
+     * session mechanism entirely, rather than trying to diagnose why it
+     * wasn't rendering.
+     */
+    private function renderCreatePaymentFailure(string $urlKey): Response
+    {
+        $reason = $this->bitPayPaymentService->lastErrorMessage();
+
+        $view_data = [
+            'render' => $this->webViewRenderer->renderPartialAsString(
+                '//invoice/paymentinformation/payment_message',
+                [
+                    'heading' => 'Unable to start the BitPay payment',
+                    'message' => $reason !== ''
+                        ? "BitPay said: \"{$reason}\""
+                        : 'Please try again shortly.',
+                    'url' => 'inv/urlKey',
+                    'url_key' => $urlKey,
+                    'gateway' => 'BitPay',
+                    'sandbox_url' => $this->sR->sandboxUrlArray()['bitpay'],
+                ],
+            ),
+        ];
+        return $this->webViewRenderer->render('payment_completion_page', $view_data);
     }
 
     /**
