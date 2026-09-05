@@ -227,9 +227,19 @@ final class UserInvController extends BaseController
      * Related logic: see src\Widget\PageSizeLimiter buttonsGuest function
      * Related logic: see ..\resources\views\invoice\inv\guest.php
      * Related logic: see InvController\guest
+     *
+     * Redirect target: prefers `$redirect` (the observer's actual current
+     * page -- these page-size buttons live in the shared guest layout
+     * menu's Settings dropdown, present on every guest page, not only the
+     * "X/guest" content pages the `$origin`-derived guess below assumes)
+     * over `$origin . '/guest'`, same fix and same reasoning as
+     * UserInvController::toggleGuestBooleanPreference()'s own docblock.
+     * `$origin` stays as a same-shape fallback only for a stale
+     * bookmarked/cached button URL predating this fix.
      * @param int $userInvId
      * @param string $origin
      * @param string $limit
+     * @param string|null $redirect
      * @param uiR $uiR
      * @return Response
      */
@@ -241,6 +251,8 @@ final class UserInvController extends BaseController
         #[RouteArgument('limit')]
         string $limit,
         uiR $uiR,
+        #[Query('redirect')]
+        ?string $redirect = null,
     ): Response {
         if ($userInvId > 0 && strlen($origin) > 0) {
             $limitInt = (int) $limit;
@@ -249,6 +261,9 @@ final class UserInvController extends BaseController
                 $userInv->setListLimit($limitInt);
                 $uiR->save($userInv);
             }
+        }
+        if (null !== $redirect && strlen($redirect) > 0) {
+            return $this->webService->getRedirectToSameOriginPathResponse($redirect);
         }
         /**
          * Related logic: see config/common/routes.php Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]')
@@ -264,6 +279,7 @@ final class UserInvController extends BaseController
      * Related logic: see App\ViewInjection\LayoutViewInjection::resolveUserState()
      * @param int $userInvId
      * @param string $origin
+     * @param string|null $redirect
      * @param uiR $uiR
      * @return Response
      */
@@ -273,10 +289,13 @@ final class UserInvController extends BaseController
         #[RouteArgument('origin')]
         string $origin,
         uiR $uiR,
+        #[Query('redirect')]
+        ?string $redirect = null,
     ): Response {
         return $this->toggleGuestBooleanPreference(
             $userInvId,
             $origin,
+            $redirect,
             $uiR,
             static function (UserInv $userInv): void {
                 $userInv->setStickyNavbar(!$userInv->getStickyNavbar());
@@ -291,6 +310,7 @@ final class UserInvController extends BaseController
      * Related logic: see ..\resources\views\invoice\inv\guest.php
      * @param int $userInvId
      * @param string $origin
+     * @param string|null $redirect
      * @param uiR $uiR
      * @return Response
      */
@@ -300,10 +320,13 @@ final class UserInvController extends BaseController
         #[RouteArgument('origin')]
         string $origin,
         uiR $uiR,
+        #[Query('redirect')]
+        ?string $redirect = null,
     ): Response {
         return $this->toggleGuestBooleanPreference(
             $userInvId,
             $origin,
+            $redirect,
             $uiR,
             static function (UserInv $userInv): void {
                 $userInv->setStickyGridHeader(!$userInv->getStickyGridHeader());
@@ -312,19 +335,31 @@ final class UserInvController extends BaseController
     }
 
     /**
-     * Shared by guestStickyNavbar()/guestStickyGridHeader() -- same origin-
-     * based redirect shape as guestlimit() above, but flipping a boolean
-     * rather than setting a limit value, so the two toggle actions don't
-     * duplicate this (the exact SonarCloud duplication shape
+     * Shared by guestStickyNavbar()/guestStickyGridHeader() -- flips a
+     * boolean then redirects back, sharing one load/save/redirect shape
+     * (the exact SonarCloud duplication shape
      * SettingToggleController::toggleBooleanSettingCreatingAtOne() was
      * already extracted for on the admin-setting side of this feature).
+     *
+     * Redirect target: prefers `$redirect` (the observer's actual current
+     * page, filled in by LayoutViewInjection::resolveUserState() from
+     * `CurrentRoute::getUri()`, validated same-origin here since it's
+     * still request input) over the `$origin`-derived guess `guestlimit()`
+     * itself uses, because these two buttons live in the shared guest
+     * layout menu -- present on every guest page, not only the "X/guest"
+     * content pages `$origin . '/guest'` assumes. Confirmed broken live:
+     * an observer on `invoice/index` (route name has no "X/guest"
+     * counterpart) got a RouteNotFoundException for "invoice/guest" on
+     * click. `$origin` stays as a same-shape fallback only for a stale
+     * bookmarked/cached toggle URL predating this fix.
      * @param int $userInvId
      * @param string $origin
+     * @param string|null $redirect
      * @param uiR $uiR
      * @param \Closure(UserInv):void $toggle
      * @return Response
      */
-    private function toggleGuestBooleanPreference(int $userInvId, string $origin, uiR $uiR, \Closure $toggle): Response
+    private function toggleGuestBooleanPreference(int $userInvId, string $origin, ?string $redirect, uiR $uiR, \Closure $toggle): Response
     {
         if ($userInvId > 0) {
             $userInv = $uiR->repoUserInvquery($userInvId);
@@ -332,6 +367,9 @@ final class UserInvController extends BaseController
                 $toggle($userInv);
                 $uiR->save($userInv);
             }
+        }
+        if (null !== $redirect && strlen($redirect) > 0) {
+            return $this->webService->getRedirectToSameOriginPathResponse($redirect);
         }
         return $this->webService->getRedirectResponse(strlen($origin) > 0 ? $origin . '/guest' : 'client/guest');
     }

@@ -393,21 +393,36 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                 $routeName = $this->currentRoute->getName() ?? '';
                 $slashPos = strpos($routeName, '/');
                 $guestOrigin = $slashPos !== false ? substr($routeName, 0, $slashPos) : 'inv';
+                // The observer's actual current page, e.g. '/en/invoice/index'
+                // -- these three toggles all live in the shared guest layout
+                // menu, present on every guest page, not only the "X/guest"
+                // content pages $guestOrigin (above) assumes. Confirmed live:
+                // toggling from a page whose route name has no "X/guest"
+                // counterpart (e.g. 'invoice/index') 500'd with
+                // RouteNotFoundException for the guessed "invoice/guest".
+                // Passed as a 'redirect' query parameter (not a route
+                // argument -- these routes' own {origin} path segment stays
+                // for backward compatibility with a stale/bookmarked toggle
+                // URL) and validated same-origin server-side in
+                // UserInvController::toggleGuestBooleanPreference()/
+                // guestlimit() before it's ever redirected to, since it's
+                // still request-derived.
+                $currentPath = $this->currentRoute->getUri()?->getPath() ?? '';
                 $guestPageSizeUrlTemplate = $this->urlGenerator->generate('userinv/guestlimit', [
                     'userinv_id' => $userInv->reqId(),
                     'limit' => '__SIZE__',
                     'origin' => $guestOrigin,
-                ]);
+                ], ['redirect' => $currentPath]);
                 $guestCurrentPageSize = $userInv->getListLimit() ?? 10;
                 $guestStickyNavbarToggleUrl = $this->urlGenerator->generate('userinv/guestStickyNavbar', [
                     'userinv_id' => $userInv->reqId(),
                     'origin' => $guestOrigin,
-                ]);
+                ], ['redirect' => $currentPath]);
                 $guestStickyNavbar = $userInv->getStickyNavbar();
                 $guestStickyGridHeaderToggleUrl = $this->urlGenerator->generate('userinv/guestStickyGridHeader', [
                     'userinv_id' => $userInv->reqId(),
                     'origin' => $guestOrigin,
-                ]);
+                ], ['redirect' => $currentPath]);
                 $guestStickyGridHeader = $userInv->getStickyGridHeader();
             }
         }
