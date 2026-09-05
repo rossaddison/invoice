@@ -1597,9 +1597,6 @@ prior to importing and no existing documents e.g. Invoices.',
   'online.payment.apiLoginId' => 'Api Login Id',
   'online.payment.appId' => 'App Id',
   'online.payment.appSecret' => 'App Secret',
-  'online.payment.bitpay.generic.complete.message' =>
-    'Your BitPay payment is being processed. Your invoice will update automatically once BitPay confirms it'
-    . ' on-chain — please check your invoice directly for the latest status.',
   'online.payment.callbackPassword' => 'Callback Password',
   'online.payment.card.invalid' => 'This credit card is'
     . ' invalid. Please check the provided information.',
@@ -1638,7 +1635,6 @@ prior to importing and no existing documents e.g. Invoices.',
   'online.payment.payment.failed' => 'Payment failed. Please try again.',
   'online.payment.payment.processing' =>
     'Payment for Invoice %s is still processing. Please check back shortly to confirm.',
-  'online.payment.payment.processing.generic' => 'Thank you',
   'online.payment.payment.redirect' =>
     'Please wait while we redirect you to the payment page...',
   'online.payment.payment.successful' => 'Payment for Invoice %s successful!',
