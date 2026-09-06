@@ -85,14 +85,25 @@ echo H::style(
     // icon itself stays clickable exactly where it's visible and nowhere
     // else -- cards and controls no longer compete for the same clicks
     // at any point in the zone.
+    //
+    // Live feedback: this wasn't enough on its own -- the arrow icons were
+    // hiding behind the cards entirely, not just failing to receive
+    // clicks. Root cause: .carousel-control-prev/-next is position:
+    // absolute with Bootstrap's own z-index:1 (an integer, not auto),
+    // which establishes its *own* stacking context -- the icon's
+    // z-index:3 only wins *inside* that context, it can't escape to beat
+    // a sibling-of-the-carousel .card at the outer level, so the whole
+    // control (icon included) still lost and rendered behind the card
+    // regardless of the icon's own z-index. The wrapper itself needs to
+    // be raised above the cards too, not just the icon inside it.
     . '#inv-calendar-months .carousel-control-prev,'
-    . '#inv-calendar-months .carousel-control-next { pointer-events: none; }'
+    . '#inv-calendar-months .carousel-control-next { pointer-events: none; z-index: 3; }'
     . '#inv-calendar-months .carousel-control-prev-icon,'
     . '#inv-calendar-months .carousel-control-next-icon {'
     . 'background-image: none; background-color: var(--calendar-accent);'
     . 'width: 2.5rem; height: 2.5rem; border-radius: 50%;'
     . 'display: flex; align-items: center; justify-content: center;'
-    . 'color: #fff; font-size: 1.25rem; position: relative; z-index: 3;'
+    . 'color: #fff; font-size: 1.25rem; position: relative;'
     . 'pointer-events: auto;'
     . 'transition: transform .15s ease, box-shadow .15s ease;'
     . '}'
