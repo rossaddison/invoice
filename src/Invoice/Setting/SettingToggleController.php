@@ -10,6 +10,7 @@ use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\Flash\Flash;
@@ -92,9 +93,9 @@ final class SettingToggleController extends BaseController
      * InvsListWidget::withGridDisplayOptions()'s docblock for the
      * pattern each *ListWidget follows).
      */
-    public function gridStickyHeader(#[RouteArgument('origin')] string $origin): Response
+    public function gridStickyHeader(#[RouteArgument('origin')] string $origin, Request $request): Response
     {
-        return $this->toggleBooleanSettingCreatingAtOne('grid_sticky_header', $origin);
+        return $this->toggleBooleanSettingCreatingAtOne('grid_sticky_header', $origin, $request);
     }
 
     /**
@@ -109,9 +110,9 @@ final class SettingToggleController extends BaseController
      * which is what actually applies the sticky-top class; only the
      * form field this setting used to live behind moved.
      */
-    public function navbarSticky(#[RouteArgument('origin')] string $origin): Response
+    public function navbarSticky(#[RouteArgument('origin')] string $origin, Request $request): Response
     {
-        return $this->toggleBooleanSettingCreatingAtOne('bootstrap5_layout_invoice_navbar_sticky', $origin);
+        return $this->toggleBooleanSettingCreatingAtOne('bootstrap5_layout_invoice_navbar_sticky', $origin, $request);
     }
 
     /**
@@ -124,19 +125,45 @@ final class SettingToggleController extends BaseController
      * whatever the entity's own default is rather than explicitly
      * setting '1' -- a real behavioural difference, not just a smaller
      * duplicate, and not this PR's code to change.
+     *
+     * For an htmx request specifically (gridStickyHeader()/navbarSticky()
+     * are both wired to a gear-dropdown checkbox via hx-get, which then
+     * forces a real window.location.reload() once the save succeeds --
+     * see htmx-hooks.ts), this returns a bare empty response instead of
+     * the normal redirect. Reported live as duplicated flash messages
+     * after that reload fix shipped: fetch()/XHR (what hx-get issues
+     * under the hood) transparently *follows* a 302 same as a browser
+     * address-bar navigation would, so the redirect target's own
+     * controller action -- $origin/index, whose own index() action calls
+     * flash-adding methods like draftFlash()/markSentFlash()/
+     * homeCareRunFlash() unconditionally on every visit, not as a
+     * one-time notification -- was actually rendering (and therefore
+     * re-adding those flashes) a second, invisible time as part of the
+     * AJAX request itself, discarded only afterwards by hx-swap="none".
+     * The follow-up window.location.reload() then rendered $origin/index
+     * for real, adding the same flashes again on top of whatever that
+     * throwaway render had already queued -- both batches visible on the
+     * one page the observer actually sees. Skipping the redirect (and
+     * therefore the phantom index() render) for the htmx leg entirely,
+     * and letting the client-side reload be the only real render, fixes
+     * this at the root rather than trying to de-duplicate flashes after
+     * the fact.
      */
-    private function toggleBooleanSettingCreatingAtOne(string $key, string $origin): Response
+    private function toggleBooleanSettingCreatingAtOne(string $key, string $origin, Request $request): Response
     {
         $setting = $this->sR->withKey($key);
         if ($setting) {
             $setting->setSettingValue($setting->getSettingValue() === '0' ? '1' : '0');
             $this->sR->save($setting);
-            return $this->webService->getRedirectResponse($origin . self::INDEX_SUFFIX);
+        } else {
+            $new_setting = new Setting();
+            $new_setting->setSettingKey($key);
+            $new_setting->setSettingValue('1');
+            $this->sR->save($new_setting);
         }
-        $new_setting = new Setting();
-        $new_setting->setSettingKey($key);
-        $new_setting->setSettingValue('1');
-        $this->sR->save($new_setting);
+        if ($request->hasHeader('Hx-Request')) {
+            return $this->webService->getHtmlResponse('');
+        }
         return $this->webService->getRedirectResponse($origin . self::INDEX_SUFFIX);
     }
 
