@@ -62,6 +62,10 @@ trait InvoiceInstallTrait
             'bootstrap5_alert_close_button_font_size' => '10',
             'bootstrap5_layout_invoice_navbar_font' => 'Arial',
             'bootstrap5_layout_invoice_navbar_font_size' => '10',
+            // Drives inv/calendar's run badges, "today" border, and
+            // carousel arrow color together (see Trait\Calendar/
+            // resources/views/invoice/inv/calendar.php).
+            'bootstrap5_calendar_accent_color' => 'primary',
             // Off by default — matches bootstrap5_offcanvas_enable's own
             // default; existing installs keep today's non-sticky navbar
             // until an admin opts in.

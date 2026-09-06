@@ -128,6 +128,18 @@ trait InvCombinedFilterTrait
                     ? $dateTimeImmutable->format('Y-m') . '%' : ''
             );
         }
+        if (isset($filter->filterDateCreatedExact) && !empty($filter->filterDateCreatedExact)) {
+            $exactDate = \DateTimeImmutable::createFromFormat(
+                'Y-m-d',
+                $filter->filterDateCreatedExact
+            );
+            $query = $query->andWhere(
+                'date_created',
+                'like',
+                $exactDate instanceof \DateTimeImmutable
+                    ? $exactDate->format('Y-m-d') . '%' : ''
+            );
+        }
         return $query;
     }
 
@@ -149,7 +161,17 @@ trait InvCombinedFilterTrait
         }
         if ($wantsRun) {
             $query = $this->applyIdInCondition($query, $runIds);
-            $query = $this->applyRunDateCondition($query, $run);
+            $wantsExactDate = isset($filter->filterDateCreatedExact)
+                && !empty($filter->filterDateCreatedExact);
+            // Skipped when an exact day is already pinned (inv/calendar's
+            // day-block links): the admin-configured "since" condition
+            // below is meant to scope an *open-ended* current run, and
+            // would otherwise silently empty out an older day's results
+            // whenever that day's category_secondary happens to match the
+            // currently configured run.
+            if (!$wantsExactDate) {
+                $query = $this->applyRunDateCondition($query, $run);
+            }
         }
         return $query;
     }

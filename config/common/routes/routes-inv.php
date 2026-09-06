@@ -99,6 +99,10 @@ return [
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'index'])
                 ->name('inv/index'),
+        Route::get('/inv/calendar[/{year:\d+}/{month:\d+}]')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([InvController::class, 'calendar'])
+                ->name('inv/calendar'),
         Route::get('/inv/[/status/{status:\d+}]')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'indexMark'])

@@ -36,6 +36,7 @@ import { initHomeCareOffline } from './homecare-offline.js';
 import { initHomeCareInstallPrompt } from './homecare-install-prompt.js';
 import { initCompanyPrivate } from './company-private.js';
 import { initStickyNavbarOffset } from './sticky-navbar-offset.js';
+import { initCalendar } from './calendar.js';
 
 declare global {
     // var (not `interface Window`) — see htmx.ts for why.
@@ -92,6 +93,7 @@ class InvoiceApp {
         initJavascriptAnalysisFaq();
         initCodeceptionChecklistFaq();
         initE164PhoneFields();
+        initCalendar();
         globalThis.NProgress?.start();
         globalThis.NProgress?.done();
         if (document.getElementById('table-invoice')) {

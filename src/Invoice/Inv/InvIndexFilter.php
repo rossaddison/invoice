@@ -22,6 +22,10 @@ final class InvIndexFilter implements RequestInputInterface
     public ?string $filterClientGroup = null;
     public ?string $filterClientAddress1 = null;
     public ?string $filterDateCreatedYearMonth = null;
+    // Exact 'Y-m-d' match, distinct from the month-only filter above --
+    // used by the inv/calendar day-block links (see Trait\Calendar) to
+    // pin a single run's batch date exactly.
+    public ?string $filterDateCreatedExact = null;
     public ?string $filterStatus = null;
     public ?string $filterCategorySecondaryRun = null;
     public ?string $groupBy = 'none';

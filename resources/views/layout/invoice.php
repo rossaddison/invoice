@@ -1018,6 +1018,30 @@ if ((null !== $currentPath) && !$isGuest) {
             // visible
             true,
         ),
+        // inv/calendar -- month grid of day-blocks, each linking a
+        // (category_secondary, exact date) run into inv/index. Styled
+        // identically to the dashboard NavLink just above (see its own
+        // comment for why no 'btn btn-lg' here).
+        NavLink::to(
+            //label
+             new I()->class('bi bi-calendar3'),
+            // url
+            $urlGenerator->generate('inv/calendar'),
+            // active
+            false,
+            // disabled
+            $isGuest,
+            // encodeLabel
+            false,
+            // attributes
+            [],
+            // url attributes
+            ['style' => 'font-size:' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
+                . 'font-family:' . $bootstrap5LayoutInvoiceNavbarFont . ';'
+                . 'color:#adb5bd;'],
+            // visible
+            true,
+        ),
         // Settings
         Dropdown::widget()
         ->addTogglerCssStyle([
@@ -1308,6 +1332,9 @@ if ((null !== $currentPath) && !$isGuest) {
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('view'),
                 $urlGenerator->generate('inv/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('calendar'),
+                $urlGenerator->generate('inv/calendar'),
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('delete.invoice.trash'),
                 $urlGenerator->generate('inv/trash'),

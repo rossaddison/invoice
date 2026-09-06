@@ -128,6 +128,23 @@ final class InvRepository extends Select\Repository implements InvRepositoryInte
     }
 
     /**
+     * All non-deleted invoices with date_created in [$from, $toExclusive) —
+     * used by inv/calendar (Trait\Calendar) to build one query's worth of
+     * day-blocks across its whole multi-month carousel window in a single
+     * round trip, rather than one LIKE 'Y-m%' query per month.
+     * @psalm-return EntityReader
+     */
+    public function repoDateRangeQuery(\DateTimeImmutable $from, \DateTimeImmutable $toExclusive): EntityReader
+    {
+        $query = $this->select()
+                ->load(['client', 'group', 'user'])
+                ->where('date_created', '>=', $from->format('Y-m-d H:i:s'))
+                ->andWhere('date_created', '<', $toExclusive->format('Y-m-d H:i:s'))
+                ->andWhere('deleted_at', null);
+        return $this->prepareDataReader($query);
+    }
+
+    /**
      * @psalm-return EntityReader
      */
     public function getReader(): EntityReader
