@@ -12,6 +12,7 @@ use App\Service\WebControllerService;
 use App\User\UserService;
 use Mockery as m;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Testo\Assert;
 use Testo\Test;
 use Yiisoft\Session\Flash\Flash;
@@ -29,6 +30,18 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
  * needed here, unlike Index::setWorker()), so no test-only subclass is
  * required.
  *
+ * Also covers the htmx-request branch added when window.location.reload()
+ * was wired up client-side for these two toggles (htmx-hooks.ts): an
+ * htmx-issued GET (hx-get + hx-swap="none") transparently follows a 302
+ * the same way a real browser navigation would, which was silently
+ * re-running the redirect target's own index() action -- and therefore
+ * its own unconditional flash-adding methods (draftFlash()/
+ * markSentFlash()/homeCareRunFlash()) -- a second, invisible time before
+ * the client-side reload rendered it again for real, duplicating every
+ * flash message the observer actually saw. Returning a bare empty
+ * response for an htmx request instead of the redirect avoids that
+ * phantom render entirely.
+ *
  * makeController() builds and returns $sR itself rather than accepting
  * it as a parameter -- a `SettingRepository&m\MockInterface` parameter
  * type triggers Psalm's documented full-project-scope scale artifact
@@ -45,18 +58,26 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 #[Test]
 final class SettingToggleControllerTest
 {
-    /** @return array{0: SettingToggleController, 1: Response&m\MockInterface, 2: SettingRepository&m\MockInterface} */
-    private function makeController(string $origin = 'inv'): array
+    /** @return array{0: SettingToggleController, 1: Response&m\MockInterface, 2: SettingRepository&m\MockInterface, 3: Request&m\MockInterface} */
+    private function makeController(string $origin = 'inv', bool $htmxRequest = false): array
     {
         /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
 
         /** @var WebControllerService&m\MockInterface $webService */
         $webService = m::mock(WebControllerService::class);
-        /** @var Response&m\MockInterface $redirect */
-        $redirect = m::mock(Response::class);
-        $webService->shouldReceive('getRedirectResponse')->once()
-            ->with($origin . '/index')->andReturn($redirect);
+        /** @var Response&m\MockInterface $result */
+        $result = m::mock(Response::class);
+        if ($htmxRequest) {
+            $webService->shouldReceive('getHtmlResponse')->once()->with('')->andReturn($result);
+        } else {
+            $webService->shouldReceive('getRedirectResponse')->once()
+                ->with($origin . '/index')->andReturn($result);
+        }
+
+        /** @var Request&m\MockInterface $request */
+        $request = m::mock(Request::class);
+        $request->shouldReceive('hasHeader')->once()->with('Hx-Request')->andReturn($htmxRequest);
 
         // BaseController::initializeViewRenderer() reads all of these
         // unconditionally on construction — same stubs SetWorkerTest's
@@ -94,7 +115,7 @@ final class SettingToggleControllerTest
             $flash,
         );
 
-        return [$controller, $redirect, $sR];
+        return [$controller, $result, $sR, $request];
     }
 
     // -------------------------------------------------------------------
@@ -103,7 +124,7 @@ final class SettingToggleControllerTest
 
     public function gridStickyHeaderTogglesAnExistingSettingFromOffToOn(): void
     {
-        [$controller, $redirect, $sR] = $this->makeController();
+        [$controller, $redirect, $sR, $request] = $this->makeController();
 
         /** @var Setting&m\MockInterface $setting */
         $setting = m::mock(Setting::class);
@@ -113,14 +134,14 @@ final class SettingToggleControllerTest
         $sR->shouldReceive('withKey')->once()->with('grid_sticky_header')->andReturn($setting);
         $sR->shouldReceive('save')->once()->with($setting);
 
-        $result = $controller->gridStickyHeader('inv');
+        $result = $controller->gridStickyHeader('inv', $request);
 
         Assert::same($redirect, $result);
     }
 
     public function gridStickyHeaderTogglesAnExistingSettingFromOnToOff(): void
     {
-        [$controller, $redirect, $sR] = $this->makeController();
+        [$controller, $redirect, $sR, $request] = $this->makeController();
 
         /** @var Setting&m\MockInterface $setting */
         $setting = m::mock(Setting::class);
@@ -130,14 +151,14 @@ final class SettingToggleControllerTest
         $sR->shouldReceive('withKey')->once()->with('grid_sticky_header')->andReturn($setting);
         $sR->shouldReceive('save')->once()->with($setting);
 
-        $result = $controller->gridStickyHeader('inv');
+        $result = $controller->gridStickyHeader('inv', $request);
 
         Assert::same($redirect, $result);
     }
 
     public function gridStickyHeaderCreatesANewSettingAtOnWhenNoneExistsYet(): void
     {
-        [$controller, $redirect, $sR] = $this->makeController();
+        [$controller, $redirect, $sR, $request] = $this->makeController();
 
         $sR->shouldReceive('withKey')->once()->with('grid_sticky_header')->andReturn(null);
         $sR->shouldReceive('save')->once()->with(m::on(
@@ -146,14 +167,14 @@ final class SettingToggleControllerTest
                 && $setting->getSettingValue() === '1'
         ));
 
-        $result = $controller->gridStickyHeader('inv');
+        $result = $controller->gridStickyHeader('inv', $request);
 
         Assert::same($redirect, $result);
     }
 
     public function gridStickyHeaderRedirectsToTheGivenOriginsIndex(): void
     {
-        [$controller, $redirect, $sR] = $this->makeController('quote');
+        [$controller, $redirect, $sR, $request] = $this->makeController('quote');
 
         /** @var Setting&m\MockInterface $setting */
         $setting = m::mock(Setting::class);
@@ -163,9 +184,26 @@ final class SettingToggleControllerTest
         $sR->shouldReceive('withKey')->once()->with('grid_sticky_header')->andReturn($setting);
         $sR->shouldReceive('save')->once()->with($setting);
 
-        $result = $controller->gridStickyHeader('quote');
+        $result = $controller->gridStickyHeader('quote', $request);
 
         Assert::same($redirect, $result);
+    }
+
+    public function gridStickyHeaderReturnsEmptyResponseForHtmxRequestWithoutRedirecting(): void
+    {
+        [$controller, $emptyResponse, $sR, $request] = $this->makeController(htmxRequest: true);
+
+        /** @var Setting&m\MockInterface $setting */
+        $setting = m::mock(Setting::class);
+        $setting->shouldReceive('getSettingValue')->once()->andReturn('0');
+        $setting->shouldReceive('setSettingValue')->once()->with('1');
+
+        $sR->shouldReceive('withKey')->once()->with('grid_sticky_header')->andReturn($setting);
+        $sR->shouldReceive('save')->once()->with($setting);
+
+        $result = $controller->gridStickyHeader('inv', $request);
+
+        Assert::same($emptyResponse, $result);
     }
 
     // -------------------------------------------------------------------
@@ -174,7 +212,7 @@ final class SettingToggleControllerTest
 
     public function navbarStickyTogglesAnExistingSettingFromOffToOn(): void
     {
-        [$controller, $redirect, $sR] = $this->makeController();
+        [$controller, $redirect, $sR, $request] = $this->makeController();
 
         /** @var Setting&m\MockInterface $setting */
         $setting = m::mock(Setting::class);
@@ -185,14 +223,14 @@ final class SettingToggleControllerTest
             ->with('bootstrap5_layout_invoice_navbar_sticky')->andReturn($setting);
         $sR->shouldReceive('save')->once()->with($setting);
 
-        $result = $controller->navbarSticky('inv');
+        $result = $controller->navbarSticky('inv', $request);
 
         Assert::same($redirect, $result);
     }
 
     public function navbarStickyTogglesAnExistingSettingFromOnToOff(): void
     {
-        [$controller, $redirect, $sR] = $this->makeController();
+        [$controller, $redirect, $sR, $request] = $this->makeController();
 
         /** @var Setting&m\MockInterface $setting */
         $setting = m::mock(Setting::class);
@@ -203,14 +241,14 @@ final class SettingToggleControllerTest
             ->with('bootstrap5_layout_invoice_navbar_sticky')->andReturn($setting);
         $sR->shouldReceive('save')->once()->with($setting);
 
-        $result = $controller->navbarSticky('inv');
+        $result = $controller->navbarSticky('inv', $request);
 
         Assert::same($redirect, $result);
     }
 
     public function navbarStickyCreatesANewSettingAtOnWhenNoneExistsYet(): void
     {
-        [$controller, $redirect, $sR] = $this->makeController();
+        [$controller, $redirect, $sR, $request] = $this->makeController();
 
         $sR->shouldReceive('withKey')->once()
             ->with('bootstrap5_layout_invoice_navbar_sticky')->andReturn(null);
@@ -220,14 +258,14 @@ final class SettingToggleControllerTest
                 && $setting->getSettingValue() === '1'
         ));
 
-        $result = $controller->navbarSticky('inv');
+        $result = $controller->navbarSticky('inv', $request);
 
         Assert::same($redirect, $result);
     }
 
     public function navbarStickyRedirectsToTheGivenOriginsIndex(): void
     {
-        [$controller, $redirect, $sR] = $this->makeController('quote');
+        [$controller, $redirect, $sR, $request] = $this->makeController('quote');
 
         /** @var Setting&m\MockInterface $setting */
         $setting = m::mock(Setting::class);
@@ -238,8 +276,26 @@ final class SettingToggleControllerTest
             ->with('bootstrap5_layout_invoice_navbar_sticky')->andReturn($setting);
         $sR->shouldReceive('save')->once()->with($setting);
 
-        $result = $controller->navbarSticky('quote');
+        $result = $controller->navbarSticky('quote', $request);
 
         Assert::same($redirect, $result);
+    }
+
+    public function navbarStickyReturnsEmptyResponseForHtmxRequestWithoutRedirecting(): void
+    {
+        [$controller, $emptyResponse, $sR, $request] = $this->makeController(htmxRequest: true);
+
+        /** @var Setting&m\MockInterface $setting */
+        $setting = m::mock(Setting::class);
+        $setting->shouldReceive('getSettingValue')->once()->andReturn('1');
+        $setting->shouldReceive('setSettingValue')->once()->with('0');
+
+        $sR->shouldReceive('withKey')->once()
+            ->with('bootstrap5_layout_invoice_navbar_sticky')->andReturn($setting);
+        $sR->shouldReceive('save')->once()->with($setting);
+
+        $result = $controller->navbarSticky('inv', $request);
+
+        Assert::same($emptyResponse, $result);
     }
 }

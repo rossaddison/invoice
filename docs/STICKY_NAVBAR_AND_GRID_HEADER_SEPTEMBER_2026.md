@@ -399,3 +399,68 @@ PHP logic touched). The two throwaway Playwright scripts and test HTML
 file used to confirm this live were deleted immediately after use, per
 this repo's own established "throwaway command, run once, then delete"
 convention.
+
+## Fifth real bug: `invoice.php`'s checkbox never actually reloaded
+
+Confirmed working on `guest.php` after the fourth bug above, but the
+staff-side `invoice.php` toggle checkboxes had their own, unrelated
+problem: clicking either one visibly checked/unchecked it, but the
+sticky behaviour itself never appeared until a manual refresh — the
+checkbox's own `hx-get` + `hx-swap="none"` save never told the browser
+to reload, and the sticky effect is baked into already-rendered HTML,
+not something a checkbox's own native click state can show on its own
+(unlike the page-size picker beside it, whose only visible effect *is*
+which button is highlighted). Fixed by having `initHtmxHooks()`
+(`src/typescript/htmx-hooks.ts`) force a full `window.location.reload()`
+once either toggle's save succeeds — a `#main-area` partial swap
+(matching the page-size picker's own `pageSizeRefresh()`) wouldn't have
+been enough for `navbar-sticky` specifically, since its affected `<nav>`
+lives in `<header>`, outside that swap target entirely.
+
+## Sixth real bug: that reload doubled every flash message
+
+Shipped alongside the fifth fix, then reported live: after a sticky
+toggle click, every flash message on the resulting page appeared twice.
+Root cause: `hx-get`'s underlying `fetch()`/XHR request transparently
+*follows* a `302` redirect the same way a real browser navigation would
+— so `SettingToggleController::gridStickyHeader()`/`navbarSticky()`'s
+own redirect to `{origin}/index` was silently causing that action's own
+`index()` method to run (and render) a second, invisible time as part of
+the htmx request itself, before `hx-swap="none"` discarded the result.
+`index()`'s own `draftFlash()`/`markSentFlash()`/`homeCareRunFlash()`
+add their flash messages unconditionally on every visit — not
+one-time notifications gated on a real state change — so that phantom
+render queued a full set of flashes nobody ever saw, and the
+fifth bug's own `window.location.reload()` then rendered `index()` again
+for real, queuing the *same* flashes a second time on top of the first,
+both visible together on the one page the observer actually sees.
+
+Fixed at the root rather than de-duplicating after the fact:
+`toggleBooleanSettingCreatingAtOne()` now checks for the `Hx-Request`
+header htmx sends on every request it issues, and returns a bare empty
+response instead of the redirect when present — skipping the phantom
+`index()` render entirely, since the client-side reload is what
+actually renders the target page now, exactly once. The non-htmx
+(no-JS) path is unchanged; there was never a fallback `href` on these
+two checkboxes to preserve, only the `hx-get` itself.
+
+Checked but deliberately not fixed in the same pass, flagged for later:
+`SettingToggleController::listlimit()` and
+`UserInvController::guestlimit()` (the page-size pickers both `invoice.
+php` and `guest.php` share) look structurally identical — same
+`hx-get`/`hx-swap="none"` toggle, same always-redirects controller
+action, same client-side follow-up request (`pageSizeRefresh()`'s own
+separate `fetch()`, in this case) — and so plausibly have the same
+latent double-render/duplicate-flash issue, just never reported,
+possibly because a page-size click is less likely to be followed by
+someone actually reading the flash banner. Not confirmed live either
+way this pass.
+
+Verified: `php -l` clean, full-project Psalm clean, full Testo Unit
+suite 1258/1258 (up from 1256 — two new tests covering the htmx-request
+branch: `gridStickyHeaderReturnsEmptyResponseForHtmxRequestWithoutRedirecting`/
+`navbarStickyReturnsEmptyResponseForHtmxRequestWithoutRedirecting`,
+alongside updating the file's existing 8 tests for the new `Request`
+parameter). `npx tsc --noEmit` clean; the compiled
+`invoice-typescript-iife.js` bundle confirmed unaffected (no TypeScript
+changed in this fix, only the PHP controller).
