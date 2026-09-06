@@ -54,7 +54,7 @@ describe('initCalendar', () => {
         initCalendar();
         initCalendar();
 
-        expect(document.querySelectorAll('.carousel-control-prev-icon i.bi').length).toBe(1);
+        expect(document.querySelectorAll('.carousel-control-prev-icon i.bi')).toHaveLength(1);
     });
 
     it('calls Carousel.prev()/next() on ArrowLeft/ArrowRight while the carousel has focus', () => {
@@ -163,7 +163,7 @@ describe('initCalendar', () => {
         initCalendar();
         initCalendar();
 
-        expect(document.querySelectorAll('.mp-btn').length).toBe(1);
+        expect(document.querySelectorAll('.mp-btn')).toHaveLength(1);
     });
 
     it('rings the indicator for the real-world current month, not the active slide', () => {

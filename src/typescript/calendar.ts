@@ -67,11 +67,11 @@ function replaceControlIcons(carousel: HTMLElement): void {
     const prevIcon = carousel.querySelector('.carousel-control-prev-icon');
     const nextIcon = carousel.querySelector('.carousel-control-next-icon');
 
-    if (prevIcon && prevIcon.querySelector('i.bi') === null) {
+    if (prevIcon?.querySelector('i.bi') === null) {
         prevIcon.innerHTML = '';
         prevIcon.appendChild(chevron('bi-chevron-left'));
     }
-    if (nextIcon && nextIcon.querySelector('i.bi') === null) {
+    if (nextIcon?.querySelector('i.bi') === null) {
         nextIcon.innerHTML = '';
         nextIcon.appendChild(chevron('bi-chevron-right'));
     }
