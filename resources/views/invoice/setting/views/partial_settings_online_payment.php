@@ -9,8 +9,6 @@ use Yiisoft\Html\Tag\Option;
 * @var Yiisoft\Translator\TranslatorInterface $translator
 * @var array $body
 * @var array $gateway_drivers
-* @var array $gateway_currency_codes
-* @var array $payment_methods
 * @var array<string, string> $gateway_credential_urls
 * @var array<string, string> $gateway_field_urls
 * @var string $tab_index_url
@@ -29,9 +27,7 @@ $noMargin = ['class' => 'form-check'];
 $panelBodySmall = ['class' => 'card-body small'];
 $pfxGateway = 'settings[gateway_';
 $sfxEnabled = '_enabled]';
-$sfxCurrency = '_currency]';
 $sfxLocale = '_locale]';
-$sfxPaymentMethod = '_payment_method]';
 echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
   echo H::openTag('div', $panel); //3
@@ -434,32 +430,6 @@ echo H::openTag('div', $row); //1
 
     echo H::openTag('hr');
 
-        echo H::openTag('div', $formGroup); //9
-        echo H::openTag('label', [
-        'for' => $pfxGateway . $d . $sfxCurrency
-       ]);
-      echo $translator->translate('currency');
-     echo H::closeTag('label');
-     $body[$pfxGateway . $d . $sfxCurrency] =
-     $s->getSetting('gateway_' . $d . '_currency');
-     echo H::openTag('select', [
-      'name' => $pfxGateway . $d . $sfxCurrency,
-      'id' => $pfxGateway . $d . $sfxCurrency,
-      'class' => 'form-select',
-     ]);
-      /**
-      * @var string $val
-      */
-      foreach (array_keys($gateway_currency_codes) as $val) {
-      echo  new Option()
-       ->value($val)
-       ->selected($body[$pfxGateway .
-        $d . $sfxCurrency] == $val)
-        ->content($val);
-        }
-        echo H::closeTag('select');
-        echo H::closeTag('div'); //9
-
         if ($d == 'mollie') {
         echo H::openTag('div', $formGroup); //9
         echo H::openTag('label', [
@@ -490,33 +460,6 @@ echo H::openTag('div', $row); //1
         echo H::closeTag('select');
         echo H::closeTag('div'); //9
         }
-
-        echo H::openTag('div', $formGroup); //9
-        echo H::openTag('label', [
-        'for' => $pfxGateway . $d . $sfxPaymentMethod
-       ]);
-      echo $translator->translate('online.payment.method');
-     echo H::closeTag('label');
-     $body[$pfxGateway . $d . $sfxPaymentMethod] =
-     $s->getSetting('gateway_' . $d . '_payment_method');
-     echo H::openTag('select', [
-      'name' => $pfxGateway . $d . $sfxPaymentMethod,
-      'id' => $pfxGateway . $d . $sfxPaymentMethod,
-      'class' => 'form-select',
-     ]);
-/**
- * @var App\Infrastructure\Persistence\PaymentMethod\PaymentMethod $payment_method
- */
-      foreach ($payment_methods as $payment_method) {
-      echo  new Option()
-       ->value($payment_method->reqId())
-       ->selected($body[$pfxGateway .
-        $d . $sfxPaymentMethod] ==
-        $payment_method->reqId())
-        ->content($payment_method->getName() ?? '');
-        }
-        echo H::closeTag('select');
-        echo H::closeTag('div'); //9
 
         echo H::closeTag('div'); //9
 
