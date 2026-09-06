@@ -7,11 +7,13 @@ namespace App\Invoice\Helpers\Peppol\Trait;
 use App\Infrastructure\Persistence\{Inv\Inv, InvItem\InvItem,
     InvItemAllowanceCharge\InvItemAllowanceCharge, UnitPeppol\UnitPeppol};
 use App\Invoice\ClientPeppol\ClientPeppolRepository as cpR;
+use App\Invoice\Helpers\NumberHelper;
+use App\Invoice\Helpers\Peppol\PeppolHelperInvDeps;
 use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
 use App\Invoice\UnitPeppol\UnitPeppolRepository as unpR;
-use App\Invoice\Ubl\{InvoicePeriod, Schema};
+use App\Invoice\Ubl\{InvoicePeriod, LegalMonetaryTotal, Schema};
 use App\Invoice\Helpers\Peppol\Exception\{
     PeppolClientNotFoundException as ClientNf,
     PeppolProductUnitCodeNotFoundException as ProductUnitCodeNf,
@@ -23,6 +25,52 @@ use App\Invoice\Helpers\Peppol\Exception\{
 
 trait PeppolHelperInvoiceLineTrait
 {
+    /**
+     * Pure computation, no throws — extracted from PeppolHelper::
+     * generateInvoicePeppolUblXmlTempFile() only for that method's own
+     * line count (php:S138). Lives here, not on PeppolHelper itself, to
+     * avoid trading that for php:S1448 (PeppolHelper's own 20-method
+     * ceiling) instead — the same reasoning every other
+     * PeppolHelper*Trait in this directory already exists for. Grouped
+     * with this trait's own buildInvoiceLinesArray() below since both
+     * aggregate the same per-line item totals, just at different levels
+     * (per-line vs. whole-document).
+     */
+    private function buildLegalMonetaryTotal(int $invoiceId, PeppolHelperInvDeps $inv): LegalMonetaryTotal
+    {
+        $numberhelper = new NumberHelper($this->s);
+        $totals_of_line_items_array =
+            $numberhelper->invCalculateTotalsofItemTotals($invoiceId, $inv->iiR, $inv->iiaR);
+
+        // The lineExtensionAmount must reconcile with the taxExclusiveAmount
+        // $lineExtensionAmount = sum of all line item line extension amounts
+        /**
+         * @var float $totals_of_line_items_array['subtotal']
+         * @var float $totals_of_line_items_array['discount']
+         * @var float $totals_of_line_items_array['total']
+         */
+        $lineExtensionAmount = $totals_of_line_items_array['subtotal']
+                                    - $totals_of_line_items_array['discount'];
+        $taxExclusiveAmount = $this->inv_amount->getItemSubtotal();
+
+        $taxInclusiveAmount =
+                $taxExclusiveAmount + $this->inv_amount->getItemTaxTotal();
+
+        // Early settlement discount is an allowance
+        $allowanceTotalAmount = $totals_of_line_items_array['discount'];
+        $payableAmount = $totals_of_line_items_array['total'];
+
+        return new LegalMonetaryTotal(
+            $lineExtensionAmount,
+            $taxExclusiveAmount,
+            $taxInclusiveAmount,
+            $allowanceTotalAmount,
+            $payableAmount,
+            $this->s->getSetting(self::SETTING_PEPPOL_DOCUMENT_CURRENCY),
+            $this->s,
+        );
+    }
+
     /**
      * @param Inv $invoice
      * @param InvoicePeriod $invoice_period

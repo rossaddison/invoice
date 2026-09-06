@@ -71,6 +71,7 @@ trait View
             $render->cfR->repoTablequery('quote_custom')
         );
         $computed = new QuoteViewComputedDeps(
+            quote: $quote,
             quoteEdit: $this->userService->hasPermission(Permissions::EDIT_INV),
             quoteAmountTotal: $quote_amount->getTotal(),
             salesOrderNumber: $sales_order_number,
@@ -81,7 +82,7 @@ trait View
             customValues: $customValues,
             quoteAllowanceChargeForm: $quoteAllowanceChargeForm,
         );
-        $parameters = $this->buildViewParameters($id, $_language, $quote, $core, $item, $render, $ui, $computed);
+        $parameters = $this->buildViewParameters($id, $_language, $core, $item, $render, $ui, $computed);
         return ($this->rbacObserver($quote, $core->ucR, $core->uiR) || $this->rbacAdmin() || $this->rbacAccountant())
             ? $this->webViewRenderer->render('view', $parameters)
             : $this->webService->getNotFoundResponse();
@@ -97,13 +98,13 @@ trait View
     private function buildViewParameters(
         int $id,
         string $_language,
-        Quote $quote,
         QuoteViewCoreDeps $core,
         QuoteViewItemDeps $item,
         QuoteViewRenderDeps $render,
         QuoteViewUIDeps $ui,
         QuoteViewComputedDeps $computed,
     ): array {
+        $quote = $computed->quote;
         return [
             '_language' => $_language,
             'body' => $this->body($quote),
