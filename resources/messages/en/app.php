@@ -162,6 +162,16 @@ return [
   'bootstrap5.alert.message.font' => 'Alert Message Font',
   'bootstrap5.alert.message.font.size' =>
     'Alert Message Font Size',
+  'bootstrap5.calendar.accent.color' =>
+    'Calendar Accent Color',
+  // Bare Bootstrap variant-name labels, shared by any accent/variant
+  // picker (currently just partial_calendar.php's dropdown options) --
+  // 'success'/'warning' already exist elsewhere in this file, reused here.
+  'primary' => 'Primary',
+  'secondary' => 'Secondary',
+  'danger' => 'Danger',
+  'info' => 'Info',
+  'dark' => 'Dark',
   'bootstrap5.cdn.not.node.module' => 'Bootstrap5 Cdn (Not Node Module)',
   'bootstrap5.layout.guest.navbar.font' =>
     'Layout Guest Navbar Font',
@@ -2953,6 +2963,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'time.created' => 'Time Created',
   'time.zone' => 'Time Zone',
   'title' => 'Title',
+  'today' => 'Today',
   'to.date' => 'To Date',
   'to.email' => 'To Email',
   'total' => 'Total',

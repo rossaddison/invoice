@@ -19,6 +19,7 @@ use Yiisoft\Html\Tag\I;
  *  - partial_offcanvas.php  (border-primary:  offcanvas enable + placement)
  *  - partial_alert.php      (border-warning:  alert font, font size, close-button size)
  *  - partial_navbar.php     (border-danger:   navbar font, navbar font size)
+ *  - partial_calendar.php   (border-success:  inv/calendar accent color)
  */
 trait SettingsTabBootstrap5
 {
@@ -62,6 +63,8 @@ trait SettingsTabBootstrap5
                 => $this->sR->getSetting('bootstrap5_form_font_size'),
             'settings[bootstrap5_form_input_height]'
                 => $this->sR->getSetting('bootstrap5_form_input_height'),
+            'settings[bootstrap5_calendar_accent_color]'
+                => $this->sR->getSetting('bootstrap5_calendar_accent_color'),
         ];
     }
 
@@ -149,6 +152,13 @@ trait SettingsTabBootstrap5
             ],
         );
 
+        $calendar = $this->webViewRenderer->renderPartialAsString(
+            '//invoice/setting/views/bootstrap5/partial_calendar',
+            [
+                'body' => $body,
+            ],
+        );
+
         $sep = H::openTag('div', ['class' => 'border']) . H::closeTag('div');
 
         return
@@ -172,6 +182,8 @@ trait SettingsTabBootstrap5
             . $sidebar
             . $sep
             . $forms
+            . $sep
+            . $calendar
             . H::closeTag('div')   // row (inner)
             . H::closeTag('div')   // card-body
             . H::closeTag('div')   // card

@@ -27,6 +27,15 @@ declare global {
               Tab: (new (element: Element) => { show(): void }) & {
                   getOrCreateInstance(element: Element): { show(): void };
               };
+              Carousel: (new (
+                  element: Element,
+                  options?: any
+              ) => { prev(): void; next(): void }) & {
+                  getOrCreateInstance(element: Element, options?: any): {
+                      prev(): void;
+                      next(): void;
+                  };
+              };
           }
         | undefined;
     var lastTaggableClicked: Element | undefined;

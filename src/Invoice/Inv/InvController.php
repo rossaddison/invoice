@@ -35,7 +35,7 @@ use App\Invoice\{
 use App\User\UserRepository as UR;
 use App\Widget\{ButtonsToolbarFull, FormFields};
 use App\Invoice\Helpers\{DateHelper, NumberHelper};
-use App\Invoice\Inv\Trait\{Add, Archive, Attachment, BatchEmail, Credit, Delete, Edit, Email,
+use App\Invoice\Inv\Trait\{Add, Archive, Attachment, BatchEmail, Calendar, Credit, Delete, Edit, Email,
     Flush, Guest, HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol,
     Storecove, Trash, Typescript, UrlKey, View, HomeCareScan};
 use Yiisoft\{
@@ -55,6 +55,7 @@ final class InvController extends BaseController
     use Archive;
     use Attachment;
     use BatchEmail;
+    use Calendar;
     use Credit;
     use Delete;
     use Edit;
