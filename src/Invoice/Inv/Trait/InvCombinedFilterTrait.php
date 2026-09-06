@@ -129,18 +129,37 @@ trait InvCombinedFilterTrait
             );
         }
         if (isset($filter->filterDateCreatedExact) && !empty($filter->filterDateCreatedExact)) {
-            $exactDate = \DateTimeImmutable::createFromFormat(
-                'Y-m-d',
-                $filter->filterDateCreatedExact
-            );
-            $query = $query->andWhere(
-                'date_created',
-                'like',
-                $exactDate instanceof \DateTimeImmutable
-                    ? $exactDate->format('Y-m-d') . '%' : ''
-            );
+            $query = $this->applyExactDateCondition($query, $filter->filterDateCreatedExact);
         }
         return $query;
+    }
+
+    /**
+     * Split out of applyClientConditions() (CodeRabbit, PR #1248) both to
+     * keep that method's own cognitive complexity under SonarQube's
+     * threshold and to isolate the getLastErrors() rollover-date check
+     * (see its own comment) as one clearly-named, independently readable
+     * step.
+     */
+    private function applyExactDateCondition(Select $query, string $filterDateCreatedExact): Select
+    {
+        $exactDate = \DateTimeImmutable::createFromFormat('Y-m-d', $filterDateCreatedExact);
+        // createFromFormat() doesn't return false for an invalid-but-
+        // rollover-normalized date like 'Y-m-d' 2026-02-29 -- it silently
+        // returns 2026-03-01 instead, only surfacing the problem via
+        // getLastErrors()'s warning_count. Without this check, an invalid
+        // date typed into the URL would silently query a *different* day
+        // rather than matching nothing, same as any other unparseable
+        // input already does below.
+        $errors = \DateTimeImmutable::getLastErrors();
+        $hasParseIssue = $errors !== false
+            && ($errors['warning_count'] > 0 || $errors['error_count'] > 0);
+        return $query->andWhere(
+            'date_created',
+            'like',
+            $exactDate instanceof \DateTimeImmutable && !$hasParseIssue
+                ? $exactDate->format('Y-m-d') . '%' : ''
+        );
     }
 
     private function applyFamilyAndRunConditions(

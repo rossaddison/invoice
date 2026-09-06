@@ -100,9 +100,17 @@ export class MobilePreviewToggle {
     }
 
     private activate(): void {
-        this.isActive = true;
         const features = 'width=390,height=844,resizable=yes,scrollbars=yes,location=no,menubar=no,toolbar=no,status=no';
-        this.previewWin = globalThis.open(globalThis.location.href, 'mp-preview', features) ?? null;
+        const previewWin = globalThis.open(globalThis.location.href, 'mp-preview', features);
+        // CodeRabbit (PR #1248): globalThis.open() returns null when the
+        // popup is blocked (or otherwise refused) -- previously isActive/
+        // the button label/mp-on were all set unconditionally first, so a
+        // blocked popup left the UI claiming "Close Preview" with nothing
+        // actually open. Bail out before touching any of that state.
+        if (previewWin === null) return;
+
+        this.previewWin = previewWin;
+        this.isActive = true;
         const span = this.toggleBtn.querySelector('span');
         if (span) span.textContent = '🖥️ Close Preview';
         this.toggleBtn.classList.add('mp-on');

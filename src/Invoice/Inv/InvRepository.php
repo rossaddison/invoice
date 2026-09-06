@@ -132,12 +132,19 @@ final class InvRepository extends Select\Repository implements InvRepositoryInte
      * used by inv/calendar (Trait\Calendar) to build one query's worth of
      * day-blocks across its whole multi-month carousel window in a single
      * round trip, rather than one LIKE 'Y-m%' query per month.
+     *
+     * 'items.product.family' is eager-loaded (CodeRabbit, PR #1248)
+     * because Trait\Calendar::calendarBucketInvoicesByDay() calls
+     * Inv::getFirstItemCategorySecondaryId() on every invoice this query
+     * returns, which walks exactly that relation chain -- without this,
+     * Cycle ORM lazy-loads it per invoice (at least one extra query each,
+     * across a 6-month window's worth of invoices).
      * @psalm-return EntityReader
      */
     public function repoDateRangeQuery(\DateTimeImmutable $from, \DateTimeImmutable $toExclusive): EntityReader
     {
         $query = $this->select()
-                ->load(['client', 'group', 'user'])
+                ->load(['client', 'group', 'user', 'items.product.family'])
                 ->where('date_created', '>=', $from->format('Y-m-d H:i:s'))
                 ->andWhere('date_created', '<', $toExclusive->format('Y-m-d H:i:s'))
                 ->andWhere('deleted_at', null);

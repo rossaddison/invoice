@@ -77,6 +77,21 @@ trait Calendar
      * Defaults to the current month; route-supplied year/month (calendar's
      * own prev/next navigation) override it. Invalid input falls back to
      * "now" rather than producing an out-of-range DateTimeImmutable.
+     *
+     * CodeRabbit (PR #1248), both confirmed live:
+     *  - createFromFormat() doesn't return false for a rollover date like
+     *    'Y-n-j' 2026-13-1 -- it silently returns 2027-01-01 instead, only
+     *    surfacing the problem via getLastErrors()'s warning_count. Without
+     *    checking it, an out-of-range month/day in the URL would silently
+     *    resolve to some other month rather than falling back to "now".
+     *  - the "now" fallback itself carried the current wall-clock time
+     *    (new DateTimeImmutable('first day of this month') at 18:00 today
+     *    returns "...-01 18:00:00", not midnight) while the route-arg
+     *    branch above it already normalized to midnight -- an inconsistency
+     *    that mattered once $target feeds $windowStart in calendar():
+     *    invoices created earlier the same day, or on days 1 through
+     *    today-1 of that month before that exact time, would have been
+     *    silently excluded from the oldest visible month.
      */
     private function calendarResolveTargetMonth(string $year, string $month): \DateTimeImmutable
     {
@@ -85,12 +100,15 @@ trait Calendar
                 'Y-n-j',
                 $year . '-' . $month . '-1'
             );
-            if ($candidate instanceof \DateTimeImmutable) {
+            $errors = \DateTimeImmutable::getLastErrors();
+            $hasParseIssue = $errors !== false
+                && ($errors['warning_count'] > 0 || $errors['error_count'] > 0);
+            if ($candidate instanceof \DateTimeImmutable && !$hasParseIssue) {
                 return $this->calendarModify($candidate, self::FIRST_DAY_OF_MONTH)
                     ->setTime(0, 0);
             }
         }
-        return new \DateTimeImmutable(self::FIRST_DAY_OF_MONTH);
+        return (new \DateTimeImmutable(self::FIRST_DAY_OF_MONTH))->setTime(0, 0);
     }
 
     /**

@@ -41,10 +41,6 @@ import { MobilePreviewToggle } from './mobile-preview-toggle.js';
 
 const CAROUSEL_ID = 'inv-calendar-months';
 
-// Module-level ref keeps MobilePreviewToggle's setInterval alive after
-// initCalendar() returns, matching inv-index.ts's own mobilePreview ref.
-let mobilePreview: MobilePreviewToggle;
-
 export function initCalendar(): void {
     const carousel = document.getElementById(CAROUSEL_ID);
     if (!carousel) return;
@@ -58,9 +54,12 @@ export function initCalendar(): void {
     // MobilePreviewToggle()` — that file's setup() only ever runs once
     // (behind its own DOMContentLoaded/readyState gate), whereas
     // initCalendar() has no such gate of its own and is safe to call
-    // more than once (matches every other init* function here).
+    // more than once (matches every other init* function here). Not
+    // stored (CodeRabbit, PR #1248: unused variable) -- watchPopup()'s
+    // own setInterval closure over `this` is what keeps the instance
+    // alive, not an external reference to it.
     if (document.querySelector('.mp-btn') === null) {
-        mobilePreview = new MobilePreviewToggle();
+        new MobilePreviewToggle(); // NOSONAR typescript:S1848 — constructor binds DOM event listeners; instantiation is the side effect
     }
 }
 

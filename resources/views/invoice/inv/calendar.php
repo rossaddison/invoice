@@ -73,12 +73,27 @@ echo H::style(
     // at every viewport size; z-index is the actual fix; it wins
     // regardless of how much (if any) the two visually overlap.
     . '.calendar-week-grid .card { position: relative; z-index: 2; }'
+    // CodeRabbit (PR #1248): raising the cards to z-index:2 fixed the
+    // badge clicks above, but at that point the *reverse* problem became
+    // possible wherever a card geometrically overlaps the control's own
+    // zone -- the card would now paint above the control and could
+    // swallow clicks meant for the visible prev/next icon instead.
+    // Two-part fix: the wide invisible zone (.carousel-control-prev/-next
+    // themselves) gets pointer-events:none, so it never captures a click
+    // anywhere along its 6% width; only the small visible icon circle
+    // gets pointer-events:auto back, at a z-index above the cards, so the
+    // icon itself stays clickable exactly where it's visible and nowhere
+    // else -- cards and controls no longer compete for the same clicks
+    // at any point in the zone.
+    . '#inv-calendar-months .carousel-control-prev,'
+    . '#inv-calendar-months .carousel-control-next { pointer-events: none; }'
     . '#inv-calendar-months .carousel-control-prev-icon,'
     . '#inv-calendar-months .carousel-control-next-icon {'
     . 'background-image: none; background-color: var(--calendar-accent);'
     . 'width: 2.5rem; height: 2.5rem; border-radius: 50%;'
     . 'display: flex; align-items: center; justify-content: center;'
-    . 'color: #fff; font-size: 1.25rem;'
+    . 'color: #fff; font-size: 1.25rem; position: relative; z-index: 3;'
+    . 'pointer-events: auto;'
     . 'transition: transform .15s ease, box-shadow .15s ease;'
     . '}'
     . '#inv-calendar-months .carousel-control-prev:hover .carousel-control-prev-icon,'

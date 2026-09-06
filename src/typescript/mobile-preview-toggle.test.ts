@@ -2,11 +2,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { MobilePreviewToggle } from './mobile-preview-toggle.js';
 
 /**
- * Deliberately light: every behavioral branch (activate/deactivate,
+ * Deliberately light: most behavioral branches (activate/deactivate,
  * collapse/restore, the watchPopup interval, style-injection idempotency)
- * is already exercised in full through inv-index.test.ts, which drives
- * this exact class via initInvIndex(). This file only confirms the class
- * still works when instantiated directly, the way calendar.ts uses it.
+ * are already exercised in full through inv-index.test.ts, which drives
+ * this exact class via initInvIndex(). This file mainly confirms the
+ * class still works when instantiated directly, the way calendar.ts uses
+ * it, plus the one branch not covered anywhere else (a blocked popup).
  */
 describe('MobilePreviewToggle', () => {
     afterEach(() => {
@@ -34,5 +35,16 @@ describe('MobilePreviewToggle', () => {
             'mp-preview',
             expect.stringContaining('width=390'),
         );
+    });
+
+    it('leaves the button in its off state when the popup is blocked', () => {
+        vi.spyOn(globalThis, 'open').mockReturnValue(null);
+        new MobilePreviewToggle();
+
+        const btn = document.querySelector('.mp-btn') as HTMLButtonElement;
+        btn.click();
+
+        expect(btn.classList.contains('mp-on')).toBe(false);
+        expect(btn.querySelector('span')?.textContent).toBe('📱 Mobile Preview');
     });
 });
