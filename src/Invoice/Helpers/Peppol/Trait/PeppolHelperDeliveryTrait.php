@@ -8,7 +8,8 @@ use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Delivery\DeliveryRepository as DelRepo;
 use App\Invoice\DeliveryParty\DeliveryPartyRepository as DelPartyRepo;
 use App\Invoice\Helpers\CountryHelper;
-use App\Invoice\Ubl\{Address, Country, Party};
+use App\Invoice\Helpers\Peppol\PeppolHelperNetDeps;
+use App\Invoice\Ubl\{Address, Country, Delivery, Party};
 use App\Invoice\Helpers\Peppol\Exception\{
     PeppolDeliveryLocationIDNotFoundException as DelLocIdNf,
     PeppolDeliveryLocationCountryNameNotFoundException as DelLocCounNameNf,
@@ -16,6 +17,29 @@ use App\Invoice\Helpers\Peppol\Exception\{
 
 trait PeppolHelperDeliveryTrait
 {
+    /**
+     * Pure, side-effect-free repository lookups only (none of these
+     * throw) — extracted from PeppolHelper::
+     * generateInvoicePeppolUblXmlTempFile() so that method stays under
+     * SonarQube's php:S138 150-line ceiling, without reordering any of
+     * that method's own exception-capable calls (BuyerRefNf/
+     * InvoiceNoteNf/SalesOrderNf), which all happen later in its own
+     * body, unaffected by this. Lives here, not on PeppolHelper itself,
+     * to avoid trading php:S138 for php:S1448 (PeppolHelper's own
+     * 20-method ceiling) instead — the same reasoning every other
+     * PeppolHelper*Trait in this directory already exists for.
+     */
+    public function buildDeliverySection(Inv $invoice, PeppolHelperNetDeps $net): Delivery
+    {
+        return new Delivery(
+            // If no actual delivery date has been set, return the date supplied
+            $this->ActualDeliveryDate($invoice, $net->delRepo),
+            $this->buildDeliveryLocationIDScheme(),
+            $this->buildDeliveryLocationAddress(),
+            $this->DeliveryParty($invoice, $net->delRepo, $net->delPartyRepo),
+        );
+    }
+
     public function buildDeliveryLocationIDScheme(): array
     {
         $id = $this->delivery_location->getGlobalLocationNumber();

@@ -232,7 +232,12 @@ class PeppolHelper
         // Generate inv items from Entity Inv->getItems() HasMany function
         // Generate inv item amounts from $iiaR
         $peppol_ubl_xml = new PeppolUblXml($this->s);
-        $f = $this->openPeppolXmlOutputFile($path);
+        $f = fopen($path, 'wb');
+        if (!$f) {
+            throw new PeppolHelperException(
+                sprintf('Unable to create output file %s', $path)
+            );
+        }
         $delivery = $this->buildDeliverySection($invoice, $net);
         $cdr_id = $this->ContractDocumentReference($invoice, $net->contractRepo);
         // if invoice/delivery periods are used retrieve from there or
@@ -384,79 +389,6 @@ class PeppolHelper
         fwrite($f, $peppol_ubl_xml->output($xml));
         fclose($f);
         return $path;
-    }
-
-    /**
-     * @return resource
-     */
-    private function openPeppolXmlOutputFile(string $path)
-    {
-        $f = fopen($path, 'wb');
-        if (!$f) {
-            throw new PeppolHelperException(
-                sprintf('Unable to create output file %s', $path)
-            );
-        }
-        return $f;
-    }
-
-    /**
-     * Pure, side-effect-free repository lookups only (none of these throw)
-     * — extracted from generateInvoicePeppolUblXmlTempFile() so that
-     * method stays under SonarQube's php:S138 150-line ceiling, without
-     * reordering any of that method's own exception-capable calls
-     * (BuyerRefNf/InvoiceNoteNf/SalesOrderNf), which all happen later in
-     * its own body, unaffected by this.
-     */
-    private function buildDeliverySection(Inv $invoice, PeppolHelperNetDeps $net): Delivery
-    {
-        return new Delivery(
-            // If no actual delivery date has been set, return the date supplied
-            $this->ActualDeliveryDate($invoice, $net->delRepo),
-            $this->buildDeliveryLocationIDScheme(),
-            $this->buildDeliveryLocationAddress(),
-            $this->DeliveryParty($invoice, $net->delRepo, $net->delPartyRepo),
-        );
-    }
-
-    /**
-     * Same reasoning as buildDeliverySection() above — pure computation,
-     * no throws, extracted only for generateInvoicePeppolUblXmlTempFile()'s
-     * own line count.
-     */
-    private function buildLegalMonetaryTotal(int $invoiceId, PeppolHelperInvDeps $inv): LegalMonetaryTotal
-    {
-        $numberhelper = new NumberHelper($this->s);
-        $totals_of_line_items_array =
-            $numberhelper->invCalculateTotalsofItemTotals($invoiceId, $inv->iiR, $inv->iiaR);
-
-        // The lineExtensionAmount must reconcile with the taxExclusiveAmount
-        // $lineExtensionAmount = sum of all line item line extension amounts
-        /**
-         * @var float $totals_of_line_items_array['subtotal']
-         * @var float $totals_of_line_items_array['discount']
-         * @var float $totals_of_line_items_array['total']
-         */
-        $lineExtensionAmount = $totals_of_line_items_array['subtotal']
-                                    - $totals_of_line_items_array['discount'];
-        $taxExclusiveAmount = $this->inv_amount->getItemSubtotal();
-
-        $taxInclusiveAmount =
-                $taxExclusiveAmount + $this->inv_amount->getItemTaxTotal();
-
-        // Early settlement discount is an allowance
-        $allowanceTotalAmount = $totals_of_line_items_array['discount'];
-        $payableAmount = $totals_of_line_items_array['total'];
-
-        return new LegalMonetaryTotal(
-            $lineExtensionAmount,
-            $taxExclusiveAmount,
-            $taxInclusiveAmount,
-            $allowanceTotalAmount,
-            $payableAmount,
-            $this->s->getSetting(self::SETTING_PEPPOL_DOCUMENT_CURRENCY),
-            $this->s,
-        );
     }
 
     /**
