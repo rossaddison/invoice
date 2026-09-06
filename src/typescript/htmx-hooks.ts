@@ -28,6 +28,30 @@ export function initHtmxHooks(): void {
         if (target.matches('[data-hx-reset-on-success]') && e.detail.successful) {
             (target as HTMLFormElement).reset();
         }
+
+        // grid-sticky-header-toggle / navbar-sticky-toggle (invoice.php's
+        // gear-dropdown checkboxes): unlike every other hx-swap="none"
+        // toggle in this dropdown (e.g. the page-size buttons above,
+        // handled via pageSizeRefresh()), the checkbox's own native
+        // "checked" flip is not itself visible feedback here -- the
+        // actual effect (position: sticky on the navbar / grid header) is
+        // baked into this page's already-rendered HTML and only changes
+        // on the *next* full render. Confirmed live: toggling either
+        // checkbox visibly checks/unchecks it but the sticky behaviour
+        // itself never appears until a manual refresh. A full reload,
+        // not a #main-area partial swap, is needed specifically for the
+        // navbar checkbox -- the affected <nav> lives in <header>, above
+        // and outside #main-area, so a partial swap could never reach it
+        // even if grid-sticky-header's own effect (inside #main-area)
+        // technically could; using the same full-reload fix for both
+        // keeps their behaviour identical rather than one refreshing
+        // fully and the other only partially.
+        if (
+            (target.id === 'grid-sticky-header-toggle' || target.id === 'navbar-sticky-toggle') &&
+            e.detail.successful
+        ) {
+            globalThis.location.reload();
+        }
     }) as EventListener);
 }
 
