@@ -1072,10 +1072,14 @@ if ((null !== $currentPath) && !$isGuest) {
             // One shared setting for every grid (Invoice/Quote/SalesOrder/
             // Product), not its own field per grid in Settings > Invoices
             // -- see SettingToggleController::gridStickyHeader()'s own
-            // docblock. Same immediate-save UX as the page-size picker
-            // just above: hx-get + hx-swap="none" persists it in the
-            // background: the checkbox's own native click already shows
-            // the new state instantly, so there's nothing to swap.
+            // docblock. hx-get + hx-swap="none" persists it in the
+            // background, same as the page-size picker just above -- but
+            // unlike that picker, the checkbox's own native click isn't
+            // itself the visible effect here: the actual sticky behaviour
+            // is baked into this page's already-rendered HTML, so
+            // initHtmxHooks() (src/typescript/htmx-hooks.ts) forces a full
+            // reload once the save succeeds, the same fix and reasoning
+            // as the navbar-sticky-toggle checkbox below.
             DropdownItem::listContent(
                 '<h6 class="dropdown-header"'
                 . ' style="font-size:' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;"'
