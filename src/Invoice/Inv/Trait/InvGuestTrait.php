@@ -199,11 +199,9 @@ trait InvGuestTrait
      * by a worker- or client-owned date must not risk exposing another
      * guest's invoices.
      *
-     * Rejects rollover dates via getLastErrors() the same way
-     * InvCombinedFilterTrait::applyExactDateCondition() does on the staff
-     * side (PR #1248) -- createFromFormat() doesn't return false for an
-     * invalid-but-normalized date like 'Y-m-d' 2026-02-29, it silently
-     * returns 2026-03-01 instead.
+     * Rollover-date rejection is shared with the staff-side
+     * InvCombinedFilterTrait::applyExactDateCondition() via
+     * exactDateLikePrefix() (PR #1252) rather than duplicated here.
      */
     public function filterGuestDateCreatedExact(
         string $filterDateCreatedExact,
@@ -217,16 +215,10 @@ trait InvGuestTrait
         $query = $query->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
             ->where('deleted_at', null);
 
-        $exactDate = \DateTimeImmutable::createFromFormat('Y-m-d', $filterDateCreatedExact);
-        $errors = \DateTimeImmutable::getLastErrors();
-        $hasParseIssue = $errors !== false
-            && ($errors['warning_count'] > 0 || $errors['error_count'] > 0);
-        $query = $query->andWhere(
-            'date_created',
-            'like',
-            $exactDate instanceof \DateTimeImmutable && !$hasParseIssue
-                ? $exactDate->format('Y-m-d') . '%' : ''
-        );
+        // Shared with InvCombinedFilterTrait::applyExactDateCondition() --
+        // see exactDateLikePrefix()'s own docblock for the rollover-date
+        // rejection this used to duplicate.
+        $query = $query->andWhere('date_created', 'like', $this->exactDateLikePrefix($filterDateCreatedExact));
         return $this->prepareDataReader($query);
     }
 }
