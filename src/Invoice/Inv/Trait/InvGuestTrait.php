@@ -218,7 +218,11 @@ trait InvGuestTrait
         // Shared with InvCombinedFilterTrait::applyExactDateCondition() --
         // see exactDateLikePrefix()'s own docblock for the rollover-date
         // rejection this used to duplicate.
-        $query = $query->andWhere('date_created', 'like', $this->exactDateLikePrefix($filterDateCreatedExact));
+        $query = $query->andWhere(
+            'date_created',
+            'like',
+            $this->exactDateLikePrefix($filterDateCreatedExact),
+        );
         return $this->prepareDataReader($query);
     }
 }

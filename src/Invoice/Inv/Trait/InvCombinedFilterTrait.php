@@ -141,9 +141,15 @@ trait InvCombinedFilterTrait
      * (see exactDateLikePrefix()'s own comment) as one clearly-named,
      * independently readable step.
      */
-    private function applyExactDateCondition(Select $query, string $filterDateCreatedExact): Select
-    {
-        return $query->andWhere('date_created', 'like', $this->exactDateLikePrefix($filterDateCreatedExact));
+    private function applyExactDateCondition(
+        Select $query,
+        string $filterDateCreatedExact,
+    ): Select {
+        return $query->andWhere(
+            'date_created',
+            'like',
+            $this->exactDateLikePrefix($filterDateCreatedExact),
+        );
     }
 
     /**

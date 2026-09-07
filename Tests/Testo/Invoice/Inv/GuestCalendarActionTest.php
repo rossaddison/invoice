@@ -90,7 +90,7 @@ final class GuestCalendarActionTest
         return [$controller, $userService, $webService, $webViewRenderer, $sR];
     }
 
-    private function makeDeps(?UserInv $userInv, ?Worker $worker, IR&m\MockInterface $iR): InvGuestDeps
+    private function makeDeps(?UserInv $userInv, ?Worker $worker, IR $iR): InvGuestDeps
     {
         /** @var UIR&m\MockInterface $uiR */
         $uiR = m::mock(UIR::class);

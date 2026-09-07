@@ -60,17 +60,41 @@ final class CalendarDateMathTest
         return $this->invoke('calendarBucketInvoices', [$invoices]);
     }
 
+    /**
+     * Bounds a "resolves to the current month" assertion with "now"
+     * captured both before and after the production call, so a real
+     * midnight rollover landing between the two can't flake the test
+     * (CodeRabbit, PR #1253).
+     */
+    private function assertMatchesCurrentMonth(
+        \DateTimeImmutable $target,
+        \DateTimeImmutable $before,
+        \DateTimeImmutable $after,
+    ): void {
+        Assert::true(
+            $target->format('Y-m') === $before->format('Y-m')
+                || $target->format('Y-m') === $after->format('Y-m'),
+            sprintf(
+                'expected target month %s to match "now" captured before (%s) or after (%s) the call',
+                $target->format('Y-m'),
+                $before->format('Y-m'),
+                $after->format('Y-m'),
+            ),
+        );
+    }
+
     // -- calendarResolveTargetMonth() ---------------------------------
 
     public function emptyYearAndMonthResolveToTheCurrentMonthAtMidnight(): void
     {
+        $before = new \DateTimeImmutable('today');
         /** @var \DateTimeImmutable $target */
         $target = $this->invoke('calendarResolveTargetMonth', ['', '']);
+        $after = new \DateTimeImmutable('today');
 
-        $now = new \DateTimeImmutable('today');
-        Assert::same($now->format('Y-m'), $target->format('Y-m'));
-        Assert::same('01', $target->format('d'));
-        Assert::same('00:00:00', $target->format('H:i:s'));
+        $this->assertMatchesCurrentMonth($target, $before, $after);
+        Assert::same($target->format('d'), '01');
+        Assert::same($target->format('H:i:s'), '00:00:00');
     }
 
     public function aValidYearAndMonthResolveExactly(): void
@@ -88,21 +112,23 @@ final class CalendarDateMathTest
         // getLastErrors()'s warning_count (confirmed live, PR #1248's
         // CodeRabbit pass). This locks in the fix: falls back to "now"
         // instead of accepting the rolled-over date.
+        $before = new \DateTimeImmutable('today');
         /** @var \DateTimeImmutable $target */
         $target = $this->invoke('calendarResolveTargetMonth', ['2026', '13']);
+        $after = new \DateTimeImmutable('today');
 
         Assert::notSame('2027-01', $target->format('Y-m'));
-        $now = new \DateTimeImmutable('today');
-        Assert::same($now->format('Y-m'), $target->format('Y-m'));
+        $this->assertMatchesCurrentMonth($target, $before, $after);
     }
 
     public function onlyOneOfYearOrMonthPresentFallsBackToTheCurrentMonth(): void
     {
+        $before = new \DateTimeImmutable('today');
         /** @var \DateTimeImmutable $target */
         $target = $this->invoke('calendarResolveTargetMonth', ['2026', '']);
+        $after = new \DateTimeImmutable('today');
 
-        $now = new \DateTimeImmutable('today');
-        Assert::same($now->format('Y-m'), $target->format('Y-m'));
+        $this->assertMatchesCurrentMonth($target, $before, $after);
     }
 
     // -- calendarWindowMonths() ----------------------------------------
