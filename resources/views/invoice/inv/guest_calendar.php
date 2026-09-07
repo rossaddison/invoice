@@ -32,6 +32,8 @@ use Yiisoft\Html\Html as H;
  * @var string $bootstrap5CalendarAccentColor Settings → Bootstrap5 →
  *      "Calendar Accent Color" (App\ViewInjection\LayoutViewInjection);
  *      one of Bootstrap's variant names, e.g. 'primary'/'success'.
+ * @var string $calendarStyle Rendered <style> markup, shared with
+ *      inv/calendar -- see Trait\Calendar::calendarStyleCss().
  * @var DateTimeImmutable $prevMonth
  * @var DateTimeImmutable $nextMonth
  * @var DateTimeImmutable $today
@@ -40,56 +42,12 @@ use Yiisoft\Html\Html as H;
  * @psalm-var array<array-key, string> $categoryNames
  */
 
-// See resources/views/invoice/inv/calendar.php's own comments for the full
-// history behind every rule here (mobile grid split, control click-zone/
-// z-index fixes, indicator repositioning, badge contrast) -- kept
-// byte-identical since this page shares the same #inv-calendar-months
-// structure and every one of those live-feedback bugs applies equally here.
-echo H::style(
-    '@media (min-width: 768px) {'
-    . '.calendar-week-grid > .col { flex: 0 0 calc(100% / 7); max-width: calc(100% / 7); }'
-    . '}'
-    . '#inv-calendar-months .carousel-control-prev,'
-    . '#inv-calendar-months .carousel-control-next { width: 6%; }'
-    . '.calendar-week-grid .card { position: relative; z-index: 2; }'
-    . '#inv-calendar-months .carousel-control-prev,'
-    . '#inv-calendar-months .carousel-control-next { pointer-events: none; z-index: 3; }'
-    . '#inv-calendar-months .carousel-control-prev-icon,'
-    . '#inv-calendar-months .carousel-control-next-icon {'
-    . 'background-image: none; background-color: var(--calendar-accent);'
-    . 'width: 2.5rem; height: 2.5rem; border-radius: 50%;'
-    . 'display: flex; align-items: center; justify-content: center;'
-    . 'color: #fff; font-size: 1.25rem; position: relative;'
-    . 'pointer-events: auto;'
-    . 'transition: transform .15s ease, box-shadow .15s ease;'
-    . '}'
-    . '#inv-calendar-months .carousel-control-prev:hover .carousel-control-prev-icon,'
-    . '#inv-calendar-months .carousel-control-next:hover .carousel-control-next-icon {'
-    . 'transform: scale(1.1);'
-    . '}'
-    . '#inv-calendar-months .carousel-control-prev:focus-visible .carousel-control-prev-icon,'
-    . '#inv-calendar-months .carousel-control-next:focus-visible .carousel-control-next-icon {'
-    . 'outline: 2px solid var(--calendar-accent); outline-offset: 2px;'
-    . '}'
-    . '#inv-calendar-months .carousel-indicators {'
-    . 'position: static; margin: 0 0 .75rem; align-items: center;'
-    . '}'
-    . '#inv-calendar-months .carousel-indicators [data-bs-target] {'
-    . 'background-color: var(--calendar-accent); opacity: .4;'
-    . 'width: 16px; height: 16px; border-radius: 50%; margin: 0 5px;'
-    . 'transition: transform .15s ease, opacity .15s ease;'
-    . '}'
-    . '#inv-calendar-months .carousel-indicators [data-bs-target]:hover {'
-    . 'opacity: .7; transform: scale(1.15);'
-    . '}'
-    . '#inv-calendar-months .carousel-indicators .active {'
-    . 'opacity: 1; transform: scale(1.2);'
-    . '}'
-    . '#inv-calendar-months .carousel-indicators .calendar-current-month-indicator {'
-    . 'opacity: 1; box-shadow: 0 0 0 2px var(--bs-warning);'
-    . '}'
-    . '#inv-calendar-months .calendar-run-badge { color: #fff !important; }'
-);
+// Shared with inv/calendar's own calendar.php -- see
+// Trait\Calendar::calendarStyleCss()'s own docblock for the full
+// live-feedback history behind this CSS (SonarCloud
+// new_duplicated_lines_density, PR #1252: the two views had this whole
+// block copy-pasted byte-for-byte).
+echo $calendarStyle;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 

@@ -81,6 +81,9 @@ trait GuestCalendar
             // Trait\Calendar::calendar()'s own comment (PR #1248).
             'bootstrap5CalendarAccentColor' =>
                 $this->sR->getSetting('bootstrap5_calendar_accent_color') ?: 'primary',
+            // Shared with inv/calendar's own calendar() -- see
+            // Trait\Calendar::calendarStyleCss()'s own docblock.
+            'calendarStyle' => $this->calendarStyleCss(),
         ]);
     }
 
