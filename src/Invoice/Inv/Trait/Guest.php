@@ -313,7 +313,7 @@ trait Guest
             ? $d->iR->repoWorkerVisible($effectiveStatus, $worker->reqId())
             : $this->invsStatusGuest($d->iR, $effectiveStatus, $user_clients);
         $preFilterInvs = $invs;
-        $invs = $this->applyGuestFilters($filter, $d->iR, $invs);
+        $invs = $this->applyGuestFilters($filter, $d->iR, $invs, $access);
         $inv_statuses = $d->iR->getStatuses($this->translator);
         $label = $d->iR->getSpecificStatusArrayLabel($status);
         // Payment isn't relevant to a worker's job — see the worker branch
@@ -371,7 +371,7 @@ trait Guest
         return $this->webViewRenderer->render('guest', $parameters);
     }
 
-    private function applyGuestFilters(InvGuestFilter $filter, IR $iR, SDI $invs): SDI
+    private function applyGuestFilters(InvGuestFilter $filter, IR $iR, SDI $invs, InvGuestAccess $access): SDI
     {
         if (isset($filter->filterInvNumber) && !empty($filter->filterInvNumber)) {
             $invs = $iR->filterInvNumber($filter->filterInvNumber);
@@ -397,6 +397,17 @@ trait Guest
         }
         if (isset($filter->filterClient) && !empty($filter->filterClient)) {
             $invs = $iR->filterGuestClient($filter->filterClient);
+        }
+        // inv/guest/calendar's day-block badges (Trait\GuestCalendar) --
+        // see InvGuestTrait::filterGuestDateCreatedExact()'s own docblock
+        // for why this one is scoped in the query itself rather than
+        // matching filterGuestClient()'s unscoped-rebuild shape above.
+        if (isset($filter->filterDateCreatedExact) && !empty($filter->filterDateCreatedExact)) {
+            $invs = $iR->filterGuestDateCreatedExact(
+                $filter->filterDateCreatedExact,
+                $access->worker?->reqId(),
+                $access->clients,
+            );
         }
         return $invs;
     }

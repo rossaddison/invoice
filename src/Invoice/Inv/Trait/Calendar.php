@@ -125,17 +125,28 @@ trait Calendar
         return $months;
     }
 
-    /**
-     * @return array<string, array<int, int>> [day 'Y-m-d' => [categorySecondaryId => invoice count]]
-     */
     private function calendarBucketInvoicesByDay(
         IR $iR,
         \DateTimeImmutable $from,
         \DateTimeImmutable $toExclusive,
     ): array {
+        return $this->calendarBucketInvoices($iR->repoDateRangeQuery($from, $toExclusive));
+    }
+
+    /**
+     * Pure bucketing, no query of its own -- split out (originally inline
+     * here) so Trait\GuestCalendar can reuse it against its own
+     * worker-/client-scoped queries (InvGuestTrait::repoWorkerDateRangeQuery()/
+     * repoGuestClientsDateRangeQuery()) instead of the unscoped
+     * repoDateRangeQuery() above, which would leak every client's invoices
+     * to a signed-in guest.
+     * @return array<string, array<int, int>> [day 'Y-m-d' => [categorySecondaryId => invoice count]]
+     */
+    private function calendarBucketInvoices(iterable $invoices): array
+    {
         $days = [];
         /** @var Inv $inv */
-        foreach ($iR->repoDateRangeQuery($from, $toExclusive) as $inv) {
+        foreach ($invoices as $inv) {
             $categorySecondaryId = $inv->getFirstItemCategorySecondaryId();
             if ($categorySecondaryId === null) {
                 continue;

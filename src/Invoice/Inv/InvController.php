@@ -36,7 +36,7 @@ use App\User\UserRepository as UR;
 use App\Widget\{ButtonsToolbarFull, FormFields};
 use App\Invoice\Helpers\{DateHelper, NumberHelper};
 use App\Invoice\Inv\Trait\{Add, Archive, Attachment, BatchEmail, Calendar, Credit, Delete, Edit, Email,
-    Flush, Guest, HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol,
+    Flush, Guest, GuestCalendar, HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol,
     Storecove, Trash, Typescript, UrlKey, View, HomeCareScan};
 use Yiisoft\{
     DataResponse\ResponseFactory\DataResponseFactoryInterface,
@@ -62,6 +62,7 @@ final class InvController extends BaseController
     use Email;
     use Flush;
     use Guest;
+    use GuestCalendar;
     use HtmlTrait;
     use Index;
     use MultipleCopy;

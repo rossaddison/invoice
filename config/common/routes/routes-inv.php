@@ -44,6 +44,13 @@ return [
             ->action([InvController::class, 'guest'])
             ->name('inv/guest'),
 
+        // Month-Carousel calendar (see inv/calendar), scoped to this
+        // signed-in guest's own worker-/client-visible invoices.
+        Route::get('/client_invoices/calendar[/{year:\d+}/{month:\d+}]')
+            ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+            ->action([InvController::class, 'guestCalendar'])
+            ->name('inv/guest/calendar'),
+
         // Lets a signed-in guest print their own home-care QR code
         Route::get('/client_invoices/qr')
             ->middleware(RoutePermission::check(Permissions::VIEW_INV))
