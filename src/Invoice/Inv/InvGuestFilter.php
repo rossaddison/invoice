@@ -19,4 +19,8 @@ final class InvGuestFilter implements RequestInputInterface
     public ?string $filterInvAmountPaid = null;
     public ?string $filterInvAmountBalance = null;
     public ?string $filterStatus = null;
+    // 'Y-m-d' exact match -- set by inv/guest/calendar's day-block badges
+    // (Trait\GuestCalendar), narrowed to this signed-in guest's own
+    // worker-/client-scoped invoices via Trait\Guest::applyGuestFilters().
+    public ?string $filterDateCreatedExact = null;
 }

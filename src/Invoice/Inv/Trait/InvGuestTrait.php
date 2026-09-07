@@ -143,4 +143,90 @@ trait InvGuestTrait
                 ->withOrder(['worker_allocated_at' => 'asc']),
         );
     }
+
+    /**
+     * inv/guest/calendar's worker-scoped source query -- the
+     * repoWorkerVisible() of the calendar feature: same worker_id scoping
+     * and non-draft status exclusion, but over a date range instead of a
+     * single status. items.product.family is eager-loaded because
+     * Trait\Calendar::calendarBucketInvoices() (reused here by
+     * Trait\GuestCalendar) walks exactly that relation chain per invoice
+     * via Inv::getFirstItemCategorySecondaryId() -- same N+1 CodeRabbit
+     * caught on the staff-side repoDateRangeQuery() in PR #1248.
+     */
+    public function repoWorkerDateRangeQuery(
+        \DateTimeImmutable $from,
+        \DateTimeImmutable $toExclusive,
+        int $workerId,
+    ): EntityReader {
+        $query = $this->select()
+                ->load(['client', 'group', 'user', 'items.product.family'])
+                ->where(['worker_id' => $workerId])
+                ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+                ->andWhere('date_created', '>=', $from->format('Y-m-d H:i:s'))
+                ->andWhere('date_created', '<', $toExclusive->format('Y-m-d H:i:s'))
+                ->where('deleted_at', null);
+        return $this->prepareDataReader($query);
+    }
+
+    /**
+     * inv/guest/calendar's client-scoped source query -- the
+     * repoGuestClientsPostDraft() of the calendar feature. See
+     * repoWorkerDateRangeQuery()'s own docblock for the eager-load reason.
+     */
+    public function repoGuestClientsDateRangeQuery(
+        \DateTimeImmutable $from,
+        \DateTimeImmutable $toExclusive,
+        array $clientIds,
+    ): EntityReader {
+        $query = $this->select()
+                ->load(['client', 'group', 'user', 'items.product.family'])
+                ->where(['client_id' => ['in' => new Parameter($clientIds)]])
+                ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+                ->andWhere('date_created', '>=', $from->format('Y-m-d H:i:s'))
+                ->andWhere('date_created', '<', $toExclusive->format('Y-m-d H:i:s'))
+                ->where('deleted_at', null);
+        return $this->prepareDataReader($query);
+    }
+
+    /**
+     * inv/guest/calendar's day-block badges narrow down to this exact
+     * date, scoped to the signed-in guest's own worker-/client-visible
+     * invoices in one query -- deliberately not the shape
+     * filterGuestClient()/applyGuestFilters()'s other filter methods use
+     * (each rebuilds an unscoped $this->select() from scratch, relying on
+     * the caller never doing that with an untrusted id), since narrowing
+     * by a worker- or client-owned date must not risk exposing another
+     * guest's invoices.
+     *
+     * Rejects rollover dates via getLastErrors() the same way
+     * InvCombinedFilterTrait::applyExactDateCondition() does on the staff
+     * side (PR #1248) -- createFromFormat() doesn't return false for an
+     * invalid-but-normalized date like 'Y-m-d' 2026-02-29, it silently
+     * returns 2026-03-01 instead.
+     */
+    public function filterGuestDateCreatedExact(
+        string $filterDateCreatedExact,
+        ?int $workerId,
+        array $clientIds,
+    ): EntityReader {
+        $query = $this->select()->load(['client', 'group', 'user']);
+        $query = $workerId !== null
+            ? $query->where(['worker_id' => $workerId])
+            : $query->where(['client_id' => ['in' => new Parameter($clientIds)]]);
+        $query = $query->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+            ->where('deleted_at', null);
+
+        $exactDate = \DateTimeImmutable::createFromFormat('Y-m-d', $filterDateCreatedExact);
+        $errors = \DateTimeImmutable::getLastErrors();
+        $hasParseIssue = $errors !== false
+            && ($errors['warning_count'] > 0 || $errors['error_count'] > 0);
+        $query = $query->andWhere(
+            'date_created',
+            'like',
+            $exactDate instanceof \DateTimeImmutable && !$hasParseIssue
+                ? $exactDate->format('Y-m-d') . '%' : ''
+        );
+        return $this->prepareDataReader($query);
+    }
 }

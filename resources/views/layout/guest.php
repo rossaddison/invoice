@@ -299,6 +299,9 @@ if ((null !== $currentPath) && !$isGuest) {
         DropdownItem::link($t->translate('view'),
             $urlGenerator->generate('inv/guest'),
             itemAttributes: $itemFontArray),
+        DropdownItem::link($t->translate('calendar'),
+            $urlGenerator->generate('inv/guest/calendar'),
+            itemAttributes: $itemFontArray),
     )
     ->render();
 
