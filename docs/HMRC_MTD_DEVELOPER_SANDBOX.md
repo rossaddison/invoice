@@ -201,7 +201,23 @@ published OAS specs rather than guessed:
    distinct from the VAT (MTD) subscription already toggled on. A
    Developer Hub configuration step, not fixed in code.
 
-Not yet re-confirmed live as of this commit — deploying to `yii3i.online`
-and retrying VAT Obligations with the same test user/VRN is the actual
-end-to-end check, same "verify live, not just by reading the code"
-standard this project holds its other external integrations to.
+**Re-confirmed live** after deploying the host fix: VAT Obligations now
+returns a real HMRC sandbox canned response (period `18A1`,
+2017-01-01–2017-03-31, due 2017-05-07, status `Open`) for VRN 931392528 —
+the main bug above is genuinely fixed, not just plausible from reading the
+code.
+
+That same successful page surfaced a fourth bug, in the rendered table
+itself: the "Prepare Return" button for an open obligation showed as raw,
+HTML-escaped text (`&lt;a href="..."&gt;Prepare Return&lt;/a&gt;`) instead
+of a clickable button. Root cause: `Yiisoft\Html\Html::tag()`'s `$content`
+parameter only skips HTML-encoding for a `Stringable` that implements
+`NoEncodeStringableInterface` (every `Yiisoft\Html\Tag\Base\Tag` subclass
+does) — `vatObligations.php`'s Action column called `->render()` on the
+`A` tag *before* passing it to the outer `H::tag('td', ...)`, turning it
+into a plain `string` first, which then got encoded like any other
+untrusted text. The adjacent Status column (a `Span` badge) never had this
+bug — it passes the tag object directly, without rendering it first.
+Fixed by dropping the stray `->render()` call. While already in the file
+(never Psalm-checked before this session), also cleaned up 5 redundant
+`(string)` casts the docblock's own typing already made unnecessary.

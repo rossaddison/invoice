@@ -40,11 +40,11 @@ echo H::openTag('div', ['class' => 'container mt-4']);
           echo H::closeTag('thead');
           echo H::openTag('tbody');
           foreach ($obligations as $ob) {
-              $periodKey = (string) ($ob['periodKey'] ?? '');
-              $start = (string) ($ob['start'] ?? '');
-              $end = (string) ($ob['end'] ?? '');
-              $due = (string) ($ob['due'] ?? '');
-              $status = (string) ($ob['status'] ?? '');
+              $periodKey = $ob['periodKey'] ?? '';
+              $start = $ob['start'] ?? '';
+              $end = $ob['end'] ?? '';
+              $due = $ob['due'] ?? '';
+              $status = $ob['status'] ?? '';
               $isOpen = $status === 'O';
 
               echo H::openTag('tr');
@@ -62,7 +62,6 @@ echo H::openTag('div', ['class' => 'container mt-4']);
                            . '&start=' . urlencode($start) . '&end=' . urlencode($end))
                        ->addClass('btn btn-sm btn-primary')
                        ->content('Prepare Return')
-                       ->render()
                    : ''
                );
               echo H::closeTag('tr');
