@@ -371,15 +371,36 @@ trait Guest
         return $this->webViewRenderer->render('guest', $parameters);
     }
 
+    /**
+     * Split out of one large applyGuestFilters() (SonarQube php:S3776,
+     * cognitive complexity 16 > 15 allowed, tipped over by adding the
+     * filterDateCreatedExact branch for inv/guest/calendar -- see that
+     * branch's own comment) into two sequential steps, mirroring
+     * InvCombinedFilterTrait's own applyXConditions() split for the
+     * staff-side equivalent. Each filter call still replaces $invs
+     * entirely rather than narrowing it (the pre-existing shape here,
+     * unchanged) -- order is preserved exactly.
+     */
     private function applyGuestFilters(InvGuestFilter $filter, IR $iR, SDI $invs, InvGuestAccess $access): SDI
     {
-        if (isset($filter->filterInvNumber) && !empty($filter->filterInvNumber)) {
+        $invs = $this->applyGuestIdentifierAndAmountFilters($filter, $iR, $invs);
+        return $this->applyGuestClientAndDateFilters($filter, $iR, $invs, $access);
+    }
+
+    private function applyGuestIdentifierAndAmountFilters(InvGuestFilter $filter, IR $iR, SDI $invs): SDI
+    {
+        $hasInvNumber = isset($filter->filterInvNumber)
+            && !empty($filter->filterInvNumber);
+        $hasInvAmountTotal = isset($filter->filterInvAmountTotal)
+            && !empty($filter->filterInvAmountTotal);
+
+        if ($hasInvNumber) {
             $invs = $iR->filterInvNumber($filter->filterInvNumber);
         }
         if (isset($filter->filterCreditInvNumber) && !empty($filter->filterCreditInvNumber)) {
             $invs = $iR->filterCreditInvNumber($filter->filterCreditInvNumber);
         }
-        if (isset($filter->filterInvAmountTotal) && !empty($filter->filterInvAmountTotal)) {
+        if ($hasInvAmountTotal) {
             $invs = $iR->filterInvAmountTotal((float) $filter->filterInvAmountTotal);
         }
         if (isset($filter->filterInvAmountPaid) && !empty($filter->filterInvAmountPaid)) {
@@ -388,13 +409,21 @@ trait Guest
         if (isset($filter->filterInvAmountBalance) && !empty($filter->filterInvAmountBalance)) {
             $invs = $iR->filterInvAmountBalance((float) $filter->filterInvAmountBalance);
         }
-        if ((isset($filter->filterInvNumber) && !empty($filter->filterInvNumber))
-           && (isset($filter->filterInvAmountTotal) && !empty($filter->filterInvAmountTotal))) {
+        if ($hasInvNumber && $hasInvAmountTotal) {
             $invs = $iR->filterInvNumberAndInvAmountTotal(
                 $filter->filterInvNumber,
                 (float) $filter->filterInvAmountTotal
             );
         }
+        return $invs;
+    }
+
+    private function applyGuestClientAndDateFilters(
+        InvGuestFilter $filter,
+        IR $iR,
+        SDI $invs,
+        InvGuestAccess $access,
+    ): SDI {
         if (isset($filter->filterClient) && !empty($filter->filterClient)) {
             $invs = $iR->filterGuestClient($filter->filterClient);
         }
