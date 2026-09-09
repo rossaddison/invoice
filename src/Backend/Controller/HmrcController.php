@@ -83,8 +83,14 @@ final class HmrcController extends BaseController
     }
 
     /**
-     * Not tested yet 23/05/2025
-     * $api e.g. 'self-assessment', 'vat', 'employment', 'customs', 'individuals'
+     * Live-tested 2026-09-09 against HMRC's real Test Fraud Prevention
+     * Headers API (`txm-fph-validator-api`) OAS spec -- two real bugs found
+     * and fixed here: this endpoint is GET, not POST, and `$api` must be
+     * one of the spec's real `{service}-mtd` identifiers (e.g. `vat-mtd`),
+     * not a bare `vat`/`self-assessment`/etc. -- both would 404 with
+     * `MATCHING_RESOURCE_NOT_FOUND` otherwise (confirmed live). See
+     * `resources/backend/views/hmrc/index.php`'s own link for the caller.
+     * Full enum: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/txm-fph-validator-api/1.0/oas/resolved
      */
     public function fphFeedback(
         #[RouteArgument('api')]
@@ -92,10 +98,14 @@ final class HmrcController extends BaseController
     ): Response {
         $logFile = $this->sR->specificCommonConfigAliase('@hmrc') . '/hmrc-requests.log';
         $otpReference = (string) $this->session->get('otpRef');
+        $tokenString = (string) $this->session->get('hmrc_access_token');
         $client = $this->createLoggedGuzzleClient($logFile);
 
-        return $client->post($this->getFphValidationFeedbackUrl($api), [
-            'headers' => $this->getWebAppViaServerHeaders($otpReference),
+        return $client->get($this->getFphValidationFeedbackUrl($api), [
+            'headers' => array_merge(
+                ['Authorization' => 'Bearer ' . $tokenString],
+                $this->getWebAppViaServerHeaders($otpReference),
+            ),
         ]);
     }
 
@@ -146,7 +156,8 @@ final class HmrcController extends BaseController
 
         $request = $this->createRequest(
             'GET',
-            'https://api.service.hmrc.gov.uk/organisations/vat/' . urlencode($vrn) . '/obligations?status=O',
+            $this->resolveHmrcApiBaseUrl()
+                . '/organisations/vat/' . urlencode($vrn) . '/obligations?status=O',
         );
 
         $request = RequestUtil::addHeaders($request, array_merge(
@@ -243,7 +254,8 @@ final class HmrcController extends BaseController
 
             $apiRequest = $this->createRequest(
                 'POST',
-                'https://api.service.hmrc.gov.uk/organisations/vat/' . urlencode($vrn) . '/returns',
+                $this->resolveHmrcApiBaseUrl()
+                    . '/organisations/vat/' . urlencode($vrn) . '/returns',
             );
 
             $apiRequest = RequestUtil::addHeaders($apiRequest, array_merge(
@@ -300,7 +312,7 @@ final class HmrcController extends BaseController
 
         $request = $this->createRequest(
             'GET',
-            'https://test-api.service.hmrc.gov.uk/individuals/business/self-employment/'
+            $this->resolveHmrcApiBaseUrl() . '/individuals/business/self-employment/'
                 . urlencode($nino) . '/self-employments',
         );
 
@@ -418,6 +430,36 @@ final class HmrcController extends BaseController
         return 'https://test-api.service.hmrc.gov.uk/test/fraud-prevention-headers/' . $api . '/validation-feedback';
     }
 
+    /**
+     * Real live-testing bug fixed 2026-09-09: vatObligations()/
+     * vatReturnSubmit()/selfEmploymentBusinesses() used to hardcode either
+     * the production (`api.service.hmrc.gov.uk`) or sandbox
+     * (`test-api.service.hmrc.gov.uk`) host directly, independent of which
+     * one the OAuth login actually authenticated against -- a sandbox
+     * (dev) token sent to the production host always 401s, which is
+     * exactly what surfaced testing against a real HMRC sandbox test user
+     * (VRN 931392528). `DeveloperSandboxHmrc::getApiBaseUrl1()` already
+     * resolves the correct host, but `setEnvironment()` is only ever
+     * called from AuthController/SignupController
+     * (`Oauth2::initializeOauth2IdentityProviderDualUrls()`) -- on a
+     * later, separate request (like this one) that never happened, so
+     * this resolves it fresh from the same `SettingRepository::getEnv()`
+     * check that method uses, rather than assuming an earlier request
+     * left the injected instance in the right state.
+     *
+     * Deliberately not used by createTestUserIndividual() or the two
+     * fraud-prevention-headers helpers below -- HMRC's Create Test User
+     * and Test Fraud Prevention Headers APIs are sandbox-only tooling
+     * that doesn't exist in production at all, so those stay hardcoded to
+     * test-api.service.hmrc.gov.uk regardless of environment.
+     */
+    private function resolveHmrcApiBaseUrl(): string
+    {
+        $environment = $this->sR->getEnv() === 'dev' ? 'dev' : 'prod';
+        $this->developerSandboxHmrc->setEnvironment($environment);
+        return $this->developerSandboxHmrc->getApiBaseUrl1();
+    }
+
     private function createRequest(string $method, string $uri): Request
     {
         return $this->requestFactory->createRequest($method, $uri);
@@ -483,7 +525,19 @@ final class HmrcController extends BaseController
     private function getRequestLoggingMiddleware(string $logFile): callable
     {
         return fn (callable $handler): callable => function (Request $request, array $options) use ($handler, $logFile): PromiseInterface {
-            $headersJson = json_encode($request->getHeaders(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            // Redact the bearer token before it ever reaches the log file --
+            // the real $request (unmodified) is still what's actually sent
+            // to HMRC below; this only affects what gets written to disk.
+            $headersForLog = $request->getHeaders();
+            foreach (array_keys($headersForLog) as $name) {
+                if (strtolower((string) $name) === 'authorization') {
+                    $headersForLog[$name] = ['[REDACTED]'];
+                }
+            }
+            $headersJson = json_encode(
+                $headersForLog,
+                JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
+            );
 
             if ($headersJson === false) {
                 $headersJson = 'Error encoding headers';

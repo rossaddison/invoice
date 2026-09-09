@@ -74,7 +74,14 @@ echo H::closeTag('table');
 
 echo H::openTag('div', ['class' => 'd-flex gap-2 flex-wrap']);
 echo H::a('Test FPH Headers', '/backend/hmrc/fphValidate', ['class' => 'btn btn-sm btn-outline-primary']);
-echo H::a('FPH Feedback (VAT)', '/backend/hmrc/fphFeedback/vat', ['class' => 'btn btn-sm btn-outline-secondary']);
+// 'vat-mtd', not bare 'vat' -- HMRC's txm-fph-validator-api spec's {api}
+// path parameter uses each service's real "-mtd"-suffixed identifier;
+// confirmed live 2026-09-09 (a bare 'vat' 404s with MATCHING_RESOURCE_NOT_FOUND).
+echo H::a(
+    'FPH Feedback (VAT)',
+    '/backend/hmrc/fphFeedback/vat-mtd',
+    ['class' => 'btn btn-sm btn-outline-secondary'],
+);
 echo H::a('VAT Obligations', '/backend/hmrc/vatObligations', ['class' => 'btn btn-sm btn-outline-info']);
 echo H::closeTag('div');
 
