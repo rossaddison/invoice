@@ -83,8 +83,14 @@ final class HmrcController extends BaseController
     }
 
     /**
-     * Not tested yet 23/05/2025
-     * $api e.g. 'self-assessment', 'vat', 'employment', 'customs', 'individuals'
+     * Live-tested 2026-09-09 against HMRC's real Test Fraud Prevention
+     * Headers API (`txm-fph-validator-api`) OAS spec -- two real bugs found
+     * and fixed here: this endpoint is GET, not POST, and `$api` must be
+     * one of the spec's real `{service}-mtd` identifiers (e.g. `vat-mtd`),
+     * not a bare `vat`/`self-assessment`/etc. -- both would 404 with
+     * `MATCHING_RESOURCE_NOT_FOUND` otherwise (confirmed live). See
+     * `resources/backend/views/hmrc/index.php`'s own link for the caller.
+     * Full enum: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/txm-fph-validator-api/1.0/oas/resolved
      */
     public function fphFeedback(
         #[RouteArgument('api')]
@@ -92,10 +98,14 @@ final class HmrcController extends BaseController
     ): Response {
         $logFile = $this->sR->specificCommonConfigAliase('@hmrc') . '/hmrc-requests.log';
         $otpReference = (string) $this->session->get('otpRef');
+        $tokenString = (string) $this->session->get('hmrc_access_token');
         $client = $this->createLoggedGuzzleClient($logFile);
 
-        return $client->post($this->getFphValidationFeedbackUrl($api), [
-            'headers' => $this->getWebAppViaServerHeaders($otpReference),
+        return $client->get($this->getFphValidationFeedbackUrl($api), [
+            'headers' => array_merge(
+                ['Authorization' => 'Bearer ' . $tokenString],
+                $this->getWebAppViaServerHeaders($otpReference),
+            ),
         ]);
     }
 
