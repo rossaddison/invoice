@@ -42,6 +42,8 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
  *     live_tested_at: string|null,
  *     region_priority: int,
  *     needs_retest: bool,
+ *     fee_percent: float|null,
+ *     fee_summary: string|null,
  * }
  */
 final class GatewayStatusListWidget extends Widget
@@ -167,6 +169,16 @@ final class GatewayStatusListWidget extends Widget
                     bodyAttributes: ['data-label' => 'Regions'],
                 ),
                 new DataColumn(
+                    // Ranking is a sort, not a filter -- no native filter
+                    // row entry needed here, unlike regions/sandbox
+                    // status/needs-retest above.
+                    'fee_percent',
+                    header: 'Fee',
+                    withSorting: true,
+                    content: self::feeCell(...),
+                    bodyAttributes: ['data-label' => 'Fee'],
+                ),
+                new DataColumn(
                     'sdk_version',
                     header: 'SDK Version',
                     withSorting: true,
@@ -242,6 +254,19 @@ final class GatewayStatusListWidget extends Widget
     private static function regionsCell(array $row): string // NOSONAR: php:S1144 — used via self::regionsCell(...) first-class callable in render(), which this analyzer doesn't trace
     {
         return Html::encode($row['regions']);
+    }
+
+    /**
+     * $fee_summary is the human-readable text shown either way -- a real
+     * fee description when set, or the reason no rate is published when
+     * $fee_percent is null (custom/negotiated pricing, sales-gated, etc.)
+     * -- see GatewayStatusRow::$feePercent's own docblock.
+     *
+     * @param GatewayStatusRow $row
+     */
+    private static function feeCell(array $row): string // NOSONAR: php:S1144
+    {
+        return Html::encode($row['fee_summary'] ?? 'Not publicly disclosed');
     }
 
     /**

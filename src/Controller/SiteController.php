@@ -198,6 +198,8 @@ final class SiteController
                 'region_priority' =>
                     in_array('asia', $gateway->getRegionsList(), true) ? 0 : 1,
                 'needs_retest' => $gateway->getNeedsRetestSinceUpdate(),
+                'fee_percent' => $gateway->getFeePercent(),
+                'fee_summary' => $gateway->getFeeSummary(),
             ],
             $gateways,
         );
@@ -207,12 +209,15 @@ final class SiteController
         // (filterSandboxStatus, see GatewayStatusListWidget::render()),
         // not a row data key, so it can no longer double as a sort key --
         // same tradeoff InvsColumnBuilder's own filterClient column makes.
+        // 'fee_percent' is added here (rather than kept filter-only) since
+        // ranking cheapest-to-most-expensive is a sort, not a filter.
         $sort = Sort::only([
             'region_priority',
             'name',
             'sdk_version',
             'last_updated',
             'live_tested_at',
+            'fee_percent',
         ])
             ->withOrder(['region_priority' => 'asc', 'name' => 'asc']);
 
@@ -227,6 +232,8 @@ final class SiteController
          *     live_tested_at: string|null,
          *     region_priority: int,
          *     needs_retest: bool,
+         *     fee_percent: float|null,
+         *     fee_summary: string|null,
          * }> $paginator
          */
         $paginator = (new OffsetPaginator(new IterableDataReader($rows)))

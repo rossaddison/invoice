@@ -125,6 +125,8 @@ final class GatewayStatusService
             $entity->setSandboxExpiryDate($row->sandboxExpiryDate);
             $entity->setRegions(implode(',', $row->regions));
             $entity->setNotes($row->notes);
+            $entity->setFeePercent($row->feePercent);
+            $entity->setFeeSummary($row->feeSummary);
             $this->repository->save($entity);
         }
     }

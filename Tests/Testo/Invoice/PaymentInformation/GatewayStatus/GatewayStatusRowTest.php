@@ -102,4 +102,64 @@ final class GatewayStatusRowTest
         $row = $this->makeRowWithLiveTest('2026-09-05', '2026-09-07');
         Assert::false($row->needsRetestSinceUpdate());
     }
+
+    /**
+     * withSdkVersion()/withSandboxResult() reconstruct a new instance via
+     * positional new self(...) -- confirms feePercent/feeSummary are
+     * threaded through both rather than silently reset to null (the exact
+     * bug this test would have caught when those two fields were added).
+     */
+    public function withSdkVersionPreservesFeePercentAndFeeSummary(): void
+    {
+        $row = new GatewayStatusRow(
+            key: 'stripe',
+            name: 'Stripe',
+            composerPackage: 'stripe/stripe-php',
+            sdkVersion: 'v21.1.1',
+            lastUpdated: '2026-08-04',
+            sandboxEnvVars: [],
+            sandboxTestedAt: null,
+            sandboxStatus: null,
+            sandboxLastError: null,
+            liveTestedAt: null,
+            sandboxExpiryDate: null,
+            regions: [],
+            notes: null,
+            feePercent: 1.5,
+            feeSummary: '1.5% + 20p (UK cards)',
+        );
+
+        $updated = $row->withSdkVersion('v21.2.0', '2026-09-09');
+
+        Assert::same('v21.2.0', $updated->sdkVersion);
+        Assert::same(1.5, $updated->feePercent);
+        Assert::same('1.5% + 20p (UK cards)', $updated->feeSummary);
+    }
+
+    public function withSandboxResultPreservesFeePercentAndFeeSummary(): void
+    {
+        $row = new GatewayStatusRow(
+            key: 'stripe',
+            name: 'Stripe',
+            composerPackage: 'stripe/stripe-php',
+            sdkVersion: 'v21.1.1',
+            lastUpdated: '2026-08-04',
+            sandboxEnvVars: [],
+            sandboxTestedAt: null,
+            sandboxStatus: null,
+            sandboxLastError: null,
+            liveTestedAt: null,
+            sandboxExpiryDate: null,
+            regions: [],
+            notes: null,
+            feePercent: 1.5,
+            feeSummary: '1.5% + 20p (UK cards)',
+        );
+
+        $updated = $row->withSandboxResult('2026-09-09', 'pass', null);
+
+        Assert::same('pass', $updated->sandboxStatus);
+        Assert::same(1.5, $updated->feePercent);
+        Assert::same('1.5% + 20p (UK cards)', $updated->feeSummary);
+    }
 }

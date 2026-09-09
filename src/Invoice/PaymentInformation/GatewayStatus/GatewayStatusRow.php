@@ -52,6 +52,22 @@ final readonly class GatewayStatusRow
         public ?string $sandboxExpiryDate,
         public array $regions,
         public ?string $notes,
+        /**
+         * Real published transaction fee, as a percentage (e.g. `1.5` for
+         * "1.5% + 20p") -- human-curated and fact-checked against the
+         * provider's own pricing page, same discipline `$regions` already
+         * gets (never guessed). Null for a provider with no public flat
+         * rate (custom/negotiated pricing, e.g. Adyen/Checkout.com, or
+         * sales-gated with no published number, e.g. TrueLayer) -- see
+         * $feeSummary for the human-readable reason in that case.
+         */
+        public ?float $feePercent = null,
+        /**
+         * Human-readable fee description shown on the grid, e.g.
+         * `'1.5% + 20p (UK cards)'` or, when $feePercent is null,
+         * `'Custom/negotiated pricing -- not publicly disclosed'`.
+         */
+        public ?string $feeSummary = null,
     ) {
     }
 
@@ -70,6 +86,8 @@ final readonly class GatewayStatusRow
      *     sandbox_expiry_date?: string|null,
      *     regions?: array<array-key, string>,
      *     notes?: string|null,
+     *     fee_percent?: float|int|null,
+     *     fee_summary?: string|null,
      * } $data
      */
     public static function fromArray(array $data): self
@@ -81,6 +99,7 @@ final readonly class GatewayStatusRow
             is_array($rawEnvVar) => $rawEnvVar,
             default => [$rawEnvVar],
         };
+        $rawFeePercent = $data['fee_percent'] ?? null;
 
         return new self(
             key: $data['key'] ?? '',
@@ -96,6 +115,8 @@ final readonly class GatewayStatusRow
             sandboxExpiryDate: $data['sandbox_expiry_date'] ?? null,
             regions: $regions,
             notes: $data['notes'] ?? null,
+            feePercent: $rawFeePercent === null ? null : (float) $rawFeePercent,
+            feeSummary: $data['fee_summary'] ?? null,
         );
     }
 
@@ -114,6 +135,8 @@ final readonly class GatewayStatusRow
      *     sandbox_expiry_date: string|null,
      *     regions: list<string>,
      *     notes: string|null,
+     *     fee_percent: float|null,
+     *     fee_summary: string|null,
      * }
      */
     public function toArray(): array
@@ -139,6 +162,8 @@ final readonly class GatewayStatusRow
             'sandbox_expiry_date' => $this->sandboxExpiryDate,
             'regions' => $this->regions,
             'notes' => $this->notes,
+            'fee_percent' => $this->feePercent,
+            'fee_summary' => $this->feeSummary,
         ];
     }
 
@@ -158,6 +183,8 @@ final readonly class GatewayStatusRow
             $this->sandboxExpiryDate,
             $this->regions,
             $this->notes,
+            $this->feePercent,
+            $this->feeSummary,
         );
     }
 
@@ -177,6 +204,8 @@ final readonly class GatewayStatusRow
             $this->sandboxExpiryDate,
             $this->regions,
             $this->notes,
+            $this->feePercent,
+            $this->feeSummary,
         );
     }
 

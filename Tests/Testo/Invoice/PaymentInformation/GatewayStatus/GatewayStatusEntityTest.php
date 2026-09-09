@@ -51,4 +51,21 @@ final class GatewayStatusEntityTest
         $entity = $this->makeEntity('2026-09-05', '2026-09-07');
         Assert::false($entity->getNeedsRetestSinceUpdate());
     }
+
+    public function feePercentAndFeeSummaryDefaultToNull(): void
+    {
+        $entity = new GatewayStatus();
+        Assert::null($entity->getFeePercent());
+        Assert::null($entity->getFeeSummary());
+    }
+
+    public function feePercentAndFeeSummaryRoundTripThroughTheirSetters(): void
+    {
+        $entity = new GatewayStatus();
+        $entity->setFeePercent(1.5);
+        $entity->setFeeSummary('1.5% + 20p (UK cards)');
+
+        Assert::same(1.5, $entity->getFeePercent());
+        Assert::same('1.5% + 20p (UK cards)', $entity->getFeeSummary());
+    }
 }
