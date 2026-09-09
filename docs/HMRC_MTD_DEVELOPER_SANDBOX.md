@@ -146,3 +146,62 @@ The only entry point for HMRC OAuth is now the **"Log in with HMRC"** button on 
 | `resources/views/invoice/setting/views/partial_settings_oauth2.php` | HMRC checkbox block removed |
 | `src/Invoice/Trait/InvoiceInstallTrait.php` | Install default for removed setting deleted |
 | `config/common/routes/routes-backend.php` | `backend/hmrc/selfEmploymentBusinesses` route added |
+
+---
+
+## First real live sandbox test — 3 bugs found (September 2026)
+
+This whole flow had never been exercised against a real HMRC sandbox test
+user until now — confirmed via `createTestUserIndividual()`'s own
+docblock ("Not tested yet 23/05/2025"). Created a real Organisation test
+user via HMRC's standalone `developer.service.hmrc.gov.uk/api-test-user`
+page (VAT enrolment ticked, generating a real VRN — the app's own
+`createTestUserIndividual()` couldn't be used for this: it's
+application-restricted per HMRC's own docs and needs a `server_token`
+this app has never collected, gated behind requiring a user OAuth token
+that in turn requires a test user to already exist — a chicken-and-egg
+gap, not fixed this pass). Signed in via "Log in with HMRC" using that
+test user's Government Gateway credentials, saved its VRN into
+Settings → Making Tax Digital, then exercised the dropdown.
+
+Three real bugs found and fixed, all confirmed against HMRC's own
+published OAS specs rather than guessed:
+
+1. **VAT Obligations 401 regardless of test user/VRN correctness.** Root
+   cause: `vatObligations()`/`vatReturnSubmit()` hardcoded the
+   **production** host (`api.service.hmrc.gov.uk`) directly, while the
+   OAuth login (correctly) authenticates against the **sandbox** host
+   (`test-api.service.hmrc.gov.uk`) — a sandbox-issued token sent to
+   production always 401s. `DeveloperSandboxHmrc::getApiBaseUrl1()`
+   already resolves the right host per environment, but
+   `setEnvironment()` is only ever called from
+   `AuthController`/`SignupController`
+   (`Oauth2::initializeOauth2IdentityProviderDualUrls()`) — on the
+   later, separate `/backend/hmrc/vatObligations` request, that never
+   ran, so the injected `DeveloperSandboxHmrc` instance's environment was
+   never actually set for this action. Fixed with a new
+   `HmrcController::resolveHmrcApiBaseUrl()` that resolves the
+   environment itself from `SettingRepository::getEnv()` on every call,
+   rather than assuming an earlier request left it in the right state.
+   Also applied to `selfEmploymentBusinesses()` (previously hardcoded to
+   sandbox unconditionally — correct only by accident today, wrong once
+   this app ever points at real production data).
+2. **"FPH Feedback (VAT)" 404 (`MATCHING_RESOURCE_NOT_FOUND`).**
+   `fphFeedback()` POSTed; HMRC's real `txm-fph-validator-api` OAS spec
+   says this endpoint is `GET`. It also passed a bare `vat` as the `{api}`
+   path parameter; the spec's real enum requires each service's
+   `-mtd`-suffixed identifier (`vat-mtd`). Fixed both, and added the
+   `Authorization: Bearer` header this action was missing entirely
+   (present on the sibling `fphValidate()` action for the same API
+   family, absent here).
+3. **"Test FPH Headers" `RESOURCE_FORBIDDEN`** ("The application is not
+   subscribed to the API which it is attempting to invoke") — not a code
+   bug: the registered application needs a separate Developer Hub API
+   subscription for **Test Fraud Prevention Headers** (`txm-fph-validator-api`),
+   distinct from the VAT (MTD) subscription already toggled on. A
+   Developer Hub configuration step, not fixed in code.
+
+Not yet re-confirmed live as of this commit — deploying to `yii3i.online`
+and retrying VAT Obligations with the same test user/VRN is the actual
+end-to-end check, same "verify live, not just by reading the code"
+standard this project holds its other external integrations to.

@@ -156,7 +156,7 @@ final class HmrcController extends BaseController
 
         $request = $this->createRequest(
             'GET',
-            'https://api.service.hmrc.gov.uk/organisations/vat/' . urlencode($vrn) . '/obligations?status=O',
+            $this->resolveHmrcApiBaseUrl() . '/organisations/vat/' . urlencode($vrn) . '/obligations?status=O',
         );
 
         $request = RequestUtil::addHeaders($request, array_merge(
@@ -253,7 +253,7 @@ final class HmrcController extends BaseController
 
             $apiRequest = $this->createRequest(
                 'POST',
-                'https://api.service.hmrc.gov.uk/organisations/vat/' . urlencode($vrn) . '/returns',
+                $this->resolveHmrcApiBaseUrl() . '/organisations/vat/' . urlencode($vrn) . '/returns',
             );
 
             $apiRequest = RequestUtil::addHeaders($apiRequest, array_merge(
@@ -310,7 +310,7 @@ final class HmrcController extends BaseController
 
         $request = $this->createRequest(
             'GET',
-            'https://test-api.service.hmrc.gov.uk/individuals/business/self-employment/'
+            $this->resolveHmrcApiBaseUrl() . '/individuals/business/self-employment/'
                 . urlencode($nino) . '/self-employments',
         );
 
@@ -426,6 +426,35 @@ final class HmrcController extends BaseController
     private function getFphValidationFeedbackUrl(string $api): string
     {
         return 'https://test-api.service.hmrc.gov.uk/test/fraud-prevention-headers/' . $api . '/validation-feedback';
+    }
+
+    /**
+     * Real live-testing bug fixed 2026-09-09: vatObligations()/
+     * vatReturnSubmit()/selfEmploymentBusinesses() used to hardcode either
+     * the production (`api.service.hmrc.gov.uk`) or sandbox
+     * (`test-api.service.hmrc.gov.uk`) host directly, independent of which
+     * one the OAuth login actually authenticated against -- a sandbox
+     * (dev) token sent to the production host always 401s, which is
+     * exactly what surfaced testing against a real HMRC sandbox test user
+     * (VRN 931392528). `DeveloperSandboxHmrc::getApiBaseUrl1()` already
+     * resolves the correct host, but `setEnvironment()` is only ever
+     * called from AuthController/SignupController
+     * (`Oauth2::initializeOauth2IdentityProviderDualUrls()`) -- on a
+     * later, separate request (like this one) that never happened, so
+     * this resolves it fresh from the same `SettingRepository::getEnv()`
+     * check that method uses, rather than assuming an earlier request
+     * left the injected instance in the right state.
+     *
+     * Deliberately not used by createTestUserIndividual() or the two
+     * fraud-prevention-headers helpers below -- HMRC's Create Test User
+     * and Test Fraud Prevention Headers APIs are sandbox-only tooling
+     * that doesn't exist in production at all, so those stay hardcoded to
+     * test-api.service.hmrc.gov.uk regardless of environment.
+     */
+    private function resolveHmrcApiBaseUrl(): string
+    {
+        $this->developerSandboxHmrc->setEnvironment($this->sR->getEnv() === 'dev' ? 'dev' : 'prod');
+        return $this->developerSandboxHmrc->getApiBaseUrl1();
     }
 
     private function createRequest(string $method, string $uri): Request
