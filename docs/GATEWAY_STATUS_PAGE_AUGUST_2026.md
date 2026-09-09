@@ -791,3 +791,42 @@ earlier sections describe by hand — confirmed the homepage still loads and
 the full PHPUnit suite still passes afterward, the same MySQL-schema-safety
 check this doc's own "Why a second, Cycle-ORM-managed SQLite database"
 section calls for.
+
+## Reconciling sdk_version on every Renovate merge, not just weekly (September 2026)
+
+### Why
+
+`renovate.json` has `platformAutomerge: true` — a gateway package bump
+(e.g. `gocardless/gocardless-pro`) merges straight to `main` with no human
+in the loop. Before this, `gateways.json`'s `sdk_version` only caught up
+with that on the *next* scheduled Monday run — up to a week stale, and in
+practice requiring someone to notice and run `php yii
+gateway-status/rebuild` by hand in the meantime (as happened live this
+session, twice, for Mollie and GoCardless).
+
+### Fix
+
+`.github/workflows/gateway-status.yml` gained a `push` trigger, scoped to
+`branches: [main]` + `paths: ['composer.lock']` — it now fires within
+minutes of any composer.lock change, not just the Monday cron. The
+existing "Check gateway sandboxes" step gets `if: github.event_name !=
+'push'` so this doesn't also increase how often real sandbox APIs get
+pinged — that stays weekly-only, the same deliberate "reuse the existing
+cron, not a tighter schedule" call already made for the sandbox-expiry
+Telegram alert (see that section above). Only "Rebuild gateway status"
+(pure `composer.lock` → `sdk_version`/`last_updated`, no external calls)
+runs on the push trigger. The "Commit results" step's own `git diff
+--staged --quiet` check already made every run idempotent — a
+composer.lock change to a *non-gateway* package still triggers a run, but
+correctly finds nothing to commit and exits cleanly, so no extra
+path-filtering by package name was needed. No infinite-trigger risk: the
+workflow's own commits only ever touch `resources/gateway-status/`, never
+`composer.lock` itself.
+
+### Verification
+
+YAML validated (`js-yaml`, no local Python available). Not yet exercised
+live by an actual Renovate merge as of this commit — the next auto-merged
+gateway-package PR is the real end-to-end check, the same "verify live,
+not just by reading the workflow file" standard this project holds its
+other CI changes to (see e.g. `docs/GATEWAY_STATUS_CI_ENV_FIX_AUGUST_2026.md`).

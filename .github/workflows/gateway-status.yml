@@ -5,6 +5,19 @@ on:
     # Every Monday at 03:00 UTC — an hour after benchmark.yml's 02:00 slot,
     # so the two scheduled jobs don't compete for the same runner window.
     - cron: '0 3 * * 1'
+  # renovate.json's platformAutomerge:true merges a gateway package bump
+  # (e.g. gocardless/gocardless-pro) straight to main with no human in the
+  # loop — without this trigger, gateways.json's sdk_version sat stale
+  # for up to a week until the schedule above next fired. This fires
+  # within minutes of any composer.lock change instead; the "Check
+  # gateway sandboxes" step below is skipped on this trigger (see its own
+  # `if:`) so sandbox API calls stay weekly-only, matching the deliberate
+  # "reuse the existing cron, not a tighter schedule" decision already
+  # made for the sandbox-expiry Telegram alert (docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md).
+  push:
+    branches: [main]
+    paths:
+      - 'composer.lock'
   workflow_dispatch: {}
 
 # The repo's default GITHUB_TOKEN permission is read-only
@@ -111,7 +124,11 @@ jobs:
       # in-app Setting isn't reachable from CI anyway (no production DB).
       # Left unset until configured; the command skips the notification
       # gracefully, same as any other unset secret here.
+      # Skipped on the composer.lock push trigger — sandbox API calls stay
+      # weekly-only (see this workflow's own `on:` comment above); a
+      # dependency-bump push only wants the rebuild step below.
       - name: Check gateway sandboxes
+        if: github.event_name != 'push'
         env:
           STRIPE_SANDBOX_SECRET_KEY: ${{ secrets.STRIPE_SANDBOX_SECRET_KEY }}
           MOLLIE_SANDBOX_API_KEY: ${{ secrets.MOLLIE_SANDBOX_API_KEY }}
@@ -138,6 +155,11 @@ jobs:
           if git diff --staged --quiet; then
             echo "Nothing to commit — gateway status unchanged."
           else
-            git commit -m "chore: weekly gateway status check $(date -u +%Y-%m-%d)"
+            if [ "${{ github.event_name }}" = "push" ]; then
+              MESSAGE="chore: gateway status sync after composer.lock update $(date -u +%Y-%m-%d)"
+            else
+              MESSAGE="chore: weekly gateway status check $(date -u +%Y-%m-%d)"
+            fi
+            git commit -m "$MESSAGE"
             git push
           fi
