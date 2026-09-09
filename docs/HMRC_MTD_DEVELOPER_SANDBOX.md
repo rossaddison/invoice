@@ -149,7 +149,7 @@ The only entry point for HMRC OAuth is now the **"Log in with HMRC"** button on 
 
 ---
 
-## First real live sandbox test — 3 bugs found (September 2026)
+## First real live sandbox test — 6 bugs found, full loop confirmed (September 2026)
 
 This whole flow had never been exercised against a real HMRC sandbox test
 user until now — confirmed via `createTestUserIndividual()`'s own
@@ -260,3 +260,17 @@ Apache does not restart it or clear its own OPcache, needed
 `rc-service php-fpm84 restart` specifically (this particular incident
 didn't actually need it, but it's a real gap in the deploy checklist for
 next time a code change doesn't seem to take effect after a restart).
+
+### Confirmed: the full loop works end to end
+
+With the real bug fixed, clicking "Submit VAT Return to HMRC" returned a
+genuine HTTP 201 from HMRC's sandbox — `VAT return accepted by HMRC
+(HTTP 201)`, a real Form Bundle Number (`592585670613`), and a real
+processing date. OAuth login → Obligations → Prepare Return → Submit →
+accepted, live-confirmed end to end for the first time, not just
+implemented. Six real bugs found and fixed along the way: the
+production/sandbox host mismatch (the core blocker), the FPH Feedback
+wrong HTTP method + wrong `{api}` identifier, the bearer token logged in
+plaintext, the "Prepare Return" button rendering as raw escaped HTML,
+`vatReturnSubmit.php`'s own missing `_csrf`, and — the actual blocker in
+this journey — `vatReturnPrepare.php`'s independently missing `_csrf`.
