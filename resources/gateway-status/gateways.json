@@ -99,7 +99,7 @@
             "key": "gocardless",
             "name": "GoCardless",
             "composer_package": "gocardless/gocardless-pro",
-            "sdk_version": "8.1.4",
+            "sdk_version": "8.1.5",
             "last_updated": "2026-09-09",
             "sandbox_env_var": "GOCARDLESS_SANDBOX_ACCESS_TOKEN",
             "sandbox_tested_at": "2026-09-07",
