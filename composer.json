@@ -40,7 +40,7 @@
         "anthropic-ai/sdk": "^0.47.0",
         "braintree/braintree_php": ">=6.37.0",
         "brick/math": ">=0.18.0",
-        "brick/money": ">=0.14.1",
+        "brick/money": ">=0.15.0",
         "cebe/markdown": "^1.2.1@dev",
         "checkout/checkout-sdk-php": "^5.3",
         "chillerlan/php-qrcode": "^6.0.1",
@@ -158,7 +158,7 @@
         "yiisoft/yii-runner-console": "^2.2.1",
         "yiisoft/yii-runner-http": "^3.2.1",
         "yiisoft/yii-view-renderer": "^7.4.1",
-        "zircote/swagger-php": ">=6.8.0"
+        "zircote/swagger-php": ">=6.8.1"
     },
     "require-dev": {
         "codeception/c3": "^2.9",
@@ -174,7 +174,7 @@
         "phpunit/php-code-coverage": ">=14.2.2",
         "phpunit/phpunit": ">=13.1.4",
         "rector/rector": "^2.6.6",
-        "roave/better-reflection": "^6.72",
+        "roave/better-reflection": "^6.73",
         "roave/infection-static-analysis-plugin": ">=1.44",
         "roave/security-advisories": "dev-latest",
         "rossaddison/translator-extractor": "dev-master",

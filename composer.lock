@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d9e6a98106e00158cd291a79529a8364",
+    "content-hash": "395a14687cf7eb2e33b86701f0e136ae",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -1093,16 +1093,16 @@
         },
         {
             "name": "brick/money",
-            "version": "0.14.2",
+            "version": "0.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/money.git",
-                "reference": "1381b2884cbd758985766df4ee9f63539d1f934f"
+                "reference": "20800223bedea899ae5b27f7272d47b5f17ab01c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/money/zipball/1381b2884cbd758985766df4ee9f63539d1f934f",
-                "reference": "1381b2884cbd758985766df4ee9f63539d1f934f",
+                "url": "https://api.github.com/repos/brick/money/zipball/20800223bedea899ae5b27f7272d47b5f17ab01c",
+                "reference": "20800223bedea899ae5b27f7272d47b5f17ab01c",
                 "shasum": ""
             },
             "require": {
@@ -1118,7 +1118,7 @@
                 "phpunit/phpunit": "^11.0"
             },
             "suggest": {
-                "ext-intl": "Required to format Money objects"
+                "ext-intl": "Required to format Money objects to a locale (needs ICU 62.1 or later)"
             },
             "type": "library",
             "autoload": {
@@ -1138,7 +1138,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/money/issues",
-                "source": "https://github.com/brick/money/tree/0.14.2"
+                "source": "https://github.com/brick/money/tree/0.15.0"
             },
             "funding": [
                 {
@@ -1146,7 +1146,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-28T21:06:24+00:00"
+            "time": "2026-09-09T19:49:01+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -5381,16 +5381,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "3.11.0",
+            "version": "3.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "147f303310f06334f03f409e49d7ad1e275ff05a"
+                "reference": "72c534fc0ab181ef52d92a68382318631e301608"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/147f303310f06334f03f409e49d7ad1e275ff05a",
-                "reference": "147f303310f06334f03f409e49d7ad1e275ff05a",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/72c534fc0ab181ef52d92a68382318631e301608",
+                "reference": "72c534fc0ab181ef52d92a68382318631e301608",
                 "shasum": ""
             },
             "require": {
@@ -5416,6 +5416,7 @@
                 "phpstan/phpstan-strict-rules": "^2",
                 "phpunit/phpunit": "^10.5.17 || ^11.0.7",
                 "predis/predis": "^1.1 || ^2",
+                "psr/clock": "^1.0",
                 "rollbar/rollbar": "^4.0",
                 "ruflin/elastica": "^7 || ^8",
                 "symfony/mailer": "^5.4 || ^6",
@@ -5434,6 +5435,7 @@
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
                 "mongodb/mongodb": "Allow sending log messages to a MongoDB server (via library)",
                 "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
+                "psr/clock": "Required to pass a clock to the Logger and control the timestamp of log records",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
                 "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
             },
@@ -5468,7 +5470,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/3.11.0"
+                "source": "https://github.com/Seldaek/monolog/tree/3.12.0"
             },
             "funding": [
                 {
@@ -5480,7 +5482,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-02T12:39:56+00:00"
+            "time": "2026-09-09T08:34:20+00:00"
         },
         {
             "name": "mpdf/mpdf",
@@ -10894,16 +10896,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v21.3.1",
+            "version": "v21.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "12986995cd5e229cc094d4b57de056f8e2e6e5a9"
+                "reference": "0d8b075e1a97d15c5324353a5277d0ea686ea525"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/12986995cd5e229cc094d4b57de056f8e2e6e5a9",
-                "reference": "12986995cd5e229cc094d4b57de056f8e2e6e5a9",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/0d8b075e1a97d15c5324353a5277d0ea686ea525",
+                "reference": "0d8b075e1a97d15c5324353a5277d0ea686ea525",
                 "shasum": ""
             },
             "require": {
@@ -10950,9 +10952,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v21.3.1"
+                "source": "https://github.com/stripe/stripe-php/tree/v21.3.2"
             },
-            "time": "2026-09-01T18:42:58+00:00"
+            "time": "2026-09-09T20:40:43+00:00"
         },
         {
             "name": "symfony/cache",
@@ -19828,12 +19830,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "73842f34ec406add8b87f0c8c125fbadf1aff44f"
+                "reference": "059d5b5b29b429cda731ea53b43c40900d627b03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/73842f34ec406add8b87f0c8c125fbadf1aff44f",
-                "reference": "73842f34ec406add8b87f0c8c125fbadf1aff44f",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/059d5b5b29b429cda731ea53b43c40900d627b03",
+                "reference": "059d5b5b29b429cda731ea53b43c40900d627b03",
                 "shasum": ""
             },
             "require": {
@@ -19914,7 +19916,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-09-08T14:14:50+00:00"
+            "time": "2026-09-09T11:43:09+00:00"
         },
         {
             "name": "yiisoft/yii-event",
@@ -20492,16 +20494,16 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "6.8.0",
+            "version": "6.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "9477163878f786fa57153a0173425879b645aee8"
+                "reference": "08c8a2d256e8f8e4b6f86d44d3044494194df552"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/9477163878f786fa57153a0173425879b645aee8",
-                "reference": "9477163878f786fa57153a0173425879b645aee8",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/08c8a2d256e8f8e4b6f86d44d3044494194df552",
+                "reference": "08c8a2d256e8f8e4b6f86d44d3044494194df552",
                 "shasum": ""
             },
             "require": {
@@ -20569,7 +20571,7 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/6.8.0"
+                "source": "https://github.com/zircote/swagger-php/tree/6.8.1"
             },
             "funding": [
                 {
@@ -20577,7 +20579,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-08T05:24:16+00:00"
+            "time": "2026-09-09T03:13:32+00:00"
         }
     ],
     "packages-dev": [
@@ -22540,23 +22542,22 @@
         },
         {
             "name": "jolicode/jolinotif",
-            "version": "v3.3.1",
+            "version": "v3.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jolicode/JoliNotif.git",
-                "reference": "fd188c41fdf2d0659a6e48bac705e0615e6eefdb"
+                "reference": "531b7a42837050eb8f6ee69150dd70a5cadb917d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolicode/JoliNotif/zipball/fd188c41fdf2d0659a6e48bac705e0615e6eefdb",
-                "reference": "fd188c41fdf2d0659a6e48bac705e0615e6eefdb",
+                "url": "https://api.github.com/repos/jolicode/JoliNotif/zipball/531b7a42837050eb8f6ee69150dd70a5cadb917d",
+                "reference": "531b7a42837050eb8f6ee69150dd70a5cadb917d",
                 "shasum": ""
             },
             "require": {
                 "jolicode/php-os-helper": "^0.3",
                 "php": ">=8.3",
                 "psr/log": "^1.0 || ^2.0 || ^3.0",
-                "symfony/deprecation-contracts": "^3",
                 "symfony/process": "^6.4 || ^7.3 || ^8.0"
             },
             "require-dev": {
@@ -22601,7 +22602,7 @@
             ],
             "support": {
                 "issues": "https://github.com/jolicode/JoliNotif/issues",
-                "source": "https://github.com/jolicode/JoliNotif/tree/v3.3.1"
+                "source": "https://github.com/jolicode/JoliNotif/tree/v3.4.0"
             },
             "funding": [
                 {
@@ -22609,7 +22610,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-22T08:53:38+00:00"
+            "time": "2026-09-09T11:32:52+00:00"
         },
         {
             "name": "jolicode/php-os-helper",
@@ -24279,16 +24280,16 @@
         },
         {
             "name": "roave/better-reflection",
-            "version": "6.72.0",
+            "version": "6.73.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BetterReflection.git",
-                "reference": "b34deeed26ec22233b1a776591ef45abc154a17d"
+                "reference": "a6a93a3bd7681627f2750bfa8f41e586d32dc67d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/b34deeed26ec22233b1a776591ef45abc154a17d",
-                "reference": "b34deeed26ec22233b1a776591ef45abc154a17d",
+                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/a6a93a3bd7681627f2750bfa8f41e586d32dc67d",
+                "reference": "a6a93a3bd7681627f2750bfa8f41e586d32dc67d",
                 "shasum": ""
             },
             "require": {
@@ -24302,7 +24303,7 @@
             },
             "require-dev": {
                 "phpbench/phpbench": "^1.7.0",
-                "phpunit/phpunit": "^13.2.4"
+                "phpunit/phpunit": "^13.3.2"
             },
             "suggest": {
                 "composer/composer": "Required to use the ComposerSourceLocator"
@@ -24342,9 +24343,9 @@
             "description": "Better Reflection - an improved code reflection API",
             "support": {
                 "issues": "https://github.com/Roave/BetterReflection/issues",
-                "source": "https://github.com/Roave/BetterReflection/tree/6.72.0"
+                "source": "https://github.com/Roave/BetterReflection/tree/6.73.0"
             },
-            "time": "2026-07-22T18:50:32+00:00"
+            "time": "2026-09-09T19:57:09+00:00"
         },
         {
             "name": "roave/infection-static-analysis-plugin",
@@ -24409,12 +24410,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "3351b8b86dbff4e6abbca303a61d27b65468203a"
+                "reference": "55a9238f51c5449fdaa650fb03322dfca498a2e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/3351b8b86dbff4e6abbca303a61d27b65468203a",
-                "reference": "3351b8b86dbff4e6abbca303a61d27b65468203a",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/55a9238f51c5449fdaa650fb03322dfca498a2e5",
+                "reference": "55a9238f51c5449fdaa650fb03322dfca498a2e5",
                 "shasum": ""
             },
             "conflict": {
@@ -25144,7 +25145,7 @@
                 "ralffreit/mfa-email": "<1.0.7|==2",
                 "rankmath/seo-by-rank-math": "<=1.0.95",
                 "rap2hpoutre/laravel-log-viewer": "<0.13",
-                "react/http": ">=0.7,<1.9",
+                "react/http": ">=0.6,<1.11.1",
                 "really-simple-plugins/complianz-gdpr": "<6.4.2",
                 "redaxo/source": "<5.21.1",
                 "remdex/livehelperchat": "<4.29",
@@ -25547,7 +25548,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-08T21:35:56+00:00"
+            "time": "2026-09-09T20:29:53+00:00"
         },
         {
             "name": "rossaddison/translator-extractor",
