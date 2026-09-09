@@ -325,6 +325,8 @@ final class GatewayStatusServiceTest
                 sandboxExpiryDate: '2026-12-31',
                 regions: ['europe'],
                 notes: null,
+                feePercent: 1.8,
+                feeSummary: '1.8% + €0.25',
             );
 
             $service->syncToDatabase([$row]);
@@ -333,6 +335,65 @@ final class GatewayStatusServiceTest
             Assert::same('pass', $existing->getSandboxStatus());
             Assert::same('europe', $existing->getRegions());
             Assert::same('2026-12-31', $existing->getSandboxExpiryDate());
+            Assert::same(1.8, $existing->getFeePercent());
+            Assert::same('1.8% + €0.25', $existing->getFeeSummary());
+        } finally {
+            $this->removeTempRoot($root);
+        }
+    }
+
+    public function saveToJsonThenLoadFromJsonRoundTripsFeePercentAndFeeSummary(): void
+    {
+        $root = $this->makeTempRoot();
+        try {
+            $this->writeGatewaysJson($root, ['schema_version' => 1, 'gateways' => []]);
+
+            $service = new GatewayStatusService(
+                new Aliases(['@root' => $root]),
+                $this->makeGatewayStatusRepositoryMock(),
+            );
+
+            $withFee = new GatewayStatusRow(
+                key: 'stripe',
+                name: 'Stripe',
+                composerPackage: 'stripe/stripe-php',
+                sdkVersion: 'v21.1.1',
+                lastUpdated: '2026-08-04',
+                sandboxEnvVars: [],
+                sandboxTestedAt: null,
+                sandboxStatus: null,
+                sandboxLastError: null,
+                liveTestedAt: null,
+                sandboxExpiryDate: null,
+                regions: ['europe'],
+                notes: null,
+                feePercent: 1.5,
+                feeSummary: '1.5% + 20p (UK cards)',
+            );
+            $withoutFee = new GatewayStatusRow(
+                key: 'adyen',
+                name: 'Adyen',
+                composerPackage: 'adyen/php-api-library',
+                sdkVersion: 'v30.0.2',
+                lastUpdated: '2026-08-04',
+                sandboxEnvVars: [],
+                sandboxTestedAt: null,
+                sandboxStatus: null,
+                sandboxLastError: null,
+                liveTestedAt: null,
+                sandboxExpiryDate: null,
+                regions: ['europe'],
+                notes: null,
+            );
+
+            $service->saveToJson([$withFee, $withoutFee]);
+            $reloaded = $service->loadFromJson();
+
+            Assert::same(2, count($reloaded));
+            Assert::same(1.5, $reloaded[0]->feePercent);
+            Assert::same('1.5% + 20p (UK cards)', $reloaded[0]->feeSummary);
+            Assert::null($reloaded[1]->feePercent);
+            Assert::null($reloaded[1]->feeSummary);
         } finally {
             $this->removeTempRoot($root);
         }

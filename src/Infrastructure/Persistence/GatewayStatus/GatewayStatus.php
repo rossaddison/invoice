@@ -38,6 +38,7 @@ use Cycle\Annotated\Annotation\Table\Index;
 #[Index(columns: ['sandbox_tested_at'], name: 'gateway_status_sandbox_tested_at_idx')]
 #[Index(columns: ['live_tested_at'], name: 'gateway_status_live_tested_at_idx')]
 #[Index(columns: ['sandbox_expiry_date'], name: 'gateway_status_sandbox_expiry_date_idx')]
+#[Index(columns: ['fee_percent'], name: 'gateway_status_fee_percent_idx')]
 class GatewayStatus
 {
     use RequireId;
@@ -68,6 +69,10 @@ class GatewayStatus
         private string $regions = '',
         #[Column(type: 'text', nullable: true)]
         private ?string $notes = null,
+        #[Column(type: 'float', nullable: true)]
+        private ?float $fee_percent = null,
+        #[Column(type: 'text', nullable: true)]
+        private ?string $fee_summary = null,
     ) {
     }
 
@@ -205,6 +210,31 @@ class GatewayStatus
     public function setNotes(?string $notes): void
     {
         $this->notes = $notes;
+    }
+
+    /**
+     * Real published transaction fee percentage -- human-curated, never
+     * touched by either console command. Null for a provider with no
+     * public flat rate (see $fee_summary for why).
+     */
+    public function getFeePercent(): ?float
+    {
+        return $this->fee_percent;
+    }
+
+    public function setFeePercent(?float $fee_percent): void
+    {
+        $this->fee_percent = $fee_percent;
+    }
+
+    public function getFeeSummary(): ?string
+    {
+        return $this->fee_summary;
+    }
+
+    public function setFeeSummary(?string $fee_summary): void
+    {
+        $this->fee_summary = $fee_summary;
     }
 
     /**

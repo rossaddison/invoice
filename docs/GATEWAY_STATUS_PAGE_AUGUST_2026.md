@@ -31,7 +31,7 @@ SiteController::gatewayStatus()  →  resources/views/site/gateway-status.php
 |---|---|
 | `sdk_version`, `last_updated` | `gateway-status/rebuild`, from `composer.lock` — `last_updated` only bumps when the resolved version actually changed |
 | `sandbox_tested_at`, `sandbox_status`, `sandbox_last_error` | `gateway-status/check-sandboxes` |
-| `name`, `regions`, `notes`, `live_tested_at`, `sandbox_env_var`, `sandbox_expiry_date` | Human only — never touched by either command |
+| `name`, `regions`, `notes`, `live_tested_at`, `sandbox_env_var`, `sandbox_expiry_date`, `fee_percent`, `fee_summary` | Human only — never touched by either command |
 
 `live_tested_at` is deliberately excluded from all automation. This project's
 own precedent (`docs/PAYMENT_GATEWAY_LIVE_TESTING_JULY_2026.md`) shows live
@@ -714,3 +714,80 @@ against the running local site (`curl`), not just read from the code:
   `data-yii-dataview-dropdown-filter-onchange` (never the CSP-blocked
   inline `onChange="this.form.submit()"`), and `no-inline-js.js` is present
   in the page's registered assets.
+
+## Fee ranking (September 2026)
+
+### Why
+
+Follow-on to the reconciliation/filter work above, from the same original
+ask: a "Fee" column ranking each gateway's real published transaction fee,
+cheapest to most expensive. New human-curated fields `fee_percent` (`float`,
+nullable) and `fee_summary` (`string`, nullable) on `GatewayStatusRow` (JSON
+side) and the matching `getFeePercent()`/`getFeeSummary()` on `GatewayStatus`
+(entity side) — same field-ownership category as `regions`/`notes`, never
+touched by either console command. `fee_percent` drives sorting (a new
+sortable `DataColumn`, `GatewayStatusListWidget::feeCell()`); no filter was
+added for it — ranking is a sort, not a filter, unlike region/sandbox-status/
+needs-retest above.
+
+### Sourcing discipline
+
+Same standard `regions` already holds itself to: fact-checked against each
+provider's own published pricing, never guessed. Where a provider publishes
+no flat rate at all (custom/negotiated enterprise pricing, or sales-gated
+with no public number), `fee_percent` is `null` and `fee_summary` states
+that plainly rather than fabricating a figure. Checked 2026-09-09, favoring
+UK/GBP figures where a provider actually serves that market (matching this
+app's own primary market):
+
+| Gateway | fee_percent | fee_summary | Source |
+|---|---|---|---|
+| Stripe | 1.5 | 1.5% + 20p (UK cards) | stripe.com/gb/pricing |
+| Braintree | 2.89 | 2.89% + $0.29 | paypal.com/us/enterprise/paypal-braintree-fees |
+| Mollie | 1.8 | 1.8% + €0.25 (EEA cards) | mollie.com/pricing |
+| **Adyen** | **null** | Custom/negotiated Interchange++ pricing | adyen.com pricing page |
+| GoCardless | 1.0 | 1% + 20p, capped £4 | gocardless.com/pricing |
+| Open Banking | null | No % fee — flat ~20-30p/txn is typical, not one vendor's rate | industry-general |
+| BACS Direct Debit | null | No % fee — flat 5-50p/collection, bureau-dependent | industry-general |
+| Robokassa | 3.9 | 3.9% standard card commission | robokassa.com/payments/tarify |
+| YooKassa | 3.5 | ~3.5% + VAT for cards (varies by method, from 0.4%) | yookassa.ru/fees |
+| Paystack | 1.5 | 1.5% + ₦100 (Nigeria); varies by country | support.paystack.com |
+| Razorpay | 2.0 | 2% + 18% GST (~2.36% effective) | razorpay.com pricing pages |
+| PayPal | 2.9 | 2.9% + £0.30 (UK commercial) | paypal.com/uk/business/paypal-business-fees |
+| Square | 1.4 | 1.4% + £0.25 (UK online) | Square's published UK pricing |
+| Mercado Pago | 3.49 | ~3.49%+, varies sharply by country | per-country Mercado Pago documentation |
+| **Checkout.com** | **null** | Custom, quote-only pricing | checkout.com |
+| **TrueLayer** | **null** | Sales-gated, no public rate (independent estimates ~0.3-1.5%) | truelayer.com |
+| BitPay | 2.0 | 2% + $0.25, tiering to 1% above $1M/month | bitpay.com/pricing |
+
+Three gateways (Adyen, Checkout.com, TrueLayer) deliberately carry no
+number — each was independently confirmed to publish no flat rate at all
+(enterprise/negotiated pricing or a sales-gated quote process), so the page
+shows "Not publicly disclosed" rather than a guessed figure. Mollie's own
+pricing page publishes its EEA rate; third-party sources cite a lower
+UK-domestic-specific figure not shown on that page directly — the EEA rate
+is used here as the directly-sourced number, with the discrepancy noted in
+`fee_summary`.
+
+### Verification
+
+Full-project `vendor/bin/psalm --no-cache` — no errors. Full Testo suite —
+1306/1306 passing (5 new: `GatewayStatusRowTest`'s 2 covering
+`withSdkVersion()`/`withSandboxResult()` correctly threading
+`feePercent`/`feeSummary` through rather than resetting them to `null`
+— the exact bug those two reconstruction methods would otherwise have
+had; `GatewayStatusEntityTest`'s 2 covering the new getter/setter pair;
+`GatewayStatusServiceTest`'s 1 new `fee_percent`/`fee_summary` round-trip
+through `saveToJson()`/`loadFromJson()`, plus an extended assertion in the
+existing `syncToDatabaseUpdatesExistingEntityWhenOneExists` confirming both
+fields persist through `syncToDatabase()`). Full `vendor/bin/phpunit` —
+3907/3907, confirming no regression. The `fee_percent`/`fee_summary`
+SQLite columns (and `fee_percent`'s own index) were verified live against
+the real local database (`PRAGMA table_info(gateway_status)`), added
+automatically by this project's `.claude/sync-schema.ps1` PostToolUse hook
+(triggers on any `src/Infrastructure/Persistence/` edit, cycling
+`BUILD_DATABASE` and reverting it) rather than the manual cycle this doc's
+earlier sections describe by hand — confirmed the homepage still loads and
+the full PHPUnit suite still passes afterward, the same MySQL-schema-safety
+check this doc's own "Why a second, Cycle-ORM-managed SQLite database"
+section calls for.
