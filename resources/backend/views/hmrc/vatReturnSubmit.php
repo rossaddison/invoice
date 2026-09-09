@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\Button;
+use Yiisoft\Yii\View\Renderer\Csrf;
 
 /**
  * @var string $vrn
  * @var string $periodKey
  * @var string $periodStart
  * @var string $periodEnd
+ * @var Csrf $csrf
  */
 
 $action = '/backend/hmrc/vatReturnSubmit';
@@ -27,6 +29,7 @@ echo H::openTag('div', ['class' => 'container mt-4']);
     echo H::openTag('div', ['class' => 'card-body']);
      echo H::openTag('form', ['method' => 'post', 'action' => $action]);
 
+      echo H::hiddenInput('_csrf', $csrf);
       echo H::input('hidden', 'periodKey', H::encode($periodKey));
 
       $rows = [

@@ -221,3 +221,18 @@ bug — it passes the tag object directly, without rendering it first.
 Fixed by dropping the stray `->render()` call. While already in the file
 (never Psalm-checked before this session), also cleaned up 5 redundant
 `(string)` casts the docblock's own typing already made unnecessary.
+
+A fifth bug, found continuing the same live test through to the final
+step: clicking "Submit VAT Return to HMRC" on the Box 1-9 form silently
+redirected to the site homepage instead of submitting anything.
+`vatReturnSubmit.php`'s `<form method="post">` had no `_csrf` hidden
+field at all — `CsrfTokenMiddleware` (wired with this app's own
+`CsrfFailureHandler`, `config/common/di/router.php`) rejects any
+unsafe-method request missing a valid token and its failure handler
+redirects to `site/index` unconditionally, exactly matching what was
+seen. Fixed by adding `echo H::hiddenInput('_csrf', $csrf);` inside the
+form, the same established pattern already used by every other
+hand-built form in this app (`invoice/inv/trash.php`,
+`invoice/salesorderitem/_item_edit_form.php`,
+`invoice/setting/tab_index.php`, ...) — `$csrf` is ambiently available in
+every view already, no controller change needed.
