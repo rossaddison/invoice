@@ -607,3 +607,108 @@ tests. Once both are in place, setting one gateway's
 gateway-status/check-sandboxes` (or triggering the workflow) is the real
 end-to-end check — same "verify live, not just by reading the code"
 standard this project holds its other Telegram/webhook integrations to.
+
+## Stale-retest badge + native multi-filter row (September 2026)
+
+### Why
+
+Concrete trigger: GoCardless's SDK was `composer update`d (bumping
+`last_updated`) without a real live payment run afterward. The page had no
+way to show that gap — a version bump and an actual verification were
+silently conflated. Separately, the page's only filter (region) was a
+hand-rolled `<form>`+`<select>`+`array_filter()` — the same "does it
+actually combine correctly" question `InvCombinedFilterTrait` exists to
+answer for `inv/index`'s own multi-filter query, just never asked here
+because there was only ever one filter.
+
+### `needsRetestSinceUpdate()` — shown publicly, deliberately
+
+`GatewayStatusRow::needsRetestSinceUpdate()` (mirrored on the
+`GatewayStatus` entity as `getNeedsRetestSinceUpdate()`, since
+`SiteController::gatewayStatus()` queries the entity, not the JSON-sourced
+row class):
+
+```php
+public function needsRetestSinceUpdate(): bool
+{
+    return $this->liveTestedAt === null || $this->liveTestedAt < $this->lastUpdated;
+}
+```
+
+True when there's no live test on record at all, *or* the last one predates
+the current `last_updated`. A version bumped the same day it was live
+tested does not count as stale. Rendered on the grid as a `⚠️ Updated since
+last live test` badge (`GatewayStatusListWidget::needsRetestCell()`) —
+shown publicly rather than kept internal, an explicit choice matching the
+page's whole purpose: showing what's actually verified, not just what's
+pinned. `sandbox_last_error` stays the one field that's deliberately never
+public (see above) — this is different, informational rather than
+diagnostic.
+
+### Native filter row replaces the hand-rolled `<form>`
+
+`yiisoft/yii-dataview` 1.2.0 (released September 2, 2026) landed this
+project's own upstream CSP fix
+(`docs/YII_DATAVIEW_DROPDOWNFILTER_UPSTREAM_FIX.md`, filed as #344/#345) as
+a more general `UseInlineJsInterface`/`useInlineJs(false)` mechanism (#355)
+— confirmed already adopted once in this codebase:
+`App\Invoice\Inv\Widget\InvsColumnBuilder::buildColumns()`'s `filterClient`
+column. This page now follows that exact precedent for three columns
+(`filterRegion`, `filterSandboxStatus`, `filterNeedsRetest`):
+
+- Each `DataColumn` gets a `DropdownFilter::widget()->useInlineJs(false)`
+  and `filterFactory: new App\Widget\NoOpFilterFactory()` — the widget
+  renders the `<select>` natively in the grid's own filter row (in-table,
+  no separate form above it), but `NoOpFilterFactory` means GridView's own
+  filter-application pipeline does nothing; the actual filtering logic
+  stays in app code (`GatewayStatusRows::filter()`), same split
+  `InvsColumnBuilder`'s own filter columns already use.
+- New `App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusFilter`
+  (`#[FromQuery]`/`RequestInputInterface`) mirrors `InvIndexFilter`'s shape
+  exactly — bound directly as a `SiteController::gatewayStatus()` parameter,
+  the same request-input-binding convention `InvController::index()` uses.
+- New `GatewayStatusRows::filter(array $gateways, GatewayStatusFilter
+  $filter): array` — three independent `array_filter()` passes composed
+  together (region, sandbox status, needs-retest), each narrowing the
+  result further rather than any one silently overwriting an earlier one.
+  Independently Testo-tested (`GatewayStatusRowsTest`) for every filter
+  alone and combined, including a case that narrows to zero rows.
+- A column whose property becomes the filter's own GET param name
+  (`filterRegion` etc., needed for `#[FromQuery]` binding to line up with
+  the rendered `<select>`'s `name` attribute) gives up native sorting —
+  same tradeoff `filterClient` already makes on `inv/index`. `regions` was
+  never sortable anyway; `sandbox_status` was, and lost it (dropped from
+  the controller's `Sort::only([...])` whitelist accordingly). The
+  "Retest?" column is new, never sortable.
+- `resources/views/site/gateway-status.php` registers
+  `App\Invoice\Asset\YiiDataViewNoInlineJsAsset` via `$assetManager`,
+  mirroring `resources/views/invoice/inv/index.php`'s own registration —
+  needed for the CSP-blocked inline `onChange` workaround's delegated
+  listener (`no-inline-js.js`).
+- No `withFilter()`/current-value setter needed on the widget: confirmed
+  `DropdownFilter::renderFilter()`'s pre-selection reads
+  `MakeFilterContext`'s own `UrlParameterProvider` (already wired via
+  `->urlParameterProvider()`), the same reason `InvsListWidget` never
+  passes `InvIndexFilter` into itself either.
+
+### Verification
+
+Full-project `vendor/bin/psalm --no-cache` — no errors. Full Testo suite —
+1301/1301 passing (1285 existing + 16 new: `GatewayStatusRowTest`'s 4
+`needsRetestSinceUpdate()` boundary cases, `GatewayStatusEntityTest`'s
+matching 4 on the entity, `GatewayStatusRowsTest`'s 8 covering each filter
+alone/combined/matching-nothing/an-unrecognized-value). Full
+`vendor/bin/phpunit` — 3907/3907, confirming no regression. Live-verified
+against the running local site (`curl`), not just read from the code:
+- `?filterRegion=europe&filterNeedsRetest=yes` → GoCardless present.
+- `?filterRegion=europe&filterNeedsRetest=no` → GoCardless absent (the
+  same real data, oppositely filtered — confirms the flag reflects
+  GoCardless's actual `last_updated`/`live_tested_at`, not a fixture).
+- `?filterRegion=asia&filterSandboxStatus=pass` → exactly the Asia-region
+  gateways with a passing sandbox check, excluding Robokassa/YooKassa
+  (untested) and any failing gateway — confirms the two filters AND
+  together rather than either alone or "last one wins."
+- All three rendered `<select>`s carry
+  `data-yii-dataview-dropdown-filter-onchange` (never the CSP-blocked
+  inline `onChange="this.form.submit()"`), and `no-inline-js.js` is present
+  in the page's registered assets.

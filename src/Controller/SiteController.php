@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Infrastructure\Persistence\GatewayStatus\GatewayStatus;
+use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusFilter;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusRepository;
+use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusRows;
 use App\Invoice\PaymentInformation\GatewayStatus\Widget\GatewayStatusListWidget;
 use App\Invoice\Peppol\PeppolStatusPageBuilder;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
@@ -157,13 +158,13 @@ final class SiteController
      * let the page be turned off outright, not just unlinked.
      */
     public function gatewayStatus(
-        Request $request,
         CurrentRoute $currentRoute,
         UrlGeneratorInterface $urlGenerator,
         GatewayStatusRepository $gatewayStatusRepository,
         TranslatorInterface $translator,
         sR $sR,
         WebControllerService $webService,
+        GatewayStatusFilter $filter,
     ): Response {
         if ($sR->getSetting('no_front_gateway_status_page') == '1') {
             return $webService->getNotFoundResponse();
@@ -180,30 +181,39 @@ final class SiteController
         $regionOptions = array_keys($allRegions);
         sort($regionOptions);
 
-        /** @var string $selectedRegion */
-        $selectedRegion = $request->getQueryParams()['region'] ?? '';
-        if ($selectedRegion !== '') {
-            $gateways = array_values(array_filter(
-                $gateways,
-                static fn (GatewayStatus $gateway): bool => in_array($selectedRegion, $gateway->getRegionsList(), true),
-            ));
-        }
+        $gateways = GatewayStatusRows::filter($gateways, $filter);
 
         $rows = array_map(
             static fn (GatewayStatus $gateway): array => [
                 'name' => $gateway->getName(),
-                'regions' => implode(', ', array_map('ucwords', $gateway->getRegionsList())),
+                'regions' => implode(
+                    ', ',
+                    array_map('ucwords', $gateway->getRegionsList()),
+                ),
                 'sdk_version' => $gateway->getSdkVersion(),
                 'last_updated' => $gateway->getLastUpdated(),
                 'sandbox_status' => $gateway->getSandboxStatus(),
                 'sandbox_tested_at' => $gateway->getSandboxTestedAt(),
                 'live_tested_at' => $gateway->getLiveTestedAt(),
-                'region_priority' => in_array('asia', $gateway->getRegionsList(), true) ? 0 : 1,
+                'region_priority' =>
+                    in_array('asia', $gateway->getRegionsList(), true) ? 0 : 1,
+                'needs_retest' => $gateway->getNeedsRetestSinceUpdate(),
             ],
             $gateways,
         );
 
-        $sort = Sort::only(['region_priority', 'name', 'sdk_version', 'last_updated', 'sandbox_status', 'live_tested_at'])
+        // 'sandbox_status' dropped from the sortable set: that column's
+        // property is now the filter's own GET param name
+        // (filterSandboxStatus, see GatewayStatusListWidget::render()),
+        // not a row data key, so it can no longer double as a sort key --
+        // same tradeoff InvsColumnBuilder's own filterClient column makes.
+        $sort = Sort::only([
+            'region_priority',
+            'name',
+            'sdk_version',
+            'last_updated',
+            'live_tested_at',
+        ])
             ->withOrder(['region_priority' => 'asc', 'name' => 'asc']);
 
         /**
@@ -216,16 +226,22 @@ final class SiteController
          *     sandbox_tested_at: string|null,
          *     live_tested_at: string|null,
          *     region_priority: int,
+         *     needs_retest: bool,
          * }> $paginator
          */
-        $paginator = (new OffsetPaginator(new IterableDataReader($rows)))->withSort($sort);
+        $paginator = (new OffsetPaginator(new IterableDataReader($rows)))
+            ->withSort($sort);
 
-        $widget = (new GatewayStatusListWidget($currentRoute, $urlGenerator, $translator))->withPaginator($paginator);
+        $widget = (new GatewayStatusListWidget(
+            $currentRoute,
+            $urlGenerator,
+            $translator,
+        ))
+            ->withPaginator($paginator)
+            ->withRegionOptions($regionOptions);
 
         return $this->webViewRenderer->render('gateway-status', [
             'gatewayStatusGrid' => $widget,
-            'regionOptions' => $regionOptions,
-            'selectedRegion' => $selectedRegion,
         ]);
     }
 

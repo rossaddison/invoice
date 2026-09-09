@@ -206,4 +206,19 @@ class GatewayStatus
     {
         $this->notes = $notes;
     }
+
+    /**
+     * Entity-side mirror of GatewayStatusRow::needsRetestSinceUpdate() --
+     * see that method's own docblock. Duplicated rather than shared: the
+     * two classes have no common ancestor/trait today (GatewayStatusRow is
+     * the JSON-sourced DTO GatewayStatusService reads/writes;
+     * GatewayStatus is the Cycle ORM entity SiteController::gatewayStatus()
+     * actually queries), so this follows the simplest option rather than
+     * introducing a new shared dependency for one boolean expression.
+     */
+    public function getNeedsRetestSinceUpdate(): bool
+    {
+        return $this->live_tested_at === null
+            || $this->live_tested_at < $this->last_updated;
+    }
 }

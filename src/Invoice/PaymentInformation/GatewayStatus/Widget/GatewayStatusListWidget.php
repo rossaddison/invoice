@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentInformation\GatewayStatus\Widget;
 
+use App\Widget\NoOpFilterFactory;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\Widget;
+use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
@@ -39,6 +41,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
  *     sandbox_tested_at: string|null,
  *     live_tested_at: string|null,
  *     region_priority: int,
+ *     needs_retest: bool,
  * }
  */
 final class GatewayStatusListWidget extends Widget
@@ -49,6 +52,9 @@ final class GatewayStatusListWidget extends Widget
      * @var OffsetPaginator<array-key, GatewayStatusRow>|null
      */
     private ?OffsetPaginator $paginator = null;
+
+    /** @var list<string> */
+    private array $regionOptions = [];
 
     public function __construct(
         private readonly CurrentRoute $currentRoute,
@@ -66,6 +72,27 @@ final class GatewayStatusListWidget extends Widget
         $new->paginator = $paginator;
         return $new;
     }
+
+    /**
+     * @param list<string> $regionOptions Every region present across all
+     *   gateways (unfiltered) -- the dropdown always lists every option,
+     *   not just the ones remaining after the current filter narrows the
+     *   grid, same as the hand-rolled <select> this replaces already did.
+     */
+    public function withRegionOptions(array $regionOptions): static
+    {
+        $new = clone $this;
+        $new->regionOptions = $regionOptions;
+        return $new;
+    }
+
+    // No withFilter()/current-filter-value setter needed: DropdownFilter's
+    // own renderFilter(Context $context) reads $context->value, which
+    // GridView populates itself from the same UrlParameterProvider passed
+    // to ->urlParameterProvider() below, keyed by each DataColumn's own
+    // property name -- confirmed against MakeFilterContext::getQueryValue()
+    // and InvsListWidget, which never passes InvIndexFilter into itself
+    // either for exactly this reason.
 
     #[\Override]
     public function render(): string
@@ -115,10 +142,28 @@ final class GatewayStatusListWidget extends Widget
                     bodyAttributes: ['data-label' => 'Gateway'],
                 ),
                 new DataColumn(
-                    'regions',
+                    // Native filter row (yiisoft/yii-dataview#355's
+                    // useInlineJs(false) + this app's own
+                    // NoOpFilterFactory) rather than a separate <form>
+                    // above the table -- mirrors
+                    // InvsColumnBuilder::buildColumns()'s filterClient
+                    // column exactly. property is the filter's own GET
+                    // param name (App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusFilter::$filterRegion),
+                    // not the row's data key, so this column gives up
+                    // native sorting the same way filterClient does --
+                    // it was never sortable before this change either.
+                    'filterRegion',
                     header: 'Regions',
                     withSorting: false,
                     content: self::regionsCell(...),
+                    filter: DropdownFilter::widget()
+                        ->addAttributes(['aria-label' => 'Filter by region'])
+                        ->optionsData(['' => 'All regions', ...array_combine(
+                            $this->regionOptions,
+                            array_map('ucwords', $this->regionOptions),
+                        )])
+                        ->useInlineJs(false),
+                    filterFactory: new NoOpFilterFactory(),
                     bodyAttributes: ['data-label' => 'Regions'],
                 ),
                 new DataColumn(
@@ -136,12 +181,40 @@ final class GatewayStatusListWidget extends Widget
                     bodyAttributes: ['data-label' => 'Last Updated'],
                 ),
                 new DataColumn(
-                    'sandbox_status',
+                    // Same property-is-the-filter-name/not-sortable
+                    // tradeoff as the regions column above.
+                    'filterSandboxStatus',
                     header: 'Sandbox Tested',
-                    withSorting: true,
+                    withSorting: false,
                     content: self::sandboxStatusCell(...),
                     encodeContent: false,
+                    filter: DropdownFilter::widget()
+                        ->addAttributes(['aria-label' => 'Filter by sandbox status'])
+                        ->optionsData([
+                            '' => 'Any',
+                            'pass' => 'Passing',
+                            'fail' => 'Failing',
+                        ])
+                        ->useInlineJs(false),
+                    filterFactory: new NoOpFilterFactory(),
                     bodyAttributes: ['data-label' => 'Sandbox Tested'],
+                ),
+                new DataColumn(
+                    'filterNeedsRetest',
+                    header: 'Retest?',
+                    withSorting: false,
+                    content: self::needsRetestCell(...),
+                    encodeContent: false,
+                    filter: DropdownFilter::widget()
+                        ->addAttributes(['aria-label' => 'Filter by retest status'])
+                        ->optionsData([
+                            '' => 'Any',
+                            'yes' => 'Needs retest',
+                            'no' => 'Up to date',
+                        ])
+                        ->useInlineJs(false),
+                    filterFactory: new NoOpFilterFactory(),
+                    bodyAttributes: ['data-label' => 'Retest?'],
                 ),
                 new DataColumn(
                     'live_tested_at',
@@ -201,6 +274,24 @@ final class GatewayStatusListWidget extends Widget
             ? ''
             : Html::tag('div', $row['sandbox_tested_at'], ['class' => 'small text-muted'])->render();
         return $badge->render() . $date;
+    }
+
+    /**
+     * True when this gateway's SDK version was bumped after -- or without
+     * ever having -- a real live payment run recorded against it (see
+     * App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusRow::needsRetestSinceUpdate()'s
+     * own docblock for why this is deliberately shown publicly).
+     *
+     * @param GatewayStatusRow $row
+     */
+    private static function needsRetestCell(array $row): string // NOSONAR: php:S1144 — used via self::needsRetestCell(...) first-class callable in render(), which this analyzer doesn't trace
+    {
+        return $row['needs_retest']
+            ? Html::span(
+                '⚠️ Updated since last live test',
+                ['class' => 'badge text-bg-warning'],
+            )->render()
+            : '';
     }
 
     /**
