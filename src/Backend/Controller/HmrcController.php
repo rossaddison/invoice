@@ -156,7 +156,8 @@ final class HmrcController extends BaseController
 
         $request = $this->createRequest(
             'GET',
-            $this->resolveHmrcApiBaseUrl() . '/organisations/vat/' . urlencode($vrn) . '/obligations?status=O',
+            $this->resolveHmrcApiBaseUrl()
+                . '/organisations/vat/' . urlencode($vrn) . '/obligations?status=O',
         );
 
         $request = RequestUtil::addHeaders($request, array_merge(
@@ -253,7 +254,8 @@ final class HmrcController extends BaseController
 
             $apiRequest = $this->createRequest(
                 'POST',
-                $this->resolveHmrcApiBaseUrl() . '/organisations/vat/' . urlencode($vrn) . '/returns',
+                $this->resolveHmrcApiBaseUrl()
+                    . '/organisations/vat/' . urlencode($vrn) . '/returns',
             );
 
             $apiRequest = RequestUtil::addHeaders($apiRequest, array_merge(
@@ -453,7 +455,8 @@ final class HmrcController extends BaseController
      */
     private function resolveHmrcApiBaseUrl(): string
     {
-        $this->developerSandboxHmrc->setEnvironment($this->sR->getEnv() === 'dev' ? 'dev' : 'prod');
+        $environment = $this->sR->getEnv() === 'dev' ? 'dev' : 'prod';
+        $this->developerSandboxHmrc->setEnvironment($environment);
         return $this->developerSandboxHmrc->getApiBaseUrl1();
     }
 
@@ -522,7 +525,19 @@ final class HmrcController extends BaseController
     private function getRequestLoggingMiddleware(string $logFile): callable
     {
         return fn (callable $handler): callable => function (Request $request, array $options) use ($handler, $logFile): PromiseInterface {
-            $headersJson = json_encode($request->getHeaders(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            // Redact the bearer token before it ever reaches the log file --
+            // the real $request (unmodified) is still what's actually sent
+            // to HMRC below; this only affects what gets written to disk.
+            $headersForLog = $request->getHeaders();
+            foreach (array_keys($headersForLog) as $name) {
+                if (strtolower((string) $name) === 'authorization') {
+                    $headersForLog[$name] = ['[REDACTED]'];
+                }
+            }
+            $headersJson = json_encode(
+                $headersForLog,
+                JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
+            );
 
             if ($headersJson === false) {
                 $headersJson = 'Error encoding headers';
