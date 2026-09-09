@@ -126,6 +126,16 @@ final class GatewayStatusListWidget extends Widget
         $gridView = GridView::widget()
             ->containerAttributes(['id' => self::DOM_ID, 'class' => 'position-relative'])
             ->tableAttributes(['class' => 'table table-striped align-middle'])
+            // Without this, GridView drops a column's own bodyAttributes
+            // (including data-label) whenever that cell's rendered content
+            // is empty -- needsRetestCell() returns '' for every gateway
+            // that's up to date (the common, good case), which silently
+            // broke this app's own mobile-stacking convention
+            // (docs/BOOTSTRAP5_TABLE_MOBILE_STACKING.md) for the "Retest?"
+            // column specifically: confirmed live via
+            // ?filterNeedsRetest=no rendering bare <td> with no
+            // data-label="Retest?" at all. yiisoft/yii-dataview#359.
+            ->keepColumnAttributesInEmptyCell(true)
             ->dataReader($this->paginator)
             ->urlParameterProvider(new UrlParameterProvider($this->currentRoute))
             ->urlCreator(new UrlCreator($this->urlGenerator))

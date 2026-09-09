@@ -830,3 +830,21 @@ live by an actual Renovate merge as of this commit — the next auto-merged
 gateway-package PR is the real end-to-end check, the same "verify live,
 not just by reading the workflow file" standard this project holds its
 other CI changes to (see e.g. `docs/GATEWAY_STATUS_CI_ENV_FIX_AUGUST_2026.md`).
+
+## Empty-cell mobile-stacking fix (September 2026)
+
+Found while surveying which other recent `yiisoft/yii-dataview` releases
+might be worth adopting here: `GridView` drops a column's own
+`bodyAttributes` (including `data-label`, this app's mobile-stacking
+convention — `docs/BOOTSTRAP5_TABLE_MOBILE_STACKING.md`) whenever that
+cell's rendered content is empty. `needsRetestCell()` returns `''` for
+every gateway that's up to date — the common, good case — so
+`data-label="Retest?"` was silently missing on mobile for exactly those
+rows, confirmed live via `?filterNeedsRetest=no` rendering a bare `<td>`
+with no `data-label` at all. `GridView::keepColumnAttributesInEmptyCell(
+bool $enabled = true)` (`yiisoft/yii-dataview#359`, already present on the
+`dev-master` version this app runs) fixes it with one call in
+`GatewayStatusListWidget::render()`. Verified: full-project Psalm clean,
+Testo 1306/1306 and PHPUnit 3907/3907 both unaffected, and re-confirmed
+live — `?filterNeedsRetest=no` now renders `data-label="Retest?"` on every
+row.
