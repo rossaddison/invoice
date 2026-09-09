@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d9e6a98106e00158cd291a79529a8364",
+    "content-hash": "0324a9660e13284ba387199284bdcc44",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -20492,16 +20492,16 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "6.8.0",
+            "version": "6.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "9477163878f786fa57153a0173425879b645aee8"
+                "reference": "08c8a2d256e8f8e4b6f86d44d3044494194df552"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/9477163878f786fa57153a0173425879b645aee8",
-                "reference": "9477163878f786fa57153a0173425879b645aee8",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/08c8a2d256e8f8e4b6f86d44d3044494194df552",
+                "reference": "08c8a2d256e8f8e4b6f86d44d3044494194df552",
                 "shasum": ""
             },
             "require": {
@@ -20569,7 +20569,7 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/6.8.0"
+                "source": "https://github.com/zircote/swagger-php/tree/6.8.1"
             },
             "funding": [
                 {
@@ -20577,7 +20577,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-08T05:24:16+00:00"
+            "time": "2026-09-09T03:13:32+00:00"
         }
     ],
     "packages-dev": [
