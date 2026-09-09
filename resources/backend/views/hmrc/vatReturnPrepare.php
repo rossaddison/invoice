@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\Button;
+use Yiisoft\Yii\View\Renderer\Csrf;
 
 /**
  * @var string $vrn
@@ -14,6 +15,7 @@ use Yiisoft\Html\Tag\Button;
  * @var float  $box4  input VAT reclaimed (auto from PurchaseEntry.vat_amount)
  * @var float  $box6  sales ex-VAT (auto from InvAmount.item_subtotal)
  * @var float  $box7  purchases ex-VAT (auto from PurchaseEntry.amount_ex_vat)
+ * @var Csrf   $csrf
  */
 
 $submitAction = '/backend/hmrc/vatReturnSubmit';
@@ -30,6 +32,7 @@ echo H::openTag('div', ['class' => 'container mt-4']);
 
     echo H::openTag('div', ['class' => 'card-body']);
      echo H::openTag('form', ['method' => 'post', 'action' => $submitAction, 'id' => 'vat100-form']);
+      echo H::hiddenInput('_csrf', $csrf);
       echo H::input('hidden', 'periodKey', H::encode($periodKey));
 
       /**
