@@ -236,3 +236,27 @@ hand-built form in this app (`invoice/inv/trash.php`,
 `invoice/salesorderitem/_item_edit_form.php`,
 `invoice/setting/tab_index.php`, ...) — `$csrf` is ambiently available in
 every view already, no controller change needed.
+
+**That fix alone didn't actually resolve it live**, and chasing why took
+a real production debugging detour, worth recording since none of it was
+a code bug in the end except the final root cause: an Apache restart
+didn't help (ruled out — the `<meta name="csrf">` token value changed
+between page loads, proving PHP was genuinely re-executing, not serving
+a cached page); `git status`/`git show HEAD:...`/`cat` on the file all
+confirmed the fix really was on disk and committed; `find /` confirmed
+only one copy of the file existed on the filesystem, no stale duplicate
+checkout. The real cause: **the redirect was happening from a different
+action's view entirely.** `vatObligations.php`'s "Prepare Return" button
+links to `vatReturnPrepare` (GET), which renders its own separate view,
+`vatReturnPrepare.php` — not `vatReturnSubmit.php`'s own GET-render
+branch, which is only reached if that URL is visited directly. The
+`_csrf` fix above was real and correct for `vatReturnSubmit.php`, but
+irrelevant to this actual user journey, since `vatReturnPrepare.php`
+(never previously touched) had the exact same missing-`_csrf` bug
+independently. Fixed there too, same pattern. Also surfaced along the
+way, unrelated but worth knowing for next time: `php-fpm84` runs as a
+separate OpenRC service from `apache2` on `yii3i.online` — restarting
+Apache does not restart it or clear its own OPcache, needed
+`rc-service php-fpm84 restart` specifically (this particular incident
+didn't actually need it, but it's a real gap in the deploy checklist for
+next time a code change doesn't seem to take effect after a restart).
