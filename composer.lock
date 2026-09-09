@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d9e6a98106e00158cd291a79529a8364",
+    "content-hash": "c79a5a10e222c4fc75281b8c46e6ee7b",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -1093,16 +1093,16 @@
         },
         {
             "name": "brick/money",
-            "version": "0.14.2",
+            "version": "0.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/money.git",
-                "reference": "1381b2884cbd758985766df4ee9f63539d1f934f"
+                "reference": "20800223bedea899ae5b27f7272d47b5f17ab01c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/money/zipball/1381b2884cbd758985766df4ee9f63539d1f934f",
-                "reference": "1381b2884cbd758985766df4ee9f63539d1f934f",
+                "url": "https://api.github.com/repos/brick/money/zipball/20800223bedea899ae5b27f7272d47b5f17ab01c",
+                "reference": "20800223bedea899ae5b27f7272d47b5f17ab01c",
                 "shasum": ""
             },
             "require": {
@@ -1118,7 +1118,7 @@
                 "phpunit/phpunit": "^11.0"
             },
             "suggest": {
-                "ext-intl": "Required to format Money objects"
+                "ext-intl": "Required to format Money objects to a locale (needs ICU 62.1 or later)"
             },
             "type": "library",
             "autoload": {
@@ -1138,7 +1138,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/money/issues",
-                "source": "https://github.com/brick/money/tree/0.14.2"
+                "source": "https://github.com/brick/money/tree/0.15.0"
             },
             "funding": [
                 {
@@ -1146,7 +1146,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-28T21:06:24+00:00"
+            "time": "2026-09-09T19:49:01+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
