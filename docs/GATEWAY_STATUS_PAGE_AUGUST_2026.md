@@ -165,10 +165,12 @@ modeled closely on the smaller `App\User\Widget\UsersListWidget` rather than
 the much larger `InvsListWidget`, since a public ~8-15-row reference table
 doesn't need bulk-action toolbars, CSV export, or group-by): sortable column
 headers (Gateway, SDK Version, Last Updated, Sandbox Tested, Live Tested),
-real pagination widget wiring, and a region filter (`<select>` + GET submit —
-deliberately a plain form rather than `yii-dataview`'s built-in
-`DropdownFilter`, since that component has a documented CSP history in this
-project — see `docs/YII_DATAVIEW_DROPDOWNFILTER_UPSTREAM_FIX.md`). The table
+real pagination widget wiring, and (as of August 2026 — since superseded,
+see "Native filter row replaces the hand-rolled `<form>`" below) a region
+filter built as a plain `<select>` + GET submit rather than
+`yii-dataview`'s built-in `DropdownFilter`, since that component had a
+documented CSP history in this project at the time — see
+`docs/YII_DATAVIEW_DROPDOWNFILTER_UPSTREAM_FIX.md`. The table
 also gets this project's existing mobile-stacking treatment for free
 (`docs/BOOTSTRAP5_TABLE_MOBILE_STACKING.md`'s global `@media (max-width:
 767px)` CSS) via `data-label` attributes on each column.

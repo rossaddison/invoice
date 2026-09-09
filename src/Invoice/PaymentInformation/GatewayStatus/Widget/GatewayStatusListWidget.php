@@ -282,9 +282,12 @@ final class GatewayStatusListWidget extends Widget
      * App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusRow::needsRetestSinceUpdate()'s
      * own docblock for why this is deliberately shown publicly).
      *
+     * NOSONAR php:S1144 justification: used via self::needsRetestCell(...)
+     * first-class callable in render(), which this analyzer doesn't trace.
+     *
      * @param GatewayStatusRow $row
      */
-    private static function needsRetestCell(array $row): string // NOSONAR: php:S1144 — used via self::needsRetestCell(...) first-class callable in render(), which this analyzer doesn't trace
+    private static function needsRetestCell(array $row): string // NOSONAR: php:S1144
     {
         return $row['needs_retest']
             ? Html::span(
