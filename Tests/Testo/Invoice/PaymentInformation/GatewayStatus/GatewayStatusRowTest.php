@@ -59,4 +59,47 @@ final class GatewayStatusRowTest
         $row = $this->makeRow('2026-01-01');
         Assert::true($row->isExpired('2026-08-08'));
     }
+
+    private function makeRowWithLiveTest(string $lastUpdated, ?string $liveTestedAt): GatewayStatusRow
+    {
+        return new GatewayStatusRow(
+            key: 'gocardless',
+            name: 'GoCardless',
+            composerPackage: 'gocardless/gocardless-pro',
+            sdkVersion: '8.1.1',
+            lastUpdated: $lastUpdated,
+            sandboxEnvVars: [],
+            sandboxTestedAt: null,
+            sandboxStatus: null,
+            sandboxLastError: null,
+            liveTestedAt: $liveTestedAt,
+            sandboxExpiryDate: null,
+            regions: [],
+            notes: null,
+        );
+    }
+
+    public function needsRetestSinceUpdateReturnsTrueWhenNeverLiveTested(): void
+    {
+        $row = $this->makeRowWithLiveTest('2026-09-05', null);
+        Assert::true($row->needsRetestSinceUpdate());
+    }
+
+    public function needsRetestSinceUpdateReturnsTrueWhenLiveTestPredatesTheUpdate(): void
+    {
+        $row = $this->makeRowWithLiveTest('2026-09-05', '2026-08-16');
+        Assert::true($row->needsRetestSinceUpdate());
+    }
+
+    public function needsRetestSinceUpdateReturnsFalseWhenLiveTestedTheSameDayAsTheUpdate(): void
+    {
+        $row = $this->makeRowWithLiveTest('2026-09-05', '2026-09-05');
+        Assert::false($row->needsRetestSinceUpdate());
+    }
+
+    public function needsRetestSinceUpdateReturnsFalseWhenLiveTestedAfterTheUpdate(): void
+    {
+        $row = $this->makeRowWithLiveTest('2026-09-05', '2026-09-07');
+        Assert::false($row->needsRetestSinceUpdate());
+    }
 }

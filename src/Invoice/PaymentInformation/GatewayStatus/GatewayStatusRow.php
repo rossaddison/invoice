@@ -188,4 +188,22 @@ final readonly class GatewayStatusRow
     {
         return $this->sandboxExpiryDate !== null && $this->sandboxExpiryDate <= $today;
     }
+
+    /**
+     * True when this gateway's SDK version was bumped (last_updated) after
+     * -- or without ever having -- a real live payment run recorded
+     * against it. The concrete trigger: GoCardless's SDK was
+     * `composer update`d without a live trial run afterward; the automated
+     * weekly sandbox ping (a read-only API call) re-passing doesn't prove
+     * the actual checkout/webhook flow still works against the new
+     * version, only that authentication still does. Shown publicly on
+     * `/gateway-status` (see docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md) --
+     * a deliberate transparency choice, matching the page's whole purpose
+     * of showing what's actually verified rather than just what's pinned.
+     */
+    public function needsRetestSinceUpdate(): bool
+    {
+        return $this->liveTestedAt === null
+            || $this->liveTestedAt < $this->lastUpdated;
+    }
 }
