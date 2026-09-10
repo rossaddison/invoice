@@ -296,7 +296,8 @@ final class HmrcController extends BaseController
     }
 
     /**
-     * List self-employment businesses for the NINO stored in session.
+     * List every business (of any type) registered for the NINO stored in
+     * session.
      *
      * Live-testing fix 2026-09-10: this used to call the
      * self-employment-business-api's own "list all businesses" endpoint
@@ -308,10 +309,21 @@ final class HmrcController extends BaseController
      * different API entirely -- Business Details (MTD)'s own /list
      * endpoint, which returns every business type (self-employment,
      * uk-property, foreign-property, property-unspecified) keyed by
-     * typeOfBusiness; filtered here to self-employment ones to keep this
-     * page's own stated scope. Needs its own Developer Hub subscription
-     * (Business Details (MTD)), separate from Self Employment Business.
+     * typeOfBusiness. Needs its own Developer Hub subscription (Business
+     * Details (MTD)), separate from Self Employment Business.
      * https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/business-details-api/2.0
+     *
+     * Live-testing fix 2026-09-10 (same day, second pass): this used to
+     * filter the /list response down to typeOfBusiness === 'self-employment'
+     * -- reasonable when the only way here was the "Self-employed Business"
+     * catalogue entry, but HmrcApiCatalogue::routeFor() also sends the
+     * "Business Details" catalogue entry to this same action (deliberately,
+     * per its own docblock -- Business Details is the API that actually
+     * backs this page now), and a NINO whose businesses are all
+     * uk-property/foreign-property made that entry point look like it
+     * "returned nothing". No filtering now -- every business type is
+     * shown, with its type as its own column, so both catalogue entries
+     * get a correct result.
      */
     public function selfEmploymentBusinesses(): Response
     {
@@ -346,16 +358,11 @@ final class HmrcController extends BaseController
         $parsed = (array) json_decode($apiResponse->getBody()->getContents(), true);
         /** @var list<array<string, mixed>> $allBusinesses */
         $allBusinesses = $parsed['listOfBusinesses'] ?? [];
-        $selfEmploymentBusinesses = array_values(array_filter(
-            $allBusinesses,
-            static fn (array $biz): bool =>
-                ($biz['typeOfBusiness'] ?? '') === 'self-employment',
-        ));
 
         return $this->webViewRenderer->render('selfEmploymentBusinesses', [
             'nino'          => $nino,
             'statusCode'    => $apiResponse->getStatusCode(),
-            'businesses'    => $selfEmploymentBusinesses,
+            'businesses'    => $allBusinesses,
             'raw'           => $parsed,
         ]);
     }

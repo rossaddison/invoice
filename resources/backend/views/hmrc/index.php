@@ -208,18 +208,30 @@ if ($availableApis === []) {
             HmrcApiCatalogue::NEEDS_EORI => ' [EORI]',
             default                      => '',
         };
+        // No route means no page is wired up for this API yet (see
+        // HmrcApiCatalogue::routeFor()'s own docblock for which ones
+        // are) -- disabling the option outright rather than leaving it
+        // selectable with a permanently-disabled Go button, which read
+        // as broken (reported live 2026-09-10: picking Self Assessment,
+        // logged in, Go never enabled -- correct given no route exists,
+        // but nothing said so).
+        $optionLabel = $entry['name'] . ' v' . $entry['version'] . $needsLabel;
+        if ($route === null) {
+            $optionLabel .= ' — not yet available';
+        }
         echo H::tag('option',
-            H::encode($entry['name'] . ' v' . $entry['version'] . $needsLabel),
+            H::encode($optionLabel),
             [
                 'value'       => $context,
                 'data-route'  => $routeUrl,
                 'data-needs'  => $entry['needs'],
+                'disabled'    => $route === null,
             ]);
     }
 
     echo H::closeTag('select');
     echo H::tag('small',
-        'Routes marked [NINO] require logging in via HMRC OAuth first.',
+        '"Not yet available" options don\'t have a page built for them yet.',
         ['class' => 'text-muted']);
     echo H::closeTag('div');
 
