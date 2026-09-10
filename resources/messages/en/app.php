@@ -1480,6 +1480,15 @@ prior to importing and no existing documents e.g. Invoices.',
       . ' needs the Test Fraud Prevention Headers API added under its'
       . ' subscriptions — {link}.',
   'mtd.fph.manage.subscriptions.link.text' => 'add it here',
+  'mtd.fph.missing.otp.session' =>
+    'Your two-factor authentication session details are missing or'
+      . ' expired, which Fraud Prevention Headers testing needs. Log'
+      . ' out and back in, then try again.',
+  'mtd.fph.feedback.no.client.credentials.token' =>
+    'Could not get an application-restricted access token from HMRC'
+      . ' (check DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_ID and'
+      . ' _CLIENT_SECRET in .env) -- FPH Feedback needs this, separate'
+      . ' from the token used by every other HMRC page here.',
   'mtd.gov.client.browser.do.not.track' =>
     'A value that indicates whether'
     . ' the Do Not Track option is turned on in the browser',
