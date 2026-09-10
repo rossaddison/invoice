@@ -1485,10 +1485,16 @@ prior to importing and no existing documents e.g. Invoices.',
       . ' expired, which Fraud Prevention Headers testing needs. Log'
       . ' out and back in, then try again.',
   'mtd.fph.feedback.no.client.credentials.token' =>
-    'Could not get an application-restricted access token from HMRC'
-      . ' (check DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_ID and'
-      . ' _CLIENT_SECRET in .env) -- FPH Feedback needs this, separate'
-      . ' from the token used by every other HMRC page here.',
+    'DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_ID or _CLIENT_SECRET is not'
+      . ' set in .env -- FPH Feedback needs its own application-'
+      . ' restricted access token from HMRC, separate from the token'
+      . ' used by every other HMRC page here.',
+  'mtd.fph.feedback.client.credentials.error' =>
+    'HMRC rejected the request for an application-restricted access'
+      . ' token: "{error}" — {description}',
+  'mtd.fph.feedback.unexpected.token.response' =>
+    'HMRC returned a 200 for the application-restricted access token'
+      . ' request, but no access_token was in the response body.',
   'mtd.gov.client.browser.do.not.track' =>
     'A value that indicates whether'
     . ' the Do Not Track option is turned on in the browser',
