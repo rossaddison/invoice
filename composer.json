@@ -1,7 +1,7 @@
 {
     "name": "rossaddison/invoice",
     "type": "project",
-    "description": "Builds the invoice folder for rossaddison/yii3-i",
+    "description": "Open-source e-invoicing platform for Yii3 (UBL 2.4/Peppol).",
     "keywords": [
         "yii",
         "app",
