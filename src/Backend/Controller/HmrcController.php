@@ -53,7 +53,21 @@ final class HmrcController extends BaseController
         $this->sR = $sR;
         $this->translator = $translator;
         $this->userService = $userService;
-        $this->webViewRenderer = $webViewRenderer->withViewPath('@hmrc');
+        // Live-testing fix 2026-09-10: this used to chain off the raw
+        // $webViewRenderer constructor parameter, which discarded the
+        // permission-based layout parent::__construct() already picked
+        // via BaseController::initializeViewRenderer() (the same
+        // mechanism every other BaseController subclass relies on to
+        // get invoice.php/guest.php instead of the DI-default public
+        // soletrader/main.php layout) -- reported live as a large blank
+        // gap between the navbar and page content, since this
+        // controller had silently been rendering every page with the
+        // public marketing layout regardless of the logged-in admin's
+        // actual permissions. Chaining off $this->webViewRenderer
+        // (already correctly configured by parent::__construct())
+        // preserves that layout selection while still applying the
+        // @hmrc view path on top of it.
+        $this->webViewRenderer = $this->webViewRenderer->withViewPath('@hmrc');
     }
 
     public function index(): Response
