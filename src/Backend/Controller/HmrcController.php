@@ -126,8 +126,10 @@ final class HmrcController extends BaseController
         #[RouteArgument('api')]
         string $api,
     ): Response {
-        $accessToken = $this->fetchClientCredentialsAccessToken();
-        if ($accessToken === null) {
+        $clientId = $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_ID'] ?? '';
+        $clientSecret = $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_SECRET']
+            ?? '';
+        if ($clientId === '' || $clientSecret === '') {
             $this->flashMessage(
                 'danger',
                 $this->translator->translate(
@@ -136,6 +138,36 @@ final class HmrcController extends BaseController
             );
             return $this->webService->getRedirectResponse('backend/hmrc/index');
         }
+
+        $tokenResponse = $this->requestClientCredentialsToken(
+            $clientId,
+            $clientSecret,
+        );
+        /** @var array<string, mixed> $tokenParsed */
+        $tokenParsed = (array) json_decode(
+            $tokenResponse->getBody()->getContents(),
+            true,
+        );
+
+        if ($tokenResponse->getStatusCode() !== 200) {
+            $this->flashClientCredentialsTokenError($tokenParsed);
+            return $this->webService->getRedirectResponse('backend/hmrc/index');
+        }
+
+        $hasAccessToken = isset($tokenParsed['access_token'])
+            && is_string($tokenParsed['access_token'])
+            && $tokenParsed['access_token'] !== '';
+        if (!$hasAccessToken) {
+            $this->flashMessage(
+                'danger',
+                $this->translator->translate(
+                    'mtd.fph.feedback.unexpected.token.response',
+                ),
+            );
+            return $this->webService->getRedirectResponse('backend/hmrc/index');
+        }
+
+        $accessToken = $tokenParsed['access_token'];
 
         $otpReference = (string) $this->session->get('otpRef');
         $logFile = $this->sR->specificCommonConfigAliase('@hmrc')
@@ -188,16 +220,16 @@ final class HmrcController extends BaseController
      * hmrc_access_token every user-restricted action here uses). The
      * token endpoint is always api.service.hmrc.gov.uk, even for a
      * sandbox application-restricted API like this one -- confirmed
-     * against the real txm-fph-validator-api OAS spec.
+     * against the real txm-fph-validator-api OAS spec. Returns the raw
+     * response rather than just a token/null -- fphFeedback() needs the
+     * body on failure too, to show the real reason (see
+     * flashClientCredentialsTokenError()'s own docblock for why a
+     * generic "could not get a token" message wasn't good enough live).
      */
-    private function fetchClientCredentialsAccessToken(): ?string
-    {
-        $clientId = $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_ID'] ?? '';
-        $clientSecret = $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_SECRET'] ?? '';
-        if ($clientId === '' || $clientSecret === '') {
-            return null;
-        }
-
+    private function requestClientCredentialsToken(
+        string $clientId,
+        string $clientSecret,
+    ): Response {
         $body = http_build_query([
             'grant_type'    => 'client_credentials',
             'client_id'     => $clientId,
@@ -212,18 +244,36 @@ final class HmrcController extends BaseController
         ]);
         $request = $request->withBody(\GuzzleHttp\Psr7\Utils::streamFor($body));
 
-        $response = $this->sendRequest($request);
-        if ($response->getStatusCode() !== 200) {
-            return null;
+        return $this->sendRequest($request);
+    }
+
+    /**
+     * Live-testing fix 2026-09-10: the first version of this flow just
+     * flashed a generic "could not get a token" message for every
+     * token-request failure -- reported live as unhelpful when
+     * client_id/secret were genuinely configured and the real problem
+     * was HMRC rejecting the request for a different reason (e.g. the
+     * application not being enabled for the Client Credentials grant
+     * type). This endpoint's errors use the plain OAuth 2.0 RFC 6749
+     * shape (error/error_description) -- confirmed via HMRC's own
+     * reference guide -- not the code/message shape every other HMRC
+     * endpoint in this app uses (flashFphValidateError() handles that
+     * one), so it needs its own parsing.
+     *
+     * @param array<string, mixed> $parsed
+     */
+    private function flashClientCredentialsTokenError(array $parsed): void
+    {
+        $error = (string) ($parsed['error'] ?? '');
+        $description = (string) ($parsed['error_description'] ?? '');
+        if ($error === '' && $description === '') {
+            $description = 'HMRC returned an unreadable error response.';
         }
 
-        /** @var array<string, mixed> $parsed */
-        $parsed = (array) json_decode($response->getBody()->getContents(), true);
-        if (!isset($parsed['access_token']) || !is_string($parsed['access_token'])) {
-            return null;
-        }
-
-        return $parsed['access_token'] !== '' ? $parsed['access_token'] : null;
+        $this->flashMessage('danger', $this->translator->translate(
+            'mtd.fph.feedback.client.credentials.error',
+            ['error' => $error, 'description' => $description],
+        ));
     }
 
     /**
