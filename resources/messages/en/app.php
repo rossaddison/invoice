@@ -1560,6 +1560,47 @@ prior to importing and no existing documents e.g. Invoices.',
       'National Insurance Number or HMRC access token not set',
   'mtd.vat.obligations' => 'VAT Obligations',
   'mtd.vat.return.submit' => 'Submit VAT Return',
+  // Live-testing fix 2026-09-10: vatReturnResult.php's top banner used
+  // to read only "HMRC returned HTTP {statusCode}." -- reported live as
+  // not meaningful on its own (the raw HTTP status alone doesn't say
+  // what actually went wrong). These map every error code HMRC's own
+  // vat-api/1.0 reference guide documents for Submit-VAT-return-for-period
+  // (fetched live, not guessed) to a plain-English explanation, keyed by
+  // the exact code strings HMRC returns (VRN_INVALID/PERIOD_KEY_INVALID/
+  // INVALID_REQUEST/VAT_TOTAL_VALUE/VAT_NET_VALUE/INVALID_NUMERIC_VALUE/
+  // INVALID_MONETARY_AMOUNT at HTTP 400; NOT_FINALISED/
+  // DUPLICATE_SUBMISSION/TAX_PERIOD_NOT_ENDED/
+  // CLIENT_OR_AGENT_NOT_AUTHORISED/RULE_INSOLVENT_TRADER at HTTP 403).
+  'mtd.vat.return.error.vrn_invalid' =>
+      'The VAT Registration Number provided is invalid.',
+  'mtd.vat.return.error.period_key_invalid' =>
+      'The period key for this VAT return is invalid or unrecognised.',
+  'mtd.vat.return.error.invalid_request' =>
+      'HMRC rejected this request as malformed.',
+  'mtd.vat.return.error.vat_total_value' =>
+      'Box 3 (Total VAT due) must equal Box 1 + Box 2.',
+  'mtd.vat.return.error.vat_net_value' =>
+      'Box 5 (Net VAT due) must equal the difference between Box 3 and'
+      . ' Box 4.',
+  'mtd.vat.return.error.invalid_numeric_value' =>
+      'One of the submitted values is not a valid number.',
+  'mtd.vat.return.error.invalid_monetary_amount' =>
+      'One of the submitted amounts is not a valid monetary value (0 to'
+      . ' 99,999,999,999.99, to 2 decimal places).',
+  'mtd.vat.return.error.not_finalised' =>
+      'This return was not declared as final -- tick the declaration'
+      . ' checkbox and resubmit.',
+  'mtd.vat.return.error.duplicate_submission' =>
+      'A VAT return has already been submitted for this period.',
+  'mtd.vat.return.error.tax_period_not_ended' =>
+      'This tax period has not ended yet -- HMRC cannot accept a return'
+      . ' before the period closes.',
+  'mtd.vat.return.error.client_or_agent_not_authorised' =>
+      'This account is not authorised to submit VAT returns for this'
+      . ' VRN.',
+  'mtd.vat.return.error.rule_insolvent_trader' =>
+      'HMRC\'s records show this trader as insolvent, so returns cannot'
+      . ' be accepted.',
   'purchase.entry.add' => 'Add Purchase Entry',
   'purchase.entry.csv.imported' => 'Imported {count} purchase entries ({skipped} rows skipped).',
   'purchase.entry.csv.no.file' => 'No CSV file uploaded or upload error.',
