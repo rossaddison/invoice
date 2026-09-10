@@ -68,6 +68,8 @@ final class HmrcController extends BaseController
         $hmrcAuthUrl = $this->developerSandboxHmrc->getClientId() !== ''
             ? $this->urlGenerator->generate('auth/authclient', ['authclient' => 'developersandboxhmrc'])
             : '';
+        $developerHubAppId = $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_APPLICATION_ID']
+            ?? '';
 
         return $this->webViewRenderer->render('index', [
             'vrn'                  => $this->sR->getSetting('vat_registration_number'),
@@ -79,6 +81,7 @@ final class HmrcController extends BaseController
             'fullCatalogue'        => HmrcApiCatalogue::all(),
             'subscriptionsLoaded'  => $subscriptions !== [],
             'hmrcAuthUrl'          => $hmrcAuthUrl,
+            'developerHubAppId'    => $developerHubAppId,
         ]);
     }
 

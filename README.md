@@ -547,6 +547,14 @@ yet wired through to the controller HTTP calls.
    DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_SECRET=...
    DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_RETURN_URL=...
    ```
+5. Also copy the application's own **application ID** — the UUID in the URL bar
+   on its "Manage application" page, *not* the client ID above — into `.env`:
+   ```
+   DEVELOPER_GOV_SANDBOX_HMRC_API_APPLICATION_ID=...
+   ```
+   This powers the "HMRC Developer Hub" dropdown on `/backend/hmrc` (shown once
+   logged in via HMRC OAuth), which links straight to that application's Manage,
+   Subscriptions, Client secrets, Redirect URIs, and other Developer Hub pages.
 
 ### Step 2 — Subscribe to All Relevant APIs
 
