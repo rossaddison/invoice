@@ -97,22 +97,133 @@ final class HmrcController extends BaseController
      * `MATCHING_RESOURCE_NOT_FOUND` otherwise (confirmed live). See
      * `resources/backend/views/hmrc/index.php`'s own link for the caller.
      * Full enum: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/txm-fph-validator-api/1.0/oas/resolved
+     *
+     * Live-testing fix 2026-09-10: two more real bugs found together.
+     *
+     * 1. This called Guzzle's own get() (http_errors defaults to true
+     *    there, unlike the PSR-18 sendRequest() every other action in
+     *    this controller uses, which never throws for an HTTP error
+     *    status) -- any non-2xx crashed with an uncaught
+     *    GuzzleHttp\Exception\ClientException rendered as a raw stack
+     *    trace, confirmed live (401 INVALID_CREDENTIALS). Switched to
+     *    the same createRequest()/sendRequest() pattern as everything
+     *    else here.
+     *
+     * 2. That 401 was real, not just badly presented: this endpoint
+     *    (GET .../validation-feedback) is application-restricted per
+     *    its own OAS spec -- it needs a Client Credentials grant token
+     *    (this app's own client_id/secret exchanged directly, no user
+     *    involved), not the user-restricted 3-legged OAuth token
+     *    (hmrc_access_token) every other action here correctly uses.
+     *    Fetches its own token via fetchClientCredentialsAccessToken()
+     *    rather than reading the session's user token.
+     *
+     * Also added the Accept header the spec requires (missing before)
+     * and a proper results view instead of returning HMRC's raw
+     * response -- same reasoning as fphValidate()'s own fix.
      */
     public function fphFeedback(
         #[RouteArgument('api')]
         string $api,
     ): Response {
-        $logFile = $this->sR->specificCommonConfigAliase('@hmrc') . '/hmrc-requests.log';
-        $otpReference = (string) $this->session->get('otpRef');
-        $tokenString = (string) $this->session->get('hmrc_access_token');
-        $client = $this->createLoggedGuzzleClient($logFile);
+        $accessToken = $this->fetchClientCredentialsAccessToken();
+        if ($accessToken === null) {
+            $this->flashMessage(
+                'danger',
+                $this->translator->translate(
+                    'mtd.fph.feedback.no.client.credentials.token',
+                ),
+            );
+            return $this->webService->getRedirectResponse('backend/hmrc/index');
+        }
 
-        return $client->get($this->getFphValidationFeedbackUrl($api), [
-            'headers' => array_merge(
-                ['Authorization' => 'Bearer ' . $tokenString],
-                $this->getWebAppViaServerHeaders($otpReference),
-            ),
+        $otpReference = (string) $this->session->get('otpRef');
+        $logFile = $this->sR->specificCommonConfigAliase('@hmrc')
+            . '/hmrc-requests.log';
+
+        $request = $this->createRequest(
+            'GET',
+            $this->getFphValidationFeedbackUrl($api),
+        );
+        $request = RequestUtil::addHeaders($request, array_merge(
+            [
+                'Accept'        => 'application/vnd.hmrc.1.0+json',
+                'Authorization' => 'Bearer ' . $accessToken,
+            ],
+            $this->getWebAppViaServerHeaders($otpReference),
+        ));
+
+        // PSR-18 sendRequest() (not Guzzle's own get()) so an HTTP error
+        // status comes back as a normal Response, not a thrown
+        // exception -- same reasoning as the docblock above. Uses its
+        // own logged client rather than $this->sendRequest() purely so
+        // this specific request is still written to hmrc-requests.log,
+        // same as before this fix.
+        $loggedClient = $this->createLoggedGuzzleClient($logFile);
+        $apiResponse = $loggedClient->sendRequest($request);
+        /** @var array<string, mixed> $parsed */
+        $parsed = (array) json_decode(
+            $apiResponse->getBody()->getContents(),
+            true,
+        );
+
+        if ($apiResponse->getStatusCode() !== 200) {
+            $this->flashFphValidateError($parsed);
+            return $this->webService->getRedirectResponse('backend/hmrc/index');
+        }
+
+        /** @var list<array<string, mixed>> $requests */
+        $requests = $parsed['requests'] ?? [];
+
+        return $this->webViewRenderer->render('fphFeedback', [
+            'api'      => $api,
+            'requests' => $requests,
         ]);
+    }
+
+    /**
+     * Application-restricted OAuth 2.0 Client Credentials grant -- this
+     * app's own client_id/secret exchanged directly for a token, no
+     * user session involved (distinct from the 3-legged
+     * hmrc_access_token every user-restricted action here uses). The
+     * token endpoint is always api.service.hmrc.gov.uk, even for a
+     * sandbox application-restricted API like this one -- confirmed
+     * against the real txm-fph-validator-api OAS spec.
+     */
+    private function fetchClientCredentialsAccessToken(): ?string
+    {
+        $clientId = $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_ID'] ?? '';
+        $clientSecret = $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_SECRET'] ?? '';
+        if ($clientId === '' || $clientSecret === '') {
+            return null;
+        }
+
+        $body = http_build_query([
+            'grant_type'    => 'client_credentials',
+            'client_id'     => $clientId,
+            'client_secret' => $clientSecret,
+        ]);
+
+        $tokenUrl = 'https://api.service.hmrc.gov.uk/oauth/token';
+        $request = $this->createRequest('POST', $tokenUrl);
+        $request = RequestUtil::addHeaders($request, [
+            'Content-Type' => 'application/x-www-form-urlencoded',
+            'Accept'       => 'application/json',
+        ]);
+        $request = $request->withBody(\GuzzleHttp\Psr7\Utils::streamFor($body));
+
+        $response = $this->sendRequest($request);
+        if ($response->getStatusCode() !== 200) {
+            return null;
+        }
+
+        /** @var array<string, mixed> $parsed */
+        $parsed = (array) json_decode($response->getBody()->getContents(), true);
+        if (!isset($parsed['access_token']) || !is_string($parsed['access_token'])) {
+            return null;
+        }
+
+        return $parsed['access_token'] !== '' ? $parsed['access_token'] : null;
     }
 
     /**
@@ -127,59 +238,79 @@ final class HmrcController extends BaseController
      * (https://developer.service.hmrc.gov.uk/developer/applications/{id}/subscriptions)
      * when RESOURCE_FORBIDDEN is the specific cause, since that's
      * exactly the page that fixes it.
+     *
+     * Live-testing fix 2026-09-10 (later same day): both early-exit
+     * guards below used to redirect straight to invoice/index -- the
+     * general dashboard, not even back to backend/hmrc -- with no flash
+     * message at all. From the "Test FPH Headers" button on
+     * backend/hmrc that read as the button "going nowhere" (reported
+     * live): the page changes, but to something that doesn't look like
+     * anything happened, no explanation why. Both guards now flash an
+     * explicit reason and redirect back to backend/hmrc/index, matching
+     * the pattern already used for the HMRC-side errors above.
      */
     public function fphValidate(): Response
     {
         $otp = (int) $this->session->get('otp');
         $otpReference = (string) $this->session->get('otpRef');
-        if ($otp > 99999 && $otp < 1000000 && strlen($otpReference) > 0) {
-            $headers = $this->getWebAppViaServerHeaders($otpReference);
-
-            $tokenString = (string) $this->session->get('hmrc_access_token');
-
-            if (strlen($tokenString) > 0) {
-                $requestPartOne = $this->createRequest('GET', $this->getFphValidateHeadersUrl());
-
-                $acceptAndAuthorizationArray = [
-                    'Accept' => 'application/vnd.hmrc.1.0+json',
-                    'Authorization' => 'Bearer ' . $tokenString,
-                ];
-
-                $mergedArray = array_merge($acceptAndAuthorizationArray, $headers);
-
-                $requestPartTwo = RequestUtil::addHeaders($requestPartOne, $mergedArray);
-
-                $apiResponse = $this->sendRequest($requestPartTwo);
-                /** @var array<string, mixed> $parsed */
-                $parsed = (array) json_decode(
-                    $apiResponse->getBody()->getContents(),
-                    true,
-                );
-
-                if ($apiResponse->getStatusCode() !== 200) {
-                    $this->flashFphValidateError($parsed);
-                    return $this->webService
-                        ->getRedirectResponse('backend/hmrc/index');
-                }
-
-                /** @var list<array<string, mixed>> $errors */
-                $errors = $parsed['errors'] ?? [];
-                /** @var list<array<string, mixed>> $warnings */
-                $warnings = $parsed['warnings'] ?? [];
-
-                return $this->webViewRenderer->render('fphValidate', [
-                    'specVersion' => (string) ($parsed['specVersion'] ?? ''),
-                    'code'        => (string) ($parsed['code'] ?? ''),
-                    'message'     => (string) ($parsed['message'] ?? ''),
-                    'errors'      => $errors,
-                    'warnings'    => $warnings,
-                ]);
-            }
-
-            return $this->webService->getRedirectResponse('invoice/index');
+        if ($otp <= 99999 || $otp >= 1000000 || strlen($otpReference) === 0) {
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('mtd.fph.missing.otp.session'),
+            );
+            return $this->webService->getRedirectResponse('backend/hmrc/index');
         }
 
-        return $this->webService->getRedirectResponse('invoice/index');
+        $tokenString = (string) $this->session->get('hmrc_access_token');
+        if (strlen($tokenString) === 0) {
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate(
+                    'mtd.vat.obligations.missing.vrn.or.token',
+                ),
+            );
+            return $this->webService->getRedirectResponse('backend/hmrc/index');
+        }
+
+        $headers = $this->getWebAppViaServerHeaders($otpReference);
+        $requestPartOne = $this->createRequest(
+            'GET',
+            $this->getFphValidateHeadersUrl(),
+        );
+
+        $acceptAndAuthorizationArray = [
+            'Accept' => 'application/vnd.hmrc.1.0+json',
+            'Authorization' => 'Bearer ' . $tokenString,
+        ];
+
+        $mergedArray = array_merge($acceptAndAuthorizationArray, $headers);
+
+        $requestPartTwo = RequestUtil::addHeaders($requestPartOne, $mergedArray);
+
+        $apiResponse = $this->sendRequest($requestPartTwo);
+        /** @var array<string, mixed> $parsed */
+        $parsed = (array) json_decode(
+            $apiResponse->getBody()->getContents(),
+            true,
+        );
+
+        if ($apiResponse->getStatusCode() !== 200) {
+            $this->flashFphValidateError($parsed);
+            return $this->webService->getRedirectResponse('backend/hmrc/index');
+        }
+
+        /** @var list<array<string, mixed>> $errors */
+        $errors = $parsed['errors'] ?? [];
+        /** @var list<array<string, mixed>> $warnings */
+        $warnings = $parsed['warnings'] ?? [];
+
+        return $this->webViewRenderer->render('fphValidate', [
+            'specVersion' => (string) ($parsed['specVersion'] ?? ''),
+            'code'        => (string) ($parsed['code'] ?? ''),
+            'message'     => (string) ($parsed['message'] ?? ''),
+            'errors'      => $errors,
+            'warnings'    => $warnings,
+        ]);
     }
 
     /**
