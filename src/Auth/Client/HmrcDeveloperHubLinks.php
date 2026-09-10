@@ -22,11 +22,49 @@ namespace App\Auth\Client;
  * test, and the calling view (which already has $translator available as
  * a common view parameter) resolves the actual text.
  *
+ * The two path tables below are the only per-link data; buildLinks() is
+ * the single place that turns a table into the {labelKey, url} shape both
+ * public methods return, so there's one copy of that shape rather than
+ * seventeen near-identical array literals.
+ *
  * @see https://developer.service.hmrc.gov.uk/developer/applications
  */
 final class HmrcDeveloperHubLinks
 {
     private const string BASE = 'https://developer.service.hmrc.gov.uk/developer';
+
+    /** @var array<string, string> Translation key => path relative to BASE. */
+    private const array ACCOUNT_PATHS_BY_LABEL_KEY = [
+        'mtd.hmrc.developer.hub.login' => '/login',
+        'mtd.hmrc.developer.hub.profile' => '/profile',
+        'mtd.hmrc.developer.hub.email.preferences' => '/profile/email-preferences',
+        'mtd.hmrc.developer.hub.change.password' => '/profile/password',
+        'mtd.hmrc.developer.hub.security.preferences' =>
+            '/profile/security-preferences',
+        'mtd.hmrc.developer.hub.add.sandbox.application' =>
+            '/application/add/sandbox',
+        'mtd.hmrc.developer.hub.add.production.application' =>
+            '/applications/add/production',
+        'mtd.hmrc.developer.hub.logout' => '/logout',
+    ];
+
+    /**
+     * @var array<string, string> Translation key => path relative to
+     * BASE . '/applications/{applicationId}'.
+     */
+    private const array APPLICATION_PATHS_BY_LABEL_KEY = [
+        'mtd.hmrc.developer.hub.manage.application' => '/manage',
+        'mtd.hmrc.developer.hub.subscriptions' => '/subscriptions',
+        'mtd.hmrc.developer.hub.change.name.and.description' =>
+            '/change-app-name-and-desc',
+        'mtd.hmrc.developer.hub.client.secrets' => '/client-secrets',
+        'mtd.hmrc.developer.hub.redirect.uris' => '/redirect-uris',
+        'mtd.hmrc.developer.hub.ip.allowlist' => '/ip-allowlist',
+        'mtd.hmrc.developer.hub.team.members' => '/team-members',
+        'mtd.hmrc.developer.hub.tc.and.privacy.policy.url' =>
+            '/change-tc-and-priv-pol-url',
+        'mtd.hmrc.developer.hub.delete.application' => '/delete',
+    ];
 
     /**
      * Account-level pages -- no application ID needed.
@@ -35,40 +73,7 @@ final class HmrcDeveloperHubLinks
      */
     public static function accountLinks(): array
     {
-        return [
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.login',
-                'url'      => self::BASE . '/login',
-            ],
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.profile',
-                'url'      => self::BASE . '/profile',
-            ],
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.email.preferences',
-                'url'      => self::BASE . '/profile/email-preferences',
-            ],
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.change.password',
-                'url'      => self::BASE . '/profile/password',
-            ],
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.security.preferences',
-                'url'      => self::BASE . '/profile/security-preferences',
-            ],
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.add.sandbox.application',
-                'url'      => self::BASE . '/application/add/sandbox',
-            ],
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.add.production.application',
-                'url'      => self::BASE . '/applications/add/production',
-            ],
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.logout',
-                'url'      => self::BASE . '/logout',
-            ],
-        ];
+        return self::buildLinks(self::BASE, self::ACCOUNT_PATHS_BY_LABEL_KEY);
     }
 
     /**
@@ -85,43 +90,20 @@ final class HmrcDeveloperHubLinks
 
         $appBase = self::BASE . '/applications/' . urlencode($applicationId);
 
-        return [
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.manage.application',
-                'url'      => $appBase . '/manage',
-            ],
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.subscriptions',
-                'url'      => $appBase . '/subscriptions',
-            ],
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.change.name.and.description',
-                'url'      => $appBase . '/change-app-name-and-desc',
-            ],
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.client.secrets',
-                'url'      => $appBase . '/client-secrets',
-            ],
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.redirect.uris',
-                'url'      => $appBase . '/redirect-uris',
-            ],
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.ip.allowlist',
-                'url'      => $appBase . '/ip-allowlist',
-            ],
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.team.members',
-                'url'      => $appBase . '/team-members',
-            ],
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.tc.and.privacy.policy.url',
-                'url'      => $appBase . '/change-tc-and-priv-pol-url',
-            ],
-            [
-                'labelKey' => 'mtd.hmrc.developer.hub.delete.application',
-                'url'      => $appBase . '/delete',
-            ],
-        ];
+        return self::buildLinks($appBase, self::APPLICATION_PATHS_BY_LABEL_KEY);
+    }
+
+    /**
+     * @param array<string, string> $pathsByLabelKey
+     * @return list<array{labelKey: string, url: string}>
+     */
+    private static function buildLinks(string $base, array $pathsByLabelKey): array
+    {
+        $links = [];
+        foreach ($pathsByLabelKey as $labelKey => $path) {
+            $links[] = ['labelKey' => $labelKey, 'url' => $base . $path];
+        }
+
+        return $links;
     }
 }
