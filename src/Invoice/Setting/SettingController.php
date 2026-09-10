@@ -325,8 +325,17 @@ final class SettingController extends BaseController
             'scalingFactor' => $query_params['scalingFactor'] ?? '',
             'colourDepth' => $query_params['colourDepth'] ?? '',
             'timestamp' => new DateTimeImmutable()->getTimestamp(),
-            'windowSize' => (string) ($query_params['windowInnerWidth'] ?? '')
-                . 'x' . (string) ($query_params['windowInnerHeight'] ?? ''),
+            // Live-testing fix 2026-09-10: this used to build "1511x754"
+            // -- HMRC's own spec (Gov-Client-Window-Size, per its
+            // fraud-prevention connection-method guide) requires the
+            // same key-value structure as Gov-Client-Screens uses,
+            // width=<n>&height=<n> -- confirmed live, "1511x754" failed
+            // validation with INVALID_HEADER "Value must be a key-value
+            // data structure" plus a missing-width/height error each.
+            'windowSize' => 'width='
+                . (string) ($query_params['windowInnerWidth'] ?? '')
+                . '&height='
+                . (string) ($query_params['windowInnerHeight'] ?? ''),
             'userUuid' => $userUuid,
         ]);
     }
