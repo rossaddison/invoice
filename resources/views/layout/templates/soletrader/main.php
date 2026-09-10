@@ -64,6 +64,7 @@ use Yiisoft\Yii\AuthClient\Asset\AuthChoiceAsset;
  * @var bool $noFrontPageTermsOfService
  * @var bool $noFrontPageGatewayStatus
  * @var bool $noFrontPagePeppolStatus
+ * @var bool $noFrontPageHmrcApiStatus
  * @var bool $noFrontPageWebshop
  * @var bool $stopLoggingIn
  * @var bool $stopSigningUp
@@ -362,6 +363,19 @@ echo new TagHtml()
             [],
             [],
             $isGuest && !$noFrontPagePeppolStatus,
+        ),
+        NavLink::to(
+             new Label()
+            ->attributes(['class' => 'bi bi-plug-fill text-white'])
+            ->content(str_repeat(' ', 1)
+                . $t->translate('menu.hmrc.api.status')),
+            $urlGenerator->generate('site/hmrc-api-status'),
+            $isGuest && !$noFrontPageHmrcApiStatus,
+            !$isGuest && $noFrontPageHmrcApiStatus,
+            false,
+            [],
+            [],
+            $isGuest && !$noFrontPageHmrcApiStatus,
         ),
         NavLink::to(
              new Label()

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Auth\Client\HmrcApiCatalogue;
 use App\Infrastructure\Persistence\GatewayStatus\GatewayStatus;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusFilter;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusRepository;
@@ -289,5 +290,30 @@ final class SiteController
             'peppol-status',
             $peppolStatusPageBuilder->build($currentProvider),
         );
+    }
+
+    /**
+     * Public list of every HMRC Making Tax Digital API this application
+     * currently integrates with, plus the date it was generated --
+     * reads HmrcApiCatalogue::all() directly (the same single source
+     * of truth HmrcController's own "Full API Catalogue" card and
+     * OAuth scope request already use), so this page can never drift
+     * out of sync with what the app actually requests.
+     *
+     * Gated by no_front_hmrc_api_status_page the same way
+     * no_front_gateway_status_page/no_front_peppol_status_page gate
+     * their own actions above: this 404s the route itself rather than
+     * only hiding a nav link, matching that established convention.
+     */
+    public function hmrcApiStatus(sR $sR, WebControllerService $webService): Response
+    {
+        if ($sR->getSetting('no_front_hmrc_api_status_page') == '1') {
+            return $webService->getNotFoundResponse();
+        }
+
+        return $this->webViewRenderer->render('hmrc-api-status', [
+            'apis' => HmrcApiCatalogue::all(),
+            'asOfDate' => (new \DateTimeImmutable())->format('j F Y'),
+        ]);
     }
 }

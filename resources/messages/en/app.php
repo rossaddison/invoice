@@ -1149,6 +1149,7 @@ return [
     . ' Development',
   'home.open.source.license' => 'Open source under the BSD-3-Clause'
     . ' license.',
+  'home.hmrc.api.status' => 'HMRC API status ➡️',
   'home.payment.gateway.coverage' => 'Payment gateway coverage ➡️',
   'home.peppol.access.point.status' => 'Peppol Access Point status ➡️',
   'home.title' => 'Yii3-i — Open Source Invoicing &amp; E-Invoicing'
@@ -1394,6 +1395,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'menu.contact.us' => 'Contact Us',
   'menu.gallery' => 'Gallery',
   'menu.gateway.status' => 'Payment Gateway Status',
+  'menu.hmrc.api.status' => 'HMRC API Status',
   'menu.peppol.status' => 'Peppol Access Point Status',
   'menu.language' => 'Language',
   'menu.login' => 'Login',
