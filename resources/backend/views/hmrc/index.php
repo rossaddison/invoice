@@ -25,6 +25,7 @@ use Yiisoft\Html\Tag\I;
  * @var string $developerHubAppId
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Assets\AssetManager $assetManager
+ * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  */
 
 $assetManager->register(HmrcApiSelectAsset::class);
@@ -35,28 +36,55 @@ $fphSet = $fphConnectionMethod !== '';
 $loggedIn = $grantedScope !== '';
 $developerHubAppIdSet = $developerHubAppId !== '';
 
+// Every field below that has a real input on Settings -> Making Tax
+// Digital gets a link straight to it (its href's #fragment matches that
+// input's own id, e.g. 'settings[nino]' -- native browser anchor
+// navigation scrolls straight to it, no JS needed; same mechanism
+// WebControllerService::generateUrl()'s own docblock already documents
+// for exactly this "deep link to a specific field" use). Rows with no
+// corresponding input (Vendor Product/Version, Developer Hub
+// Application ID, Granted Scopes) stay plain text.
+$settingsMtdUrl = $urlGenerator->generate(
+    'setting/tabIndex',
+    [],
+    ['active' => 'mtd'],
+);
+$settingsMtdFieldUrl = static fn (string $fieldId): string =>
+    $urlGenerator->generate('setting/tabIndex', [], ['active' => 'mtd'], $fieldId);
+
 echo H::openTag('div', ['class' => 'container mt-4']);
 echo H::openTag('div', ['class' => 'row']);
 echo H::openTag('div', ['class' => 'col-12 col-md-8 offset-md-2']);
 
 // ── Status card ──────────────────────────────────────────────────────────────
 echo H::openTag('div', ['class' => 'card mb-3']);
-echo H::openTag('div', ['class' => 'card-header']);
+echo H::openTag('div', [
+    'class' => 'card-header d-flex justify-content-between align-items-center',
+]);
 echo H::tag('strong', 'HMRC Making Tax Digital — Status');
+echo H::a('← Settings', $settingsMtdUrl, [
+    'class' => 'btn btn-sm btn-outline-secondary',
+]);
 echo H::closeTag('div');
 echo H::openTag('div', ['class' => 'card-body']);
 echo H::openTag('table', ['class' => 'table table-sm']);
 echo H::openTag('tbody');
 
 echo H::openTag('tr');
-echo H::tag('td', 'VAT Registration Number (VRN)');
+echo H::tag('td', H::a(
+    'VAT Registration Number (VRN)',
+    $settingsMtdFieldUrl('settings[vat_registration_number]'),
+));
 echo H::tag('td', $vrnSet
     ? H::tag('span', $vrn, ['class' => 'text-success'])
     : H::tag('span', 'Not set — configure in Settings → Making Tax Digital', ['class' => 'text-danger']));
 echo H::closeTag('tr');
 
 echo H::openTag('tr');
-echo H::tag('td', $translator->translate('mtd.nino'));
+echo H::tag('td', H::a(
+    $translator->translate('mtd.nino'),
+    $settingsMtdFieldUrl('settings[nino]'),
+));
 echo H::tag('td', $ninoSet
     ? H::tag('span', $nino, ['class' => 'text-success'])
     : H::tag('span',
@@ -67,7 +95,10 @@ echo H::tag('td', $ninoSet
 echo H::closeTag('tr');
 
 echo H::openTag('tr');
-echo H::tag('td', 'FPH Connection Method');
+echo H::tag('td', H::a(
+    'FPH Connection Method',
+    $settingsMtdFieldUrl('settings[fph_connection_method]'),
+));
 echo H::tag('td', $fphSet
     ? H::tag('span', $fphConnectionMethod, ['class' => 'text-success'])
     : H::tag('span', 'Not set — run Generate in Settings → Making Tax Digital', ['class' => 'text-warning']));
