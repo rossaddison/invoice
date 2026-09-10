@@ -7,14 +7,18 @@ use Yiisoft\Html\Tag\Button;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
 /**
+ * @var string $alert
  * @var string $vrn
  * @var string $periodKey
  * @var string $periodStart
  * @var string $periodEnd
  * @var Csrf $csrf
+ * @var App\Invoice\Setting\SettingRepository $s
  */
 
 $action = '/backend/hmrc/vatReturnSubmit';
+
+echo $s->getSetting('disable_flash_messages') === '0' ? $alert : '';
 
 echo H::openTag('div', ['class' => 'container mt-4']);
  echo H::openTag('div', ['class' => 'row']);

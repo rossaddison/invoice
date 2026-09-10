@@ -15,8 +15,10 @@ use Yiisoft\Html\Html as H;
  * validations (e.g. Gov-Vendor-Forwarded/Gov-Vendor-Public-IP/
  * Gov-Client-Public-IP agreeing with each other).
  *
+ * @var string $alert
  * @var string $api
  * @var list<array<string, mixed>> $requests
+ * @var App\Invoice\Setting\SettingRepository $s
  */
 
 $badgeFor = static function (string $code): array {
@@ -32,6 +34,8 @@ $badgeFor = static function (string $code): array {
         default => ['badge bg-secondary', $code === '' ? '—' : $code],
     };
 };
+
+echo $s->getSetting('disable_flash_messages') === '0' ? $alert : '';
 
 echo H::openTag('div', ['class' => 'container mt-4']);
 

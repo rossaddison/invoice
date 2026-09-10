@@ -17,11 +17,15 @@ use Yiisoft\Html\Html as H;
  * (those lived in the old, now-gone endpoint's response and would need a
  * separate per-businessId Business Details call this page doesn't make).
  *
+ * @var string $alert
  * @var string $nino
  * @var int $statusCode
  * @var array<int, array<string, mixed>> $businesses
  * @var array<string, mixed> $raw
+ * @var App\Invoice\Setting\SettingRepository $s
  */
+
+echo $s->getSetting('disable_flash_messages') === '0' ? $alert : '';
 
 echo H::openTag('div', ['class' => 'container mt-4']);
 

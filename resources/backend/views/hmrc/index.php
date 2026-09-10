@@ -12,6 +12,7 @@ use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\I;
 
 /**
+ * @var string $alert
  * @var string $vrn
  * @var string $nino
  * @var string $fphConnectionMethod
@@ -26,7 +27,10 @@ use Yiisoft\Html\Tag\I;
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Assets\AssetManager $assetManager
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var App\Invoice\Setting\SettingRepository $s
  */
+
+echo $s->getSetting('disable_flash_messages') === '0' ? $alert : '';
 
 $assetManager->register(HmrcApiSelectAsset::class);
 

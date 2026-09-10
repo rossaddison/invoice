@@ -72,6 +72,7 @@ final class HmrcController extends BaseController
             ?? '';
 
         return $this->webViewRenderer->render('index', [
+            'alert'                => $this->alert(),
             'vrn'                  => $this->sR->getSetting('vat_registration_number'),
             'nino'                 => $this->sR->getSetting('nino'),
             'fphConnectionMethod'  => $this->sR->getSetting('fph_connection_method'),
@@ -206,6 +207,7 @@ final class HmrcController extends BaseController
         $requests = $parsed['requests'] ?? [];
 
         return $this->webViewRenderer->render('fphFeedback', [
+            'alert'    => $this->alert(),
             'api'      => $api,
             'requests' => $requests,
         ]);
@@ -351,6 +353,7 @@ final class HmrcController extends BaseController
         $warnings = $parsed['warnings'] ?? [];
 
         return $this->webViewRenderer->render('fphValidate', [
+            'alert'       => $this->alert(),
             'specVersion' => (string) ($parsed['specVersion'] ?? ''),
             'code'        => (string) ($parsed['code'] ?? ''),
             'message'     => (string) ($parsed['message'] ?? ''),
@@ -466,6 +469,7 @@ final class HmrcController extends BaseController
         $obligations = $parsed['obligations'] ?? [];
 
         return $this->webViewRenderer->render('vatObligations', [
+            'alert'       => $this->alert(),
             'obligations' => $obligations,
             'vrn' => $vrn,
             'statusCode' => $apiResponse->getStatusCode(),
@@ -498,6 +502,7 @@ final class HmrcController extends BaseController
         $purchaseTotals = $purchaseEntryRepository->repoVatTotalsForPeriod($periodStart, $periodEnd);
 
         return $this->webViewRenderer->render('vatReturnPrepare', [
+            'alert'       => $this->alert(),
             'vrn'         => $vrn,
             'periodKey'   => $periodKey,
             'periodStart' => $periodStart,
@@ -571,6 +576,7 @@ final class HmrcController extends BaseController
             $result = (array) json_decode($apiResponse->getBody()->getContents(), true);
 
             return $this->webViewRenderer->render('vatReturnResult', [
+                'alert' => $this->alert(),
                 'statusCode' => $apiResponse->getStatusCode(),
                 'result' => $result,
                 'periodKey' => $returnData['periodKey'],
@@ -580,6 +586,7 @@ final class HmrcController extends BaseController
         // GET — show the form, pre-populate period key from query string
         $queryParams = $request->getQueryParams();
         return $this->webViewRenderer->render('vatReturnSubmit', [
+            'alert' => $this->alert(),
             'vrn' => $vrn,
             'periodKey' => (string) ($queryParams['periodKey'] ?? ''),
             'periodStart' => (string) ($queryParams['start'] ?? ''),
@@ -660,6 +667,7 @@ final class HmrcController extends BaseController
         $allBusinesses = $parsed['listOfBusinesses'] ?? [];
 
         return $this->webViewRenderer->render('selfEmploymentBusinesses', [
+            'alert'         => $this->alert(),
             'nino'          => $nino,
             'statusCode'    => $apiResponse->getStatusCode(),
             'businesses'    => $allBusinesses,
