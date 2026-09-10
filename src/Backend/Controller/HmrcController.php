@@ -67,7 +67,25 @@ final class HmrcController extends BaseController
         // (already correctly configured by parent::__construct())
         // preserves that layout selection while still applying the
         // @hmrc view path on top of it.
-        $this->webViewRenderer = $this->webViewRenderer->withViewPath('@hmrc');
+        //
+        // Live-testing fix 2026-09-10 (same day, second pass): that fix
+        // alone broke every view with ViewNotFoundException ("...
+        // hmrc/hmrc/index.php does not exist") -- initializeViewRenderer()
+        // also calls withControllerName($this->controllerName) (='hmrc'
+        // for this class), and WebViewRenderer::getViewPath() appends
+        // '/' . $name onto the resolved viewPath alias unconditionally
+        // (see vendor/yiisoft/yii-view-renderer's own source). The
+        // '@hmrc' alias (config/common/params.php) already resolves
+        // straight to resources/backend/views/hmrc -- the exact final
+        // view directory, no controller-name subfolder underneath it --
+        // so that automatic suffix duplicated it. withControllerName('')
+        // clears it (WebViewRenderer treats an empty name as "append
+        // nothing"), same as the raw constructor parameter effectively
+        // had before this whole layout fix (it never had
+        // withControllerName() applied to it at all).
+        $this->webViewRenderer = $this->webViewRenderer
+            ->withViewPath('@hmrc')
+            ->withControllerName('');
     }
 
     public function index(): Response
