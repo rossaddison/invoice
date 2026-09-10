@@ -67,9 +67,7 @@ final class HmrcController extends BaseController
         } else {
             $availableApis = [];
         }
-        $hmrcAuthUrl = $this->developerSandboxHmrc->getClientId() !== ''
-            ? $this->urlGenerator->generate('auth/authclient', ['authclient' => 'developersandboxhmrc'])
-            : '';
+        $hmrcAuthUrl = $this->hmrcAuthUrl();
         $developerHubAppId = $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_APPLICATION_ID']
             ?? '';
 
@@ -263,12 +261,10 @@ final class HmrcController extends BaseController
 
         $tokenString = (string) $this->session->get('hmrc_access_token');
         if (strlen($tokenString) === 0) {
-            $this->flashMessage(
-                'warning',
-                $this->translator->translate(
-                    'mtd.vat.obligations.missing.vrn.or.token',
-                ),
-            );
+            $this->flashMessage('warning', $this->translator->translate(
+                'mtd.fph.missing.hmrc.token',
+                ['link' => $this->hmrcLoginLink()],
+            ));
             return $this->webService->getRedirectResponse('backend/hmrc/index');
         }
 
@@ -311,6 +307,40 @@ final class HmrcController extends BaseController
             'errors'      => $errors,
             'warnings'    => $warnings,
         ]);
+    }
+
+    /**
+     * The "Log in with HMRC" OAuth2 authorization URL, or '' if the
+     * OAuth client isn't configured (no client_id) -- same condition
+     * index() has always gated its own "Log in with HMRC" button on.
+     * Extracted so both index() and hmrcLoginLink() below share the
+     * exact same check rather than duplicating it.
+     */
+    private function hmrcAuthUrl(): string
+    {
+        if ($this->developerSandboxHmrc->getClientId() === '') {
+            return '';
+        }
+
+        return $this->urlGenerator->generate(
+            'auth/authclient',
+            ['authclient' => 'developersandboxhmrc'],
+        );
+    }
+
+    /**
+     * "Log in with HMRC" as a real link when OAuth is configured (so a
+     * flash message can send the user straight there, not just tell
+     * them to find the button themselves), plain text otherwise.
+     */
+    private function hmrcLoginLink(): string
+    {
+        $url = $this->hmrcAuthUrl();
+        if ($url === '') {
+            return 'Log in with HMRC';
+        }
+
+        return (string) Html::a('Log in with HMRC', $url);
     }
 
     /**
