@@ -88,6 +88,21 @@ final class HmrcApiCatalogue
                 self::itsaEntry('Individual Calculations', '5.0'),
             'individuals/income-received' =>
                 self::itsaEntry('Income Received', '2.0'),
+            // Added 2026-09-10 per user request to incorporate further
+            // relevant HMRC APIs -- confirmed live against HMRC's real
+            // obligations-api/3.0 OAS spec that this needs only
+            // read:self-assessment (no write), so it's a plain entry()
+            // rather than itsaEntry() -- reusing itsaEntry()'s bundled
+            // write:self-assessment here would have made the
+            // catalogue's own record of what this API needs wrong,
+            // the exact mistake #1287 fixed for a different entry.
+            'individuals/obligations' => self::entry(
+                'Obligations (MTD)',
+                ['read:self-assessment'],
+                self::NEEDS_NINO,
+                'self-assessment',
+                '3.0',
+            ),
             'individuals/national-insurance' => self::entry(
                 'National Insurance Record',
                 ['read:national-insurance-record'],
@@ -255,6 +270,7 @@ final class HmrcApiCatalogue
             'individuals/business/self-employment',
             'individuals/business/details' =>
                 'backend/hmrc/selfEmploymentBusinesses',
+            'individuals/obligations' => 'backend/hmrc/incomeTaxObligations',
             default => null,
         };
     }

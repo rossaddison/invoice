@@ -724,6 +724,163 @@ final class HmrcController extends BaseController
         ]);
     }
 
+    /**
+     * Retrieve every MTD obligation for the configured NINO across all
+     * income sources -- quarterly-update/EOPS deadlines via
+     * income-and-expenditure, plus the once-per-NINO final declaration
+     * deadline via crystallisation. Confirmed live against HMRC's real
+     * obligations-api/3.0 OAS spec (fetched 2026-09-10, not guessed):
+     * GET .../obligations/details/{nino}/income-and-expenditure and
+     * GET .../obligations/details/{nino}/crystallisation, both needing
+     * only read:self-assessment -- the same NINO/token every other
+     * ITSA-family action here already uses.
+     * https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/obligations-api/3.0
+     */
+    public function incomeTaxObligations(): Response
+    {
+        $nino         = $this->sR->getSetting('nino');
+        $tokenString  = (string) $this->session->get('hmrc_access_token');
+        $otpReference = (string) $this->session->get('otpRef');
+
+        if ($nino === '' || strlen($tokenString) === 0) {
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('mtd.business.missing.nino.or.token'),
+            );
+            return $this->webService->getRedirectResponse('backend/hmrc/index');
+        }
+
+        $headers = array_merge(
+            [
+                'Accept'        => 'application/vnd.hmrc.3.0+json',
+                'Authorization' => 'Bearer ' . $tokenString,
+            ],
+            $this->getWebAppViaServerHeaders($otpReference),
+        );
+        $base = $this->resolveHmrcApiBaseUrl() . '/obligations/details/'
+            . urlencode($nino);
+
+        $incomeResponse = $this->sendRequest(RequestUtil::addHeaders(
+            $this->createRequest('GET', $base . '/income-and-expenditure'),
+            $headers,
+        ));
+        /** @var array<string, mixed> $incomeParsed */
+        $incomeParsed = (array) json_decode(
+            $incomeResponse->getBody()->getContents(),
+            true,
+        );
+
+        $crystallisationResponse = $this->sendRequest(RequestUtil::addHeaders(
+            $this->createRequest('GET', $base . '/crystallisation'),
+            $headers,
+        ));
+        /** @var array<string, mixed> $crystallisationParsed */
+        $crystallisationParsed = (array) json_decode(
+            $crystallisationResponse->getBody()->getContents(),
+            true,
+        );
+
+        return $this->webViewRenderer->render('incomeTaxObligations', [
+            'alert'                      => $this->alert(),
+            'nino'                       => $nino,
+            'incomeStatusCode'           => $incomeResponse->getStatusCode(),
+            'incomeObligations'          =>
+                $this->flattenIncomeExpenditureObligations($incomeParsed),
+            'crystallisationStatusCode'  =>
+                $crystallisationResponse->getStatusCode(),
+            'crystallisationObligations' =>
+                $this->normalizeCrystallisationObligations($crystallisationParsed),
+        ]);
+    }
+
+    /**
+     * Flattens the income-and-expenditure endpoint's per-business
+     * grouping (obligations[].obligationDetails[]) into one flat list
+     * for the view -- see incomeTaxObligations()'s own docblock for the
+     * real response shape this mirrors.
+     *
+     * @param array<string, mixed> $parsed
+     * @return list<array{
+     *     typeOfBusiness: string,
+     *     businessId: string,
+     *     periodStartDate: string,
+     *     periodEndDate: string,
+     *     dueDate: string,
+     *     status: string,
+     *     receivedDate: string,
+     * }>
+     */
+    private function flattenIncomeExpenditureObligations(array $parsed): array
+    {
+        /** @var list<array<string, mixed>> $groups */
+        $groups    = (array) ($parsed['obligations'] ?? []);
+        $flattened = [];
+        foreach ($groups as $group) {
+            $typeOfBusiness = isset($group['typeOfBusiness'])
+                ? (string) $group['typeOfBusiness']
+                : '';
+            $businessId = isset($group['businessId'])
+                ? (string) $group['businessId']
+                : '';
+            /** @var list<array<string, mixed>> $details */
+            $details = (array) ($group['obligationDetails'] ?? []);
+            foreach ($details as $detail) {
+                $flattened[] = [
+                    'typeOfBusiness'  => $typeOfBusiness,
+                    'businessId'      => $businessId,
+                    'periodStartDate' =>
+                        $this->stringOrEmpty($detail, 'periodStartDate'),
+                    'periodEndDate' =>
+                        $this->stringOrEmpty($detail, 'periodEndDate'),
+                    'dueDate' => $this->stringOrEmpty($detail, 'dueDate'),
+                    'status' => $this->stringOrEmpty($detail, 'status'),
+                    'receivedDate' =>
+                        $this->stringOrEmpty($detail, 'receivedDate'),
+                ];
+            }
+        }
+        return $flattened;
+    }
+
+    /**
+     * Normalizes the crystallisation endpoint's already-flat obligations
+     * list -- no per-business grouping there, unlike
+     * income-and-expenditure (it's once per NINO, not per business).
+     *
+     * @param array<string, mixed> $parsed
+     * @return list<array{
+     *     periodStartDate: string,
+     *     periodEndDate: string,
+     *     dueDate: string,
+     *     status: string,
+     *     receivedDate: string,
+     * }>
+     */
+    private function normalizeCrystallisationObligations(array $parsed): array
+    {
+        /** @var list<array<string, mixed>> $rows */
+        $rows       = (array) ($parsed['obligations'] ?? []);
+        $normalized = [];
+        foreach ($rows as $row) {
+            $normalized[] = [
+                'periodStartDate' => $this->stringOrEmpty($row, 'periodStartDate'),
+                'periodEndDate'   => $this->stringOrEmpty($row, 'periodEndDate'),
+                'dueDate'         => $this->stringOrEmpty($row, 'dueDate'),
+                'status'          => $this->stringOrEmpty($row, 'status'),
+                'receivedDate'    => $this->stringOrEmpty($row, 'receivedDate'),
+            ];
+        }
+        return $normalized;
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function stringOrEmpty(array $row, string $key): string
+    {
+        return isset($row[$key]) ? (string) $row[$key] : '';
+    }
+
     public function createTestUserIndividual(array $requestBody = []): array
     {
         /**
