@@ -134,11 +134,20 @@ if ($subscriptionsLoaded) {
 // see HmrcDeveloperHubLinks's own docblock for why the application ID is
 // a separate value from the OAuth client_id already used above.
 if ($loggedIn) {
+    // Every link here leaves this app for the real Developer Hub site --
+    // opened in a new tab (rel=noopener so that tab can't reach back into
+    // this one via window.opener) rather than navigating this one away.
+    $developerHubLinkAttributes = [
+        'target' => '_blank',
+        'rel'    => 'noopener noreferrer',
+    ];
+
     $developerHubItems = [];
     foreach (HmrcDeveloperHubLinks::accountLinks() as $link) {
         $developerHubItems[] = DropdownItem::link(
             $translator->translate($link['labelKey']),
             $link['url'],
+            itemAttributes: $developerHubLinkAttributes,
         );
     }
     $applicationLinks = HmrcDeveloperHubLinks::applicationLinks($developerHubAppId);
@@ -148,6 +157,7 @@ if ($loggedIn) {
             $developerHubItems[] = DropdownItem::link(
                 $translator->translate($link['labelKey']),
                 $link['url'],
+                itemAttributes: $developerHubLinkAttributes,
             );
         }
     }
