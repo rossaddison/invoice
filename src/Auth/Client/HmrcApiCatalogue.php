@@ -23,67 +23,135 @@ final class HmrcApiCatalogue
     public const string NEEDS_EORI = 'eori';
 
     /**
-     * @return array<string, array{name: string, scopes: list<string>, needs: string, serviceName: string, version: string}>
+     * Live-testing fix 2026-09-10: SonarCloud flagged this array as
+     * duplicated code -- and correctly so, not a normalization false
+     * positive: five of the eight entries below genuinely repeated
+     * 'needs' => self::NEEDS_NINO, 'serviceName' => 'self-assessment',
+     * AND the same two-scope array verbatim, byte-for-byte. Those five
+     * are exactly HMRC's own "ITSA" (Making Tax Digital for Income Tax
+     * Self Assessment) API bundle -- Self Assessment, Self Employment
+     * Business, Business Details, Individual Calculations, Income
+     * Received -- which genuinely share one OAuth scope pair, one
+     * "needs a NINO" identifier, and one Create Test User serviceName
+     * by HMRC's own design. itsaEntry() names that real shared concept
+     * explicitly instead of repeating it five times; only name/version
+     * (the two fields that actually differ per API) are passed in.
+     *
+     * @return array<string, array{
+     *     name: string,
+     *     scopes: list<string>,
+     *     needs: string,
+     *     serviceName: string,
+     *     version: string,
+     * }>
      */
     public static function all(): array
     {
         return [
-            'organisations/vat' => [
-                'name'        => 'VAT (MTD)',
-                'scopes'      => ['read:vat', 'write:vat'],
-                'needs'       => self::NEEDS_VRN,
-                'serviceName' => 'mtd-vat',
-                'version'     => '1.0',
-            ],
-            'individuals/self-assessment' => [
-                'name'        => 'Self Assessment (Individual)',
-                'scopes'      => ['read:self-assessment', 'write:self-assessment'],
-                'needs'       => self::NEEDS_NINO,
-                'serviceName' => 'self-assessment',
-                'version'     => '3.0',
-            ],
-            'individuals/business/self-employment' => [
-                'name'        => 'Self-employed Business',
-                'scopes'      => ['read:self-employment', 'write:self-employment'],
-                'needs'       => self::NEEDS_NINO,
-                'serviceName' => 'self-assessment',
-                'version'     => '5.0',
-            ],
-            'individuals/business/details' => [
-                'name'        => 'Business Details',
-                'scopes'      => ['read:self-assessment'],
-                'needs'       => self::NEEDS_NINO,
-                'serviceName' => 'self-assessment',
-                'version'     => '2.0',
-            ],
-            'individuals/calculations' => [
-                'name'        => 'Individual Calculations',
-                'scopes'      => ['read:self-assessment', 'write:self-assessment'],
-                'needs'       => self::NEEDS_NINO,
-                'serviceName' => 'self-assessment',
-                'version'     => '5.0',
-            ],
-            'individuals/income-received' => [
-                'name'        => 'Income Received',
-                'scopes'      => ['read:self-assessment', 'write:self-assessment'],
-                'needs'       => self::NEEDS_NINO,
-                'serviceName' => 'self-assessment',
-                'version'     => '2.0',
-            ],
-            'individuals/national-insurance' => [
-                'name'        => 'National Insurance Record',
-                'scopes'      => ['read:national-insurance-record'],
-                'needs'       => self::NEEDS_NINO,
-                'serviceName' => 'national-insurance',
-                'version'     => '1.0',
-            ],
-            'customs/declarations' => [
-                'name'        => 'Customs Declarations',
-                'scopes'      => ['write:customs-declaration'],
-                'needs'       => self::NEEDS_EORI,
-                'serviceName' => 'customs-services',
-                'version'     => '2.0',
-            ],
+            'organisations/vat' => self::entry(
+                'VAT (MTD)',
+                ['read:vat', 'write:vat'],
+                self::NEEDS_VRN,
+                'mtd-vat',
+                '1.0',
+            ),
+            'individuals/self-assessment' =>
+                self::itsaEntry('Self Assessment (Individual)', '3.0'),
+            // Live-testing fix 2026-09-10: this entry's own scopes used
+            // to be read:self-employment/write:self-employment, which
+            // don't exist on HMRC's real self-employment-business-api/5.0
+            // OAS spec (fetched live) -- it actually shares the same
+            // ITSA-bundle scopes itsaEntry() encodes above. Since HMRC
+            // never grants a scope name that isn't real, this entry
+            // could never match fromGrantedScopeString() even when the
+            // application genuinely was subscribed and the user had
+            // granted the real (shared) scopes -- reported live as
+            // "Self Employment Business (MTD) 5.0" missing from the
+            // "Select API to exercise" dropdown despite "Derived from
+            // granted scopes" being shown. Name corrected to HMRC's own
+            // official display name too.
+            'individuals/business/self-employment' =>
+                self::itsaEntry('Self Employment Business (MTD)', '5.0'),
+            // Live-testing fix 2026-09-10: business-details-api/2.0's
+            // own OAS spec (fetched live) documents write:self-assessment
+            // as required for 3 of its 6 operations (amend quarterly
+            // period type, disapply/withdraw the late accounting date
+            // rule election) -- this entry only ever listed
+            // read:self-assessment (so wasn't a real itsaEntry() member
+            // yet). Doesn't change dropdown availability today (every
+            // other ITSA-family entry already requests
+            // write:self-assessment), but the catalogue's own record of
+            // what this API needs was incomplete/misleading.
+            'individuals/business/details' =>
+                self::itsaEntry('Business Details (MTD)', '2.0'),
+            'individuals/calculations' =>
+                self::itsaEntry('Individual Calculations', '5.0'),
+            'individuals/income-received' =>
+                self::itsaEntry('Income Received', '2.0'),
+            'individuals/national-insurance' => self::entry(
+                'National Insurance Record',
+                ['read:national-insurance-record'],
+                self::NEEDS_NINO,
+                'national-insurance',
+                '1.0',
+            ),
+            'customs/declarations' => self::entry(
+                'Customs Declarations',
+                ['write:customs-declaration'],
+                self::NEEDS_EORI,
+                'customs-services',
+                '2.0',
+            ),
+        ];
+    }
+
+    /**
+     * Shorthand for the five-strong "ITSA" bundle sharing one OAuth
+     * scope pair, NEEDS_NINO, and one Create Test User serviceName --
+     * see all()'s own docblock for why this exists.
+     *
+     * @return array{
+     *     name: string,
+     *     scopes: list<string>,
+     *     needs: string,
+     *     serviceName: string,
+     *     version: string,
+     * }
+     */
+    private static function itsaEntry(string $name, string $version): array
+    {
+        return self::entry(
+            $name,
+            ['read:self-assessment', 'write:self-assessment'],
+            self::NEEDS_NINO,
+            'self-assessment',
+            $version,
+        );
+    }
+
+    /**
+     * @param list<string> $scopes
+     * @return array{
+     *     name: string,
+     *     scopes: list<string>,
+     *     needs: string,
+     *     serviceName: string,
+     *     version: string,
+     * }
+     */
+    private static function entry(
+        string $name,
+        array $scopes,
+        string $needs,
+        string $serviceName,
+        string $version,
+    ): array {
+        return [
+            'name'        => $name,
+            'scopes'      => $scopes,
+            'needs'       => $needs,
+            'serviceName' => $serviceName,
+            'version'     => $version,
         ];
     }
 

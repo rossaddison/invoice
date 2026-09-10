@@ -23,8 +23,8 @@ A curated catalogue of eight HMRC MTD APIs, keyed by context path.
 |---|---|---|---|
 | `organisations/vat` | VAT (MTD) | VRN | `read:vat` `write:vat` |
 | `individuals/self-assessment` | Self Assessment (Individual) | NINO | `read:self-assessment` `write:self-assessment` |
-| `individuals/business/self-employment` | Self-employed Business | NINO | `read:self-employment` `write:self-employment` |
-| `individuals/business/details` | Business Details | NINO | `read:self-assessment` |
+| `individuals/business/self-employment` | Self Employment Business (MTD) | NINO | `read:self-assessment` `write:self-assessment` |
+| `individuals/business/details` | Business Details (MTD) | NINO | `read:self-assessment` `write:self-assessment` |
 | `individuals/calculations` | Individual Calculations | NINO | `read:self-assessment` `write:self-assessment` |
 | `individuals/income-received` | Income Received | NINO | `read:self-assessment` `write:self-assessment` |
 | `individuals/national-insurance` | National Insurance Record | NINO | `read:national-insurance-record` |
