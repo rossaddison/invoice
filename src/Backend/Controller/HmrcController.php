@@ -73,6 +73,7 @@ final class HmrcController extends BaseController
 
         return $this->webViewRenderer->render('index', [
             'vrn'                  => $this->sR->getSetting('vat_registration_number'),
+            'nino'                 => $this->sR->getSetting('nino'),
             'fphConnectionMethod'  => $this->sR->getSetting('fph_connection_method'),
             'govVendorProductName' => $this->sR->getGovVendorProductName(),
             'govVendorVersion'     => $this->sR->getGovVendorVersion(),
@@ -296,8 +297,16 @@ final class HmrcController extends BaseController
     }
 
     /**
-     * List every business (of any type) registered for the NINO stored in
-     * session.
+     * List every business (of any type) registered for the configured NINO.
+     *
+     * Live-testing fix 2026-09-10 (third pass): this read the NINO from
+     * session ('hmrc_nino'), which nothing anywhere in this app ever
+     * wrote -- every request landed here with an empty NINO and bounced
+     * straight back to backend/hmrc's own "missing vrn or token" flash,
+     * regardless of which API was picked. NINO now comes from the same
+     * place VRN already does (Settings -> Making Tax Digital, a plain
+     * getSetting() call), matching partial_settings_making_tax_digital.php's
+     * own new 'nino' field.
      *
      * Live-testing fix 2026-09-10: this used to call the
      * self-employment-business-api's own "list all businesses" endpoint
@@ -327,14 +336,14 @@ final class HmrcController extends BaseController
      */
     public function selfEmploymentBusinesses(): Response
     {
-        $nino        = (string) $this->session->get('hmrc_nino', '');
+        $nino        = $this->sR->getSetting('nino');
         $tokenString = (string) $this->session->get('hmrc_access_token');
         $otpReference = (string) $this->session->get('otpRef');
 
         if ($nino === '' || strlen($tokenString) === 0) {
             $this->flashMessage(
                 'warning',
-                $this->translator->translate('mtd.vat.obligations.missing.vrn.or.token')
+                $this->translator->translate('mtd.business.missing.nino.or.token')
             );
             return $this->webService->getRedirectResponse('backend/hmrc/index');
         }

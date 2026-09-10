@@ -22,6 +22,7 @@ $panelBody = ['class' => 'card-body'];
 $formGroup = ['class' => 'mb-3'];
 $formControl = 'form-control';
 $kVatRegistrationNumber = 'settings[vat_registration_number]';
+$kNino = 'settings[nino]';
 $kFphConnectionMethod = 'settings[fph_connection_method]';
 $kFphClientBrowserJsUserAgent = 'settings[fph_client_browser_js_user_agent]';
 $kFphClientDeviceId = 'settings[fph_client_device_id]';
@@ -61,6 +62,26 @@ echo H::openTag('div', $row); //1
      ]);
      echo H::openTag('small', ['class' => 'text-muted']);
       echo $translator->translate('mtd.vat.registration.number.hint');
+     echo H::closeTag('small');
+    echo H::closeTag('div'); //5
+    echo H::openTag('div', $formGroup); //5
+     echo H::openTag('label', ['for' => $kNino]);
+      echo H::openTag('h4');
+       echo $translator->translate('mtd.nino');
+      echo H::closeTag('h4');
+     echo H::closeTag('label');
+     $body[$kNino] = $s->getSetting('nino');
+     echo H::openTag('input', [
+      'type' => 'text',
+      'name' => $kNino,
+      'id' => $kNino,
+      'class' => $formControl,
+      'maxlength' => '9',
+      'placeholder' => 'AB123456C',
+      'value' => $body[$kNino],
+     ]);
+     echo H::openTag('small', ['class' => 'text-muted']);
+      echo $translator->translate('mtd.nino.hint');
      echo H::closeTag('small');
     echo H::closeTag('div'); //5
     echo H::openTag('br');
