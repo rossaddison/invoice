@@ -61,9 +61,17 @@ trait SettingGovMtdTrait
         // The timestamp field must contain a T and use the 24 hour format
         $timestamp = gmdate('Y-m-d\TH:i:s\Z');
 
+        // Live-testing fix 2026-09-10: unique-reference wasn't
+        // percent-encoded -- HMRC's own spec says every key and value
+        // needs it (only the =, &, and , separators are exempt).
+        // Confirmed live: this header came back INVALID_HEADER "Value
+        // must be a list of key-value data structures" (an
+        // unencoded '&' or '=' inside the OTP reference breaks the
+        // parser's own key-value splitting) alongside a separate
+        // POTENTIALLY_INVALID_HEADER "not percent encoded" warning.
         return 'type=' . $mfaType . '&'
                . 'timestamp=' . rawurlencode($timestamp) . '&'
-               . 'unique-reference=' . $uniqueReference;
+               . 'unique-reference=' . rawurlencode($uniqueReference);
     }
 
     public function getGovClientPublicIp(): ?string

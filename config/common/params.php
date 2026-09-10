@@ -106,6 +106,16 @@ return [
         'remote_port' => $_SERVER['REMOTE_PORT'] ?? null,
         'http_x_forwarded_for' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null,
         'http_client_ip' => $_SERVER['HTTP_CLIENT_IP'] ?? null,
+        // Live-testing fix 2026-09-10: SettingGovMtdTrait::getGovClientPublicIp()
+        // has always fallen back to $server['remote_addr'] when neither
+        // header above is set (the normal case for a direct connection
+        // with no reverse proxy), but that key was never actually added
+        // here -- the fallback was dead code, so Gov-Client-Public-Ip
+        // (and, downstream, Gov-Client-Public-IP-Timestamp and
+        // Gov-Vendor-Forwarded's 'for' field) came back empty on every
+        // request. Confirmed live against HMRC's real Test Fraud
+        // Prevention Headers API.
+        'remote_addr' => $_SERVER['REMOTE_ADDR'] ?? null,
     ],
     'license' => [
         'id' => 'invoice_BSD-3-Clause_20250511',
