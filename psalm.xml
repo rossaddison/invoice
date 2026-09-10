@@ -12,6 +12,7 @@
     <projectFiles>
         <directory name="config" />
         <directory name="resources/views" />
+        <directory name="resources/backend/views" />
         <directory name="src" />
         <directory name="Tests" />
         <file name="public/index.php"/>
