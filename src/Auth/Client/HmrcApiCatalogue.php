@@ -47,14 +47,14 @@ final class HmrcApiCatalogue
                 'scopes'      => ['read:self-employment', 'write:self-employment'],
                 'needs'       => self::NEEDS_NINO,
                 'serviceName' => 'self-assessment',
-                'version'     => '3.0',
+                'version'     => '5.0',
             ],
             'individuals/business/details' => [
                 'name'        => 'Business Details',
                 'scopes'      => ['read:self-assessment'],
                 'needs'       => self::NEEDS_NINO,
                 'serviceName' => 'self-assessment',
-                'version'     => '1.0',
+                'version'     => '2.0',
             ],
             'individuals/calculations' => [
                 'name'        => 'Individual Calculations',
@@ -170,13 +170,24 @@ final class HmrcApiCatalogue
     /**
      * Route name used by the HMRC controller for each API context.
      * Returns null when no dedicated route exists yet.
+     *
+     * 'individuals/business/self-employment' and
+     * 'individuals/business/details' both point at the same route
+     * deliberately (not a copy-paste slip): the self-employment-business
+     * API's own "list all businesses" endpoint no longer exists in its
+     * current version (self-employmentBusinesses() found this live,
+     * 2026-09-10 -- see that action's own docblock) -- business discovery
+     * now lives on Business Details' /list endpoint instead, so the one
+     * page is genuinely backed by both APIs' scopes now.
      */
     public static function routeFor(string $context): ?string
     {
         return match ($context) {
-            'organisations/vat'                     => 'backend/hmrc/vatObligations',
-            'individuals/business/self-employment'  => 'backend/hmrc/selfEmploymentBusinesses',
-            default                                 => null,
+            'organisations/vat' => 'backend/hmrc/vatObligations',
+            'individuals/business/self-employment',
+            'individuals/business/details' =>
+                'backend/hmrc/selfEmploymentBusinesses',
+            default => null,
         };
     }
 }

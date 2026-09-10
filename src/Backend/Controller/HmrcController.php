@@ -294,7 +294,21 @@ final class HmrcController extends BaseController
 
     /**
      * List self-employment businesses for the NINO stored in session.
-     * https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-employment-business-api/3.0
+     *
+     * Live-testing fix 2026-09-10: this used to call the
+     * self-employment-business-api's own "list all businesses" endpoint
+     * (GET .../self-employment/{nino}/self-employments) -- confirmed
+     * against that API's real current OAS spec (version 5.0) that this
+     * endpoint no longer exists; every endpoint there now needs an
+     * already-known businessId (annual/period/cumulative submissions),
+     * nothing to discover one with. Business discovery moved to a
+     * different API entirely -- Business Details (MTD)'s own /list
+     * endpoint, which returns every business type (self-employment,
+     * uk-property, foreign-property, property-unspecified) keyed by
+     * typeOfBusiness; filtered here to self-employment ones to keep this
+     * page's own stated scope. Needs its own Developer Hub subscription
+     * (Business Details (MTD)), separate from Self Employment Business.
+     * https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/business-details-api/2.0
      */
     public function selfEmploymentBusinesses(): Response
     {
@@ -312,13 +326,13 @@ final class HmrcController extends BaseController
 
         $request = $this->createRequest(
             'GET',
-            $this->resolveHmrcApiBaseUrl() . '/individuals/business/self-employment/'
-                . urlencode($nino) . '/self-employments',
+            $this->resolveHmrcApiBaseUrl() . '/individuals/business/details/'
+                . urlencode($nino) . '/list',
         );
 
         $request = RequestUtil::addHeaders($request, array_merge(
             [
-                'Accept'        => 'application/vnd.hmrc.3.0+json',
+                'Accept'        => 'application/vnd.hmrc.2.0+json',
                 'Authorization' => 'Bearer ' . $tokenString,
             ],
             $this->getWebAppViaServerHeaders($otpReference),
@@ -327,11 +341,18 @@ final class HmrcController extends BaseController
         $apiResponse = $this->sendRequest($request);
         /** @var array<string, mixed> $parsed */
         $parsed = (array) json_decode($apiResponse->getBody()->getContents(), true);
+        /** @var list<array<string, mixed>> $allBusinesses */
+        $allBusinesses = $parsed['listOfBusinesses'] ?? [];
+        $selfEmploymentBusinesses = array_values(array_filter(
+            $allBusinesses,
+            static fn (array $biz): bool =>
+                ($biz['typeOfBusiness'] ?? '') === 'self-employment',
+        ));
 
         return $this->webViewRenderer->render('selfEmploymentBusinesses', [
             'nino'          => $nino,
             'statusCode'    => $apiResponse->getStatusCode(),
-            'businesses'    => $parsed['selfEmployments'] ?? [],
+            'businesses'    => $selfEmploymentBusinesses,
             'raw'           => $parsed,
         ]);
     }
