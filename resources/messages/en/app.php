@@ -1484,6 +1484,8 @@ prior to importing and no existing documents e.g. Invoices.',
     'Your two-factor authentication session details are missing or'
       . ' expired, which Fraud Prevention Headers testing needs. Log'
       . ' out and back in, then try again.',
+  'mtd.fph.missing.hmrc.token' =>
+    'You are not logged in to HMRC. {link}, then try again.',
   'mtd.fph.feedback.no.client.credentials.token' =>
     'DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_ID or _CLIENT_SECRET is not'
       . ' set in .env -- FPH Feedback needs its own application-'
