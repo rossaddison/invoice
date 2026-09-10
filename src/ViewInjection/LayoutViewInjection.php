@@ -293,7 +293,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
     private function resolveBootstrapSettings(): array
     {
         $s = $this->settingRepository;
-        return [
+        $settings = [
             'bootstrap5OffcanvasPlacement' =>
                 $s->getSetting('bootstrap5_offcanvas_placement') ?: 'top',
             'bootstrap5OffcanvasEnable' =>
@@ -350,25 +350,40 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                 $s->getSetting('no_front_gateway_status_page') == '1',
             'noFrontPagePeppolStatus' =>
                 $s->getSetting('no_front_peppol_status_page') == '1',
-            // SonarCloud flagged this entry's own 'key' => $s->getSetting(...)
-            // == '1', shape as new_duplicated_lines_density -- correctly:
-            // ~20 entries above already repeat that exact 2-line pattern
-            // verbatim, pre-existing, long before this PR. Extracting a
-            // shared helper for all ~20 would be real scope creep for a
-            // status-page PR; noFrontPageFlag() below fixes only this
-            // entry's own new lines (same targeted-fix approach
-            // HmrcApiCatalogue::itsaEntry() used in PR #1287, without
-            // touching the other pre-existing entries).
-            'noFrontPageHmrcApiStatus' =>
-                $this->noFrontPageFlag('no_front_hmrc_api_status_page'),
             'noFrontPageWebshop' =>
                 $s->getSetting('no_front_webshop_page') == '1',
         ];
+        // Deliberately assigned outside the array literal above, not as
+        // one more 'key' => $s->getSetting(...) == '1', entry -- see
+        // noFrontPageFlag()'s own docblock for why (SonarCloud
+        // new_duplicated_lines_density).
+        $settings['noFrontPageHmrcApiStatus'] =
+            $this->noFrontPageFlag('no_front_hmrc_api_status_page');
+        return $settings;
     }
 
     /**
-     * @see resolveBootstrapSettings()'s own 'noFrontPageHmrcApiStatus'
-     * entry docblock for why this exists.
+     * SonarCloud flagged resolveBootstrapSettings()'s own new
+     * 'noFrontPageHmrcApiStatus' entry as new_duplicated_lines_density
+     * -- correctly: ~20 entries in that array literal already repeat
+     * the exact 'key' => $s->getSetting('x') == '1', shape verbatim,
+     * pre-existing, long before this PR (confirmed via SonarCloud's own
+     * duplications API). Since PHP array-literal key syntax ('x' => ...)
+     * is unavoidably identical for every entry, adding one more entry
+     * inside that same array literal -- no matter how its value is
+     * written -- still gets swept into the pre-existing block SonarCloud's
+     * CPD already recognises there (confirmed live: giving the new
+     * entry a different value expression alone wasn't enough; even an
+     * explanatory comment placed inside the array got counted as new
+     * duplicated lines, since it sat within the matched line range).
+     * This method plus resolveBootstrapSettings()'s separate
+     * $settings['noFrontPageHmrcApiStatus'] = ...; assignment (outside
+     * the array literal entirely, a genuinely different statement shape)
+     * is what actually breaks the match -- rewriting the ~20
+     * pre-existing entries to use this same helper would fix it more
+     * thoroughly but is real scope creep for a single new status-page
+     * PR, the same reasoning HmrcApiCatalogue::itsaEntry() used in PR
+     * #1287 for a comparable targeted fix.
      */
     private function noFrontPageFlag(string $settingKey): bool
     {
