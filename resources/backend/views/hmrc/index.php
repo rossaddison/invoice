@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 use App\Auth\Client\HmrcApiCatalogue;
 use App\Auth\Client\HmrcDeveloperHubLinks;
+use App\Backend\Asset\HmrcApiSelectAsset;
 use Yiisoft\Bootstrap5\ButtonVariant;
 use Yiisoft\Bootstrap5\Dropdown;
 use Yiisoft\Bootstrap5\DropdownItem;
 use Yiisoft\Html\Html as H;
+use Yiisoft\Html\Tag\I;
 
 /**
  * @var string $vrn
@@ -21,7 +23,10 @@ use Yiisoft\Html\Html as H;
  * @var string $hmrcAuthUrl
  * @var string $developerHubAppId
  * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Assets\AssetManager $assetManager
  */
+
+$assetManager->register(HmrcApiSelectAsset::class);
 
 $vrnSet = $vrn !== '';
 $fphSet = $fphConnectionMethod !== '';
@@ -146,9 +151,19 @@ if ($loggedIn) {
             );
         }
     }
+    // Deliberately NOT ButtonVariant::DARK: that's "Log in with HMRC"'s own
+    // colour a few lines up, and this dropdown only ever renders once
+    // already logged in -- sharing that colour made the two impossible to
+    // tell apart at a glance (reported live 2026-09-10), undoing the one
+    // visual signal this header used to give for login state. An outline
+    // style plus an explicit icon keeps it clearly a links menu, not a
+    // login call-to-action.
     echo Dropdown::widget()
-        ->togglerContent($translator->translate('mtd.hmrc.developer.hub'))
-        ->togglerVariant(ButtonVariant::DARK)
+        ->togglerContent(
+            new I()->addClass('bi bi-box-arrow-up-right')
+                . ' ' . $translator->translate('mtd.hmrc.developer.hub'),
+        )
+        ->togglerVariant(ButtonVariant::OUTLINE_SECONDARY)
         ->addTogglerAttribute('id', 'btn-developer-hub-links')
         ->items(...$developerHubItems);
 }
@@ -168,11 +183,9 @@ if ($availableApis === []) {
     echo H::tag('label', 'Select API to exercise:', ['for' => 'api-context', 'class' => 'form-label fw-semibold']);
 
     echo H::openTag('select', [
-        'id'       => 'api-context',
-        'name'     => 'context',
-        'class'    => 'form-select',
-        'onchange' => 'document.getElementById("api-select-form").action = this.options[this.selectedIndex].dataset.route || "#"; '
-            . 'document.getElementById("btn-go").disabled = !this.options[this.selectedIndex].dataset.route;',
+        'id'    => 'api-context',
+        'name'  => 'context',
+        'class' => 'form-select',
     ]);
     echo H::tag('option', '— choose an API —', ['value' => '']);
 
@@ -205,7 +218,6 @@ if ($availableApis === []) {
         'id'       => 'btn-go',
         'class'    => 'btn btn-primary',
         'disabled' => true,
-        'onclick'  => 'var f=document.getElementById("api-select-form"); if(f.action && f.action !== location.href) location.href=f.action;',
     ]);
 
     echo H::closeTag('form');
