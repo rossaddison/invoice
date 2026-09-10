@@ -13,6 +13,7 @@ use Yiisoft\Html\Tag\I;
 
 /**
  * @var string $vrn
+ * @var string $nino
  * @var string $fphConnectionMethod
  * @var string $govVendorProductName
  * @var string $govVendorVersion
@@ -29,6 +30,7 @@ use Yiisoft\Html\Tag\I;
 $assetManager->register(HmrcApiSelectAsset::class);
 
 $vrnSet = $vrn !== '';
+$ninoSet = $nino !== '';
 $fphSet = $fphConnectionMethod !== '';
 $loggedIn = $grantedScope !== '';
 $developerHubAppIdSet = $developerHubAppId !== '';
@@ -51,6 +53,17 @@ echo H::tag('td', 'VAT Registration Number (VRN)');
 echo H::tag('td', $vrnSet
     ? H::tag('span', $vrn, ['class' => 'text-success'])
     : H::tag('span', 'Not set — configure in Settings → Making Tax Digital', ['class' => 'text-danger']));
+echo H::closeTag('tr');
+
+echo H::openTag('tr');
+echo H::tag('td', $translator->translate('mtd.nino'));
+echo H::tag('td', $ninoSet
+    ? H::tag('span', $nino, ['class' => 'text-success'])
+    : H::tag('span',
+        'Not set — configure in Settings → Making Tax Digital.'
+            . ' Every NINO-based API below (Self-employed Business,'
+            . ' Business Details, etc.) needs this.',
+        ['class' => 'text-danger']));
 echo H::closeTag('tr');
 
 echo H::openTag('tr');

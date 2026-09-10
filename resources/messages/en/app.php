@@ -1527,6 +1527,12 @@ prior to importing and no existing documents e.g. Invoices.',
   'mtd.vat.obligations.missing.vrn.or.token' => 'VAT Registration Number or HMRC access token not set',
   'mtd.vat.registration.number' => 'VAT Registration Number (VRN)',
   'mtd.vat.registration.number.hint' => '9-digit number on your VAT registration certificate',
+  'mtd.nino' => 'National Insurance Number (NINO)',
+  'mtd.nino.hint' => 'Needed for every NINO-based API below (Self-employed'
+      . ' Business, Business Details, etc.) -- for the HMRC sandbox, use'
+      . ' the nino returned by Create Test User, not your own real NINO',
+  'mtd.business.missing.nino.or.token' =>
+      'National Insurance Number or HMRC access token not set',
   'mtd.vat.obligations' => 'VAT Obligations',
   'mtd.vat.return.submit' => 'Submit VAT Return',
   'purchase.entry.add' => 'Add Purchase Entry',
