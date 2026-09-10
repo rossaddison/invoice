@@ -7,6 +7,7 @@ use Yiisoft\Html\Tag\Button;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
 /**
+ * @var string $alert
  * @var string $vrn
  * @var string $periodKey
  * @var string $periodStart
@@ -16,9 +17,12 @@ use Yiisoft\Yii\View\Renderer\Csrf;
  * @var float  $box6  sales ex-VAT (auto from InvAmount.item_subtotal)
  * @var float  $box7  purchases ex-VAT (auto from PurchaseEntry.amount_ex_vat)
  * @var Csrf   $csrf
+ * @var App\Invoice\Setting\SettingRepository $s
  */
 
 $submitAction = '/backend/hmrc/vatReturnSubmit';
+
+echo $s->getSetting('disable_flash_messages') === '0' ? $alert : '';
 
 echo H::openTag('div', ['class' => 'container mt-4']);
  echo H::openTag('div', ['class' => 'row']);

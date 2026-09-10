@@ -5,12 +5,16 @@ declare(strict_types=1);
 use Yiisoft\Html\Html as H;
 
 /**
+ * @var string $alert
  * @var int $statusCode
  * @var array<string, mixed> $result
  * @var string $periodKey
+ * @var App\Invoice\Setting\SettingRepository $s
  */
 
 $success = $statusCode === 200 || $statusCode === 201;
+
+echo $s->getSetting('disable_flash_messages') === '0' ? $alert : '';
 
 echo H::openTag('div', ['class' => 'container mt-4']);
  echo H::openTag('div', ['class' => 'row']);

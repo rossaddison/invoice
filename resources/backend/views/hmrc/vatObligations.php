@@ -6,10 +6,14 @@ use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\A;
 
 /**
+ * @var string $alert
  * @var array<int, array<string, string>> $obligations
  * @var string $vrn
  * @var int $statusCode
+ * @var App\Invoice\Setting\SettingRepository $s
  */
+
+echo $s->getSetting('disable_flash_messages') === '0' ? $alert : '';
 
 echo H::openTag('div', ['class' => 'container mt-4']);
  echo H::openTag('div', ['class' => 'row']);

@@ -15,12 +15,14 @@ use Yiisoft\Html\Html as H;
  * is the outcome (VALID_HEADERS/INVALID_HEADERS/POTENTIALLY_INVALID_HEADERS),
  * not an HTTP or platform error code.
  *
+ * @var string $alert
  * @var string $specVersion
  * @var string $code
  * @var string $message
  * @var list<array<string, mixed>> $errors
  * @var list<array<string, mixed>> $warnings
  * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var App\Invoice\Setting\SettingRepository $s
  */
 
 $badgeClass = match ($code) {
@@ -36,6 +38,8 @@ $badgeText = match ($code) {
         $translator->translate('mtd.fph.some.advisories'),
     default => $translator->translate('mtd.fph.no.provided'),
 };
+
+echo $s->getSetting('disable_flash_messages') === '0' ? $alert : '';
 
 echo H::openTag('div', ['class' => 'container mt-4']);
 
