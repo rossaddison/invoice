@@ -144,6 +144,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'noFrontPageContactUs' => $bs['noFrontPageContactUs'],
             'noFrontPageGatewayStatus' => $bs['noFrontPageGatewayStatus'],
             'noFrontPagePeppolStatus' => $bs['noFrontPagePeppolStatus'],
+            'noFrontPageHmrcApiStatus' => $bs['noFrontPageHmrcApiStatus'],
             'noFrontPageWebshop' => $bs['noFrontPageWebshop'],
             'isGuest' => $userState['isGuest'],
             'user' => $userState['user'],
@@ -285,6 +286,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
      *     noFrontPageContactUs: bool,
      *     noFrontPageGatewayStatus: bool,
      *     noFrontPagePeppolStatus: bool,
+     *     noFrontPageHmrcApiStatus: bool,
      *     noFrontPageWebshop: bool,
      * }
      */
@@ -348,6 +350,8 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                 $s->getSetting('no_front_gateway_status_page') == '1',
             'noFrontPagePeppolStatus' =>
                 $s->getSetting('no_front_peppol_status_page') == '1',
+            'noFrontPageHmrcApiStatus' =>
+                $s->getSetting('no_front_hmrc_api_status_page') == '1',
             'noFrontPageWebshop' =>
                 $s->getSetting('no_front_webshop_page') == '1',
         ];

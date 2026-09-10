@@ -58,6 +58,19 @@ $divHeight = (string) 250;
                         ->addAttributes(['class' => 'btn btn-outline-secondary ms-2'])
                         ->render(); ?>
                 <?php } ?>
+                <?php
+                $noFrontHmrcApiStatusPage =
+                    $s->getSetting('no_front_hmrc_api_status_page');
+                ?>
+                <?php if ($noFrontHmrcApiStatusPage == '0') { ?>
+                    <?= new A()
+                        ->content($translator->translate('home.hmrc.api.status'))
+                        ->href('/hmrc-api-status')
+                        ->addAttributes([
+                            'class' => 'btn btn-outline-secondary ms-2',
+                        ])
+                        ->render(); ?>
+                <?php } ?>
             <?= Html::closeTag('p'); ?>
             <?= Html::openTag('p', ['class' => 'text-secondary small mb-2']); ?>
                 <?= $translator->translate('home.github.click.tracking.explanation'); ?>
