@@ -75,5 +75,10 @@ return [
             Route::get('/selfEmploymentBusinesses')
                 ->action([HmrcController::class, 'selfEmploymentBusinesses'])
                 ->name('backend/hmrc/selfEmploymentBusinesses'),
+
+            // https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/obligations-api/3.0
+            Route::get('/incomeTaxObligations')
+                ->action([HmrcController::class, 'incomeTaxObligations'])
+                ->name('backend/hmrc/incomeTaxObligations'),
         ),
 ];

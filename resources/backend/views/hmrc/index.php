@@ -154,6 +154,11 @@ echo H::a(
     ['class' => 'btn btn-sm btn-outline-secondary'],
 );
 echo H::a('VAT Obligations', '/backend/hmrc/vatObligations', ['class' => 'btn btn-sm btn-outline-info']);
+echo H::a(
+    'Income Tax Obligations',
+    '/backend/hmrc/incomeTaxObligations',
+    ['class' => 'btn btn-sm btn-outline-info'],
+);
 echo H::closeTag('div');
 
 echo H::closeTag('div');
