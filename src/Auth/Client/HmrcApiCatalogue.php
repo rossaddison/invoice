@@ -42,16 +42,39 @@ final class HmrcApiCatalogue
                 'serviceName' => 'self-assessment',
                 'version'     => '3.0',
             ],
+            // Live-testing fix 2026-09-10: this entry's own scopes
+            // (read:self-employment/write:self-employment) don't exist
+            // on HMRC's real self-employment-business-api/5.0 OAS spec
+            // (fetched live) -- it actually uses the same
+            // read:self-assessment/write:self-assessment scopes every
+            // other ITSA-family entry below already requests. Since
+            // HMRC never grants a scope name that isn't real, this
+            // entry could never match fromGrantedScopeString() even
+            // when the application genuinely was subscribed and the
+            // user had granted the real (shared) scopes -- reported
+            // live as "Self Employment Business (MTD) 5.0" missing
+            // from the "Select API to exercise" dropdown despite
+            // "Derived from granted scopes" being shown. Name corrected
+            // to HMRC's own official display name too.
             'individuals/business/self-employment' => [
-                'name'        => 'Self-employed Business',
-                'scopes'      => ['read:self-employment', 'write:self-employment'],
+                'name'        => 'Self Employment Business (MTD)',
+                'scopes'      => ['read:self-assessment', 'write:self-assessment'],
                 'needs'       => self::NEEDS_NINO,
                 'serviceName' => 'self-assessment',
                 'version'     => '5.0',
             ],
+            // Live-testing fix 2026-09-10: business-details-api/2.0's
+            // own OAS spec (fetched live) documents write:self-assessment
+            // as required for 3 of its 6 operations (amend quarterly
+            // period type, disapply/withdraw the late accounting date
+            // rule election) -- this catalogue entry only ever listed
+            // read:self-assessment. Doesn't change dropdown availability
+            // today (every other ITSA-family entry already requests
+            // write:self-assessment), but the catalogue's own record of
+            // what this API needs was incomplete/misleading.
             'individuals/business/details' => [
-                'name'        => 'Business Details',
-                'scopes'      => ['read:self-assessment'],
+                'name'        => 'Business Details (MTD)',
+                'scopes'      => ['read:self-assessment', 'write:self-assessment'],
                 'needs'       => self::NEEDS_NINO,
                 'serviceName' => 'self-assessment',
                 'version'     => '2.0',
