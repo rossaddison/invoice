@@ -114,7 +114,7 @@ final class HmrcController extends BaseController
      *    (this app's own client_id/secret exchanged directly, no user
      *    involved), not the user-restricted 3-legged OAuth token
      *    (hmrc_access_token) every other action here correctly uses.
-     *    Fetches its own token via fetchClientCredentialsAccessToken()
+     *    Fetches its own token via requestClientCredentialsToken()
      *    rather than reading the session's user token.
      *
      * Also added the Accept header the spec requires (missing before)
@@ -217,14 +217,31 @@ final class HmrcController extends BaseController
      * Application-restricted OAuth 2.0 Client Credentials grant -- this
      * app's own client_id/secret exchanged directly for a token, no
      * user session involved (distinct from the 3-legged
-     * hmrc_access_token every user-restricted action here uses). The
-     * token endpoint is always api.service.hmrc.gov.uk, even for a
-     * sandbox application-restricted API like this one -- confirmed
-     * against the real txm-fph-validator-api OAS spec. Returns the raw
-     * response rather than just a token/null -- fphFeedback() needs the
-     * body on failure too, to show the real reason (see
+     * hmrc_access_token every user-restricted action here uses). Returns
+     * the raw response rather than just a token/null -- fphFeedback()
+     * needs the body on failure too, to show the real reason (see
      * flashClientCredentialsTokenError()'s own docblock for why a
      * generic "could not get a token" message wasn't good enough live).
+     *
+     * Live-testing fix 2026-09-10: this used to hardcode the production
+     * token host (api.service.hmrc.gov.uk) unconditionally -- confirmed
+     * live as wrong ("invalid_client -- invalid client id or secret")
+     * and against HMRC's own application-restricted-endpoints guide
+     * (https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/application-restricted-endpoints,
+     * "The example URLs shown below are for the sandbox environment
+     * only. In the production environment you should use
+     * https://api.service.hmrc.gov.uk") that sandbox testing must POST
+     * to test-api.service.hmrc.gov.uk/oauth/token instead. The only
+     * caller of this method (fphFeedback(), via
+     * getFphValidationFeedbackUrl()) exists purely to exercise HMRC's
+     * Test Fraud Prevention Headers API, which this file's own
+     * resolveHmrcApiBaseUrl() docblock already documents as sandbox-only
+     * tooling that doesn't exist in production at all -- so this app's
+     * client_id/secret for it is necessarily a sandbox-only Developer
+     * Hub application, one production's own OAuth server has never
+     * heard of. Always using the sandbox host here, unconditionally,
+     * matches getFphValidateHeadersUrl()/getFphValidationFeedbackUrl()'s
+     * own deliberate hardcoding for the exact same reason.
      */
     private function requestClientCredentialsToken(
         string $clientId,
@@ -236,7 +253,7 @@ final class HmrcController extends BaseController
             'client_secret' => $clientSecret,
         ]);
 
-        $tokenUrl = 'https://api.service.hmrc.gov.uk/oauth/token';
+        $tokenUrl = 'https://test-api.service.hmrc.gov.uk/oauth/token';
         $request = $this->createRequest('POST', $tokenUrl);
         $request = RequestUtil::addHeaders($request, [
             'Content-Type' => 'application/x-www-form-urlencoded',
