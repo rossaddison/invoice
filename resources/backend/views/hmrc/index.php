@@ -3,6 +3,10 @@
 declare(strict_types=1);
 
 use App\Auth\Client\HmrcApiCatalogue;
+use App\Auth\Client\HmrcDeveloperHubLinks;
+use Yiisoft\Bootstrap5\ButtonVariant;
+use Yiisoft\Bootstrap5\Dropdown;
+use Yiisoft\Bootstrap5\DropdownItem;
 use Yiisoft\Html\Html as H;
 
 /**
@@ -15,11 +19,14 @@ use Yiisoft\Html\Html as H;
  * @var array<string, array{name: string, scopes: list<string>, needs: string, serviceName: string, version: string}> $fullCatalogue
  * @var bool $subscriptionsLoaded
  * @var string $hmrcAuthUrl
+ * @var string $developerHubAppId
+ * @var Yiisoft\Translator\TranslatorInterface $translator
  */
 
 $vrnSet = $vrn !== '';
 $fphSet = $fphConnectionMethod !== '';
 $loggedIn = $grantedScope !== '';
+$developerHubAppIdSet = $developerHubAppId !== '';
 
 echo H::openTag('div', ['class' => 'container mt-4']);
 echo H::openTag('div', ['class' => 'row']);
@@ -62,6 +69,17 @@ echo H::tag('td', $govVendorVersion !== ''
     : H::tag('span', 'Not set', ['class' => 'text-muted']));
 echo H::closeTag('tr');
 
+echo H::openTag('tr');
+echo H::tag('td', $translator->translate('mtd.hmrc.developer.hub.application.id'));
+echo H::tag('td', $developerHubAppIdSet
+    ? H::tag('code',
+        H::encode($developerHubAppId),
+        ['class' => 'small text-success'])
+    : H::tag('span',
+        $translator->translate('mtd.hmrc.developer.hub.application.id.not.set'),
+        ['class' => 'text-warning small']));
+echo H::closeTag('tr');
+
 if ($loggedIn) {
     echo H::openTag('tr');
     echo H::tag('td', 'Granted Scopes');
@@ -92,6 +110,7 @@ echo H::closeTag('div');
 echo H::openTag('div', ['class' => 'card mb-3']);
 echo H::openTag('div', ['class' => 'card-header d-flex justify-content-between align-items-center']);
 echo H::tag('strong', 'Available APIs');
+echo H::openTag('div', ['class' => 'd-flex gap-2 align-items-center']);
 if ($subscriptionsLoaded) {
     echo H::tag('span', '✅ Subscriptions loaded from HMRC', ['class' => 'badge bg-success']);
 } elseif ($loggedIn) {
@@ -105,6 +124,35 @@ if ($subscriptionsLoaded) {
 } else {
     echo H::tag('span', 'Configure HMRC OAuth in Settings to log in', ['class' => 'badge bg-secondary']);
 }
+// Developer Hub account/application management links -- only meaningful
+// once logged in via HMRC OAuth (matches this whole card's own gating);
+// see HmrcDeveloperHubLinks's own docblock for why the application ID is
+// a separate value from the OAuth client_id already used above.
+if ($loggedIn) {
+    $developerHubItems = [];
+    foreach (HmrcDeveloperHubLinks::accountLinks() as $link) {
+        $developerHubItems[] = DropdownItem::link(
+            $translator->translate($link['labelKey']),
+            $link['url'],
+        );
+    }
+    $applicationLinks = HmrcDeveloperHubLinks::applicationLinks($developerHubAppId);
+    if ($applicationLinks !== []) {
+        $developerHubItems[] = DropdownItem::divider();
+        foreach ($applicationLinks as $link) {
+            $developerHubItems[] = DropdownItem::link(
+                $translator->translate($link['labelKey']),
+                $link['url'],
+            );
+        }
+    }
+    echo Dropdown::widget()
+        ->togglerContent($translator->translate('mtd.hmrc.developer.hub'))
+        ->togglerVariant(ButtonVariant::DARK)
+        ->addTogglerAttribute('id', 'btn-developer-hub-links')
+        ->items(...$developerHubItems);
+}
+echo H::closeTag('div');
 echo H::closeTag('div');
 
 echo H::openTag('div', ['class' => 'card-body']);

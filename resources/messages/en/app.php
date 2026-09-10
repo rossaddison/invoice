@@ -1434,6 +1434,32 @@ prior to importing and no existing documents e.g. Invoices.',
   'mpdf.show.image.errors' => 'Show image errors',
   'mtd' => 'Making Tax Digital',
   'mtd.hmrc' => 'HMRC Making Tax Digital',
+  'mtd.hmrc.developer.hub' => 'HMRC Developer Hub',
+  'mtd.hmrc.developer.hub.application.id' => 'Developer Hub Application ID',
+  'mtd.hmrc.developer.hub.application.id.not.set' => 'Not set — add'
+      . ' DEVELOPER_GOV_SANDBOX_HMRC_API_APPLICATION_ID to .env (the UUID'
+      . ' from Developer Hub\'s own "Manage application" URL, not the'
+      . ' OAuth client_id)',
+  'mtd.hmrc.developer.hub.login' => 'Log in',
+  'mtd.hmrc.developer.hub.profile' => 'Profile',
+  'mtd.hmrc.developer.hub.email.preferences' => 'Email preferences',
+  'mtd.hmrc.developer.hub.change.password' => 'Change password',
+  'mtd.hmrc.developer.hub.security.preferences' => 'Security preferences',
+  'mtd.hmrc.developer.hub.add.sandbox.application' => 'Add sandbox application',
+  'mtd.hmrc.developer.hub.add.production.application' =>
+      'Add production application',
+  'mtd.hmrc.developer.hub.logout' => 'Log out',
+  'mtd.hmrc.developer.hub.manage.application' => 'Manage application',
+  'mtd.hmrc.developer.hub.subscriptions' => 'Subscriptions',
+  'mtd.hmrc.developer.hub.change.name.and.description' =>
+      'Change name & description',
+  'mtd.hmrc.developer.hub.client.secrets' => 'Client secrets',
+  'mtd.hmrc.developer.hub.redirect.uris' => 'Redirect URIs',
+  'mtd.hmrc.developer.hub.ip.allowlist' => 'IP allowlist',
+  'mtd.hmrc.developer.hub.team.members' => 'Team members',
+  'mtd.hmrc.developer.hub.tc.and.privacy.policy.url' =>
+      'T&Cs / privacy policy URL',
+  'mtd.hmrc.developer.hub.delete.application' => 'Delete application',
   'mtd.fph' => 'Fraud Prevention Headers',
   'mtd.fph.all.valid' => 'All Fraud Prevention Headers Valid',
   'mtd.fph.generate' => 'Generate',
