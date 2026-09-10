@@ -1472,6 +1472,14 @@ prior to importing and no existing documents e.g. Invoices.',
   'mtd.fph.some.advisories' =>
     'At least one header is potentially invalid',
   'mtd.fph.some.invalid' => 'At least one header is invalid',
+  'mtd.fph.validate.error.generic' =>
+    'HMRC returned an error validating your Fraud Prevention Headers:'
+      . ' "{code}" — {message}',
+  'mtd.fph.validate.error.not.subscribed' =>
+    'HMRC returned "{code}": {message} Your Developer Hub application'
+      . ' needs the Test Fraud Prevention Headers API added under its'
+      . ' subscriptions — {link}.',
+  'mtd.fph.manage.subscriptions.link.text' => 'add it here',
   'mtd.gov.client.browser.do.not.track' =>
     'A value that indicates whether'
     . ' the Do Not Track option is turned on in the browser',

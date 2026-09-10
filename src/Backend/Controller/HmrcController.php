@@ -6,6 +6,7 @@ namespace App\Backend\Controller;
 
 use App\Auth\Client\DeveloperSandboxHmrc;
 use App\Auth\Client\HmrcApiCatalogue;
+use App\Auth\Client\HmrcDeveloperHubLinks;
 use App\Invoice\BaseController;
 use App\Invoice\PurchaseEntry\PurchaseEntryRepository;
 use App\Invoice\Setting\SettingRepository as SR;
@@ -18,6 +19,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as ServerRequest;
+use Yiisoft\Html\Html;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -113,6 +115,19 @@ final class HmrcController extends BaseController
         ]);
     }
 
+    /**
+     * Live-testing fix 2026-09-10: this used to return HMRC's raw
+     * response as-is -- fine for a 200 (still just raw JSON, now
+     * rendered properly below instead), but an HMRC platform-level
+     * error like RESOURCE_FORBIDDEN ("The application is not
+     * subscribed to the API which it is attempting to invoke") showed
+     * up as an unstyled raw JSON blob with no explanation. Now parsed
+     * and turned into an explicit flash message -- including a direct
+     * link to this application's own Subscriptions page
+     * (https://developer.service.hmrc.gov.uk/developer/applications/{id}/subscriptions)
+     * when RESOURCE_FORBIDDEN is the specific cause, since that's
+     * exactly the page that fixes it.
+     */
     public function fphValidate(): Response
     {
         $otp = (int) $this->session->get('otp');
@@ -134,13 +149,78 @@ final class HmrcController extends BaseController
 
                 $requestPartTwo = RequestUtil::addHeaders($requestPartOne, $mergedArray);
 
-                return $this->sendRequest($requestPartTwo);
+                $apiResponse = $this->sendRequest($requestPartTwo);
+                /** @var array<string, mixed> $parsed */
+                $parsed = (array) json_decode(
+                    $apiResponse->getBody()->getContents(),
+                    true,
+                );
+
+                if ($apiResponse->getStatusCode() !== 200) {
+                    $this->flashFphValidateError($parsed);
+                    return $this->webService
+                        ->getRedirectResponse('backend/hmrc/index');
+                }
+
+                /** @var list<array<string, mixed>> $errors */
+                $errors = $parsed['errors'] ?? [];
+                /** @var list<array<string, mixed>> $warnings */
+                $warnings = $parsed['warnings'] ?? [];
+
+                return $this->webViewRenderer->render('fphValidate', [
+                    'specVersion' => (string) ($parsed['specVersion'] ?? ''),
+                    'code'        => (string) ($parsed['code'] ?? ''),
+                    'message'     => (string) ($parsed['message'] ?? ''),
+                    'errors'      => $errors,
+                    'warnings'    => $warnings,
+                ]);
             }
 
             return $this->webService->getRedirectResponse('invoice/index');
         }
 
         return $this->webService->getRedirectResponse('invoice/index');
+    }
+
+    /**
+     * @param array<string, mixed> $parsed
+     */
+    private function flashFphValidateError(array $parsed): void
+    {
+        $code = (string) ($parsed['code'] ?? '');
+        $message = (string) ($parsed['message'] ?? '');
+        if ($code === '' && $message === '') {
+            $message = 'HMRC returned an unreadable error response.';
+        }
+
+        $developerHubAppId = $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_APPLICATION_ID']
+            ?? '';
+        $subscriptionsUrl = HmrcDeveloperHubLinks::applicationSubscriptionsUrl(
+            $developerHubAppId,
+        );
+
+        if ($code === 'RESOURCE_FORBIDDEN' && $subscriptionsUrl !== '') {
+            $this->flashMessage('danger', $this->translator->translate(
+                'mtd.fph.validate.error.not.subscribed',
+                [
+                    'code'    => $code,
+                    'message' => $message,
+                    'link'    => Html::a(
+                        $this->translator->translate(
+                            'mtd.fph.manage.subscriptions.link.text',
+                        ),
+                        $subscriptionsUrl,
+                        ['target' => '_blank', 'rel' => 'noopener noreferrer'],
+                    ),
+                ],
+            ));
+            return;
+        }
+
+        $this->flashMessage('danger', $this->translator->translate(
+            'mtd.fph.validate.error.generic',
+            ['code' => $code, 'message' => $message],
+        ));
     }
 
     /**

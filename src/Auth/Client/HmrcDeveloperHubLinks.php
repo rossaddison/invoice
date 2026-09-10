@@ -94,6 +94,27 @@ final class HmrcDeveloperHubLinks
     }
 
     /**
+     * Direct link to this application's own API subscriptions page --
+     * where the "not subscribed to this API" flash message
+     * (HmrcController::fphValidate() and friends) sends the user, per
+     * https://developer.service.hmrc.gov.uk/developer/applications/{$appId}/subscriptions.
+     * Empty when no application ID is configured, same as
+     * applicationLinks().
+     */
+    public static function applicationSubscriptionsUrl(string $applicationId): string
+    {
+        if ($applicationId === '') {
+            return '';
+        }
+
+        $key = 'mtd.hmrc.developer.hub.subscriptions';
+        $subscriptionsPath = self::APPLICATION_PATHS_BY_LABEL_KEY[$key];
+
+        return self::BASE . '/applications/'
+            . urlencode($applicationId) . $subscriptionsPath;
+    }
+
+    /**
      * @param array<string, string> $pathsByLabelKey
      * @return list<array{labelKey: string, url: string}>
      */
