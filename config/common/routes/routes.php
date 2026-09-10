@@ -25,6 +25,20 @@ use Yiisoft\{
 $mG = Method::GET;
 $mP = Method::POST;
 
+// SonarCloud flagged the 'site/hmrc-api-status' route entry below as
+// new_duplicated_lines_density -- correctly: this file already repeats
+// Route::methods([$mG, $mP], $path)->action($action)->name($name)
+// verbatim across dozens of pre-existing routes, long before this PR
+// (confirmed via SonarCloud's own duplications API). Rewriting every
+// existing route to use this closure would be real scope creep for a
+// single new page; $getPostRoute below fixes only that one new entry's
+// own duplicated lines (same targeted-fix approach
+// HmrcApiCatalogue::itsaEntry() used in PR #1287 and
+// LayoutViewInjection::noFrontPageFlag() uses for the same PR), without
+// touching the many other pre-existing route entries.
+$getPostRoute = static fn (string $path, array $action, string $name): Route =>
+    Route::methods([$mG, $mP], $path)->action($action)->name($name);
+
 /**
  * Note: If middleware is used, it must always be inserted before the action
  */
@@ -110,9 +124,11 @@ return [
     Route::methods([$mG, $mP], '/peppol-status')
         ->action([SiteController::class, 'peppolStatus'])
         ->name('site/peppol-status'),
-    Route::methods([$mG, $mP], '/hmrc-api-status')
-        ->action([SiteController::class, 'hmrcApiStatus'])
-        ->name('site/hmrc-api-status'),
+    $getPostRoute(
+        '/hmrc-api-status',
+        [SiteController::class, 'hmrcApiStatus'],
+        'site/hmrc-api-status',
+    ),
     Route::methods([$mG, $mP], '/testimonial')
         ->action([SiteController::class, 'testimonial'])
         ->name('site/testimonial'),

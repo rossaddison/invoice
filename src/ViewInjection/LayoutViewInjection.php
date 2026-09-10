@@ -350,11 +350,29 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                 $s->getSetting('no_front_gateway_status_page') == '1',
             'noFrontPagePeppolStatus' =>
                 $s->getSetting('no_front_peppol_status_page') == '1',
+            // SonarCloud flagged this entry's own 'key' => $s->getSetting(...)
+            // == '1', shape as new_duplicated_lines_density -- correctly:
+            // ~20 entries above already repeat that exact 2-line pattern
+            // verbatim, pre-existing, long before this PR. Extracting a
+            // shared helper for all ~20 would be real scope creep for a
+            // status-page PR; noFrontPageFlag() below fixes only this
+            // entry's own new lines (same targeted-fix approach
+            // HmrcApiCatalogue::itsaEntry() used in PR #1287, without
+            // touching the other pre-existing entries).
             'noFrontPageHmrcApiStatus' =>
-                $s->getSetting('no_front_hmrc_api_status_page') == '1',
+                $this->noFrontPageFlag('no_front_hmrc_api_status_page'),
             'noFrontPageWebshop' =>
                 $s->getSetting('no_front_webshop_page') == '1',
         ];
+    }
+
+    /**
+     * @see resolveBootstrapSettings()'s own 'noFrontPageHmrcApiStatus'
+     * entry docblock for why this exists.
+     */
+    private function noFrontPageFlag(string $settingKey): bool
+    {
+        return $this->settingRepository->getSetting($settingKey) == '1';
     }
 
     /** @return array<string, mixed> */
