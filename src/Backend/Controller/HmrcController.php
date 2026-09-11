@@ -1153,6 +1153,189 @@ final class HmrcController extends BaseController
         );
     }
 
+    /**
+     * Per-category metadata for the eight MTD "Income Received"
+     * replacement APIs -- see HmrcApiCatalogue::all()'s own 2026-09-11
+     * addendum for the live-confirmed finding that the old single
+     * "Income Received" API was deprecated and split into these eight
+     * independently-versioned APIs. Every one of them shares
+     * read:self-assessment/write:self-assessment (confirmed live
+     * against each one's own OAS spec) -- already correctly requested
+     * via the existing itsaEntry() bundle -- so this table only needs
+     * to record what actually differs per category: the URL path
+     * segment, display label, Accept header version, whether the tax
+     * year is part of the URL (savings' list endpoint is keyed by NINO
+     * alone -- taxYear only appears on its per-account detail
+     * endpoint, which this lightweight test page doesn't drill into),
+     * and any extra path suffix (partner-income's list endpoint needs
+     * a trailing /partnership).
+     *
+     * @var array<string, array{
+     *     segment: string,
+     *     label: string,
+     *     version: string,
+     *     needsTaxYear: bool,
+     *     suffix: string,
+     * }>
+     */
+    private const array INCOME_CATEGORIES = [
+        'dividends' => [
+            'segment'      => 'dividends-income',
+            'label'        => 'Dividends Income',
+            'version'      => '2.0',
+            'needsTaxYear' => true,
+            'suffix'       => '',
+        ],
+        'employments' => [
+            'segment'      => 'employments-income',
+            'label'        => 'Employments Income',
+            'version'      => '2.0',
+            'needsTaxYear' => true,
+            'suffix'       => '',
+        ],
+        'foreign' => [
+            'segment'      => 'foreign-income',
+            'label'        => 'Foreign Income',
+            'version'      => '2.0',
+            'needsTaxYear' => true,
+            'suffix'       => '',
+        ],
+        'insurance-policies' => [
+            'segment'      => 'insurance-policies-income',
+            'label'        => 'Insurance Policies Income',
+            'version'      => '2.0',
+            'needsTaxYear' => true,
+            'suffix'       => '',
+        ],
+        'other' => [
+            'segment'      => 'other-income',
+            'label'        => 'Other Income',
+            'version'      => '2.0',
+            'needsTaxYear' => true,
+            'suffix'       => '',
+        ],
+        // The only one of the eight on its own version track (1.0, not
+        // 2.0) -- confirmed live, not assumed to match its siblings.
+        'partner' => [
+            'segment'      => 'partner-income',
+            'label'        => 'Partner Income',
+            'version'      => '1.0',
+            'needsTaxYear' => true,
+            'suffix'       => '/partnership',
+        ],
+        'pensions' => [
+            'segment'      => 'pensions-income',
+            'label'        => 'Pensions Income',
+            'version'      => '2.0',
+            'needsTaxYear' => true,
+            'suffix'       => '',
+        ],
+        'savings' => [
+            'segment'      => 'savings-income/uk-accounts',
+            'label'        => 'Savings Income (UK Accounts)',
+            'version'      => '2.0',
+            'needsTaxYear' => false,
+            'suffix'       => '',
+        ],
+    ];
+
+    public function incomeDividends(): Response
+    {
+        return $this->renderIncomeCategory('dividends');
+    }
+
+    public function incomeEmployments(): Response
+    {
+        return $this->renderIncomeCategory('employments');
+    }
+
+    public function incomeForeign(): Response
+    {
+        return $this->renderIncomeCategory('foreign');
+    }
+
+    public function incomeInsurancePolicies(): Response
+    {
+        return $this->renderIncomeCategory('insurance-policies');
+    }
+
+    public function incomeOther(): Response
+    {
+        return $this->renderIncomeCategory('other');
+    }
+
+    public function incomePartner(): Response
+    {
+        return $this->renderIncomeCategory('partner');
+    }
+
+    public function incomePensions(): Response
+    {
+        return $this->renderIncomeCategory('pensions');
+    }
+
+    public function incomeSavings(): Response
+    {
+        return $this->renderIncomeCategory('savings');
+    }
+
+    /**
+     * Shared GET/render logic for all eight income-category actions
+     * above -- see INCOME_CATEGORIES's own docblock for why one shared
+     * action+view serves all eight rather than eight near-identical
+     * copies (the exact DRY reasoning itsaEntry() already applies to
+     * the catalogue side of this same API family).
+     */
+    private function renderIncomeCategory(string $category): Response
+    {
+        $config = self::INCOME_CATEGORIES[$category];
+
+        $nino         = $this->sR->getSetting('nino');
+        $tokenString  = (string) $this->session->get('hmrc_access_token');
+        $otpReference = (string) $this->session->get('otpRef');
+
+        if ($nino === '' || strlen($tokenString) === 0) {
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('mtd.business.missing.nino.or.token'),
+            );
+            return $this->webService->getRedirectResponse('backend/hmrc/index');
+        }
+
+        $taxYear = $config['needsTaxYear'] ? $this->currentUkTaxYear() : '';
+
+        $url = $this->resolveHmrcApiBaseUrl() . '/individuals/'
+            . $config['segment'] . '/' . urlencode($nino)
+            . ($taxYear !== '' ? '/' . urlencode($taxYear) : '')
+            . $config['suffix'];
+
+        $request = $this->createRequest('GET', $url);
+        $request = RequestUtil::addHeaders($request, array_merge(
+            [
+                'Accept'        =>
+                    'application/vnd.hmrc.' . $config['version'] . '+json',
+                'Authorization' => 'Bearer ' . $tokenString,
+            ],
+            $this->getWebAppViaServerHeaders($otpReference),
+        ));
+
+        $response = $this->sendRequest($request);
+        /** @var array<string, mixed> $parsed */
+        $parsed = (array) json_decode(
+            $response->getBody()->getContents(),
+            true,
+        );
+
+        return $this->webViewRenderer->render('incomeCategory', [
+            'alert'      => $this->alert(),
+            'nino'       => $nino,
+            'taxYear'    => $taxYear,
+            'label'      => $config['label'],
+            'statusCode' => $response->getStatusCode(),
+            'raw'        => $parsed,
+        ]);
+    }
+
     public function createTestUserIndividual(array $requestBody = []): array
     {
         /**

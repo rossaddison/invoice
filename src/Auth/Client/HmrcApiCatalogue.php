@@ -38,6 +38,13 @@ final class HmrcApiCatalogue
      * explicitly instead of repeating it five times; only name/version
      * (the two fields that actually differ per API) are passed in.
      *
+     * 2026-09-11 addendum: "Income Received", one of the original five,
+     * turned out to be a deprecated API split into eight replacements
+     * -- see the 'individuals/dividends-income' entry's own comment
+     * below. All eight are itsaEntry() members too, so the bundle is
+     * now twelve entries, not five -- itsaEntry()'s own reasoning for
+     * existing is unchanged, just its membership count.
+     *
      * @return array<string, array{
      *     name: string,
      *     scopes: list<string>,
@@ -97,8 +104,40 @@ final class HmrcApiCatalogue
             // version HMRC no longer serves.
             'individuals/calculations' =>
                 self::itsaEntry('Individual Calculations', '8.0'),
-            'individuals/income-received' =>
-                self::itsaEntry('Income Received', '2.0'),
+            // Live-testing fix 2026-09-11: HMRC's own Developer Hub
+            // (fetched live, not guessed) confirms the single
+            // "Income Received" API this entry used to represent
+            // (context path individuals/income-received) is DEPRECATED
+            // -- not just a stale version number like
+            // individuals/calculations above. It was split into eight
+            // independently-versioned replacement APIs, each with its
+            // own real context path: Dividends, Employments, Foreign,
+            // Insurance Policies, Other, Partner, Pensions, and Savings
+            // Income. Every one of them shares this same
+            // read:self-assessment/write:self-assessment scope pair
+            // and NEEDS_NINO (confirmed live against each one's own OAS
+            // spec) -- HMRC's underlying data model didn't change, only
+            // how it's split across endpoints -- so all eight are real
+            // itsaEntry() members, replacing the one entry below.
+            'individuals/dividends-income' =>
+                self::itsaEntry('Dividends Income', '2.0'),
+            'individuals/employments-income' =>
+                self::itsaEntry('Employments Income', '2.0'),
+            'individuals/foreign-income' =>
+                self::itsaEntry('Foreign Income', '2.0'),
+            'individuals/insurance-policies-income' =>
+                self::itsaEntry('Insurance Policies Income', '2.0'),
+            'individuals/other-income' =>
+                self::itsaEntry('Other Income', '2.0'),
+            // Partner Income is the only one of the eight on its own
+            // version track (1.0, not 2.0) -- confirmed live, not
+            // assumed to match its seven siblings.
+            'individuals/partner-income' =>
+                self::itsaEntry('Partner Income', '1.0'),
+            'individuals/pensions-income' =>
+                self::itsaEntry('Pensions Income', '2.0'),
+            'individuals/savings-income' =>
+                self::itsaEntry('Savings Income', '2.0'),
             // Added 2026-09-10 per user request to incorporate further
             // relevant HMRC APIs -- confirmed live against HMRC's real
             // obligations-api/3.0 OAS spec that this needs only
@@ -299,6 +338,17 @@ final class HmrcApiCatalogue
             'individuals/self-assessment' => 'backend/hmrc/itsaStatus',
             'individuals/calculations' =>
                 'backend/hmrc/individualCalculations',
+            'individuals/dividends-income' =>
+                'backend/hmrc/incomeDividends',
+            'individuals/employments-income' =>
+                'backend/hmrc/incomeEmployments',
+            'individuals/foreign-income' => 'backend/hmrc/incomeForeign',
+            'individuals/insurance-policies-income' =>
+                'backend/hmrc/incomeInsurancePolicies',
+            'individuals/other-income' => 'backend/hmrc/incomeOther',
+            'individuals/partner-income' => 'backend/hmrc/incomePartner',
+            'individuals/pensions-income' => 'backend/hmrc/incomePensions',
+            'individuals/savings-income' => 'backend/hmrc/incomeSavings',
             default => null,
         };
     }

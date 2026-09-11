@@ -90,5 +90,33 @@ return [
             Route::methods([Method::GET, Method::POST], '/individualCalculations')
                 ->action([HmrcController::class, 'individualCalculations'])
                 ->name('backend/hmrc/individualCalculations'),
+
+            // The eight replacements for the deprecated "Income
+            // Received" API -- see HmrcApiCatalogue::all()'s own
+            // 2026-09-11 addendum.
+            Route::get('/incomeDividends')
+                ->action([HmrcController::class, 'incomeDividends'])
+                ->name('backend/hmrc/incomeDividends'),
+            Route::get('/incomeEmployments')
+                ->action([HmrcController::class, 'incomeEmployments'])
+                ->name('backend/hmrc/incomeEmployments'),
+            Route::get('/incomeForeign')
+                ->action([HmrcController::class, 'incomeForeign'])
+                ->name('backend/hmrc/incomeForeign'),
+            Route::get('/incomeInsurancePolicies')
+                ->action([HmrcController::class, 'incomeInsurancePolicies'])
+                ->name('backend/hmrc/incomeInsurancePolicies'),
+            Route::get('/incomeOther')
+                ->action([HmrcController::class, 'incomeOther'])
+                ->name('backend/hmrc/incomeOther'),
+            Route::get('/incomePartner')
+                ->action([HmrcController::class, 'incomePartner'])
+                ->name('backend/hmrc/incomePartner'),
+            Route::get('/incomePensions')
+                ->action([HmrcController::class, 'incomePensions'])
+                ->name('backend/hmrc/incomePensions'),
+            Route::get('/incomeSavings')
+                ->action([HmrcController::class, 'incomeSavings'])
+                ->name('backend/hmrc/incomeSavings'),
         ),
 ];
