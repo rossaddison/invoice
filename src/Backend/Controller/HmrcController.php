@@ -1026,17 +1026,12 @@ final class HmrcController extends BaseController
      */
     public function individualCalculations(ServerRequest $request): Response
     {
-        $nino         = $this->sR->getSetting('nino');
-        $tokenString  = (string) $this->session->get('hmrc_access_token');
-        $otpReference = (string) $this->session->get('otpRef');
-
-        if ($nino === '' || strlen($tokenString) === 0) {
-            $this->flashMessage(
-                'warning',
-                $this->translator->translate('mtd.business.missing.nino.or.token'),
-            );
-            return $this->webService->getRedirectResponse('backend/hmrc/index');
+        $guard = $this->ensureNinoAndToken();
+        if ($guard instanceof Response) {
+            return $guard;
         }
+        [$nino, $tokenString] = $guard;
+        $otpReference = (string) $this->session->get('otpRef');
 
         $queryParams = $request->getQueryParams();
         $taxYear = (string) ($queryParams['taxYear'] ?? $this->currentUkTaxYear());
@@ -1276,15 +1271,17 @@ final class HmrcController extends BaseController
     /**
      * Validates NINO + HMRC access token are both set, redirecting
      * with a flash message when either is missing -- the same guard
-     * every NINO-based action in this file already repeats inline
-     * (itsaStatus(), individualCalculations(),
-     * selfEmploymentBusinesses(), incomeTaxObligations()). Extracted
-     * here, and used ONLY by renderIncomeCategory() below, purely
-     * because that one new inline copy is what SonarCloud's own
+     * itsaStatus(), selfEmploymentBusinesses() and
+     * incomeTaxObligations() already repeat inline (all three
+     * pre-existing on main before this PR). Extracted here and used by
+     * individualCalculations() and renderIncomeCategory() below --
+     * both new in this PR -- purely because two new inline copies of
+     * this exact guard is what SonarCloud's own
      * new_duplicated_lines_density flagged as real duplication against
-     * itsaStatus()'s own pre-existing inline copy -- not a general
-     * refactor of the other four call sites, which is out of scope for
-     * this change (see this session's own scope-creep discipline).
+     * itsaStatus()'s own pre-existing inline copy; not a general
+     * refactor of the three pre-existing call sites, which stays out
+     * of scope for this change (see this session's own scope-creep
+     * discipline).
      *
      * @return array{0: string, 1: string}|Response Either [nino,
      *   token] on success, or a redirect Response to render directly.

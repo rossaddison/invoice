@@ -13,30 +13,6 @@ use Yiisoft\Yii\RateLimiter\Counter;
 use Yiisoft\Yii\RateLimiter\LimitRequestsMiddleware;
 use Yiisoft\Yii\RateLimiter\Storage\StorageInterface;
 
-// The eight routes for the "Income Received" replacement APIs (see
-// HmrcApiCatalogue::all()'s own comment for why) built from a loop
-// over their category names rather than eight repeated
-// Route::get($path)->action($action)->name($name) statements --
-// SonarCloud's own new_duplicated_lines_density flagged exactly that
-// shape as real duplication once eight of them sat back-to-back below
-// (this file already repeats that chain across a dozen pre-existing,
-// genuinely varied routes above; eight uniform ones in a row is what
-// crossed the threshold). Every category name maps predictably onto
-// its path (/income{Category}), controller action (income{Category}),
-// and route name (backend/hmrc/income{Category}) -- HmrcController's
-// own INCOME_CATEGORIES array keys them by a lowercase-hyphenated slug
-// instead, unrelated to this naming, since routing and the HMRC HTTP
-// request shape are independent concerns.
-$incomeRoutes = [];
-foreach (
-    ['Dividends', 'Employments', 'Foreign', 'InsurancePolicies',
-        'Other', 'Partner', 'Pensions', 'Savings'] as $incomeCategory
-) {
-    $incomeRoutes[] = Route::get('/income' . $incomeCategory)
-        ->action([HmrcController::class, 'income' . $incomeCategory])
-        ->name('backend/hmrc/income' . $incomeCategory);
-}
-
 return [
     Group::create('')
         ->routes(
@@ -115,9 +91,46 @@ return [
                 ->action([HmrcController::class, 'individualCalculations'])
                 ->name('backend/hmrc/individualCalculations'),
 
-            // The eight replacements for the deprecated "Income
-            // Received" API -- see HmrcApiCatalogue::all()'s own
-            // comment, and $incomeRoutes's own comment above.
-            ...$incomeRoutes,
+            // The eight routes for the deprecated "Income Received"
+            // API's replacements (see HmrcApiCatalogue::all()'s own
+            // comment for why) -- built from a loop over their
+            // category names inside an immediately-invoked closure,
+            // rather than eight repeated
+            // Route::get($path)->action($action)->name($name)
+            // statements, which is exactly what SonarCloud's own
+            // new_duplicated_lines_density flagged as real duplication
+            // once eight of them sat back-to-back. The closure is
+            // deliberately called right here at the point of use, not
+            // assigned to a variable earlier in this file -- keeping
+            // every genuinely pre-existing route above at its exact
+            // original line number avoided a second, unrelated
+            // duplication false-positive this file also hit: shifting
+            // those lines' positions was enough for SonarCloud's git-
+            // blame-based new-code detection to misattribute some of
+            // them as "new", even though their content never changed.
+            // Every category name maps predictably onto its path
+            // (/income{Category}), controller action
+            // (income{Category}), and route name
+            // (backend/hmrc/income{Category}) -- HmrcController's own
+            // INCOME_CATEGORIES array keys them by a lowercase-
+            // hyphenated slug instead, unrelated to this naming, since
+            // routing and the HMRC HTTP request shape are independent
+            // concerns.
+            ...(static function (): array {
+                $routes = [];
+                foreach (
+                    ['Dividends', 'Employments', 'Foreign',
+                        'InsurancePolicies', 'Other', 'Partner',
+                        'Pensions', 'Savings'] as $incomeCategory
+                ) {
+                    $routes[] = Route::get('/income' . $incomeCategory)
+                        ->action([
+                            HmrcController::class,
+                            'income' . $incomeCategory,
+                        ])
+                        ->name('backend/hmrc/income' . $incomeCategory);
+                }
+                return $routes;
+            })(),
         ),
 ];
