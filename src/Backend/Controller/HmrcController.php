@@ -1352,6 +1352,32 @@ final class HmrcController extends BaseController
         ]);
     }
 
+    /**
+     * Informational page for the Customs Declarations API -- see
+     * HmrcApiCatalogue::all()'s own comment on the 'customs/declarations'
+     * entry for the live-confirmed reasons this is the one catalogue
+     * entry this app doesn't offer a real live test for: every one of
+     * its five endpoints is a write-only submission of a genuine
+     * customs/trade-compliance XML document (not JSON like every other
+     * API here), and there's no minimal-effort payload analogous to
+     * Individual Calculations' empty-body trigger that HMRC would
+     * actually accept -- a "test" that submits invalid data would just
+     * fail, proving nothing real. Shows the EORI on file, the five
+     * endpoints and their real paths/scope, and the header-based
+     * identification scheme (X-Badge-Identifier/X-Submitter-Identifier/
+     * X-Eori-Identifier -- a URL path parameter the way NINO/VRN/UTR
+     * work elsewhere in this app) so a developer can see exactly what
+     * this API needs without this page pretending to exercise it.
+     * https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/customs-declarations/1.0
+     */
+    public function customsDeclarationsInfo(): Response
+    {
+        return $this->webViewRenderer->render('customsDeclarationsInfo', [
+            'alert' => $this->alert(),
+            'eori'  => $this->sR->getSetting('eori'),
+        ]);
+    }
+
     public function createTestUserIndividual(array $requestBody = []): array
     {
         /**

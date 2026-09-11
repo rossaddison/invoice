@@ -1558,6 +1558,10 @@ prior to importing and no existing documents e.g. Invoices.',
   'mtd.nino.hint' => 'Needed for every NINO-based API below (Self-employed'
       . ' Business, Business Details, etc.) -- for the HMRC sandbox, use'
       . ' the nino returned by Create Test User, not your own real NINO',
+  'mtd.eori' => 'Economic Operators Registration and Identification'
+      . ' (EORI) number',
+  'mtd.eori.hint' => 'Needed to identify this business to HMRC\'s'
+      . ' Customs Declarations API -- e.g. GB123456789000',
   'mtd.business.missing.nino.or.token' =>
       'National Insurance Number or HMRC access token not set',
   'mtd.vat.obligations' => 'VAT Obligations',
