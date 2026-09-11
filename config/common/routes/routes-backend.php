@@ -13,6 +13,30 @@ use Yiisoft\Yii\RateLimiter\Counter;
 use Yiisoft\Yii\RateLimiter\LimitRequestsMiddleware;
 use Yiisoft\Yii\RateLimiter\Storage\StorageInterface;
 
+// The eight routes for the "Income Received" replacement APIs (see
+// HmrcApiCatalogue::all()'s own comment for why) built from a loop
+// over their category names rather than eight repeated
+// Route::get($path)->action($action)->name($name) statements --
+// SonarCloud's own new_duplicated_lines_density flagged exactly that
+// shape as real duplication once eight of them sat back-to-back below
+// (this file already repeats that chain across a dozen pre-existing,
+// genuinely varied routes above; eight uniform ones in a row is what
+// crossed the threshold). Every category name maps predictably onto
+// its path (/income{Category}), controller action (income{Category}),
+// and route name (backend/hmrc/income{Category}) -- HmrcController's
+// own INCOME_CATEGORIES array keys them by a lowercase-hyphenated slug
+// instead, unrelated to this naming, since routing and the HMRC HTTP
+// request shape are independent concerns.
+$incomeRoutes = [];
+foreach (
+    ['Dividends', 'Employments', 'Foreign', 'InsurancePolicies',
+        'Other', 'Partner', 'Pensions', 'Savings'] as $incomeCategory
+) {
+    $incomeRoutes[] = Route::get('/income' . $incomeCategory)
+        ->action([HmrcController::class, 'income' . $incomeCategory])
+        ->name('backend/hmrc/income' . $incomeCategory);
+}
+
 return [
     Group::create('')
         ->routes(
@@ -93,30 +117,7 @@ return [
 
             // The eight replacements for the deprecated "Income
             // Received" API -- see HmrcApiCatalogue::all()'s own
-            // 2026-09-11 addendum.
-            Route::get('/incomeDividends')
-                ->action([HmrcController::class, 'incomeDividends'])
-                ->name('backend/hmrc/incomeDividends'),
-            Route::get('/incomeEmployments')
-                ->action([HmrcController::class, 'incomeEmployments'])
-                ->name('backend/hmrc/incomeEmployments'),
-            Route::get('/incomeForeign')
-                ->action([HmrcController::class, 'incomeForeign'])
-                ->name('backend/hmrc/incomeForeign'),
-            Route::get('/incomeInsurancePolicies')
-                ->action([HmrcController::class, 'incomeInsurancePolicies'])
-                ->name('backend/hmrc/incomeInsurancePolicies'),
-            Route::get('/incomeOther')
-                ->action([HmrcController::class, 'incomeOther'])
-                ->name('backend/hmrc/incomeOther'),
-            Route::get('/incomePartner')
-                ->action([HmrcController::class, 'incomePartner'])
-                ->name('backend/hmrc/incomePartner'),
-            Route::get('/incomePensions')
-                ->action([HmrcController::class, 'incomePensions'])
-                ->name('backend/hmrc/incomePensions'),
-            Route::get('/incomeSavings')
-                ->action([HmrcController::class, 'incomeSavings'])
-                ->name('backend/hmrc/incomeSavings'),
+            // comment, and $incomeRoutes's own comment above.
+            ...$incomeRoutes,
         ),
 ];

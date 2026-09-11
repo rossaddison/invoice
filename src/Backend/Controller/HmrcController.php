@@ -1170,7 +1170,14 @@ final class HmrcController extends BaseController
      * and any extra path suffix (partner-income's list endpoint needs
      * a trailing /partnership).
      *
-     * @var array<string, array{
+     * Built via a loop over a compact tuple table rather than eight
+     * repeated 'key' => [...] array literals -- that shape (tried
+     * first) is exactly what SonarCloud's own new_duplicated_lines_density
+     * flagged as real duplication, the same CPD mechanism documented
+     * in HmrcApiCatalogue::incomeReceivedReplacementEntries()'s own
+     * docblock, generalized here to a table with more columns.
+     *
+     * @return array<string, array{
      *     segment: string,
      *     label: string,
      *     version: string,
@@ -1178,66 +1185,53 @@ final class HmrcController extends BaseController
      *     suffix: string,
      * }>
      */
-    private const array INCOME_CATEGORIES = [
-        'dividends' => [
-            'segment'      => 'dividends-income',
-            'label'        => 'Dividends Income',
-            'version'      => '2.0',
-            'needsTaxYear' => true,
-            'suffix'       => '',
-        ],
-        'employments' => [
-            'segment'      => 'employments-income',
-            'label'        => 'Employments Income',
-            'version'      => '2.0',
-            'needsTaxYear' => true,
-            'suffix'       => '',
-        ],
-        'foreign' => [
-            'segment'      => 'foreign-income',
-            'label'        => 'Foreign Income',
-            'version'      => '2.0',
-            'needsTaxYear' => true,
-            'suffix'       => '',
-        ],
-        'insurance-policies' => [
-            'segment'      => 'insurance-policies-income',
-            'label'        => 'Insurance Policies Income',
-            'version'      => '2.0',
-            'needsTaxYear' => true,
-            'suffix'       => '',
-        ],
-        'other' => [
-            'segment'      => 'other-income',
-            'label'        => 'Other Income',
-            'version'      => '2.0',
-            'needsTaxYear' => true,
-            'suffix'       => '',
-        ],
-        // The only one of the eight on its own version track (1.0, not
-        // 2.0) -- confirmed live, not assumed to match its siblings.
-        'partner' => [
-            'segment'      => 'partner-income',
-            'label'        => 'Partner Income',
-            'version'      => '1.0',
-            'needsTaxYear' => true,
-            'suffix'       => '/partnership',
-        ],
-        'pensions' => [
-            'segment'      => 'pensions-income',
-            'label'        => 'Pensions Income',
-            'version'      => '2.0',
-            'needsTaxYear' => true,
-            'suffix'       => '',
-        ],
-        'savings' => [
-            'segment'      => 'savings-income/uk-accounts',
-            'label'        => 'Savings Income (UK Accounts)',
-            'version'      => '2.0',
-            'needsTaxYear' => false,
-            'suffix'       => '',
-        ],
-    ];
+    private static function incomeCategories(): array
+    {
+        // [slug, segment, label, version, needsTaxYear, suffix]
+        $categories = [
+            ['dividends', 'dividends-income', 'Dividends Income', '2.0', true, ''],
+            [
+                'employments', 'employments-income',
+                'Employments Income', '2.0', true, '',
+            ],
+            ['foreign', 'foreign-income', 'Foreign Income', '2.0', true, ''],
+            [
+                'insurance-policies', 'insurance-policies-income',
+                'Insurance Policies Income', '2.0', true, '',
+            ],
+            ['other', 'other-income', 'Other Income', '2.0', true, ''],
+            // Partner is the only one of the eight on its own version
+            // track (1.0, not 2.0) -- confirmed live, not assumed to
+            // match its siblings.
+            [
+                'partner', 'partner-income', 'Partner Income', '1.0',
+                true, '/partnership',
+            ],
+            ['pensions', 'pensions-income', 'Pensions Income', '2.0', true, ''],
+            // Savings' list endpoint is keyed by NINO alone -- taxYear
+            // only appears on its per-account detail endpoint, which
+            // this lightweight test page doesn't drill into.
+            [
+                'savings', 'savings-income/uk-accounts',
+                'Savings Income (UK Accounts)', '2.0', false, '',
+            ],
+        ];
+
+        $result = [];
+        foreach (
+            $categories as
+            [$slug, $segment, $label, $version, $needsTaxYear, $suffix]
+        ) {
+            $result[$slug] = [
+                'segment'      => $segment,
+                'label'        => $label,
+                'version'      => $version,
+                'needsTaxYear' => $needsTaxYear,
+                'suffix'       => $suffix,
+            ];
+        }
+        return $result;
+    }
 
     public function incomeDividends(): Response
     {
@@ -1280,20 +1274,25 @@ final class HmrcController extends BaseController
     }
 
     /**
-     * Shared GET/render logic for all eight income-category actions
-     * above -- see INCOME_CATEGORIES's own docblock for why one shared
-     * action+view serves all eight rather than eight near-identical
-     * copies (the exact DRY reasoning itsaEntry() already applies to
-     * the catalogue side of this same API family).
+     * Validates NINO + HMRC access token are both set, redirecting
+     * with a flash message when either is missing -- the same guard
+     * every NINO-based action in this file already repeats inline
+     * (itsaStatus(), individualCalculations(),
+     * selfEmploymentBusinesses(), incomeTaxObligations()). Extracted
+     * here, and used ONLY by renderIncomeCategory() below, purely
+     * because that one new inline copy is what SonarCloud's own
+     * new_duplicated_lines_density flagged as real duplication against
+     * itsaStatus()'s own pre-existing inline copy -- not a general
+     * refactor of the other four call sites, which is out of scope for
+     * this change (see this session's own scope-creep discipline).
+     *
+     * @return array{0: string, 1: string}|Response Either [nino,
+     *   token] on success, or a redirect Response to render directly.
      */
-    private function renderIncomeCategory(string $category): Response
+    private function ensureNinoAndToken(): array|Response
     {
-        $config = self::INCOME_CATEGORIES[$category];
-
-        $nino         = $this->sR->getSetting('nino');
-        $tokenString  = (string) $this->session->get('hmrc_access_token');
-        $otpReference = (string) $this->session->get('otpRef');
-
+        $nino = $this->sR->getSetting('nino');
+        $tokenString = (string) $this->session->get('hmrc_access_token');
         if ($nino === '' || strlen($tokenString) === 0) {
             $this->flashMessage(
                 'warning',
@@ -1301,6 +1300,26 @@ final class HmrcController extends BaseController
             );
             return $this->webService->getRedirectResponse('backend/hmrc/index');
         }
+        return [$nino, $tokenString];
+    }
+
+    /**
+     * Shared GET/render logic for all eight income-category actions
+     * above -- see incomeCategories()'s own docblock for why one
+     * shared action+view serves all eight rather than eight near-
+     * identical copies (the exact DRY reasoning itsaEntry() already
+     * applies to the catalogue side of this same API family).
+     */
+    private function renderIncomeCategory(string $category): Response
+    {
+        $config = self::incomeCategories()[$category];
+
+        $guard = $this->ensureNinoAndToken();
+        if ($guard instanceof Response) {
+            return $guard;
+        }
+        [$nino, $tokenString] = $guard;
+        $otpReference = (string) $this->session->get('otpRef');
 
         $taxYear = $config['needsTaxYear'] ? $this->currentUkTaxYear() : '';
 
