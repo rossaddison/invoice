@@ -38,6 +38,13 @@ final class HmrcApiCatalogue
      * explicitly instead of repeating it five times; only name/version
      * (the two fields that actually differ per API) are passed in.
      *
+     * 2026-09-11 addendum: "Income Received", one of the original five,
+     * turned out to be a deprecated API split into eight replacements
+     * -- see the 'individuals/dividends-income' entry's own comment
+     * below. All eight are itsaEntry() members too, so the bundle is
+     * now twelve entries, not five -- itsaEntry()'s own reasoning for
+     * existing is unchanged, just its membership count.
+     *
      * @return array<string, array{
      *     name: string,
      *     scopes: list<string>,
@@ -48,7 +55,7 @@ final class HmrcApiCatalogue
      */
     public static function all(): array
     {
-        return [
+        $entries = [
             'organisations/vat' => self::entry(
                 'VAT (MTD)',
                 ['read:vat', 'write:vat'],
@@ -85,10 +92,18 @@ final class HmrcApiCatalogue
             // what this API needs was incomplete/misleading.
             'individuals/business/details' =>
                 self::itsaEntry('Business Details (MTD)', '2.0'),
+            // Live-testing fix 2026-09-11: HMRC's own Developer Hub
+            // (fetched live, not guessed) lists version 8.0 as the ONLY
+            // current individual-calculations-api version -- 5.0 has
+            // been retired entirely, not just superseded. A stale
+            // version here doesn't break scope matching the way #1287/
+            // #1295's wrong-scope bugs did (fromGrantedScopeString()
+            // still works fine), but the Accept header this app sends
+            // (application/vnd.hmrc.{version}+json, built from this
+            // very field in individualCalculations()) would target a
+            // version HMRC no longer serves.
             'individuals/calculations' =>
-                self::itsaEntry('Individual Calculations', '5.0'),
-            'individuals/income-received' =>
-                self::itsaEntry('Income Received', '2.0'),
+                self::itsaEntry('Individual Calculations', '8.0'),
             // Added 2026-09-10 per user request to incorporate further
             // relevant HMRC APIs -- confirmed live against HMRC's real
             // obligations-api/3.0 OAS spec that this needs only
@@ -133,6 +148,73 @@ final class HmrcApiCatalogue
                 '2.0',
             ),
         ];
+
+        // Live-testing fix 2026-09-11: HMRC's own Developer Hub
+        // (fetched live, not guessed) confirms the single "Income
+        // Received" API that used to sit here as one more 'key' =>
+        // self::itsaEntry(...) entry (context path
+        // individuals/income-received) is DEPRECATED -- not just a
+        // stale version number like individuals/calculations above.
+        // It was split into eight independently-versioned replacement
+        // APIs, each with its own real context path: Dividends,
+        // Employments, Foreign, Insurance Policies, Other, Partner,
+        // Pensions, and Savings Income. Every one of them shares this
+        // same read:self-assessment/write:self-assessment scope pair
+        // and NEEDS_NINO (confirmed live against each one's own OAS
+        // spec) -- HMRC's underlying data model didn't change, only
+        // how it's split across endpoints. Deliberately merged in
+        // outside the array literal above via a loop-based helper, not
+        // eight more 'key' => self::itsaEntry(...) lines inside it --
+        // that shape (tried first) is exactly what SonarCloud's own
+        // new_duplicated_lines_density flagged as real duplication
+        // once eight of them sat back-to-back with no separating
+        // comments between them, the same real CPD mechanism this
+        // session's routes.php $getPostRoute fix and
+        // LayoutViewInjection.php's noFrontPageFlag() fix both worked
+        // around (see incomeReceivedReplacementEntries()'s own
+        // docblock), generalized here to eight entries built by one
+        // loop instead of one entry moved outside a literal.
+        return $entries + self::incomeReceivedReplacementEntries();
+    }
+
+    /**
+     * The eight real replacement APIs for the deprecated "Income
+     * Received" API -- see all()'s own comment above for why. Built
+     * from a compact [context-path-suffix, display name, version]
+     * table via a loop rather than eight repeated 'key' =>
+     * self::itsaEntry(...) statements, so the source itself isn't
+     * literally duplicated eight times.
+     *
+     * @return array<string, array{
+     *     name: string,
+     *     scopes: list<string>,
+     *     needs: string,
+     *     serviceName: string,
+     *     version: string,
+     * }>
+     */
+    private static function incomeReceivedReplacementEntries(): array
+    {
+        // Partner Income is the only one of the eight on its own
+        // version track (1.0, not 2.0) -- confirmed live, not assumed
+        // to match its seven siblings.
+        $categories = [
+            ['dividends-income', 'Dividends Income', '2.0'],
+            ['employments-income', 'Employments Income', '2.0'],
+            ['foreign-income', 'Foreign Income', '2.0'],
+            ['insurance-policies-income', 'Insurance Policies Income', '2.0'],
+            ['other-income', 'Other Income', '2.0'],
+            ['partner-income', 'Partner Income', '1.0'],
+            ['pensions-income', 'Pensions Income', '2.0'],
+            ['savings-income', 'Savings Income', '2.0'],
+        ];
+
+        $entries = [];
+        foreach ($categories as [$pathSuffix, $name, $version]) {
+            $entries['individuals/' . $pathSuffix] =
+                self::itsaEntry($name, $version);
+        }
+        return $entries;
     }
 
     /**
@@ -287,6 +369,19 @@ final class HmrcApiCatalogue
                 'backend/hmrc/selfEmploymentBusinesses',
             'individuals/obligations' => 'backend/hmrc/incomeTaxObligations',
             'individuals/self-assessment' => 'backend/hmrc/itsaStatus',
+            'individuals/calculations' =>
+                'backend/hmrc/individualCalculations',
+            'individuals/dividends-income' =>
+                'backend/hmrc/incomeDividends',
+            'individuals/employments-income' =>
+                'backend/hmrc/incomeEmployments',
+            'individuals/foreign-income' => 'backend/hmrc/incomeForeign',
+            'individuals/insurance-policies-income' =>
+                'backend/hmrc/incomeInsurancePolicies',
+            'individuals/other-income' => 'backend/hmrc/incomeOther',
+            'individuals/partner-income' => 'backend/hmrc/incomePartner',
+            'individuals/pensions-income' => 'backend/hmrc/incomePensions',
+            'individuals/savings-income' => 'backend/hmrc/incomeSavings',
             default => null,
         };
     }

@@ -1603,6 +1603,11 @@ prior to importing and no existing documents e.g. Invoices.',
   'mtd.vat.return.error.rule_insolvent_trader' =>
       'HMRC\'s records show this trader as insolvent, so returns cannot'
       . ' be accepted.',
+  'mtd.individual.calculations.triggered' =>
+      'Calculation triggered (ID: {calculationId}).',
+  'mtd.individual.calculations.trigger.error' =>
+      'HMRC returned an error triggering the calculation: "{code}" —'
+      . ' {message}',
   'purchase.entry.add' => 'Add Purchase Entry',
   'purchase.entry.csv.imported' => 'Imported {count} purchase entries ({skipped} rows skipped).',
   'purchase.entry.csv.no.file' => 'No CSV file uploaded or upload error.',
