@@ -121,6 +121,15 @@ final class InvsToolbar
             ->content('☑️' . $p->translator->translate('recurring') . '♻️')
             ->render();
 
+        $runSheetPdf = new A()
+            ->addAttributes(['data-bs-toggle' => 'tooltip',
+                'title' => Html::encode($p->translator->translate('run.sheet.pdf'))])
+            ->addClass('btn btn-info')
+            ->href($p->urlGenerator->generate('inv/runsheetpdf'))
+            ->content('📍' . $p->translator->translate('run.sheet.pdf'))
+            ->id('btn-run-sheet-pdf')
+            ->render();
+
         $addBtn = self::buildAddBtn($p);
         $groupBySelect = self::buildGroupBySelect($p);
         $collapseExpand = self::buildCollapseExpand($p);
@@ -145,6 +154,7 @@ final class InvsToolbar
                 . $bulkQuickPay
                 . $batchEmailBtn
                 . $markRecurring
+                . $runSheetPdf
                 . $addBtn
                 . Html::closeTag('div')
                 . $groupBySelect

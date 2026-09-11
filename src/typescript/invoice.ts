@@ -174,6 +174,18 @@ export class InvoiceHandler {
             return;
         }
 
+        // Run sheet PDF -- forwards the grid's current query string as-is,
+        // same reasoning as handleCopyAllToDate() below: the server re-runs
+        // the exact same filterCombined() the grid itself used, so the PDF
+        // matches whatever's currently shown (e.g. the active "Current Run"
+        // filter), not every invoice.
+        const runSheetPdf = closestSafe<HTMLAnchorElement>(target, '#btn-run-sheet-pdf');
+        if (runSheetPdf) {
+            event.preventDefault();
+            globalThis.location.href = runSheetPdf.href + location.search;
+            return;
+        }
+
         // Bulk quick pay (modal confirm)
         const bulkQuickPay = closestSafe(target, '#bulk-quick-pay-confirm');
         if (bulkQuickPay) {
