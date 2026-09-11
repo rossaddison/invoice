@@ -80,5 +80,10 @@ return [
             Route::get('/incomeTaxObligations')
                 ->action([HmrcController::class, 'incomeTaxObligations'])
                 ->name('backend/hmrc/incomeTaxObligations'),
+
+            // https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-api/3.0
+            Route::get('/itsaStatus')
+                ->action([HmrcController::class, 'itsaStatus'])
+                ->name('backend/hmrc/itsaStatus'),
         ),
 ];

@@ -271,6 +271,7 @@ final class HmrcApiCatalogue
             'individuals/business/details' =>
                 'backend/hmrc/selfEmploymentBusinesses',
             'individuals/obligations' => 'backend/hmrc/incomeTaxObligations',
+            'individuals/self-assessment' => 'backend/hmrc/itsaStatus',
             default => null,
         };
     }
