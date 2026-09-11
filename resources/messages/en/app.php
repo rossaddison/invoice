@@ -884,6 +884,7 @@ return [
   'street.order.back.to.families' => 'Back to Families',
   'street.order.position' => 'Cleaning run position:',
   'street.order.manage.link' => 'Manage street order →',
+  'run.sheet.pdf' => 'Run Sheet (PDF)',
   'faq' => 'FAQ\'s',
   'faq.ai.callback.session' =>
     'Copilot: How can I include '

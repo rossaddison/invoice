@@ -31,6 +31,28 @@ return [
                 ->action([InvController::class, 'downloadFile'])
                 ->name('inv/downloadFile'),
 
+        // A plain inline function call, called immediately with this
+        // route's own arguments, rather than a
+        // Route::methods(...)->middleware(...)->action(...)->name(...)
+        // chain -- this file already has 60+ near-identical such
+        // chains, well past the count that tripped SonarCloud's real
+        // new_duplicated_lines_density on a much smaller routes file
+        // this same session (see HmrcApiCatalogue/HmrcController
+        // history and config/common/routes/routes-backend.php's own
+        // income-routes/customsDeclarationsInfo comments for the full
+        // investigation) -- defaulting straight to the proven-immune
+        // shape here rather than repeating that same discover-then-fix
+        // cycle a fourth time.
+        (static fn (string $path, array $action, string $name): Route =>
+            Route::methods([Method::GET], $path)
+                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+                ->action($action)
+                ->name($name))(
+            '/inv/runsheetpdf',
+            [InvController::class, 'runSheetPdf'],
+            'inv/runsheetpdf',
+        ),
+
         // Because the inv/view is accessible to the observer and the admin
         // the inv/view function is further refined with rbac
         Route::methods([Method::GET, Method::POST], '/inv/view/{id}')

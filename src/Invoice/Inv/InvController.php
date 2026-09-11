@@ -37,7 +37,7 @@ use App\Widget\{ButtonsToolbarFull, FormFields};
 use App\Invoice\Helpers\{DateHelper, NumberHelper};
 use App\Invoice\Inv\Trait\{Add, Archive, Attachment, BatchEmail, Calendar, Credit, Delete, Edit, Email,
     Flush, Guest, GuestCalendar, HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol,
-    Storecove, Trash, Typescript, UrlKey, View, HomeCareScan};
+    RunSheetPdf, Storecove, Trash, Typescript, UrlKey, View, HomeCareScan};
 use Yiisoft\{
     DataResponse\ResponseFactory\DataResponseFactoryInterface,
     DataResponse\ResponseFactory\HtmlResponseFactory,
@@ -69,6 +69,7 @@ final class InvController extends BaseController
     use OptionsData;
     use PdfTrait;
     use Peppol;
+    use RunSheetPdf;
     use Storecove;
     use Trash;
     use Typescript;
