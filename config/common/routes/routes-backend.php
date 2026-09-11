@@ -116,6 +116,11 @@ return [
             // hyphenated slug instead, unrelated to this naming, since
             // routing and the HMRC HTTP request shape are independent
             // concerns.
+            // https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/customs-declarations/1.0
+            Route::get('/customsDeclarationsInfo')
+                ->action([HmrcController::class, 'customsDeclarationsInfo'])
+                ->name('backend/hmrc/customsDeclarationsInfo'),
+
             ...(static function (): array {
                 $routes = [];
                 foreach (

@@ -23,6 +23,7 @@ $formGroup = ['class' => 'mb-3'];
 $formControl = 'form-control';
 $kVatRegistrationNumber = 'settings[vat_registration_number]';
 $kNino = 'settings[nino]';
+$kEori = 'settings[eori]';
 $kFphConnectionMethod = 'settings[fph_connection_method]';
 $kFphClientBrowserJsUserAgent = 'settings[fph_client_browser_js_user_agent]';
 $kFphClientDeviceId = 'settings[fph_client_device_id]';
@@ -82,6 +83,26 @@ echo H::openTag('div', $row); //1
      ]);
      echo H::openTag('small', ['class' => 'text-muted']);
       echo $translator->translate('mtd.nino.hint');
+     echo H::closeTag('small');
+    echo H::closeTag('div'); //5
+    echo H::openTag('div', $formGroup); //5
+     echo H::openTag('label', ['for' => $kEori]);
+      echo H::openTag('h4');
+       echo $translator->translate('mtd.eori');
+      echo H::closeTag('h4');
+     echo H::closeTag('label');
+     $body[$kEori] = $s->getSetting('eori');
+     echo H::openTag('input', [
+      'type' => 'text',
+      'name' => $kEori,
+      'id' => $kEori,
+      'class' => $formControl,
+      'maxlength' => '17',
+      'placeholder' => 'GB123456789000',
+      'value' => $body[$kEori],
+     ]);
+     echo H::openTag('small', ['class' => 'text-muted']);
+      echo $translator->translate('mtd.eori.hint');
      echo H::closeTag('small');
     echo H::closeTag('div'); //5
     echo H::openTag('br');

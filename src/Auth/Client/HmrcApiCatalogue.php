@@ -140,12 +140,28 @@ final class HmrcApiCatalogue
                 'national-insurance',
                 '1.1',
             ),
+            // Live-testing fix 2026-09-11: confirmed live against
+            // HMRC's real customs-declarations/1.0 OAS spec that the
+            // current version is 1.0, not 2.0 -- the same class of
+            // stale-version bug individuals/calculations had (5.0 ->
+            // 8.0, fixed earlier this session). The scope
+            // (write:customs-declaration) was already correct, unlike
+            // that entry. This API is also genuinely different from
+            // everything else in this catalogue: every one of its five
+            // endpoints is a write-only XML submission (a customs
+            // declaration, not JSON), and identification is via one of
+            // three HTTP headers (X-Badge-Identifier/
+            // X-Submitter-Identifier/X-Eori-Identifier), not a URL path
+            // parameter the way NINO/VRN/UTR are elsewhere -- see
+            // HmrcController::customsDeclarationsInfo()'s own docblock
+            // for why this app shows an informational page here rather
+            // than a live test like every other catalogue entry.
             'customs/declarations' => self::entry(
                 'Customs Declarations',
                 ['write:customs-declaration'],
                 self::NEEDS_EORI,
                 'customs-services',
-                '2.0',
+                '1.0',
             ),
         ];
 
@@ -382,6 +398,8 @@ final class HmrcApiCatalogue
             'individuals/partner-income' => 'backend/hmrc/incomePartner',
             'individuals/pensions-income' => 'backend/hmrc/incomePensions',
             'individuals/savings-income' => 'backend/hmrc/incomeSavings',
+            'customs/declarations' =>
+                'backend/hmrc/customsDeclarationsInfo',
             default => null,
         };
     }
