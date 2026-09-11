@@ -85,8 +85,18 @@ final class HmrcApiCatalogue
             // what this API needs was incomplete/misleading.
             'individuals/business/details' =>
                 self::itsaEntry('Business Details (MTD)', '2.0'),
+            // Live-testing fix 2026-09-11: HMRC's own Developer Hub
+            // (fetched live, not guessed) lists version 8.0 as the ONLY
+            // current individual-calculations-api version -- 5.0 has
+            // been retired entirely, not just superseded. A stale
+            // version here doesn't break scope matching the way #1287/
+            // #1295's wrong-scope bugs did (fromGrantedScopeString()
+            // still works fine), but the Accept header this app sends
+            // (application/vnd.hmrc.{version}+json, built from this
+            // very field in individualCalculations()) would target a
+            // version HMRC no longer serves.
             'individuals/calculations' =>
-                self::itsaEntry('Individual Calculations', '5.0'),
+                self::itsaEntry('Individual Calculations', '8.0'),
             'individuals/income-received' =>
                 self::itsaEntry('Income Received', '2.0'),
             // Added 2026-09-10 per user request to incorporate further
@@ -287,6 +297,8 @@ final class HmrcApiCatalogue
                 'backend/hmrc/selfEmploymentBusinesses',
             'individuals/obligations' => 'backend/hmrc/incomeTaxObligations',
             'individuals/self-assessment' => 'backend/hmrc/itsaStatus',
+            'individuals/calculations' =>
+                'backend/hmrc/individualCalculations',
             default => null,
         };
     }

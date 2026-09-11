@@ -1000,6 +1000,159 @@ final class HmrcController extends BaseController
         return $startYear . '-' . substr((string) ($startYear + 1), 2, 2);
     }
 
+    /**
+     * List, and trigger, MTD Self Assessment Tax Calculations for the
+     * configured NINO and a tax year (defaults to the current UK tax
+     * year, overridable via ?taxYear=YYYY-YY). Confirmed live against
+     * HMRC's real individual-calculations-api/8.0 OAS spec (fetched
+     * 2026-09-11, not guessed):
+     * GET .../individuals/calculations/{nino}/self-assessment/{taxYear}
+     * (list, read:self-assessment) and
+     * POST .../trigger/{calculationType} (write:self-assessment) --
+     * both already correctly requested via the existing itsaEntry()
+     * bundle, no catalogue scope fix needed (unlike Obligations/
+     * National Insurance earlier this session) -- though the
+     * catalogue's own version field WAS stale, see that entry's own
+     * fix note in HmrcApiCatalogue::all().
+     *
+     * Deliberately doesn't render the "retrieve a single calculation"
+     * endpoint's full response here -- its real shape is a large
+     * nested object (metadata + inputs + calculation breakdown) far
+     * beyond what a lightweight test page needs; viewCalculation()
+     * below shows it as raw JSON instead, same reasoning
+     * selfEmploymentBusinesses()'s own view already uses for an
+     * unexpected/error response.
+     * https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/individual-calculations-api/8.0
+     */
+    public function individualCalculations(ServerRequest $request): Response
+    {
+        $nino         = $this->sR->getSetting('nino');
+        $tokenString  = (string) $this->session->get('hmrc_access_token');
+        $otpReference = (string) $this->session->get('otpRef');
+
+        if ($nino === '' || strlen($tokenString) === 0) {
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('mtd.business.missing.nino.or.token'),
+            );
+            return $this->webService->getRedirectResponse('backend/hmrc/index');
+        }
+
+        $queryParams = $request->getQueryParams();
+        $taxYear = (string) ($queryParams['taxYear'] ?? $this->currentUkTaxYear());
+
+        if ($request->getMethod() === Method::POST) {
+            return $this->triggerCalculation(
+                $request,
+                $nino,
+                $taxYear,
+                $tokenString,
+                $otpReference,
+            );
+        }
+
+        $listRequest = $this->createRequest(
+            'GET',
+            $this->resolveHmrcApiBaseUrl()
+                . '/individuals/calculations/' . urlencode($nino)
+                . '/self-assessment/' . urlencode($taxYear),
+        );
+        $listRequest = RequestUtil::addHeaders($listRequest, array_merge(
+            [
+                'Accept'        => 'application/vnd.hmrc.8.0+json',
+                'Authorization' => 'Bearer ' . $tokenString,
+            ],
+            $this->getWebAppViaServerHeaders($otpReference),
+        ));
+
+        $listResponse = $this->sendRequest($listRequest);
+        /** @var array<string, mixed> $listParsed */
+        $listParsed = (array) json_decode(
+            $listResponse->getBody()->getContents(),
+            true,
+        );
+        /** @var list<array<string, mixed>> $calculations */
+        $calculations = $listParsed['calculations'] ?? [];
+
+        return $this->webViewRenderer->render('individualCalculations', [
+            'alert'        => $this->alert(),
+            'nino'         => $nino,
+            'taxYear'      => $taxYear,
+            'statusCode'   => $listResponse->getStatusCode(),
+            'calculations' => $calculations,
+        ]);
+    }
+
+    /**
+     * POST half of individualCalculations() -- separated out purely to
+     * keep that method's GET/POST branches each readable on their own,
+     * same split incomeTaxObligations()'s own helpers use for a
+     * different reason (response-shape normalization there, request-
+     * building here).
+     */
+    private function triggerCalculation(
+        ServerRequest $request,
+        string $nino,
+        string $taxYear,
+        string $tokenString,
+        string $otpReference,
+    ): Response {
+        $body = $request->getParsedBody();
+        /** @var array<string, string> $body */
+        $body = is_array($body) ? $body : [];
+        $calculationType = $body['calculationType'] ?? 'in-year';
+
+        $triggerRequest = $this->createRequest(
+            'POST',
+            $this->resolveHmrcApiBaseUrl()
+                . '/individuals/calculations/' . urlencode($nino)
+                . '/self-assessment/' . urlencode($taxYear)
+                . '/trigger/' . urlencode($calculationType),
+        );
+        $triggerRequest = RequestUtil::addHeaders($triggerRequest, array_merge(
+            [
+                'Accept'        => 'application/vnd.hmrc.8.0+json',
+                'Authorization' => 'Bearer ' . $tokenString,
+                'Content-Type'  => 'application/json',
+            ],
+            $this->getWebAppViaServerHeaders($otpReference),
+        ));
+        $triggerRequest = $triggerRequest->withBody(
+            \GuzzleHttp\Psr7\Utils::streamFor('{}'),
+        );
+
+        $triggerResponse = $this->sendRequest($triggerRequest);
+        /** @var array<string, mixed> $triggerParsed */
+        $triggerParsed = (array) json_decode(
+            $triggerResponse->getBody()->getContents(),
+            true,
+        );
+
+        if ($triggerResponse->getStatusCode() === 202) {
+            $this->flashMessage('success', $this->translator->translate(
+                'mtd.individual.calculations.triggered',
+                [
+                    'calculationId' =>
+                        (string) ($triggerParsed['calculationId'] ?? ''),
+                ],
+            ));
+        } else {
+            $this->flashMessage('danger', $this->translator->translate(
+                'mtd.individual.calculations.trigger.error',
+                [
+                    'code'    => (string) ($triggerParsed['code'] ?? ''),
+                    'message' => (string) ($triggerParsed['message'] ?? ''),
+                ],
+            ));
+        }
+
+        return $this->webService->getRedirectResponse(
+            'backend/hmrc/individualCalculations',
+            [],
+            ['taxYear' => $taxYear],
+        );
+    }
+
     public function createTestUserIndividual(array $requestBody = []): array
     {
         /**

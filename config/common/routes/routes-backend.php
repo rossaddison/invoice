@@ -85,5 +85,10 @@ return [
             Route::get('/itsaStatus')
                 ->action([HmrcController::class, 'itsaStatus'])
                 ->name('backend/hmrc/itsaStatus'),
+
+            // https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/individual-calculations-api/8.0
+            Route::methods([Method::GET, Method::POST], '/individualCalculations')
+                ->action([HmrcController::class, 'individualCalculations'])
+                ->name('backend/hmrc/individualCalculations'),
         ),
 ];
