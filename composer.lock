@@ -3366,16 +3366,16 @@
         },
         {
             "name": "gocardless/gocardless-pro",
-            "version": "8.1.5",
+            "version": "8.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gocardless/gocardless-pro-php.git",
-                "reference": "2f7d2d124a5af59c9fcc4123ddc73f3f5f8dc87e"
+                "reference": "539d6227bd3d884fcdf47804b4cbf2993825fa4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gocardless/gocardless-pro-php/zipball/2f7d2d124a5af59c9fcc4123ddc73f3f5f8dc87e",
-                "reference": "2f7d2d124a5af59c9fcc4123ddc73f3f5f8dc87e",
+                "url": "https://api.github.com/repos/gocardless/gocardless-pro-php/zipball/539d6227bd3d884fcdf47804b4cbf2993825fa4d",
+                "reference": "539d6227bd3d884fcdf47804b4cbf2993825fa4d",
                 "shasum": ""
             },
             "require": {
@@ -3415,9 +3415,9 @@
             ],
             "support": {
                 "issues": "https://github.com/gocardless/gocardless-pro-php/issues",
-                "source": "https://github.com/gocardless/gocardless-pro-php/tree/v8.1.5"
+                "source": "https://github.com/gocardless/gocardless-pro-php/tree/v8.2.0"
             },
-            "time": "2026-09-09T10:22:55+00:00"
+            "time": "2026-09-11T10:06:23+00:00"
         },
         {
             "name": "google/auth",
@@ -4950,16 +4950,16 @@
         },
         {
             "name": "league/iso3166",
-            "version": "4.4.0",
+            "version": "4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/alcohol/iso3166.git",
-                "reference": "928ac7ecc569db9123a83ef5b1c6efc279e7cb49"
+                "reference": "d2a202eae724b3e81699996c62985004d5205113"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alcohol/iso3166/zipball/928ac7ecc569db9123a83ef5b1c6efc279e7cb49",
-                "reference": "928ac7ecc569db9123a83ef5b1c6efc279e7cb49",
+                "url": "https://api.github.com/repos/alcohol/iso3166/zipball/d2a202eae724b3e81699996c62985004d5205113",
+                "reference": "d2a202eae724b3e81699996c62985004d5205113",
                 "shasum": ""
             },
             "require": {
@@ -5013,7 +5013,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-02T09:49:36+00:00"
+            "time": "2026-08-27T14:33:05+00:00"
         },
         {
             "name": "league/uri",
@@ -14599,16 +14599,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "6.16.1",
+            "version": "6.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "f1f5de594dc76faf8784e02d3dc4716c91c6f6ac"
+                "reference": "056992a902704e2b691d33f9bfe4a063e43c79f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/f1f5de594dc76faf8784e02d3dc4716c91c6f6ac",
-                "reference": "f1f5de594dc76faf8784e02d3dc4716c91c6f6ac",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/056992a902704e2b691d33f9bfe4a063e43c79f2",
+                "reference": "056992a902704e2b691d33f9bfe4a063e43c79f2",
                 "shasum": ""
             },
             "require": {
@@ -14632,7 +14632,7 @@
                 "netresearch/jsonmapper": "^5.0",
                 "nikic/php-parser": "^5.0.0",
                 "php": "~8.1.31 || ~8.2.27 || ~8.3.16 || ~8.4.3 || ~8.5.0",
-                "sebastian/diff": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0",
+                "sebastian/diff": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.0",
                 "spatie/array-to-xml": "^2.17.0 || ^3.0",
                 "symfony/console": "^6.0 || ^7.0 || ^8.0",
                 "symfony/filesystem": "~6.3.12 || ~6.4.3 || ^7.0.3 || ^8.0",
@@ -14713,7 +14713,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm"
             },
-            "time": "2026-03-19T10:56:09+00:00"
+            "time": "2026-09-10T11:14:46+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -19830,12 +19830,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "059d5b5b29b429cda731ea53b43c40900d627b03"
+                "reference": "632521bae15d6253ceccd5331d260e32d62f9cbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/059d5b5b29b429cda731ea53b43c40900d627b03",
-                "reference": "059d5b5b29b429cda731ea53b43c40900d627b03",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/632521bae15d6253ceccd5331d260e32d62f9cbc",
+                "reference": "632521bae15d6253ceccd5331d260e32d62f9cbc",
                 "shasum": ""
             },
             "require": {
@@ -19916,7 +19916,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-09-09T11:43:09+00:00"
+            "time": "2026-09-10T19:17:35+00:00"
         },
         {
             "name": "yiisoft/yii-event",

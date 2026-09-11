@@ -12,10 +12,10 @@
     "govuk-frontend": "^6.5.0",
     "hono": ">=4.13.7",
     "htmx.org": "^2.0.10",
-    "libphonenumber-js": "^1.13.12"
+    "libphonenumber-js": "^1.13.13"
   },
   "devDependencies": {
-    "@babel/core": "8.0.1",
+    "@babel/core": "8.0.5",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.5.0",
