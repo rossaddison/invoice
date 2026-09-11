@@ -15,7 +15,7 @@
     "libphonenumber-js": "^1.13.12"
   },
   "devDependencies": {
-    "@babel/core": "8.0.1",
+    "@babel/core": "8.0.5",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.5.0",
