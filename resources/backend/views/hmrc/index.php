@@ -259,6 +259,7 @@ if ($availableApis === []) {
             HmrcApiCatalogue::NEEDS_NINO => ' [NINO]',
             HmrcApiCatalogue::NEEDS_VRN  => ' [VRN]',
             HmrcApiCatalogue::NEEDS_EORI => ' [EORI]',
+            HmrcApiCatalogue::NEEDS_UTR  => ' [UTR]',
             default                      => '',
         };
         // No route means no page is wired up for this API yet (see

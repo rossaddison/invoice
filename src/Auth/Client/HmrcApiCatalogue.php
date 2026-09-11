@@ -21,6 +21,7 @@ final class HmrcApiCatalogue
     public const string NEEDS_NINO = 'nino';
     public const string NEEDS_VRN  = 'vrn';
     public const string NEEDS_EORI = 'eori';
+    public const string NEEDS_UTR  = 'utr';
 
     /**
      * Live-testing fix 2026-09-10: SonarCloud flagged this array as
@@ -103,12 +104,26 @@ final class HmrcApiCatalogue
                 'self-assessment',
                 '3.0',
             ),
+            // Live-testing fix 2026-09-11: confirmed live against HMRC's
+            // real national-insurance/1.1 OAS spec that this entry's own
+            // scope (read:national-insurance-record) doesn't exist --
+            // the real API uses read:national-insurance -- the exact
+            // same class of bug #1287 fixed for a different entry, so
+            // this could never match fromGrantedScopeString() either.
+            // Its real endpoint (GET .../national-insurance/sa/{utr}/
+            // annual-summary/{taxYear}) also needs a self-assessment
+            // UTR, not a NINO despite the API's own name -- this
+            // catalogue had no NEEDS_UTR constant before now since
+            // nothing else in it needs one. Version corrected to the
+            // real current 1.1 (was 1.0); name corrected to HMRC's own
+            // official "National Insurance" (was "National Insurance
+            // Record").
             'individuals/national-insurance' => self::entry(
-                'National Insurance Record',
-                ['read:national-insurance-record'],
-                self::NEEDS_NINO,
+                'National Insurance',
+                ['read:national-insurance'],
+                self::NEEDS_UTR,
                 'national-insurance',
-                '1.0',
+                '1.1',
             ),
             'customs/declarations' => self::entry(
                 'Customs Declarations',
