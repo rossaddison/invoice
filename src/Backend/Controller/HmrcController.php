@@ -881,6 +881,125 @@ final class HmrcController extends BaseController
         return isset($row[$key]) ? (string) $row[$key] : '';
     }
 
+    /**
+     * Retrieve the MTD ITSA status for the configured NINO and a tax
+     * year (defaults to the current UK tax year, overridable via
+     * ?taxYear=YYYY-YY). Confirmed live against HMRC's real
+     * self-assessment-api/3.0 OAS spec (fetched 2026-09-11, not
+     * guessed): GET .../individuals/person/itsa-status/{nino}/{taxYear},
+     * needing only read:self-assessment -- already correctly requested
+     * via the existing itsaEntry() bundle, no catalogue fix needed for
+     * this one.
+     * https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-api/3.0
+     */
+    public function itsaStatus(ServerRequest $request): Response
+    {
+        $nino         = $this->sR->getSetting('nino');
+        $tokenString  = (string) $this->session->get('hmrc_access_token');
+        $otpReference = (string) $this->session->get('otpRef');
+
+        if ($nino === '' || strlen($tokenString) === 0) {
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('mtd.business.missing.nino.or.token'),
+            );
+            return $this->webService->getRedirectResponse('backend/hmrc/index');
+        }
+
+        $queryParams = $request->getQueryParams();
+        $taxYear = (string) ($queryParams['taxYear'] ?? $this->currentUkTaxYear());
+
+        $apiRequest = $this->createRequest(
+            'GET',
+            $this->resolveHmrcApiBaseUrl()
+                . '/individuals/person/itsa-status/' . urlencode($nino)
+                . '/' . urlencode($taxYear),
+        );
+
+        $apiRequest = RequestUtil::addHeaders($apiRequest, array_merge(
+            [
+                'Accept'        => 'application/vnd.hmrc.3.0+json',
+                'Authorization' => 'Bearer ' . $tokenString,
+            ],
+            $this->getWebAppViaServerHeaders($otpReference),
+        ));
+
+        $apiResponse = $this->sendRequest($apiRequest);
+        /** @var array<string, mixed> $parsed */
+        $parsed = (array) json_decode(
+            $apiResponse->getBody()->getContents(),
+            true,
+        );
+
+        return $this->webViewRenderer->render('itsaStatus', [
+            'alert'       => $this->alert(),
+            'nino'        => $nino,
+            'taxYear'     => $taxYear,
+            'statusCode'  => $apiResponse->getStatusCode(),
+            'itsaStatuses' => $this->normalizeItsaStatuses($parsed),
+        ]);
+    }
+
+    /**
+     * Normalizes the itsa-status endpoint's per-tax-year grouping
+     * (itsaStatuses[].itsaStatusDetails[]) into one flat list for the
+     * view -- see itsaStatus()'s own docblock for the real response
+     * shape this mirrors.
+     *
+     * @param array<string, mixed> $parsed
+     * @return list<array{
+     *     taxYear: string,
+     *     submittedOn: string,
+     *     status: string,
+     *     statusReason: string,
+     *     businessIncome2YearsPrior: string,
+     * }>
+     */
+    private function normalizeItsaStatuses(array $parsed): array
+    {
+        /** @var list<array<string, mixed>> $groups */
+        $groups     = (array) ($parsed['itsaStatuses'] ?? []);
+        $normalized = [];
+        foreach ($groups as $group) {
+            $taxYear = isset($group['taxYear']) ? (string) $group['taxYear'] : '';
+            /** @var list<array<string, mixed>> $details */
+            $details = (array) ($group['itsaStatusDetails'] ?? []);
+            foreach ($details as $detail) {
+                $businessIncome = isset($detail['businessIncome2YearsPrior'])
+                    ? (string) $detail['businessIncome2YearsPrior']
+                    : '';
+                $normalized[] = [
+                    'taxYear'      => $taxYear,
+                    'submittedOn'  => $this->stringOrEmpty($detail, 'submittedOn'),
+                    'status'       => $this->stringOrEmpty($detail, 'status'),
+                    'statusReason' =>
+                        $this->stringOrEmpty($detail, 'statusReason'),
+                    'businessIncome2YearsPrior' => $businessIncome,
+                ];
+            }
+        }
+        return $normalized;
+    }
+
+    /**
+     * The current UK tax year in HMRC's own "YYYY-YY" format (e.g.
+     * "2026-27"), used as itsaStatus()'s default when no ?taxYear=
+     * query parameter is given. The UK tax year runs 6 April to 5
+     * April; deliberately a fresh calculation from today's date rather
+     * than DateHelper::taxYearToImmutable() -- that method reads a
+     * configurable "this_tax_year_from_date" setting used for internal
+     * sales-by-year reporting, not necessarily 6 April, whereas HMRC's
+     * own tax year boundary is fixed and not user-configurable.
+     */
+    private function currentUkTaxYear(): string
+    {
+        $today = new \DateTimeImmutable('today');
+        $year = (int) $today->format('Y');
+        $boundary = $today->setDate($year, 4, 6);
+        $startYear = $today < $boundary ? $year - 1 : $year;
+        return $startYear . '-' . substr((string) ($startYear + 1), 2, 2);
+    }
+
     public function createTestUserIndividual(array $requestBody = []): array
     {
         /**
