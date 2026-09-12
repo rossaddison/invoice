@@ -121,12 +121,31 @@ final class InvsToolbar
             ->content('☑️' . $p->translator->translate('recurring') . '♻️')
             ->render();
 
+        // Two Bootstrap Icons glyphs (location + PDF file), not an
+        // emoji or a translated text label -- this button works for
+        // any invoice list, not just a HomeCare cleaning run (falls
+        // back to the client's own address when there's no dwelling),
+        // so the original "Run Sheet" label was HomeCare-specific
+        // jargon that no longer fit. Glyphs avoid both the emoji-
+        // rendering inconsistency across platforms that prompted this
+        // rewrite (tried first: 📍, then 🧭, then 🛰️) and adding a new
+        // string to translate across all 30 locales for a label this
+        // narrow -- and match every other icon-only button already in
+        // this toolbar (e.g. $toolbarReset's own bi-bootstrap-reboot,
+        // just above). The explanation moves to the button's own
+        // native title/tooltip instead of a separate info-circle icon
+        // (tried first, but visually cluttered the toolbar).
         $runSheetPdf = new A()
             ->addAttributes(['data-bs-toggle' => 'tooltip',
-                'title' => Html::encode($p->translator->translate('run.sheet.pdf'))])
-            ->addClass('btn btn-info')
+                'title' => Html::encode(
+                    $p->translator->translate('run.sheet.pdf.tooltip'),
+                )])
+            ->addClass('btn btn-info border border-dark')
             ->href($p->urlGenerator->generate('inv/runsheetpdf'))
-            ->content('📍' . $p->translator->translate('run.sheet.pdf'))
+            ->content(
+                new I()->addClass('bi bi-geo-alt-fill'),
+                new I()->addClass('bi bi-file-pdf-fill ms-1'),
+            )
             ->id('btn-run-sheet-pdf')
             ->render();
 
