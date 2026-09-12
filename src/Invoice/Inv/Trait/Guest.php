@@ -119,7 +119,17 @@ trait Guest
             : $this->invsStatusGuest($d->iR, $effectiveStatus, $access->clients);
         $invs = $this->applyGuestFilters($filter, $d->iR, $invs, $access);
 
-        return $this->renderRunSheetPdf($invs, $dwR, $fR, $rowBuilder);
+        // applyGuestFilters() is typed to return SDI (SortableDataInterface)
+        // only -- unlike the staff-side runSheetPdf()'s EntityReader, plain
+        // SDI is NOT Traversable/iterable on its own (it extends
+        // ReadableDataInterface, which only guarantees a read(): iterable
+        // method, not foreach support on the object itself). Calling
+        // read() here is what actually produces something
+        // renderRunSheetPdf()'s `iterable $invs` parameter can accept --
+        // confirmed by a real Psalm failure on the full-project CI scan
+        // (InvalidArgument: SDI provided where iterable expected), not
+        // guessed.
+        return $this->renderRunSheetPdf($invs->read(), $dwR, $fR, $rowBuilder);
     }
 
     /**
