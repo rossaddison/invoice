@@ -5,6 +5,14 @@ declare(strict_types=1);
 /**
  * @link  Acknowledgement to chatgpt.com
  * @link  Acknowledgement to https://text-html.com/ convert chatgpt text to html
+ * @link  Rewritten 2026-09-12 in plain language -- shorter sentences, no
+ *   nested clauses, consistent terms -- both to ease translation into
+ *   this app's other locales and to move closer to GDPR Article 12's
+ *   own "clear and plain language" requirement for legal notices (see
+ *   privacypolicy.php's identical note). Legal meaning unchanged from
+ *   the original wording; a genuine review by the site owner/legal
+ *   advisor is still needed before this replaces the original text in
+ *   production, same as privacypolicy.php.
  *
  * Existing url's for a 'terms of service' page, and a 'privacy policy' page,
  * are necessary to develop many of the Oauth2.0 clients
@@ -25,21 +33,66 @@ declare(strict_types=1);
  * @var string $companyWeb
  * @var string $companyZip
  */
+
+// Arbitration body/jurisdiction come from the current Company record's
+// own "Arbitration Body"/"Arbitration Jurisdiction" fields (see
+// CompanyFormFields.php) -- both empty by default, unfilled here would
+// render as literal blanks in the Dispute Resolution/Governing Law
+// sentences below (confirmed live). Jurisdiction falls back to the
+// Company's own registered state/country (already configured data,
+// not a made-up placeholder) rather than a specific country's law --
+// this app has no way to know which country's law is actually
+// intended until the site owner sets it explicitly. Arbitration body
+// has no equivalent real fallback, so it gets an honest generic
+// description instead of naming a specific body (e.g. the AAA or the
+// ICC) that may not be the one the site owner actually intends.
+$displayArbitrationBody = $arbitrationBody !== ''
+    ? $arbitrationBody
+    : 'an arbitration body recognized in the Company\'s jurisdiction';
+$companyLocation = trim(
+    $companyState . ($companyState !== '' && $companyCountry !== '' ? ', ' : '')
+        . $companyCountry,
+);
+$fallbackJurisdiction = $companyLocation !== ''
+    ? $companyLocation
+    : 'the Company\'s registered jurisdiction';
+$displayArbitrationJurisdiction = $arbitrationJurisdiction !== ''
+    ? $arbitrationJurisdiction
+    : $fallbackJurisdiction;
 ?>
 <p><strong>Terms of Service</strong></p>
 <p><strong>Effective Date:</strong> <?= $companyStartDate; ?></p>
-<p>Welcome to <?= $companyName; ?>, a Yii3 PHP framework development company. By accessing or using our services, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.</p>
+<p>
+Welcome to <?= $companyName; ?>, a Yii3 PHP framework development
+company. By using our services, you agree to these Terms of Service.
+If you do not agree, please do not use our services.
+</p>
 <hr />
 <h3>1. <strong>Definitions</strong></h3>
 <ul>
-<li><strong>"Company"</strong> refers to <?= $companyName ?>, the provider of Yii3 PHP framework development services.</li>
-<li><strong>"Client"</strong> refers to any individual, company, or entity that engages our services.</li>
-<li><strong>"Services"</strong> refer to Yii3 PHP framework development, support, consultation, and related services provided by the Company.</li>
-<li><strong>"Agreement"</strong> refers to these Terms of Service, as well as any contracts or agreements entered into between the Client and the Company.</li>
+<li>
+<strong>"Company"</strong> means <?= $companyName ?>, the provider of
+Yii3 PHP framework development services.
+</li>
+<li>
+<strong>"Client"</strong> means any person, company, or other entity
+that uses our services.
+</li>
+<li>
+<strong>"Services"</strong> means Yii3 PHP framework development,
+support, consultation, and related services we provide.
+</li>
+<li>
+<strong>"Agreement"</strong> means these Terms of Service, together
+with any contract you sign with us.
+</li>
 </ul>
 <hr />
 <h3>2. <strong>Services Provided</strong></h3>
-<p>The Company specializes in developing, customizing, and maintaining web applications using the Yii3 PHP framework. Specific services may include, but are not limited to:</p>
+<p>
+We build, customize, and maintain web applications using the Yii3 PHP
+framework. Our services may include:
+</p>
 <ul>
 <li>Custom Yii3 application development.</li>
 <li>Yii3 framework installation and configuration.</li>
@@ -49,61 +102,109 @@ declare(strict_types=1);
 </ul>
 <hr />
 <h3>3. <strong>Client Responsibilities</strong></h3>
-<p>The Client agrees to:</p>
+<p>You agree to:</p>
 <ol>
-<li>Provide accurate and complete project requirements and information.</li>
-<li>Ensure timely communication and feedback during the project lifecycle.</li>
-<li>Secure all necessary permissions and licenses for any third-party resources provided to the Company.</li>
-<li>Make payments in accordance with the agreed-upon terms.</li>
+<li>Give us accurate, complete project requirements and information.</li>
+<li>Respond to us quickly and give feedback throughout the project.</li>
+<li>
+Get any permissions or licenses needed for third-party material you
+give us.
+</li>
+<li>Pay us on the agreed terms.</li>
 </ol>
 <hr />
 <h3>4. <strong>Fees and Payment</strong></h3>
 <ul>
-<li>Fees for services will be outlined in a written agreement or invoice provided to the Client.</li>
-<li>Payment terms are net 30 days from the invoice date unless otherwise agreed upon.</li>
-<li>Late payments may incur additional charges or suspension of services.</li>
+<li>We will state our fees in a written agreement or invoice.</li>
+<li>
+Payment is due within 30 days of the invoice date, unless we agree
+otherwise.
+</li>
+<li>Late payment may lead to extra charges or a pause in our services.</li>
 </ul>
 <hr />
 <h3>5. <strong>Intellectual Property</strong></h3>
 <ul>
-<li>All code and deliverables developed by the Company remain the property of the Company until full payment is received.</li>
-<li>Upon receipt of full payment, ownership of the deliverables is transferred to the Client, except for any pre-existing intellectual property or third-party components.</li>
-<li>The Company retains the right to showcase non-confidential deliverables in its portfolio unless otherwise agreed upon in writing.</li>
+<li>
+We own all code and deliverables we develop until we receive full
+payment.
+</li>
+<li>
+Once we receive full payment, ownership passes to you -- except for
+our pre-existing intellectual property and any third-party
+components.
+</li>
+<li>
+We may show non-confidential work in our portfolio, unless we agree
+otherwise in writing.
+</li>
 </ul>
 <hr />
 <h3>6. <strong>Confidentiality</strong></h3>
 <ul>
-<li>Both parties agree to keep all confidential information shared during the course of the project secure and not disclose it to third parties without prior written consent.</li>
-<li>Confidentiality obligations shall survive the termination of this Agreement.</li>
+<li>
+Both sides agree to keep confidential information shared during the
+project secure, and not share it with others without written
+consent.
+</li>
+<li>This duty of confidentiality continues after the Agreement ends.</li>
 </ul>
 <hr />
 <h3>7. <strong>Warranties and Limitations of Liability</strong></h3>
 <ul>
-<li>The Company will use commercially reasonable efforts to ensure the quality and functionality of the deliverables.</li>
-<li>The Company makes no guarantees regarding the performance of third-party tools or services integrated into the project.</li>
-<li>To the fullest extent permitted by law, the Company&rsquo;s liability is limited to the fees paid by the Client for the specific service in question.</li>
+<li>
+We will make reasonable efforts to ensure our work is high-quality
+and functions correctly.
+</li>
+<li>
+We do not guarantee the performance of third-party tools or services
+used in the project.
+</li>
+<li>
+Where the law allows, our liability is limited to the fees you paid
+for that specific service.
+</li>
 </ul>
 <hr />
 <h3>8. <strong>Termination</strong></h3>
 <ul>
-<li>Either party may terminate the Agreement by providing "30 days" written notice.</li>
-<li>Upon termination, the Client agrees to pay for all services rendered up to the date of termination.</li>
+<li>Either side may end this Agreement by giving 30 days' written notice.</li>
+<li>
+If the Agreement ends, you agree to pay for all work done up to that
+date.
+</li>
 </ul>
 <hr />
 <h3>9. <strong>Dispute Resolution</strong></h3>
 <ul>
-<li>Any disputes arising under this Agreement shall be resolved through good-faith negotiation.</li>
-<li>If unresolved, disputes shall be submitted to binding arbitration under the rules of <?= $arbitrationBody ?> in <?= $arbitrationJurisdiction ?>.</li>
+<li>We will first try to resolve any dispute through good-faith discussion.</li>
+<li>
+If that does not work, the dispute goes to binding arbitration under
+the rules of <?= $displayArbitrationBody ?> in
+<?= $displayArbitrationJurisdiction ?>.
+</li>
 </ul>
 <hr />
 <h3>10. <strong>Governing Law</strong></h3>
-<p>This Agreement shall be governed by and construed in accordance with the laws of <?= $arbitrationJurisdiction ?>.</p>
+<p>The laws of <?= $displayArbitrationJurisdiction ?> govern this Agreement.</p>
 <hr />
 <h3>11. <strong>Amendments</strong></h3>
-<p>The Company reserves the right to modify these Terms of Service at any time. Clients will be notified of significant changes via email or a notice on our website.</p>
+<p>
+We may change these Terms of Service at any time. We will tell you
+about significant changes by email or a notice on our website.
+</p>
 <hr />
 <h3>12. <strong>Contact Information</strong></h3>
 <p>For any questions about these Terms of Service, please contact us at:</p>
-<p><b><?= $companyName ?></b><br /><?= $companyAddress1 ?><br /><?= $companyAddress2 ?><br /><?= $companyCity ?><br /><?= $companyState ?><br /><?= $companyZip ?><br /><?= $companyCountry ?>
-<br /><?= $companyEmail ?><br /> <?= $companyPhone ?></p>
+<p>
+<b><?= $companyName ?></b><br />
+<?= $companyAddress1 ?><br />
+<?= $companyAddress2 ?><br />
+<?= $companyCity ?><br />
+<?= $companyState ?><br />
+<?= $companyZip ?><br />
+<?= $companyCountry ?><br />
+<?= $companyEmail ?><br />
+<?= $companyPhone ?>
+</p>
 <hr/>
