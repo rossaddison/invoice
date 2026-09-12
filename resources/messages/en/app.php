@@ -468,6 +468,7 @@ return [
   'cookie.consent.message' => 'We use a few essential cookies to keep you'
     . ' signed in, remember your language, and protect the site from'
     . ' forgery. We do not use cookies for advertising or tracking.',
+  'cookie.consent.preferences' => 'Cookie preferences',
   'contact.information' => 'Contact Information',
   'continue' => 'Continue',
   'continue.with.facebook' => 'Continue with Facebook',

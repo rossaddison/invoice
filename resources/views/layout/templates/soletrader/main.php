@@ -532,6 +532,12 @@ echo new TagHtml()
           ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
           ->content($brandLabel . ' - ' . date('Y') . ' -' )
           ->render();
+      echo new A()
+          ->id('cookie-consent-reopen')
+          ->href('#')
+          ->addClass('text-white text-decoration-underline small ms-2')
+          ->content($t->translate('cookie.consent.preferences'))
+          ->render();
       echo Html::openTag('div', ['class' => 'ms-2 text-white']); //5
        echo PerformanceMetrics::widget();
       echo Html::closeTag('div'); //5
@@ -606,6 +612,15 @@ echo new TagHtml()
       (confirmed live 2026-09-12: cookie_consent cookie set correctly,
       banner stayed put). This re-asserts the override d-flex defeated. */
    #cookie-consent-banner[hidden] { display: none !important; }
+   /* Fade out instead of vanishing instantly (cookie-consent.ts adds
+      this class first, then sets [hidden] once the transition ends or
+      a 300ms fallback timeout fires -- whichever comes first). Skipped
+      entirely for a visitor who has asked for reduced motion. */
+   #cookie-consent-banner { opacity: 1; transition: opacity .3s ease; }
+   #cookie-consent-banner.cookie-consent-hiding { opacity: 0; }
+   @media (prefers-reduced-motion: reduce) {
+     #cookie-consent-banner { transition: none; }
+   }
   ');
   // Cookie consent banner -- hidden by default (the `hidden` boolean
   // attribute) so a returning visitor with an existing cookie_consent
@@ -616,7 +631,17 @@ echo new TagHtml()
   // paragraph literally true rather than aspirational boilerplate.
   echo new Div()
       ->id('cookie-consent-banner')
-      ->addAttributes(['hidden' => true])
+      ->addAttributes([
+          'hidden' => true,
+          // Screen readers: announce this region when it appears
+          // (role=region + aria-label make it findable/nameable at
+          // all, since it isn't a <nav>/<main>/<form> landmark;
+          // aria-live=polite is what actually triggers the
+          // announcement once JS clears the hidden attribute).
+          'role' => 'region',
+          'aria-label' => $t->translate('cookie.consent.preferences'),
+          'aria-live' => 'polite',
+      ])
       ->addClass(
           'position-fixed bottom-0 start-0 end-0 d-flex flex-wrap'
           . ' align-items-center justify-content-between gap-2 p-3',
@@ -648,7 +673,12 @@ echo new TagHtml()
                   new Button()
                       ->type('button')
                       ->id('btn-cookie-consent-accept')
-                      ->addClass('btn btn-light btn-sm')
+                      // Same btn-outline-light styling as Decline, not
+                      // solid btn-light -- an ICO/CNIL "equal
+                      // prominence" point: a consent banner where
+                      // Accept is visually heavier than Reject/Decline
+                      // is a recognized dark pattern.
+                      ->addClass('btn btn-outline-light btn-sm')
                       ->content($t->translate('cookie.consent.accept')),
               ),
       )
