@@ -885,6 +885,11 @@ return [
   'street.order.position' => 'Cleaning run position:',
   'street.order.manage.link' => 'Manage street order →',
   'run.sheet.pdf' => 'Run Sheet (PDF)',
+  'run.sheet.pdf.tooltip' =>
+      'Download a PDF of every invoice currently shown by your'
+      . ' filters, address foremost as a clickable Google Maps link --'
+      . ' useful for a HomeCare cleaning run or any other invoice list'
+      . ' you need to visit or reference offline.',
   'faq' => 'FAQ\'s',
   'faq.ai.callback.session' =>
     'Copilot: How can I include '
