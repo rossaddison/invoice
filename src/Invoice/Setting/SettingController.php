@@ -160,6 +160,10 @@ final class SettingController extends BaseController
             'fontSize' => (int) $this->sR->getSetting('bootstrap5_layout_invoice_navbar_font_size')
                 ?: 16,
             'frontPage' => $this->webViewRenderer->renderPartialAsString($p . 'front_page'),
+            'privacyPolicy' => $this->webViewRenderer
+                ->renderPartialAsString($p . 'privacy_policy'),
+            'termsOfService' => $this->webViewRenderer
+                ->renderPartialAsString($p . 'terms_of_service'),
             'general' => $this->webViewRenderer->renderPartialAsString($p . 'general', [
                 /**
                  * @psalm-suppress PossiblyInvalidArgument

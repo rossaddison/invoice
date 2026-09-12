@@ -214,48 +214,6 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::closeTag('div'); //6
 
      echo H::openTag('div', ['class' => 'form-check']); //6
-      $snfppp = 'settings[no_front_privacy_policy_page]';
-      $body[$snfppp] = $s->getSetting('no_front_privacy_policy_page');
-      echo H::openTag('input', [
-       'type' => 'hidden',
-       'name' => $snfppp,
-       'value' => '0'
-      ]);
-      echo H::openTag('input', [
-       'type' => 'checkbox',
-       'class' => 'form-check-input',
-       'id' => 'no_front_privacy_policy_page',
-       'name' => $snfppp,
-       'value' => '1',
-       'checked' => ($body[$snfppp] == 1) ? 'checked' : null
-      ]);
-      echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'no_front_privacy_policy_page']);
-       echo $translator->translate('menu.privacy.policy');
-      echo H::closeTag('label');
-     echo H::closeTag('div'); //6
-
-     echo H::openTag('div', ['class' => 'form-check']); //6
-      $snftosp = 'settings[no_front_terms_of_service_page]';
-      $body[$snftosp] = $s->getSetting('no_front_terms_of_service_page');
-      echo H::openTag('input', [
-       'type' => 'hidden',
-       'name' => $snftosp,
-       'value' => '0'
-      ]);
-      echo H::openTag('input', [
-       'type' => 'checkbox',
-       'class' => 'form-check-input',
-       'id' => 'no_front_terms_of_service_page',
-       'name' => $snftosp,
-       'value' => '1',
-       'checked' => ($body[$snftosp] == 1) ? 'checked' : null
-      ]);
-      echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'no_front_terms_of_service_page']);
-       echo $translator->translate('menu.terms.of.service');
-      echo H::closeTag('label');
-     echo H::closeTag('div'); //6
-
-     echo H::openTag('div', ['class' => 'form-check']); //6
       $snfgsp = 'settings[no_front_gateway_status_page]';
       $body[$snfgsp] = $s->getSetting('no_front_gateway_status_page');
       echo H::openTag('input', [

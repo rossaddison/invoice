@@ -14,6 +14,8 @@ use Yiisoft\Html\Html as H;
  * @var string $bootstrap5
  * @var string $csrf
  * @var string $frontPage
+ * @var string $privacyPolicy
+ * @var string $termsOfService
  * @var string $general
  * @var string $invoices
  * @var string $quotes
@@ -62,6 +64,22 @@ $tabs = [
      'aria'  => 'front-page',
      'role'  => true,
      'content' => $frontPage
+ ],
+ 'privacy-policy' => [
+     'label' => $translator->translate('menu.privacy.policy'),
+     'icon'  => 'bi bi-file-earmark-lock',
+     'color' => '#20c997',
+     'aria'  => 'settings-privacy-policy',
+     'role'  => true,
+     'content' => $privacyPolicy
+ ],
+ 'terms-of-service' => [
+     'label' => $translator->translate('menu.terms.of.service'),
+     'icon'  => 'bi bi-file-earmark-text',
+     'color' => '#6610f2',
+     'aria'  => 'settings-terms-of-service',
+     'role'  => true,
+     'content' => $termsOfService
  ],
  'oauth2' => [
      'label' => 'OAuth2',
