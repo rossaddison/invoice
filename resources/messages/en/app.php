@@ -2722,10 +2722,16 @@ prior to importing and no existing documents e.g. Invoices.',
   'set.to.read.only' => 'Set the Invoice to read-only on',
   'setting' => 'Setting',
   'setting.add' => 'Setting Add',
+  'setting.arbitration.details.note' => 'The Arbitration Body and'
+    . ' Arbitration Jurisdiction fields used in the Dispute Resolution'
+    . ' and Governing Law sections are also set on the Company page.',
   'setting.as.a.result.of ' => ' as a result of ',
   'setting.assets.cleared.at' => 'Assets cleared at ',
   'setting.assets.were.not.cleared.at' => 'Assets were not cleared at ',
   'setting.company' => 'Company Public Details',
+  'setting.company.details.note' => 'The company name, contact'
+    . ' details, and address shown on this page are managed on the'
+    . ' Company page.',
   'setting.company.private' => 'Company Private Details',
   'setting.company.profile' => 'Changing Profile eg.'
     . ' mobile and email address',
@@ -2734,9 +2740,12 @@ prior to importing and no existing documents e.g. Invoices.',
   'setting.error.on.the.public.assets.folder' =>
     ' error on the public assets folder.',
   'setting.form' => 'Setting Form',
+  'setting.hide.from.front.page' => 'Hide from Front Page',
   'setting.key' => 'Setting Key',
+  'setting.privacy.policy.preview' => 'Preview Privacy Policy',
   'setting.section' => 'Section',
   'setting.subsection' => 'Subsection',
+  'setting.terms.of.service.preview' => 'Preview Terms of Service',
   'setting.translator.key' => 'Translator Key',
   'setting.value' => 'Setting Value',
   'setting.you.have.cleared.the.cache' => 'You have cleared the cache.',
