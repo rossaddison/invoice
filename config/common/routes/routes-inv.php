@@ -79,6 +79,23 @@ return [
             ->action([InvController::class, 'guestQrCode'])
             ->name('inv/guest/qr'),
 
+        // The same run sheet PDF as inv/runsheetpdf above, scoped to
+        // this signed-in guest's own worker-/client-visible invoices
+        // -- see Trait\Guest::guestRunSheetPdf()'s own comment. Inline
+        // function-call shape, not a plain
+        // Route::methods(...)->middleware(...)->action(...)->name(...)
+        // chain -- see inv/runsheetpdf's own comment above for why
+        // this file defaults to it now.
+        (static fn (string $path, array $action, string $name): Route =>
+            Route::get($path)
+                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+                ->action($action)
+                ->name($name))(
+            '/client_invoices/runsheetpdf',
+            [InvController::class, 'guestRunSheetPdf'],
+            'inv/guest/runsheetpdf',
+        ),
+
         // HomeCare field-worker-only offline PWA (see
         // docs/HOMECARE_OFFLINE_PWA_AUGUST_2026.md): a JSON snapshot
         // of the worker's allocated invoices, and the standalone

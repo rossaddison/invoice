@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
+use App\Invoice\Dwelling\DwellingRepository as DwR;
 use App\Invoice\Family\FamilyRepository as FR;
 use App\Invoice\Helpers\MpdfHelper;
 use App\Invoice\Helpers\NumberHelper;
@@ -39,6 +40,14 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  * Row-building/sorting itself lives in RunSheetPdfRowBuilder, a stateless
  * class with no HTTP/PDF dependencies -- this trait is just the thin
  * request-handling/PDF-rendering wiring around it.
+ *
+ * renderRunSheetPdf() below is also reused by
+ * Trait\Guest::guestRunSheetPdf() -- the same PDF from whatever this
+ * signed-in guest's own worker-/client-scoped inv/guest filters
+ * currently match, using Trait\Guest's own access control and
+ * applyGuestFilters(), not this staff-side filterCombined(). Only the
+ * "which invoices" step differs between the two entry points; row-
+ * building and PDF rendering are identical either way.
  */
 trait RunSheetPdf
 {
@@ -61,7 +70,20 @@ trait RunSheetPdf
         $run  = $this->indexHomeCareRunContext($request, $filter);
         $invs = $list->invRepo->filterCombined($filter, $run, $effectiveStatus);
 
-        $rows = $rowBuilder->build($invs, $nav->dwR, $fR);
+        return $this->renderRunSheetPdf($invs, $nav->dwR, $fR, $rowBuilder);
+    }
+
+    /**
+     * @return Response|\Mpdf\Mpdf|array<array-key, mixed>|string
+     * @psalm-suppress MixedInferredReturnType
+     */
+    private function renderRunSheetPdf(
+        iterable $invs,
+        DwR $dwR,
+        FR $fR,
+        RunSheetPdfRowBuilder $rowBuilder,
+    ): Response|\Mpdf\Mpdf|array|string {
+        $rows = $rowBuilder->build($invs, $dwR, $fR);
         $title = $this->translator->translate('run.sheet.pdf');
         $html = $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/run_sheet_pdf',
