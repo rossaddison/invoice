@@ -33,10 +33,14 @@
       <code><![CDATA[WebControllerService&m\MockInterface $webService]]></code>
     </ReservedWord>
     <UnusedParam>
+      <code><![CDATA[$dwR]]></code>
+      <code><![CDATA[$fR]]></code>
       <code><![CDATA[$iR]]></code>
       <code><![CDATA[$iR]]></code>
       <code><![CDATA[$invs]]></code>
       <code><![CDATA[$invs]]></code>
+      <code><![CDATA[$invs]]></code>
+      <code><![CDATA[$rowBuilder]]></code>
       <code><![CDATA[$ucR]]></code>
       <code><![CDATA[$userId]]></code>
     </UnusedParam>
