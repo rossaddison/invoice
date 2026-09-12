@@ -463,6 +463,11 @@ return [
     . ' a payment is outstanding.',
   'consent.telegram.chat.id' => 'Telegram Chat ID (required for payment'
     . ' notifications — message @userinfobot on Telegram to find yours)',
+  'cookie.consent.accept' => 'Accept',
+  'cookie.consent.decline' => 'Decline',
+  'cookie.consent.message' => 'We use a few essential cookies to keep you'
+    . ' signed in, remember your language, and protect the site from'
+    . ' forgery. We do not use cookies for advertising or tracking.',
   'contact.information' => 'Contact Information',
   'continue' => 'Continue',
   'continue.with.facebook' => 'Continue with Facebook',
