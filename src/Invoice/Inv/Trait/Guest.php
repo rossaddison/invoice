@@ -15,10 +15,13 @@ use App\Invoice\Enum\FlashScope;
 use App\Invoice\{
     Client\ClientRepository as ClientR,
     Client\ClientService,
+    Dwelling\DwellingRepository as DwR,
+    Family\FamilyRepository as FR,
     Inv\InvGuestAccess,
     Inv\InvGuestDeps,
     Inv\InvGuestFilter,
     Inv\InvRepository as IR,
+    Inv\RunSheetPdfRowBuilder,
 };
 use Yiisoft\{
     Data\Reader\DataReaderInterface as DRI,
@@ -74,6 +77,49 @@ trait Guest
             return $this->webService->getRedirectResponse('shop/catalog/index');
         }
         return $this->renderGuestView($d, $filter, $page, $status, $user_id, $access);
+    }
+
+    /**
+     * The same run sheet PDF as Trait\RunSheetPdf::runSheetPdf() (see
+     * that method's own docblock for the address-source/Google-Maps-
+     * link/landscape reasoning, shared via renderRunSheetPdf()) --
+     * scoped to this signed-in guest's own worker-/client-visible
+     * invoices instead of the staff-side filterCombined(). Mirrors
+     * guest()'s own access resolution and renderGuestView()'s own
+     * invoice-fetching/applyGuestFilters() steps exactly, so the PDF
+     * matches whatever this guest's inv/guest filters currently show.
+     *
+     * @return Response|\Mpdf\Mpdf|array<array-key, mixed>|string
+     * @psalm-suppress MixedInferredReturnType
+     */
+    public function guestRunSheetPdf(
+        InvGuestDeps $d,
+        InvGuestFilter $filter,
+        DwR $dwR,
+        FR $fR,
+        RunSheetPdfRowBuilder $rowBuilder,
+    ): Response|\Mpdf\Mpdf|array|string {
+        $user = $this->userService->getUser();
+        $user_id = ($user instanceof User) ? $user->reqId() : 0;
+        if ($user_id <= 0) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $access = $this->resolveGuestAccess($d, $user_id);
+        if (null === $access) {
+            // Same redirect as guest() itself for the same reason --
+            // see that method's own docblock.
+            return $this->webService->getRedirectResponse('shop/catalog/index');
+        }
+        $effectiveStatus = isset($filter->filterStatus)
+            && !empty($filter->filterStatus)
+            ? (int) $filter->filterStatus
+            : 0;
+        $invs = null !== $access->worker
+            ? $d->iR->repoWorkerVisible($effectiveStatus, $access->worker->reqId())
+            : $this->invsStatusGuest($d->iR, $effectiveStatus, $access->clients);
+        $invs = $this->applyGuestFilters($filter, $d->iR, $invs, $access);
+
+        return $this->renderRunSheetPdf($invs, $dwR, $fR, $rowBuilder);
     }
 
     /**

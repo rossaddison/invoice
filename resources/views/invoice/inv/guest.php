@@ -97,6 +97,27 @@ $resetColumnWidths = new HtmlButton()
     ->id('btn-reset-column-widths')
     ->render();
 
+// Same PDF as the staff-side inv/index toolbar's own run-sheet button
+// (InvsToolbar::build()), scoped to this signed-in guest's own
+// worker-/client-visible invoices via inv/guest/runsheetpdf -- see
+// Trait\Guest::guestRunSheetPdf()'s own comment. Same icon pair,
+// border, and native-tooltip choices as that button (see its own
+// comment for why: no translated text label, no separate info-circle
+// icon).
+$runSheetPdf = new A()
+    ->addAttributes(['data-bs-toggle' => 'tooltip',
+        'title' => Html::encode(
+            $translator->translate('run.sheet.pdf.tooltip'),
+        )])
+    ->addClass('btn btn-info border border-dark me-1')
+    ->href($urlGenerator->generate('inv/guest/runsheetpdf'))
+    ->content(
+        new I()->addClass('bi bi-geo-alt-fill'),
+        new I()->addClass('bi bi-file-pdf-fill ms-1'),
+    )
+    ->id('btn-guest-run-sheet-pdf')
+    ->render();
+
 echo new Div();
 
 /**
@@ -579,6 +600,7 @@ $toolbarString =  new Form()->post(
             .   $toolbarReset
             .   $autoFitColumns
             .   $resetColumnWidths
+            .   $runSheetPdf
             .   Button::ascDesc(
                 $urlGenerator, 'client_id', 'warning',
                 $translator->translate('client'), true)

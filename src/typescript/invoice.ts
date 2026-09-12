@@ -176,10 +176,15 @@ export class InvoiceHandler {
 
         // Run sheet PDF -- forwards the grid's current query string as-is,
         // same reasoning as handleCopyAllToDate() below: the server re-runs
-        // the exact same filterCombined() the grid itself used, so the PDF
-        // matches whatever's currently shown (e.g. the active "Current Run"
-        // filter), not every invoice.
-        const runSheetPdf = closestSafe<HTMLAnchorElement>(target, '#btn-run-sheet-pdf');
+        // the exact same filterCombined() (inv/index) or applyGuestFilters()
+        // (inv/guest) the page itself used, so the PDF matches whatever's
+        // currently shown (e.g. the active "Current Run" filter), not every
+        // invoice. One selector for both toolbar buttons -- inv/index's own
+        // and inv/guest's own -- since the forwarding logic is identical.
+        const runSheetPdf = closestSafe<HTMLAnchorElement>(
+            target,
+            '#btn-run-sheet-pdf, #btn-guest-run-sheet-pdf'
+        );
         if (runSheetPdf) {
             event.preventDefault();
             globalThis.location.href = runSheetPdf.href + location.search;
