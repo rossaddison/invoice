@@ -399,6 +399,7 @@ return [
     'cookie.consent.accept' => 'Karɓa',
     'cookie.consent.decline' => 'Ragewa',
     'cookie.consent.message' => 'Muna amfani da wasu mahimman kukis don ci gaba da sanya hannu, tuna yarenku, da kuma kare shafin daga jabu. Ba ma amfani da kukis don tallatawa ko bin diddigin bayanai.',
+    'cookie.consent.preferences' => 'Abubuwan da ake so a cikin kukis',
     'copied' => 'An kwafi!',
     'copy' => 'Kwafi',
     'copy.all.to.date' => 'Kwafi Duk zuwa Kwanan Wata',

@@ -399,6 +399,7 @@ return [
     'cookie.consent.accept' => 'Priimti',
     'cookie.consent.decline' => 'Atmesti',
     'cookie.consent.message' => 'Mes naudojame kelis būtinus slapukus, kad išliktumėte prisijungę, įsimintume jūsų kalbą ir apsaugotume svetainę nuo klastojimo. Mes nenaudojame slapukų reklamai ar stebėjimui.',
+    'cookie.consent.preferences' => 'Slapukų nuostatos',
     'copied' => 'Nukopijuota!',
     'copy' => 'Kopijuoti',
     'copy.all.to.date' => 'Kopijuoti viską iki datos',

@@ -400,6 +400,7 @@ return [
     'cookie.consent.accept' => 'Akzeptieren',
     'cookie.consent.decline' => 'Abfall',
     'cookie.consent.message' => 'Wir verwenden einige wenige notwendige Cookies, um Sie angemeldet zu halten, Ihre Sprache zu speichern und die Website vor Manipulationen zu schützen. Wir verwenden keine Cookies für Werbung oder Tracking.',
+    'cookie.consent.preferences' => 'Cookie-Einstellungen',
     'copied' => 'Kopiert!',
     'copy' => 'Kopie',
     'copy.all.to.date' => 'Alle Kopien bis heute',

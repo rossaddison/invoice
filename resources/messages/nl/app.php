@@ -400,6 +400,7 @@ return [
     'cookie.consent.accept' => 'Accepteren',
     'cookie.consent.decline' => 'Afwijzen',
     'cookie.consent.message' => 'We gebruiken een paar essentiële cookies om u ingelogd te houden, uw taalvoorkeur te onthouden en de site te beschermen tegen fraude. We gebruiken geen cookies voor reclame of tracking.',
+    'cookie.consent.preferences' => 'Cookievoorkeuren',
     'copied' => 'Gekopieerd!',
     'copy' => 'Kopiëren',
     'copy.all.to.date' => 'Alles kopiëren tot de datum',

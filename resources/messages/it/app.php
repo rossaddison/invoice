@@ -399,6 +399,7 @@ return [
     'cookie.consent.accept' => 'Accettare',
     'cookie.consent.decline' => 'Declino',
     'cookie.consent.message' => 'Utilizziamo alcuni cookie essenziali per mantenere l\'accesso, ricordare la lingua e proteggere il sito da eventuali frodi. Non utilizziamo cookie a scopo pubblicitario o di tracciamento.',
+    'cookie.consent.preferences' => 'Preferenze sui cookie',
     'copied' => 'Copiato!',
     'copy' => 'Copia',
     'copy.all.to.date' => 'Copia tutto alla data',

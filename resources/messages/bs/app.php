@@ -400,6 +400,7 @@ return [
     'cookie.consent.accept' => 'Prihvati',
     'cookie.consent.decline' => 'Odbij',
     'cookie.consent.message' => 'Koristimo nekoliko osnovnih kolačića kako bismo vas održali prijavljenim, zapamtili vaš jezik i zaštitili stranicu od krivotvorenja. Ne koristimo kolačiće za oglašavanje ili praćenje.',
+    'cookie.consent.preferences' => 'Postavke kolačića',
     'copied' => 'Kopirano!',
     'copy' => 'Kopiraj',
     'copy.all.to.date' => 'Kopiraj sve do datuma',

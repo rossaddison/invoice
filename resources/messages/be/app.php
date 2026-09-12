@@ -399,6 +399,7 @@ return [
     'cookie.consent.accept' => 'Прыняць',
     'cookie.consent.decline' => 'Адмова',
     'cookie.consent.message' => 'Мы выкарыстоўваем некалькі важных файлаў cookie, каб вы не ўвайшлі ў сістэму, не забывалі вашу мову і не дапускалі падробкі. Мы не выкарыстоўваем файлы cookie для рэкламы або адсочвання.',
+    'cookie.consent.preferences' => 'Налады файлаў cookie',
     'copied' => 'Скапіравана!',
     'copy' => 'Капіраваць',
     'copy.all.to.date' => 'Скапіяваць усё да цяперашняга часу',

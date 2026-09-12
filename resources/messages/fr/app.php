@@ -400,6 +400,7 @@ return [
     'cookie.consent.accept' => 'Accepter',
     'cookie.consent.decline' => 'Déclin',
     'cookie.consent.message' => 'Nous utilisons quelques cookies essentiels pour vous maintenir connecté(e), mémoriser votre langue et protéger le site contre la contrefaçon. Nous n\'utilisons pas de cookies à des fins publicitaires ou de suivi.',
+    'cookie.consent.preferences' => 'Préférences relatives aux cookies',
     'copied' => 'Copié !',
     'copy' => 'Copie',
     'copy.all.to.date' => 'Copier tout à ce jour',

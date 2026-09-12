@@ -399,6 +399,7 @@ return [
     'cookie.consent.accept' => 'Gabh ris',
     'cookie.consent.decline' => 'Crìonadh',
     'cookie.consent.message' => 'Bidh sinn a’ cleachdadh beagan bhriosgaidean riatanach gus do chumail air logadh a-steach, cuimhneachadh air do chànan, agus an làrach a dhìon bho bhith air a foill. Chan eil sinn a’ cleachdadh bhriosgaidean airson sanasachd no tracadh.',
+    'cookie.consent.preferences' => 'Roghainnean bhriosgaidean',
     'copied' => 'Air a chopaigeadh!',
     'copy' => 'Dèan lethbhreac',
     'copy.all.to.date' => 'Dèan lethbhreac de na h-uile gu ruige seo',

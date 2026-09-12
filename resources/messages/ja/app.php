@@ -400,6 +400,7 @@ return [
     'cookie.consent.accept' => '受け入れる',
     'cookie.consent.decline' => '衰退',
     'cookie.consent.message' => '当サイトでは、ログイン状態の維持、言語設定の記憶、サイトへの不正アクセス防止のために、必要最低限​​のクッキーを使用しています。広告やトラッキング目的でクッキーを使用することはありません。',
+    'cookie.consent.preferences' => 'クッキーの設定',
     'copied' => 'コピーしました！',
     'copy' => 'コピー',
     'copy.all.to.date' => '現在までのすべてをコピー',

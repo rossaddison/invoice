@@ -400,6 +400,7 @@ return [
     'cookie.consent.accept' => 'Menerima',
     'cookie.consent.decline' => 'Menolak',
     'cookie.consent.message' => 'Kami menggunakan beberapa cookie penting untuk membuat Anda tetap masuk, mengingat bahasa Anda, dan melindungi situs dari pemalsuan. Kami tidak menggunakan cookie untuk iklan atau pelacakan.',
+    'cookie.consent.preferences' => 'Preferensi cookie',
     'copied' => 'Disalin!',
     'copy' => 'Menyalin',
     'copy.all.to.date' => 'Salin Semua ke Tanggal',

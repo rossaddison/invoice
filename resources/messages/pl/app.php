@@ -400,6 +400,7 @@ return [
     'cookie.consent.accept' => 'Przyjąć',
     'cookie.consent.decline' => 'Spadek',
     'cookie.consent.message' => 'Używamy kilku niezbędnych plików cookie, aby umożliwić Ci pozostanie zalogowanym, zapamiętać Twój język i chronić witrynę przed fałszerstwami. Nie używamy plików cookie do celów reklamowych ani śledzenia.',
+    'cookie.consent.preferences' => 'Preferencje dotyczące plików cookie',
     'copied' => 'Skopiowano!',
     'copy' => 'Kopia',
     'copy.all.to.date' => 'Kopiuj wszystko do daty',

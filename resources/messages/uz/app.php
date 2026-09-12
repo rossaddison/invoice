@@ -400,6 +400,7 @@ return [
     'cookie.consent.accept' => 'Qabul qilish',
     'cookie.consent.decline' => 'Rad etish',
     'cookie.consent.message' => 'Sizni tizimda saqlash, tilingizni eslab qolish va saytni qalbakilashtirishdan himoya qilish uchun biz bir nechta muhim cookie-fayllardan foydalanamiz. Biz reklama yoki kuzatuv uchun cookie-fayllardan foydalanmaymiz.',
+    'cookie.consent.preferences' => 'Cookie sozlamalari',
     'copied' => 'Nusxalandi!',
     'copy' => 'Nusxalash',
     'copy.all.to.date' => 'Hammasini sanaga nusxalash',

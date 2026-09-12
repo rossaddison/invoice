@@ -400,6 +400,7 @@ return [
     'cookie.consent.accept' => 'Chấp nhận',
     'cookie.consent.decline' => 'Sự suy sụp',
     'cookie.consent.message' => 'Chúng tôi sử dụng một số cookie thiết yếu để giúp bạn duy trì trạng thái đăng nhập, ghi nhớ ngôn ngữ và bảo vệ trang web khỏi các hành vi giả mạo. Chúng tôi không sử dụng cookie cho mục đích quảng cáo hoặc theo dõi.',
+    'cookie.consent.preferences' => 'Tùy chọn cookie',
     'copied' => 'Đã sao chép!',
     'copy' => 'Sao chép',
     'copy.all.to.date' => 'Sao chép tất cả đến nay',

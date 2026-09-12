@@ -400,6 +400,7 @@ return [
     'cookie.consent.accept' => 'Tanggapin',
     'cookie.consent.decline' => 'Tanggihan',
     'cookie.consent.message' => 'Gumagamit kami ng ilang mahahalagang cookies para mapanatili kang naka-sign in, maalala ang iyong wika, at maprotektahan ang site mula sa pamemeke. Hindi kami gumagamit ng cookies para sa advertising o pagsubaybay.',
+    'cookie.consent.preferences' => 'Mga kagustuhan sa cookie',
     'copied' => 'Kinopya!',
     'copy' => 'Kopyahin',
     'copy.all.to.date' => 'Kopyahin Lahat sa Petsa',

@@ -399,6 +399,7 @@ return [
     'cookie.consent.accept' => 'Nabata',
     'cookie.consent.decline' => 'Mbelata',
     'cookie.consent.message' => 'Anyị na-eji kuki ole na ole dị mkpa iji mee ka ị banye, cheta asụsụ gị, ma chebe saịtị ahụ pụọ na adịgboroja. Anyị anaghị eji kuki maka mgbasa ozi ma ọ bụ nsochi.',
+    'cookie.consent.preferences' => 'Mmasị kuki',
     'copied' => 'E depụtaghachiri ya!',
     'copy' => 'Detuo',
     'copy.all.to.date' => 'Detuo ihe niile ruo taa',

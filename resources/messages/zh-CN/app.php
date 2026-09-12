@@ -400,6 +400,7 @@ return [
     'cookie.consent.accept' => '接受',
     'cookie.consent.decline' => '衰退',
     'cookie.consent.message' => '我们使用一些必要的 Cookie 来保持您的登录状态、记住您的语言并保护网站免受篡改。我们不会将 Cookie 用于广告或追踪目的。',
+    'cookie.consent.preferences' => 'Cookie 偏好设置',
     'copied' => '已复制！',
     'copy' => '复制',
     'copy.all.to.date' => '复制所有截至目前为止的内容',

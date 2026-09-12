@@ -399,6 +399,7 @@ return [
     'cookie.consent.accept' => 'Gba',
     'cookie.consent.decline' => 'Ìkọ̀sílẹ̀',
     'cookie.consent.message' => 'A nlo awọn kuki pataki diẹ lati jẹ ki o wọle, ranti ede rẹ, ati daabobo aaye naa kuro lọwọ ayederu. A ko lo awọn kuki fun ipolowo tabi ipasẹ.',
+    'cookie.consent.preferences' => 'Àwọn ìfẹ́kúfẹ́ kúkì',
     'copied' => 'Ti daakọ!',
     'copy' => 'Dáakọ',
     'copy.all.to.date' => 'Da gbogbo rẹ̀ kọ sí ọjọ́ yìí',

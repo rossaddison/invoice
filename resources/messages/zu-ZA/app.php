@@ -400,6 +400,7 @@ return [
     'cookie.consent.accept' => 'Yamukela',
     'cookie.consent.decline' => 'Yenqaba',
     'cookie.consent.message' => 'Sisebenzisa amakhukhi ambalwa abalulekile ukuze sikugcine ungene ngemvume, ukhumbule ulimi lwakho, futhi uvikele isayithi ekungamanga. Asisebenzisi amakhukhi ukukhangisa noma ukulandelela.',
+    'cookie.consent.preferences' => 'Izintandokazi zamakhukhi',
     'copied' => 'Kukopishiwe!',
     'copy' => 'Kopisha',
     'copy.all.to.date' => 'Kopisha Konke Kuze Kube Sesikhathini',

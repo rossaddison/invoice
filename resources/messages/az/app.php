@@ -400,6 +400,7 @@ return [
     'cookie.consent.accept' => 'Qəbul et',
     'cookie.consent.decline' => 'Rədd et',
     'cookie.consent.message' => 'Daxil olmağınızı təmin etmək, dilinizi yadda saxlamaq və saytı saxtakarlıqdan qorumaq üçün bir neçə vacib kukidən istifadə edirik. Reklam və ya izləmə üçün kukilərdən istifadə etmirik.',
+    'cookie.consent.preferences' => 'Kuki seçimləri',
     'copied' => 'Kopyalandı!',
     'copy' => 'Kopyalayın',
     'copy.all.to.date' => 'Hamısını tarixə kopyalayın',

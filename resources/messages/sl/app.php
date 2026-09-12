@@ -400,6 +400,7 @@ return [
     'cookie.consent.accept' => 'Sprejmi',
     'cookie.consent.decline' => 'Zavrnitev',
     'cookie.consent.message' => 'Za ohranjanje vaše prijave, pomnjenje vašega jezika in zaščito spletnega mesta pred ponarejanjem uporabljamo nekaj bistvenih piškotkov. Piškotkov ne uporabljamo za oglaševanje ali sledenje.',
+    'cookie.consent.preferences' => 'Nastavitve piškotkov',
     'copied' => 'Kopirano!',
     'copy' => 'Kopiraj',
     'copy.all.to.date' => 'Kopiraj vse do datuma',

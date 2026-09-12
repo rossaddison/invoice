@@ -400,6 +400,7 @@ return [
     'cookie.consent.accept' => 'Prijať',
     'cookie.consent.decline' => 'Odmietnuť',
     'cookie.consent.message' => 'Používame niekoľko základných súborov cookie, aby ste zostali prihlásení, zapamätali si váš jazyk a chránili stránku pred falšovaním. Súbory cookie nepoužívame na reklamu ani sledovanie.',
+    'cookie.consent.preferences' => 'Predvoľby súborov cookie',
     'copied' => 'Skopírované!',
     'copy' => 'Kopírovať',
     'copy.all.to.date' => 'Kopírovať všetko do dátumu',

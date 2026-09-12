@@ -399,6 +399,7 @@ return [
     'cookie.consent.accept' => 'Aanvaar',
     'cookie.consent.decline' => 'Weier',
     'cookie.consent.message' => 'Ons gebruik \'n paar noodsaaklike koekies om jou aangemeld te hou, jou taal te onthou en die webwerf teen vervalsing te beskerm. Ons gebruik nie koekies vir advertensies of dophou nie.',
+    'cookie.consent.preferences' => 'Koekievoorkeure',
     'copied' => 'Gekopieer!',
     'copy' => 'Kopieer',
     'copy.all.to.date' => 'Kopieer alles tot op datum',

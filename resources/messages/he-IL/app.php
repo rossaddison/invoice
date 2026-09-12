@@ -399,6 +399,7 @@ return [
     'cookie.consent.accept' => 'לְקַבֵּל',
     'cookie.consent.decline' => 'יְרִידָה',
     'cookie.consent.message' => 'אנו משתמשים בכמה קובצי Cookie חיוניים כדי לשמור אותך מחובר, לזכור את השפה שלך ולהגן על האתר מפני זיוף. איננו משתמשים בקובצי Cookie למטרות פרסום או מעקב.',
+    'cookie.consent.preferences' => 'העדפות קובצי Cookie',
     'copied' => 'מוּעֲתָק!',
     'copy' => 'לְהַעְתִיק',
     'copy.all.to.date' => 'העתק הכל עד היום',
