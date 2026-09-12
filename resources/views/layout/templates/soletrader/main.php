@@ -6,10 +6,12 @@ use App\Auth\Asset\AuthAegisTotpKeypadAsset;
 
 use App\Asset\AppCdnAsset as AppCdn;
 use App\Asset\AppNodeModulesAsset as AppNm;
+use App\Asset\CookieConsentAsset;
 use App\Widget\PerformanceMetrics;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Button;
+use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Html as TagHtml;
 use Yiisoft\Html\Tag\I;
@@ -124,6 +126,7 @@ $assetManager->register($bootstrap5CdnNotNodeModule ? BsCdnJs::class : BsNmJs::c
 $assetManager->register($appCdnNotNodeModule ? AppCdn::class : AppNm::class);
 $assetManager->register(AuthAegisTotpKeypadAsset::class);
 $assetManager->register(AuthChoiceAsset::class);
+$assetManager->register(CookieConsentAsset::class);
 
 $this->addCssFiles($assetManager->getCssFiles());
 $this->addCssStrings($assetManager->getCssStrings());
@@ -529,6 +532,12 @@ echo new TagHtml()
           ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
           ->content($brandLabel . ' - ' . date('Y') . ' -' )
           ->render();
+      echo new A()
+          ->id('cookie-consent-reopen')
+          ->href('#')
+          ->addClass('text-white text-decoration-underline small ms-2')
+          ->content($t->translate('cookie.consent.preferences'))
+          ->render();
       echo Html::openTag('div', ['class' => 'ms-2 text-white']); //5
        echo PerformanceMetrics::widget();
       echo Html::closeTag('div'); //5
@@ -594,7 +603,86 @@ echo new TagHtml()
    footer a:hover .bi-twitter  { color: #1da1f2; }
    footer a:hover .bi-whatsapp { color: #25d366; }
    footer a:hover .bi-linkedin { color: #0a66c2; }
+   /* #cookie-consent-banner below also carries the Bootstrap d-flex
+      utility (display: flex !important) so its content lays out
+      correctly while shown -- but that !important beats the plain
+      (non-important) `[hidden] { display: none }` rule browsers apply
+      by default, so cookie-consent.ts setting the hidden property true
+      left the banner still visually on screen after Accept/Decline
+      (confirmed live 2026-09-12: cookie_consent cookie set correctly,
+      banner stayed put). This re-asserts the override d-flex defeated. */
+   #cookie-consent-banner[hidden] { display: none !important; }
+   /* Fade out instead of vanishing instantly (cookie-consent.ts adds
+      this class first, then sets [hidden] once the transition ends or
+      a 300ms fallback timeout fires -- whichever comes first). Skipped
+      entirely for a visitor who has asked for reduced motion. */
+   #cookie-consent-banner { opacity: 1; transition: opacity .3s ease; }
+   #cookie-consent-banner.cookie-consent-hiding { opacity: 0; }
+   @media (prefers-reduced-motion: reduce) {
+     #cookie-consent-banner { transition: none; }
+   }
   ');
+  // Cookie consent banner -- hidden by default (the `hidden` boolean
+  // attribute) so a returning visitor with an existing cookie_consent
+  // cookie never sees a flash of it; cookie-consent.ts (registered via
+  // CookieConsentAsset above) unhides it on DOMContentLoaded only when
+  // that cookie is absent. See privacypolicy.php's "Cookies Policy /
+  // Notice Acceptance Cookies" paragraph -- this is what makes that
+  // paragraph literally true rather than aspirational boilerplate.
+  echo new Div()
+      ->id('cookie-consent-banner')
+      ->addAttributes([
+          'hidden' => true,
+          // Screen readers: announce this region when it appears
+          // (role=region + aria-label make it findable/nameable at
+          // all, since it isn't a <nav>/<main>/<form> landmark;
+          // aria-live=polite is what actually triggers the
+          // announcement once JS clears the hidden attribute).
+          'role' => 'region',
+          'aria-label' => $t->translate('cookie.consent.preferences'),
+          'aria-live' => 'polite',
+      ])
+      ->addClass(
+          'position-fixed bottom-0 start-0 end-0 d-flex flex-wrap'
+          . ' align-items-center justify-content-between gap-2 p-3',
+      )
+      ->addStyle([
+          'background' => 'rgba(15,23,42,.95)',
+          'color' => '#fff',
+          'z-index' => '1080',
+      ])
+      ->content(
+          new Div()
+              ->addClass('flex-grow-1')
+              ->content(
+                  $t->translate('cookie.consent.message'),
+                  ' ',
+                  new A()
+                      ->href($urlGenerator->generate('site/privacypolicy'))
+                      ->addClass('link-light text-decoration-underline')
+                      ->content($t->translate('menu.privacy.policy')),
+              ),
+          new Div()
+              ->addClass('d-flex gap-2')
+              ->content(
+                  new Button()
+                      ->type('button')
+                      ->id('btn-cookie-consent-decline')
+                      ->addClass('btn btn-outline-light btn-sm')
+                      ->content($t->translate('cookie.consent.decline')),
+                  new Button()
+                      ->type('button')
+                      ->id('btn-cookie-consent-accept')
+                      // Same btn-outline-light styling as Decline, not
+                      // solid btn-light -- an ICO/CNIL "equal
+                      // prominence" point: a consent banner where
+                      // Accept is visually heavier than Reject/Decline
+                      // is a recognized dark pattern.
+                      ->addClass('btn btn-outline-light btn-sm')
+                      ->content($t->translate('cookie.consent.accept')),
+              ),
+      )
+      ->render();
   $this->endBody();
  echo Html::closeTag('body'); //1
 echo Html::closeTag('html');

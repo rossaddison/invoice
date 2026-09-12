@@ -9,11 +9,16 @@ export default defineConfig({
     },
     test: {
         environment: 'jsdom',
-        include: ['src/typescript/**/*.test.ts'],
+        include: ['src/typescript/**/*.test.ts', 'src/Asset/*.test.ts'],
         coverage: {
             provider: 'v8',
-            include: ['src/typescript/**/*.ts'],
-            exclude: ['src/typescript/**/*.test.ts', 'src/typescript/index.ts'],
+            include: ['src/typescript/**/*.ts', 'src/Asset/*.ts'],
+            exclude: [
+                'src/typescript/**/*.test.ts',
+                'src/typescript/index.ts',
+                'src/Asset/*.test.ts',
+                'src/Asset/rebuild/**',
+            ],
             reporter: ['lcov', 'text'],
             reportsDirectory: 'coverage',
         },
