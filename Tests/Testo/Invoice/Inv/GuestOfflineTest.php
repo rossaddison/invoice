@@ -407,4 +407,24 @@ final class GuestOfflineTestHarness extends BaseController
     {
         throw new \LogicException('Not exercised by GuestOfflineTest.');
     }
+
+    // Guest::guestRunSheetPdf() (added in #1304, another action this
+    // harness doesn't test) calls $this->renderRunSheetPdf() expecting
+    // Trait\RunSheetPdf to be composed on the same class -- real on
+    // InvController, not here. `use RunSheetPdf;` was considered instead
+    // of this stub, but that trait's own public runSheetPdf() method
+    // calls $this->indexHomeCareRunContext() (Trait\Index, the exact
+    // "much larger unrelated dependency graph" this harness is built to
+    // avoid per its own docblock above), so it would trade one missing-
+    // method Psalm error for another. Same real-signature-stub approach
+    // as the optionsData* methods above.
+    /** @return Response|\Mpdf\Mpdf|array<array-key, mixed>|string */
+    public function renderRunSheetPdf(
+        iterable $invs,
+        \App\Invoice\Dwelling\DwellingRepository $dwR,
+        \App\Invoice\Family\FamilyRepository $fR,
+        \App\Invoice\Inv\RunSheetPdfRowBuilder $rowBuilder,
+    ): Response|\Mpdf\Mpdf|array|string {
+        throw new \LogicException('Not exercised by GuestOfflineTest.');
+    }
 }
