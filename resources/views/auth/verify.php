@@ -66,6 +66,31 @@ use Yiisoft\Html\Tag\Td;
                         .recovery-table tr:hover td {
                             background: #e6f2ff;
                         }
+                        /*
+                         * Sized for the common case (a 6-digit TOTP code)
+                         * with a larger, letter-spaced font -- maxlength
+                         * stays 8 on the input itself (see its own
+                         * attributes below) since this same box also
+                         * accepts 8-character backup recovery codes, it
+                         * just doesn't need to be sized for that wider,
+                         * less common case.
+                         *
+                         * The width/centering has to go on .form-floating
+                         * (Field::text() -> Bootstrap's floating-label
+                         * wrapper div), not #code itself -- Bootstrap's
+                         * floating label is positioned absolutely relative
+                         * to that wrapper, so narrowing only the input
+                         * left the label overflowing past its edge.
+                         */
+                        .form-floating {
+                            max-width: 220px;
+                            margin: 0 auto;
+                        }
+                        #code {
+                            font-size: 1.75rem;
+                            letter-spacing: 0.3em;
+                            text-align: center;
+                        }
                         </style>
                         CSS;
 
