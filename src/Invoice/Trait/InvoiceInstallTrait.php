@@ -146,11 +146,6 @@ trait InvoiceInstallTrait
             // SettingTooltipTrait::tooltipArrayC1(). No effect yet.
             'capture_gps_on_send' => 0,
             'enable_tfa_with_disabling' => 0,
-            // Settings tab "General" -- how long the login form's "Remember
-            // Me" auto-login cookie lasts. See
-            // SettingRepository::rememberMeDurationDays() and
-            // config/web/di/auth.php's CookieLogin definition.
-            'remember_me_days' => 30,
             // Archived pdfs are automatically sent to customers from
             // view/invoice...Options...Send
             // The pdf is sent along with the attachment to the invoice on the
@@ -300,6 +295,18 @@ trait InvoiceInstallTrait
             'thousands_separator' => ',',
             'time_zone' => 'Europe/London',
         ];
+        // Kept out of the array literal above on purpose -- SonarCloud's
+        // CPD swept a new entry placed inside it into the array's own
+        // pre-existing duplicate block (same syntax shape as every other
+        // 'key' => value, entry, regardless of the value); a separate
+        // assignment statement has a different token shape and doesn't
+        // match. See feedback_sonarcloud_cpd_array_literal_gotcha memory.
+        //
+        // Settings tab "General" -- how long the login form's "Remember
+        // Me" auto-login cookie lasts. See
+        // SettingRepository::rememberMeDurationDays() and
+        // config/web/di/auth.php's CookieLogin definition.
+        $default_settings['remember_me_days'] = 30;
         $this->installDefaultSettings($default_settings, $sR);
     }
 
