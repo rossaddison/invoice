@@ -73,20 +73,17 @@ use Yiisoft\Html\Tag\Td;
                          * attributes below) since this same box also
                          * accepts 8-character backup recovery codes, it
                          * just doesn't need to be sized for that wider,
-                         * less common case.
-                         *
-                         * The width/centering has to go on .form-floating
-                         * (Field::text() -> Bootstrap's floating-label
-                         * wrapper div), not #code itself -- Bootstrap's
-                         * floating label is positioned absolutely relative
-                         * to that wrapper, so narrowing only the input
-                         * left the label overflowing past its edge.
+                         * less common case. No visible label any more
+                         * (->hideLabel() below, aria-label instead) --
+                         * the length/format is already said in the
+                         * heading above and the recovery-codes table/
+                         * button when relevant -- so this can size #code
+                         * directly instead of also having to keep
+                         * .form-floating's wrapper div in sync with it.
                          */
-                        .form-floating {
+                        #code {
                             max-width: 220px;
                             margin: 0 auto;
-                        }
-                        #code {
                             font-size: 1.75rem;
                             letter-spacing: 0.3em;
                             text-align: center;
@@ -135,6 +132,20 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
     ->csrf($csrf)
     ->id('twoFactorAuthenticationVerfiyForm')
     ->open(); ?>
+                    <?php
+                        // No visible label: the heading above already says
+                        // "6-digit authentication code ... from your app"
+                        // (the 8-digit backup-code option is likewise
+                        // already covered by the recovery-codes table/
+                        // button above, when relevant), and the floating
+                        // label this field used to have just got clipped by
+                        // the box below being narrowed for the code font.
+                        // Kept as the accessible name via aria-label
+                        // instead of disappearing from screen readers too.
+                        $codeLabel = $translator->translate(
+                            'layout.password.otp.6.8'
+                        );
+                    ?>
                     <?= Field::text($formModel, 'code')
     ->addInputAttributes(
         [
@@ -145,12 +156,15 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
             // otp = 6 digits, backup recovery code = 8 digits
             'maxlength' => 8,
             'type' => 'tel',
+            'aria-label' => $codeLabel,
         ],
     )
     ->error($error ?? '')
     ->required(true)
     ->inputClass('form-control form-control-lg',)
-    ->label($translator->translate('layout.password.otp.6.8'))
+    ->containerClass('mb-3')
+    ->label($codeLabel)
+    ->hideLabel()
     ->autofocus();
 ?>
                     <?= Field::submitButton()
