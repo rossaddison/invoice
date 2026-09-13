@@ -24,6 +24,12 @@ use Yiisoft\User\Login\Cookie\CookieLogin;
  */
 $secretKey = $params['yiisoft/cookies']['secretKey'];
 return [
+    // Previously unconfigured -- the vendor default ($duration = null) makes
+    // the "autoLogin" cookie a session cookie that expires when the browser
+    // closes, i.e. indistinguishable from not checking "Remember Me" at all.
+    // 30 days is a conventional default for this kind of persistent-login
+    // cookie (GitHub, Google, etc. all use ~30 days).
+    CookieLogin::class => static fn (): CookieLogin => new CookieLogin(new DateInterval('P30D')),
     IdentityRepositoryInterface::class => static function (ContainerInterface $container): RepositoryInterface {
         /** @var ORMInterface $orm */
         $orm = $container->get(ORMInterface::class);
