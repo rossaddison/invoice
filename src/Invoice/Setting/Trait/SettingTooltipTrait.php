@@ -232,6 +232,13 @@ trait SettingTooltipTrait
                 . ' number of records viewed',
                 'where' => 'ClientController/Edit',
             ],
+            'remember_me_days' => [
+                'why' => 'How many days the login form\'s "Remember Me" cookie'
+                . ' keeps a user signed in after they close their browser.'
+                . ' Applies whether or not Two Factor Authentication is'
+                . ' required to log in.',
+                'where' => 'AuthController/login, config/web/di/auth.php',
+            ],
             'default_invoice_group' => [
                 'why' => 'When a new invoice or quote is created, the package'
                 . ' uses invoice groups to determine the next invoice or quote'

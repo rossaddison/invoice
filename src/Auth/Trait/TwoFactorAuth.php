@@ -17,6 +17,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Security\TokenMask;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\User\Login\Cookie\CookieLoginIdentityInterface;
 
 trait TwoFactorAuth
 {
@@ -363,7 +364,7 @@ trait TwoFactorAuth
         $tokenApplySec = TokenMask::apply($totpSec);
         $this->session->set('otp', $inputCode);
         $this->session->set('otpRef', $tokenApplySec);
-        return $this->redirectToInvoiceIndex();
+        return $this->applyRememberMe($this->redirectToInvoiceIndex());
     }
 
     private function tryBackupCodeLogin(
@@ -380,7 +381,27 @@ trait TwoFactorAuth
         $this->secHelper->remSessTempsPermitEntryBase($vuid);
         $this->session->set('otp', $inputCode);
         $this->session->set('otpRef', $tokenApplySec);
-        return $this->redirectToInvoiceIndex();
+        return $this->applyRememberMe($this->redirectToInvoiceIndex());
+    }
+
+    /**
+     * Applies the "Remember Me" choice stashed in session by
+     * AuthController::handleTfaPath() (this method's caller has no
+     * LoginForm of its own -- it's a separate HTTP request from the one
+     * that submitted it). Mirrors the non-TFA path's own inline check in
+     * AuthController::handleNonTfaPath().
+     */
+    private function applyRememberMe(ResponseInterface $response): ResponseInterface
+    {
+        $rememberMe = (bool) $this->session->get('remember_me', false);
+        $this->session->remove('remember_me');
+        if (!$rememberMe) {
+            return $response;
+        }
+        $identity = $this->authService->getIdentity();
+        return $identity instanceof CookieLoginIdentityInterface
+            ? $this->cookieLogin->addCookie($identity, $response)
+            : $response;
     }
 
     private function redirectToOneTimePasswordError(): ResponseInterface

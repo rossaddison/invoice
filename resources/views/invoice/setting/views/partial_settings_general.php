@@ -55,6 +55,7 @@ $kMonospaceAmounts = 'settings[monospace_amounts]';
 $kOpenReports = 'settings[open_reports_in_new_tab]';
 $kBccMails = 'settings[bcc_mails_to_admin]';
 $kCronKey = 'settings[cron_key]';
+$kRememberMeDays = 'settings[remember_me_days]';
 
 echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
@@ -928,8 +929,31 @@ echo H::openTag('div', $row); //1
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     // Not $colMd6 (its col-md-6 sibling, bcc_mails_to_admin, is a plain
-     // Yes/No dropdown and doesn't need the room) — a 32-character hex
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
+       echo H::openTag('label', [
+        'for' => $kRememberMeDays
+       ]);
+        echo $translator->translate('remember.me.days');
+        echo $s->infoIcon('remember_me_days');
+       echo H::closeTag('label');
+       $body[$kRememberMeDays] =
+       $s->getSetting('remember_me_days');
+       echo H::openTag('input', [
+        'type' => 'number',
+        'name' => $kRememberMeDays,
+        'id' => $kRememberMeDays,
+        'class' => 'form-control',
+        'minlength' => '1',
+        'min' => '1',
+        'required' => true,
+        'value' => $body[$kRememberMeDays]
+       ]);
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+     // Not $colMd6 (its two col-md-6 siblings above, bcc_mails_to_admin
+     // and remember_me_days, are a dropdown and a short number field and
+     // don't need the room) — a 32-character hex
      // value plus the pe-5 reserved for the regenerate button genuinely
      // doesn't fit in a half-width column at normal font size; confirmed
      // live: the tail of the key was clipped, which first looked like a

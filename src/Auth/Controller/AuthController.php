@@ -88,6 +88,11 @@ final class AuthController
         private readonly UrlGenerator $urlGenerator,
         private readonly LoggerInterface $logger,
         private readonly TranslatorInterface $translator,
+        // Only login() gets CookieLogin via method injection (see its own
+        // parameter) -- the TFA verify step (TwoFactorAuth::tryTotpLogin()/
+        // tryBackupCodeLogin()) is a separate HTTP request/action with no
+        // access to that, so it needs its own copy via the constructor.
+        private readonly CookieLogin $cookieLogin,
         // trait variables
         private readonly CounterInterface $rateLimiter,
         private readonly StorageInterface $rateLimiterStorage,
@@ -560,14 +565,27 @@ final class AuthController
         // setting — an admin without TOTP set up is routed into setup by
         // handleTfaPath() below, same as any other 2FA-required user.
         if ($this->sR->getSetting('enable_tfa') == '1' || $this->isAdminUser($userIdString)) {
-            return $this->handleTfaPath($userIdString, $user);
+            return $this->handleTfaPath($userIdString, $user, $loginForm);
         }
         return $this->handleNonTfaPath($userIdString, $userInv, $cookieLogin, $loginForm, $tR);
     }
 
-    private function handleTfaPath(string $userId, User $user): ResponseInterface
-    {
+    private function handleTfaPath(
+        string $userId,
+        User $user,
+        LoginForm $loginForm,
+    ): ResponseInterface {
         $this->session->set('tfa_verified', false);
+        // Carried across the redirect to auth/verifyLogin (and through a
+        // first-time auth/showSetup, which itself redirects to
+        // auth/verifyLogin once its own code is confirmed) since neither of
+        // those is the same HTTP request as this one, so $loginForm isn't in
+        // scope there. Read back and applied once TFA succeeds, in
+        // TwoFactorAuth::applyRememberMe().
+        $this->session->set(
+            'remember_me',
+            $loginForm->getPropertyValue('rememberMe')
+        );
         $enabled = $user->is2FAEnabled();
         if (!$enabled) {
             $this->session->set('pending_2fa_user_id', $userId);
