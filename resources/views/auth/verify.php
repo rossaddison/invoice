@@ -156,15 +156,22 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
             'autocomplete' => 'current-code',
             'id' => 'code',
             'name' => 'code',
+            // Defaults to the TOTP shape (6 numeric digits) -- the
+            // #backupCodeToggle checkbox below switches these to 8 via
+            // applyCodeMode() in keypad-copy-to-clipboard.ts when the
+            // user says they're entering a backup recovery code instead.
+            // A fixed 8 here previously meant nothing stopped over-typing
+            // a TOTP code past 6 digits, even though the server (see
+            // AuthTfaHelper::sanitizeAndValidateCode()) only ever accepts
+            // exactly 6 or exactly 8, never anything in between.
             'minlength' => 6,
-            // otp = 6 digits, backup recovery code = 8 digits
-            'maxlength' => 8,
+            'maxlength' => 6,
             // Visible width in characters, matching maxlength -- the
             // semantically correct native attribute for this, even though
             // Bootstrap's .form-control class (width: 100%) overrides its
             // actual sizing effect here; see the #code CSS rule below,
             // which is what really constrains the box's width.
-            'size' => 8,
+            'size' => 6,
             'type' => 'tel',
             'aria-label' => $codeLabel,
         ],
@@ -177,6 +184,18 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
     ->hideLabel()
     ->autofocus();
 ?>
+                    <div class="form-check form-check-inline small mt-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="backupCodeToggle"
+                        >
+                        <label class="form-check-label" for="backupCodeToggle">
+                            <?= Html::encode($translator->translate(
+                                'two.factor.authentication.use.backup.code'
+                            )) ?>
+                        </label>
+                    </div>
                     <?= Field::submitButton()
     ->buttonId('code-button')
     ->buttonClass('btn btn-primary')
@@ -184,7 +203,7 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
     ->content($translator->translate('layout.submit')) ?>
                     <?=  new Form()->close() ?>
                 </div>
-                <div class="card-body p-1 text-center">
+                <div id="digitPad" class="card-body p-1 text-center">
                     <?php for ($i = 1; $i <= 9; $i++): ?>
                         <button type="button" class="btn btn-info btn-sm btn-digit" data-digit="<?= $i ?>"><?= $i ?></button>
                     <?php endfor; ?>
