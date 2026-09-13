@@ -44,7 +44,7 @@ class InvRecurring
 
     public function reqId(): int
     {
-        return $this->requireId($this->id, 'InvCustom');
+        return $this->requireId($this->id, 'InvRecurring');
     }
 
     public function setId(int $id): void
@@ -78,9 +78,24 @@ class InvRecurring
         return $this->start;
     }
 
-    public function setStart(string|DateTime $start): void
+    /**
+     * Accepts the legacy mutable \DateTime InvRecurringService/
+     * InvRecurringController still construct (e.g.
+     * `new \DateTime($array['start'])`), but always stores a
+     * DateTimeImmutable -- getStart()'s own return type never included
+     * \DateTime, so storing one verbatim made getStart() throw a TypeError
+     * the moment it was called afterward on the same in-memory instance
+     * (confirmed live: InvRecurringServiceTest's own
+     * saveInvRecurringThrowsWhenInvoiceAlreadyHasARealNextDateTime, which
+     * exercises exactly that -- saveInvRecurring() itself calls
+     * $model->getNext() to decide which branch to take, right after a
+     * prior save had called setNext(new \DateTime(...)) on this object).
+     */
+    public function setStart(string|DateTime|DateTimeImmutable $start): void
     {
-        $this->start = $start;
+        $this->start = $start instanceof DateTime
+            ? DateTimeImmutable::createFromMutable($start)
+            : $start;
     }
 
     public function getEnd(): string|DateTimeImmutable|null
@@ -89,9 +104,12 @@ class InvRecurring
         return $this->end;
     }
 
-    public function setEnd(?DateTime $end): void
+    /** @see setStart() for why a \DateTime argument is normalized before storage. */
+    public function setEnd(DateTime|DateTimeImmutable|null $end): void
     {
-        $this->end = $end;
+        $this->end = $end instanceof DateTime
+            ? DateTimeImmutable::createFromMutable($end)
+            : $end;
     }
 
     public function getNext(): string|DateTimeImmutable|null
@@ -100,9 +118,12 @@ class InvRecurring
         return $this->next;
     }
 
-    public function setNext(?DateTime $next): void
+    /** @see setStart() for why a \DateTime argument is normalized before storage. */
+    public function setNext(DateTime|DateTimeImmutable|null $next): void
     {
-        $this->next = $next;
+        $this->next = $next instanceof DateTime
+            ? DateTimeImmutable::createFromMutable($next)
+            : $next;
     }
 
     public function getFrequency(): string

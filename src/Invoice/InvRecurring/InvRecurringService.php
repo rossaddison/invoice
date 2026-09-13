@@ -29,17 +29,32 @@ final readonly class InvRecurringService
         InvRecurring $model,
         array $array
     ): void {
-        $this->persist($model, $array);
-        $model->setInvId((int) $array['inv_id']);
+        // 'inv_id' is read via isset(), not a bare $array['inv_id'], since
+        // it's genuinely allowed to be absent here (e.g. an unguarded
+        // read used to warn on missing key -- confirmed live via
+        // InvRecurringController::add(), whose hidden inv_id form field
+        // submits empty when the controller forgets to pre-populate the
+        // form, which is exactly the bug that read masked instead of
+        // surfacing). Resolved ONCE and reused for both the `inv`
+        // relation and the base-invoice gate below -- the two used to be
+        // two separate repoInvUnLoadedquery() calls for the same id.
+        $invId = isset($array['inv_id']) ? (int) $array['inv_id'] : null;
+        $baseInvoice = null !== $invId
+            ? $this->invR->repoInvUnLoadedquery($invId)
+            : null;
+
+        if (null !== $baseInvoice) {
+            $model->setInv($baseInvoice);
+        }
+        if (null !== $invId) {
+            $model->setInvId($invId);
+        }
 
         isset($array['frequency']) ?
             $model->setFrequency(
                 (string) $array['frequency']
             ) : '';
 
-        $baseInvoice = $this->invR->repoInvUnloadedquery(
-            (int) $array['inv_id']
-        );
         if (null !== $baseInvoice) {
             $dateHelper = new DateHelper($this->s);
 
@@ -84,21 +99,6 @@ final readonly class InvRecurringService
             $end ? $model->setEnd($end) : '';
 
             $this->repository->save($model);
-        }
-    }
-
-    private function persist(
-        InvRecurring $model,
-        array $array
-    ): void {
-        $inv = 'inv_id';
-        if (isset($array[$inv])) {
-            $invEntity = $this->invR->repoInvUnLoadedquery(
-                (int) $array[$inv]
-            );
-            if ($invEntity) {
-                $model->setInv($invEntity);
-            }
         }
     }
 

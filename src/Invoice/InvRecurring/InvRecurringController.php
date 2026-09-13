@@ -130,6 +130,17 @@ final class InvRecurringController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
+                // $form above is a bare `new InvRecurringForm()`, never
+                // InvRecurringForm::show()'d with $inv_id (unlike start()'s
+                // own flow) -- so its hidden inv_id field (_form.php)
+                // always submits empty, and saveInvRecurring() could never
+                // resolve a real base invoice: the row was silently never
+                // saved even though this action redirected as if it had
+                // been. $inv_id itself was already resolved and validated
+                // against a real invoice at the top of this method, so use
+                // that directly rather than trusting whatever (if
+                // anything) came back from the client.
+                $body['inv_id'] = $inv_id;
                 $this->invrecurringService->saveInvRecurring($invRecurring, $body);
                 $redirect = $this->webService->getRedirectResponse('invrecurring/index');
             } else {

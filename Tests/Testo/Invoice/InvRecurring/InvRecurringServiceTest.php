@@ -12,7 +12,6 @@ use App\Invoice\InvRecurring\InvRecurringService;
 use App\Invoice\Setting\SettingRepository;
 use Mockery as m;
 use Testo\Assert;
-use Testo\Assert\ExpectException;
 use Testo\Test;
 
 /**
@@ -20,18 +19,27 @@ use Testo\Test;
  * persistence, the "restart" vs. "currently running" next/start date
  * computation, end-date parsing, and deleteInvRecurring.
  *
- * saveInvRecurring() calls the same InvRepository::repoInvUnLoadedquery()
- * twice per save — once in persist() to set the `inv` relation, once more
- * directly to fetch the "base invoice" gate — so every scenario below
- * expects it ->twice() with the same id, documenting the existing redundant
- * duplicate query rather than treating it as a new bug.
+ * saveInvRecurring() used to call the same
+ * InvRepository::repoInvUnLoadedquery() twice per save — once in a
+ * private persist() to set the `inv` relation, once more directly to
+ * fetch the "base invoice" gate — for the exact same id. Fixed to resolve
+ * it once and reuse it for both; every scenario below now expects
+ * ->once() rather than the old ->twice().
  *
- * See PR #998 "Possible issues found": setNext()/setStart() accept a plain
- * \DateTime, but getNext()/getStart() are declared to return
- * string|DateTimeImmutable(|null), which does not include \DateTime — so
- * calling those getters after saveInvRecurring() actually sets a date
- * throws a TypeError. Reflection on the private properties avoids
- * exercising that crash here.
+ * See PR #998 "Possible issues found": setNext()/setStart() used to
+ * accept a plain \DateTime while getNext()/getStart() were declared to
+ * return string|DateTimeImmutable(|null), which never included \DateTime
+ * — so calling those getters after saveInvRecurring() had actually set a
+ * date threw a TypeError. Fixed in the InvRecurring entity itself:
+ * setStart()/setEnd()/setNext() still accept \DateTime (existing callers
+ * are unchanged) but now normalize it to DateTimeImmutable before
+ * storing, so the getters' own declared return type is never violated.
+ * saveInvRecurringThrowsWhenInvoiceAlreadyHasARealNextDateTime below is
+ * kept as a regression test proving the crash is gone (its own
+ * #[ExpectException] was removed accordingly), and reflection on the
+ * private properties is no longer needed for it, though the other tests
+ * still use it purely to avoid depending on \DateTime's own
+ * equality/formatting quirks.
  */
 #[Test]
 final class InvRecurringServiceTest
@@ -76,7 +84,7 @@ final class InvRecurringServiceTest
         /** @var IR&m\MockInterface $invR */
         $invR = m::mock(IR::class);
         $e = $invR->shouldReceive('repoInvUnLoadedquery');
-        $e->twice()->with(3)->andReturn(null);
+        $e->once()->with(3)->andReturn(null);
 
         /** @var InvRecurringRepository&m\MockInterface $repository */
         $repository = m::mock(InvRecurringRepository::class);
@@ -104,7 +112,7 @@ final class InvRecurringServiceTest
         /** @var IR&m\MockInterface $invR */
         $invR = m::mock(IR::class);
         $e = $invR->shouldReceive('repoInvUnLoadedquery');
-        $e->twice()->with(7)->andReturn($inv);
+        $e->once()->with(7)->andReturn($inv);
 
         /** @var InvRecurringRepository&m\MockInterface $repository */
         $repository = m::mock(InvRecurringRepository::class);
@@ -117,32 +125,37 @@ final class InvRecurringServiceTest
         Assert::same($inv, $model->getInv());
 
         $next = $this->nextProperty($model);
-        Assert::true($next instanceof \DateTime);
+        Assert::true($next instanceof \DateTimeImmutable);
         Assert::same('2026-02-01', $next->format('Y-m-d'));
 
         $start = $this->startProperty($model);
-        Assert::true($start instanceof \DateTime);
+        Assert::true($start instanceof \DateTimeImmutable);
         Assert::same('2026-01-01', $start->format('Y-m-d'));
     }
 
     /**
      * The "currently running" branch (invoice already has a real `next`
-     * DateTime, e.g. from a previous restart-branch save) can't actually be
-     * exercised: saveInvRecurring() itself calls `$model->getNext()` to
-     * decide which branch to take, and that call is what throws per the
-     * class docblock — the bug crashes the method before its own branching
-     * logic runs, not just a getter called by the caller afterward.
+     * date, e.g. from a previous restart-branch save) -- exercised here by
+     * going through setNext() itself (matching a real prior save), not by
+     * writing the private property directly via reflection, since it's
+     * specifically the setter normalizing \DateTime -> DateTimeImmutable
+     * that keeps saveInvRecurring()'s own $model->getNext() call (used to
+     * decide which branch to take) from throwing a TypeError. Before the
+     * InvRecurring entity fix, this exact scenario crashed inside
+     * saveInvRecurring() itself, before its own branching logic ever ran.
      */
-    #[ExpectException(\TypeError::class)]
-    public function saveInvRecurringThrowsWhenInvoiceAlreadyHasARealNextDateTime(): void
+    public function saveInvRecurringRecomputesNextAndStartWhenInvoiceAlreadyHasARealNextDate(): void
     {
         $model = new InvRecurring();
-        $property = new \ReflectionProperty(InvRecurring::class, 'next');
-        $property->setValue($model, new \DateTime('2025-06-01'));
+        $model->setNext(new \DateTime('2025-06-01'));
 
         $array = [
             'inv_id' => 7,
-            'frequency' => 'P1M',
+            // incrementDateStringToDateTime() prepends its own 'P' --
+            // matches saveInvRecurringRestartsAndSetsNextAndStartWhenNextWasEmpty's
+            // own '1M' (not 'P1M'), the only other test that actually
+            // reaches this call rather than just carrying an unused value.
+            'frequency' => '1M',
             'start' => '2026-03-01',
         ];
 
@@ -151,13 +164,22 @@ final class InvRecurringServiceTest
         /** @var IR&m\MockInterface $invR */
         $invR = m::mock(IR::class);
         $e = $invR->shouldReceive('repoInvUnLoadedquery');
-        $e->twice()->with(7)->andReturn($inv);
+        $e->once()->with(7)->andReturn($inv);
 
         /** @var InvRecurringRepository&m\MockInterface $repository */
         $repository = m::mock(InvRecurringRepository::class);
-        $repository->shouldNotReceive('save');
+        $e2 = $repository->shouldReceive('save');
+        $e2->once()->with($model);
 
         $this->makeService($repository, $invR)->saveInvRecurring($model, $array);
+
+        $next = $this->nextProperty($model);
+        Assert::true($next instanceof \DateTimeImmutable);
+        Assert::same('2026-04-01', $next->format('Y-m-d'));
+
+        $start = $this->startProperty($model);
+        Assert::true($start instanceof \DateTimeImmutable);
+        Assert::same('2026-03-01', $start->format('Y-m-d'));
     }
 
     public function saveInvRecurringSetsEndDateWhenProvided(): void
@@ -174,7 +196,7 @@ final class InvRecurringServiceTest
         /** @var IR&m\MockInterface $invR */
         $invR = m::mock(IR::class);
         $e = $invR->shouldReceive('repoInvUnLoadedquery');
-        $e->twice()->with(2)->andReturn($inv);
+        $e->once()->with(2)->andReturn($inv);
 
         /** @var InvRecurringRepository&m\MockInterface $repository */
         $repository = m::mock(InvRecurringRepository::class);
@@ -185,7 +207,7 @@ final class InvRecurringServiceTest
         $service->saveInvRecurring($model, $array);
 
         $end = $this->endProperty($model);
-        Assert::true($end instanceof \DateTime);
+        Assert::true($end instanceof \DateTimeImmutable);
         Assert::same('2026-12-31', $end->format('Y-m-d'));
     }
 
@@ -199,7 +221,7 @@ final class InvRecurringServiceTest
         /** @var IR&m\MockInterface $invR */
         $invR = m::mock(IR::class);
         $e = $invR->shouldReceive('repoInvUnLoadedquery');
-        $e->twice()->with(2)->andReturn($inv);
+        $e->once()->with(2)->andReturn($inv);
 
         /** @var InvRecurringRepository&m\MockInterface $repository */
         $repository = m::mock(InvRecurringRepository::class);
