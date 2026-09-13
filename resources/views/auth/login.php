@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Widget\Button;
 use App\Widget\IdentityProviderButton;
 use Yiisoft\{FormModel\Field as F};
-use Yiisoft\Html\{Html as H, Tag\A, Tag\Form, Tag\Span};
+use Yiisoft\Html\{Html as H, Tag\A, Tag\Form, Tag\Img, Tag\Span};
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 
@@ -94,7 +94,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
                  'class' => (string) $class[9],
                  'style' => 'white-space:normal;word-break:break-word;'
                 . 'max-width:100%;display:inline-block;',
-                 'data-toggle-bs' => 'tooltip',
+                 'data-bs-toggle' => 'tooltip',
                  'title' => $s->getSetting('enable_tfa_with_disabling') == '1'
                 ? $translator->translate($tfaEnabled . '.with.disabling')
                 : $translator->translate($tfaEnabled . '.without.disabling'
@@ -102,11 +102,40 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
              ->content($translator->translate($tfaEnabled . '.badge'))
              ->render();
         echo H::openTag('br');
-        echo  new Span()
-         ->addAttributes(['class' => 'text-muted small'])
-         ->content($translator->translate('two.factor.authentication.compatible.apps'))
+        /**
+         * Google Authenticator, Microsoft Authenticator, Authy, 1Password,
+         * Bitwarden, Yandex ID, Aegis, left-to-right -- one composite
+         * image (public/img/tfa-authenticator-apps.png) rather than 7
+         * separate <img> tags, matching the "single combined asset" shape
+         * requested for this group label. The full compatible-apps
+         * sentence moves to the title/alt attributes as a tooltip instead
+         * of visible text.
+         */
+        $compatibleApps = $translator->translate(
+            'two.factor.authentication.compatible.apps'
+        );
+        echo  new Img()
+         ->size(249, 28)
+         ->src('/img/tfa-authenticator-apps.png')
+         ->alt($compatibleApps)
+         ->addAttributes([
+             'class' => 'mt-1',
+             'data-bs-toggle' => 'tooltip',
+             'title' => $compatibleApps,
+         ])
          ->render();
       echo H::closeTag('div');
+      /**
+       * The login page doesn't load InvoiceCdnAsset (too heavy/invoice-
+       * specific for an unauthenticated page) so scripts.ts's initTooltips()
+       * never runs here -- without it, the `data-bs-toggle="tooltip"`
+       * attributes above are inert: bootstrap.bundle.js defines the
+       * Tooltip class but never auto-instantiates it. A static file
+       * (rather than an inline <script>, per this page's CSP -- script-src
+       * has no 'unsafe-inline'/nonce here) scopes the same init to just
+       * #tfa-badge's own tooltips.
+       */
+      $this->registerJsFile('/js/login-tfa-tooltip.js', WebView::POSITION_END);
     }
     echo H::openTag('div', ['class' => (string) $class[10]]);
     echo  new Form()
