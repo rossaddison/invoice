@@ -3171,6 +3171,8 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' have.',
   'two.factor.authentication.setup' =>
     'Setup Two Factor Authentication',
+  'two.factor.authentication.use.backup.code' =>
+    'Use 8-digit backup recovery code instead',
   'type' => 'Type',
   'ubl.version.required.2.4' => 'UBL version must be 2.1, 2.2, 2.3, or 2.4',
   'unit' => 'Unit',

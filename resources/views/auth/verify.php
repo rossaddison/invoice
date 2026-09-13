@@ -66,6 +66,32 @@ use Yiisoft\Html\Tag\Td;
                         .recovery-table tr:hover td {
                             background: #e6f2ff;
                         }
+                        /*
+                         * The input's own `size` attribute (see
+                         * addInputAttributes() below) is set too, tied to
+                         * maxlength rather than a hand-picked number here --
+                         * but Bootstrap's .form-control class hardcodes
+                         * `width: 100%`, which overrides the native `size`
+                         * sizing entirely (confirmed: size alone, with
+                         * .form-control applied, still renders full width).
+                         * So max-width still has to be set explicitly here
+                         * for .form-control inputs -- size is kept anyway
+                         * since it's still the semantically correct
+                         * attribute and costs nothing. margin: 0 auto is
+                         * needed too, for the same reason -- .form-control
+                         * is also display: block, not the plain <input>'s
+                         * usual inline default, so the parent's own
+                         * text-align: center doesn't center the box itself
+                         * (only text inside it), just like a max-width
+                         * alone on any other block element wouldn't.
+                         */
+                        #code {
+                            max-width: 260px;
+                            margin: 0 auto;
+                            font-size: 1.75rem;
+                            letter-spacing: 0.3em;
+                            text-align: center;
+                        }
                         </style>
                         CSS;
 
@@ -110,24 +136,66 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
     ->csrf($csrf)
     ->id('twoFactorAuthenticationVerfiyForm')
     ->open(); ?>
+                    <?php
+                        // No visible label: the heading above already says
+                        // "6-digit authentication code ... from your app"
+                        // (the 8-digit backup-code option is likewise
+                        // already covered by the recovery-codes table/
+                        // button above, when relevant), and the floating
+                        // label this field used to have just got clipped by
+                        // the box below being narrowed for the code font.
+                        // Kept as the accessible name via aria-label
+                        // instead of disappearing from screen readers too.
+                        $codeLabel = $translator->translate(
+                            'layout.password.otp.6.8'
+                        );
+                    ?>
                     <?= Field::text($formModel, 'code')
     ->addInputAttributes(
         [
             'autocomplete' => 'current-code',
             'id' => 'code',
             'name' => 'code',
+            // Defaults to the TOTP shape (6 numeric digits) -- the
+            // #backupCodeToggle checkbox below switches these to 8 via
+            // applyCodeMode() in keypad-copy-to-clipboard.ts when the
+            // user says they're entering a backup recovery code instead.
+            // A fixed 8 here previously meant nothing stopped over-typing
+            // a TOTP code past 6 digits, even though the server (see
+            // AuthTfaHelper::sanitizeAndValidateCode()) only ever accepts
+            // exactly 6 or exactly 8, never anything in between.
             'minlength' => 6,
-            // otp = 6 digits, backup recovery code = 8 digits
-            'maxlength' => 8,
+            'maxlength' => 6,
+            // Visible width in characters, matching maxlength -- the
+            // semantically correct native attribute for this, even though
+            // Bootstrap's .form-control class (width: 100%) overrides its
+            // actual sizing effect here; see the #code CSS rule below,
+            // which is what really constrains the box's width.
+            'size' => 6,
             'type' => 'tel',
+            'aria-label' => $codeLabel,
         ],
     )
     ->error($error ?? '')
     ->required(true)
     ->inputClass('form-control form-control-lg',)
-    ->label($translator->translate('layout.password.otp.6.8'))
+    ->containerClass('mb-3')
+    ->label($codeLabel)
+    ->hideLabel()
     ->autofocus();
 ?>
+                    <div class="form-check form-check-inline small mt-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="backupCodeToggle"
+                        >
+                        <label class="form-check-label" for="backupCodeToggle">
+                            <?= Html::encode($translator->translate(
+                                'two.factor.authentication.use.backup.code'
+                            )) ?>
+                        </label>
+                    </div>
                     <?= Field::submitButton()
     ->buttonId('code-button')
     ->buttonClass('btn btn-primary')
@@ -135,7 +203,7 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
     ->content($translator->translate('layout.submit')) ?>
                     <?=  new Form()->close() ?>
                 </div>
-                <div class="card-body p-1 text-center">
+                <div id="digitPad" class="card-body p-1 text-center">
                     <?php for ($i = 1; $i <= 9; $i++): ?>
                         <button type="button" class="btn btn-info btn-sm btn-digit" data-digit="<?= $i ?>"><?= $i ?></button>
                     <?php endfor; ?>
