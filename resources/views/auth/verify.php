@@ -67,22 +67,26 @@ use Yiisoft\Html\Tag\Td;
                             background: #e6f2ff;
                         }
                         /*
-                         * Sized for the common case (a 6-digit TOTP code)
-                         * with a larger, letter-spaced font -- maxlength
-                         * stays 8 on the input itself (see its own
-                         * attributes below) since this same box also
-                         * accepts 8-character backup recovery codes, it
-                         * just doesn't need to be sized for that wider,
-                         * less common case. No visible label any more
-                         * (->hideLabel() below, aria-label instead) --
-                         * the length/format is already said in the
-                         * heading above and the recovery-codes table/
-                         * button when relevant -- so this can size #code
-                         * directly instead of also having to keep
-                         * .form-floating's wrapper div in sync with it.
+                         * The input's own `size` attribute (see
+                         * addInputAttributes() below) is set too, tied to
+                         * maxlength rather than a hand-picked number here --
+                         * but Bootstrap's .form-control class hardcodes
+                         * `width: 100%`, which overrides the native `size`
+                         * sizing entirely (confirmed: size alone, with
+                         * .form-control applied, still renders full width).
+                         * So max-width still has to be set explicitly here
+                         * for .form-control inputs -- size is kept anyway
+                         * since it's still the semantically correct
+                         * attribute and costs nothing. margin: 0 auto is
+                         * needed too, for the same reason -- .form-control
+                         * is also display: block, not the plain <input>'s
+                         * usual inline default, so the parent's own
+                         * text-align: center doesn't center the box itself
+                         * (only text inside it), just like a max-width
+                         * alone on any other block element wouldn't.
                          */
                         #code {
-                            max-width: 220px;
+                            max-width: 260px;
                             margin: 0 auto;
                             font-size: 1.75rem;
                             letter-spacing: 0.3em;
@@ -155,6 +159,12 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
             'minlength' => 6,
             // otp = 6 digits, backup recovery code = 8 digits
             'maxlength' => 8,
+            // Visible width in characters, matching maxlength -- the
+            // semantically correct native attribute for this, even though
+            // Bootstrap's .form-control class (width: 100%) overrides its
+            // actual sizing effect here; see the #code CSS rule below,
+            // which is what really constrains the box's width.
+            'size' => 8,
             'type' => 'tel',
             'aria-label' => $codeLabel,
         ],
