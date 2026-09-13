@@ -276,6 +276,28 @@ final class SettingRepository extends Select\Repository implements SettingReposi
     }
 
     /**
+     * Settings tab "General" -> Remember Me Duration (Days). Used to
+     * build CookieLogin's auto-login cookie lifetime (config/web/di/
+     * auth.php) -- falls back to 30 days for a value that's unset (fresh
+     * install before its seeded default row exists, or a settings-table
+     * row deleted out from under it), non-numeric, zero, or negative,
+     * same guard shape as positiveListLimit() above.
+     *
+     * @psalm-return positive-int
+     */
+    public function rememberMeDurationDays(): int
+    {
+        $days = (int) $this->getSetting('remember_me_days');
+        if ($days > 0) {
+            /**
+             * @psalm-var positive-int $positiveInt
+             */
+            return $days;
+        }
+        return 30;
+    }
+
+    /**
      * @param string $key
      * @return string
      */

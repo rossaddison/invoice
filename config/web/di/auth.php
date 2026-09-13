@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Infrastructure\Persistence\Identity\Identity;
+use App\Invoice\Setting\SettingRepository;
 use Cycle\ORM\RepositoryInterface;
 use Cycle\ORM\ORMInterface;
 use Psr\Container\ContainerInterface;
@@ -27,9 +28,16 @@ return [
     // Previously unconfigured -- the vendor default ($duration = null) makes
     // the "autoLogin" cookie a session cookie that expires when the browser
     // closes, i.e. indistinguishable from not checking "Remember Me" at all.
-    // 30 days is a conventional default for this kind of persistent-login
-    // cookie (GitHub, Google, etc. all use ~30 days).
-    CookieLogin::class => static fn (): CookieLogin => new CookieLogin(new DateInterval('P30D')),
+    // Duration is user-configurable: Settings tab "General" -> "Remember Me
+    // Duration (Days)" (SettingRepository::rememberMeDurationDays(), 30-day
+    // default). Resolved fresh per container build rather than cached at
+    // request start, so a saved settings change takes effect on the very
+    // next login without a redeploy.
+    CookieLogin::class => static fn (
+        SettingRepository $settingRepository
+    ): CookieLogin => new CookieLogin(
+        new DateInterval('P' . $settingRepository->rememberMeDurationDays() . 'D')
+    ),
     IdentityRepositoryInterface::class => static function (ContainerInterface $container): RepositoryInterface {
         /** @var ORMInterface $orm */
         $orm = $container->get(ORMInterface::class);

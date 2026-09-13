@@ -146,6 +146,11 @@ trait InvoiceInstallTrait
             // SettingTooltipTrait::tooltipArrayC1(). No effect yet.
             'capture_gps_on_send' => 0,
             'enable_tfa_with_disabling' => 0,
+            // Settings tab "General" -- how long the login form's "Remember
+            // Me" auto-login cookie lasts. See
+            // SettingRepository::rememberMeDurationDays() and
+            // config/web/di/auth.php's CookieLogin definition.
+            'remember_me_days' => 30,
             // Archived pdfs are automatically sent to customers from
             // view/invoice...Options...Send
             // The pdf is sent along with the attachment to the invoice on the
