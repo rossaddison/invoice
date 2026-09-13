@@ -7,14 +7,18 @@ namespace App\Invoice\Inv;
 use App\Invoice\AppConstants;
 // Entities
 use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\InvAuditLog\InvAuditLog;
 use App\Infrastructure\Persistence\User\User;
 // Repositories
 use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\Group\GroupRepository as GR;
+use App\Invoice\InvAuditLog\InvAuditFieldDiffer;
+use App\Invoice\InvAuditLog\InvAuditLogRepository;
 use App\Invoice\Setting\SettingRepository as SR;
 // Helpers
 use App\Invoice\Helpers\DateHelper;
 // Ancillary
+use App\User\UserService;
 use Cycle\Database\DatabaseManager;
 use Yiisoft\Security\Random;
 use Yiisoft\Translator\TranslatorInterface as Translator;
@@ -28,6 +32,9 @@ final readonly class InvService
         private CR $cR,
         private GR $gR,
         private DatabaseManager $dbal,
+        private UserService $userService,
+        private InvAuditLogRepository $auditLogRepository,
+        private InvAuditFieldDiffer $auditFieldDiffer,
     ) {
     }
 
@@ -44,6 +51,15 @@ final readonly class InvService
         SR $s,
         GR $gR
     ): Inv {
+        // Snapshot the audit-worthy fields' CURRENT (pre-save) values before
+        // anything below mutates them -- only meaningful for an existing
+        // invoice; hasIdentity() is false for a brand new one, and every
+        // "before" getter here (reqClientId() etc.) requires an already-
+        // persisted record with real, non-null values.
+        $isUpdate = $model->hasIdentity();
+        $before = $isUpdate ? $this->snapshotAuditFields($model) : null;
+        $beforePassword = $isUpdate ? $model->getPassword() : null;
+
         $this->persist($model, $array, $user);
         /**
          * Give a legitimate invoice number to an invoice that currently:
@@ -121,7 +137,106 @@ final readonly class InvService
             $this->initNewInvFields($model, $s, $gR, $user, $array);
         }
         $this->repository->save($model);
+        $this->recordAuditLog($model, $before, $beforePassword);
         return $model;
+    }
+
+    /**
+     * The audit-worthy fields' current values, keyed the same way on both
+     * the "before" and "after" snapshot so InvAuditFieldDiffer::diff() can
+     * compare them directly. Deliberately excludes url_key (regenerated on
+     * every single save via Random::string(32) above, regardless of
+     * whether anything else changed -- diffing it would just be noise on
+     * every row) and password (its own VALUE is never recorded in the
+     * audit trail at all -- see recordAuditLog()'s own handling of it via
+     * $beforePassword/getPassword() instead of this snapshot, so a
+     * shareable public-invoice-link password can't leak into a log other
+     * staff can read).
+     *
+     * @return array<string, bool|int|float|string|null>
+     */
+    private function snapshotAuditFields(Inv $model): array
+    {
+        return [
+            'client_id' => $model->reqClientId(),
+            'group_id' => $model->reqGroupId(),
+            'status_id' => $model->reqStatusId(),
+            'so_id' => $model->getSoId(),
+            'quote_id' => $model->getQuoteId(),
+            'contract_id' => $model->getContractId(),
+            'delivery_id' => $model->getDeliveryId(),
+            'delivery_location_id' => $model->getDeliveryLocationId(),
+            'postal_address_id' => $model->getPostalAddressId(),
+            'discount_amount' => $model->getDiscountAmount(),
+            'payment_method' => $model->getPaymentMethod(),
+            'creditinvoice_parent_id' => $model->getCreditinvoiceParentId(),
+            'terms' => $model->getTerms(),
+            'note' => $model->getNote(),
+            'document_description' => $model->getDocumentDescription(),
+            'client_po_number' => $model->getClientPoNumber(),
+            'client_po_person' => $model->getClientPoPerson(),
+            'date_created' => $model->getDateCreated()->format('Y-m-d'),
+            'date_supplied' => $model->getDateSupplied()->format('Y-m-d'),
+            'date_tax_point' => $model->getDateTaxPoint()->format('Y-m-d'),
+            'date_due' => $model->getDateDue()->format('Y-m-d'),
+            'number' => $model->getNumber(),
+        ];
+    }
+
+    /**
+     * Writes one InvAuditLog row per saveInv() call that either creates an
+     * invoice, or actually changes one of the fields snapshotAuditFields()
+     * covers -- a save that touches nothing audit-worthy (e.g. only
+     * url_key's own unconditional regeneration) writes nothing at all.
+     *
+     * The acting user is resolved from UserService::getUser() -- the
+     * actual signed-in staff member making THIS request -- not from
+     * saveInv()'s own $user parameter, which is the invoice's assigned
+     * client-portal owner (see InvController::activeUser()), a different
+     * concept entirely. Null when there is no interactively signed-in user
+     * (e.g. the recurring-invoice cron), recorded as such rather than
+     * guessed.
+     *
+     * @param array<string, bool|int|float|string|null>|null $before Null
+     *     for a brand new invoice -- see saveInv()'s own $isUpdate.
+     */
+    private function recordAuditLog(
+        Inv $model,
+        ?array $before,
+        ?string $beforePassword,
+    ): void {
+        if (null === $before) {
+            $this->writeAuditLog($model, 'created', null);
+            return;
+        }
+
+        $after = $this->snapshotAuditFields($model);
+        $diff = $this->auditFieldDiffer->diff($before, $after);
+        if ($model->getPassword() !== $beforePassword) {
+            $diff['password'] = ['old' => '(redacted)', 'new' => '(redacted)'];
+        }
+        if ($diff === []) {
+            return;
+        }
+        $changedFields = json_encode($diff, JSON_THROW_ON_ERROR);
+        $this->writeAuditLog($model, 'updated', $changedFields);
+    }
+
+    private function writeAuditLog(
+        Inv $model,
+        string $action,
+        ?string $changedFields,
+    ): void {
+        $auditUser = $this->userService->getUser();
+        $log = new InvAuditLog(
+            inv_id: $model->reqId(),
+            user_id: $auditUser?->reqId(),
+            action: $action,
+            changed_fields: $changedFields,
+        );
+        $log->setInv($model);
+        null !== $auditUser and $log->setUser($auditUser);
+        $this->auditLogRepository->save($log);
     }
 
     private function setOptionalArrayFields(Inv $model, array $array): void
@@ -291,6 +406,11 @@ final readonly class InvService
         $model->setClientPoNumber((string) ($array['client_po_number'] ?? ''));
         $model->setClientPoPerson((string) ($array['client_po_person'] ?? ''));
         $this->repository->save($model);
+        // copyInv()'s only real caller (MultipleCopy::copyInvToClient())
+        // always passes a brand new Inv() -- see this method's own
+        // "Follows Inv construct sequence" docblock above -- so this is
+        // always a creation, never an update; no before/after diff needed.
+        $this->writeAuditLog($model, 'created', null);
         return $model;
     }
 
@@ -336,6 +456,18 @@ final readonly class InvService
      */
     public function saveInvFromRecurring(User $user, Inv $model, array $details, SR $s): void
     {
+        // Same before/after audit snapshot as saveInv() -- see its own
+        // docblock on $isUpdate for why this must happen before anything
+        // below mutates the model. Currently dead in production (no real
+        // caller resolves to this method instead of saveInv() -- the
+        // actual recurring-invoice cron, InvRecurringCronService::process(),
+        // already calls saveInv() directly with a fresh Inv()), but this
+        // is still public API and Testo-tested, so it gets the same
+        // coverage as every other write path.
+        $isUpdate = $model->hasIdentity();
+        $before = $isUpdate ? $this->snapshotAuditFields($model) : null;
+        $beforePassword = $isUpdate ? $model->getPassword() : null;
+
         $datehelper = new DateHelper($s);
         $datetime = $datehelper->getOrSetWithStyle($details['date_created'] ?? new \DateTime());
         $datetimeimmutable = new DateTimeImmutable($datetime instanceof \DateTime ? $datetime->format(AppConstants::DATETIME_FORMAT) : 'now');
@@ -379,16 +511,19 @@ final readonly class InvService
             $model->setDiscountAmount(0.00);
         }
         $this->repository->save($model);
+        $this->recordAuditLog($model, $before, $beforePassword);
     }
 
     public function deleteInv(Inv $inv): void
     {
         $this->repository->delete($inv);
+        $this->writeAuditLog($inv, 'deleted', null);
     }
 
     public function restoreInv(Inv $inv): void
     {
         $inv->restore();
         $this->repository->save($inv);
+        $this->writeAuditLog($inv, 'restored', null);
     }
 }
