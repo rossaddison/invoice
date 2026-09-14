@@ -275,34 +275,26 @@ trait SettingConfigTrait
 
     /**
      * Moved out of SettingRepository's own class body (php:S1448 -- 21
-     * methods there, 20 allowed) alongside getEnv()/mailerEnabled() below:
-     * all three are config/company lookups, not Setting-entity CRUD, and
-     * this trait already groups exactly that kind of method
+     * methods there, 20 allowed): a company lookup, not Setting-entity
+     * CRUD, and this trait already groups exactly that kind of method
      * (getConfigParams() etc. above). Purely a location change -- every
      * external `$sR->getActiveCompany()` call site is unaffected, since a
      * trait's methods become part of the composing class's own method
      * table.
+     *
+     * getEnv()/mailerEnabled() were deliberately NOT moved alongside this
+     * one, despite being the same kind of config-lookup method: both call
+     * into getConfigParams() above, which boots a real HttpApplicationRunner
+     * against this app's actual config files -- there's no cheap way to
+     * unit-test them (matching SettingRepositoryTest's own docblock note
+     * that every query-building method here is already untested for the
+     * same reason), so relocating them would only have dragged genuinely
+     * untestable code into this PR's SonarCloud-measured diff for no real
+     * benefit -- removing withValue() (dead code) plus this one relocation
+     * alone already brings the class to 19 methods, comfortably under 20.
      */
     public function getActiveCompany(): ?Company
     {
         return $this->compR->repoCompanyActivequery();
-    }
-
-    /**
-     * See getActiveCompany()'s own docblock above for why this moved here.
-     */
-    public function getEnv(): string
-    {
-        $config = $this->getConfigParams();
-        $params = $config->get('params');
-        return (string) $params['env'];
-    }
-
-    /**
-     * See getActiveCompany()'s own docblock above for why this moved here.
-     */
-    public function mailerEnabled(): bool
-    {
-        return $this->configParams()['esmtp_enabled'];
     }
 }

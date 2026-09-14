@@ -123,6 +123,13 @@ final class SettingRepository extends Select\Repository implements SettingReposi
         );
     }
 
+    public function getEnv(): string
+    {
+        $config = $this->getConfigParams();
+        $params = $config->get('params');
+        return (string) $params['env'];
+    }
+
     public function filterSettingKey(string $setting_key): EntityReader
     {
         $select = $this->select();
@@ -290,5 +297,10 @@ final class SettingRepository extends Select\Repository implements SettingReposi
     public function setSetting(string $key, string $value): void
     {
         $this->settingsArray[$key] = $value;
+    }
+
+    public function mailerEnabled(): bool
+    {
+        return $this->configParams()['esmtp_enabled'];
     }
 }
