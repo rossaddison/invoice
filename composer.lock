@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d6ba48afb441ea1f51fe9e7619d521fa",
+    "content-hash": "46812849db7ab74202ce60e0b7db1108",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -3551,22 +3551,22 @@
         },
         {
             "name": "google/cloud-translate",
-            "version": "v2.3.4",
+            "version": "v2.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-translate.git",
-                "reference": "1bd63a8180b9a20b16d884c447f9c2e23888e1b9"
+                "reference": "7ba4e24856b20ea7da8772bfcc46717003890a52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/1bd63a8180b9a20b16d884c447f9c2e23888e1b9",
-                "reference": "1bd63a8180b9a20b16d884c447f9c2e23888e1b9",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/7ba4e24856b20ea7da8772bfcc46717003890a52",
+                "reference": "7ba4e24856b20ea7da8772bfcc46717003890a52",
                 "shasum": ""
             },
             "require": {
                 "google/cloud-core": "^1.57",
                 "google/gax": "^1.38.0",
-                "php": "^8.1"
+                "php": "^8.2"
             },
             "require-dev": {
                 "erusev/parsedown": "^1.6",
@@ -3601,9 +3601,9 @@
             ],
             "description": "Cloud Translation Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v2.3.4"
+                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v2.3.5"
             },
-            "time": "2026-09-01T17:33:42+00:00"
+            "time": "2026-09-14T18:27:51+00:00"
         },
         {
             "name": "google/common-protos",
