@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Testo\Invoice\Setting;
 
+use App\Infrastructure\Persistence\Company\Company;
 use App\Invoice\Company\CompanyRepository;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
 use App\Invoice\Setting\SettingRepository;
@@ -29,7 +30,7 @@ use Yiisoft\Translator\TranslatorInterface;
 #[Test]
 final class SettingRepositoryTest
 {
-    private function makeRepository(): SettingRepository
+    private function makeRepository(?CompanyRepository $compR = null): SettingRepository
     {
         /** @var Select<\App\Infrastructure\Persistence\Setting\Setting>&m\MockInterface $select */
         $select = m::mock(Select::class);
@@ -38,7 +39,7 @@ final class SettingRepositoryTest
         /** @var TranslatorInterface&m\MockInterface $translator */
         $translator = m::mock(TranslatorInterface::class);
         /** @var CompanyRepository&m\MockInterface $compR */
-        $compR = m::mock(CompanyRepository::class);
+        $compR = $compR ?? m::mock(CompanyRepository::class);
         /** @var CompanyPrivateRepository&m\MockInterface $compPR */
         $compPR = m::mock(CompanyPrivateRepository::class);
 
@@ -110,5 +111,34 @@ final class SettingRepositoryTest
         $repository = $this->makeRepository();
 
         Assert::same('', $repository->infoIcon('remember_me_days', false));
+    }
+
+    // ─── SettingConfigTrait::getActiveCompany() ────────────────────────
+
+    public function getActiveCompanyReturnsWhateverCompanyRepositoryFindsActive(): void
+    {
+        /** @var Company&m\MockInterface $company */
+        $company = m::mock(Company::class);
+
+        /** @var CompanyRepository&m\MockInterface $compR */
+        $compR = m::mock(CompanyRepository::class);
+        $e = $compR->shouldReceive('repoCompanyActivequery');
+        $e->once()->andReturn($company);
+
+        $repository = $this->makeRepository($compR);
+
+        Assert::same($company, $repository->getActiveCompany());
+    }
+
+    public function getActiveCompanyReturnsNullWhenNoCompanyIsActive(): void
+    {
+        /** @var CompanyRepository&m\MockInterface $compR */
+        $compR = m::mock(CompanyRepository::class);
+        $e = $compR->shouldReceive('repoCompanyActivequery');
+        $e->once()->andReturn(null);
+
+        $repository = $this->makeRepository($compR);
+
+        Assert::null($repository->getActiveCompany());
     }
 }
