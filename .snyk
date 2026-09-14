@@ -74,5 +74,28 @@ ignore:
         reason: False positive - string is a configuration array key name for a postal address structure, not a cryptographic secret
         expires: '2027-06-19T00:00:00.000Z'
 
+  # Accepted risk (audited 2026-09-14): mpdf/mpdf CVE-2022-50897, PHP remote
+  # file inclusion via <annotation> tags in HTML passed to WriteHTML(). No
+  # fixed version exists for any mpdf/mpdf release >=5.5.1 -- the maintainer
+  # disputes it, holding that sanitizing input before WriteHTML() is the
+  # calling application's responsibility, not a bug in mpdf itself.
+  #
+  # Audited every PDF-generation call site in this app
+  # (resources/views/invoice/template/{invoice,quote,salesorder}/pdf/*.php):
+  # every user/staff-editable field reaching WriteHTML() (notes/terms,
+  # line-item name/description, custom field values) is HTML-encoded via
+  # H::encode()/Html::encode() before output -- confirmed not exploitable by
+  # any authenticated user, let alone anonymously. The one raw-HTML sink is
+  # the admin-only 'pdf_invoice_footer' setting (Settings > Invoices), a
+  # <textarea> intentionally free-text/HTML by design for footer styling --
+  # accepted the same way any "admin can inject custom HTML" feature is,
+  # since exploiting it already requires the admin-level access an attacker
+  # would need to do far more direct damage through this app's other admin
+  # features regardless.
+  SNYK-PHP-MPDFMPDF-14927583:
+    - '*':
+        reason: No non-admin-reachable path exists (audited every PDF template); the one admin-only sink is an accepted by-design tradeoff. No fixed mpdf/mpdf version available; maintainer disputes the report.
+        expires: '2027-06-19T00:00:00.000Z'
+
 # patches apply the minimum changes required to fix a vulnerability
 patch: {}
