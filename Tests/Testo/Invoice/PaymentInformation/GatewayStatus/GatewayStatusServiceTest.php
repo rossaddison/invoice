@@ -269,6 +269,10 @@ final class GatewayStatusServiceTest
                     && $entity->getName() === 'Stripe'
                     && $entity->getRegions() === 'europe,asia';
             }));
+            // Prune pass at the end of syncToDatabase(): no existing rows to
+            // compare against here, so nothing should be deleted.
+            $repository->shouldReceive('findAllquery')->once()->andReturn([]);
+            $repository->shouldNotReceive('delete');
 
             $service = new GatewayStatusService(new Aliases(['@root' => $root]), $repository);
 
@@ -308,6 +312,10 @@ final class GatewayStatusServiceTest
             $eFind->once()->with('mollie')->andReturn($existing);
             $eSave = $repository->shouldReceive('save');
             $eSave->once()->with($existing);
+            // The row being synced is the only one on file, so the prune
+            // pass must find it already current and delete nothing.
+            $repository->shouldReceive('findAllquery')->once()->andReturn([$existing]);
+            $repository->shouldNotReceive('delete');
 
             $service = new GatewayStatusService(new Aliases(['@root' => $root]), $repository);
 
@@ -337,6 +345,76 @@ final class GatewayStatusServiceTest
             Assert::same('2026-12-31', $existing->getSandboxExpiryDate());
             Assert::same(1.8, $existing->getFeePercent());
             Assert::same('1.8% + €0.25', $existing->getFeeSummary());
+        } finally {
+            $this->removeTempRoot($root);
+        }
+    }
+
+    public function syncToDatabaseDeletesRowsNoLongerPresentInTheGivenRows(): void
+    {
+        // Real-world case this guards: Amazon Pay was removed from
+        // gateways.json (folded into Stripe) but its old database row was
+        // never pruned -- syncToDatabase() only ever upserted, so it kept
+        // showing up on /gateway-status forever.
+        $root = $this->makeTempRoot();
+        try {
+            $stripe = new GatewayStatus();
+            $stripe->setGatewayKey('stripe');
+            $stripe->setName('Stripe');
+
+            $amazonPay = new GatewayStatus();
+            $amazonPay->setGatewayKey('amazon_pay');
+            $amazonPay->setName('Amazon Pay');
+
+            /** @var GatewayStatusRepository&m\MockInterface $repository */
+            $repository = m::mock(GatewayStatusRepository::class);
+            $repository->shouldReceive('findByGatewayKeyquery')->once()->with('stripe')->andReturn($stripe);
+            $repository->shouldReceive('save')->once()->with($stripe);
+            $repository->shouldReceive('findAllquery')->once()->andReturn([$stripe, $amazonPay]);
+            $repository->shouldReceive('delete')->once()->with($amazonPay);
+
+            $service = new GatewayStatusService(new Aliases(['@root' => $root]), $repository);
+
+            $row = new GatewayStatusRow(
+                key: 'stripe',
+                name: 'Stripe',
+                composerPackage: 'stripe/stripe-php',
+                sdkVersion: 'v21.1.1',
+                lastUpdated: '2026-08-04',
+                sandboxEnvVars: [],
+                sandboxTestedAt: null,
+                sandboxStatus: null,
+                sandboxLastError: null,
+                liveTestedAt: null,
+                sandboxExpiryDate: null,
+                regions: ['europe'],
+                notes: null,
+            );
+
+            $service->syncToDatabase([$row]);
+        } finally {
+            $this->removeTempRoot($root);
+        }
+    }
+
+    public function syncToDatabaseWithNoRowsAtAllDeletesEveryExistingEntity(): void
+    {
+        $root = $this->makeTempRoot();
+        try {
+            $stray = new GatewayStatus();
+            $stray->setGatewayKey('amazon_pay');
+            $stray->setName('Amazon Pay');
+
+            /** @var GatewayStatusRepository&m\MockInterface $repository */
+            $repository = m::mock(GatewayStatusRepository::class);
+            $repository->shouldNotReceive('findByGatewayKeyquery');
+            $repository->shouldNotReceive('save');
+            $repository->shouldReceive('findAllquery')->once()->andReturn([$stray]);
+            $repository->shouldReceive('delete')->once()->with($stray);
+
+            $service = new GatewayStatusService(new Aliases(['@root' => $root]), $repository);
+
+            $service->syncToDatabase([]);
         } finally {
             $this->removeTempRoot($root);
         }
