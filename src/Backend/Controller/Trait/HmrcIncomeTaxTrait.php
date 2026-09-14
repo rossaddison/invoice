@@ -60,7 +60,7 @@ trait HmrcIncomeTaxTrait
                 'warning',
                 $this->translator->translate('mtd.business.missing.nino.or.token')
             );
-            return $this->webService->getRedirectResponse('backend/hmrc/index');
+            return $this->webService->getRedirectResponse(self::INDEX_ROUTE);
         }
 
         $request = $this->createRequest(
@@ -115,7 +115,7 @@ trait HmrcIncomeTaxTrait
                 'warning',
                 $this->translator->translate('mtd.business.missing.nino.or.token'),
             );
-            return $this->webService->getRedirectResponse('backend/hmrc/index');
+            return $this->webService->getRedirectResponse(self::INDEX_ROUTE);
         }
 
         $headers = array_merge(
@@ -271,7 +271,7 @@ trait HmrcIncomeTaxTrait
                 'warning',
                 $this->translator->translate('mtd.business.missing.nino.or.token'),
             );
-            return $this->webService->getRedirectResponse('backend/hmrc/index');
+            return $this->webService->getRedirectResponse(self::INDEX_ROUTE);
         }
 
         $queryParams = $request->getQueryParams();

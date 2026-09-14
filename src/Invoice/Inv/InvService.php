@@ -61,28 +61,12 @@ final readonly class InvService
         $beforePassword = $isUpdate ? $model->getPassword() : null;
 
         $this->persist($model, $array, $user);
-        /**
-         * Give a legitimate invoice number to an invoice that currently:
-         * 1. Exists
-         * 2. Has no invoice number
-         * 3. Has a status of 'sent'
-         */
-        if (($model->hasIdentity()) && (strlen($model->getNumber() ?? '') == 0)
-                && ($array['status_id'] == 2)) {
-            $model->setNumber(
-                (string) $gR->generateNumber(
-                    (int) $array['group_id'],
-                    true
-                )
-            );
-        }
+        $this->assignInvoiceNumberIfNeeded($model, $array, $gR);
 
         /**
          * The following fields are not set on the form but are calculated
          *  automatically
          */
-
-        $datetime_created = new DateTimeImmutable();
 
         /**
          * @var string $array['date_created']
@@ -91,36 +75,18 @@ final readonly class InvService
                 (new DateTimeImmutable('now'))->format('Y-m-d');
         $model->setDateCreated($date_created);
 
-        $datetime_supplied = new DateTimeImmutable();
         /**
          * @var string $array['date_supplied']
          */
         $date_supplied = $array['date_supplied'] ??
                 (new DateTimeImmutable('now'))->format('Y-m-d');
-        $model->setDateSupplied($datetime_supplied::createFromFormat(
-            'Y-m-d',
-            $date_supplied
-        ) ?: new DateTimeImmutable('1901/01/01'));
+        $dateSuppliedImmutable = DateTimeImmutable::createFromFormat('Y-m-d', $date_supplied)
+            ?: new DateTimeImmutable('1901/01/01');
+        $model->setDateSupplied($dateSuppliedImmutable);
 
-
-        $date_tax_point_raw = (string) ($array['date_tax_point'] ?? '');
-        if ($date_tax_point_raw !== '') {
-            $model->setDateTaxPoint(
-                DateTimeImmutable::createFromFormat('Y-m-d', $date_tax_point_raw)
-                    ?: new DateTimeImmutable('1901/01/01')
-            );
-        } else {
-            $datetimeimmutable_tax_point = $this->setTaxPoint(
-                $model,
-                $datetime_supplied::createFromFormat('Y-m-d', $date_supplied) ?:
-                    new DateTimeImmutable('1901/01/01'),
-                $datetime_created::createFromFormat('Y-m-d', $date_created) ?:
-                    new DateTimeImmutable('1901/01/01'),
-            );
-            if (null !== $datetimeimmutable_tax_point) {
-                $model->setDateTaxPoint($datetimeimmutable_tax_point);
-            }
-        }
+        $dateCreatedImmutable = DateTimeImmutable::createFromFormat('Y-m-d', $date_created)
+            ?: new DateTimeImmutable('1901/01/01');
+        $this->applyDateTaxPoint($model, $array, $dateSuppliedImmutable, $dateCreatedImmutable);
 
         // Once a GoCardless payment has been scheduled, date_due must stop
         // moving so it can't drift away from the direct_debit_date the
@@ -139,6 +105,48 @@ final readonly class InvService
         $this->repository->save($model);
         $this->recordAuditLog($model, $before, $beforePassword);
         return $model;
+    }
+
+    /**
+     * Give a legitimate invoice number to an invoice that currently:
+     * 1. Exists
+     * 2. Has no invoice number
+     * 3. Has a status of 'sent'
+     */
+    private function assignInvoiceNumberIfNeeded(Inv $model, array $array, GR $gR): void
+    {
+        if (!$model->hasIdentity()
+            || strlen($model->getNumber() ?? '') !== 0
+            || $array['status_id'] != 2) {
+            return;
+        }
+        $model->setNumber((string) $gR->generateNumber((int) $array['group_id'], true));
+    }
+
+    /**
+     * Sets date_tax_point either directly from the submitted value, or --
+     * when none was submitted -- computed by setTaxPoint() from the
+     * invoice's already-resolved supplied/created dates.
+     */
+    private function applyDateTaxPoint(
+        Inv $model,
+        array $array,
+        DateTimeImmutable $dateSupplied,
+        DateTimeImmutable $dateCreated,
+    ): void {
+        $date_tax_point_raw = (string) ($array['date_tax_point'] ?? '');
+        if ($date_tax_point_raw !== '') {
+            $model->setDateTaxPoint(
+                DateTimeImmutable::createFromFormat('Y-m-d', $date_tax_point_raw)
+                    ?: new DateTimeImmutable('1901/01/01')
+            );
+            return;
+        }
+
+        $datetimeimmutable_tax_point = $this->setTaxPoint($model, $dateSupplied, $dateCreated);
+        if (null !== $datetimeimmutable_tax_point) {
+            $model->setDateTaxPoint($datetimeimmutable_tax_point);
+        }
     }
 
     /**
@@ -235,7 +243,7 @@ final readonly class InvService
             changed_fields: $changedFields,
         );
         $log->setInv($model);
-        null !== $auditUser and $log->setUser($auditUser);
+        null !== $auditUser && $log->setUser($auditUser);
         $this->auditLogRepository->save($log);
     }
 

@@ -24,7 +24,7 @@ trait HmrcVatTrait
 
         if ($vrn === '' || strlen($tokenString) === 0) {
             $this->flashMessage('warning', $this->translator->translate('mtd.vat.obligations.missing.vrn.or.token'));
-            return $this->webService->getRedirectResponse('backend/hmrc/index');
+            return $this->webService->getRedirectResponse(self::INDEX_ROUTE);
         }
 
         $request = $this->createRequest(
@@ -65,7 +65,7 @@ trait HmrcVatTrait
 
         if ($vrn === '' || strlen($tokenString) === 0) {
             $this->flashMessage('warning', $this->translator->translate('mtd.vat.obligations.missing.vrn.or.token'));
-            return $this->webService->getRedirectResponse('backend/hmrc/index');
+            return $this->webService->getRedirectResponse(self::INDEX_ROUTE);
         }
 
         $queryParams = $request->getQueryParams();
@@ -103,7 +103,7 @@ trait HmrcVatTrait
                 'warning',
                 $this->translator->translate('mtd.vat.obligations.missing.vrn.or.token')
             );
-            return $this->webService->getRedirectResponse('backend/hmrc/index');
+            return $this->webService->getRedirectResponse(self::INDEX_ROUTE);
         }
 
         if ($request->getMethod() === Method::POST) {

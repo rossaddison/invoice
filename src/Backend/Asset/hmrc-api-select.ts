@@ -34,7 +34,7 @@ document.addEventListener('click', (event: Event): void => {
     if (!(target instanceof Element) || !target.closest('#btn-go')) return;
 
     const form = document.getElementById('api-select-form') as HTMLFormElement | null;
-    if (form && form.action && form.action !== location.href) {
+    if (form?.action && form.action !== location.href) {
         location.href = form.action;
     }
 });
