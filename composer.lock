@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "46812849db7ab74202ce60e0b7db1108",
+    "content-hash": "327795a5d59e5a8759e89948b3a03939",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -1093,20 +1093,20 @@
         },
         {
             "name": "brick/money",
-            "version": "0.15.0",
+            "version": "0.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/money.git",
-                "reference": "20800223bedea899ae5b27f7272d47b5f17ab01c"
+                "reference": "1d07d80d8f1c04ee0efa8b8c2bccf129e7805646"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/money/zipball/20800223bedea899ae5b27f7272d47b5f17ab01c",
-                "reference": "20800223bedea899ae5b27f7272d47b5f17ab01c",
+                "url": "https://api.github.com/repos/brick/money/zipball/1d07d80d8f1c04ee0efa8b8c2bccf129e7805646",
+                "reference": "1d07d80d8f1c04ee0efa8b8c2bccf129e7805646",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "~0.15.0 || ~0.16.0 || ~0.17.0 || ~0.18.0 || ~0.19.0 || ~0.20.0",
+                "brick/math": "~0.15.0 || ~0.16.0 || ~0.17.0 || ~0.18.0 || ~0.19.0 || ~0.20.0 || ^1.0",
                 "php": "^8.2",
                 "psr/simple-cache": "^2.0 || ^3.0"
             },
@@ -1138,7 +1138,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/money/issues",
-                "source": "https://github.com/brick/money/tree/0.15.0"
+                "source": "https://github.com/brick/money/tree/0.15.1"
             },
             "funding": [
                 {
@@ -1146,7 +1146,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-09T19:49:01+00:00"
+            "time": "2026-09-14T19:55:26+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
