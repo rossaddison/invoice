@@ -9,7 +9,7 @@
     "bs5-lightbox": "^1.8.5",
     "clipboard": "^2.0.11",
     "flag-icons": "^7.5.0",
-    "govuk-frontend": "^6.5.0",
+    "govuk-frontend": "^6.5.1",
     "hono": ">=4.13.7",
     "htmx.org": "^2.0.10",
     "libphonenumber-js": "^1.13.13"
@@ -33,7 +33,7 @@
     "otplib": "^13.5.0",
     "picomatch": "^4.0.7",
     "prettier": "^4.0.0-alpha.13",
-    "rollup": ">=4.63.2",
+    "rollup": ">=4.63.3",
     "sass": "^1.104.1",
     "typedoc": "^0.28.20",
     "typescript": "^7.0.2",
