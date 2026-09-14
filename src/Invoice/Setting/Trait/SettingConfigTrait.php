@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Setting\Trait;
 
+use App\Infrastructure\Persistence\Company\Company;
 use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use Yiisoft\Config\ConfigInterface;
 use Yiisoft\Yii\Runner\Http\HttpApplicationRunner;
@@ -270,5 +271,38 @@ trait SettingConfigTrait
             ['events'],
         );
         return $http_runner->getConfig();
+    }
+
+    /**
+     * Moved out of SettingRepository's own class body (php:S1448 -- 21
+     * methods there, 20 allowed) alongside getEnv()/mailerEnabled() below:
+     * all three are config/company lookups, not Setting-entity CRUD, and
+     * this trait already groups exactly that kind of method
+     * (getConfigParams() etc. above). Purely a location change -- every
+     * external `$sR->getActiveCompany()` call site is unaffected, since a
+     * trait's methods become part of the composing class's own method
+     * table.
+     */
+    public function getActiveCompany(): ?Company
+    {
+        return $this->compR->repoCompanyActivequery();
+    }
+
+    /**
+     * See getActiveCompany()'s own docblock above for why this moved here.
+     */
+    public function getEnv(): string
+    {
+        $config = $this->getConfigParams();
+        $params = $config->get('params');
+        return (string) $params['env'];
+    }
+
+    /**
+     * See getActiveCompany()'s own docblock above for why this moved here.
+     */
+    public function mailerEnabled(): bool
+    {
+        return $this->configParams()['esmtp_enabled'];
     }
 }

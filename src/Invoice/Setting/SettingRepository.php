@@ -11,7 +11,6 @@ use Brick\Money\CurrencyConverter;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Money;
 use App\Infrastructure\Persistence\Setting\Setting;
-use App\Infrastructure\Persistence\Company\Company;
 use App\Invoice\Company\CompanyRepository as compR;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository as compPR;
 use App\Invoice\Setting\Trait\SettingConfigTrait;
@@ -124,18 +123,6 @@ final class SettingRepository extends Select\Repository implements SettingReposi
         );
     }
 
-    public function getActiveCompany(): ?Company
-    {
-        return $this->compR->repoCompanyActivequery();
-    }
-
-    public function getEnv(): string
-    {
-        $config = $this->getConfigParams();
-        $params = $config->get('params');
-        return (string) $params['env'];
-    }
-
     public function filterSettingKey(string $setting_key): EntityReader
     {
         $select = $this->select();
@@ -217,18 +204,6 @@ final class SettingRepository extends Select\Repository implements SettingReposi
         $query = $this
             ->select()
             ->where(['setting_key' => $setting_key]);
-        return  $query->fetchOne() ?: null;
-    }
-
-    /**
-     * @param string $setting_value
-     * @return Setting|null
-     */
-    public function withValue(string $setting_value): ?Setting
-    {
-        $query = $this
-            ->select()
-            ->where(['setting_value' => $setting_value]);
         return  $query->fetchOne() ?: null;
     }
 
@@ -315,10 +290,5 @@ final class SettingRepository extends Select\Repository implements SettingReposi
     public function setSetting(string $key, string $value): void
     {
         $this->settingsArray[$key] = $value;
-    }
-
-    public function mailerEnabled(): bool
-    {
-        return $this->configParams()['esmtp_enabled'];
     }
 }
