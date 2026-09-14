@@ -32,6 +32,15 @@ final class GatewayStatusRepository extends Select\Repository
         $this->entityWriter->write([$status]);
     }
 
+    /**
+     * @param array|GatewayStatus|null $status
+     * @throws Throwable
+     */
+    public function delete(array|GatewayStatus|null $status): void
+    {
+        $this->entityWriter->delete([$status]);
+    }
+
     public function findByGatewayKeyquery(string $gatewayKey): ?GatewayStatus
     {
         return $this->select()

@@ -106,13 +106,22 @@ final class GatewayStatusService
 
     /**
      * Upserts every row into the gateway_status SQLite database, matching
-     * existing entities by gateway_key.
+     * existing entities by gateway_key, then deletes any database row whose
+     * gateway_key is no longer present in $rows. The JSON file is the sole
+     * source of truth (see class docblock) -- without this prune step, a
+     * gateway removed from gateways.json (e.g. Amazon Pay, folded into
+     * Stripe) would sit in the database forever and keep showing up on
+     * /gateway-status, since this method previously only ever upserted.
      *
      * @param list<GatewayStatusRow> $rows
      */
     public function syncToDatabase(array $rows): void
     {
+        $currentKeys = [];
+
         foreach ($rows as $row) {
+            $currentKeys[$row->key] = true;
+
             $entity = $this->repository->findByGatewayKeyquery($row->key) ?? new GatewayStatus();
             $entity->setGatewayKey($row->key);
             $entity->setName($row->name);
@@ -128,6 +137,12 @@ final class GatewayStatusService
             $entity->setFeePercent($row->feePercent);
             $entity->setFeeSummary($row->feeSummary);
             $this->repository->save($entity);
+        }
+
+        foreach ($this->repository->findAllquery() as $entity) {
+            if (!isset($currentKeys[$entity->getGatewayKey()])) {
+                $this->repository->delete($entity);
+            }
         }
     }
 
