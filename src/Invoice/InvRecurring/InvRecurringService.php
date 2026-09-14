@@ -57,29 +57,22 @@ final readonly class InvRecurringService
 
         if (null !== $baseInvoice) {
             $dateHelper = new DateHelper($this->s);
-
-            // Next is not null because currently running
-            // The start has been adjusted
-            // A new next = start + frequency
             $invNext = $model->getNext();
-            if (null !== $invNext
-                && !is_string($invNext)
-                && isset($array['start'])) {
-                $nextDate = $dateHelper
-                    ->incrementDateStringToDateTime(
-                        (string) $array['start'],
-                        (string) $array['frequency']
-                    );
-                $model->setNext($nextDate);
-                $model->setStart(
-                    new \DateTime((string) $array['start'])
-                );
-            }
 
-            // Next is null because it has stopped
-            // Restart => allow new start and new next
-            // A new next = start + frequency
-            if (null == $invNext && isset($array['start'])) {
+            // Whether currently running (next holds a real DateTimeImmutable,
+            // start adjusted) or restarting after having stopped (next is
+            // still its '' default, or explicitly null), both cases compute
+            // the same new next = start + frequency. Was two near-identical
+            // if-blocks -- `$invNext !== null && !is_string($invNext)` for
+            // "currently running", `null == $invNext` (a loose comparison
+            // that's also true for '') for "stopped" -- merged into the one
+            // condition both were really carving out: not a non-empty
+            // string. (getNext()'s own return type is
+            // string|DateTimeImmutable|null; a non-empty string is never a
+            // real "running" state this app produces, but the merge
+            // preserves the original's exact behavior for it regardless.)
+            $hasNonEmptyStringNext = is_string($invNext) && '' !== $invNext;
+            if (isset($array['start']) && !$hasNonEmptyStringNext) {
                 $nextDate = $dateHelper
                     ->incrementDateStringToDateTime(
                         (string) $array['start'],

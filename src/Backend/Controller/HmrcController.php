@@ -46,6 +46,14 @@ final class HmrcController extends BaseController
     use HmrcIncomeTaxTrait;
     use HmrcVatTrait;
 
+    /**
+     * php:S1192 -- the redirect target for "something went wrong, back to
+     * the dashboard" across every action in the 5 traits above (11 call
+     * sites total). Declared here rather than on any one trait since it's
+     * genuinely shared across all of them.
+     */
+    private const string INDEX_ROUTE = 'backend/hmrc/index';
+
     protected string $controllerName = 'hmrc';
 
     public function __construct(

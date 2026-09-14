@@ -76,7 +76,7 @@ trait HmrcIncomeCategoryTrait
                 'warning',
                 $this->translator->translate('mtd.business.missing.nino.or.token'),
             );
-            return $this->webService->getRedirectResponse('backend/hmrc/index');
+            return $this->webService->getRedirectResponse(self::INDEX_ROUTE);
         }
         return [$nino, $tokenString];
     }

@@ -50,6 +50,41 @@ trait HmrcFphTrait
         #[RouteArgument('api')]
         string $api,
     ): Response {
+        $accessToken = $this->resolveFphFeedbackAccessToken();
+        if (null === $accessToken) {
+            return $this->webService->getRedirectResponse(self::INDEX_ROUTE);
+        }
+
+        return $this->fetchFphFeedback($api, $accessToken);
+    }
+
+    /**
+     * The Client Credentials token fphFeedback() needs, or null (having
+     * already flashed the specific reason) when it couldn't get one.
+     * Split out of fphFeedback() itself, and further split from
+     * exchangeFphFeedbackClientCredentialsForAccessToken() below, purely
+     * to keep each method's own return count within SonarCloud's php:S1142
+     * limit (3) -- the control flow is otherwise unchanged from before.
+     */
+    private function resolveFphFeedbackAccessToken(): ?string
+    {
+        $credentials = $this->fphFeedbackClientCredentials();
+        if (null === $credentials) {
+            return null;
+        }
+
+        return $this->exchangeFphFeedbackClientCredentialsForAccessToken(
+            $credentials[0],
+            $credentials[1],
+        );
+    }
+
+    /**
+     * @return array{0: string, 1: string}|null [clientId, clientSecret], or
+     *     null (having already flashed) when either is unconfigured.
+     */
+    private function fphFeedbackClientCredentials(): ?array
+    {
         $clientId = $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_ID'] ?? '';
         $clientSecret = $_ENV['DEVELOPER_GOV_SANDBOX_HMRC_API_CLIENT_SECRET']
             ?? '';
@@ -60,9 +95,16 @@ trait HmrcFphTrait
                     'mtd.fph.feedback.no.client.credentials.token',
                 ),
             );
-            return $this->webService->getRedirectResponse('backend/hmrc/index');
+            return null;
         }
 
+        return [$clientId, $clientSecret];
+    }
+
+    private function exchangeFphFeedbackClientCredentialsForAccessToken(
+        string $clientId,
+        string $clientSecret,
+    ): ?string {
         $tokenResponse = $this->requestClientCredentialsToken(
             $clientId,
             $clientSecret,
@@ -75,7 +117,7 @@ trait HmrcFphTrait
 
         if ($tokenResponse->getStatusCode() !== 200) {
             $this->flashClientCredentialsTokenError($tokenParsed);
-            return $this->webService->getRedirectResponse('backend/hmrc/index');
+            return null;
         }
 
         $hasAccessToken = isset($tokenParsed['access_token'])
@@ -88,11 +130,14 @@ trait HmrcFphTrait
                     'mtd.fph.feedback.unexpected.token.response',
                 ),
             );
-            return $this->webService->getRedirectResponse('backend/hmrc/index');
+            return null;
         }
 
-        $accessToken = $tokenParsed['access_token'];
+        return $tokenParsed['access_token'];
+    }
 
+    private function fetchFphFeedback(string $api, string $accessToken): Response
+    {
         $otpReference = (string) $this->session->get('otpRef');
         $logFile = $this->sR->specificCommonConfigAliase('@hmrc')
             . '/hmrc-requests.log';
@@ -125,7 +170,7 @@ trait HmrcFphTrait
 
         if ($apiResponse->getStatusCode() !== 200) {
             $this->flashFphValidateError($parsed);
-            return $this->webService->getRedirectResponse('backend/hmrc/index');
+            return $this->webService->getRedirectResponse(self::INDEX_ROUTE);
         }
 
         /** @var list<array<string, mixed>> $requests */
@@ -243,6 +288,26 @@ trait HmrcFphTrait
      */
     public function fphValidate(): Response
     {
+        $prerequisites = $this->fphValidatePrerequisites();
+        if (null === $prerequisites) {
+            return $this->webService->getRedirectResponse(self::INDEX_ROUTE);
+        }
+        [$tokenString, $otpReference] = $prerequisites;
+
+        return $this->performFphValidate($tokenString, $otpReference);
+    }
+
+    /**
+     * The signed-in user's OTP session and HMRC access token, or null
+     * (having already flashed the specific reason) when either is
+     * missing/invalid. Split out of fphValidate() itself, same reason as
+     * fphFeedback()'s own split above: keeping each method's own return
+     * count within SonarCloud's php:S1142 limit (3).
+     *
+     * @return array{0: string, 1: string}|null [hmrc_access_token, otpReference]
+     */
+    private function fphValidatePrerequisites(): ?array
+    {
         $otp = (int) $this->session->get('otp');
         $otpReference = (string) $this->session->get('otpRef');
         if ($otp <= 99999 || $otp >= 1000000 || strlen($otpReference) === 0) {
@@ -250,7 +315,7 @@ trait HmrcFphTrait
                 'warning',
                 $this->translator->translate('mtd.fph.missing.otp.session'),
             );
-            return $this->webService->getRedirectResponse('backend/hmrc/index');
+            return null;
         }
 
         $tokenString = (string) $this->session->get('hmrc_access_token');
@@ -259,9 +324,14 @@ trait HmrcFphTrait
                 'mtd.fph.missing.hmrc.token',
                 ['link' => $this->hmrcLoginLink()],
             ));
-            return $this->webService->getRedirectResponse('backend/hmrc/index');
+            return null;
         }
 
+        return [$tokenString, $otpReference];
+    }
+
+    private function performFphValidate(string $tokenString, string $otpReference): Response
+    {
         $headers = $this->getWebAppViaServerHeaders($otpReference);
         $requestPartOne = $this->createRequest(
             'GET',
@@ -286,7 +356,7 @@ trait HmrcFphTrait
 
         if ($apiResponse->getStatusCode() !== 200) {
             $this->flashFphValidateError($parsed);
-            return $this->webService->getRedirectResponse('backend/hmrc/index');
+            return $this->webService->getRedirectResponse(self::INDEX_ROUTE);
         }
 
         /** @var list<array<string, mixed>> $errors */
