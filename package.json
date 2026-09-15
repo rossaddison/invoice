@@ -10,7 +10,7 @@
     "clipboard": "^2.0.11",
     "flag-icons": "^7.5.0",
     "govuk-frontend": "^6.5.1",
-    "hono": ">=4.13.7",
+    "hono": ">=4.13.8",
     "htmx.org": "^2.0.10",
     "libphonenumber-js": "^1.13.13"
   },
@@ -22,7 +22,7 @@
     "@typescript-eslint/eslint-plugin": "^8.70.0",
     "@typescript-eslint/parser": "^8.70.0",
     "@typescript/native-preview": "^7.0.0-dev.20260707.2",
-    "@vitest/coverage-v8": "^5.0.0",
+    "@vitest/coverage-v8": "^5.0.1",
     "esbuild": "^0.28.2",
     "eslint": "^10.10.0",
     "globals": "^17.12.0",
@@ -38,7 +38,7 @@
     "typedoc": "^0.28.20",
     "typescript": "^7.0.2",
     "vitepress": "^2.0.0-alpha.18",
-    "vitest": "^5.0.0"
+    "vitest": "^5.0.1"
   },
   "scripts": {
     "build": "npm run build:all",

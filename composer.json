@@ -39,7 +39,7 @@
         "adyen/php-api-library": "^30.0.1",
         "anthropic-ai/sdk": "^0.48.0",
         "braintree/braintree_php": ">=6.37.0",
-        "brick/math": ">=0.18.0",
+        "brick/math": ">=1",
         "brick/money": ">=0.15.0",
         "cebe/markdown": "^1.2.1@dev",
         "checkout/checkout-sdk-php": "^5.3",
@@ -92,8 +92,8 @@
         "setasign/fpdf": "^1.9.0",
         "spomky-labs/otphp": "^11.5.0",
         "stripe/stripe-php": ">=19",
-        "symfony/console": ">=8.1.6",
-        "symfony/process": ">=8.1.6",
+        "symfony/console": ">=8.1.7",
+        "symfony/process": ">=8.1.7",
         "truelayer/client": "^3.3",
         "vlucas/phpdotenv": "^5.7.0",
         "yiisoft/access": "^2.0.1",
@@ -184,7 +184,7 @@
         "testo/bridge-mockery": "^0.1.2",
         "testo/facade": ">=0.1.1",
         "testo/testo": "^0.10.47",
-        "vimeo/psalm": ">=6.16.1"
+        "vimeo/psalm": ">=6.17.2"
     },
     "autoload": {
         "psr-4": {
