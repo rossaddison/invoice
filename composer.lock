@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "37e3be198a40068bd8e2657951fd99cf",
+    "content-hash": "5219a273d21f56e4d85686975260753a",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -985,16 +985,16 @@
         },
         {
             "name": "braintree/braintree_php",
-            "version": "6.37.0",
+            "version": "6.38.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/braintree/braintree_php.git",
-                "reference": "0f53ece38397c9fed05b94620634a5a23ef8ee48"
+                "reference": "2a97c3d516a1ee66e710db8140a835d79789627a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/braintree/braintree_php/zipball/0f53ece38397c9fed05b94620634a5a23ef8ee48",
-                "reference": "0f53ece38397c9fed05b94620634a5a23ef8ee48",
+                "url": "https://api.github.com/repos/braintree/braintree_php/zipball/2a97c3d516a1ee66e710db8140a835d79789627a",
+                "reference": "2a97c3d516a1ee66e710db8140a835d79789627a",
                 "shasum": ""
             },
             "require": {
@@ -1028,9 +1028,9 @@
             "description": "Braintree PHP Client Library",
             "support": {
                 "issues": "https://github.com/braintree/braintree_php/issues",
-                "source": "https://github.com/braintree/braintree_php/tree/6.37.0"
+                "source": "https://github.com/braintree/braintree_php/tree/6.38.0"
             },
-            "time": "2026-08-05T20:52:14+00:00"
+            "time": "2026-09-16T20:37:30+00:00"
         },
         {
             "name": "brick/math",
@@ -8453,16 +8453,16 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "4.x-dev",
+            "version": "4.9.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "40988c506689c11cfc76c18445f7b26819d0d259"
+                "reference": "75d73f48d02797c2c285a7e9f348fadc0102ffe2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/40988c506689c11cfc76c18445f7b26819d0d259",
-                "reference": "40988c506689c11cfc76c18445f7b26819d0d259",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/75d73f48d02797c2c285a7e9f348fadc0102ffe2",
+                "reference": "75d73f48d02797c2c285a7e9f348fadc0102ffe2",
                 "shasum": ""
             },
             "require": {
@@ -8499,7 +8499,6 @@
                 "paragonie/random-lib": "Provides RandomLib for use with the RandomLibAdapter",
                 "ramsey/uuid-doctrine": "Allows the use of Ramsey\\Uuid\\Uuid as Doctrine field type."
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "captainhook": {
@@ -8526,9 +8525,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ramsey/uuid/issues",
-                "source": "https://github.com/ramsey/uuid/tree/4.x"
+                "source": "https://github.com/ramsey/uuid/tree/4.9.4"
             },
-            "time": "2026-09-13T14:33:28+00:00"
+            "time": "2026-09-16T11:39:30+00:00"
         },
         {
             "name": "revolt/event-loop",
