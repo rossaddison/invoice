@@ -396,6 +396,72 @@ textarea.form-control {
   left: auto;
 }
 
+/* Flyout submenus -- a nested dropdown-within-dropdown (Settings menu's
+   Company/Email/Access/Preferences/More groups, and the Performance menu's
+   Prometheus Monitoring entry -- see App\Widget\SubMenu). Bootstrap5's own
+   Dropdown only auto-closes on clicks *outside* its .dropdown-menu, so this
+   nested <ul> never fights the parent dropdown's open/close state.
+   :hover/:focus-within opens it for free for a mouse moving in a straight
+   line or a keyboard user tabbing in; initNavFlyoutSubmenu()
+   (src/typescript/nav-flyout-submenu.ts) adds an explicit .show class on
+   click as the reliable primary mechanism (also the only one touch users
+   have, since they have no :hover at all). */
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.dropdown-submenu-toggle .submenu-caret {
+  margin-left: var(--spacing-sm);
+  font-size: 0.75em;
+}
+
+.dropdown-menu-submenu {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  margin: 0 0 0 2px;
+}
+
+/* Debug mode adds long, unwrapped diagnostic lines to the parent
+   .dropdown-menu (see resources/views/layout/invoice.php's own
+   $flyoutLiClass comment) that stretch it far wider than usual, landing a
+   right-exiting flyout well past the row that opened it -- exiting left
+   instead keeps it anchored to that row regardless of the parent menu's
+   width. Only applied when debug mode is on; everyone else keeps the
+   normal right-exiting flyout. */
+.dropdown-submenu-start > .dropdown-menu-submenu {
+  left: auto;
+  right: 100%;
+  margin: 0 2px 0 0;
+}
+
+.dropdown-submenu:hover > .dropdown-menu-submenu,
+.dropdown-submenu:focus-within > .dropdown-menu-submenu,
+.dropdown-submenu.show > .dropdown-menu-submenu {
+  display: block;
+}
+
+/* A viewport this narrow can't fit a flyout to the right -- fall back to
+   an inline expanding list instead, matching how the rest of this dropdown
+   already stacks on small screens. */
+@media (max-width: 991.98px) {
+  .dropdown-menu-submenu {
+    position: static;
+    left: auto;
+    margin: 0 0 0 var(--spacing-lg);
+    box-shadow: none;
+    border: none;
+  }
+}
+
 /* Input Groups - From style.css */
 .input-group {
   position: relative;

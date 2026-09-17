@@ -269,6 +269,169 @@ $subMenuPrometheus = [
         ],
     ],
 ];
+
+// Settings menu flyout groups -- see App\Widget\SubMenu and the "Settings"
+// Dropdown further below. Grouping these (previously ~29 flat links) into
+// 5 flyouts keeps the toggler itself short.
+$subMenuCompany = [
+    0 => [
+        'items' => [
+            $t->translate('setting.company') => ['company/index', []],
+            $t->translate('setting.company.private') => ['companyprivate/index', []],
+            $t->translate('setting.company.profile') => ['profile/index', []],
+        ],
+    ],
+];
+$subMenuEmail = [
+    0 => [
+        'items' => [
+            $t->translate('email.template') => ['emailtemplate/index', []],
+            $t->translate('email.from.dropdown') => ['from/index', []],
+            $t->translate('email.log') => ['invsentlog/index', []],
+        ],
+    ],
+];
+$subMenuAccess = [
+    0 => [
+        'items' => [
+            $t->translate('user.account') => ['userinv/index', []],
+            $t->translate('password.change') => ['auth/change', []],
+            $t->translate('user.api.list') => ['user/index', []],
+        ],
+    ],
+];
+$subMenuMore = [
+    0 => [
+        'items' => [
+            $t->translate('custom.fields') => ['customfield/index', []],
+            $t->translate('group') => ['group/index', []],
+            $t->translate('archive') => ['inv/archive', []],
+            $t->translate('payment.method') => ['paymentmethod/index', []],
+            $t->translate('tax.rate') => ['taxrate/index', []],
+            $t->translate('contract') => ['contract/index', []],
+            $t->translate('redirect.map') => ['redirect/map', []],
+        ],
+    ],
+];
+
+// "Display" flyout groups the list-limit/sticky-header/sticky-navbar
+// preference controls with the two remaining plain links (view/tabIndex,
+// install-test-data) -- bespoke markup (not App\Widget\SubMenu::generate(),
+// which only knows plain link lists) since these rows are interactive
+// controls, not links. Content moved here unchanged from the old flat
+// Settings list; only the wrapping toggle span + nested <ul> is new.
+$displaySubmenu = '<span class="dropdown-item dropdown-submenu-toggle" tabindex="0"'
+    . ' role="menuitem" aria-haspopup="true"'
+    . ' style="font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
+    . ' font-family: ' . Html::encode($bootstrap5LayoutInvoiceNavbarFont) . ';">'
+    . Html::encode($t->translate('view'))
+    . (new I())->addClass('bi bi-chevron-right submenu-caret')->render()
+    . '</span>'
+    . '<ul class="dropdown-menu dropdown-menu-submenu">'
+    . '<li><h6 class="dropdown-header"'
+    . ' style="font-size:' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;"'
+    . ' data-bs-toggle="tooltip" data-bs-placement="right"'
+    . ' title="' . Html::encode($t->translate('default.list.limit.hint')) . '">'
+    . (new I())->addClass('bi bi-list-ol')->render()
+    . ' ' . Html::encode($t->translate('default.list.limit'))
+    . '</h6></li>'
+    . '<li><div class="px-3 py-1">'
+    . '<div id="page-size-btn-group" class="btn-group btn-group-sm" role="group" aria-label="'
+    . Html::encode($t->translate('default.list.limit')) . '">'
+    . implode('', array_map(
+        static fn(int $size): string =>
+            '<a hx-get="' . Html::encode(str_replace('__SIZE__', (string) $size, $pageSizeUrlTemplate)) . '"'
+            . ' hx-swap="none"'
+            . ' href="' . Html::encode(str_replace('__SIZE__', (string) $size, $pageSizeUrlTemplate)) . '"'
+            . ' class="btn btn-outline-secondary' . ($size === $currentPageSize ? ' active' : '') . '">'
+            . $size . '</a>',
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25, 50, 100, 200]
+    ))
+    . '</div></div></li>'
+    // One shared setting for every grid (Invoice/Quote/SalesOrder/Product),
+    // not its own field per grid in Settings > Invoices -- see
+    // SettingToggleController::gridStickyHeader()'s own docblock. hx-get +
+    // hx-swap="none" persists it in the background, same as the page-size
+    // picker just above -- but unlike that picker, the checkbox's own
+    // native click isn't itself the visible effect here: the actual sticky
+    // behaviour is baked into this page's already-rendered HTML, so
+    // initHtmxHooks() (src/typescript/htmx-hooks.ts) forces a full reload
+    // once the save succeeds, the same fix and reasoning as the
+    // navbar-sticky-toggle checkbox below.
+    . '<li><h6 class="dropdown-header"'
+    . ' style="font-size:' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;"'
+    . ' data-bs-toggle="tooltip" data-bs-placement="right"'
+    . ' title="' . Html::encode($t->translate('grid.sticky.header.hint')) . '">'
+    . (new I())->addClass('bi bi-pin-angle')->render()
+    . ' ' . Html::encode($t->translate('grid.sticky.header'))
+    . '</h6></li>'
+    . '<li><div class="px-3 py-1">'
+    . '<div class="form-check form-switch">'
+    . '<input type="checkbox" class="form-check-input" role="switch"'
+    . ' id="grid-sticky-header-toggle"'
+    . ' aria-checked="' . ($s->getSetting('grid_sticky_header') == '1' ? 'true' : 'false') . '"'
+    . ' hx-get="' . Html::encode($urlGenerator->generate('setting/gridStickyHeader', ['origin' => 'inv'])) . '"'
+    . ' hx-swap="none"'
+    . ($s->getSetting('grid_sticky_header') == '1' ? ' checked' : '')
+    . '></div></div></li>'
+    // Pulled out of Settings > Bootstrap5 (see
+    // SettingToggleController::navbarSticky()'s own docblock) and placed
+    // adjacent to the grid-header toggle just above -- same shared
+    // immediate-save UX, same underlying setting key LayoutViewInjection
+    // already reads into $bootstrap5LayoutInvoiceNavbarSticky further up
+    // this file.
+    . '<li><h6 class="dropdown-header"'
+    . ' style="font-size:' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;"'
+    . ' data-bs-toggle="tooltip" data-bs-placement="right"'
+    . ' title="' . Html::encode($t->translate('bootstrap5.layout.invoice.navbar.sticky.hint')) . '">'
+    . (new I())->addClass('bi bi-pin-angle')->render()
+    . ' ' . Html::encode($t->translate('bootstrap5.layout.invoice.navbar.sticky'))
+    . '</h6></li>'
+    . '<li><div class="px-3 py-1">'
+    . '<div class="form-check form-switch">'
+    . '<input type="checkbox" class="form-check-input" role="switch"'
+    . ' id="navbar-sticky-toggle"'
+    . ' aria-checked="' . ($bootstrap5LayoutInvoiceNavbarSticky ? 'true' : 'false') . '"'
+    . ' hx-get="' . Html::encode($urlGenerator->generate('setting/navbarSticky', ['origin' => 'inv'])) . '"'
+    . ' hx-swap="none"'
+    . ($bootstrap5LayoutInvoiceNavbarSticky ? ' checked' : '')
+    . '></div></div></li>'
+    . '<li><hr class="dropdown-divider"></li>'
+    . '<li><a class="dropdown-item" href="'
+    . Html::encode($urlGenerator->generate('setting/tabIndex')) . '"'
+    . ' style="font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
+    . ' font-family: ' . Html::encode($bootstrap5LayoutInvoiceNavbarFont) . ';">'
+    . Html::encode($t->translate('view'))
+    . '</a></li>'
+    . '<li><a class="dropdown-item'
+    . (($s->getSetting('install_test_data') == '1' && $s->getSetting('use_test_data') == '1') ? ' active' : '')
+    . '" ' . (($s->getSetting('install_test_data') == '1' && $s->getSetting('use_test_data') == '1') ? 'aria-current="true" ' : '')
+    . 'href="'
+    . Html::encode(
+        ($s->getSetting('install_test_data') == '1' && $s->getSetting('use_test_data') == '1')
+            ? $urlGenerator->generate('invoice/index')
+            : $urlGenerator->generate('setting/tabIndex')
+    ) . '"'
+    . ' style="font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
+    . ' font-family: ' . Html::encode($bootstrap5LayoutInvoiceNavbarFont) . ';">'
+    . Html::encode($t->translate(
+        ($s->getSetting('install_test_data') == '1' && $s->getSetting('use_test_data') == '1')
+            ? 'install.test.data' : 'install.test.data.goto.tab.index'
+    ))
+    . '</a></li>'
+    . '</ul>';
+
+// Debug mode adds several long, unwrapped diagnostic lines (e.g. "Testing
+// Only: Delete all invoices..." in Settings, or the opcache.* lines in
+// Performance) that stretch the whole .dropdown-menu much wider than its
+// normal ~10rem -- a flyout anchored to that menu's right edge then lands
+// far past where the triggering row visually is. Exiting to the left
+// instead (see .dropdown-submenu-start in components.css) keeps it next
+// to the row that opened it. Normal (non-debug) users never see this: the
+// menu stays its usual narrow width, where opening right already reads
+// naturally.
+$flyoutLiClass = 'dropdown-submenu' . ($debugMode ? ' dropdown-submenu-start' : '');
+
 $currentPath = $currentRoute->getUri()?->getPath();
 if ((null !== $currentPath) && !$isGuest) {
     // nav items available in debugMode
@@ -735,11 +898,14 @@ if ((null !== $currentPath) && !$isGuest) {
                 // Prometheus Monitoring Section
                 DropdownItem::text(PerformanceMetrics::prometheusStatus(),
                     itemAttributes: $itemFontArray),
-                DropdownItem::text($subMenu->generate('Prometheus Monitoring',
-                    $urlGenerator,
-                    $bootstrap5LayoutInvoiceNavbarFont,
-                    $bootstrap5LayoutInvoiceNavbarFontSize,
-                    $subMenuPrometheus)),
+                DropdownItem::listContent(
+                    $subMenu->generate('Prometheus Monitoring',
+                        $urlGenerator,
+                        $bootstrap5LayoutInvoiceNavbarFont,
+                        $bootstrap5LayoutInvoiceNavbarFontSize,
+                        $subMenuPrometheus),
+                    ['class' => $flyoutLiClass],
+                ),
             ),
             // Platform
             Dropdown::widget()
@@ -1042,7 +1208,10 @@ if ((null !== $currentPath) && !$isGuest) {
             // visible
             true,
         ),
-        // Settings
+        // Settings -- grouped into flyout submenus (see App\Widget\SubMenu
+        // and .dropdown-submenu in components.css) instead of one long flat
+        // list, so the toggler only ever shows debug-only items (hidden for
+        // normal users), 2 dividers, and 5 group togglers.
         Dropdown::widget()
         ->addTogglerCssStyle([
             'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
@@ -1056,161 +1225,48 @@ if ((null !== $currentPath) && !$isGuest) {
             DropdownItem::link($t->translate('debug') . ': ' . $t->translate('view'),
                 $urlGenerator->generate('setting/debugIndex'),
                     false, !$debugMode,
-                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;',
+                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
+                         . ' white-space: normal; max-width: 260px;',
                          'hidden' => !$debugMode]),
             DropdownItem::link($t->translate('setting.add'),
                 $urlGenerator->generate('setting/add'),
                     false, !$debugMode,
-                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;',
+                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
+                         . ' white-space: normal; max-width: 260px;',
                          'hidden' => !$debugMode]),
             DropdownItem::link($t->translate('caution.delete.invoices'),
                 $urlGenerator->generate('inv/flush'),
                     false, !$debugMode,
-                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;',
+                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
+                         . ' white-space: normal; max-width: 260px;',
                          'hidden' => !$debugMode]),
             DropdownItem::divider(),
+            DropdownItem::listContent($displaySubmenu, ['class' => $flyoutLiClass]),
             DropdownItem::listContent(
-                '<h6 class="dropdown-header"'
-                . ' style="font-size:' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;"'
-                . ' data-bs-toggle="tooltip" data-bs-placement="right"'
-                . ' title="' . Html::encode($t->translate('default.list.limit.hint')) . '">'
-                . (new I())->addClass('bi bi-list-ol')->render()
-                . ' ' . Html::encode($t->translate('default.list.limit'))
-                . '</h6>'
+                $subMenu->generate($t->translate('setting.company'), $urlGenerator,
+                    $bootstrap5LayoutInvoiceNavbarFont, $bootstrap5LayoutInvoiceNavbarFontSize,
+                    $subMenuCompany),
+                ['class' => $flyoutLiClass],
             ),
             DropdownItem::listContent(
-                '<div class="px-3 py-1">'
-                . '<div id="page-size-btn-group" class="btn-group btn-group-sm" role="group" aria-label="'
-                . Html::encode($t->translate('default.list.limit')) . '">'
-                . implode('', array_map(
-                    static fn(int $size): string =>
-                        '<a hx-get="' . Html::encode(str_replace('__SIZE__', (string) $size, $pageSizeUrlTemplate)) . '"'
-                        . ' hx-swap="none"'
-                        . ' href="' . Html::encode(str_replace('__SIZE__', (string) $size, $pageSizeUrlTemplate)) . '"'
-                        . ' class="btn btn-outline-secondary' . ($size === $currentPageSize ? ' active' : '') . '">'
-                        . $size . '</a>',
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25, 50, 100, 200]
-                ))
-                . '</div></div>'
-            ),
-            // One shared setting for every grid (Invoice/Quote/SalesOrder/
-            // Product), not its own field per grid in Settings > Invoices
-            // -- see SettingToggleController::gridStickyHeader()'s own
-            // docblock. hx-get + hx-swap="none" persists it in the
-            // background, same as the page-size picker just above -- but
-            // unlike that picker, the checkbox's own native click isn't
-            // itself the visible effect here: the actual sticky behaviour
-            // is baked into this page's already-rendered HTML, so
-            // initHtmxHooks() (src/typescript/htmx-hooks.ts) forces a full
-            // reload once the save succeeds, the same fix and reasoning
-            // as the navbar-sticky-toggle checkbox below.
-            DropdownItem::listContent(
-                '<h6 class="dropdown-header"'
-                . ' style="font-size:' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;"'
-                . ' data-bs-toggle="tooltip" data-bs-placement="right"'
-                . ' title="' . Html::encode($t->translate('grid.sticky.header.hint')) . '">'
-                . (new I())->addClass('bi bi-pin-angle')->render()
-                . ' ' . Html::encode($t->translate('grid.sticky.header'))
-                . '</h6>'
+                $subMenu->generate($t->translate('email.template'), $urlGenerator,
+                    $bootstrap5LayoutInvoiceNavbarFont, $bootstrap5LayoutInvoiceNavbarFontSize,
+                    $subMenuEmail),
+                ['class' => $flyoutLiClass],
             ),
             DropdownItem::listContent(
-                '<div class="px-3 py-1">'
-                . '<div class="form-check form-switch">'
-                . '<input type="checkbox" class="form-check-input" role="switch"'
-                . ' id="grid-sticky-header-toggle"'
-                . ' hx-get="' . Html::encode($urlGenerator->generate('setting/gridStickyHeader', ['origin' => 'inv'])) . '"'
-                . ' hx-swap="none"'
-                . ($s->getSetting('grid_sticky_header') == '1' ? ' checked' : '')
-                . '></div></div>'
-            ),
-            // Pulled out of Settings > Bootstrap5 (see
-            // SettingToggleController::navbarSticky()'s own docblock) and
-            // placed adjacent to the grid-header toggle just above --
-            // same shared immediate-save UX, same underlying setting key
-            // LayoutViewInjection already reads into
-            // $bootstrap5LayoutInvoiceNavbarSticky further up this file.
-            DropdownItem::listContent(
-                '<h6 class="dropdown-header"'
-                . ' style="font-size:' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;"'
-                . ' data-bs-toggle="tooltip" data-bs-placement="right"'
-                . ' title="' . Html::encode($t->translate('bootstrap5.layout.invoice.navbar.sticky.hint')) . '">'
-                . (new I())->addClass('bi bi-pin-angle')->render()
-                . ' ' . Html::encode($t->translate('bootstrap5.layout.invoice.navbar.sticky'))
-                . '</h6>'
-            ),
-            DropdownItem::listContent(
-                '<div class="px-3 py-1">'
-                . '<div class="form-check form-switch">'
-                . '<input type="checkbox" class="form-check-input" role="switch"'
-                . ' id="navbar-sticky-toggle"'
-                . ' hx-get="' . Html::encode($urlGenerator->generate('setting/navbarSticky', ['origin' => 'inv'])) . '"'
-                . ' hx-swap="none"'
-                . ($bootstrap5LayoutInvoiceNavbarSticky ? ' checked' : '')
-                . '></div></div>'
+                $subMenu->generate($t->translate('user.account'), $urlGenerator,
+                    $bootstrap5LayoutInvoiceNavbarFont, $bootstrap5LayoutInvoiceNavbarFontSize,
+                    $subMenuAccess),
+                ['class' => $flyoutLiClass],
             ),
             DropdownItem::divider(),
-            DropdownItem::link($t->translate('view'),
-                $urlGenerator->generate('setting/tabIndex'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate((
-                ($s->getSetting('install_test_data') == '1')
-                && ($s->getSetting('use_test_data') == '1'))
-                ? 'install.test.data' : 'install.test.data.goto.tab.index'),
-                    (($s->getSetting('install_test_data') == '1'
-                        && $s->getSetting('use_test_data') == '1')
-                ? $urlGenerator->generate('invoice/index') :
-                $urlGenerator->generate('setting/tabIndex')),
-                    ($s->getSetting('install_test_data') == '1'
-                        && $s->getSetting('use_test_data') == '1'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('email.template'),
-                $urlGenerator->generate('emailtemplate/index'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('email.from.dropdown'),
-                $urlGenerator->generate('from/index'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('email.log'),
-                $urlGenerator->generate('invsentlog/index'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('custom.fields'),
-                $urlGenerator->generate('customfield/index'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('group'),
-                $urlGenerator->generate('group/index'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('archive'),
-                $urlGenerator->generate('inv/archive'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('payment.method'),
-                $urlGenerator->generate('paymentmethod/index'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('tax.rate'),
-                $urlGenerator->generate('taxrate/index'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('contract'),
-                $urlGenerator->generate('contract/index'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('user.account'),
-                $urlGenerator->generate('userinv/index'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('password.change'),
-                $urlGenerator->generate('auth/change'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('user.api.list'),
-                $urlGenerator->generate('user/index'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('setting.company'),
-                $urlGenerator->generate('company/index'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('setting.company.private'),
-                $urlGenerator->generate('companyprivate/index'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('setting.company.profile'),
-                $urlGenerator->generate('profile/index'),
-                itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('redirect.map'),
-                $urlGenerator->generate('redirect/map'),
-                itemAttributes: $itemFontArray),
+            DropdownItem::listContent(
+                $subMenu->generate($t->translate('menu.more'), $urlGenerator,
+                    $bootstrap5LayoutInvoiceNavbarFont, $bootstrap5LayoutInvoiceNavbarFontSize,
+                    $subMenuMore),
+                ['class' => $flyoutLiClass],
+            ),
         ),
         // peppol
         Dropdown::widget()
