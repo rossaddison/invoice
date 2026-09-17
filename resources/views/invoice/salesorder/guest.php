@@ -66,26 +66,30 @@ $resetColumnWidths = new HtmlButton()
 // see SalesOrder/SalesOrderRepository getStatuses function
 // && Invoice\Asset\invoice\css\style.css & yii3i.css
 
+// WCAG 1.4.1: btn-primary vs each tab's own inactive color was the only
+// cue for which status tab is currently selected -- aria-current="page"
+// now carries that too, added without touching the existing (deliberate
+// -- each tab keeps hinting at its own status color when inactive)
+// class logic.
+$soStatusTab = static fn (string $label, int $statusValue, string $inactiveClass, array $extraAttrs = []): string =>
+    Html::a(
+        $label,
+        $urlGenerator->generate('salesorder/guest', ['page' => 1, 'status' => $statusValue]),
+        array_filter([
+            'class' => 'btn ' . ($status == $statusValue ? 'btn-primary' : $inactiveClass),
+            'aria-current' => $status == $statusValue ? 'page' : null,
+            ...$extraAttrs,
+        ]),
+    )->render();
+
 $statusBar =   new Div()
     ->addClass('btn-group index-options')
     ->content(
-        Html::a(
-            $translator->translate('all'),
-            $urlGenerator->generate('salesorder/guest', ['page' => 1,
-                'status' => 0]),
+        $soStatusTab($translator->translate('all'), 0, 'btn-secondary')
+        . $soStatusTab(
+            $soR->getSpecificStatusArrayLabel('2'), 2,
+            'label ' . $soR->getSpecificStatusArrayClass(2),
             [
-                'class' => 'btn ' . ($status == 0 ? 'btn-primary' :
-                'btn-secondary'),
-            ],
-        )
-        . Html::a(
-            $soR->getSpecificStatusArrayLabel('2'),
-            $urlGenerator->generate('salesorder/guest',
-                    ['page' => 1, 'status' => 2]),
-            [
-                'class' => 'btn ' . ($status == 2 ? 'btn-primary' : 'label '
-                . $soR->getSpecificStatusArrayClass(2)),
-
                 'data-bs-toggle' => 'tooltip',
                 'title' => $s->getSetting('debug_mode') === '1'
                     ? $translator->translate(
@@ -93,75 +97,33 @@ $statusBar =   new Div()
                     : '',
             ],
         )
-        . Html::a(
-            $soR->getSpecificStatusArrayLabel('3'),
-            $urlGenerator->generate('salesorder/guest',
-                    ['page' => 1, 'status' => 3]),
-            [
-                'class' => 'btn ' . ($status == 3 ? 'btn-primary' : 'label '
-                . $soR->getSpecificStatusArrayClass(3)),
-
-            ],
+        . $soStatusTab(
+            $soR->getSpecificStatusArrayLabel('3'), 3,
+            'label ' . $soR->getSpecificStatusArrayClass(3),
         )
-        . Html::a(
-            $soR->getSpecificStatusArrayLabel('4'),
-            $urlGenerator->generate('salesorder/guest', ['page' => 1,
-                'status' => 4]),
-            [
-                'class' => 'btn ' . ($status == 4 ? 'btn-primary' : 'label '
-                . $soR->getSpecificStatusArrayClass(4)),
-
-            ],
+        . $soStatusTab(
+            $soR->getSpecificStatusArrayLabel('4'), 4,
+            'label ' . $soR->getSpecificStatusArrayClass(4),
         )
-        . Html::a(
-            $soR->getSpecificStatusArrayLabel('5'),
-            $urlGenerator->generate('salesorder/guest', ['page' => 1,
-                'status' => 5]),
-            [
-                'class' => 'btn ' . ($status == 5 ? 'btn-primary' : 'label '
-                . $soR->getSpecificStatusArrayClass(5)),
-
-            ],
+        . $soStatusTab(
+            $soR->getSpecificStatusArrayLabel('5'), 5,
+            'label ' . $soR->getSpecificStatusArrayClass(5),
         )
-        . Html::a(
-            $soR->getSpecificStatusArrayLabel('6'),
-            $urlGenerator->generate('salesorder/guest', ['page' => 1,
-                'status' => 6]),
-            [
-                'class' => 'btn ' . ($status == 6 ? 'btn-primary' : 'label '
-                . $soR->getSpecificStatusArrayClass(6)),
-
-            ],
+        . $soStatusTab(
+            $soR->getSpecificStatusArrayLabel('6'), 6,
+            'label ' . $soR->getSpecificStatusArrayClass(6),
         )
-        . Html::a(
-            $soR->getSpecificStatusArrayLabel('7'),
-            $urlGenerator->generate('salesorder/guest', ['page' => 1,
-                'status' => 7]),
-            [
-                'class' => 'btn ' . ($status == 7 ? 'btn-primary' : 'label '
-                . $soR->getSpecificStatusArrayClass(7)),
-
-            ],
+        . $soStatusTab(
+            $soR->getSpecificStatusArrayLabel('7'), 7,
+            'label ' . $soR->getSpecificStatusArrayClass(7),
         )
-        . Html::a(
-            $soR->getSpecificStatusArrayLabel('8'),
-            $urlGenerator->generate('salesorder/guest', ['page' => 1,
-                'status' => 8]),
-            [
-                'class' => 'btn ' . ($status == 8 ? 'btn-primary' : 'label '
-                . $soR->getSpecificStatusArrayClass(8)),
-
-            ],
+        . $soStatusTab(
+            $soR->getSpecificStatusArrayLabel('8'), 8,
+            'label ' . $soR->getSpecificStatusArrayClass(8),
         )
-        . Html::a(
-            $soR->getSpecificStatusArrayLabel('9'),
-            $urlGenerator->generate('salesorder/guest', ['page' => 1,
-                'status' => 9]),
-            [
-                'class' => 'btn ' . ($status == 9 ? 'btn-primary' : 'label '
-                . $soR->getSpecificStatusArrayClass(9)),
-
-            ],
+        . $soStatusTab(
+            $soR->getSpecificStatusArrayLabel('9'), 9,
+            'label ' . $soR->getSpecificStatusArrayClass(9),
         ),
     )
     ->encode(false)
@@ -187,7 +149,12 @@ $columns = [
                         (string) $model->getStatusId());
                 $class = $soR->getSpecificStatusArrayClass(
                         (int) $model->getStatusId());
-                return Html::tag('span', $span, ['id' => '#so-to-invoice',
+                // Dropped 'id' => '#so-to-invoice': a dead, malformed id
+                // (unrelated to modal_so_to_invoice.php's own real
+                // id="so-to-invoice" on a different page) duplicated onto
+                // every single row's span here -- same copy-paste mistake
+                // as quote/guest.php's own '#quote-guest'.
+                return Html::tag('span', $span, [
                     'class' => 'badge text-bg-' . $class]);
             }
             return Html::tag('span');
@@ -243,10 +210,17 @@ $columns = [
     ),
     new DataColumn(
         header: $translator->translate('view'),
-        content: static function (SalesOrder $model) use ($urlGenerator): A {
+        content: static function (SalesOrder $model) use ($urlGenerator, $translator): A {
+            // WCAG 1.1.1/2.4.4/4.1.2: icon-only link, empty attributes --
+            // no title, no aria-label, nothing. A screen reader announced
+            // this as a bare, purposeless "link".
             return Html::a(Html::tag('i', '', ['class' => 'bi-eye']),
                 $urlGenerator->generate(
-                        'salesorder/view', ['id' => $model->reqId()]), []);
+                        'salesorder/view', ['id' => $model->reqId()]), [
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('view'),
+                    'aria-label' => $translator->translate('view'),
+                ]);
         },
     ),
 ];

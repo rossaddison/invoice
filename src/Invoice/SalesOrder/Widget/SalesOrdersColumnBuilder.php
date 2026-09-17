@@ -178,8 +178,14 @@ final class SalesOrdersColumnBuilder
             content: static fn (SalesOrder $m): string =>
                 Html::encode($m->getClient()?->getClientFullName() ?? ''),
             encodeContent: false,
+            // WCAG 1.3.1/3.3.2: no aria-label/title at all.
             filter: DropdownFilter::widget()
-                ->addAttributes(['name' => 'client_id', 'class' => 'native-reset'])
+                ->addAttributes([
+                    'name' => 'client_id',
+                    'class' => 'native-reset',
+                    'aria-label' => 'Filter by client',
+                    'title' => $t->translate('client'),
+                ])
                 ->optionsData($opts),
             filterFactory: new NoOpFilterFactory(),
             withSorting: false,

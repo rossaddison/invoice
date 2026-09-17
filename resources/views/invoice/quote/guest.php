@@ -67,56 +67,29 @@ $resetColumnWidths = new HtmlButton()
 
 echo new Div();
 
+// WCAG 1.4.1: btn-primary vs btn-secondary was the only cue for which
+// status tab is currently selected -- aria-current="page" now carries
+// that too, the standard ARIA way to mark the active item in a set of
+// navigation-style links (matches this project's own use of the same
+// attribute elsewhere for "current" states).
+$statusTab = static fn (string $label, int $statusValue): string => Html::a(
+    $translator->translate($label),
+    $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => $statusValue]),
+    array_filter([
+        'class' => 'btn ' . ($status == $statusValue ? 'btn-primary' : 'btn-secondary'),
+        'aria-current' => $status == $statusValue ? 'page' : null,
+    ]),
+)->render();
+
 $statusBar =   new Div()
     ->addClass('btn-group index-options')
     ->content(
-        Html::a(
-            $translator->translate('all'),
-            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 0]),
-            [
-                'class' => 'btn ' . ($status == 0 ? 'btn-primary' : 'btn-secondary'),
-            ],
-        )
-        . Html::a(
-            $translator->translate('sent'),
-            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 2]),
-            [
-                'class' => 'btn ' . ($status == 2 ? 'btn-primary' : 'btn-secondary'),
-
-            ],
-        )
-        . Html::a(
-            $translator->translate('viewed'),
-            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 3]),
-            [
-                'class' => 'btn ' . ($status == 3 ? 'btn-primary' : 'btn-secondary'),
-
-            ],
-        )
-        . Html::a(
-            $translator->translate('approved'),
-            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 4]),
-            [
-                'class' => 'btn ' . ($status == 4 ? 'btn-primary' : 'btn-secondary'),
-
-            ],
-        )
-        . Html::a(
-            $translator->translate('rejected'),
-            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 5]),
-            [
-                'class' => 'btn ' . ($status == 5 ? 'btn-primary' : 'btn-secondary'),
-
-            ],
-        )
-        . Html::a(
-            $translator->translate('canceled'),
-            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 6]),
-            [
-                'class' => 'btn ' . ($status == 6 ? 'btn-primary' : 'btn-secondary'),
-
-            ],
-        ),
+        $statusTab('all', 0)
+        . $statusTab('sent', 2)
+        . $statusTab('viewed', 3)
+        . $statusTab('approved', 4)
+        . $statusTab('rejected', 5)
+        . $statusTab('canceled', 6),
     )
     ->encode(false)
     ->render();
@@ -136,7 +109,11 @@ $columns = [
         content: static function (Quote $model) use ($qR): Yiisoft\Html\Tag\CustomTag|string {
             $span = $qR->getSpecificStatusArrayLabel((string) $model->reqStatusId());
                 $class = $qR->getSpecificStatusArrayClass((string) $model->reqStatusId());
-                return Html::tag('span', $span, ['id' => '#quote-guest','class' => 'badge text-bg-' . $class]);
+                // Dropped 'id' => '#quote-guest': a malformed, dead id
+                // (never referenced by any JS/CSS) duplicated onto every
+                // single row's span -- a real HTML-validity/duplicate-ID
+                // issue serving no purpose.
+                return Html::tag('span', $span, ['class' => 'badge text-bg-' . $class]);
         },
         encodeContent: false,
         withSorting: true,
@@ -148,8 +125,14 @@ $columns = [
             return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->reqId()]), ['class' => 'text-decoration-none']);
         },
         encodeContent: false,
+        // WCAG 1.3.1/3.3.2: no aria-label/placeholder at all.
         filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
-                ->addAttributes(['style' => 'max-width: 80px']),
+                ->addAttributes([
+                    'style' => 'max-width: 80px',
+                    'aria-label' => 'Filter by quote number',
+                    'title' => $translator->translate('quote.number'),
+                    'placeholder' => $translator->translate('quote.number'),
+                ]),
     ),
     new DataColumn(
         'client_id',
@@ -207,15 +190,22 @@ echo GridView::widget()
 ->urlCreator($urlCreator)
 // the up and down symbol will appear at first indicating that the column can be sorted
 // Ir also appears in this state if another column has been sorted
-->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
+// aria-hidden: purely decorative -- yii-dataview's GridView already sets
+// the real aria-sort attribute on each sortable <th>, so these glyphs
+// would otherwise be redundant, inconsistently-read Unicode noise on top
+// of a state a screen reader already announces correctly.
+->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50" aria-hidden="true">⭥</div>')
 // the up arrow will appear if column values are ascending
-->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
+->sortableHeaderAscPrepend('<div class="float-end fw-bold" aria-hidden="true">⭡</div>')
 // the down arrow will appear if column values are descending
-->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
+->sortableHeaderDescPrepend('<div class="float-end fw-bold" aria-hidden="true">⭣</div>')
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
 ->header($translator->translate('quote'))
 ->emptyCell($translator->translate('not.set'))
-->emptyCellAttributes(['style' => 'color:red'])
+// WCAG 1.4.3: plain CSS `red` (#FF0000) on white is ~4.0:1, below AA's
+// 4.5:1 minimum. Bootstrap's own text-danger (#dc3545, ~4.5:1) matches
+// every other "attention" color already used in this grid.
+->emptyCellAttributes(['class' => 'text-danger'])
 ->id('w7-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
