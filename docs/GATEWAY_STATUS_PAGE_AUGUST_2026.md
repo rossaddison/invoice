@@ -132,16 +132,28 @@ from this app's own production credentials (which live encrypted in the
 - `SQUARE_SANDBOX_ACCESS_TOKEN`
 - `ADYEN_SANDBOX_API_KEY`
 - `ADYEN_SANDBOX_MERCHANT_ACCOUNT`
+- `MERCADOPAGO_SANDBOX_ACCESS_TOKEN`
+- `BRAINTREE_SANDBOX_MERCHANT_ID`
+- `BRAINTREE_SANDBOX_PUBLIC_KEY`
+- `BRAINTREE_SANDBOX_PRIVATE_KEY`
 
-All six are configured as of 2026-08-08 — the weekly job pings every one of
-these five gateways' real sandbox APIs and gets `pass` (see
-`docs/GATEWAY_STATUS_CI_ENV_FIX_AUGUST_2026.md` for the CI plumbing that
-took three fixes to get there). A gateway with no secret configured yet
-simply skips (no failure) — deliberately not something Claude sets
-directly: these are real sandbox credentials, and shouldn't flow through a
-conversation transcript or tool-call history even for a sandbox account —
-add them yourself via GitHub → Settings → Secrets and variables → Actions →
-New repository secret, whenever a real sandbox account exists for each.
+The first six are configured as of 2026-08-08 — the weekly job pings every
+one of Stripe/Mollie/GoCardless/Square/Adyen's real sandbox APIs and gets
+`pass` (see `docs/GATEWAY_STATUS_CI_ENV_FIX_AUGUST_2026.md` for the CI
+plumbing that took three fixes to get there). The Braintree three were
+wired into the workflow's `env:` block on 2026-09-17 (they'd been in
+`checkGateway()`'s switch and `gateways.json`'s `sandbox_env_var` since
+2026-08-16, but the workflow YAML itself never passed them through — so
+the automated weekly ping silently never ran for Braintree at all, despite
+`sandbox_status: "pass"` reflecting a real but one-off human-run test from
+that date, not an ongoing automated one). A gateway with no secret
+configured yet simply skips (no failure) — deliberately not something
+Claude sets directly: these are real sandbox credentials, and shouldn't
+flow through a conversation transcript or tool-call history even for a
+sandbox account — add them yourself via GitHub → Settings → Secrets and
+variables → Actions → New repository secret, whenever a real sandbox
+account exists for each. Braintree's three still need adding this way
+before its weekly ping actually starts running.
 
 Two more, unrelated to any specific gateway, added the same way — see
 "Sandbox credential expiry + Telegram alert" below:
