@@ -75,6 +75,7 @@ new DataColumn(
 use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
 
 $gridView = GridView::widget()
+    ->accessibility(true)
     ->columns(...$columns)
     ->dataReader($gridDataReader)
     ->urlCreator($urlCreator)

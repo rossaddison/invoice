@@ -125,6 +125,7 @@ $clientColumns = [
 ];
 
 echo GridView::widget()
+    ->accessibility(true)
     ->bodyRowAttributes(['class' => 'align-middle'])
     ->tableAttributes([
         'class' => 'table table-striped text-center h-75',
@@ -673,6 +674,7 @@ $toolbarString = new Form()
  * for the sequence of functions which can effect rendering
  */
 echo GridView::widget()
+    ->accessibility(true)
     ->bodyRowAttributes(['class' => 'align-middle'])
     ->tableAttributes([
         'class' => 'table table-striped text-center h-75',

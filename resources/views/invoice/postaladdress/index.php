@@ -142,6 +142,7 @@ $toolbarString =  new Form()->post($urlGenerator->generate('postaladdress/index'
     .  new Form()->close();
 
 echo GridView::widget()
+->accessibility(true)
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-center h-85','id' => 'table-postaladdress'])
 ->columns(...$columns)

@@ -193,6 +193,7 @@ $toolbarString =  new Form()->post($urlGenerator->generate('task/index'))->csrf(
  * Related logic: see vendor\yiisoft\yii-dataview\src\GridView.php for the sequence of functions which can effect rendering
  */
 echo GridView::widget()
+->accessibility(true)
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->columns(...$columns)
 ->dataReader($paginator)

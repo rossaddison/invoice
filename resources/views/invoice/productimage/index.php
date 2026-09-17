@@ -103,6 +103,7 @@ $toolbarString =  new Form()->post($urlGenerator->generate('upload/index'))->csr
         .  new Form()->close();
 
 echo GridView::widget()
+->accessibility(true)
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-center h-125','id' => 'table-upload'])
 ->columns(...$columns)

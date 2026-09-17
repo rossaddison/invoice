@@ -122,6 +122,7 @@ $toolbarString =  new Form()->post($urlGenerator->generate('unitpeppol/index'))-
     .  new Form()->close();
 
 echo GridView::widget()
+->accessibility(true)
 ->columns(...$columns)
 ->dataReader($paginator)
 ->tableAttributes(['class' => 'table table-striped text-center h-81','id' => 'table-unitpeppol'])

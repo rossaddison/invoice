@@ -112,6 +112,7 @@ $toolbarString =  new Form()->post($urlGenerator->generate('unit/index'))->csrf(
     .  new Form()->close();
 
 echo GridView::widget()
+->accessibility(true)
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-unit'])
 ->columns(...$columns)

@@ -95,6 +95,7 @@ $toolbarString =  new Form()->post($urlGenerator->generate('categoryprimary/inde
 $gridSummary = $s->gridSummary($paginator, $translator, (int) $s->getSetting('default.list.limit'), $translator->translate('plural'), '');
 
 echo GridView::widget()
+  ->accessibility(true)
   ->bodyRowAttributes(['class' => 'align-middle'])
   ->tableAttributes(['class' => 'table table-striped text-center', 'id' => 'table-categoryprimary'])
   ->columns(...$columns)

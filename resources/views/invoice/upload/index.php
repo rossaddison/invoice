@@ -113,6 +113,7 @@ $toolbarString =  new Form()->post($urlGenerator->generate('upload/index'))->csr
     .  new Form()->close();
 
 echo GridView::widget()
+->accessibility(true)
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->columns(...$columns)
 ->dataReader($paginator)

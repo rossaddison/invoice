@@ -100,6 +100,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
         '',
     );
 echo GridView::widget()
+->accessibility(true)
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-center h-475', 'id' => 'table-product-image-list'])
 ->columns(...$columns)

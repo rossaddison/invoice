@@ -186,6 +186,7 @@ $gridSummary = $s->gridSummary(
 );
 
 echo GridView::widget()
+ ->accessibility(true)
  ->bodyRowAttributes(['class' => 'align-middle'])
  ->tableAttributes(['class' => 'table table-hover table-striped'])
  ->columns(...$columns)

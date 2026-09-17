@@ -145,6 +145,7 @@ $gridSummary = $s->gridSummary(
     '',
 );
 echo GridView::widget()
+->accessibility(true)
 ->bodyRowAttributes(['class' => 'align-left'])
 ->tableAttributes(['class' => 'table table-striped table-responsive h-75', 'id' => 'table-invoice'])
 ->columns(...$columns)

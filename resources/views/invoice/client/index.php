@@ -366,6 +366,7 @@ if ($visible) {
 }
 
 echo GridView::widget()
+->accessibility(true)
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => $tableOrTableResponsive
         . ' table-striped text-center h-75',

@@ -99,6 +99,7 @@ $toolbarString =  new Form()->post($urlGenerator->generate('productproperty/inde
         .  new Form()->close();
 
 echo GridView::widget()
+->accessibility(true)
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-center h-99999999999999999', 'id' => 'table-productproperty'])
 ->columns(...$columns)
