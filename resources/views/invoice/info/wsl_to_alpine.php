@@ -17,11 +17,14 @@ declare(strict_types=1);
  <pre style="margin: 0.5rem 0 0;">cd /var/www/invoice
 git pull origin main
 sh bin/alpine-menu.sh</pre>
- It's an interactive numbered menu covering most of sections 3&ndash;13
+ It's an interactive numbered menu covering most of sections 3&ndash;14
  below &mdash; git pull, verifying <code>.env</code>/RBAC, permissions,
  restarting Apache/MariaDB, clearing the route cache, backing up the
  database, updating Node. Type the number of whatever you need; you don't
- have to know this page's order to use it.
+ have to know this page's order to use it. It does not yet cover
+ <code>composer install</code> / <code>runtime/schema.php</code> /
+ php-fpm84 restart (section 4/11 below) or the MariaDB
+ <code>zap</code> fix (section 5) &mdash; do those manually for now.
 </div>
 
 <p><b>On this page:</b></p>
@@ -36,6 +39,7 @@ sh bin/alpine-menu.sh</pre>
  <li><a href="#mail-smtp">Mail / SMTP testing</a></li>
  <li><a href="#logs">Logs</a></li>
  <li><a href="#apache-ssl">Apache / SSL</a></li>
+ <li><a href="#php-fpm">PHP-FPM restart &amp; opcache</a></li>
  <li><a href="#route-cache">Route cache</a></li>
  <li><a href="#backup">Database backup</a></li>
  <li><a href="#node">Updating Node.js</a></li>
@@ -90,6 +94,28 @@ php yii user/assignRole observer 2</pre>
  <li>After a pull, clear the Yii3 route cache so new routes are picked up
   immediately &mdash; see <a href="#route-cache">Route cache</a> below.</li>
 </ul>
+<div class="alert alert-info" role="alert">
+ <b>Full checklist after a pull that changed dependencies or entities</b>
+ (git pull alone is never enough for those) &mdash; a real production
+ incident on this box confirmed all four steps matter, in order:
+ <pre>cd /var/www/invoice
+git pull origin main
+composer install
+rm -f runtime/schema.php
+rc-service php-fpm84 restart</pre>
+ <ul style="margin-bottom: 0;">
+  <li><code>composer install</code> &mdash; a bare <code>git pull</code> updates
+   <code>composer.lock</code> on disk but never touches <code>vendor/</code>
+   itself.</li>
+  <li><code>rm -f runtime/schema.php</code> &mdash; Cycle ORM's compiled
+   schema cache goes stale after an entity change (new/changed column).
+   It's gitignored and regenerates automatically on the next request once
+   removed &mdash; no <code>BUILD_DATABASE=true</code> flag needed.</li>
+  <li><code>rc-service php-fpm84 restart</code> &mdash; see
+   <a href="#php-fpm">PHP-FPM restart &amp; opcache</a> below for why this
+   is a <i>different</i> service from Apache and easy to forget.</li>
+ </ul>
+</div>
 
 <h5 id="database">5. Database access</h5>
 <ul>
@@ -102,7 +128,30 @@ php yii user/assignRole observer 2</pre>
  <li>Check MariaDB is running (useful when you see connection errors):
   <code>rc-service mariadb status</code></li>
  <li>Restart MariaDB: <code>rc-service mariadb restart</code></li>
+ <li>Double-confirm it's genuinely serving requests, not just reporting a
+  status: <pre>ps aux | grep -i mariadb
+mysqladmin ping</pre>
+ </li>
 </ul>
+<div class="alert alert-info" role="alert">
+ <b>"WARNING: mariadb has already been started" when it isn't actually
+ running</b> &mdash; OpenRC's own started/crashed status flag can get
+ stuck on this box (confirmed live twice). <code>rc-service mariadb
+ start</code> then does nothing, silently, while showing that warning.
+ <code>rc-service mariadb status</code> is the authoritative check &mdash;
+ trust that over the warning text. If status doesn't say
+ <code>started</code>, clear the stuck flag first:
+ <pre>rc-service mariadb zap
+rc-service mariadb start
+rc-service mariadb status</pre>
+ If <code>start</code> still fails even after <code>zap</code>, run the
+ daemon in the foreground to see the real error immediately, rather than
+ waiting on <code>mysqld_safe</code>'s retry/syslog delay (check
+ <code>ps aux | grep mariadb</code> first &mdash; a lock-contention error
+ here usually means a real instance is already running, i.e. the fix
+ already worked):
+ <pre>su mysql -s /bin/sh -c "mariadbd --datadir=/var/lib/mysql"</pre>
+</div>
 
 <h5 id="permissions">6. File ownership &amp; permissions</h5>
 <pre>chown -R apache:apache /var/www/invoice/
@@ -155,7 +204,23 @@ telnet smtp.gmail.com 465</pre>
 <p>Then test the config and restart Apache:</p>
 <pre>httpd -t &amp;&amp; rc-service apache2 restart</pre>
 
-<h5 id="route-cache">11. Route cache</h5>
+<h5 id="php-fpm">11. PHP-FPM restart &amp; opcache</h5>
+<p><code>php-fpm84</code> is a separate OpenRC service from
+ <code>apache2</code> &mdash; Apache proxies PHP requests to it but
+ restarting Apache does <b>not</b> restart php-fpm84 or touch its
+ opcache. If a genuine code/config change (e.g. a DI config file under
+ <code>config/</code>) doesn't seem to take effect after a
+ <code>git pull</code> and an Apache restart &mdash; and it isn't actually
+ a wrong-view mix-up (double-check you're looking at the view the link
+ you clicked actually renders) &mdash; restart php-fpm84 explicitly:</p>
+<pre>rc-service php-fpm84 restart</pre>
+<p>Confirm the exact running service name first if unsure, since this box
+ can have an installed-but-inactive older version alongside it (e.g.
+ <code>php-fpm83</code>):</p>
+<pre>rc-service --list
+ps aux | grep -i php</pre>
+
+<h5 id="route-cache">12. Route cache</h5>
 <p>Yii3 compiles <code>routes.php</code> into a cache file in
  <code>runtime/cache/</code> on first boot. A <code>git pull</code> updates
  the PHP files on disk, but the stale cache keeps being served until it's
@@ -163,7 +228,7 @@ telnet smtp.gmail.com 465</pre>
 <pre>rm -rf /var/www/invoice/runtime/cache/*</pre>
 <p>Yii3 rebuilds the cache automatically on the next request.</p>
 
-<h5 id="backup">12. Database backup</h5>
+<h5 id="backup">13. Database backup</h5>
 <p>From the server, at the root:</p>
 <pre>mysqldump -u root -p --single-transaction yii3_i | gzip > /tmp/invoice_backup_$(date +%Y%m%d_%H%M%S).sql.gz</pre>
 <p>(<code>-p</code> with no value prompts for the password interactively &mdash; never put it inline on the command line, it ends up in shell history.)</p>
@@ -171,7 +236,7 @@ telnet smtp.gmail.com 465</pre>
 <pre>scp root@yii3i.online:/tmp/invoice_backup_*.sql.gz /mnt/c/wamp64/www/invoice/backups/</pre>
 <p>(You'll be prompted for the server password.)</p>
 
-<h5 id="node">13. Updating Node.js</h5>
+<h5 id="node">14. Updating Node.js</h5>
 <p><code>package.json</code>'s own <code>"engines"</code> constraint is
  <code>node ^22.22.3 || ^24.15.0 || >=26.0.0</code>. This box is Alpine
  (musl libc), not glibc &mdash; nvm's precompiled Node builds generally
@@ -190,7 +255,7 @@ node -v</pre>
  in <code>.env</code> at its absolute path (<code>which node</code>)
  rather than relying on <code>PATH</code>.</p>
 
-<h5 id="assets-cache">14. Published assets cache</h5>
+<h5 id="assets-cache">15. Published assets cache</h5>
 <p>Yii3's AssetManager publishes CSS/JS with a content hash into
  <code>public/assets/&lt;hash&gt;/...</code> the first time each asset
  bundle is requested. Useful to force a clean republish after a
