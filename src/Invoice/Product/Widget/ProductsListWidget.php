@@ -386,7 +386,7 @@ final class ProductsListWidget extends Widget
                 ->addAttributes([
                     'name' => 'family_id',
                     'class' => 'native-reset',
-                    'aria-label' => 'Filter by ' . $t->translate('family.name'),
+                    'aria-label' => $t->translate('filter.by') . ' ' . $t->translate('family.name'),
                     'title' => $t->translate('family.name'),
                 ])
                 ->optionsData($optionsFam),
@@ -463,7 +463,7 @@ final class ProductsListWidget extends Widget
                 ->addAttributes([
                     'name' => 'product_sku',
                     'class' => 'native-reset',
-                    'aria-label' => 'Filter by ' . $t->translate('product.sku'),
+                    'aria-label' => $t->translate('filter.by') . ' ' . $t->translate('product.sku'),
                     'title' => $t->translate('product.sku'),
                 ])
                 ->optionsData($optionsProd),
@@ -485,7 +485,7 @@ final class ProductsListWidget extends Widget
                 ->addAttributes([
                     'style' => 'max-width: 50px',
                     'class' => 'native-reset',
-                    'aria-label' => 'Filter by ' . $t->translate('product.price'),
+                    'aria-label' => $t->translate('filter.by') . ' ' . $t->translate('product.price'),
                     'title' => $t->translate('product.price'),
                     'placeholder' => $t->translate('product.price'),
                 ]),

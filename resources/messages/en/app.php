@@ -935,6 +935,7 @@ return [
   'fax.number' => 'Fax Number',
   'field' => 'Field',
   'file' => 'File',
+  'filter.by' => 'Filter by',
   'filter.clients' => 'Filter Clients',
   'filter.invoices' => 'Filter Invoices',
   'filter.payments' => 'Filter Payments',

@@ -129,7 +129,8 @@ $columns = [
         filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
                 ->addAttributes([
                     'style' => 'max-width: 80px',
-                    'aria-label' => 'Filter by quote number',
+                    'aria-label' => $translator->translate('filter.by') . ' '
+                        . $translator->translate('quote.number'),
                     'title' => $translator->translate('quote.number'),
                     'placeholder' => $translator->translate('quote.number'),
                 ]),

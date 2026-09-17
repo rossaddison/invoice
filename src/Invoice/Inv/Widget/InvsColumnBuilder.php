@@ -133,7 +133,7 @@ final class InvsColumnBuilder
                 filter: DropdownFilter::widget()
                     ->addAttributes(['id' => 'filter-client', 'name' => 'client_id',
                         'class' => 'inv-filter',
-                        'aria-label' => 'Filter by client',
+                        'aria-label' => $t->translate('filter.by') . ' ' . $t->translate('client'),
                         'title' => $t->translate('client')])
                     ->optionsData($this->filterOptions->clients)
                     ->useInlineJs(false),
@@ -159,7 +159,7 @@ final class InvsColumnBuilder
                 encodeContent: false,
                 filter: TextInputFilter::widget()->addAttributes([
                     'id' => 'filter-address-1', 'class' => self::FILTER_CLASS,
-                    'aria-label' => 'Filter by street address',
+                    'aria-label' => $t->translate('filter.by') . ' ' . $t->translate('street.address'),
                     'title' => $t->translate('street.address'),
                     'placeholder' => $t->translate('street.address')]),
                 filterFactory: new NoOpFilterFactory(),
@@ -183,7 +183,7 @@ final class InvsColumnBuilder
                 filter: DropdownFilter::widget()
                     ->addAttributes(['id' => 'filter-client-group', 'name' => 'number',
                         'class' => self::FILTER_CLASS,
-                        'aria-label' => 'Filter by client group',
+                        'aria-label' => $t->translate('filter.by') . ' ' . $t->translate('client.group'),
                         'title' => $t->translate('client.group')])
                     ->optionsData($this->filterOptions->clientGroup),
                 filterFactory: new NoOpFilterFactory(),
@@ -350,7 +350,7 @@ final class InvsColumnBuilder
                 encodeContent: false,
                 filter: TextInputFilter::widget()->addAttributes([
                     'id' => 'filter-amount-total', 'class' => self::AMOUNT_FILTER_CLASS,
-                    'aria-label' => 'Filter by total amount',
+                    'aria-label' => $t->translate('filter.by') . ' ' . $t->translate('total'),
                     'title' => $t->translate('total'),
                     'placeholder' => $t->translate('total')]),
                 filterFactory: new NoOpFilterFactory(),
@@ -410,7 +410,7 @@ final class InvsColumnBuilder
                 encodeContent: false,
                 filter: TextInputFilter::widget()->addAttributes([
                     'id' => 'filter-amount-paid', 'class' => self::AMOUNT_FILTER_CLASS,
-                    'aria-label' => 'Filter by paid amount',
+                    'aria-label' => $t->translate('filter.by') . ' ' . $t->translate('paid'),
                     'title' => $t->translate('paid'),
                     'placeholder' => $t->translate('paid')]),
                 filterFactory: new NoOpFilterFactory(),
@@ -442,7 +442,7 @@ final class InvsColumnBuilder
                 encodeContent: false,
                 filter: TextInputFilter::widget()->addAttributes([
                     'id' => 'filter-amount-balance', 'class' => self::AMOUNT_FILTER_CLASS,
-                    'aria-label' => 'Filter by balance amount',
+                    'aria-label' => $t->translate('filter.by') . ' ' . $t->translate('balance'),
                     'title' => $t->translate('balance'),
                     'placeholder' => $t->translate('balance')]),
                 filterFactory: new NoOpFilterFactory(),
@@ -672,7 +672,7 @@ final class InvsColumnBuilder
             filter: DropdownFilter::widget()
                 ->addAttributes(['id' => 'filter-family-name', 'name' => 'number',
                     'class' => self::FILTER_CLASS,
-                    'aria-label' => 'Filter by family name',
+                    'aria-label' => $t->translate('filter.by') . ' ' . $t->translate('family.name'),
                     'title' => $t->translate('family.name')])
                 ->optionsData($this->filterOptions->familyName),
             filterFactory: new NoOpFilterFactory(),
@@ -695,7 +695,7 @@ final class InvsColumnBuilder
             filter: DropdownFilter::widget()
                 ->addAttributes(['id' => 'filter-year-month', 'name' => 'number',
                     'class' => self::FILTER_CLASS,
-                    'aria-label' => 'Filter by year-month',
+                    'aria-label' => $t->translate('filter.by') . ' ' . $header,
                     'title' => $header])
                 ->optionsData($this->filterOptions->yearMonth),
             filterFactory: new NoOpFilterFactory(),
@@ -958,7 +958,7 @@ final class InvsColumnBuilder
             filter: DropdownFilter::widget()
                 ->addAttributes(['id' => 'filter-inv-number', 'name' => 'number',
                     'class' => self::FILTER_CLASS,
-                    'aria-label' => 'Filter by invoice number',
+                    'aria-label' => $t->translate('filter.by') . ' ' . $t->translate('number'),
                     'title' => $t->translate('number')])
                 ->optionsData($this->filterOptions->invNumber),
             filterFactory: new NoOpFilterFactory(),
@@ -1015,7 +1015,7 @@ final class InvsColumnBuilder
             filter: DropdownFilter::widget()
                 ->addAttributes(['id' => 'filter-status', 'name' => 'status',
                     'class' => self::FILTER_CLASS,
-                    'aria-label' => 'Filter by status',
+                    'aria-label' => $t->translate('filter.by') . ' ' . $t->translate('status'),
                     'title' => $t->translate('status')])
                 ->optionsData($this->filterOptions->status),
             filterFactory: new NoOpFilterFactory(),
@@ -1057,7 +1057,8 @@ final class InvsColumnBuilder
             filter: DropdownFilter::widget()
                 ->addAttributes(['id' => 'filter-credit-inv-number',
                     'class' => self::FILTER_CLASS,
-                    'aria-label' => 'Filter by credit note parent invoice',
+                    'aria-label' => $t->translate('filter.by') . ' '
+                        . $t->translate('credit.invoice.for.invoice'),
                     'title' => $t->translate('credit.invoice.for.invoice')])
                 ->optionsData($this->filterOptions->creditInvNumber),
             filterFactory: new NoOpFilterFactory(),

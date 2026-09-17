@@ -183,7 +183,7 @@ final class SalesOrdersColumnBuilder
                 ->addAttributes([
                     'name' => 'client_id',
                     'class' => 'native-reset',
-                    'aria-label' => 'Filter by client',
+                    'aria-label' => $t->translate('filter.by') . ' ' . $t->translate('client'),
                     'title' => $t->translate('client'),
                 ])
                 ->optionsData($opts),

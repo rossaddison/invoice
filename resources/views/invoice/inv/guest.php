@@ -152,7 +152,8 @@ $columns = [
                 ->addAttributes([
                     'id'         => 'filter-inv-number',
                     'class'      => NATIVE_RESET_INV_FILTER,
-                    'aria-label' => 'Filter by invoice number',
+                    'aria-label' => $translator->translate('filter.by') . ' '
+                        . $translator->translate('number'),
                     'title'      => $translator->translate('number'),
                 ])
                 ->optionsData($optionsInvNumberDropDownFilter),
@@ -211,7 +212,8 @@ $columns = [
                 ->addAttributes([
                     'id'          => 'filter-amount-paid',
                     'class'       => NATIVE_RESET_INV_AMOUNT_FILTER,
-                    'aria-label'  => 'Filter by paid text-end',
+                    'aria-label'  => $translator->translate('filter.by') . ' '
+                        . $translator->translate('paid'),
                     'title'       => $translator->translate('paid'),
                     'placeholder' => $translator->translate('paid'),
                 ]),
@@ -326,7 +328,8 @@ $columns = [
                 'id'         => 'filter-status',
                 'name'       => 'status',
                 'class'      => NATIVE_RESET_INV_FILTER,
-                'aria-label' => 'Filter by status',
+                'aria-label' => $translator->translate('filter.by') . ' '
+                    . $translator->translate('status'),
                 'title'      => $translator->translate('status'),
             ])
             ->optionsData($optionsStatusDropDownFilter),
@@ -413,7 +416,8 @@ $columns = [
                 ->addAttributes([
                     'id'         => 'filter-credit-inv-number',
                     'class'      => NATIVE_RESET_INV_FILTER,
-                    'aria-label' => 'Filter by credit note parent invoice',
+                    'aria-label' => $translator->translate('filter.by') . ' '
+                        . $translator->translate('credit.invoice.for.invoice'),
                     'title'      => $translator->translate(
                         'credit.invoice.for.invoice'),
                 ])
@@ -435,7 +439,8 @@ $columns = [
                     'id'         => 'filter-client',
                     'name'       => 'client_id',
                     'class'      => NATIVE_RESET_INV_FILTER,
-                    'aria-label' => 'Filter by client',
+                    'aria-label' => $translator->translate('filter.by') . ' '
+                        . $translator->translate('client'),
                     'title'      => $translator->translate('client'),
                 ])
                 ->optionsData($optionsClientsDropDownFilter),
@@ -495,7 +500,8 @@ $columns = [
                 ->addAttributes([
                     'id'          => 'filter-amount-total',
                     'class'       => NATIVE_RESET_INV_AMOUNT_FILTER,
-                    'aria-label'  => 'Filter by total text-end',
+                    'aria-label'  => $translator->translate('filter.by') . ' '
+                        . $translator->translate('total'),
                     'title'       => $translator->translate('total'),
                     'placeholder' => $translator->translate('total'),
                 ]),
@@ -530,7 +536,8 @@ $columns = [
                 ->addAttributes([
                     'id'          => 'filter-amount-balance',
                     'class'       => NATIVE_RESET_INV_AMOUNT_FILTER,
-                    'aria-label'  => 'Filter by balance text-end',
+                    'aria-label'  => $translator->translate('filter.by') . ' '
+                        . $translator->translate('balance'),
                     'title'       => $translator->translate('balance'),
                     'placeholder' => $translator->translate('balance'),
                 ]),

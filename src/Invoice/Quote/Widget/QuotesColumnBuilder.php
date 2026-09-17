@@ -200,7 +200,8 @@ final class QuotesColumnBuilder
                 ->addAttributes([
                     'name' => 'status',
                     'class' => 'native-reset',
-                    'aria-label' => 'Filter by status',
+                    'aria-label' => $translator->translate('filter.by') . ' '
+                        . $translator->translate('status'),
                     'title' => $translator->translate('status'),
                 ])
                 ->optionsData($this->optionsDataStatusDropDownFilter),
@@ -271,7 +272,8 @@ final class QuotesColumnBuilder
             // WCAG 1.3.1/3.3.2: no aria-label/placeholder at all.
             filter: TextInputFilter::widget()->addAttributes([
                 'style' => 'max-width: 80px',
-                'aria-label' => 'Filter by quote number',
+                'aria-label' => $translator->translate('filter.by') . ' '
+                    . $translator->translate('quote.number'),
                 'title' => $translator->translate('quote.number'),
                 'placeholder' => $translator->translate('quote.number'),
             ]),
@@ -299,7 +301,8 @@ final class QuotesColumnBuilder
                 ->addAttributes([
                     'name' => 'filterClient',
                     'class' => 'native-reset',
-                    'aria-label' => 'Filter by client',
+                    'aria-label' => $translator->translate('filter.by') . ' '
+                        . $translator->translate('client'),
                     'title' => $translator->translate('client'),
                 ])
                 ->optionsData($this->optionsDataClientsDropdownFilter),
@@ -336,7 +339,8 @@ final class QuotesColumnBuilder
                 ->addAttributes([
                     'style' => 'max-width: 50px',
                     'class' => 'native-reset',
-                    'aria-label' => 'Filter by total amount',
+                    'aria-label' => $translator->translate('filter.by') . ' '
+                        . $translator->translate('total'),
                     'title' => $translator->translate('total'),
                     'placeholder' => $translator->translate('total'),
                 ]),
