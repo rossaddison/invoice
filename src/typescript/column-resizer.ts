@@ -84,9 +84,15 @@ export class ColumnResizer {
             });
 
             if (width > 0) {
-                col.style.width = `${width}px`;
-                globalThis.localStorage.setItem(this.storageKeyPrefix + String(index), String(width));
-                this.updateAriaValueNow(index, width);
+                // Same 40px floor setWidth() (drag/keyboard) already
+                // enforces everywhere else -- without it, a narrow column
+                // (e.g. a 2-digit ID) could autoFit below that minimum,
+                // and its handle's aria-valuenow would fall below the
+                // aria-valuemin="40" declared on it (invalid ARIA state).
+                const clamped = Math.max(40, width);
+                col.style.width = `${clamped}px`;
+                globalThis.localStorage.setItem(this.storageKeyPrefix + String(index), String(clamped));
+                this.updateAriaValueNow(index, clamped);
             }
         });
 

@@ -28,12 +28,14 @@ function buildTable(): void {
             { width: 100 + i * 20 } as DOMRect,
         );
     });
-    // Deliberately much narrower than the header widths above, so
-    // autoFit tests can prove it fits to this (the data), not those.
+    // Narrower than the header widths above, so autoFit tests can prove it
+    // fits to this (the data), not those — but still above the 40px floor
+    // setWidth() enforces everywhere else, so those tests aren't also
+    // exercising the clamp (see its own dedicated test below).
     document.querySelectorAll('#table-invoice tbody td').forEach((td, i) => {
         const colIndex = i % 2;
         vi.spyOn(td, 'getBoundingClientRect').mockReturnValue(
-            { width: 25 + colIndex * 5 } as DOMRect,
+            { width: 45 + colIndex * 5 } as DOMRect,
         );
     });
 }
@@ -257,11 +259,25 @@ describe('ColumnResizer', () => {
             document.getElementById('btn-autofit-columns')?.click();
 
             // buildTable()'s th mock is 100px; the td mock (what a real column's
-            // body content usually is) is only 25px — proving autoFit reads the
+            // body content usually is) is only 45px — proving autoFit reads the
             // data, not the header, which stays untouched at 100px regardless.
-            expect(cols()[0].style.width).toBe('25px');
-            expect(localStorage.getItem(STORAGE_KEY_0)).toBe('25');
-            expect(handle(0).getAttribute('aria-valuenow')).toBe('25');
+            expect(cols()[0].style.width).toBe('45px');
+            expect(localStorage.getItem(STORAGE_KEY_0)).toBe('45');
+            expect(handle(0).getAttribute('aria-valuenow')).toBe('45');
+        });
+
+        it('clamps a narrower-than-40px measured width to the same 40px floor setWidth() enforces, keeping aria-valuenow >= aria-valuemin', () => {
+            buildTable();
+            document.querySelectorAll('#table-invoice tbody td').forEach((td) => {
+                vi.spyOn(td, 'getBoundingClientRect').mockReturnValue({ width: 10 } as DOMRect);
+            });
+            initColumnResizer('table-invoice');
+
+            document.getElementById('btn-autofit-columns')?.click();
+
+            expect(cols()[0].style.width).toBe('40px');
+            expect(localStorage.getItem(STORAGE_KEY_0)).toBe('40');
+            expect(handle(0).getAttribute('aria-valuenow')).toBe('40');
         });
 
         it('grows a column whose data is wider than its header, rather than clamping to the header', () => {
@@ -293,8 +309,8 @@ describe('ColumnResizer', () => {
             buildTable();
             initColumnResizer('table-invoice');
             document.getElementById('btn-autofit-columns')?.click();
-            expect(cols()[0].style.width).toBe('25px');
-            expect(cols()[1].style.width).toBe('30px');
+            expect(cols()[0].style.width).toBe('45px');
+            expect(cols()[1].style.width).toBe('50px');
         });
 
         it('uses the widest row when body rows disagree', () => {
@@ -346,7 +362,7 @@ describe('ColumnResizer', () => {
             expect(localStorage.getItem(STORAGE_KEY_0)).toBeNull();
 
             document.getElementById('btn-autofit-columns')?.click();
-            expect(localStorage.getItem(STORAGE_KEY_0)).toBe('25');
+            expect(localStorage.getItem(STORAGE_KEY_0)).toBe('45');
 
             document.getElementById('btn-reset-column-widths')?.click();
 
