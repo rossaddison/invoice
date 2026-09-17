@@ -691,14 +691,19 @@ echo GridView::widget()
     ->columnGrouping(true)
     ->dataReader($sortedAndPagedPaginator)
     ->urlCreator($urlCreator)
+    // yii-dataview 1.3's accessibility() opt-in (added scope="col"/
+    // aria-sort on header cells and aria-current/aria-disabled/aria-label/
+    // role="link" on pagination links -- disabled by default, so none of
+    // this rendered before enabling it here).
+    ->accessibility(true)
     // the up and down symbol will appear at first indicating that the column
     // can be sorted. It also appears in this state if another column has been
     // sorted
     //
-    // aria-hidden: purely decorative -- yii-dataview's GridView already
-    // sets the real aria-sort attribute on each sortable <th>, so these
-    // glyphs would otherwise be redundant, inconsistently-read Unicode
-    // noise on top of a state a screen reader already announces correctly.
+    // aria-hidden: purely decorative -- accessibility() above adds the
+    // real aria-sort attribute on each sortable <th>, so these glyphs
+    // would otherwise be redundant, inconsistently-read Unicode noise on
+    // top of a state a screen reader already announces correctly.
     ->sortableHeaderPrepend(
                 '<div class="float-end text-secondary text-opacity-50" aria-hidden="true">⭥</div>')
     // the up arrow will appear if column values are ascending

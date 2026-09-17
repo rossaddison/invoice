@@ -251,6 +251,11 @@ echo GridView::widget()
 ->columnGrouping(true)
 ->dataReader($paginator)
 ->columns(...$columns)
+// yii-dataview 1.3's accessibility() opt-in -- no sortable columns here,
+// but it still adds aria-current/aria-disabled/aria-label/role="link" to
+// the pagination widget below (disabled by default, so none of that
+// rendered before enabling it here).
+->accessibility(true)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
 ->header($translator->translate('salesorder'))
 ->id('w12-grid')

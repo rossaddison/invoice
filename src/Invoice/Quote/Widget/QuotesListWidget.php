@@ -222,11 +222,16 @@ final class QuotesListWidget extends Widget
             ->paginationWidget($pagination)
             ->sortableLinkAttributes(['hx-boost' => 'true', ...$htmxAttrs])
             ->filterFormAttributes(['hx-boost' => 'true', ...$htmxAttrs])
-            // aria-hidden: purely decorative -- yii-dataview's GridView
-            // already sets the real aria-sort attribute on each sortable
-            // <th>, so these glyphs would otherwise be redundant,
-            // inconsistently-read Unicode noise on top of a state a
-            // screen reader already announces correctly.
+            // yii-dataview 1.3's accessibility() opt-in (added scope="col"/
+            // aria-sort on header cells and aria-current/aria-disabled/
+            // aria-label/role="link" on pagination links -- disabled by
+            // default, so none of this rendered before enabling it here).
+            ->accessibility(true)
+            // aria-hidden: purely decorative -- accessibility() above adds
+            // the real aria-sort attribute on each sortable <th>, so these
+            // glyphs would otherwise be redundant, inconsistently-read
+            // Unicode noise on top of a state a screen reader already
+            // announces correctly.
             ->sortableHeaderAscPrepend('<div class="float-end fw-bold" aria-hidden="true">⭡</div>')
             ->sortableHeaderDescPrepend('<div class="float-end fw-bold" aria-hidden="true">⭣</div>')
             ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
