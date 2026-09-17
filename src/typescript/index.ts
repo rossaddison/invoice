@@ -37,6 +37,7 @@ import { initHomeCareInstallPrompt } from './homecare-install-prompt.js';
 import { initCompanyPrivate } from './company-private.js';
 import { initStickyNavbarOffset } from './sticky-navbar-offset.js';
 import { initCalendar } from './calendar.js';
+import { initNavFlyoutSubmenu } from './nav-flyout-submenu.js';
 
 declare global {
     // var (not `interface Window`) — see htmx.ts for why.
@@ -94,6 +95,7 @@ class InvoiceApp {
         initCodeceptionChecklistFaq();
         initE164PhoneFields();
         initCalendar();
+        initNavFlyoutSubmenu();
         globalThis.NProgress?.start();
         globalThis.NProgress?.done();
         if (document.getElementById('table-invoice')) {
