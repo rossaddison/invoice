@@ -174,7 +174,13 @@ $columns = [
                 number_format($paid > 0.00 ? $paid : 0.00, $decimalPlaces)
             );
             $labelClass = $isPaid ? 'text-success' : 'text-danger';
-            $html = '<span class="' . $labelClass . '">' . $paidFormatted . '</span>';
+            // WCAG 1.4.1: text color used to be the only cue distinguishing
+            // "paid" from "not yet paid" -- an icon + title now carry that
+            // distinction too.
+            $icon = $isPaid ? '✅ ' : '⚠️ ';
+            $title = $isPaid ? $translator->translate('paid') : $translator->translate('unpaid');
+            $html = '<span class="' . $labelClass . '" data-bs-toggle="tooltip" title="'
+                . Html::encode($title) . '">' . $icon . $paidFormatted . '</span>';
             $payableStatus = in_array($model->reqStatusId(), [2, 3, 5, 6], true);
             if ($payableStatus && !empty($enabledGateways)) {
                 $dropdownId = 'pay-drop-' . Html::encode((string) $model->reqId());
@@ -214,6 +220,8 @@ $columns = [
     ),
     new ActionColumn(
         header: '',
+        // WCAG 4.1.2: this toggle button had no visible text and no
+        // aria-label -- a screen reader announced it as a nameless button.
         before: Html::openTag('div', ['class' => 'dropdown'])
             . Html::openTag('button', [
                 'class' => 'btn btn-info dropdown-toggle',
@@ -222,6 +230,7 @@ $columns = [
                 'data-bs-toggle' => 'dropdown',
                 'aria-haspopup' => 'true',
                 'aria-expanded' => 'false',
+                'aria-label' => $translator->translate('download.pdf'),
             ])
             . Html::closeTag('button')
             . Html::openTag('div', [
@@ -349,9 +358,13 @@ $columns = [
                 ->csrf($csrf)
                 ->addAttributes(['class' => 'd-flex gap-1'])
                 ->content(
+                    // WCAG 1.3.1/3.3.2: no label at all -- the adjacent save
+                    // button has a title, this <select> had nothing.
                     Html::openTag('select', [
                         'name' => 'reason',
                         'class' => 'form-select form-select-sm',
+                        'aria-label' => $translator->translate('do.not.send')
+                            . ' #' . ($model->getNumber() ?? ''),
                     ]) . $options . Html::closeTag('select')
                     . Html::tag('button', '💾', [
                         'type' => 'submit',
@@ -386,8 +399,14 @@ $columns = [
                             ->href($urlGenerator->generate('inv/view',
                                     ['id' => $cipId]));
                 }
-            }            
-            return  new A()->content('')->href('');
+            }
+            // WCAG 2.4.4/4.1.2: href('') made this a real, focusable link
+            // to the current page with no visible content and no purpose
+            // -- a keyboard user tabbing through the grid landed on a
+            // phantom stop that did nothing perceivable. href(null) omits
+            // the attribute entirely, so this renders as a plain, inert
+            // <a> outside the tab order, the way "no credit note" should.
+            return  new A()->content('')->href(null);
         },
         encodeContent: false,
         filter: DropdownFilter::widget()
@@ -435,14 +454,22 @@ $columns = [
     new DataColumn(
         'date_due',
         header: $translator->translate('due.date'),
-        content: static function (Inv $model): Yiisoft\Html\Tag\CustomTag {
+        content: static function (Inv $model) use ($translator): Yiisoft\Html\Tag\CustomTag {
             $now = new \DateTimeImmutable('now');
+            $isOverdue = $model->getDateDue() <= $now;
+            $dateText = !is_string($dateDue = $model->getDateDue()) ?
+                    $dateDue->format('Y-m-d') : '';
+            $attributes = ['class' => $isOverdue ?
+                        'badge text-bg-warning' : 'badge text-bg-success'];
+            // WCAG 1.4.1: badge color used to be the only cue that this
+            // invoice is overdue -- an icon + title now carry that too.
+            if ($isOverdue) {
+                $attributes['data-bs-toggle'] = 'tooltip';
+                $attributes['title'] = $translator->translate('overdue');
+            }
             return Html::tag('label')
-                    ->attributes([
-                        'class' => $model->getDateDue() > $now ?
-                            'badge text-bg-success' : 'badge text-bg-warning'])
-                    ->content(!is_string($dateDue = $model->getDateDue()) ?
-                            $dateDue->format('Y-m-d') : '');
+                    ->attributes($attributes)
+                    ->content(($isOverdue ? '⏰ ' : '') . $dateText);
         },
         encodeContent: false,
         withSorting: true,
@@ -479,12 +506,23 @@ $columns = [
         property: 'filterInvAmountBalance',
         header: $translator->translate('balance')
             . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
-        content: static function (Inv $model) use ($decimalPlaces): Label {
+        content: static function (Inv $model) use ($decimalPlaces, $translator): Label {
             $invAmntBal = $model->getInvAmount()->getBalance() ?? 0;
+            $stillOwing = $invAmntBal > 0.00;
+            // WCAG 1.4.1: text color used to be the only cue that there's
+            // still a balance outstanding -- an icon + title now carry
+            // that too.
+            $icon = $stillOwing ? '⚠️ ' : '✅ ';
+            $title = $stillOwing
+                ? $translator->translate('unpaid')
+                : $translator->translate('paid');
             return new Label()
-                    ->attributes(['class' => $invAmntBal > 0.00 ?
-                            'text-danger' : 'text-success'])
-                    ->content(Html::encode(
+                    ->attributes([
+                        'class' => $stillOwing ? 'text-danger' : 'text-success',
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $title,
+                    ])
+                    ->content($icon . Html::encode(
                             number_format($invAmntBal, $decimalPlaces)));
         },
         encodeContent: false,
@@ -649,15 +687,23 @@ echo GridView::widget()
     // the up and down symbol will appear at first indicating that the column
     // can be sorted. It also appears in this state if another column has been
     // sorted
+    //
+    // aria-hidden: purely decorative -- yii-dataview's GridView already
+    // sets the real aria-sort attribute on each sortable <th>, so these
+    // glyphs would otherwise be redundant, inconsistently-read Unicode
+    // noise on top of a state a screen reader already announces correctly.
     ->sortableHeaderPrepend(
-                '<div class="float-end text-secondary text-opacity-50">⭥</div>')
+                '<div class="float-end text-secondary text-opacity-50" aria-hidden="true">⭥</div>')
     // the up arrow will appear if column values are ascending
-    ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
+    ->sortableHeaderAscPrepend('<div class="float-end fw-bold" aria-hidden="true">⭡</div>')
     // the down arrow will appear if column values are descending
-    ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
+    ->sortableHeaderDescPrepend('<div class="float-end fw-bold" aria-hidden="true">⭣</div>')
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
     ->emptyCell($translator->translate('not.set'))
-    ->emptyCellAttributes(['style' => 'color:red'])
+    // WCAG 1.4.3: plain CSS `red` (#FF0000) on white is ~4.0:1, below
+    // AA's 4.5:1 minimum. Bootstrap's own text-danger (#dc3545, ~4.5:1)
+    // matches every other "attention" color already used in this grid.
+    ->emptyCellAttributes(['class' => 'text-danger'])
     ->id('w9-grid')
     ->paginationWidget($gridComponents->offsetPaginationWidget(
                                                     $sortedAndPagedPaginator))

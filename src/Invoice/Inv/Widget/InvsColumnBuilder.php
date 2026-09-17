@@ -1047,7 +1047,11 @@ final class InvsColumnBuilder
                             ->href($ug->generate('inv/view', ['id' => $parentId]));
                     }
                 }
-                return (new A())->content('')->href('');
+                // WCAG 2.4.4/4.1.2: href('') made this a real, focusable
+                // link to the current page with no visible content and no
+                // purpose. href(null) omits the attribute entirely, so it
+                // renders as a plain, inert <a> outside the tab order.
+                return (new A())->content('')->href(null);
             },
             encodeContent: false,
             filter: DropdownFilter::widget()
