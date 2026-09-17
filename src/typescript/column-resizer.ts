@@ -131,6 +131,15 @@ export class ColumnResizer {
         }
     }
 
+    /**
+     * WCAG 2.1.1: mousedown/mousemove alone gave this handle no keyboard
+     * equivalent at all -- a keyboard-only user could resize nothing more
+     * precisely than the toolbar's all-columns 📐 auto-fit/🔄 reset
+     * buttons. Now a real WAI-ARIA "separator" widget: focusable, and
+     * ArrowLeft/ArrowRight adjust the same width + localStorage persistence
+     * startDrag()/onDrag()/stopDrag() already use for a mouse drag, via the
+     * shared setWidth() helper below.
+     */
     private addHandle(th: HTMLTableCellElement, col: HTMLTableColElement, index: number): void {
         // Idempotent: attach() re-runs after every HTMX table refresh, and a
         // swap that doesn't touch this specific table would otherwise double up.
@@ -138,8 +147,32 @@ export class ColumnResizer {
 
         const handle = document.createElement('span');
         handle.className = 'col-resize-handle';
+        handle.setAttribute('role', 'separator');
+        handle.setAttribute('aria-orientation', 'vertical');
+        handle.setAttribute('tabindex', '0');
+        const headerLabel = th.textContent?.trim();
+        handle.setAttribute(
+            'aria-label',
+            headerLabel ? `Resize ${headerLabel} column` : 'Resize column',
+        );
         handle.addEventListener('mousedown', (e: MouseEvent) => { this.startDrag(e, col, index); });
+        handle.addEventListener('keydown', (e: KeyboardEvent) => { this.onHandleKeydown(e, col, index); });
         th.appendChild(handle);
+    }
+
+    private onHandleKeydown(e: KeyboardEvent, col: HTMLTableColElement, index: number): void {
+        const step = 10;
+        const delta = e.key === 'ArrowLeft' ? -step : e.key === 'ArrowRight' ? step : null;
+        if (delta === null) return;
+        e.preventDefault();
+        const currentWidth = Number.parseInt(col.style.width, 10) || 0;
+        this.setWidth(col, index, currentWidth + delta);
+    }
+
+    private setWidth(col: HTMLTableColElement, index: number, width: number): void {
+        const clamped = Math.max(40, Math.round(width));
+        col.style.width = `${clamped}px`;
+        globalThis.localStorage.setItem(this.storageKeyPrefix + String(index), String(clamped));
     }
 
     private startDrag(e: MouseEvent, col: HTMLTableColElement, index: number): void {

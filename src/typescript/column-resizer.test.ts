@@ -151,6 +151,55 @@ describe('ColumnResizer', () => {
         });
     });
 
+    describe('keyboard resize (WCAG 2.1.1 — the handle has no other keyboard equivalent)', () => {
+        beforeEach(() => {
+            buildTable();
+            initColumnResizer('table-invoice');
+        });
+
+        it('is a focusable ARIA separator, not just a mouse target', () => {
+            const h = handle(0);
+            expect(h.getAttribute('role')).toBe('separator');
+            expect(h.getAttribute('tabindex')).toBe('0');
+            expect(h.getAttribute('aria-orientation')).toBe('vertical');
+        });
+
+        it('names the handle after its own column header', () => {
+            expect(handle(0).getAttribute('aria-label')).toBe('Resize A column');
+            expect(handle(1).getAttribute('aria-label')).toBe('Resize B column');
+        });
+
+        it('ArrowRight grows the column by 10px and persists it', () => {
+            handle(0).dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+            expect(cols()[0].style.width).toBe('110px');
+            expect(localStorage.getItem(STORAGE_KEY_0)).toBe('110');
+        });
+
+        it('ArrowLeft shrinks the column by 10px and persists it', () => {
+            handle(0).dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+            expect(cols()[0].style.width).toBe('90px');
+            expect(localStorage.getItem(STORAGE_KEY_0)).toBe('90');
+        });
+
+        it('clamps to the same 40px minimum as a mouse drag', () => {
+            for (let i = 0; i < 20; i++) {
+                handle(0).dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+            }
+            expect(cols()[0].style.width).toBe('40px');
+        });
+
+        it('does not move a different column', () => {
+            handle(0).dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+            expect(cols()[1].style.width).toBe('120px');
+        });
+
+        it('ignores keys other than the two arrow keys', () => {
+            handle(0).dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+            expect(cols()[0].style.width).toBe('100px');
+            expect(localStorage.getItem(STORAGE_KEY_0)).toBeNull();
+        });
+    });
+
     describe('autoFit (📐 toolbar button)', () => {
         it('fits to the data, not the (much wider) header — overriding a previously saved width', () => {
             localStorage.setItem(STORAGE_KEY_0, '300');
