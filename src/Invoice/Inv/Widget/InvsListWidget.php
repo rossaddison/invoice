@@ -327,16 +327,29 @@ final class InvsListWidget extends Widget
             ->paginationWidget($pagination)
             ->sortableLinkAttributes(['hx-boost' => 'true', ...$htmxAttrs])
             ->filterFormAttributes(['hx-boost' => 'true', ...$htmxAttrs])
+            // aria-hidden: purely decorative -- yii-dataview's GridView
+            // already sets the real aria-sort attribute on each sortable
+            // <th> (see BaseListView/GlobalContext), so these glyphs would
+            // otherwise be redundant, inconsistently-read Unicode noise on
+            // top of a state a screen reader already announces correctly.
             ->sortableHeaderPrepend(
-                '<div class="float-end text-secondary text-opacity-50">⭥</div>'
+                '<div class="float-end text-secondary text-opacity-50" aria-hidden="true">⭥</div>'
             )
-            ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
-            ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
+            ->sortableHeaderAscPrepend(
+                '<div class="float-end fw-bold" aria-hidden="true">⭡</div>'
+            )
+            ->sortableHeaderDescPrepend(
+                '<div class="float-end fw-bold" aria-hidden="true">⭣</div>'
+            )
             ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
             ->footerRowAttributes(['class' => 'card-footer bg-success text-white fw-bold'])
             ->enableFooter(true)
             ->emptyCell($this->translator->translate('not.set'))
-            ->emptyCellAttributes(['style' => 'color:red'])
+            // WCAG 1.4.3: plain CSS `red` (#FF0000) on white is ~4.0:1,
+            // below AA's 4.5:1 minimum for normal text. Bootstrap's own
+            // --bs-danger (#dc3545) clears it (~4.5:1) and matches every
+            // other "attention" color elsewhere in this grid.
+            ->emptyCellAttributes(['class' => 'text-danger'])
             ->summaryAttributes([
                 'class' =>
                 'mt-3 me-3 summary d-flex justify-content-between align-items-center',

@@ -212,7 +212,12 @@ final class InvsColumnBuilder
                             ['client_id' => $model->reqClientId()],
                             ['origin' => 'inv', 'origin_id' => $model->reqId(),
                                 'action' => 'index']
-                        )
+                        ),
+                        [
+                            'data-bs-toggle' => 'tooltip',
+                            'title' => $t->translate('delivery.add'),
+                            'aria-label' => $t->translate('delivery.add'),
+                        ]
                     ),
                 encodeContent: false,
                 visible: $vis && !$isHidden('delivery_add'),
@@ -382,15 +387,25 @@ final class InvsColumnBuilder
             new DataColumn(
                 property: 'filterInvAmountPaid',
                 header: $t->translate('paid') . '➡️' . $sR->getSetting('currency_symbol'),
-                content: static function (Inv $model) use ($dp): Label {
+                content: static function (Inv $model) use ($dp, $t): Label {
                     $paid  = $model->getInvAmount()->getPaid();
                     $value = (null !== $paid && $paid > 0.00) ? $paid : 0.00;
-                    $class = ($model->getInvAmount()->getPaid()
-                        < $model->getInvAmount()->getTotal())
-                        ? 'badge bg-danger' : self::BDG_BG_SCS;
+                    $isUnderpaid = $model->getInvAmount()->getPaid()
+                        < $model->getInvAmount()->getTotal();
+                    $class = $isUnderpaid ? 'badge bg-danger' : self::BDG_BG_SCS;
+                    // WCAG 1.4.1: color alone used to distinguish underpaid vs
+                    // fully-paid used to be the only differentiator between two
+                    // badges showing the same kind of value -- an icon + title
+                    // now carry that distinction too, not just the badge color.
+                    $icon  = $isUnderpaid ? '⚠️ ' : '✅ ';
+                    $title = $isUnderpaid ? $t->translate('unpaid') : $t->translate('paid');
                     return (new Label())
-                        ->attributes(['class' => $class])
-                        ->content(Html::encode(number_format($value, $dp)));
+                        ->attributes([
+                            'class' => $class,
+                            'data-bs-toggle' => 'tooltip',
+                            'title' => $title,
+                        ])
+                        ->content($icon . Html::encode(number_format($value, $dp)));
                 },
                 encodeContent: false,
                 filter: TextInputFilter::widget()->addAttributes([
@@ -460,12 +475,21 @@ final class InvsColumnBuilder
             new DataColumn(
                 'date_modified',
                 header: $t->translate('datetime.immutable.date.modified'),
-                content: static function (Inv $m): Label {
-                    $cls = $m->getDateModified() <> $m->getDateCreated()
-                        ? 'badge bg-danger' : self::BDG_BG_SCS;
+                content: static function (Inv $m) use ($t): Label {
+                    $isModified = $m->getDateModified() <> $m->getDateCreated();
+                    $cls = $isModified ? 'badge bg-danger' : self::BDG_BG_SCS;
+                    // WCAG 1.4.1: the badge color used to be the only cue that
+                    // this invoice was edited after creation -- an icon + title
+                    // now carry that too.
+                    $icon = $isModified ? '✏️ ' : '';
+                    $attributes = ['class' => $cls];
+                    if ($isModified) {
+                        $attributes['data-bs-toggle'] = 'tooltip';
+                        $attributes['title'] = $t->translate('datetime.immutable.date.modified');
+                    }
                     return (new Label())
-                        ->attributes(['class' => $cls])
-                        ->content(Html::encode($m->getDateModified()->format('Y-m-d')));
+                        ->attributes($attributes)
+                        ->content($icon . Html::encode($m->getDateModified()->format('Y-m-d')));
                 },
                 encodeContent: false,
                 visible: $this->visible
@@ -473,13 +497,22 @@ final class InvsColumnBuilder
             new DataColumn(
                 'date_due',
                 header: $t->translate('due.date'),
-                content: static function (Inv $m): Label {
+                content: static function (Inv $m) use ($t): Label {
                     $now = new \DateTimeImmutable('now');
                     $due = $m->getDateDue();
+                    $isOverdue = $due <= $now;
+                    // WCAG 1.4.1: same fix as date_modified above -- badge
+                    // color was the sole indicator of "overdue".
+                    $icon = $isOverdue ? '⏰ ' : '';
+                    $attributes = ['class' => $due > $now
+                            ? self::BDG_BG_SCS : self::BDG_TXT_DARK];
+                    if ($isOverdue) {
+                        $attributes['data-bs-toggle'] = 'tooltip';
+                        $attributes['title'] = $t->translate('overdue');
+                    }
                     return (new Label())
-                        ->attributes(['class' => $due > $now
-                            ? self::BDG_BG_SCS : self::BDG_TXT_DARK])
-                        ->content(Html::encode($due->format('Y-m-d')));
+                        ->attributes($attributes)
+                        ->content($icon . Html::encode($due->format('Y-m-d')));
                 },
                 encodeContent: false,
                 withSorting: true,
@@ -682,13 +715,23 @@ final class InvsColumnBuilder
                 ->render(),
             encodeHeader: false,
             property: 'id',
-            content: static fn (Inv $model): A =>
-                (new A())
-                    ->addAttributes(['style' => 'text-decoration:none'])
+            content: static function (Inv $model) use ($ug, $t): A {
+                $isActive = $model->getClient()?->getClientActive();
+                $label = $t->translate('edit') . ' ' . $t->translate('client')
+                    . ' (' . $t->translate('active') . ': '
+                    . ($isActive ? '✅' : '❌') . ')';
+                return (new A())
+                    ->addAttributes([
+                        'style' => 'text-decoration:none',
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $label,
+                        'aria-label' => $label,
+                    ])
                     ->href($ug->generate('client/edit', [
                         'id' => $model->getClient()?->reqId(), 'origin' => 'inv',
                     ]))
-                    ->content($model->getClient()?->getClientActive() ? '✅' : '❌'),
+                    ->content($isActive ? '✅' : '❌');
+            },
             visible: $visible,
         );
     }
@@ -800,10 +843,15 @@ final class InvsColumnBuilder
         return new ActionColumn(
             header: '',
             before: Html::openTag('div', ['class' => 'dropdown'])
+                // Was 'data-toggle' (Bootstrap 4) -- Bootstrap 5's JS only
+                // wires up 'data-bs-toggle', so this dropdown never opened
+                // at all, for anyone. Also had no accessible name (empty
+                // button, no aria-label) -- added one.
                 . Html::openTag('button', [
                     'class' => 'btn btn-info dropdown-toggle', 'type' => 'button',
-                    'id' => 'dropdownMenuButton', 'data-toggle' => 'dropdown',
+                    'id' => 'dropdownMenuButton', 'data-bs-toggle' => 'dropdown',
                     'aria-haspopup' => 'true', 'aria-expanded' => 'false',
+                    'aria-label' => $t->translate('download.pdf') . ' / ' . $t->translate('email'),
                 ])
                 . Html::closeTag('button')
                 . Html::openTag('div', [
