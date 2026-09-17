@@ -421,6 +421,17 @@ $displaySubmenu = '<span class="dropdown-item dropdown-submenu-toggle" tabindex=
     . '</a></li>'
     . '</ul>';
 
+// Debug mode adds several long, unwrapped diagnostic lines (e.g. "Testing
+// Only: Delete all invoices..." in Settings, or the opcache.* lines in
+// Performance) that stretch the whole .dropdown-menu much wider than its
+// normal ~10rem -- a flyout anchored to that menu's right edge then lands
+// far past where the triggering row visually is. Exiting to the left
+// instead (see .dropdown-submenu-start in components.css) keeps it next
+// to the row that opened it. Normal (non-debug) users never see this: the
+// menu stays its usual narrow width, where opening right already reads
+// naturally.
+$flyoutLiClass = 'dropdown-submenu' . ($debugMode ? ' dropdown-submenu-start' : '');
+
 $currentPath = $currentRoute->getUri()?->getPath();
 if ((null !== $currentPath) && !$isGuest) {
     // nav items available in debugMode
@@ -893,7 +904,7 @@ if ((null !== $currentPath) && !$isGuest) {
                         $bootstrap5LayoutInvoiceNavbarFont,
                         $bootstrap5LayoutInvoiceNavbarFontSize,
                         $subMenuPrometheus),
-                    ['class' => 'dropdown-submenu'],
+                    ['class' => $flyoutLiClass],
                 ),
             ),
             // Platform
@@ -1214,44 +1225,47 @@ if ((null !== $currentPath) && !$isGuest) {
             DropdownItem::link($t->translate('debug') . ': ' . $t->translate('view'),
                 $urlGenerator->generate('setting/debugIndex'),
                     false, !$debugMode,
-                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;',
+                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
+                         . ' white-space: normal; max-width: 260px;',
                          'hidden' => !$debugMode]),
             DropdownItem::link($t->translate('setting.add'),
                 $urlGenerator->generate('setting/add'),
                     false, !$debugMode,
-                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;',
+                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
+                         . ' white-space: normal; max-width: 260px;',
                          'hidden' => !$debugMode]),
             DropdownItem::link($t->translate('caution.delete.invoices'),
                 $urlGenerator->generate('inv/flush'),
                     false, !$debugMode,
-                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;',
+                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
+                         . ' white-space: normal; max-width: 260px;',
                          'hidden' => !$debugMode]),
             DropdownItem::divider(),
-            DropdownItem::listContent($displaySubmenu, ['class' => 'dropdown-submenu']),
+            DropdownItem::listContent($displaySubmenu, ['class' => $flyoutLiClass]),
             DropdownItem::listContent(
                 $subMenu->generate($t->translate('setting.company'), $urlGenerator,
                     $bootstrap5LayoutInvoiceNavbarFont, $bootstrap5LayoutInvoiceNavbarFontSize,
                     $subMenuCompany),
-                ['class' => 'dropdown-submenu'],
+                ['class' => $flyoutLiClass],
             ),
             DropdownItem::listContent(
                 $subMenu->generate($t->translate('email.template'), $urlGenerator,
                     $bootstrap5LayoutInvoiceNavbarFont, $bootstrap5LayoutInvoiceNavbarFontSize,
                     $subMenuEmail),
-                ['class' => 'dropdown-submenu'],
+                ['class' => $flyoutLiClass],
             ),
             DropdownItem::listContent(
                 $subMenu->generate($t->translate('user.account'), $urlGenerator,
                     $bootstrap5LayoutInvoiceNavbarFont, $bootstrap5LayoutInvoiceNavbarFontSize,
                     $subMenuAccess),
-                ['class' => 'dropdown-submenu'],
+                ['class' => $flyoutLiClass],
             ),
             DropdownItem::divider(),
             DropdownItem::listContent(
                 $subMenu->generate($t->translate('menu.more'), $urlGenerator,
                     $bootstrap5LayoutInvoiceNavbarFont, $bootstrap5LayoutInvoiceNavbarFontSize,
                     $subMenuMore),
-                ['class' => 'dropdown-submenu'],
+                ['class' => $flyoutLiClass],
             ),
         ),
         // peppol

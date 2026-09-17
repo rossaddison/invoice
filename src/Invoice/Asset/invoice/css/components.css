@@ -430,6 +430,19 @@ textarea.form-control {
   margin: 0 0 0 2px;
 }
 
+/* Debug mode adds long, unwrapped diagnostic lines to the parent
+   .dropdown-menu (see resources/views/layout/invoice.php's own
+   $flyoutLiClass comment) that stretch it far wider than usual, landing a
+   right-exiting flyout well past the row that opened it -- exiting left
+   instead keeps it anchored to that row regardless of the parent menu's
+   width. Only applied when debug mode is on; everyone else keeps the
+   normal right-exiting flyout. */
+.dropdown-submenu-start > .dropdown-menu-submenu {
+  left: auto;
+  right: 100%;
+  margin: 0 2px 0 0;
+}
+
 .dropdown-submenu:hover > .dropdown-menu-submenu,
 .dropdown-submenu:focus-within > .dropdown-menu-submenu,
 .dropdown-submenu.show > .dropdown-menu-submenu {
