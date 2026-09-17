@@ -37,6 +37,7 @@ trait InvsWorkerColumnTrait
             header: $t->translate('worker'),
             content: static function (Inv $model) use ($ug, $t, $activeWorkers, $csrf): string {
                 $current = $model->getWorker();
+                $number = $model->getNumber();
                 $options = (new Option())
                     ->value('')
                     ->content($t->translate('worker.unassigned'))
@@ -66,7 +67,7 @@ trait InvsWorkerColumnTrait
                             // worker #" with no number, unlike every other
                             // number reference in this app.
                             'aria-label' => $t->translate('worker.assign')
-                                . ($model->getNumber() !== null ? ' #' . $model->getNumber() : ''),
+                                . ($number !== null ? ' #' . $number : ''),
                         ]) . $options . Html::closeTag('select')
                         . Html::tag('button', '💾', [
                             'type' => 'submit', 'class' => 'btn btn-outline-primary btn-sm',
