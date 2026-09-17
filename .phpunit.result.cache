@@ -1,1 +1,0 @@
-{"version":1,"defects":{"App\\Tests\\Functional\\IndexControllerTest::testGetIndex":8,"Tests\\Functional\\IndexControllerTest::testGetIndex":8},"times":{"App\\Tests\\Functional\\EventListenerConfigurationTest::testConsoleListenerConfiguration":0.252,"Tests\\Functional\\EventListenerConfigurationTest::testConsoleListenerConfiguration":0.147}}
