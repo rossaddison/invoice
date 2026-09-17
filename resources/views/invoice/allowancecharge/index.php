@@ -187,6 +187,7 @@ $toolbarString
     .  new Form()->close();
 
 echo GridView::widget()
+    ->accessibility(true)
     ->columns(...$columns)
     ->dataReader($paginator)
     ->bodyRowAttributes(['class' => 'align-middle'])

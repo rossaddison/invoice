@@ -104,6 +104,7 @@ final class GeneratorListWidget extends Widget
         $urlCreator->__invoke([], OrderHelper::stringToArray($this->sortString));
 
         return GridView::widget()
+            ->accessibility(true)
             ->containerAttributes(['id' => self::DOM_ID, 'class' => 'position-relative'])
             ->bodyRowAttributes(['class' => 'align-middle'])
             ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-generator'])

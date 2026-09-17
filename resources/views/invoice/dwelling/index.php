@@ -106,6 +106,7 @@ $toolbarString =  new Form()->post($urlGenerator->generate('dwelling/index'))->c
 $gridSummary = $s->gridSummary($paginator, $translator, (int) $s->getSetting('default_list_limit'), $translator->translate('dwelling.plural'), '');
 
 echo GridView::widget()
+  ->accessibility(true)
   ->bodyRowAttributes(['class' => 'align-middle'])
   ->tableAttributes(['class' => 'table table-striped text-center', 'id' => 'table-dwelling'])
   ->columns(...$columns)

@@ -124,6 +124,7 @@ final class GatewayStatusListWidget extends Widget
         );
 
         $gridView = GridView::widget()
+            ->accessibility(true)
             ->containerAttributes(['id' => self::DOM_ID, 'class' => 'position-relative'])
             ->tableAttributes(['class' => 'table table-striped align-middle'])
             // Without this, GridView drops a column's own bodyAttributes

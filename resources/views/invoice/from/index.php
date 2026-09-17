@@ -91,6 +91,7 @@ $toolbarString
 $gridSummary = $s->gridSummary($paginator, $translator, (int) $s->getSetting('default_list_limit'), $translator->translate('plural'), '');
 
 echo GridView::widget()
+  ->accessibility(true)
   ->bodyRowAttributes(['class' => 'align-middle'])
   ->tableAttributes(['class' => 'table table-striped text-center h-99999999999999999', 'id' => 'table-from'])
   ->columns(...$columns)

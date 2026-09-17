@@ -154,6 +154,7 @@ $gridSummary = $s->gridSummary(
 );
 
 echo GridView::widget()
+  ->accessibility(true)
   ->bodyRowAttributes(['class' => 'align-middle'])
   ->tableAttributes(
         ['class' => 'table table-striped text-center h-<?= $random; ?>',

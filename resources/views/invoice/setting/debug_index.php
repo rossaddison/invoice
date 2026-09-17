@@ -150,6 +150,7 @@ $toolbarString =  new Form()->post($urlGenerator->generate('setting/debugIndex')
     .  new Form()->close();
 
 echo GridView::widget()
+->accessibility(true)
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-striped text-start h-75','id' => 'table-setting'])
 /** @psalm-suppress InvalidArgument */

@@ -69,6 +69,7 @@ final class UsersListWidget extends Widget
         ]);
 
         $gridView = GridView::widget()
+            ->accessibility(true)
             ->containerAttributes(['id' => self::DOM_ID, 'class' => 'mt-4 position-relative'])
             ->dataReader($this->paginator)
             ->urlParameterProvider(new UrlParameterProvider($this->currentRoute))
