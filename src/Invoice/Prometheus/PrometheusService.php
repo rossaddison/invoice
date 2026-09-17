@@ -51,6 +51,17 @@ final class PrometheusService
         return RenderTextFormat::MIME_TYPE;
     }
 
+    /**
+     * @return array{
+     *     status: 'healthy'|'warning'|'error',
+     *     timestamp: int,
+     *     checks: array{
+     *         memory: array{status?: 'ok'|'warning', usage_bytes?: int, limit_bytes?: int, usage_percent?: float},
+     *         metrics_registry: array{status: 'ok'|'unknown', storage_type: mixed}
+     *     },
+     *     error?: string
+     * }
+     */
     public function performHealthCheck(): array
     {
         $health = [
@@ -107,12 +118,18 @@ final class PrometheusService
     private function createRegistry(): CollectorRegistry
     {
         $configStorage     = (array) $this->config['storage'];
-        $configStorageType = (string) $configStorage['type'];
-        $configStorageRedis = (array) $configStorage['redis'];
-        $storageType       = $configStorageType ?: 'memory';
+        $configStorageType = (string) ($configStorage['type'] ?? '');
+        // 'apcu' default: 'memory' only lives inside this single PHP
+        // process, so on PHP-FPM/Apache it can never survive to the next
+        // request's scrape -- see config/common/di/prometheus.php.
+        $storageType       = $configStorageType ?: 'apcu';
 
         return match ($storageType) {
-            'redis' => new CollectorRegistry(new Redis($configStorageRedis ?: [])),
+            // 'redis' sub-array only extracted here, not unconditionally
+            // above -- a partial config override (e.g. just ['type' =>
+            // 'apcu']) has no reason to also carry Redis connection
+            // defaults it'll never use.
+            'redis' => new CollectorRegistry(new Redis((array) ($configStorage['redis'] ?? []))),
             'apcu'  => extension_loaded('apcu') && class_exists(APC::class) && apcu_enabled()
                 ? new CollectorRegistry(new APC())
                 : new CollectorRegistry(new InMemory()),
@@ -124,7 +141,7 @@ final class PrometheusService
     {
         return [
             'storage' => [
-                'type'  => 'memory',
+                'type'  => 'apcu',
                 'redis' => [
                     'host'                 => '127.0.0.1',
                     'port'                 => 6379,

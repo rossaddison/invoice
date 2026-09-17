@@ -17,7 +17,13 @@ return [
         '__construct()' => [
             'config' => [
                 'storage' => [
-                    'type' => $_ENV['PROMETHEUS_STORAGE_TYPE'] ?? 'memory',
+                    // 'memory' only lives inside a single PHP process -- on
+                    // PHP-FPM/Apache every request is a fresh process with
+                    // nothing shared, so metrics never survive to the next
+                    // scrape. 'apcu' is the default since this app already
+                    // requires ext-apcu, giving real cross-request
+                    // persistence with zero extra infrastructure.
+                    'type' => $_ENV['PROMETHEUS_STORAGE_TYPE'] ?? 'apcu',
                     'redis' => [
                         'host' => $_ENV['REDIS_HOST'] ?? '127.0.0.1',
                         'port' => (int) ($_ENV['REDIS_PORT'] ?? 6379),
@@ -39,7 +45,12 @@ return [
     ],
 
     CollectorRegistry::class => static function (): CollectorRegistry {
-        $storageType = $_ENV['PROMETHEUS_STORAGE_TYPE'] ?? 'memory';
+        // Same default/rationale as PrometheusService::class's config above --
+        // keep both in sync, since PrometheusMiddleware writes to this
+        // registry while PrometheusService/PrometheusController reads from
+        // its own separately-constructed one; they only end up seeing the
+        // same data when both resolve to the same real (apcu/redis) backend.
+        $storageType = $_ENV['PROMETHEUS_STORAGE_TYPE'] ?? 'apcu';
 
         return match ($storageType) {
             'redis' => new CollectorRegistry(
