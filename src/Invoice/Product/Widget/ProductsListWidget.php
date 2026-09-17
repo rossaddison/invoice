@@ -176,18 +176,26 @@ final class ProductsListWidget extends Widget
             ->paginationWidget($pagination)
             ->sortableLinkAttributes(['hx-boost' => 'true', ...$htmxAttrs])
             ->filterFormAttributes(['hx-boost' => 'true', ...$htmxAttrs])
+            // aria-hidden: purely decorative -- yii-dataview's GridView
+            // already sets the real aria-sort attribute on each sortable
+            // <th>, so these glyphs would otherwise be redundant,
+            // inconsistently-read Unicode noise on top of a state a screen
+            // reader already announces correctly.
             ->sortableHeaderPrepend(
-                '<div class="float-end text-secondary text-opacity-50">⭥</div>'
+                '<div class="float-end text-secondary text-opacity-50" aria-hidden="true">⭥</div>'
             )
-            ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
-            ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
+            ->sortableHeaderAscPrepend('<div class="float-end fw-bold" aria-hidden="true">⭡</div>')
+            ->sortableHeaderDescPrepend('<div class="float-end fw-bold" aria-hidden="true">⭣</div>')
             ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
             ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
             ->summaryTemplate($this->gridSummary)
             ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
             ->noResultsText($this->translator->translate('no.records'))
             ->emptyCell($this->translator->translate('not.set'))
-            ->emptyCellAttributes(['style' => 'color:red'])
+            // WCAG 1.4.3: plain CSS `red` (#FF0000) on white is ~4.0:1,
+            // below AA's 4.5:1 minimum. Bootstrap's text-danger (#dc3545,
+            // ~4.5:1) matches the fix already applied to every other grid.
+            ->emptyCellAttributes(['class' => 'text-danger'])
             ->toolbar($this->buildToolbarString())
             ->render();
     }
@@ -210,18 +218,30 @@ final class ProductsListWidget extends Widget
             ->id('btn-all-visible')
             ->render();
 
+        // WCAG 1.1.1/2.4.4/4.1.2: icon-only link with no accessible name at
+        // all -- neither title nor aria-label (the same gap as this exact
+        // button in every other grid's toolbar, left as-is there since it's
+        // out of today's scope, but worth fixing here since this file is
+        // already open).
         $toolbarReset = (new A())
-            ->addAttributes(['type' => 'reset'])
+            ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
+                'title' => $t->translate('reset')])
             ->addClass('btn btn-danger me-1 ajax-loader')
             ->content(new I()->addClass('bi bi-bootstrap-reboot'))
             ->href($ug->generate($this->currentRoute->getName() ?? self::ROUTE_INDEX))
             ->id('btn-reset')
             ->render();
 
+        // WCAG 1.1.1/2.4.4/4.1.2: same gap, icon-only "+" link with no name.
         $addProduct = (new A())
             ->href($ug->generate('product/add'))
             ->addClass('btn btn-info')
-            ->addAttributes(['hx-boost' => 'false'])
+            ->addAttributes([
+                'hx-boost' => 'false',
+                'data-bs-toggle' => 'tooltip',
+                'title' => $t->translate('add'),
+                'aria-label' => $t->translate('add'),
+            ])
             ->content('➕')
             ->render();
 
@@ -330,11 +350,17 @@ final class ProductsListWidget extends Widget
             ),
             new DataColumn(
                 header: $t->translate('product.property.add'),
+                // WCAG 1.1.1/2.4.4/4.1.2: icon-only link, no title/aria-label.
                 content: static fn (Product $m): A =>
                     Html::a(
                         Html::tag('i', '', ['class' => 'bi-plus dropdown-item text-decoration-none']),
                         $ug->generate('productproperty/add', ['product_id' => $m->reqId()]),
-                        ['hx-boost' => 'false'],
+                        [
+                            'hx-boost' => 'false',
+                            'data-bs-toggle' => 'tooltip',
+                            'title' => $t->translate('product.property.add'),
+                            'aria-label' => $t->translate('product.property.add'),
+                        ],
                     ),
                 encodeContent: false,
                 visible: $visible,
@@ -354,9 +380,15 @@ final class ProductsListWidget extends Widget
             encodeHeader: true,
             content: static fn (Product $m): string =>
                 Html::encode($m->getFamily()?->getFamilyName() ?? ''),
+            // WCAG 1.3.1/3.3.2: no aria-label/title at all.
             /** @psalm-suppress MixedArgumentTypeCoercion */
             filter: DropdownFilter::widget()
-                ->addAttributes(['name' => 'family_id', 'class' => 'native-reset'])
+                ->addAttributes([
+                    'name' => 'family_id',
+                    'class' => 'native-reset',
+                    'aria-label' => 'Filter by ' . $t->translate('family.name'),
+                    'title' => $t->translate('family.name'),
+                ])
                 ->optionsData($optionsFam),
             filterFactory: new NoOpFilterFactory(),
             visible: true,
@@ -425,9 +457,15 @@ final class ProductsListWidget extends Widget
             header: $t->translate('product.sku'),
             encodeHeader: true,
             content: static fn (Product $m): string => Html::encode($m->getProductSku()),
+            // WCAG 1.3.1/3.3.2: no aria-label/title at all.
             /** @psalm-suppress MixedArgumentTypeCoercion */
             filter: DropdownFilter::widget()
-                ->addAttributes(['name' => 'product_sku', 'class' => 'native-reset'])
+                ->addAttributes([
+                    'name' => 'product_sku',
+                    'class' => 'native-reset',
+                    'aria-label' => 'Filter by ' . $t->translate('product.sku'),
+                    'title' => $t->translate('product.sku'),
+                ])
                 ->optionsData($optionsProd),
             filterFactory: new NoOpFilterFactory(),
             visible: true,
@@ -442,8 +480,15 @@ final class ProductsListWidget extends Widget
             header: $t->translate('product.price') . ' ( ' . $sR->getSetting('currency_symbol') . ' ) ',
             content: static fn (Product $m): string =>
                 Html::encode((string) $m->getProductPrice()),
+            // WCAG 1.3.1/3.3.2: no aria-label/title/placeholder at all.
             filter: TextInputFilter::widget()
-                ->addAttributes(['style' => 'max-width: 50px', 'class' => 'native-reset']),
+                ->addAttributes([
+                    'style' => 'max-width: 50px',
+                    'class' => 'native-reset',
+                    'aria-label' => 'Filter by ' . $t->translate('product.price'),
+                    'title' => $t->translate('product.price'),
+                    'placeholder' => $t->translate('product.price'),
+                ]),
             filterFactory: new NoOpFilterFactory(),
             visible: true,
             withSorting: false,
@@ -485,6 +530,7 @@ final class ProductsListWidget extends Widget
                     url: static fn (Product $m): string =>
                         $ug->generate('product/delete', ['id' => $m->reqId()]),
                     attributes: [
+                        'data-bs-toggle' => 'tooltip',
                         'title'   => $t->translate('delete'),
                         'data-confirm' => $t->translate('delete.record.warning'),
                         'class'   => 'btn btn-outline-danger btn-sm',
