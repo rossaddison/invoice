@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
     bootstrap="Tests/bootstrap.php"
-    cacheDirectory=".phpunit.cache"
+    cacheDirectory="runtime/cache/phpunit"
     executionOrder="depends,defects"
     requireCoverageMetadata="false"
     beStrictAboutChangesToGlobalState="true"

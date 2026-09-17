@@ -45,8 +45,14 @@ c3.php
 #assets
 !assets
 
-# Code Style
-php-cs-fixer.cache
+# Code Style — both now live under runtime/ (see .php-cs-fixer.php's
+# setCacheFile()/phpunit.xml.dist's cacheDirectory, already covered by
+# runtime/.gitignore's blanket "*"), but keep these as a defensive
+# fallback in case something ever runs either tool without its own
+# config file and falls back to a root-level default.
+.php-cs-fixer.cache
+.phpunit.cache/
+.phpunit.result.cache
 
 # Snyk
 snyk-report.txt
