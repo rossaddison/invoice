@@ -81,6 +81,23 @@ describe('ColumnResizer', () => {
         expect(document.querySelectorAll('.col-resize-handle')).toHaveLength(2);
     });
 
+    it('keyboard resize still works after an idempotent re-attach reuses the existing handle', () => {
+        // Regression: attach() rebuilds its internal handle-lookup map on
+        // every call, but addHandle() returns early (without touching that
+        // map) when a handle already exists in the DOM -- the reused handle
+        // needs re-registering there too, or setWidth() silently stops
+        // finding it (and updating aria-valuenow) after the very next
+        // unrelated HTMX swap.
+        buildTable();
+        initColumnResizer('table-invoice');
+        document.body.dispatchEvent(new Event('htmx:afterSwap'));
+
+        handle(0).dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+
+        expect(cols()[0].style.width).toBe('110px');
+        expect(handle(0).getAttribute('aria-valuenow')).toBe('110');
+    });
+
     it('re-attaches handles to a freshly swapped-in table', () => {
         buildTable();
         initColumnResizer('table-invoice');
@@ -115,6 +132,12 @@ describe('ColumnResizer', () => {
             handle(0).dispatchEvent(new MouseEvent('mousedown', { clientX: 100 }));
             document.dispatchEvent(new MouseEvent('mousemove', { clientX: 150 }));
             expect(cols()[0].style.width).toBe('150px');
+        });
+
+        it('keeps aria-valuenow in sync live during a mouse drag, not just on mouseup', () => {
+            handle(0).dispatchEvent(new MouseEvent('mousedown', { clientX: 100 }));
+            document.dispatchEvent(new MouseEvent('mousemove', { clientX: 150 }));
+            expect(handle(0).getAttribute('aria-valuenow')).toBe('150');
         });
 
         it('clamps the width to a 40px minimum', () => {
@@ -198,6 +221,30 @@ describe('ColumnResizer', () => {
             expect(cols()[0].style.width).toBe('100px');
             expect(localStorage.getItem(STORAGE_KEY_0)).toBeNull();
         });
+
+        it('is a range widget exposing aria-valuemin and an initial aria-valuenow', () => {
+            expect(handle(0).getAttribute('aria-valuemin')).toBe('40');
+            expect(handle(0).getAttribute('aria-valuenow')).toBe('100');
+        });
+
+        it('keeps aria-valuenow in sync with a keyboard resize', () => {
+            handle(0).dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+            expect(handle(0).getAttribute('aria-valuenow')).toBe('110');
+        });
+
+        it('after a reset, an arrow key nudges the real rendered width instead of snapping to the 40px floor', () => {
+            // Regression: col.style.width is '' right after reset() (see the
+            // 'reset' describe block below) -- Number.parseInt('', 10) || 0
+            // used to feed setWidth() a bogus 0, clamping straight to 40px
+            // instead of nudging from the column's actual current width.
+            document.getElementById('btn-reset-column-widths')?.click();
+            expect(cols()[0].style.width).toBe('');
+
+            handle(0).dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+
+            // buildTable()'s th mock for column 0 is 100px -- +10px, not 40px.
+            expect(cols()[0].style.width).toBe('110px');
+        });
     });
 
     describe('autoFit (📐 toolbar button)', () => {
@@ -214,6 +261,7 @@ describe('ColumnResizer', () => {
             // data, not the header, which stays untouched at 100px regardless.
             expect(cols()[0].style.width).toBe('25px');
             expect(localStorage.getItem(STORAGE_KEY_0)).toBe('25');
+            expect(handle(0).getAttribute('aria-valuenow')).toBe('25');
         });
 
         it('grows a column whose data is wider than its header, rather than clamping to the header', () => {
@@ -321,6 +369,20 @@ describe('ColumnResizer', () => {
             document.getElementById('btn-reset-column-widths')?.click();
             expect((document.getElementById('table-invoice') as HTMLTableElement).style.tableLayout)
                 .toBe('auto');
+        });
+
+        it('re-syncs aria-valuenow to the post-reset rendered width, without re-pinning col.style.width', () => {
+            buildTable();
+            initColumnResizer('table-invoice');
+            handle(0).dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+            expect(handle(0).getAttribute('aria-valuenow')).toBe('110');
+
+            document.getElementById('btn-reset-column-widths')?.click();
+
+            // buildTable()'s th mock for column 0 is 100px — the real
+            // rendered width once the fixed inline width is cleared.
+            expect(handle(0).getAttribute('aria-valuenow')).toBe('100');
+            expect(cols()[0].style.width).toBe('');
         });
 
         it('a subsequent attach() (e.g. next HTMX swap) re-measures fresh, ignoring the old saved width', () => {

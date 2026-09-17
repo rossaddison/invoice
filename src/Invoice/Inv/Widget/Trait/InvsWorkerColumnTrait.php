@@ -61,7 +61,12 @@ trait InvsWorkerColumnTrait
                         // to a screen reader the way it is visually.
                         Html::openTag('select', [
                             'name' => 'worker_id', 'class' => 'form-select form-select-sm',
-                            'aria-label' => $t->translate('worker.assign') . ' #' . ($model->getNumber() ?? ''),
+                            // Inv::$number is nullable -- appending '#' plus
+                            // an empty string produced a dangling "Assign
+                            // worker #" with no number, unlike every other
+                            // number reference in this app.
+                            'aria-label' => $t->translate('worker.assign')
+                                . ($model->getNumber() !== null ? ' #' . $model->getNumber() : ''),
                         ]) . $options . Html::closeTag('select')
                         . Html::tag('button', '💾', [
                             'type' => 'submit', 'class' => 'btn btn-outline-primary btn-sm',
