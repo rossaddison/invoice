@@ -209,11 +209,21 @@ final class SalesOrdersListWidget extends Widget
             ->paginationWidget($pagination)
             ->sortableLinkAttributes($htmxBoostAttrs)
             ->filterFormAttributes($htmxBoostAttrs)
+            // yii-dataview 1.3's accessibility() opt-in (added scope="col"/
+            // aria-sort on header cells and aria-current/aria-disabled/
+            // aria-label/role="link" on pagination links -- disabled by
+            // default, so none of this rendered before enabling it here).
+            ->accessibility(true)
+            // aria-hidden: purely decorative -- accessibility() above adds
+            // the real aria-sort attribute on each sortable <th>, so these
+            // glyphs would otherwise be redundant, inconsistently-read
+            // Unicode noise on top of a state a screen reader already
+            // announces correctly.
             ->sortableHeaderPrepend(
-                '<div class="float-end text-secondary text-opacity-50">⭥</div>'
+                '<div class="float-end text-secondary text-opacity-50" aria-hidden="true">⭥</div>'
             )
-            ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
-            ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
+            ->sortableHeaderAscPrepend('<div class="float-end fw-bold" aria-hidden="true">⭡</div>')
+            ->sortableHeaderDescPrepend('<div class="float-end fw-bold" aria-hidden="true">⭣</div>')
             ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
             ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
             ->summaryTemplate($this->gridSummary)
@@ -289,19 +299,31 @@ final class SalesOrdersListWidget extends Widget
         $groupBySelect = (new Div())
             ->addClass('d-flex align-items-center gap-1')
             ->addAttributes(['role' => 'group'])
+            // WCAG 1.3.1/3.3.2/4.1.2, and a real functional bug: the
+            // 'onchange' attribute below was raw inline JavaScript --
+            // this app's CSP (script-src, no 'unsafe-inline') blocks
+            // inline event-handler attributes exactly like it blocks
+            // inline <script> tags, so this select never actually
+            // changed the grouping at all. Switched to the same
+            // .group-by-select class + data-base-url attribute
+            // inv/index and quote/index already use (list-utils.ts's
+            // initGroupBySelect(), CSP-safe, real change-event
+            // listener) -- salesorder-index.ts now calls it too. The
+            // label/select pair is also now programmatically linked via
+            // forId()/id, which it never was either.
             ->content(
                 (new Label())
                     ->addClass(
                         'btn btn-sm btn-outline-secondary active bi bi-collection me-1'
                     )
+                    ->forId('salesorder-group-by-select')
                     ->content(' ' . $t->translate('group.by') . ':')
                 . (new Select())
-                    ->addClass('form-select form-select-sm')
+                    ->addClass('form-select form-select-sm group-by-select')
                     ->addAttributes([
-                        'style'    => 'max-width: 150px;',
-                        'onchange' => 'globalThis.location.href=\''
-                            . $ug->generate(self::ROUTE_INDEX)
-                            . '?groupBy=\' + this.value',
+                        'id'            => 'salesorder-group-by-select',
+                        'style'         => 'max-width: 150px;',
+                        'data-base-url' => $ug->generate(self::ROUTE_INDEX),
                     ])
                     ->optionsData([
                         'none'   => $t->translate('grouping.none'),

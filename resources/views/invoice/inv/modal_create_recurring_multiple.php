@@ -16,11 +16,12 @@ declare(strict_types=1);
 
 ?>
 
-<div id="create-recurring-multiple" class="modal" tabindex="-1">
+<div id="create-recurring-multiple" class="modal" tabindex="-1"
+    aria-labelledby="create-recurring-multiple-title">
     <div class="modal-dialog">
         <div class="modal-content">
            <div class="modal-header">
-               <h5 class="modal-title">
+               <h5 class="modal-title" id="create-recurring-multiple-title">
                     <?= $translator->translate('create.recurring'); ?>
                </h5>
                <button

@@ -54,8 +54,19 @@ trait InvsWorkerColumnTrait
                     ->csrf($csrf)
                     ->addAttributes(['class' => 'd-flex gap-1'])
                     ->content(
+                        // WCAG 1.3.1/3.3.2: this <select> had no label at all
+                        // (only the adjacent save button did) -- aria-label
+                        // now names both the control and which invoice it's
+                        // for, since the column position alone isn't exposed
+                        // to a screen reader the way it is visually.
                         Html::openTag('select', [
                             'name' => 'worker_id', 'class' => 'form-select form-select-sm',
+                            // Inv::$number is nullable -- appending '#' plus
+                            // an empty string produced a dangling "Assign
+                            // worker #" with no number, unlike every other
+                            // number reference in this app.
+                            'aria-label' => $t->translate('worker.assign')
+                                . ($model->getNumber() !== null ? ' #' . $model->getNumber() : ''),
                         ]) . $options . Html::closeTag('select')
                         . Html::tag('button', '💾', [
                             'type' => 'submit', 'class' => 'btn btn-outline-primary btn-sm',

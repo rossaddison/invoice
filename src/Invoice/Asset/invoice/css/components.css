@@ -551,8 +551,18 @@ textarea.form-control {
 }
 
 .col-resize-handle:hover,
-.col-resize-handle.col-resizing {
+.col-resize-handle.col-resizing,
+.col-resize-handle:focus-visible {
     background: rgba(13, 110, 253, 0.35);
+}
+
+/* WCAG 2.4.7: the handle is a 6px-wide absolutely-positioned sliver --
+   a browser's default focus outline on something this thin is easy to
+   miss, so :focus-visible also gets the same highlight as hover/dragging
+   above, plus an outline that isn't clipped by the handle's own tiny box. */
+.col-resize-handle:focus-visible {
+    outline: 2px solid #0d6efd;
+    outline-offset: 1px;
 }
 
 /* Set while dragging (on <body>) so the resize cursor and no-select apply

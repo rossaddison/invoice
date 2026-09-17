@@ -56,6 +56,7 @@ final class Bootstrap5ModalQuote
         ];
         $this->layoutParameters = [
             'type' => 'quote',
+            'title' => $this->formParameters['title'],
             'form' => $this->webViewRenderer->renderPartialAsString('//invoice/quote/modal_add_quote_form', $this->formParameters),
         ];
         return $this->webViewRenderer->renderPartialAsString('//invoice/quote/modal_layout', $this->layoutParameters);

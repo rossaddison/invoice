@@ -40,7 +40,8 @@ trait InvsCategorySecondaryRunColumnTrait
             filter: DropdownFilter::widget()
                 ->addAttributes(['id' => 'filter-category-secondary-run',
                     'class' => 'native-reset inv-filter',
-                    'aria-label' => 'Filter by HomeCare current run',
+                    'aria-label' => $t->translate('filter.by') . ' '
+                        . $t->translate('homecare.current.run'),
                     'title' => $t->translate('homecare.current.run')])
                 ->optionsData($this->filterOptions->categorySecondaryRun),
             filterFactory: new NoOpFilterFactory(),

@@ -15,11 +15,11 @@ use Yiisoft\Html\Html as H;
  */
 
 echo H::openTag('div', ['id' => 'modal-copy-inv-multiple', 'class' => 'modal',
-    'tabindex' => '-1']); //0
+    'tabindex' => '-1', 'aria-labelledby' => 'modal-copy-inv-multiple-title']); //0
  echo H::openTag('div', ['class' => 'modal-dialog']); //1
   echo H::openTag('div', ['class' => 'modal-content']); //2
    echo H::openTag('div', ['class' => 'modal-header']); //3
-    echo H::openTag('h5', ['class' => 'modal-title']); //4
+    echo H::openTag('h5', ['class' => 'modal-title', 'id' => 'modal-copy-inv-multiple-title']); //4
      echo $translator->translate('copy.invoice');
     echo H::closeTag('h5'); //4
     echo H::tag('button', '', [
@@ -51,6 +51,10 @@ echo H::openTag('div', ['id' => 'modal-copy-inv-multiple', 'class' => 'modal',
        'id'           => 'copy-inv-multiple-client-search',
        'class'        => 'form-control form-control-sm',
        'placeholder'  => $translator->translate('search') . '…',
+       // WCAG 3.3.2: placeholder alone isn't a reliable label (it
+       // disappears once the field has a value, and isn't announced
+       // consistently by every screen reader) -- aria-label backs it.
+       'aria-label'   => $translator->translate('search'),
        'autocomplete' => 'off',
       ]);
      echo H::closeTag('div'); //5
@@ -92,10 +96,14 @@ echo H::openTag('div', ['id' => 'modal-copy-inv-multiple', 'class' => 'modal',
        echo H::closeTag('a'); //7
       echo H::closeTag('div'); //6
       echo H::tag('input', '', [
-       'type'   => 'file',
-       'id'     => 'copy_inv_csv_file',
-       'accept' => '.csv',
-       'class'  => 'form-control form-control-sm mb-2',
+       'type'       => 'file',
+       'id'         => 'copy_inv_csv_file',
+       'accept'     => '.csv',
+       'class'      => 'form-control form-control-sm mb-2',
+       // WCAG 1.3.1: no visible <label> for this file input -- the
+       // preceding text is a heading for the whole section, not a label
+       // programmatically tied to this specific control.
+       'aria-label' => $translator->translate('spreadsheet.import'),
       ]);
       echo H::openTag('div', ['id' => 'copy_inv_csv_preview', 'style' => 'display:none;max-height:160px;overflow-y:auto;']); //6
        echo H::openTag('table', ['class' => 'table table-sm table-bordered mb-0']); //7

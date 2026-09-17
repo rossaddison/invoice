@@ -90,15 +90,27 @@ trait Add
         }
         // show the form inside a modal when engaging with a view (quote or client origin)
         $type = ($origin == 'quote') ? 'quote' : 'client';
+        // WCAG 2.4.6/4.1.2: modal_layout.php now renders $title (see its
+        // own @var docblock) -- this second, outer render of modal_layout
+        // (wrapping the already-complete modal_layout HTML string that
+        // renderPartialLayoutWithFormAsString() itself returns) was still
+        // missing it, throwing an undefined-variable warning on every
+        // "Add Quote" modal opened from a quote/client detail view (the
+        // 'main'/'dashboard' branch above never hits this path at all).
+        // getFormParameters() must be read after
+        // renderPartialLayoutWithFormAsString() populates it, so the form
+        // render happens first and its result is reused rather than
+        // calling the (side-effectful) method a second time.
+        $formHtml = $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString(
+            $origin,
+            $errors
+        );
         return $this->webViewRenderer->render('modal_layout', [
             // use type to id the quote\modal_layout.php eg.
             // ->options(['id' => 'modal-add-'.$type,
             'type' => $type,
-            'form' =>
-                $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString(
-                    $origin,
-                    $errors
-                ),
+            'title' => $bootstrap5ModalQuote->getFormParameters()['title'],
+            'form' => $formHtml,
             'return_url_action' => 'add',
         ]);
     }

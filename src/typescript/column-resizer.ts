@@ -16,6 +16,10 @@
 export class ColumnResizer {
     private readonly storageKeyPrefix: string;
     private dragging: { col: HTMLTableColElement; startX: number; startWidth: number; index: number } | null = null;
+    // Populated by addHandle() on every attach()/re-attach -- lets
+    // setWidth()/autoFit()/reset() keep aria-valuenow in sync without a
+    // DOM lookup on every width change.
+    private handles = new Map<number, HTMLSpanElement>();
 
     constructor(private readonly tableId: string) {
         this.storageKeyPrefix = `col-width:${tableId}:`;
@@ -26,6 +30,7 @@ export class ColumnResizer {
         if (parts === null) return;
         const { table, cols, headerCells } = parts;
 
+        this.handles = new Map();
         headerCells.forEach((th, index) => {
             const col = cols[index];
             if (col === undefined) return;
@@ -79,8 +84,15 @@ export class ColumnResizer {
             });
 
             if (width > 0) {
-                col.style.width = `${width}px`;
-                globalThis.localStorage.setItem(this.storageKeyPrefix + String(index), String(width));
+                // Same 40px floor setWidth() (drag/keyboard) already
+                // enforces everywhere else -- without it, a narrow column
+                // (e.g. a 2-digit ID) could autoFit below that minimum,
+                // and its handle's aria-valuenow would fall below the
+                // aria-valuemin="40" declared on it (invalid ARIA state).
+                const clamped = Math.max(40, width);
+                col.style.width = `${clamped}px`;
+                globalThis.localStorage.setItem(this.storageKeyPrefix + String(index), String(clamped));
+                this.updateAriaValueNow(index, clamped);
             }
         });
 
@@ -97,13 +109,23 @@ export class ColumnResizer {
     reset(): void {
         const parts = this.findParts();
         if (parts === null) return;
-        const { table, cols } = parts;
+        const { table, cols, headerCells } = parts;
 
         cols.forEach((col, index) => {
             col.style.width = '';
             globalThis.localStorage.removeItem(this.storageKeyPrefix + String(index));
         });
         table.style.tableLayout = 'auto';
+
+        // aria-valuenow must keep reflecting the real current width even
+        // after a reset -- read it back post-reflow (same technique
+        // applyWidth() uses on initial load) rather than leaving the
+        // handle's last pre-reset value stale. Deliberately not written
+        // into col.style.width itself: doing so would re-pin a fixed
+        // width and defeat the point of resetting to auto layout.
+        headerCells.forEach((th, index) => {
+            this.updateAriaValueNow(index, Math.round(th.getBoundingClientRect().width));
+        });
     }
 
     private findParts(): {
@@ -131,15 +153,78 @@ export class ColumnResizer {
         }
     }
 
+    /**
+     * WCAG 2.1.1: mousedown/mousemove alone gave this handle no keyboard
+     * equivalent at all -- a keyboard-only user could resize nothing more
+     * precisely than the toolbar's all-columns 📐 auto-fit/🔄 reset
+     * buttons. Now a real WAI-ARIA "separator" widget: focusable, and
+     * ArrowLeft/ArrowRight adjust the same width + localStorage persistence
+     * startDrag()/onDrag()/stopDrag() already use for a mouse drag, via the
+     * shared setWidth() helper below.
+     */
     private addHandle(th: HTMLTableCellElement, col: HTMLTableColElement, index: number): void {
         // Idempotent: attach() re-runs after every HTMX table refresh, and a
-        // swap that doesn't touch this specific table would otherwise double up.
-        if (th.querySelector('.col-resize-handle') !== null) return;
+        // swap that doesn't touch this specific table would otherwise double
+        // up. attach() always starts a fresh `handles` map (see attach()
+        // above), so an already-idempotent-skipped handle still needs
+        // registering into it here, or setWidth()/autoFit()/reset() would
+        // silently stop finding it after the first HTMX refresh.
+        const existing = th.querySelector<HTMLSpanElement>('.col-resize-handle');
+        if (existing !== null) {
+            this.handles.set(index, existing);
+            return;
+        }
 
         const handle = document.createElement('span');
         handle.className = 'col-resize-handle';
+        handle.setAttribute('role', 'separator');
+        handle.setAttribute('aria-orientation', 'vertical');
+        handle.setAttribute('tabindex', '0');
+        // WCAG/WAI-ARIA: a focusable separator MUST expose aria-valuenow
+        // (updated on every width change -- see updateAriaValueNow()) and
+        // SHOULD expose aria-valuemin when it isn't the implicit 0 -- this
+        // one's floor is setWidth()'s own 40px clamp, applied everywhere
+        // width changes (keyboard, drag, autoFit, reset).
+        handle.setAttribute('aria-valuemin', '40');
+        handle.setAttribute('aria-valuenow', String(Math.round(col.style.width ? Number.parseInt(col.style.width, 10) : th.getBoundingClientRect().width)));
+        const headerLabel = th.textContent?.trim();
+        handle.setAttribute(
+            'aria-label',
+            headerLabel ? `Resize ${headerLabel} column` : 'Resize column',
+        );
         handle.addEventListener('mousedown', (e: MouseEvent) => { this.startDrag(e, col, index); });
+        handle.addEventListener('keydown', (e: KeyboardEvent) => { this.onHandleKeydown(e, th, col, index); });
         th.appendChild(handle);
+        this.handles.set(index, handle);
+    }
+
+    private onHandleKeydown(e: KeyboardEvent, th: HTMLTableCellElement, col: HTMLTableColElement, index: number): void {
+        const step = 10;
+        const delta = e.key === 'ArrowLeft' ? -step : e.key === 'ArrowRight' ? step : null;
+        if (delta === null) return;
+        e.preventDefault();
+        // col.style.width is empty right after reset() -- falling back to
+        // 0 here made the very next arrow-key press clamp straight to the
+        // 40px floor instead of nudging the actual rendered width, since
+        // <col> elements have no rendered box of their own to read back
+        // from (same reason startDrag() below reads col.style.width, not
+        // getBoundingClientRect(), when it *is* set). th.getBoundingClientRect()
+        // is the same fallback applyWidth() already uses on initial load.
+        const currentWidth = col.style.width
+            ? Number.parseInt(col.style.width, 10)
+            : Math.round(th.getBoundingClientRect().width);
+        this.setWidth(col, index, currentWidth + delta);
+    }
+
+    private setWidth(col: HTMLTableColElement, index: number, width: number): void {
+        const clamped = Math.max(40, Math.round(width));
+        col.style.width = `${clamped}px`;
+        globalThis.localStorage.setItem(this.storageKeyPrefix + String(index), String(clamped));
+        this.updateAriaValueNow(index, clamped);
+    }
+
+    private updateAriaValueNow(index: number, width: number): void {
+        this.handles.get(index)?.setAttribute('aria-valuenow', String(width));
     }
 
     private startDrag(e: MouseEvent, col: HTMLTableColElement, index: number): void {
@@ -159,6 +244,7 @@ export class ColumnResizer {
         const delta = e.clientX - this.dragging.startX;
         const newWidth = Math.max(40, Math.round(this.dragging.startWidth + delta));
         this.dragging.col.style.width = `${newWidth}px`;
+        this.updateAriaValueNow(this.dragging.index, newWidth);
     };
 
     private readonly stopDrag = (): void => {

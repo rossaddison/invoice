@@ -234,13 +234,18 @@ final class QuotesToolbar
         $groupBySelect = (new Div())
             ->addClass('btn-group ms-3')
             ->addAttributes(['role' => 'group'])
+            // WCAG 1.3.1/3.3.2/4.1.2: label and select were only visually
+            // adjacent -- forId()/id now link them programmatically, same
+            // fix as inv/index's own "Group by" control.
             ->content(
                 (new Label())
                     ->addClass('btn btn-outline-secondary active bi bi-collection me-1')
+                    ->forId('quote-group-by-select')
                     ->content(' ' . $translator->translate('group.by') . ':')
                 . (new Select())
                     ->addClass('form-select group-by-select')
                     ->addAttributes([
+                        'id'            => 'quote-group-by-select',
                         'style'         => 'max-width: 150px;',
                         'data-base-url' => $urlGenerator->generate(self::ROUTE_INDEX),
                     ])

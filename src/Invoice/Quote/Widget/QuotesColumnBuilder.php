@@ -194,8 +194,16 @@ final class QuotesColumnBuilder
                     . Html::encode($label) . '" class="badge text-bg-' . $class . '">'
                     . Html::encode($label) . '</span>';
             },
+            // WCAG 1.3.1/3.3.2: this filter had no aria-label/title at
+            // all, unlike every equivalent filter on inv/index.
             filter: DropdownFilter::widget()
-                ->addAttributes(['name' => 'status', 'class' => 'native-reset'])
+                ->addAttributes([
+                    'name' => 'status',
+                    'class' => 'native-reset',
+                    'aria-label' => $translator->translate('filter.by') . ' '
+                        . $translator->translate('status'),
+                    'title' => $translator->translate('status'),
+                ])
                 ->optionsData($this->optionsDataStatusDropDownFilter),
             filterFactory: new NoOpFilterFactory(),
             encodeContent: false,
@@ -229,10 +237,16 @@ final class QuotesColumnBuilder
                             ->href($urlGenerator->generate('salesorder/view', ['id' => $soId]));
                     }
                     if ($model->getSoId() === 0 && $model->reqStatusId() === 7 && $statusId > 0) {
+                        // WCAG 2.4.4/4.1.2: href('') made this a real link
+                        // back to the current page -- clicking a status
+                        // badge that goes nowhere useful isn't what a link
+                        // implies. href(null) omits the attribute, matching
+                        // the plain non-interactive `new A()` two lines
+                        // below for the same "not really linkable" case.
                         return (new A())
                             ->addAttributes(['class' => 'btn btn-warning'])
                             ->content($soR->getSpecificStatusArrayLabel((string) $statusId))
-                            ->href('');
+                            ->href(null);
                     }
                 }
                 return new A();
@@ -255,7 +269,14 @@ final class QuotesColumnBuilder
                     ['style' => 'text-decoration:none'],
                 ),
             encodeContent: false,
-            filter: TextInputFilter::widget()->addAttributes(['style' => 'max-width: 80px']),
+            // WCAG 1.3.1/3.3.2: no aria-label/placeholder at all.
+            filter: TextInputFilter::widget()->addAttributes([
+                'style' => 'max-width: 80px',
+                'aria-label' => $translator->translate('filter.by') . ' '
+                    . $translator->translate('quote.number'),
+                'title' => $translator->translate('quote.number'),
+                'placeholder' => $translator->translate('quote.number'),
+            ]),
             filterFactory: new NoOpFilterFactory(),
         );
     }
@@ -275,8 +296,15 @@ final class QuotesColumnBuilder
                 return '';
             },
             encodeContent: false,
+            // WCAG 1.3.1/3.3.2: no aria-label/title at all.
             filter: DropdownFilter::widget()
-                ->addAttributes(['name' => 'filterClient', 'class' => 'native-reset'])
+                ->addAttributes([
+                    'name' => 'filterClient',
+                    'class' => 'native-reset',
+                    'aria-label' => $translator->translate('filter.by') . ' '
+                        . $translator->translate('client'),
+                    'title' => $translator->translate('client'),
+                ])
                 ->optionsData($this->optionsDataClientsDropdownFilter),
             filterFactory: new NoOpFilterFactory(),
             withSorting: false,
@@ -306,8 +334,16 @@ final class QuotesColumnBuilder
                     ));
             },
             encodeContent: false,
+            // WCAG 1.3.1/3.3.2: no aria-label/placeholder at all.
             filter: TextInputFilter::widget()
-                ->addAttributes(['style' => 'max-width: 50px', 'class' => 'native-reset']),
+                ->addAttributes([
+                    'style' => 'max-width: 50px',
+                    'class' => 'native-reset',
+                    'aria-label' => $translator->translate('filter.by') . ' '
+                        . $translator->translate('total'),
+                    'title' => $translator->translate('total'),
+                    'placeholder' => $translator->translate('total'),
+                ]),
             filterFactory: new NoOpFilterFactory(),
             withSorting: false,
             footer: (new Span())

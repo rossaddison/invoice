@@ -222,13 +222,27 @@ final class QuotesListWidget extends Widget
             ->paginationWidget($pagination)
             ->sortableLinkAttributes(['hx-boost' => 'true', ...$htmxAttrs])
             ->filterFormAttributes(['hx-boost' => 'true', ...$htmxAttrs])
-            ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
-            ->sortableHeaderDescPrepend('<div class="float-end fw-bold">⭣</div>')
+            // yii-dataview 1.3's accessibility() opt-in (added scope="col"/
+            // aria-sort on header cells and aria-current/aria-disabled/
+            // aria-label/role="link" on pagination links -- disabled by
+            // default, so none of this rendered before enabling it here).
+            ->accessibility(true)
+            // aria-hidden: purely decorative -- accessibility() above adds
+            // the real aria-sort attribute on each sortable <th>, so these
+            // glyphs would otherwise be redundant, inconsistently-read
+            // Unicode noise on top of a state a screen reader already
+            // announces correctly.
+            ->sortableHeaderAscPrepend('<div class="float-end fw-bold" aria-hidden="true">⭡</div>')
+            ->sortableHeaderDescPrepend('<div class="float-end fw-bold" aria-hidden="true">⭣</div>')
             ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
             ->footerRowAttributes(['class' => 'card-footer bg-success text-white fw-bold'])
             ->enableFooter(true)
             ->emptyCell($this->translator->translate('not.set'))
-            ->emptyCellAttributes(['style' => 'color:red'])
+            // WCAG 1.4.3: plain CSS `red` (#FF0000) on white is ~4.0:1,
+            // below AA's 4.5:1 minimum. Bootstrap's own text-danger
+            // (#dc3545, ~4.5:1) matches every other "attention" color
+            // already used in this grid.
+            ->emptyCellAttributes(['class' => 'text-danger'])
             ->summaryAttributes([
                 'class' =>
                 'mt-3 me-3 summary d-flex justify-content-between align-items-center',

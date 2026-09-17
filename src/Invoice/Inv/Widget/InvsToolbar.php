@@ -347,12 +347,19 @@ final class InvsToolbar
             ->addClass('btn-group ms-3')
             ->addAttributes(['role' => 'group'])
             ->content(
+                // WCAG 1.3.1/3.3.2/4.1.2: label and select were only
+                // visually adjacent -- forId()/id now link them
+                // programmatically, the same as any other <label>/<input>
+                // pair, so a screen reader announces "Group by" for this
+                // control instead of relying on reading order alone.
                 new Label()
                     ->addClass('btn btn-outline-secondary active bi bi-collection me-1')
+                    ->forId('inv-group-by-select')
                     ->content(' ' . $p->translator->translate('group.by') . ':')
                 . new Select()
                     ->addClass('form-select group-by-select')
                     ->addAttributes([
+                        'id'            => 'inv-group-by-select',
                         'style'         => 'max-width: 150px;',
                         'data-base-url' => $p->urlGenerator->generate(self::ROUTE_INDEX),
                     ])
