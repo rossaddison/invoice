@@ -13,6 +13,6 @@ return [
     // the app's normal layout. verboseTemplate (YII_DEBUG=true only) is
     // left untouched -- that one is already stock-detailed on purpose.
     HtmlRenderer::class => static fn (Aliases $aliases): HtmlRenderer => new HtmlRenderer(
-        template: $aliases->get('@resources/errors/production.php'),
+        template: $aliases->get('@views/errors/production.php'),
     ),
 ];
