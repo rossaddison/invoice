@@ -39,6 +39,15 @@
         </include>
         <exclude>
             <directory>./src/Invoice/Asset</directory>
+            <!-- Tested exclusively via Testo (Tests/Testo/Bookkeeping),
+                 never PHPUnit. Without this, PHPUnit's own coverage.xml
+                 still lists every line here as 0% (it never executes
+                 these Testo-attributed tests), and SonarCloud importing
+                 both coverage.xml and coverage-testo.xml for the same
+                 files produced a diluted, non-100% new_coverage number
+                 for a module Testo alone already covers completely,
+                 confirmed live against the SonarCloud API on PR #1338. -->
+            <directory>./src/Bookkeeping</directory>
         </exclude>
     </source>
 </phpunit>
