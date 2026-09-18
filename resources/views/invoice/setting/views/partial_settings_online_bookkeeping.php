@@ -43,10 +43,20 @@ $fields = [
 
 echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
-  echo H::openTag('div', ['id' => 'gateway-settings-quickbooks', 'class' => 'gateway-settings card']); //3
+  // NOT class "gateway-settings" -- that exact class name is queried
+  // unconditionally on every page load by settings.ts's
+  // handleOnlinePaymentSelectChange() (Online Payment's own show/hide
+  // mechanism, called eagerly once "to ensure initial state" regardless
+  // of which tab is active) and gets the "hidden" (display: none
+  // !important) class added to it unless it also carries
+  // "active-gateway" -- confirmed live as the actual root cause of this
+  // card silently disappearing. "bookkeeping-settings" avoids the
+  // collision entirely; QuickBooks doesn't need that show/hide behaviour
+  // anyway, since it's the only provider and is always shown.
+  echo H::openTag('div', ['id' => 'bookkeeping-settings-quickbooks', 'class' => 'bookkeeping-settings card']); //3
    echo H::openTag('div', $panelHead); //4
     echo H::openTag('a', [
-     'href' => $tab_index_url . '#gateway-settings-quickbooks',
+     'href' => $tab_index_url . '#bookkeeping-settings-quickbooks',
      'class' => 'text-decoration-none text-reset',
     ]);
      echo 'QuickBooks';
@@ -79,9 +89,9 @@ echo H::openTag('div', $row); //1
      ]);
       echo $translator->translate('bookkeeping.quickbooks.connect');
      echo H::closeTag('a');
-     echo H::openTag('div', ['class' => 'form-text']);
+     echo H::openTag('div', ['class' => 'form-text']); //6
       echo $translator->translate('bookkeeping.quickbooks.connect.hint');
-     echo H::closeTag('div');
+     echo H::closeTag('div'); //6
     echo H::closeTag('div'); //5
 
     /**
@@ -128,7 +138,7 @@ echo H::openTag('div', $row); //1
       echo $field['label'];
      echo H::closeTag('label');
      if ($field['type'] === 'password') {
-     echo H::openTag('div', ['class' => 'position-relative']);
+     echo H::openTag('div', ['class' => 'position-relative']); //7
       echo H::openTag('input', [
        'type' => 'password',
        'class' => 'form-control',
@@ -159,7 +169,7 @@ echo H::openTag('div', $row); //1
       ]);
        echo H::tag('i', '', ['class' => 'bi bi-eye']);
       echo H::closeTag('button');
-     echo H::closeTag('div');
+     echo H::closeTag('div'); //7
      echo H::openTag('input', [
       'type' => 'hidden',
       'value' => '1',
