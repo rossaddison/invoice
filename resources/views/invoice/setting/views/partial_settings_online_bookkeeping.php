@@ -156,7 +156,6 @@ echo H::openTag('div', $row); //1
        'data-copied-label' => $translator->translate('copied'),
        'aria-label' => $translator->translate('copy.to.clipboard'),
        'title' => $translator->translate('copy.to.clipboard'),
-       'tabindex' => '-1',
       ]);
        echo H::tag('i', '', ['class' => 'bi bi-clipboard']);
       echo H::closeTag('button');
@@ -165,7 +164,6 @@ echo H::openTag('div', $row); //1
        'class' => 'btn btn-link position-absolute top-50 end-0 translate-middle-y password-reveal-toggle',
        'data-target' => $fieldId,
        'aria-label' => 'Show password',
-       'tabindex' => '-1',
       ]);
        echo H::tag('i', '', ['class' => 'bi bi-eye']);
       echo H::closeTag('button');
