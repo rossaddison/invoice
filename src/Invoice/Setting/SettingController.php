@@ -233,6 +233,16 @@ final class SettingController extends BaseController
                     ['_language' => (string) $this->session->get('_language')],
                 ),
             ]),
+            'online_bookkeeping' => $this->webViewRenderer->renderPartialAsString($p . 'online_bookkeeping', [
+                'tab_index_url' => $urlFastRouteGenerator->generate(
+                    'setting/tabIndex',
+                    ['_language' => (string) $this->session->get('_language')],
+                ),
+                'quickbooks_credential_url' => 'https://developer.intuit.com/app/developer/myapps',
+                'quickbooks_connect_url' => $urlFastRouteGenerator->generate('bookkeeping/quickbooksConnect'),
+                'quickbooks_connected' => $this->sR->getSetting('bookkeeping_quickbooks_realm_id') !== ''
+                    && $this->sR->getSetting('bookkeeping_quickbooks_refresh_token') !== '',
+            ]),
             'mpdf' => $this->webViewRenderer->renderPartialAsString($p . 'mpdf'),
             'mtd' => $this->webViewRenderer->renderPartialAsString($p . 'making_tax_digital'),
             'projects_tasks' => $this->webViewRenderer->renderPartialAsString($p . 'projects_tasks'),

@@ -16,11 +16,15 @@ use DateTimeImmutable;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Request as Psr7Request;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Testo\Assert;
 use Testo\Test;
+use Yiisoft\Factory\Factory;
 
 /**
  * Covers QuickBooksGateway against a mocked Guzzle handler — no real
@@ -85,13 +89,28 @@ final class QuickBooksGatewayTest
     private function makeGateway(
         MockHandler $mock,
         ?SettingRepository $settings = null,
+        ?ClientInterface $authHttpClient = null,
+        ?RequestFactoryInterface $requestFactory = null,
     ): QuickBooksGateway {
         /** @var LoggerInterface&m\MockInterface $logger */
         $logger = m::spy(LoggerInterface::class);
+        /** @var Factory&m\MockInterface $factory */
+        $factory = m::mock(Factory::class);
+        if ($authHttpClient === null) {
+            /** @var ClientInterface&m\MockInterface $authHttpClient */
+            $authHttpClient = m::mock(ClientInterface::class);
+        }
+        if ($requestFactory === null) {
+            /** @var RequestFactoryInterface&m\MockInterface $requestFactory */
+            $requestFactory = m::mock(RequestFactoryInterface::class);
+        }
 
         return new QuickBooksGateway(
             $settings ?? $this->makeSettingRepository(),
             $logger,
+            $authHttpClient,
+            $requestFactory,
+            $factory,
             $this->makeHttpClient($mock),
         );
     }
@@ -212,15 +231,22 @@ final class QuickBooksGatewayTest
         $settings->shouldReceive('withKey')->times(3)->andReturn($storedSetting);
         $settings->shouldReceive('save')->times(3)->with($storedSetting);
 
-        $mock = new MockHandler([
-            new Response(200, [], json_encode([
-                'access_token' => 'new-access-token',
-                'refresh_token' => 'new-refresh-token',
-                'expires_in' => 3600,
-            ], JSON_THROW_ON_ERROR)),
-            $this->journalEntryResponse('QB-2'),
-        ]);
-        $gateway = $this->makeGateway($mock, $settings);
+        /** @var RequestFactoryInterface&m\MockInterface $requestFactory */
+        $requestFactory = m::mock(RequestFactoryInterface::class);
+        $requestFactory->shouldReceive('createRequest')
+            ->with('POST', 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer')
+            ->andReturn(new Psr7Request('POST', 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer'));
+
+        /** @var ClientInterface&m\MockInterface $authHttpClient */
+        $authHttpClient = m::mock(ClientInterface::class);
+        $authHttpClient->shouldReceive('sendRequest')->once()->andReturn(new Response(200, [], json_encode([
+            'access_token' => 'new-access-token',
+            'refresh_token' => 'new-refresh-token',
+            'expires_in' => 3600,
+        ], JSON_THROW_ON_ERROR)));
+
+        $mock = new MockHandler([$this->journalEntryResponse('QB-2')]);
+        $gateway = $this->makeGateway($mock, $settings, $authHttpClient, $requestFactory);
 
         $result = $gateway->createTransaction($this->paymentReceivedTransaction('INV-502-payment'));
 
@@ -248,10 +274,18 @@ final class QuickBooksGatewayTest
         $settings = $this->makeSettingRepository([
             'bookkeeping_quickbooks_access_token_expires_at' => (string) (time() - 10),
         ]);
-        $mock = new MockHandler([
-            new Response(200, [], json_encode(['token_type' => 'bearer'], JSON_THROW_ON_ERROR)),
-        ]);
-        $gateway = $this->makeGateway($mock, $settings);
+
+        /** @var RequestFactoryInterface&m\MockInterface $requestFactory */
+        $requestFactory = m::mock(RequestFactoryInterface::class);
+        $requestFactory->shouldReceive('createRequest')
+            ->andReturn(new Psr7Request('POST', 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer'));
+
+        /** @var ClientInterface&m\MockInterface $authHttpClient */
+        $authHttpClient = m::mock(ClientInterface::class);
+        $authHttpClient->shouldReceive('sendRequest')
+            ->andReturn(new Response(200, [], json_encode(['token_type' => 'bearer'], JSON_THROW_ON_ERROR)));
+
+        $gateway = $this->makeGateway(new MockHandler([]), $settings, $authHttpClient, $requestFactory);
 
         $result = $gateway->createTransaction($this->paymentReceivedTransaction());
 
