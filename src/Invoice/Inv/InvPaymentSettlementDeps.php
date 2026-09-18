@@ -26,6 +26,7 @@ final class InvPaymentSettlementDeps
         public readonly smR $smR,
         public readonly InvService $invService,
         public readonly LowStockNotifier $lowStockNotifier,
+        public readonly InvBookkeepingTransactionFactory $bookkeepingTransactionFactory,
     ) {
     }
 }

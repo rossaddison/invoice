@@ -11,7 +11,7 @@ namespace App\Bookkeeping\Application;
  * App\Invoice\PaymentInformation\PaymentRefundResult's own convention, so
  * a caller can flash $message rather than wrap every gateway call in
  * try/catch. $providerReference is the provider's own assigned id for the
- * transaction (e.g. Xero's invoice id) -- empty when $success is false or
+ * transaction (e.g. QuickBooks' JournalEntry id) -- empty when $success is false or
  * the operation (delete) has none to give.
  */
 final class BookkeepingResult

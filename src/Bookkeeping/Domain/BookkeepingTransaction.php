@@ -41,7 +41,7 @@ final class BookkeepingTransaction
     // original design discussion as behaviour on the entity itself,
     // since "has this been posted, and where" is genuine business state,
     // not a mere storage detail. $exportedProviderReference is the
-    // PROVIDER's own assigned id (e.g. Xero's invoice id) -- distinct
+    // PROVIDER's own assigned id (e.g. QuickBooks' JournalEntry id) -- distinct
     // from $reference above, which is this app's own idempotency key.
     private ?string $exportedProviderKey = null;
     private ?string $exportedProviderReference = null;
