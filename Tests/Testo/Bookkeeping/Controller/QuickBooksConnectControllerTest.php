@@ -285,11 +285,33 @@ final class QuickBooksConnectControllerTest
         $intuit->shouldReceive('fetchAccessToken')->once()->andReturn($token);
 
         $settings = $this->makeSettingRepository();
-        /** @var Setting&m\MockInterface $storedSetting */
-        $storedSetting = m::mock(Setting::class);
-        $storedSetting->shouldReceive('setSettingValue')->times(4);
-        $settings->shouldReceive('withKey')->times(4)->andReturn($storedSetting);
-        $settings->shouldReceive('save')->times(4)->with($storedSetting);
+
+        /** @var Setting&m\MockInterface $realmIdSetting */
+        $realmIdSetting = m::mock(Setting::class);
+        $realmIdSetting->shouldReceive('setSettingValue')->once()->with('999888777');
+        $settings->shouldReceive('withKey')->once()->with('bookkeeping_quickbooks_realm_id')->andReturn($realmIdSetting);
+        $settings->shouldReceive('save')->once()->with($realmIdSetting);
+
+        /** @var Setting&m\MockInterface $refreshTokenSetting */
+        $refreshTokenSetting = m::mock(Setting::class);
+        $refreshTokenSetting->shouldReceive('setSettingValue')->once()->with('enc:new-refresh-token');
+        $settings->shouldReceive('withKey')->once()->with('bookkeeping_quickbooks_refresh_token')->andReturn($refreshTokenSetting);
+        $settings->shouldReceive('save')->once()->with($refreshTokenSetting);
+
+        /** @var Setting&m\MockInterface $accessTokenSetting */
+        $accessTokenSetting = m::mock(Setting::class);
+        $accessTokenSetting->shouldReceive('setSettingValue')->once()->with('enc:new-access-token');
+        $settings->shouldReceive('withKey')->once()->with('bookkeeping_quickbooks_access_token')->andReturn($accessTokenSetting);
+        $settings->shouldReceive('save')->once()->with($accessTokenSetting);
+
+        /** @var Setting&m\MockInterface $expiresAtSetting */
+        $expiresAtSetting = m::mock(Setting::class);
+        $before = time() + 3600;
+        $expiresAtSetting->shouldReceive('setSettingValue')->once()->with(m::on(
+            static fn(string $value): bool => is_numeric($value) && (int) $value >= $before && (int) $value <= $before + 5,
+        ));
+        $settings->shouldReceive('withKey')->once()->with('bookkeeping_quickbooks_access_token_expires_at')->andReturn($expiresAtSetting);
+        $settings->shouldReceive('save')->once()->with($expiresAtSetting);
 
         /** @var Flash&m\MockInterface $flash */
         $flash = m::mock(Flash::class);
