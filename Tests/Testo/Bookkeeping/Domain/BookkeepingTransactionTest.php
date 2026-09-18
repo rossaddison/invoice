@@ -107,6 +107,44 @@ final class BookkeepingTransactionTest
         Assert::same(7, $transaction->reqId());
     }
 
+    public function defaultsToNotExported(): void
+    {
+        $transaction = $this->transaction($this->balancedInvoiceIssuedLines());
+
+        Assert::false($transaction->isExported());
+        Assert::null($transaction->getExportedProviderKey());
+        Assert::null($transaction->getExportedProviderReference());
+        Assert::null($transaction->getExportedAt());
+    }
+
+    public function markExportedRecordsProviderKeyReferenceAndTimestamp(): void
+    {
+        $transaction = $this->transaction($this->balancedInvoiceIssuedLines());
+        $exportedAt = new DateTimeImmutable('2026-09-19');
+
+        $transaction->markExported('xero', 'XERO-INV-4001', $exportedAt);
+
+        Assert::true($transaction->isExported());
+        Assert::same('xero', $transaction->getExportedProviderKey());
+        Assert::same('XERO-INV-4001', $transaction->getExportedProviderReference());
+        Assert::same($exportedAt, $transaction->getExportedAt());
+    }
+
+    public function markExportedCanBeCalledAgainToReconfirm(): void
+    {
+        // A later run's getTransaction() lookup finding it already posted
+        // (e.g. a previous createTransaction() succeeded but the response
+        // was lost to a timeout) re-confirms with the same facts rather
+        // than needing a guard against double-marking.
+        $transaction = $this->transaction($this->balancedInvoiceIssuedLines());
+        $transaction->markExported('xero', 'XERO-INV-4001', new DateTimeImmutable('2026-09-19'));
+
+        $secondConfirmation = new DateTimeImmutable('2026-09-20');
+        $transaction->markExported('xero', 'XERO-INV-4001', $secondConfirmation);
+
+        Assert::same($secondConfirmation, $transaction->getExportedAt());
+    }
+
     public function sourceInvIdDefaultsToNullForEventsWithNoOwningInvoice(): void
     {
         // NOSONAR php:S1848 — instantiation exercises the constructor path with no $sourceInvId argument

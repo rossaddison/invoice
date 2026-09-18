@@ -36,6 +36,17 @@ final class BookkeepingTransaction
 {
     private ?int $id = null;
 
+    // Export/audit-trail state -- implements the bookkeep_provider/
+    // bookkeep_reference/bookkeep_exported_at fields from this module's
+    // original design discussion as behaviour on the entity itself,
+    // since "has this been posted, and where" is genuine business state,
+    // not a mere storage detail. $exportedProviderReference is the
+    // PROVIDER's own assigned id (e.g. Xero's invoice id) -- distinct
+    // from $reference above, which is this app's own idempotency key.
+    private ?string $exportedProviderKey = null;
+    private ?string $exportedProviderReference = null;
+    private ?DateTimeImmutable $exportedAt = null;
+
     /**
      * @param list<BookkeepingLine> $lines Accepts an empty list at the type
      *     level deliberately -- assertBalanced() below is the actual
@@ -139,5 +150,40 @@ final class BookkeepingTransaction
     public function setId(int $id): void
     {
         $this->id = $id;
+    }
+
+    /**
+     * Records that this transaction was successfully posted (or
+     * confirmed already posted, via a gateway's getTransaction() lookup)
+     * to the given provider. Safe to call more than once -- re-confirming
+     * an already-exported transaction on a later run overwrites with the
+     * same facts rather than needing a guard, matching this app's
+     * existing StockMovement::setId()'s own unguarded-reassignment style.
+     */
+    public function markExported(string $providerKey, string $providerReference, DateTimeImmutable $exportedAt): void
+    {
+        $this->exportedProviderKey = $providerKey;
+        $this->exportedProviderReference = $providerReference;
+        $this->exportedAt = $exportedAt;
+    }
+
+    public function isExported(): bool
+    {
+        return $this->exportedAt !== null;
+    }
+
+    public function getExportedProviderKey(): ?string
+    {
+        return $this->exportedProviderKey;
+    }
+
+    public function getExportedProviderReference(): ?string
+    {
+        return $this->exportedProviderReference;
+    }
+
+    public function getExportedAt(): ?DateTimeImmutable
+    {
+        return $this->exportedAt;
     }
 }
