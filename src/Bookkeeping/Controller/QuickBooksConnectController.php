@@ -11,6 +11,7 @@ use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use InvalidArgumentException;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -18,6 +19,7 @@ use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Yii\AuthClient\OAuthToken;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 /**
@@ -72,8 +74,7 @@ final class QuickBooksConnectController extends BaseController
         $clientId = $this->sR->getSetting(self::KEY_CLIENT_ID);
         $clientSecret = $this->decodedSetting(self::KEY_CLIENT_SECRET);
         if ($clientId === '' || $clientSecret === '') {
-            $this->flashMessage('warning', $this->translator->translate('bookkeeping.quickbooks.not.configured'));
-            return $this->redirectToSettingsTab();
+            return $this->flashAndRedirect('warning', 'bookkeeping.quickbooks.not.configured');
         }
 
         $this->configureIntuit($clientId, $clientSecret);
@@ -84,46 +85,80 @@ final class QuickBooksConnectController extends BaseController
 
     public function callback(Request $request): Response
     {
+        $context = $this->validateCallbackRequest($request);
+        if ($context instanceof Response) {
+            return $context;
+        }
+
+        $this->configureIntuit($context['clientId'], $context['clientSecret']);
+
+        $token = $this->fetchToken($request, $context['code']);
+        if ($token instanceof Response) {
+            return $token;
+        }
+
+        $this->persistSetting(self::KEY_REALM_ID, $context['realmId']);
+        $this->persistSetting(self::KEY_REFRESH_TOKEN, (string) $this->sR->encode((string) $token->getParam('refresh_token')));
+        $this->persistSetting(self::KEY_ACCESS_TOKEN, (string) $this->sR->encode((string) $token->getParam('access_token')));
+        $this->persistSetting(self::KEY_ACCESS_TOKEN_EXPIRES_AT, (string) (time() + (int) $token->getParam('expires_in')));
+
+        return $this->flashAndRedirect('info', 'bookkeeping.quickbooks.connect.success');
+    }
+
+    /**
+     * First half of callback()'s guard-clause chain -- split out purely to
+     * keep both this method and callback() itself under SonarQube's
+     * php:S1142 return-count cap (3), matching AdyenPaymentController::
+     * loadAdyenInvoiceContext()'s precedent for this exact pattern.
+     *
+     * @return Response|array{clientId: string, clientSecret: string, code: string, realmId: string}
+     */
+    private function validateCallbackRequest(Request $request): Response|array
+    {
         $query = $request->getQueryParams();
         $error = (string) ($query['error'] ?? '');
         $code = (string) ($query['code'] ?? '');
         $realmId = (string) ($query['realmId'] ?? '');
-
         if ($error !== '' || $code === '' || $realmId === '') {
-            $this->flashMessage('danger', $this->translator->translate('bookkeeping.quickbooks.connect.cancelled'));
-            return $this->redirectToSettingsTab();
+            return $this->flashAndRedirect('danger', 'bookkeeping.quickbooks.connect.cancelled');
         }
 
         $clientId = $this->sR->getSetting(self::KEY_CLIENT_ID);
         $clientSecret = $this->decodedSetting(self::KEY_CLIENT_SECRET);
-        if ($clientId === '' || $clientSecret === '') {
-            $this->flashMessage('warning', $this->translator->translate('bookkeeping.quickbooks.not.configured'));
-            return $this->redirectToSettingsTab();
-        }
 
-        $this->configureIntuit($clientId, $clientSecret);
+        return ($clientId === '' || $clientSecret === '')
+            ? $this->flashAndRedirect('warning', 'bookkeeping.quickbooks.not.configured')
+            : ['clientId' => $clientId, 'clientSecret' => $clientSecret, 'code' => $code, 'realmId' => $realmId];
+    }
 
+    /**
+     * Second half of callback()'s guard-clause chain -- see
+     * validateCallbackRequest()'s docblock.
+     */
+    private function fetchToken(Request $request, string $code): Response|OAuthToken
+    {
         try {
             $token = $this->intuit->fetchAccessToken($request, $code);
-        } catch (InvalidArgumentException) {
-            $this->flashMessage('danger', $this->translator->translate('bookkeeping.quickbooks.connect.invalid.state'));
-            return $this->redirectToSettingsTab();
+        } catch (InvalidArgumentException | ClientExceptionInterface $e) {
+            $translationKey = $e instanceof InvalidArgumentException
+                ? 'bookkeeping.quickbooks.connect.invalid.state'
+                : 'bookkeeping.quickbooks.connect.unexpected.response';
+            return $this->flashAndRedirect('danger', $translationKey);
         }
 
         $accessToken = (string) $token->getParam('access_token');
         $refreshToken = (string) $token->getParam('refresh_token');
-        $expiresIn = (int) $token->getParam('expires_in');
-        if ($accessToken === '' || $refreshToken === '') {
-            $this->flashMessage('danger', $this->translator->translate('bookkeeping.quickbooks.connect.unexpected.response'));
-            return $this->redirectToSettingsTab();
+        $expiresIn = $token->getParam('expires_in');
+        if ($accessToken === '' || $refreshToken === '' || !is_numeric($expiresIn)) {
+            return $this->flashAndRedirect('danger', 'bookkeeping.quickbooks.connect.unexpected.response');
         }
 
-        $this->persistSetting(self::KEY_REALM_ID, $realmId);
-        $this->persistSetting(self::KEY_REFRESH_TOKEN, (string) $this->sR->encode($refreshToken));
-        $this->persistSetting(self::KEY_ACCESS_TOKEN, $accessToken);
-        $this->persistSetting(self::KEY_ACCESS_TOKEN_EXPIRES_AT, (string) (time() + $expiresIn));
+        return $token;
+    }
 
-        $this->flashMessage('info', $this->translator->translate('bookkeeping.quickbooks.connect.success'));
+    private function flashAndRedirect(string $level, string $translationKey): Response
+    {
+        $this->flashMessage($level, $this->translator->translate($translationKey));
         return $this->redirectToSettingsTab();
     }
 

@@ -40,21 +40,21 @@ final class IntuitTest
 
     public function getNameReturnsIntuit(): void
     {
-        Assert::same('intuit', $this->makeIntuit()->getName());
+        Assert::same($this->makeIntuit()->getName(), 'intuit');
     }
 
     public function getTitleReturnsQuickbooks(): void
     {
-        Assert::same('QuickBooks', $this->makeIntuit()->getTitle());
+        Assert::same($this->makeIntuit()->getTitle(), 'QuickBooks');
     }
 
     public function getButtonClassReturnsABootstrapPrimaryButton(): void
     {
-        Assert::same('btn btn-primary', $this->makeIntuit()->getButtonClass());
+        Assert::same($this->makeIntuit()->getButtonClass(), 'btn btn-primary');
     }
 
     public function getScopeDefaultsToTheQuickbooksAccountingScope(): void
     {
-        Assert::same('com.intuit.quickbooks.accounting', $this->makeIntuit()->getScope());
+        Assert::same($this->makeIntuit()->getScope(), 'com.intuit.quickbooks.accounting');
     }
 }

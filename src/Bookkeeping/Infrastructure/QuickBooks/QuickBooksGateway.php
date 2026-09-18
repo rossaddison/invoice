@@ -371,7 +371,7 @@ final class QuickBooksGateway implements BookkeepingGatewayInterface
         $cached = $this->settings->getSetting(self::KEY_ACCESS_TOKEN);
         $expiresAt = (int) $this->settings->getSetting(self::KEY_ACCESS_TOKEN_EXPIRES_AT);
         if ($cached !== '' && $expiresAt - time() > 60) {
-            return $cached;
+            return (string) $this->settings->decode($cached);
         }
 
         return $this->refreshAccessToken();
@@ -413,7 +413,7 @@ final class QuickBooksGateway implements BookkeepingGatewayInterface
 
     private function persistTokens(string $accessToken, string $refreshToken, int $expiresIn): void
     {
-        $this->persistSetting(self::KEY_ACCESS_TOKEN, $accessToken);
+        $this->persistSetting(self::KEY_ACCESS_TOKEN, (string) $this->settings->encode($accessToken));
         $this->persistSetting(self::KEY_ACCESS_TOKEN_EXPIRES_AT, (string) (time() + $expiresIn));
         $this->persistSetting(self::KEY_REFRESH_TOKEN, (string) $this->settings->encode($refreshToken));
     }

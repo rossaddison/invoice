@@ -156,8 +156,8 @@ final class QuickBooksConnectControllerTest
 
         $response = $controller->connect($this->makeRequest());
 
-        Assert::same(302, $response->getStatusCode());
-        Assert::same('/en/setting/tab_index?active=online-bookkeeping', $response->getHeaderLine('Location'));
+        Assert::same($response->getStatusCode(), 302);
+        Assert::same($response->getHeaderLine('Location'), '/en/setting/tab_index?active=online-bookkeeping');
     }
 
     public function connectRedirectsToTheIntuitAuthorizeUrlWhenConfigured(): void
@@ -173,8 +173,8 @@ final class QuickBooksConnectControllerTest
 
         $response = $controller->connect($this->makeRequest());
 
-        Assert::same(302, $response->getStatusCode());
-        Assert::same('https://appcenter.intuit.com/connect/oauth2?client_id=test-client-id', $response->getHeaderLine('Location'));
+        Assert::same($response->getStatusCode(), 302);
+        Assert::same($response->getHeaderLine('Location'), 'https://appcenter.intuit.com/connect/oauth2?client_id=test-client-id');
     }
 
     public function callbackFlashesCancelledAndRedirectsWhenErrorIsPresent(): void
@@ -188,7 +188,7 @@ final class QuickBooksConnectControllerTest
 
         $response = $controller->callback($this->makeRequest(['error' => 'access_denied']));
 
-        Assert::same(302, $response->getStatusCode());
+        Assert::same($response->getStatusCode(), 302);
     }
 
     public function callbackFlashesCancelledAndRedirectsWhenCodeIsMissing(): void
@@ -197,7 +197,7 @@ final class QuickBooksConnectControllerTest
 
         $response = $controller->callback($this->makeRequest(['realmId' => self::REALM_ID]));
 
-        Assert::same(302, $response->getStatusCode());
+        Assert::same($response->getStatusCode(), 302);
     }
 
     public function callbackFlashesCancelledAndRedirectsWhenRealmIdIsMissing(): void
@@ -206,7 +206,7 @@ final class QuickBooksConnectControllerTest
 
         $response = $controller->callback($this->makeRequest(['code' => 'abc123']));
 
-        Assert::same(302, $response->getStatusCode());
+        Assert::same($response->getStatusCode(), 302);
     }
 
     public function callbackFlashesNotConfiguredWhenCredentialsAreMissing(): void
@@ -222,7 +222,7 @@ final class QuickBooksConnectControllerTest
 
         $response = $controller->callback($this->makeRequest(['code' => 'abc123', 'realmId' => self::REALM_ID]));
 
-        Assert::same(302, $response->getStatusCode());
+        Assert::same($response->getStatusCode(), 302);
     }
 
     public function callbackFlashesInvalidStateWhenFetchAccessTokenThrows(): void
@@ -243,7 +243,7 @@ final class QuickBooksConnectControllerTest
 
         $response = $controller->callback($this->makeRequest(['code' => 'abc123', 'realmId' => self::REALM_ID]));
 
-        Assert::same(302, $response->getStatusCode());
+        Assert::same($response->getStatusCode(), 302);
     }
 
     public function callbackFlashesUnexpectedResponseWhenTheTokenIsMissingFields(): void
@@ -267,7 +267,7 @@ final class QuickBooksConnectControllerTest
 
         $response = $controller->callback($this->makeRequest(['code' => 'abc123', 'realmId' => self::REALM_ID]));
 
-        Assert::same(302, $response->getStatusCode());
+        Assert::same($response->getStatusCode(), 302);
     }
 
     public function callbackPersistsSettingsAndFlashesSuccessOnTheHappyPath(): void
@@ -300,6 +300,6 @@ final class QuickBooksConnectControllerTest
 
         $response = $controller->callback($this->makeRequest(['code' => 'abc123', 'realmId' => '999888777']));
 
-        Assert::same(302, $response->getStatusCode());
+        Assert::same($response->getStatusCode(), 302);
     }
 }

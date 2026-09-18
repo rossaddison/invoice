@@ -162,7 +162,7 @@ final class QuickBooksGatewayTest
     {
         $gateway = $this->makeGateway(new MockHandler([]));
 
-        Assert::same('quickbooks', $gateway->getDriverKey());
+        Assert::same($gateway->getDriverKey(), 'quickbooks');
     }
 
     public function isConfiguredReturnsTrueWhenAllCredentialsArePresent(): void
@@ -189,19 +189,19 @@ final class QuickBooksGatewayTest
 
         $create = $gateway->createTransaction($transaction);
         Assert::false($create->success);
-        Assert::same($notConfigured, $create->message);
+        Assert::same($create->message, $notConfigured);
 
         $update = $gateway->updateTransaction($transaction);
         Assert::false($update->success);
-        Assert::same($notConfigured, $update->message);
+        Assert::same($update->message, $notConfigured);
 
         $lookup = $gateway->getTransaction($transaction->getReference());
         Assert::false($lookup->found);
-        Assert::same($notConfigured, $lookup->message);
+        Assert::same($lookup->message, $notConfigured);
 
         $delete = $gateway->deleteTransaction($transaction->getReference());
         Assert::false($delete->success);
-        Assert::same($notConfigured, $delete->message);
+        Assert::same($delete->message, $notConfigured);
     }
 
     public function createTransactionPostsAJournalEntryWithTheCachedAccessTokenAndReturnsTheProviderReference(): void
@@ -212,23 +212,23 @@ final class QuickBooksGatewayTest
         $result = $gateway->createTransaction($this->paymentReceivedTransaction());
 
         Assert::true($result->success);
-        Assert::same('QB-1', $result->providerReference);
+        Assert::same($result->providerReference, 'QB-1');
 
         $sentRequest = $mock->getLastRequest();
         Assert::notNull($sentRequest);
-        Assert::same('Bearer cached-access-token', $sentRequest->getHeaderLine('Authorization'));
+        Assert::same($sentRequest->getHeaderLine('Authorization'), 'Bearer cached-access-token');
 
         /** @var array{DocNumber: string, TxnDate: string, CurrencyRef: array{value: string}, Line: list<array{Amount: int|float, JournalEntryLineDetail: array{PostingType: string, AccountRef: array{value: string}}}>} $body */
         $body = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        Assert::same('INV-501-payment', $body['DocNumber']);
-        Assert::same('2026-09-18', $body['TxnDate']);
-        Assert::same('GBP', $body['CurrencyRef']['value']);
+        Assert::same($body['DocNumber'], 'INV-501-payment');
+        Assert::same($body['TxnDate'], '2026-09-18');
+        Assert::same($body['CurrencyRef']['value'], 'GBP');
         Assert::count($body['Line'], 2);
-        Assert::same('Debit', $body['Line'][0]['JournalEntryLineDetail']['PostingType']);
-        Assert::same('14', $body['Line'][0]['JournalEntryLineDetail']['AccountRef']['value']);
-        Assert::same(120.00, (float) $body['Line'][0]['Amount']);
-        Assert::same('Credit', $body['Line'][1]['JournalEntryLineDetail']['PostingType']);
-        Assert::same('11', $body['Line'][1]['JournalEntryLineDetail']['AccountRef']['value']);
+        Assert::same($body['Line'][0]['JournalEntryLineDetail']['PostingType'], 'Debit');
+        Assert::same($body['Line'][0]['JournalEntryLineDetail']['AccountRef']['value'], '14');
+        Assert::same((float) $body['Line'][0]['Amount'], 120.00);
+        Assert::same($body['Line'][1]['JournalEntryLineDetail']['PostingType'], 'Credit');
+        Assert::same($body['Line'][1]['JournalEntryLineDetail']['AccountRef']['value'], '11');
     }
 
     public function createTransactionRefreshesAnExpiredAccessTokenAndPersistsTheRotatedPair(): void
@@ -262,11 +262,11 @@ final class QuickBooksGatewayTest
         $result = $gateway->createTransaction($this->paymentReceivedTransaction('INV-502-payment'));
 
         Assert::true($result->success);
-        Assert::same('QB-2', $result->providerReference);
+        Assert::same($result->providerReference, 'QB-2');
 
         $sentRequest = $mock->getLastRequest();
         Assert::notNull($sentRequest);
-        Assert::same('Bearer new-access-token', $sentRequest->getHeaderLine('Authorization'));
+        Assert::same($sentRequest->getHeaderLine('Authorization'), 'Bearer new-access-token');
     }
 
     public function createTransactionFailsWhenAnAccountRoleHasNoConfiguredAccount(): void
@@ -277,7 +277,7 @@ final class QuickBooksGatewayTest
         $result = $gateway->createTransaction($this->paymentReceivedTransaction());
 
         Assert::false($result->success);
-        Assert::same('No QuickBooks account configured for role bank.', $result->message);
+        Assert::same($result->message, 'No QuickBooks account configured for role bank.');
     }
 
     public function createTransactionReportsUnableToObtainAnAccessTokenWhenRefreshResponseIsMalformed(): void
@@ -301,7 +301,7 @@ final class QuickBooksGatewayTest
         $result = $gateway->createTransaction($this->paymentReceivedTransaction());
 
         Assert::false($result->success);
-        Assert::same('Unable to obtain a QuickBooks access token.', $result->message);
+        Assert::same($result->message, 'Unable to obtain a QuickBooks access token.');
     }
 
     public function getTransactionReturnsFoundWhenQueryMatchesAJournalEntry(): void
@@ -312,7 +312,7 @@ final class QuickBooksGatewayTest
         $result = $gateway->getTransaction('INV-503-payment');
 
         Assert::true($result->found);
-        Assert::same('QB-3', $result->providerReference);
+        Assert::same($result->providerReference, 'QB-3');
     }
 
     public function getTransactionReturnsNotFoundWhenQueryResponseIsEmpty(): void
@@ -323,7 +323,7 @@ final class QuickBooksGatewayTest
         $result = $gateway->getTransaction('INV-504-payment');
 
         Assert::false($result->found);
-        Assert::same('', $result->message);
+        Assert::same($result->message, '');
     }
 
     public function updateTransactionUpdatesTheExistingJournalEntryUsingItsSyncToken(): void
@@ -337,14 +337,14 @@ final class QuickBooksGatewayTest
         $result = $gateway->updateTransaction($this->paymentReceivedTransaction('INV-505-payment'));
 
         Assert::true($result->success);
-        Assert::same('QB-5', $result->providerReference);
+        Assert::same($result->providerReference, 'QB-5');
 
         $sentRequest = $mock->getLastRequest();
         Assert::notNull($sentRequest);
         /** @var array{Id: string, SyncToken: string} $body */
         $body = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        Assert::same('QB-5', $body['Id']);
-        Assert::same('3', $body['SyncToken']);
+        Assert::same($body['Id'], 'QB-5');
+        Assert::same($body['SyncToken'], '3');
     }
 
     public function updateTransactionFailsWhenNoMatchingJournalEntryExists(): void
@@ -356,8 +356,8 @@ final class QuickBooksGatewayTest
 
         Assert::false($result->success);
         Assert::same(
-            'Cannot update: no QuickBooks JournalEntry found for reference INV-506-payment.',
             $result->message,
+            'Cannot update: no QuickBooks JournalEntry found for reference INV-506-payment.',
         );
     }
 
@@ -372,14 +372,14 @@ final class QuickBooksGatewayTest
         $result = $gateway->deleteTransaction('INV-507-payment');
 
         Assert::true($result->success);
-        Assert::same('QB-7', $result->providerReference);
+        Assert::same($result->providerReference, 'QB-7');
 
         $sentRequest = $mock->getLastRequest();
         Assert::notNull($sentRequest);
         /** @var array{Id: string, SyncToken: string} $body */
         $body = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        Assert::same('QB-7', $body['Id']);
-        Assert::same('5', $body['SyncToken']);
+        Assert::same($body['Id'], 'QB-7');
+        Assert::same($body['SyncToken'], '5');
     }
 
     public function deleteTransactionFailsWhenNoMatchingJournalEntryExists(): void
@@ -390,7 +390,7 @@ final class QuickBooksGatewayTest
         $result = $gateway->deleteTransaction('INV-508-payment');
 
         Assert::false($result->success);
-        Assert::same('No QuickBooks JournalEntry found for reference INV-508-payment.', $result->message);
+        Assert::same($result->message, 'No QuickBooks JournalEntry found for reference INV-508-payment.');
     }
 
     public function createTransactionReturnsFailureWhenTheJournalEntryRequestThrows(): void
@@ -403,7 +403,7 @@ final class QuickBooksGatewayTest
         $result = $gateway->createTransaction($this->paymentReceivedTransaction());
 
         Assert::false($result->success);
-        Assert::same(self::CONNECTION_REFUSED, $result->message);
+        Assert::same($result->message, self::CONNECTION_REFUSED);
     }
 
     public function updateTransactionReturnsFailureWhenTheUpdateRequestThrows(): void
@@ -417,7 +417,7 @@ final class QuickBooksGatewayTest
         $result = $gateway->updateTransaction($this->paymentReceivedTransaction('INV-509-payment'));
 
         Assert::false($result->success);
-        Assert::same(self::CONNECTION_REFUSED, $result->message);
+        Assert::same($result->message, self::CONNECTION_REFUSED);
     }
 
     public function getTransactionReturnsFailedWhenTheQueryRequestThrows(): void
@@ -430,7 +430,7 @@ final class QuickBooksGatewayTest
         $result = $gateway->getTransaction('INV-510-payment');
 
         Assert::false($result->found);
-        Assert::same(self::CONNECTION_REFUSED, $result->message);
+        Assert::same($result->message, self::CONNECTION_REFUSED);
     }
 
     public function deleteTransactionReturnsFailureWhenTheDeleteRequestThrows(): void
@@ -444,7 +444,7 @@ final class QuickBooksGatewayTest
         $result = $gateway->deleteTransaction('INV-511-payment');
 
         Assert::false($result->success);
-        Assert::same(self::CONNECTION_REFUSED, $result->message);
+        Assert::same($result->message, self::CONNECTION_REFUSED);
     }
 
     public function refreshAccessTokenReturnsNullWhenTheAuthHttpClientThrows(): void
@@ -469,7 +469,7 @@ final class QuickBooksGatewayTest
         $result = $gateway->createTransaction($this->paymentReceivedTransaction());
 
         Assert::false($result->success);
-        Assert::same('Unable to obtain a QuickBooks access token.', $result->message);
+        Assert::same($result->message, 'Unable to obtain a QuickBooks access token.');
     }
 
     public function errorLogContextExtractsTheQuickBooksFaultDetailFromARequestException(): void
