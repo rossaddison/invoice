@@ -45,7 +45,7 @@ final class BookkeepingLineTest
     public function carriesOptionalTaxCodeAndDescriptionAsGiven(): void
     {
         $line = new BookkeepingLine(
-            AccountRole::Vat,
+            AccountRole::VatOrTax,
             DebitCredit::Credit,
             20.00,
             'GB_STANDARD',

@@ -14,7 +14,7 @@ namespace App\Bookkeeping\Domain;
  */
 enum BookkeepingTransactionType: string
 {
-    // Dr AccountsReceivable / Cr Sales / Cr Vat
+    // Dr AccountsReceivable / Cr Sales / Cr VatOrTax
     case InvoiceIssued = 'invoice_issued';
 
     // Dr Bank / Cr AccountsReceivable

@@ -25,7 +25,7 @@ final class BookkeepingTransactionTest
         return [
             new BookkeepingLine(AccountRole::AccountsReceivable, DebitCredit::Debit, 120.00),
             new BookkeepingLine(AccountRole::Sales, DebitCredit::Credit, 100.00),
-            new BookkeepingLine(AccountRole::Vat, DebitCredit::Credit, 20.00),
+            new BookkeepingLine(AccountRole::VatOrTax, DebitCredit::Credit, 20.00),
         ];
     }
 
