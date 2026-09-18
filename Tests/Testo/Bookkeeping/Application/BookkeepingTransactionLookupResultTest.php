@@ -31,10 +31,10 @@ final class BookkeepingTransactionLookupResultTest
 
     public function failedHasNoReferenceButCarriesTheMessage(): void
     {
-        $result = BookkeepingTransactionLookupResult::failed('Xero API timeout');
+        $result = BookkeepingTransactionLookupResult::failed('QuickBooks API timeout');
 
         Assert::false($result->found);
         Assert::null($result->providerReference);
-        Assert::same('Xero API timeout', $result->message);
+        Assert::same('QuickBooks API timeout', $result->message);
     }
 }

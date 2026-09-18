@@ -7,10 +7,9 @@ namespace App\Bookkeeping\Application;
 use App\Bookkeeping\Domain\BookkeepingTransaction;
 
 /**
- * Common surface every bookkeeping provider integration exposes
- * (Xero/Sage/Akaunting/QuickBooks -- see the eventual
- * App\Bookkeeping\Infrastructure\{Provider} adapters), regardless of how
- * its own REST API is shaped. Mirrors
+ * Common surface a bookkeeping provider integration exposes (currently
+ * App\Bookkeeping\Infrastructure\QuickBooks\QuickBooksGateway), regardless
+ * of how its own REST API is shaped. Mirrors
  * App\Invoice\PaymentInformation\PaymentGatewayInterface's role for
  * payment gateways -- including its "never throw on provider-side
  * failure, report via a Result object" convention -- so a caller here has
@@ -25,7 +24,7 @@ interface BookkeepingGatewayInterface
 {
     /**
      * Matches the suffix used in a `bookkeeping_{driver}_enabled`-style
-     * setting key, e.g. 'xero', 'sage', 'akaunting', 'quickbooks'.
+     * setting key, e.g. 'quickbooks'.
      */
     public function getDriverKey(): string;
 

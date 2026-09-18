@@ -49,7 +49,7 @@ final class BookkeepingServiceTest
         /** @var BookkeepingGatewayInterface&m\MockInterface $gateway */
         $gateway = m::mock(BookkeepingGatewayInterface::class);
         $gateway->shouldReceive('isConfigured')->andReturn(false);
-        $gateway->shouldReceive('getDriverKey')->andReturn('xero');
+        $gateway->shouldReceive('getDriverKey')->andReturn('quickbooks');
 
         /** @var BookkeepingTransactionRepositoryInterface&m\MockInterface $repository */
         $repository = m::mock(BookkeepingTransactionRepositoryInterface::class);
@@ -59,7 +59,7 @@ final class BookkeepingServiceTest
 
         Assert::same(0, $summary->exportedCount);
         Assert::same(2, $summary->failedCount);
-        Assert::true(str_contains($summary->messages[0], 'xero is not configured.'));
+        Assert::true(str_contains($summary->messages[0], 'quickbooks is not configured.'));
     }
 
     public function marksAnAlreadyExistingTransactionAsExportedWithoutRecreatingIt(): void
@@ -67,10 +67,10 @@ final class BookkeepingServiceTest
         /** @var BookkeepingGatewayInterface&m\MockInterface $gateway */
         $gateway = m::mock(BookkeepingGatewayInterface::class);
         $gateway->shouldReceive('isConfigured')->andReturn(true);
-        $gateway->shouldReceive('getDriverKey')->andReturn('xero');
+        $gateway->shouldReceive('getDriverKey')->andReturn('quickbooks');
         $gateway->shouldReceive('getTransaction')
             ->with('INV-1024')
-            ->andReturn(BookkeepingTransactionLookupResult::found('XERO-9001'));
+            ->andReturn(BookkeepingTransactionLookupResult::found('QB-9001'));
         // Not creating a duplicate is the whole point of this test.
         $gateway->shouldNotReceive('createTransaction');
 
@@ -86,8 +86,8 @@ final class BookkeepingServiceTest
         Assert::same(1, $summary->exportedCount);
         Assert::same(0, $summary->failedCount);
         Assert::true($transaction->isExported());
-        Assert::same('xero', $transaction->getExportedProviderKey());
-        Assert::same('XERO-9001', $transaction->getExportedProviderReference());
+        Assert::same('quickbooks', $transaction->getExportedProviderKey());
+        Assert::same('QB-9001', $transaction->getExportedProviderReference());
     }
 
     public function createsAndMarksExportedOnSuccess(): void
@@ -95,9 +95,9 @@ final class BookkeepingServiceTest
         /** @var BookkeepingGatewayInterface&m\MockInterface $gateway */
         $gateway = m::mock(BookkeepingGatewayInterface::class);
         $gateway->shouldReceive('isConfigured')->andReturn(true);
-        $gateway->shouldReceive('getDriverKey')->andReturn('xero');
+        $gateway->shouldReceive('getDriverKey')->andReturn('quickbooks');
         $gateway->shouldReceive('getTransaction')->andReturn(BookkeepingTransactionLookupResult::notFound());
-        $gateway->shouldReceive('createTransaction')->andReturn(new BookkeepingResult(true, 'XERO-9002'));
+        $gateway->shouldReceive('createTransaction')->andReturn(new BookkeepingResult(true, 'QB-9002'));
 
         $transaction = $this->transaction();
 
@@ -111,7 +111,7 @@ final class BookkeepingServiceTest
         Assert::same(1, $summary->exportedCount);
         Assert::same(0, $summary->failedCount);
         Assert::true($transaction->isExported());
-        Assert::same('XERO-9002', $transaction->getExportedProviderReference());
+        Assert::same('QB-9002', $transaction->getExportedProviderReference());
     }
 
     public function recordsTheFailureMessageAndLeavesTheTransactionUnexported(): void
@@ -119,9 +119,9 @@ final class BookkeepingServiceTest
         /** @var BookkeepingGatewayInterface&m\MockInterface $gateway */
         $gateway = m::mock(BookkeepingGatewayInterface::class);
         $gateway->shouldReceive('isConfigured')->andReturn(true);
-        $gateway->shouldReceive('getDriverKey')->andReturn('xero');
+        $gateway->shouldReceive('getDriverKey')->andReturn('quickbooks');
         $gateway->shouldReceive('getTransaction')->andReturn(BookkeepingTransactionLookupResult::notFound());
-        $gateway->shouldReceive('createTransaction')->andReturn(new BookkeepingResult(false, '', 'Xero API timeout'));
+        $gateway->shouldReceive('createTransaction')->andReturn(new BookkeepingResult(false, '', 'QuickBooks API timeout'));
 
         $transaction = $this->transaction();
 
@@ -134,7 +134,7 @@ final class BookkeepingServiceTest
 
         Assert::same(0, $summary->exportedCount);
         Assert::same(1, $summary->failedCount);
-        Assert::same('INV-1024: Xero API timeout', $summary->messages[0]);
+        Assert::same('INV-1024: QuickBooks API timeout', $summary->messages[0]);
         Assert::false($transaction->isExported());
     }
 

@@ -10,7 +10,7 @@ use DateTimeImmutable;
  * Orchestrates exporting already-built, already-persisted
  * BookkeepingTransactions to whichever provider this app is configured
  * for. Which concrete BookkeepingGatewayInterface implementation that is
- * (Xero/Sage/Akaunting/QuickBooks) is a DI-config concern
+ * (currently only QuickBooksGateway) is a DI-config concern
  * (config/common/di/), not application logic -- exactly one gateway is
  * injected here rather than this service iterating a provider list
  * itself, matching how Yii3 DI binds a single interface to one
@@ -18,8 +18,9 @@ use DateTimeImmutable;
  * a code change, which is the actual payoff of the port existing at all.
  *
  * Deliberately does NOT build BookkeepingTransactions from Inv/Payment
- * data -- that's a separate step (not yet built), closer to where this
- * app already writes StockMovement rows when an Inv reaches status_id 4.
+ * data itself -- that's App\Invoice\Inv\InvBookkeepingTransactionFactory's
+ * job, called from InvPaymentSettlementService (the same place this app
+ * already writes StockMovement rows when an Inv reaches status_id 4).
  * This service only knows how to export whatever the repository already
  * has queued.
  */

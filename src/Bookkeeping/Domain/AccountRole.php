@@ -6,13 +6,12 @@ namespace App\Bookkeeping\Domain;
 
 /**
  * The small, closed set of account categories this app's bookkeeping
- * events map onto -- deliberately NOT a chart of accounts. Xero, Sage,
- * Akaunting and QuickBooks each already own their user's real chart of
- * accounts; mirroring that here would just be a second copy to keep in
- * sync for no benefit. Each provider gateway
- * (App\Bookkeeping\Infrastructure\{Provider}) owns its own small mapping
- * from a role here to that provider's actual configured account code
- * (Settings-driven, same shape as this app's existing
+ * events map onto -- deliberately NOT a chart of accounts. QuickBooks
+ * already owns the user's real chart of accounts; mirroring that here
+ * would just be a second copy to keep in sync for no benefit.
+ * App\Bookkeeping\Infrastructure\QuickBooks\QuickBooksGateway owns its
+ * own small mapping from a role here to QuickBooks' actual configured
+ * account code (Settings-driven, same shape as this app's existing
  * gateway_{driver}_* credential settings).
  *
  * VatOrTax rather than just Vat: this app is seeing real interest from

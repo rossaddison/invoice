@@ -9,6 +9,7 @@ use App\Infrastructure\Persistence\InvAmount\InvAmount;
 use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\Product\Product;
 use App\Infrastructure\Persistence\StockMovement\StockMovement;
+use App\Invoice\Inv\InvBookkeepingTransactionFactory;
 use App\Invoice\Inv\InvPaymentSettlementDeps;
 use App\Invoice\Inv\InvPaymentSettlementService;
 use App\Invoice\Inv\InvRepository as IR;
@@ -101,7 +102,12 @@ final class InvPaymentSettlementServiceTest
         $smR = m::mock(SMR::class);
         $smR->shouldReceive('save')->once()->with(m::type(StockMovement::class));
 
-        $service = $this->makeService($iR, $iaR, $iiR, $pR, $smR);
+        /** @var InvBookkeepingTransactionFactory&m\MockInterface $bookkeepingTransactionFactory */
+        $bookkeepingTransactionFactory = m::mock(InvBookkeepingTransactionFactory::class);
+        $bookkeepingTransactionFactory->shouldReceive('createForPaidInvoice')
+            ->once()->with($invoice, $invoiceAmountRecord);
+
+        $service = $this->makeService($iR, $iaR, $iiR, $pR, $smR, bookkeepingTransactionFactory: $bookkeepingTransactionFactory);
         $service->markInvoicePaidAndAdjustStock($invoice, $invoiceAmountRecord);
 
         Assert::same(4, $invoice->reqStatusId());
@@ -246,7 +252,11 @@ final class InvPaymentSettlementServiceTest
         $smR = m::mock(SMR::class);
         $smR->shouldNotReceive('save');
 
-        $service = $this->makeService($iR, $iaR, $iiR, $pR, $smR);
+        /** @var InvBookkeepingTransactionFactory&m\MockInterface $bookkeepingTransactionFactory */
+        $bookkeepingTransactionFactory = m::mock(InvBookkeepingTransactionFactory::class);
+        $bookkeepingTransactionFactory->shouldNotReceive('createForPaidInvoice');
+
+        $service = $this->makeService($iR, $iaR, $iiR, $pR, $smR, bookkeepingTransactionFactory: $bookkeepingTransactionFactory);
         $service->markInvoicePaidAndAdjustStock($invoice, $invoiceAmountRecord);
     }
 
@@ -257,6 +267,7 @@ final class InvPaymentSettlementServiceTest
         PR $pR,
         SMR $smR,
         ?LowStockNotifier $lowStockNotifier = null,
+        ?InvBookkeepingTransactionFactory $bookkeepingTransactionFactory = null,
     ): InvPaymentSettlementService {
         /** @var IS&m\MockInterface $invService */
         $invService = m::mock(IS::class);
@@ -274,8 +285,14 @@ final class InvPaymentSettlementServiceTest
             $lowStockNotifier->shouldReceive('notifyIfCrossed')->byDefault();
         }
 
+        if ($bookkeepingTransactionFactory === null) {
+            /** @var InvBookkeepingTransactionFactory&m\MockInterface $bookkeepingTransactionFactory */
+            $bookkeepingTransactionFactory = m::mock(InvBookkeepingTransactionFactory::class);
+            $bookkeepingTransactionFactory->shouldReceive('createForPaidInvoice')->byDefault();
+        }
+
         return new InvPaymentSettlementService(
-            new InvPaymentSettlementDeps($iR, $iaR, $iiR, $pR, $smR, $invService, $lowStockNotifier),
+            new InvPaymentSettlementDeps($iR, $iaR, $iiR, $pR, $smR, $invService, $lowStockNotifier, $bookkeepingTransactionFactory),
         );
     }
 }

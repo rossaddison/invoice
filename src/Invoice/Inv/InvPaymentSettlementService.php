@@ -68,6 +68,7 @@ final readonly class InvPaymentSettlementService
                 $this->applyPaidStatus($invoice, $paymentMethod);
                 $this->settleInvoiceAmount($invoiceAmountRecord);
                 $this->recordStockMovementsForSale($invoice);
+                $this->d->bookkeepingTransactionFactory->createForPaidInvoice($invoice, $invoiceAmountRecord);
             },
         );
     }
