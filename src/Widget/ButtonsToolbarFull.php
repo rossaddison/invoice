@@ -593,7 +593,7 @@ final readonly class ButtonsToolbarFull
 
         $statusText = match ($inv->reqStatusId()) {
             1 => '📝 ' . $this->translator->translate('draft'),
-            2 => '📤 ' . $this->translator->translate('sent'),
+            2 => '📤 ' . $this->translator->translate('invoice.status.issued'),
             3 => '👁 ' . $this->translator->translate('viewed'),
             4 => '✅ ' . $this->translator->translate('paid'),
             5 => '⚠️ ' . $this->translator->translate('overdue'),

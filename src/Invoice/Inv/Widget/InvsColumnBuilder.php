@@ -817,7 +817,7 @@ final class InvsColumnBuilder
                             ],
                             'true' => [
                                 '0' => ['2' => ['data-bs-toggle' => 'tooltip',
-                                    'title' => $t->translate('sent'),
+                                    'title' => $t->translate('invoice.status.issued'),
                                     'disabled' => 'disabled',
                                     'aria-disabled' => 'true',
                                     'class' => 'btn btn-secondary btn-sm disabled',
@@ -973,7 +973,7 @@ final class InvsColumnBuilder
             . Html::encode(
                 '🌎 ' . $t->translate('all')
                 . '<br/>🗋 ' . $t->translate('draft')
-                . '<br/>📨 ' . $t->translate('sent')
+                . '<br/>📨 ' . $t->translate('invoice.status.issued')
                 . '<br/>👀 ' . $t->translate('viewed')
                 . '<br/>😀 ' . $t->translate('paid')
                 . '<br/>🏦 ' . $t->translate('overdue')

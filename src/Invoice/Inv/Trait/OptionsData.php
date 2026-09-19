@@ -127,11 +127,19 @@ trait OptionsData
         }
 
         $optionsDataInvoiceStatus = [];
+        $currentStatus = $inv->hasIdentity() ? $inv->reqStatusId() : 0;
         /**
          * @var string $key
          * @var array $status
          */
         foreach ($core->invRepo->getStatuses($this->translator) as $key => $status) {
+            $statusId = (int) $key;
+            // Void has its own action, and an issued invoice never reverts
+            // among draft/issued/viewed/paid (see Inv::setStatusId()).
+            $isBackwards = $currentStatus >= 2 && $currentStatus <= 4 && $statusId >= 1 && $statusId < $currentStatus;
+            if ($statusId === 14 && $currentStatus !== 14 || $isBackwards) {
+                continue;
+            }
             $optionsDataInvoiceStatus[$key] = (string) $status['label'];
         }
         return [
