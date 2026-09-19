@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Html as H;
+use Yiisoft\Html\Tag\Option;
 
 /**
 * @var App\Invoice\Setting\SettingRepository $s
@@ -21,30 +22,92 @@ $panelBody = ['class' => 'card-body'];
 $formGroup = ['class' => 'mb-3'];
 $checkbox = ['class' => 'form-check'];
 $formText = ['class' => 'form-text'];
-// Same 'settings[bookkeeping_{driver}_' prefix convention
-// partial_settings_online_payment.php uses for 'settings[gateway_' --
-// QuickBooksGateway's own Settings keys already use bookkeeping_ (not
-// gateway_), so this mirrors that naming exactly rather than the
-// payment-gateway one.
-$pfx = 'settings[bookkeeping_quickbooks_';
+
+$selectedProvider = $s->getSetting('bookkeeping_provider') === 'frontaccounting' ? 'frontaccounting' : 'quickbooks';
 
 /**
- * One field's key => this app's own real Setting key, matching
- * QuickBooksGateway's own private constants exactly.
+ * Each provider's fields: the last part of its Setting key
+ * ('bookkeeping_{provider}_{key}'), matching that provider's gateway class
+ * constants exactly (QuickBooksGateway, FrontAccountingGateway).
  */
-$fields = [
-    'client_id' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.quickbooks.client.id')],
-    'client_secret' => ['type' => 'password', 'label' => $translator->translate('bookkeeping.quickbooks.client.secret')],
-    'sandbox' => ['type' => 'checkbox', 'label' => $translator->translate('bookkeeping.quickbooks.sandbox')],
-    'account_accounts_receivable' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.quickbooks.account.accounts.receivable')],
-    'account_sales' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.quickbooks.account.sales')],
-    'account_vat_or_tax' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.quickbooks.account.vat.or.tax')],
-    'account_bank' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.quickbooks.account.bank')],
-    'account_payment_fees' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.quickbooks.account.payment.fees')],
+$providers = [
+    'quickbooks' => [
+        'title' => 'QuickBooks',
+        'fields' => [
+            'client_id' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.quickbooks.client.id')],
+            'client_secret' => ['type' => 'password', 'label' => $translator->translate('bookkeeping.quickbooks.client.secret')],
+            'sandbox' => ['type' => 'checkbox', 'label' => $translator->translate('bookkeeping.quickbooks.sandbox')],
+            'account_accounts_receivable' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.quickbooks.account.accounts.receivable')],
+            'account_sales' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.quickbooks.account.sales')],
+            'account_vat_or_tax' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.quickbooks.account.vat.or.tax')],
+            'account_bank' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.quickbooks.account.bank')],
+            'account_payment_fees' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.quickbooks.account.payment.fees')],
+        ],
+    ],
+    'frontaccounting' => [
+        'title' => 'FrontAccounting',
+        'fields' => [
+            'base_url' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.base.url')],
+            'company' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.company')],
+            'username' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.username')],
+            'password' => ['type' => 'password', 'label' => $translator->translate('bookkeeping.frontaccounting.password')],
+            'bank_account' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.bank.account')],
+            'stock_id' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.stock.id')],
+            'vat_stock_id' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.vat.stock.id')],
+            'tax_group' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.tax.group')],
+            'sales_type' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.sales.type')],
+            'payment_terms' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.payment.terms')],
+            'location' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.location')],
+        ],
+    ],
 ];
 
 echo H::openTag('div', $row); //0
  echo H::openTag('div', $colMd8); //1
+  echo H::openTag('div', $formGroup); //2
+   echo H::openTag('label', ['for' => 'settings[bookkeeping_provider]']); //3
+    echo $translator->translate('bookkeeping.provider');
+   echo H::closeTag('label'); //3
+   echo H::openTag('select', [
+    'name' => 'settings[bookkeeping_provider]',
+    'id' => 'settings[bookkeeping_provider]',
+    'class' => 'form-select',
+   ]); //3
+    foreach ($providers as $providerKey => $provider) {
+    echo new Option()
+     ->value($providerKey)
+     ->selected($selectedProvider === $providerKey)
+     ->content($provider['title']);
+    }
+   echo H::closeTag('select'); //3
+   echo H::openTag('div', $formText); //3
+    echo $translator->translate('bookkeeping.provider.hint');
+   echo H::closeTag('div'); //3
+  echo H::closeTag('div'); //2
+
+// A submit button with formaction, not a nested <form>: this partial
+// already sits inside tab_index's one settings form, which also carries
+// the _csrf field this POST needs.
+  echo H::openTag('div', $formGroup); //2
+   echo H::openTag('button', [
+    'type' => 'submit',
+    'formaction' => $bookkeeping_export_url,
+    'formmethod' => 'post',
+    'formnovalidate' => true,
+    'class' => 'btn btn-success',
+   ]); //3
+    echo $translator->translate('bookkeeping.export.now');
+   echo H::closeTag('button'); //3
+   echo H::openTag('div', $formText); //3
+    echo $translator->translate('bookkeeping.export.hint');
+   echo H::closeTag('div'); //3
+  echo H::closeTag('div'); //2
+
+  /**
+   * @var string $providerKey
+   * @var array{title: string, fields: array<string, array{type: string, label: string}>} $provider
+   */
+  foreach ($providers as $providerKey => $provider) {
 // NOT class "gateway-settings" -- that exact class name is queried
 // unconditionally on every page load by settings.ts's
 // handleOnlinePaymentSelectChange() (Online Payment's own show/hide
@@ -53,17 +116,20 @@ echo H::openTag('div', $row); //0
 // !important) class added to it unless it also carries
 // "active-gateway" -- confirmed live as the actual root cause of this
 // card silently disappearing. "bookkeeping-settings" avoids the
-// collision entirely; QuickBooks doesn't need that show/hide behaviour
-// anyway, since it's the only provider and is always shown.
-  echo H::openTag('div', ['id' => 'bookkeeping-settings-quickbooks', 'class' => 'bookkeeping-settings card']); //2
+// collision entirely.
+  $pfx = 'settings[bookkeeping_' . $providerKey . '_';
+  echo H::openTag('div', [
+   'id' => 'bookkeeping-settings-' . $providerKey,
+   'class' => 'bookkeeping-settings card mb-3',
+  ]); //2
    echo H::openTag('div', $panelHead); //3
     echo H::openTag('a', [
-     'href' => $tab_index_url . '#bookkeeping-settings-quickbooks',
+     'href' => $tab_index_url . '#bookkeeping-settings-' . $providerKey,
      'class' => 'text-decoration-none text-reset',
     ]); //4
-     echo 'QuickBooks';
+     echo $provider['title'];
     echo H::closeTag('a'); //4
-    if ($quickbooks_credential_url !== '') {
+    if ($providerKey === 'quickbooks' && $quickbooks_credential_url !== '') {
     echo H::openTag('a', [
      'href' => $quickbooks_credential_url,
      'target' => '_blank',
@@ -73,6 +139,7 @@ echo H::openTag('div', $row); //0
      echo $translator->translate('online.payment.get.credentials');
     echo H::closeTag('a'); //4
     }
+    if ($providerKey === 'quickbooks') {
     echo H::openTag('span', [
      'class' => 'badge float-end ' . ($quickbooks_connected ? 'bg-success' : 'bg-secondary'),
     ]); //4
@@ -80,9 +147,16 @@ echo H::openTag('div', $row); //0
       ? $translator->translate('bookkeeping.quickbooks.connected')
       : $translator->translate('bookkeeping.quickbooks.not.connected');
     echo H::closeTag('span'); //4
+    }
+    if ($selectedProvider === $providerKey) {
+    echo H::openTag('span', ['class' => 'badge float-end bg-primary me-2']); //4
+     echo $translator->translate('bookkeeping.provider.active');
+    echo H::closeTag('span'); //4
+    }
    echo H::closeTag('div'); //3
 
    echo H::openTag('div', $panelBody); //3
+    if ($providerKey === 'quickbooks') {
     echo H::openTag('div', $formGroup); //4
      echo H::openTag('a', [
       'href' => $quickbooks_connect_url,
@@ -94,32 +168,11 @@ echo H::openTag('div', $row); //0
       echo $translator->translate('bookkeeping.quickbooks.connect.hint');
      echo H::closeTag('div'); //5
     echo H::closeTag('div'); //4
+    }
 
-// A submit button with formaction, not a nested <form>: this partial
-// already sits inside tab_index's one settings form, which also carries
-// the _csrf field this POST needs.
-    echo H::openTag('div', $formGroup); //4
-     echo H::openTag('button', [
-      'type' => 'submit',
-      'formaction' => $bookkeeping_export_url,
-      'formmethod' => 'post',
-      'formnovalidate' => true,
-      'class' => 'btn btn-success',
-     ]); //5
-      echo $translator->translate('bookkeeping.export.now');
-     echo H::closeTag('button'); //5
-     echo H::openTag('div', $formText); //5
-      echo $translator->translate('bookkeeping.export.hint');
-     echo H::closeTag('div'); //5
-    echo H::closeTag('div'); //4
-
-    /**
-     * @var string $key
-     * @var array{type: string, label: string} $field
-     */
-    foreach ($fields as $key => $field) {
+    foreach ($provider['fields'] as $key => $field) {
     $fieldId = $pfx . $key . ']';
-    $body[$fieldId] = $s->getSetting('bookkeeping_quickbooks_' . $key);
+    $body[$fieldId] = $s->getSetting('bookkeeping_' . $providerKey . '_' . $key);
 
     if ($field['type'] === 'checkbox') {
     echo H::openTag('div', $checkbox); //4
@@ -206,5 +259,7 @@ echo H::openTag('div', $row); //0
 
    echo H::closeTag('div'); //3
   echo H::closeTag('div'); //2
+  }
+
  echo H::closeTag('div'); //1
 echo H::closeTag('div'); //0
