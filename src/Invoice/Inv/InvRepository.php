@@ -241,6 +241,22 @@ final class InvRepository extends Select\Repository implements InvRepositoryInte
         return  $query->fetchOne() ?: null;
     }
 
+    /**
+     * Every non-draft, non-deleted invoice with its InvAmount loaded, for
+     * the bookkeeping ledger sync.
+     *
+     * @return list<Inv>
+     */
+    public function repoNonDraftLoadedInvAmount(): array
+    {
+        /** @var list<Inv> */
+        return $this->select()
+            ->load('invAmount')
+            ->where('status_id', '>=', 2)
+            ->where('deleted_at', null)
+            ->fetchAll();
+    }
+
     public function repoInvLoadInvAmountquery(int $id): ?Inv
     {
         $query = $this->select()

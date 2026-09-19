@@ -287,7 +287,7 @@ $columns = [
         header: '<span data-bs-toggle="tooltip" data-bs-html="true" title="' .
                 Html::encode('🌎 ' . $translator->translate('all') . '<br/>🗋 '
                         . $translator->translate('draft')
-                        . '<br/>📨 ' . $translator->translate('sent')
+                        . '<br/>📨 ' . $translator->translate('invoice.status.issued')
                         . '<br/>👀 ' . $translator->translate('viewed')
                         . '<br/>😀 ' . $translator->translate('paid')
                         . '<br/>🏦 ' . $translator->translate('overdue')

@@ -89,9 +89,9 @@ final class InvsToolbar
 
         $markAsSent = new A()
             ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
-                'title' => Html::encode($p->translator->translate('sent'))])
+                'title' => Html::encode($p->translator->translate('invoice.status.issued'))])
             ->addClass('btn btn-success')
-            ->content('☑️' . $p->translator->translate('sent') . $p->iR->getSpecificStatusArrayEmoji(2))
+            ->content('☑️' . $p->translator->translate('invoice.status.issued') . $p->iR->getSpecificStatusArrayEmoji(2))
             ->id('btn-mark-as-sent')
             ->render();
 
@@ -112,7 +112,7 @@ final class InvsToolbar
         $copyAllToDateModal = self::buildCopyAllToDateModal($t, $today);
         $batchEmailBtn      = self::buildBatchEmailButton($t);
         $batchEmailModal    = self::buildBatchEmailModal($p, $t);
-        $markSentAsDraft    = self::buildMarkSentAsDraft($p);
+        $voidSelected    = self::buildVoidSelected($p);
 
         $markRecurring = new A()
             ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal'])
@@ -169,7 +169,7 @@ final class InvsToolbar
                 . $copyMultiple
                 . $copyAllToDate
                 . $markAsSent
-                . $markSentAsDraft
+                . $voidSelected
                 . $bulkQuickPay
                 . $batchEmailBtn
                 . $markRecurring
@@ -298,27 +298,17 @@ final class InvsToolbar
             . Html::closeTag('div');
     }
 
-    private static function buildMarkSentAsDraft(InvsToolbarParams $p): string
+    private static function buildVoidSelected(InvsToolbarParams $p): string
     {
-        return $p->sR->getSetting('disable_read_only') === '0'
-            ? new A()
-                ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
-                    'title' => Html::encode(
-                        $p->translator->translate('security.disable.read.only.info')
-                    ),
-                    'disabled' => 'disabled', 'style' => 'text-decoration:none'])
-                ->addClass('btn btn-success')
-                ->content('☑️' . $p->translator->translate('draft') . $p->iR->getSpecificStatusArrayEmoji(1))
-                ->id('btn-mark-sent-as-draft')
-                ->render()
-            : new A()
-                ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
-                    'title' => Html::encode($p->translator->translate('draft')),
-                    'style' => 'text-decoration:none'])
-                ->addClass('btn btn-success')
-                ->content('☑️' . $p->translator->translate('draft') . $p->iR->getSpecificStatusArrayEmoji(1))
-                ->id('btn-mark-sent-as-draft')
-                ->render();
+        return new A()
+            ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
+                'title' => Html::encode($p->translator->translate('invoice.void')),
+                'data-confirm' => $p->translator->translate('invoice.void.selected.confirm'),
+                'style' => 'text-decoration:none'])
+            ->addClass('btn btn-danger')
+            ->content('🚫' . $p->translator->translate('invoice.status.void'))
+            ->id('btn-void-selected')
+            ->render();
     }
 
     private static function buildAddBtn(InvsToolbarParams $p): string

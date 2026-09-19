@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Auth\Permissions;
 use App\Invoice\Inv\InvController;
+use App\Invoice\Inv\InvVoidController;
 use App\Middleware\RoutePermission;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\Route;
@@ -114,6 +115,11 @@ return [
                 ->middleware(RoutePermission::check(Permissions::VIEW_INV))
                 ->action([InvController::class, 'urlKey']),
 
+        Route::post('/inv/void/{id}')
+            ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+            ->action([InvVoidController::class, 'void'])
+            ->name('inv/void'),
+
         // id acquired by session
         Route::methods([Method::GET, Method::POST], '/inv/pdf/{include}')
             ->middleware(RoutePermission::check(Permissions::VIEW_INV))
@@ -201,10 +207,10 @@ return [
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'markAsSent'])
                 ->name('inv/markAsSent'),
-        Route::methods([Method::GET, Method::POST], '/inv/markSentAsDraft')
+        Route::methods([Method::GET, Method::POST], '/inv/voidSelected')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
-                ->action([InvController::class, 'markSentAsDraft'])
-                ->name('inv/markSentAsDraft'),
+                ->action([InvVoidController::class, 'voidSelected'])
+                ->name('inv/voidSelected'),
         Route::methods([Method::GET, Method::POST], '/inv/setworker/{inv_id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'setWorker'])

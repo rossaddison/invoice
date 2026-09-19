@@ -120,7 +120,7 @@ foreach ($email_templates_invoice as $et) {
 
 // Map read_only_toggle numeric value to label
 $readOnlyLabel = match($s->getSetting('read_only_toggle')) {
-    '2' => $translator->translate('sent'),
+    '2' => $translator->translate('invoice.status.issued'),
     '3' => $translator->translate('viewed'),
     '4' => $translator->translate('paid'),
     default => $translator->translate('not.set'),
@@ -637,7 +637,7 @@ echo Breadcrumbs::widget()
     $isPaid = $inv->reqStatusId() === 4;
     $steps = [
         ['label' => $translator->translate('checkout'), 'state' => 'done'],
-        ['label' => $translator->translate('sent'), 'state' => $isPaid ? 'done' : 'active'],
+        ['label' => $translator->translate('invoice.status.issued'), 'state' => $isPaid ? 'done' : 'active'],
         ['label' => $translator->translate('pay.now'), 'state' => $isPaid ? 'done' : 'pending'],
     ];
     echo H::openTag('div', ['class' => 'd-flex justify-content-center align-items-start my-4']);
@@ -909,6 +909,26 @@ if ($showButtons
       echo ' ' . H::encode($translator->translate('edit'));
      echo H::closeTag('a');
     echo H::closeTag('li');
+// Options...Void (issued/viewed with no payments only)
+    if (in_array($inv->reqStatusId(), [2, 3], true) && ($inv->getInvAmount()->getPaid() ?? 0.00) <= 0.00) {
+        echo H::openTag('li');
+         echo H::openTag('form', [
+             'method' => 'post',
+             'action' => $urlGenerator->generate('inv/void', ['id' => $inv->reqId()]),
+         ]);
+          echo H::tag('input', '', ['type' => 'hidden', 'name' => '_csrf', 'value' => $csrf]);
+          echo H::openTag('button', [
+              'type' => 'submit',
+              'class' => $dropdownItem . ' text-danger',
+              'data-confirm' => $translator->translate('invoice.void.confirm'),
+          ]);
+           echo H::openTag('i', ['class' => 'bi bi-slash-circle']);
+           echo H::closeTag('i');
+           echo ' ' . H::encode($translator->translate('invoice.void'));
+          echo H::closeTag('button');
+         echo H::closeTag('form');
+        echo H::closeTag('li');
+    }
 // Options...Add Invoice Tax
     if ($vat === '0') {
         echo H::openTag('li');
