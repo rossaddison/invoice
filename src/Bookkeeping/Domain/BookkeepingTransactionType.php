@@ -25,4 +25,12 @@ enum BookkeepingTransactionType: string
 
     // Reversal of InvoiceIssued and/or PaymentReceived's lines
     case Refund = 'refund';
+
+    // Dr Sales / Dr VatOrTax / Cr AccountsReceivable: cancels an unpaid,
+    // already-issued invoice in full
+    case Void = 'void';
+
+    // Dr Sales / Dr VatOrTax / Cr AccountsReceivable: reduces the amount
+    // owed by a credit note's value
+    case CreditNote = 'credit_note';
 }

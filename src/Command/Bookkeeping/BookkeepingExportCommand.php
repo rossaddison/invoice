@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command\Bookkeeping;
 
 use App\Bookkeeping\Application\BookkeepingService;
+use App\Invoice\Inv\InvLedgerSyncService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,7 +13,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Yiisoft\Yii\Console\ExitCode;
 
 /**
- * Exports every not-yet-exported BookkeepingTransaction to the configured
+ * Syncs the ledger from invoice state, then exports every not-yet-exported BookkeepingTransaction to the configured
  * bookkeeping provider (currently QuickBooks).
  *
  * Usage:
@@ -24,6 +25,7 @@ final class BookkeepingExportCommand extends Command
 
     public function __construct(
         private readonly BookkeepingService $bookkeepingService,
+        private readonly InvLedgerSyncService $ledgerSyncService,
     ) {
         parent::__construct();
     }
@@ -40,6 +42,7 @@ final class BookkeepingExportCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->title('Bookkeeping export');
 
+        $io->writeln(sprintf('Invoices checked: %d', $this->ledgerSyncService->sync()));
         $summary = $this->bookkeepingService->exportDueTransactions();
 
         $io->writeln(sprintf('Exported: %d', $summary->exportedCount));
