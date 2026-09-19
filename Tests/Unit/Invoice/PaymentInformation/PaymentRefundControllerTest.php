@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Invoice\PaymentInformation;
 
+use App\Bookkeeping\Application\BookkeepingTransactionRepositoryInterface;
 use App\Infrastructure\Persistence\Merchant\Merchant;
 use App\Infrastructure\Persistence\Payment\Payment;
+use App\Invoice\Inv\InvBookkeepingTransactionFactory;
+use App\Invoice\Inv\InvRepository;
+use App\Invoice\InvAmount\InvAmountRepository;
 use App\Invoice\Merchant\MerchantRepository;
 use App\Invoice\Payment\PaymentRepository;
 use App\Invoice\PaymentInformation\PaymentRefundController;
@@ -145,6 +149,9 @@ final class PaymentRefundControllerTest extends TestCase
             $this->createStub(CheckoutComPaymentService::class),
             $this->createStub(TrueLayerPaymentService::class),
             $this->createStub(BitPayPaymentService::class),
+            new InvBookkeepingTransactionFactory($this->createStub(BookkeepingTransactionRepositoryInterface::class), $this->createStub(SettingRepository::class)),
+            $this->createStub(InvRepository::class),
+            $this->createStub(InvAmountRepository::class),
         );
     }
 
