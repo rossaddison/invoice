@@ -62,6 +62,110 @@ final readonly class InvBookkeepingTransactionFactory
         $this->createPaymentReceived($reference, $currency, $date, $invId, $total);
     }
 
+    public function createForIssuedInvoice(Inv $invoice, InvAmount $invoiceAmountRecord): void
+    {
+        $total = $invoiceAmountRecord->getTotal() ?? 0.00;
+        if ($total <= 0.00) {
+            return;
+        }
+        $this->createInvoiceIssued(
+            $this->referenceFor($invoice),
+            $this->settingRepository->getSetting('currency_code_from'),
+            $invoice->getDateCreated(),
+            $invoice->reqId(),
+            $total,
+            $invoiceAmountRecord->getTaxTotal() ?? 0.00,
+        );
+    }
+
+    public function createForPaymentReceived(Inv $invoice, InvAmount $invoiceAmountRecord): void
+    {
+        $total = $invoiceAmountRecord->getTotal() ?? 0.00;
+        if ($total <= 0.00) {
+            return;
+        }
+        $this->createPaymentReceived(
+            $this->referenceFor($invoice),
+            $this->settingRepository->getSetting('currency_code_from'),
+            new DateTimeImmutable(),
+            $invoice->reqId(),
+            $total,
+        );
+    }
+
+    /**
+     * Reverses the invoice's InvoiceIssued entry. Does nothing when that
+     * entry was never created (issued and voided between two syncs).
+     */
+    public function createForVoidedInvoice(Inv $invoice, InvAmount $invoiceAmountRecord): void
+    {
+        $reference = $this->referenceFor($invoice);
+        if ($this->bookkeepingTransactions->findByReference($reference . '-invoice') === null) {
+            return;
+        }
+        $this->createReversal(
+            BookkeepingTransactionType::Void,
+            $reference . '-void',
+            new DateTimeImmutable(),
+            $invoice->reqId(),
+            $invoiceAmountRecord->getTotal() ?? 0.00,
+            $invoiceAmountRecord->getTaxTotal() ?? 0.00,
+        );
+    }
+
+    /**
+     * A credit note is an invoice with negative amounts; its ledger entry is
+     * the reduction of the amount owed (debit Sales and VAT, credit AR).
+     */
+    public function createForCreditNote(Inv $invoice, InvAmount $invoiceAmountRecord): void
+    {
+        $this->createReversal(
+            BookkeepingTransactionType::CreditNote,
+            $this->referenceFor($invoice) . '-creditnote',
+            $invoice->getDateCreated(),
+            $invoice->reqId(),
+            abs($invoiceAmountRecord->getTotal() ?? 0.00),
+            abs($invoiceAmountRecord->getTaxTotal() ?? 0.00),
+        );
+    }
+
+    private function referenceFor(Inv $invoice): string
+    {
+        $number = $invoice->getNumber();
+        return ($number !== null && $number !== '') ? $number : '#' . $invoice->reqId();
+    }
+
+    private function createReversal(
+        BookkeepingTransactionType $type,
+        string $transactionReference,
+        DateTimeImmutable $date,
+        int $invId,
+        float $total,
+        float $taxTotal,
+    ): void {
+        if ($total <= 0.00 || $this->bookkeepingTransactions->findByReference($transactionReference) !== null) {
+            return;
+        }
+        $net = $total - $taxTotal;
+        $lines = [];
+        if ($net > 0.00) {
+            $lines[] = new BookkeepingLine(AccountRole::Sales, DebitCredit::Debit, $net);
+        }
+        if ($taxTotal > 0.00) {
+            $lines[] = new BookkeepingLine(AccountRole::VatOrTax, DebitCredit::Debit, $taxTotal);
+        }
+        $lines[] = new BookkeepingLine(AccountRole::AccountsReceivable, DebitCredit::Credit, $total);
+
+        $this->bookkeepingTransactions->save(new BookkeepingTransaction(
+            $type,
+            $transactionReference,
+            $date,
+            $this->settingRepository->getSetting('currency_code_from'),
+            $lines,
+            $invId,
+        ));
+    }
+
     public function createForRefundedInvoice(Inv $invoice, InvAmount $invoiceAmountRecord, float $refundedAmount): void
     {
         $total = $invoiceAmountRecord->getTotal() ?? 0.00;
