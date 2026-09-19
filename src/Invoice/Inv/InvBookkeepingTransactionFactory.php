@@ -62,6 +62,43 @@ final readonly class InvBookkeepingTransactionFactory
         $this->createPaymentReceived($reference, $currency, $date, $invId, $total);
     }
 
+    public function createForRefundedInvoice(Inv $invoice, InvAmount $invoiceAmountRecord, float $refundedAmount): void
+    {
+        $total = $invoiceAmountRecord->getTotal() ?? 0.00;
+        if ($refundedAmount <= 0.00 || $total <= 0.00) {
+            return;
+        }
+
+        $number = $invoice->getNumber();
+        $reference = ($number !== null && $number !== '') ? $number : '#' . $invoice->reqId();
+        $transactionReference = $reference . '-refund';
+        if ($this->bookkeepingTransactions->findByReference($transactionReference) !== null) {
+            return;
+        }
+
+        $taxRefunded = round(($invoiceAmountRecord->getTaxTotal() ?? 0.00) * min(1.0, $refundedAmount / $total), 2);
+        $net = $refundedAmount - $taxRefunded;
+        $lines = [];
+        if ($net > 0.00) {
+            $lines[] = new BookkeepingLine(AccountRole::Sales, DebitCredit::Debit, $net);
+        }
+        if ($taxRefunded > 0.00) {
+            $lines[] = new BookkeepingLine(AccountRole::VatOrTax, DebitCredit::Debit, $taxRefunded);
+        }
+        $lines[] = new BookkeepingLine(AccountRole::AccountsReceivable, DebitCredit::Credit, $refundedAmount);
+        $lines[] = new BookkeepingLine(AccountRole::AccountsReceivable, DebitCredit::Debit, $refundedAmount);
+        $lines[] = new BookkeepingLine(AccountRole::Bank, DebitCredit::Credit, $refundedAmount);
+
+        $this->bookkeepingTransactions->save(new BookkeepingTransaction(
+            BookkeepingTransactionType::Refund,
+            $transactionReference,
+            new DateTimeImmutable(),
+            $this->settingRepository->getSetting('currency_code_from'),
+            $lines,
+            $invoice->reqId(),
+        ));
+    }
+
     private function createInvoiceIssued(
         string $reference,
         string $currency,

@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\PaymentInformation;
 
 use App\Infrastructure\Persistence\Payment\Payment;
+use App\Invoice\Inv\InvBookkeepingTransactionFactory;
+use App\Invoice\Inv\InvRepository as iR;
+use App\Invoice\InvAmount\InvAmountRepository as iaR;
 use App\Invoice\Merchant\MerchantRepository;
 use App\Invoice\Payment\PaymentRepository;
 use App\Invoice\PaymentInformation\Service\AdyenPaymentService;
@@ -68,6 +71,9 @@ final class PaymentRefundController
         private readonly CheckoutComPaymentService $checkoutComPaymentService,
         private readonly TrueLayerPaymentService $trueLayerPaymentService,
         private readonly BitPayPaymentService $bitPayPaymentService,
+        private readonly InvBookkeepingTransactionFactory $bookkeepingTransactionFactory,
+        private readonly iR $iR,
+        private readonly iaR $iaR,
     ) {
     }
 
@@ -136,6 +142,7 @@ final class PaymentRefundController
     {
         if ($result->refunded) {
             $this->recordRefundNote($context->payment, $context->driver, $result);
+            $this->recordRefundInLedger($context->payment);
             $this->flashMessage(
                 'success',
                 sprintf($this->translator->translate('refund.successful'), $context->driver)
@@ -175,6 +182,17 @@ final class PaymentRefundController
             'bitpay'     => $this->bitPayPaymentService->refund($reference, $amount),
             default      => null,
         };
+    }
+
+    private function recordRefundInLedger(Payment $payment): void
+    {
+        $invId = $payment->reqInvId();
+        $invoice = $this->iR->repoInvUnLoadedquery($invId);
+        $amount = $this->iaR->repoInvquery($invId);
+        if ($invoice === null || $amount === null) {
+            return;
+        }
+        $this->bookkeepingTransactionFactory->createForRefundedInvoice($invoice, $amount, $payment->getAmount() ?? 0.00);
     }
 
     private function recordRefundNote(

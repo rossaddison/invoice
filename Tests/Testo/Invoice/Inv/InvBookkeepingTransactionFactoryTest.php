@@ -6,6 +6,7 @@ namespace Tests\Testo\Invoice\Inv;
 
 use App\Bookkeeping\Application\BookkeepingTransactionRepositoryInterface;
 use App\Bookkeeping\Domain\AccountRole;
+use App\Bookkeeping\Domain\BookkeepingLine;
 use App\Bookkeeping\Domain\BookkeepingTransaction;
 use App\Bookkeeping\Domain\BookkeepingTransactionType;
 use App\Bookkeeping\Domain\DebitCredit;
@@ -181,5 +182,81 @@ final class InvBookkeepingTransactionFactoryTest
 
         $factory = $this->makeFactory($repository);
         $factory->createForPaidInvoice($invoice, $invoiceAmountRecord);
+    }
+
+    public function createsABalancedRefundTransactionReversingSalesAndTaxAgainstBank(): void
+    {
+        $invoice = $this->makeInvoice(301, 'INV-301');
+        $invoiceAmountRecord = new InvAmount(inv_id: 301, item_tax_total: 20.00, tax_total: 20.00, total: 120.00);
+
+        /** @var BookkeepingTransactionRepositoryInterface&m\MockInterface $repository */
+        $repository = m::mock(BookkeepingTransactionRepositoryInterface::class);
+        $repository->shouldReceive('findByReference')->with('INV-301-refund')->andReturn(null);
+
+        /** @var array<string, BookkeepingTransaction> $saved */
+        $saved = [];
+        $repository->shouldReceive('save')
+            ->once()
+            ->with(m::type(BookkeepingTransaction::class))
+            ->andReturnUsing(static function (BookkeepingTransaction $transaction) use (&$saved): void {
+                $saved[$transaction->getType()->value] = $transaction;
+            });
+
+        $this->makeFactory($repository)->createForRefundedInvoice($invoice, $invoiceAmountRecord, 120.00);
+
+        $refund = $this->requireSaved($saved, BookkeepingTransactionType::Refund);
+        Assert::same($refund->getReference(), 'INV-301-refund');
+        Assert::same($refund->getSourceInvId(), 301);
+        Assert::count($refund->getLines(), 5);
+        Assert::same($refund->getLines()[2]->account, AccountRole::AccountsReceivable);
+        Assert::same($refund->getLines()[2]->direction, DebitCredit::Credit);
+        Assert::same($refund->getLines()[3]->account, AccountRole::AccountsReceivable);
+        Assert::same($refund->getLines()[3]->direction, DebitCredit::Debit);
+        Assert::same($refund->getLines()[0]->account, AccountRole::Sales);
+        Assert::same($refund->getLines()[0]->direction, DebitCredit::Debit);
+        Assert::same($refund->getLines()[0]->amount, 100.00);
+        Assert::same($refund->getLines()[1]->account, AccountRole::VatOrTax);
+        Assert::same($refund->getLines()[1]->direction, DebitCredit::Debit);
+        Assert::same($refund->getLines()[1]->amount, 20.00);
+        Assert::same($refund->getLines()[4]->account, AccountRole::Bank);
+        Assert::same($refund->getLines()[4]->direction, DebitCredit::Credit);
+        Assert::same($refund->getLines()[4]->amount, 120.00);
+    }
+
+    public function refundIsIdempotentWhenTheRefundTransactionAlreadyExists(): void
+    {
+        $invoice = $this->makeInvoice(302, 'INV-302');
+        $invoiceAmountRecord = new InvAmount(inv_id: 302, tax_total: 0.00, total: 50.00);
+
+        /** @var BookkeepingTransactionRepositoryInterface&m\MockInterface $repository */
+        $repository = m::mock(BookkeepingTransactionRepositoryInterface::class);
+        $repository->shouldReceive('findByReference')->with('INV-302-refund')->andReturn(
+            new BookkeepingTransaction(
+                BookkeepingTransactionType::Refund,
+                'INV-302-refund',
+                new \DateTimeImmutable(),
+                'GBP',
+                [
+                    new BookkeepingLine(AccountRole::Sales, DebitCredit::Debit, 50.00),
+                    new BookkeepingLine(AccountRole::Bank, DebitCredit::Credit, 50.00),
+                ],
+                302,
+            ),
+        );
+        $repository->shouldReceive('save')->never();
+
+        $this->makeFactory($repository)->createForRefundedInvoice($invoice, $invoiceAmountRecord, 50.00);
+    }
+
+    public function refundDoesNothingForAZeroRefundAmount(): void
+    {
+        $invoice = $this->makeInvoice(303, 'INV-303');
+        $invoiceAmountRecord = new InvAmount(inv_id: 303, tax_total: 0.00, total: 50.00);
+
+        /** @var BookkeepingTransactionRepositoryInterface&m\MockInterface $repository */
+        $repository = m::mock(BookkeepingTransactionRepositoryInterface::class);
+        $repository->shouldReceive('save')->never();
+
+        $this->makeFactory($repository)->createForRefundedInvoice($invoice, $invoiceAmountRecord, 0.00);
     }
 }
