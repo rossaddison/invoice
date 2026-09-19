@@ -239,6 +239,10 @@ final class SettingController extends BaseController
                     ['_language' => (string) $this->session->get('_language')],
                 ),
                 'quickbooks_credential_url' => 'https://developer.intuit.com/app/developer/myapps',
+                'bookkeeping_export_url' => $urlFastRouteGenerator->generate(
+                    'bookkeeping/export',
+                    ['_language' => (string) $this->session->get('_language')],
+                ),
                 'quickbooks_connect_url' => $urlFastRouteGenerator->generate(
                     'bookkeeping/quickbooksConnect',
                     ['_language' => (string) $this->session->get('_language')],
