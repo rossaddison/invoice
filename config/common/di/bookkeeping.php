@@ -2,16 +2,20 @@
 
 declare(strict_types=1);
 
+use App\Bookkeeping\Application\BookkeepingDocumentSourceInterface;
 use App\Bookkeeping\Application\BookkeepingGatewayInterface;
 use App\Bookkeeping\Application\BookkeepingTransactionRepositoryInterface;
+use App\Bookkeeping\Infrastructure\FrontAccounting\FrontAccountingGateway;
 use App\Bookkeeping\Infrastructure\Persistence\CycleBookkeepingTransactionRepository;
 use App\Bookkeeping\Infrastructure\QuickBooks\QuickBooksGateway;
+use App\Invoice\Inv\InvBookkeepingDocumentSource;
+use App\Invoice\Setting\SettingRepository;
+use Psr\Container\ContainerInterface;
 
 /**
- * QuickBooks is this app's chosen fallback bookkeeping provider (see
- * project_bookkeeping_ddd_module_design memory). Swapping providers later
- * is a one-line change here, matching BookkeepingService's own "exactly
- * one gateway injected, selection is a DI-config concern" design.
+ * Which provider BookkeepingService exports to is chosen by the
+ * `bookkeeping_provider` setting ('quickbooks', the default, or
+ * 'frontaccounting'), so switching is a settings change, not a code change.
  *
  * No Intuit::class binding lives here deliberately -- yiisoft/config's
  * Merger throws a hard error on a duplicate top-level key across the
@@ -26,5 +30,17 @@ use App\Bookkeeping\Infrastructure\QuickBooks\QuickBooksGateway;
  */
 return [
     BookkeepingTransactionRepositoryInterface::class => CycleBookkeepingTransactionRepository::class,
-    BookkeepingGatewayInterface::class => QuickBooksGateway::class,
+    BookkeepingDocumentSourceInterface::class => InvBookkeepingDocumentSource::class,
+    BookkeepingGatewayInterface::class => static function (ContainerInterface $container): BookkeepingGatewayInterface {
+        /** @var SettingRepository $settings */
+        $settings = $container->get(SettingRepository::class);
+        /** @var BookkeepingGatewayInterface $gateway */
+        $gateway = $container->get(
+            $settings->getSetting('bookkeeping_provider') === 'frontaccounting'
+                ? FrontAccountingGateway::class
+                : QuickBooksGateway::class,
+        );
+
+        return $gateway;
+    },
 ];
