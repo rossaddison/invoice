@@ -1222,6 +1222,13 @@ return [
     . ' Invoice, Quote, Sales Order or Product list. Saved immediately —'
     . ' effect visible when you visit a list.',
   'invoice' => 'Invoice',
+  'invoice.status.issued' => 'Issued',
+  'invoice.status.void' => 'Void',
+  'invoice.status.cannot.revert' => 'An issued invoice cannot be reverted to an earlier status. Void it (if unpaid) or issue a credit note.',
+  'invoice.void' => 'Void invoice',
+  'invoice.void.confirm' => 'Void this invoice? It will be cancelled, keep its number, and can no longer be edited or paid.',
+  'invoice.void.success' => 'Invoice voided.',
+  'invoice.void.not.allowed' => 'Only an issued or viewed invoice with no payments can be voided. Issue a credit note instead.',
   'invoice.to.html' => 'Invoice to Html',
   'invoice.created.from.quote' => 'Invoice created from quote',
   'invoice.needs.to.be.sent' => 'To see Pay buttons change'

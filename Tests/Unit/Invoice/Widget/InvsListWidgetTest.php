@@ -518,7 +518,7 @@ final class InvsListWidgetTest extends TestCase
 
         $result = $this->resolveGroup('status', $inv, $iR);
 
-        $this->assertSame('sent', $result);
+        $this->assertSame('invoice.status.issued', $result);
     }
 
     public function testGroupResolverReturnsYearMonth(): void

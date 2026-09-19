@@ -877,7 +877,7 @@ echo H::openTag('div', $row); //1
           $body[$srot] == '2'
          )
          ->content(
-          $translator->translate('sent') . ' (Peppol Requirement)'
+          $translator->translate('invoice.status.issued') . ' (Peppol Requirement)'
          );
         echo  new Option()
          ->value('3')

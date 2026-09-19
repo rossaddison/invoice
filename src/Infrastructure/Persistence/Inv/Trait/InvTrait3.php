@@ -26,12 +26,41 @@ trait InvTrait3
         return $this->requireId($this->status_id, 'Status');
     }
 
+    /**
+     * Draft(1) -> sent(2) -> viewed(3) -> paid(4) only moves forward: once
+     * an invoice is issued its ledger entries may already be exported to the
+     * bookkeeping provider, so it can only be corrected with a credit note,
+     * never by reverting its status. Statuses 5-13 (dunning stages) are
+     * outside that sequence.
+     */
     public function setStatusId(int $status_id): void
     {
-        $this->status_id = (!in_array(
-            $status_id,
-            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-        ) ? 1 : $status_id);
+        $target = !in_array($status_id, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]) ? 1 : $status_id;
+        $current = $this->status_id;
+        if ($this->hasIdentity() && $current !== null && !$this->isStatusChangeAllowed($current, $target)) {
+            return;
+        }
+        $this->status_id = $target;
+    }
+
+    /**
+     * Void(14) is terminal and is only reachable from issued(2)/viewed(3);
+     * the remaining rule is forward-only among draft, sent, viewed and paid.
+     */
+    private function isStatusChangeAllowed(int $current, int $target): bool
+    {
+        if ($current === 14) {
+            return $target === 14;
+        }
+        if ($target === 14) {
+            return $current === 2 || $current === 3;
+        }
+        return !($current >= 2 && $current <= 4 && $target < $current && $target <= 4);
+    }
+
+    public function isVoid(): bool
+    {
+        return $this->status_id === 14;
     }
 
     public function isDeleted(): bool

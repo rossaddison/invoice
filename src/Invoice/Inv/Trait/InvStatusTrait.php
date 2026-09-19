@@ -89,7 +89,7 @@ trait InvStatusTrait
                 'emoji' => '🗋 ',
             ],
             '2' => [
-                'label' => $translator->translate('sent'),
+                'label' => $translator->translate('invoice.status.issued'),
                 'class' => 'info',
                 'href' => 2,
                 'emoji' => '📨 ',
@@ -159,6 +159,12 @@ trait InvStatusTrait
                 'class' => 'danger',
                 'href' => 13,
                 'emoji' => '❎ ',
+            ],
+            '14' => [
+                'label' => $translator->translate('invoice.status.void'),
+                'class' => 'dark',
+                'href' => 14,
+                'emoji' => '🚫 ',
             ],
         ];
     }

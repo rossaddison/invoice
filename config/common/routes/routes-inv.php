@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Auth\Permissions;
 use App\Invoice\Inv\InvController;
+use App\Invoice\Inv\InvVoidController;
 use App\Middleware\RoutePermission;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\Route;
@@ -113,6 +114,11 @@ return [
                 ->name('inv/urlKey')
                 ->middleware(RoutePermission::check(Permissions::VIEW_INV))
                 ->action([InvController::class, 'urlKey']),
+
+        Route::post('/inv/void/{id}')
+            ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+            ->action([InvVoidController::class, 'void'])
+            ->name('inv/void'),
 
         // id acquired by session
         Route::methods([Method::GET, Method::POST], '/inv/pdf/{include}')

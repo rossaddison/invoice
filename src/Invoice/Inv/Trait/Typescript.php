@@ -88,57 +88,19 @@ trait Typescript
         return true;
     }
 
-    public function markSentAsDraft(Request $request, IR $iR): Response
+    /**
+     * Issued invoices can no longer be reverted to draft: their ledger
+     * entries may already be exported, so they are corrected with a void
+     * (unpaid) or a credit note instead. Kept as an endpoint only so a stale
+     * client gets a clear warning rather than a 404.
+     */
+    public function markSentAsDraft(): Response
     {
-        $data = $request->getQueryParams();
-        $parameters = ['success' => 0];
-        /**
-         * @var array $data['keylist']
-         */
-        $keyList = $data['keylist'] ?? [];
-        if (!empty($keyList)) {
-            /**
-             * @var string $value
-             */
-            foreach ($keyList as $value) {
-                /**
-                 * @var \App\Infrastructure\Persistence\Inv\Inv $inv
-                 */
-                $inv = $iR->repoInvUnLoadedquery((int) $value);
-                if ($inv->getInvAmount()->getTotal() >= 0) {
-                    /**
-                     * Only invoices with a 'sent' status are targeted to be
-                     * set to draft
-                     */
-                    if ($inv->reqStatusId() == 2) {
-                        $inv->setStatusId(1);
-                    }
-                    /**
-                     * Invoices are set to 'read only' if the status is 'sent'
-                     * and the ability to mark invoices as 'read only' has now
-                     * been disabled
-                     */
-                    if ($this->shouldMarkReadOnly('1')) {
-                        /**
-                         * The invoice is now a draft and so now must be
-                         * editable i.e. not 'read-only'
-                         */
-                        $inv->setIsReadOnly(false);
-                    }
-                    $iR->save($inv);
-                    $parameters['success'] = 1;
-                }
-            }
-            $this->flashMessage(
-                'info',
-                $this->translator->translate('record.successfully.updated')
-            );
-            $this->flashMessage(
-                'success',
-                $this->translator->translate('security.disable.read.only.success')
-            );
-        }
-        return $this->factory->createResponse(Json::encode($parameters));
+        $this->flashMessage(
+            'warning',
+            $this->translator->translate('invoice.status.cannot.revert')
+        );
+        return $this->factory->createResponse(Json::encode(['success' => 0]));
     }
 
     private function shouldMarkReadOnly(string $disableReadOnlyValue): bool
