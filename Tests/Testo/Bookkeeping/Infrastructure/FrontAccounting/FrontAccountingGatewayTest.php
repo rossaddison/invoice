@@ -45,7 +45,7 @@ final class FrontAccountingGatewayTest
     private function makeSettings(array $overrides = []): SettingRepository
     {
         $values = array_merge([
-            'bookkeeping_frontaccounting_base_url' => 'http://fa.test/modules/api',
+            'bookkeeping_frontaccounting_base_url' => 'http://localhost/modules/api',
             'bookkeeping_frontaccounting_company' => '0',
             'bookkeeping_frontaccounting_username' => 'admin',
             'bookkeeping_frontaccounting_password' => 'enc:secret',
@@ -184,7 +184,7 @@ final class FrontAccountingGatewayTest
         $result = $gateway->createTransaction($this->invoiceTransaction());
 
         Assert::false($result->success);
-        Assert::same($result->message, 'FrontAccounting is not configured.');
+        Assert::same($result->message, 'FrontAccounting is not configured (the API URL must be https://, or http://localhost for a local trial).');
     }
 
     public function postsAnInvoiceForAnExistingCustomerAndReturnsTheFaNumber(): void
@@ -505,5 +505,19 @@ final class FrontAccountingGatewayTest
         $this->makeGateway($mock, null, $settings)->createTransaction($this->invoiceTransaction());
 
         Assert::same($this->formAt(1)->get('tax_group_id'), '3');
+    }
+
+    public function plainHttpIsOnlyAcceptedForLocalhost(): void
+    {
+        foreach (['http://localhost:8084/modules/api', 'http://127.0.0.1:8083/modules/api', 'https://fa.example.com/modules/api'] as $url) {
+            Assert::true($this->makeGateway(new MockHandler([]), null, $this->makeSettings([
+                'bookkeeping_frontaccounting_base_url' => $url,
+            ]))->isConfigured());
+        }
+        foreach (['http://fa.example.com/modules/api', 'http://192.168.1.20/modules/api', 'ftp://localhost/api', 'localhost/api'] as $url) {
+            Assert::false($this->makeGateway(new MockHandler([]), null, $this->makeSettings([
+                'bookkeeping_frontaccounting_base_url' => $url,
+            ]))->isConfigured());
+        }
     }
 }

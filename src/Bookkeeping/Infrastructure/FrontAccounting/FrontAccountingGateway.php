@@ -68,7 +68,7 @@ final class FrontAccountingGateway implements BookkeepingGatewayInterface
     private const string SUFFIX_CREDIT_NOTE = '-creditnote';
     private const string SUFFIX_VOID = '-void';
 
-    private const string MESSAGE_NOT_CONFIGURED = 'FrontAccounting is not configured.';
+    private const string MESSAGE_NOT_CONFIGURED = 'FrontAccounting is not configured (the API URL must be https://, or http://localhost for a local trial).';
 
     public function __construct(
         private readonly SettingRepository $settings,
@@ -93,7 +93,22 @@ final class FrontAccountingGateway implements BookkeepingGatewayInterface
                 return false;
             }
         }
-        return true;
+
+        return $this->isSafeBaseUrl($this->settings->getSetting(self::KEY_BASE_URL));
+    }
+
+    /**
+     * The API authenticates with the FrontAccounting password in a request
+     * header, so plain HTTP is only acceptable for a local trial; anything
+     * else must be HTTPS.
+     */
+    private function isSafeBaseUrl(string $baseUrl): bool
+    {
+        $scheme = strtolower((string) parse_url($baseUrl, PHP_URL_SCHEME));
+        $host = strtolower((string) parse_url($baseUrl, PHP_URL_HOST));
+
+        return $scheme === 'https'
+            || ($scheme === 'http' && in_array($host, ['localhost', '127.0.0.1', '[::1]', '::1'], true));
     }
 
     #[\Override]

@@ -47,7 +47,11 @@ $providers = [
     'frontaccounting' => [
         'title' => 'FrontAccounting',
         'fields' => [
-            'base_url' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.base.url')],
+            'base_url' => [
+                'type' => 'text',
+                'label' => $translator->translate('bookkeeping.frontaccounting.base.url'),
+                'hint' => $translator->translate('bookkeeping.frontaccounting.base.url.hint'),
+            ],
             'company' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.company')],
             'username' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.username')],
             'password' => ['type' => 'password', 'label' => $translator->translate('bookkeeping.frontaccounting.password')],
@@ -105,7 +109,7 @@ echo H::openTag('div', $row); //0
 
   /**
    * @var string $providerKey
-   * @var array{title: string, fields: array<string, array{type: string, label: string}>} $provider
+   * @var array{title: string, fields: array<string, array{type: string, label: string, hint?: string}>} $provider
    */
   foreach ($providers as $providerKey => $provider) {
 // NOT class "gateway-settings" -- that exact class name is queried
@@ -253,6 +257,11 @@ echo H::openTag('div', $row); //0
       'id' => $fieldId,
       'value' => $inputValue,
      ]); //5
+     }
+     if (isset($field['hint'])) {
+     echo H::openTag('div', $formText); //5
+      echo $field['hint'];
+     echo H::closeTag('div'); //5
      }
     echo H::closeTag('div'); //4
     }
