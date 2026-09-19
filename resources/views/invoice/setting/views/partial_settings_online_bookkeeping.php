@@ -10,6 +10,7 @@ use Yiisoft\Html\Html as H;
 * @var string $tab_index_url
 * @var string $quickbooks_credential_url
 * @var string $quickbooks_connect_url
+* @var string $bookkeeping_export_url
 * @var bool $quickbooks_connected
 */
 
@@ -91,6 +92,24 @@ echo H::openTag('div', $row); //1
      echo H::closeTag('a');
      echo H::openTag('div', ['class' => 'form-text']); //6
       echo $translator->translate('bookkeeping.quickbooks.connect.hint');
+     echo H::closeTag('div'); //6
+    echo H::closeTag('div'); //5
+
+    // A submit button with formaction, not a nested <form>: this partial
+    // already sits inside tab_index's one settings form, which also carries
+    // the _csrf field this POST needs.
+    echo H::openTag('div', $formGroup); //5
+     echo H::openTag('button', [
+      'type' => 'submit',
+      'formaction' => $bookkeeping_export_url,
+      'formmethod' => 'post',
+      'formnovalidate' => true,
+      'class' => 'btn btn-success',
+     ]);
+      echo $translator->translate('bookkeeping.export.now');
+     echo H::closeTag('button');
+     echo H::openTag('div', ['class' => 'form-text']); //6
+      echo $translator->translate('bookkeeping.export.hint');
      echo H::closeTag('div'); //6
     echo H::closeTag('div'); //5
 

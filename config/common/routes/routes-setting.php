@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Auth\Permissions;
+use App\Bookkeeping\Controller\BookkeepingExportController;
 use App\Bookkeeping\Controller\QuickBooksConnectController;
 use App\Invoice\PaymentInformation\AdyenHmacKeyVerificationController;
 use App\Invoice\Setting\SettingController;
@@ -82,5 +83,9 @@ return [
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([QuickBooksConnectController::class, 'callback'])
                 ->name('bookkeeping/quickbooksCallback'),
+        Route::post('/bookkeeping/export')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([BookkeepingExportController::class, 'export'])
+                ->name('bookkeeping/export'),
     ), // invoice
 ];
