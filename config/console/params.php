@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Command\Bookkeeping\BookkeepingExportCommand;
 use App\Command\CacheClearCommand;
 use App\Command\InstallCommand;
 use App\Command\Invoice\AutoIncrementSetToOneAfterTruncate6Command;
@@ -47,7 +48,8 @@ return [
             'cache/clear' => CacheClearCommand::class,
             'serve' => Serve::class,
             'install' => InstallCommand::class,
-            'as4/retry'           => As4RetryCommand::class,
+            'bookkeeping/export'  => BookkeepingExportCommand::class,
+            'as4/retry'         => As4RetryCommand::class,
             'as4/status'          => As4StatusCommand::class,
             'as4/resend'          => As4ResendCommand::class,
             'as4/monitor'         => As4MonitorCommand::class,
