@@ -88,21 +88,6 @@ trait Typescript
         return true;
     }
 
-    /**
-     * Issued invoices can no longer be reverted to draft: their ledger
-     * entries may already be exported, so they are corrected with a void
-     * (unpaid) or a credit note instead. Kept as an endpoint only so a stale
-     * client gets a clear warning rather than a 404.
-     */
-    public function markSentAsDraft(): Response
-    {
-        $this->flashMessage(
-            'warning',
-            $this->translator->translate('invoice.status.cannot.revert')
-        );
-        return $this->factory->createResponse(Json::encode(['success' => 0]));
-    }
-
     private function shouldMarkReadOnly(string $disableReadOnlyValue): bool
     {
         return $this->sR->getSetting('read_only_toggle') == '2'

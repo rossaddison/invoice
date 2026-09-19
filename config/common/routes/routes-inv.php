@@ -207,10 +207,10 @@ return [
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'markAsSent'])
                 ->name('inv/markAsSent'),
-        Route::methods([Method::GET, Method::POST], '/inv/markSentAsDraft')
+        Route::methods([Method::GET, Method::POST], '/inv/voidSelected')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
-                ->action([InvController::class, 'markSentAsDraft'])
-                ->name('inv/markSentAsDraft'),
+                ->action([InvVoidController::class, 'voidSelected'])
+                ->name('inv/voidSelected'),
         Route::methods([Method::GET, Method::POST], '/inv/setworker/{inv_id}')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'setWorker'])

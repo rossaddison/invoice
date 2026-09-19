@@ -1227,6 +1227,7 @@ return [
   'invoice.status.cannot.revert' => 'An issued invoice cannot be reverted to an earlier status. Void it (if unpaid) or issue a credit note.',
   'invoice.void' => 'Void invoice',
   'invoice.void.confirm' => 'Void this invoice? It will be cancelled, keep its number, and can no longer be edited or paid.',
+  'invoice.void.selected.confirm' => 'Void the selected invoices? Only issued or viewed invoices with no payments will be voided; they keep their numbers and can no longer be edited.',
   'invoice.void.success' => 'Invoice voided.',
   'invoice.void.not.allowed' => 'Only an issued or viewed invoice with no payments can be voided. Issue a credit note instead.',
   'invoice.to.html' => 'Invoice to Html',

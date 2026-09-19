@@ -148,10 +148,10 @@ export class InvoiceHandler {
             return;
         }
 
-        // Mark sent as draft
-        const markDraft = closestSafe(target, '#btn-mark-sent-as-draft');
-        if (markDraft) {
-            this.handleMarkSentAsDraft();
+        // Void the selected issued/viewed invoices
+        const voidSelected = closestSafe(target, '#btn-void-selected');
+        if (voidSelected) {
+            this.handleVoidSelected();
             return;
         }
 
@@ -440,17 +440,21 @@ export class InvoiceHandler {
         }
     }
 
-    private async handleMarkSentAsDraft(): Promise<void> {
-        const btn = document.getElementById('btn-mark-sent-as-draft');
+    private async handleVoidSelected(): Promise<void> {
+        const btn = document.getElementById('btn-void-selected');
         const originalHtml = btn?.innerHTML;
+        const selected = this.getCheckedInvoiceIds();
+
+        if (selected.length === 0 || !globalThis.confirm(btn?.getAttribute('data-confirm') ?? 'Void the selected invoices?')) {
+            return;
+        }
 
         if (btn) {
             setButtonLoadingOn(btn);
         }
 
         try {
-            const selected = this.getCheckedInvoiceIds();
-            const url = `${location.origin}/invoice/inv/markSentAsDraft`;
+            const url = `${location.origin}/invoice/inv/voidSelected`;
 
             const response = await getJson<ApiResponse>(url, { keylist: selected });
             const data = parsedata(response);
@@ -463,7 +467,7 @@ export class InvoiceHandler {
                 globalThis.location.reload();
             }
         } catch (error) {
-            console.error('mark_sent_as_draft error', error);
+            console.error('void_selected error', error);
             if (btn && originalHtml) {
                 setButtonLoadingOff(btn, originalHtml);
             }

@@ -11,9 +11,11 @@ use App\Invoice\Inv\InvVoidController;
 use App\Invoice\InvAmount\InvAmountRepository;
 use App\Service\WebControllerService;
 use GuzzleHttp\Psr7\Response as Psr7Response;
+use GuzzleHttp\Psr7\ServerRequest;
 use Mockery as m;
 use Testo\Assert;
 use Testo\Test;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
@@ -26,7 +28,7 @@ final class InvVoidControllerTest
         /** @var InvRepository&m\MockInterface $iR */
         $iR = m::mock(InvRepository::class);
         $iR->shouldReceive('repoInvUnLoadedquery')->andReturn($inv);
-        if ($inv !== null && $expectedFlash === 'invoice.void.success') {
+        if ($inv !== null && str_starts_with($expectedFlash, 'invoice.void.success')) {
             $iR->shouldReceive('save')->once()->with($inv);
         } else {
             $iR->shouldReceive('save')->never();
@@ -54,7 +56,13 @@ final class InvVoidControllerTest
         $web->shouldReceive('getRedirectResponse')->andReturn(new Psr7Response(302));
         $web->shouldReceive('getNotFoundResponse')->andReturn(new Psr7Response(404));
 
-        return new InvVoidController($flash, $iR, $iaR, $translator, $web);
+        /** @var DataResponseFactoryInterface&m\MockInterface $factory */
+        $factory = m::mock(DataResponseFactoryInterface::class);
+        $factory->shouldReceive('createResponse')->andReturnUsing(
+            static fn(mixed $data): Psr7Response => new Psr7Response(200, [], (string) $data),
+        );
+
+        return new InvVoidController($factory, $flash, $iR, $iaR, $translator, $web);
     }
 
     private function route(): CurrentRoute
@@ -125,5 +133,25 @@ final class InvVoidControllerTest
         $paid = $this->inv(4);
         $paid->setStatusId(14);
         Assert::same($paid->reqStatusId(), 4);
+    }
+
+    public function voidSelectedVoidsEligibleInvoicesAndReportsSuccess(): void
+    {
+        $a = $this->inv(2);
+        $response = $this->makeController($a, 0.00, 'invoice.void.success (1)')
+            ->voidSelected((new ServerRequest('GET', '/'))->withQueryParams(['keylist' => ['1']]));
+
+        Assert::same($a->reqStatusId(), 14);
+        Assert::same((string) $response->getBody(), '{"success":1}');
+    }
+
+    public function voidSelectedSkipsIneligibleInvoicesAndWarns(): void
+    {
+        $paid = $this->inv(4);
+        $response = $this->makeController($paid, 0.00, 'invoice.void.not.allowed #1')
+            ->voidSelected((new ServerRequest('GET', '/'))->withQueryParams(['keylist' => ['1']]));
+
+        Assert::same($paid->reqStatusId(), 4);
+        Assert::same((string) $response->getBody(), '{"success":0}');
     }
 }
