@@ -347,14 +347,18 @@ final class FrontAccountingGatewayTest
             ],
             9,
         );
-        $mock = new MockHandler([$this->json(['msg' => 'voided', 'id' => '8'])]);
+        $mock = new MockHandler([$this->json(['voided' => true, 'already_voided' => false, 'trans_type' => 10, 'trans_no' => 8])]);
 
         $result = $this->makeGateway($mock)->createTransaction($void);
 
         Assert::true($result->success);
         Assert::same($result->providerReference, '8');
-        Assert::same($this->lastRequest()->getMethod(), 'DELETE');
-        Assert::same($this->lastRequest()->getUri()->getPath(), '/modules/api/journal/10/8');
+        Assert::same($this->lastRequest()->getMethod(), 'POST');
+        Assert::same($this->lastRequest()->getUri()->getPath(), '/modules/api/sales/void/');
+        $form = $this->formAt(count($this->history ?? []) - 1);
+        Assert::same($form->get('trans_type'), '10');
+        Assert::same($form->get('trans_no'), '8');
+        Assert::same($form->get('memo'), 'Voided by the invoicing app: INV-9');
     }
 
     public function refundsAreReportedAsNotSupportedYet(): void
@@ -443,7 +447,7 @@ final class FrontAccountingGatewayTest
 
     public function deleteTransactionVoidsAnInvoiceAndRefusesOtherTypes(): void
     {
-        $mock = new MockHandler([$this->json(['msg' => 'voided', 'id' => '8'])]);
+        $mock = new MockHandler([$this->json(['voided' => true, 'already_voided' => true, 'trans_type' => 10, 'trans_no' => 8])]);
         $gateway = $this->makeGateway($mock);
 
         Assert::true($gateway->deleteTransaction('INV-9-invoice')->success);
@@ -476,7 +480,7 @@ final class FrontAccountingGatewayTest
             $this->json([['branch_code' => '4']]),
             $this->json('ok'),
             $this->json(['trans_no' => 8, 'reference' => '003/2026', 'total' => 95.24]),
-            $this->json(['msg' => 'voided', 'id' => '8']),
+            $this->json(['voided' => true, 'already_voided' => false, 'trans_type' => 10, 'trans_no' => 8]),
         ]);
 
         $result = $this->makeGateway($mock)->createTransaction($this->invoiceTransaction());
@@ -486,8 +490,8 @@ final class FrontAccountingGatewayTest
             $result->message,
             'FrontAccounting total 95.24 does not match the ledger total 100.00 (check the tax group and VAT item settings); the document was voided.',
         );
-        Assert::same($this->lastRequest()->getMethod(), 'DELETE');
-        Assert::same($this->lastRequest()->getUri()->getPath(), '/modules/api/journal/10/8');
+        Assert::same($this->lastRequest()->getMethod(), 'POST');
+        Assert::same($this->lastRequest()->getUri()->getPath(), '/modules/api/sales/void/');
     }
 
     public function createsNewCustomersInTheConfiguredTaxGroup(): void
@@ -519,5 +523,32 @@ final class FrontAccountingGatewayTest
                 'bookkeeping_frontaccounting_base_url' => $url,
             ]))->isConfigured());
         }
+    }
+
+    public function aVoidFrontAccountingRefusesIsAFailureWithItsOwnReasonNotASuccess(): void
+    {
+        $void = new BookkeepingTransaction(
+            BookkeepingTransactionType::Void,
+            'INV-9-void',
+            new DateTimeImmutable('2026-09-22'),
+            'GBP',
+            [
+                new BookkeepingLine(AccountRole::Sales, DebitCredit::Debit, 100.00),
+                new BookkeepingLine(AccountRole::AccountsReceivable, DebitCredit::Credit, 100.00),
+            ],
+            9,
+        );
+        $mock = new MockHandler([
+            new RequestException(
+                'Conflict',
+                new Psr7Request('POST', 'x'),
+                new Response(409, [], '{"code":409,"success":0,"msg":"This invoice cannot be voided because it was already credited."}'),
+            ),
+        ]);
+
+        $result = $this->makeGateway($mock)->createTransaction($void);
+
+        Assert::false($result->success);
+        Assert::same($result->message, 'This invoice cannot be voided because it was already credited.');
     }
 }

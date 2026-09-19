@@ -31,7 +31,7 @@ use Psr\Log\LoggerInterface;
  *   InvoiceIssued   -> sales invoice   (POST /sales, trans_type 10)
  *   CreditNote      -> credit note     (POST /sales, trans_type 11)
  *   PaymentReceived -> customer payment allocated to the invoice (POST /payments)
- *   Void            -> FrontAccounting's own void (DELETE /journal/10/{no})
+ *   Void            -> FrontAccounting's own void (POST /sales/void/)
  *
  * Refund and MerchantFee entries are not supported yet and report failure.
  *
@@ -256,7 +256,7 @@ final class FrontAccountingGateway implements BookkeepingGatewayInterface
 
         $expected = round($net + ($vatStockId !== '' ? $vat : 0.00), 2);
         if (abs($created['total'] - $expected) > 0.01) {
-            $this->request('DELETE', '/journal/' . $type . '/' . $created['trans_no']);
+            $this->voidDocument($type, (string) $created['trans_no'], 'Total did not match the ledger: ' . $transaction->getReference());
             return new BookkeepingResult(false, message: sprintf(
                 'FrontAccounting total %.2f does not match the ledger total %.2f (check the tax group and VAT item settings); the document was voided.',
                 $created['total'],
@@ -307,7 +307,7 @@ final class FrontAccountingGateway implements BookkeepingGatewayInterface
         if ($invoiceNo === null) {
             return new BookkeepingResult(false, message: 'The invoice has not been exported to FrontAccounting, so there is nothing to void.');
         }
-        $this->request('DELETE', '/journal/' . self::TYPE_INVOICE . '/' . $invoiceNo);
+        $this->voidDocument(self::TYPE_INVOICE, $invoiceNo, 'Voided by the invoicing app: ' . $baseReference);
 
         return new BookkeepingResult(true, $invoiceNo);
     }
@@ -363,6 +363,21 @@ final class FrontAccountingGateway implements BookkeepingGatewayInterface
             }
         }
         return null;
+    }
+
+    /**
+     * FrontAccounting refuses some voids (for example an invoice that was
+     * already credited); the API then answers 409 with the reason, which
+     * surfaces here as a failed result rather than a silent success.
+     *
+     * @throws GuzzleException
+     * @throws \JsonException
+     */
+    private function voidDocument(int $type, string $transNo, string $memo): void
+    {
+        $this->request('POST', '/sales/void/', [
+            'form_params' => ['trans_type' => $type, 'trans_no' => $transNo, 'memo' => $memo],
+        ]);
     }
 
     /**
@@ -472,6 +487,11 @@ final class FrontAccountingGateway implements BookkeepingGatewayInterface
     {
         $response = $e instanceof RequestException ? $e->getResponse() : null;
         if ($response !== null) {
+            /** @var array{msg?: string}|scalar|null $json */
+            $json = json_decode((string) $response->getBody(), true);
+            if (is_array($json) && isset($json['msg']) && $json['msg'] !== '') {
+                return $json['msg'];
+            }
             $html = preg_replace('#<style.*?</style>#is', '', (string) $response->getBody()) ?? '';
             $body = preg_replace('/<[^>]*>/', ' ', $html) ?? '';
             $body = trim(preg_replace('/\s+/', ' ', $body) ?? '');
