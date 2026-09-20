@@ -167,7 +167,7 @@
         "codeception/module-cli": "^2.0.1",
         "codeception/module-phpbrowser": "^4.1.0",
         "dg/bypass-finals": "^1.11.0",
-        "friendsofphp/php-cs-fixer": "^3.95.25",
+        "friendsofphp/php-cs-fixer": "^3.95.26",
         "google/protobuf": ">=5.36.2",
         "guzzlehttp/promises": ">=2.5.3",
         "mockery/mockery": "^1.6.12",
