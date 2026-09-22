@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "49693465a2702a0384999aad315fee5d",
+    "content-hash": "414f9e0e35aa4a1326b79d7931bd7c71",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -3373,16 +3373,16 @@
         },
         {
             "name": "gocardless/gocardless-pro",
-            "version": "8.3.0",
+            "version": "8.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gocardless/gocardless-pro-php.git",
-                "reference": "4ea18535a0351c73b431deb5db9ecbab4a2b8f61"
+                "reference": "8b2d40894cd808de4a4657d7da8767ac18da0552"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gocardless/gocardless-pro-php/zipball/4ea18535a0351c73b431deb5db9ecbab4a2b8f61",
-                "reference": "4ea18535a0351c73b431deb5db9ecbab4a2b8f61",
+                "url": "https://api.github.com/repos/gocardless/gocardless-pro-php/zipball/8b2d40894cd808de4a4657d7da8767ac18da0552",
+                "reference": "8b2d40894cd808de4a4657d7da8767ac18da0552",
                 "shasum": ""
             },
             "require": {
@@ -3422,9 +3422,9 @@
             ],
             "support": {
                 "issues": "https://github.com/gocardless/gocardless-pro-php/issues",
-                "source": "https://github.com/gocardless/gocardless-pro-php/tree/v8.3.0"
+                "source": "https://github.com/gocardless/gocardless-pro-php/tree/v8.3.1"
             },
-            "time": "2026-09-17T12:02:31+00:00"
+            "time": "2026-09-22T11:52:00+00:00"
         },
         {
             "name": "google/auth",
