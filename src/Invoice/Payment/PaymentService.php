@@ -42,7 +42,7 @@ final readonly class PaymentService
         isset($array['amount']) ?
             $model->setAmount((float) $array['amount']) : '';
         isset($array['note']) ?
-            $model->setNote((string) $array['note']) : '';
+            $model->setNote((string) $array['note']) : $payment_date;
         isset($array['inv_id']) ?
             $model->setInvId((int) $array['inv_id']) : '';
         $this->repository->save($model);

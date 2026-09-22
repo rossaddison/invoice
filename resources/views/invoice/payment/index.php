@@ -113,7 +113,9 @@ $columns = [
             return Html::a($model->getInv()?->getNumber() ?? '',
                     $urlGenerator->generate('inv/view',
                             ['id' => $model->reqInvId()]),
-                    ['class' => 'text-decoration-none']);
+                    ['class' => 'text-decoration-none',
+                     'data-bs-toggle' => 'tooltip',
+                     'title' => $model->getInv()?->getClient()?->getClientFullName()]);
         },
         encodeContent: false,
     ),

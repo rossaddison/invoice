@@ -161,7 +161,7 @@ trait Edit
         }
         $this->processCustomFields($body, $formHydrator, $this->customFieldProcessor, $inv_id);
         $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
-        return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
+        return $this->webService->getRedirectResponse('inv/index');
     }
 
     private function editInputAttributesUrlKey(InvForm $form): array

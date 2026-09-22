@@ -949,7 +949,11 @@ final class InvsColumnBuilder
                         'class' => 'btn btn-primary btn-lg',
                         'style' => 'text-decoration:none',
                         'data-bs-toggle' => 'tooltip',
-                        'title' => $model->getFirstItemProductName(),
+                        'title' => $model->getFirstItemProductName()
+                            . ' '
+                            . $model->getDateSupplied()->format('l, j, F')
+                            . ' '
+                            . ($model->getNote() ?? '')
                     ])
                     ->content($model->getNumber() ?? '#')
                     ->href($ug->generate('inv/view', ['id' => $model->reqId()]));
