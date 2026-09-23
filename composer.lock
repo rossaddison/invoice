@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "414f9e0e35aa4a1326b79d7931bd7c71",
+    "content-hash": "ace9037dcac47a68a2e572e77c58905a",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -5301,16 +5301,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v3.14.0",
+            "version": "v3.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "c3b496ab069170717fc40852035f5fb39c1eb104"
+                "reference": "da124bd13b9a2f30e38d944e2db4f8fe0da3fcbb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/c3b496ab069170717fc40852035f5fb39c1eb104",
-                "reference": "c3b496ab069170717fc40852035f5fb39c1eb104",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/da124bd13b9a2f30e38d944e2db4f8fe0da3fcbb",
+                "reference": "da124bd13b9a2f30e38d944e2db4f8fe0da3fcbb",
                 "shasum": ""
             },
             "require": {
@@ -5391,9 +5391,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v3.14.0"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v3.15.0"
             },
-            "time": "2026-09-07T13:57:58+00:00"
+            "time": "2026-09-23T13:33:07+00:00"
         },
         {
             "name": "monolog/monolog",
