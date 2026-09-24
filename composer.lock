@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "414f9e0e35aa4a1326b79d7931bd7c71",
+    "content-hash": "0f0b5d60a8ac4f8c8a25346ca9a6a2e3",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -3373,16 +3373,16 @@
         },
         {
             "name": "gocardless/gocardless-pro",
-            "version": "8.3.1",
+            "version": "8.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gocardless/gocardless-pro-php.git",
-                "reference": "8b2d40894cd808de4a4657d7da8767ac18da0552"
+                "reference": "a9b0f1f3570ae51ad6dad8912b8de051f2688999"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gocardless/gocardless-pro-php/zipball/8b2d40894cd808de4a4657d7da8767ac18da0552",
-                "reference": "8b2d40894cd808de4a4657d7da8767ac18da0552",
+                "url": "https://api.github.com/repos/gocardless/gocardless-pro-php/zipball/a9b0f1f3570ae51ad6dad8912b8de051f2688999",
+                "reference": "a9b0f1f3570ae51ad6dad8912b8de051f2688999",
                 "shasum": ""
             },
             "require": {
@@ -3422,9 +3422,9 @@
             ],
             "support": {
                 "issues": "https://github.com/gocardless/gocardless-pro-php/issues",
-                "source": "https://github.com/gocardless/gocardless-pro-php/tree/v8.3.1"
+                "source": "https://github.com/gocardless/gocardless-pro-php/tree/v8.3.2"
             },
-            "time": "2026-09-22T11:52:00+00:00"
+            "time": "2026-09-22T15:25:55+00:00"
         },
         {
             "name": "google/auth",
@@ -5301,16 +5301,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v3.14.0",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "c3b496ab069170717fc40852035f5fb39c1eb104"
+                "reference": "265dfcb58339ec4fec726012ca40c672316bf8de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/c3b496ab069170717fc40852035f5fb39c1eb104",
-                "reference": "c3b496ab069170717fc40852035f5fb39c1eb104",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/265dfcb58339ec4fec726012ca40c672316bf8de",
+                "reference": "265dfcb58339ec4fec726012ca40c672316bf8de",
                 "shasum": ""
             },
             "require": {
@@ -5319,17 +5319,18 @@
                 "ext-json": "*",
                 "ext-openssl": "*",
                 "nyholm/psr7": "^1.8",
-                "php": "^7.4|^8.0",
+                "php": "^8.2",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.1",
-                "psr/http-message": "^1.1|^2.0"
+                "psr/http-message": "^1.1|^2.0",
+                "symfony/var-dumper": "^5.4|^6.4|^7.2|^8.0"
             },
             "require-dev": {
-                "brianium/paratest": "^6.11",
                 "guzzlehttp/guzzle": "^7.6",
+                "laravel/pint": "1.30.4",
+                "pestphp/pest": "^3.0",
                 "phpstan/phpstan": "^2.0",
-                "phpunit/phpunit": "^9.6",
-                "symfony/var-dumper": "^5.4|^6.4|^7.2"
+                "phpunit/phpunit": "^11.5"
             },
             "suggest": {
                 "mollie/oauth2-mollie-php": "Use OAuth to authenticate with the Mollie API. This is needed for some endpoints. Visit https://docs.mollie.com/ for more information."
@@ -5391,9 +5392,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v3.14.0"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v4.0.0"
             },
-            "time": "2026-09-07T13:57:58+00:00"
+            "time": "2026-09-23T13:16:56+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -19337,16 +19338,16 @@
         },
         {
             "name": "yiisoft/validator",
-            "version": "2.6.0",
+            "version": "2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/validator.git",
-                "reference": "a0524aabc80a5613911a232de3492e04d31d130b"
+                "reference": "fb5547cfa4a94eeda25c4e28be1bb42e93b1b2a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/validator/zipball/a0524aabc80a5613911a232de3492e04d31d130b",
-                "reference": "a0524aabc80a5613911a232de3492e04d31d130b",
+                "url": "https://api.github.com/repos/yiisoft/validator/zipball/fb5547cfa4a94eeda25c4e28be1bb42e93b1b2a1",
+                "reference": "fb5547cfa4a94eeda25c4e28be1bb42e93b1b2a1",
                 "shasum": ""
             },
             "require": {
@@ -19363,11 +19364,12 @@
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8.3",
                 "friendsofphp/php-cs-fixer": "^3.91",
+                "guzzlehttp/psr7": "^2.13",
                 "jetbrains/phpstorm-attributes": "^1.2",
-                "maglnet/composer-require-checker": "^4.7.1",
                 "phpbench/phpbench": "^1.4.1",
                 "phpunit/phpunit": "^10.5.46",
-                "rector/rector": "^2.0.16",
+                "rector/rector": "^2.6.6",
+                "shipmonk/composer-dependency-analyser": "^1.8",
                 "spatie/phpunit-watcher": "^1.24",
                 "yiisoft/di": "^1.3",
                 "yiisoft/test-support": "^3.0.2",
@@ -19427,7 +19429,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-06-02T21:18:16+00:00"
+            "time": "2026-09-22T16:35:06+00:00"
         },
         {
             "name": "yiisoft/var-dumper",
@@ -22596,16 +22598,16 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "6.12.0",
+            "version": "6.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jsonrainbow/json-schema.git",
-                "reference": "8ef236a1a37df364b518b7411a4b5bb95b040d79"
+                "reference": "30de5e9b3fa04253af272a7d932a38cd026c311b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/8ef236a1a37df364b518b7411a4b5bb95b040d79",
-                "reference": "8ef236a1a37df364b518b7411a4b5bb95b040d79",
+                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/30de5e9b3fa04253af272a7d932a38cd026c311b",
+                "reference": "30de5e9b3fa04253af272a7d932a38cd026c311b",
                 "shasum": ""
             },
             "require": {
@@ -22655,9 +22657,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jsonrainbow/json-schema/issues",
-                "source": "https://github.com/jsonrainbow/json-schema/tree/6.12.0"
+                "source": "https://github.com/jsonrainbow/json-schema/tree/6.13.0"
             },
-            "time": "2026-09-04T12:54:20+00:00"
+            "time": "2026-09-23T19:46:42+00:00"
         },
         {
             "name": "marc-mabe/php-enum",
@@ -23012,11 +23014,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.2.14",
+            "version": "2.2.15",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9c672e7a8e791dfc3d30e55f683e73fc0b63a3ac",
-                "reference": "9c672e7a8e791dfc3d30e55f683e73fc0b63a3ac",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/b158556ffd26825cf615a1c1f72fb5157a2301b7",
+                "reference": "b158556ffd26825cf615a1c1f72fb5157a2301b7",
                 "shasum": ""
             },
             "require": {
@@ -23072,7 +23074,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-12T21:39:33+00:00"
+            "time": "2026-09-23T12:23:07+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -24342,12 +24344,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "f1dd47da8977aa9dcb913f443ed6c26042da059f"
+                "reference": "2fd3139c169689cc42710d8b1228ccf7c84b274d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f1dd47da8977aa9dcb913f443ed6c26042da059f",
-                "reference": "f1dd47da8977aa9dcb913f443ed6c26042da059f",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/2fd3139c169689cc42710d8b1228ccf7c84b274d",
+                "reference": "2fd3139c169689cc42710d8b1228ccf7c84b274d",
                 "shasum": ""
             },
             "conflict": {
@@ -25080,7 +25082,7 @@
                 "rap2hpoutre/laravel-log-viewer": "<0.13",
                 "react/http": ">=0.6,<1.11.1",
                 "really-simple-plugins/complianz-gdpr": "<6.4.2",
-                "redaxo/source": "<5.21.1",
+                "redaxo/source": "<=5.21.1",
                 "remdex/livehelperchat": "<4.29",
                 "renolit/reint-downloadmanager": "<4.0.2|>=5,<5.0.1",
                 "reportico-web/reportico": "<=8.1",
@@ -25185,7 +25187,7 @@
                 "subhh/libconnect": "<7.0.8|>=8,<8.1",
                 "sukohi/surpass": "<1",
                 "sulu/form-bundle": ">=2,<2.5.3",
-                "sulu/sulu": "<=2.6.24|>=3,<3.0.8",
+                "sulu/sulu": "<2.6.25|>=3,<3.0.8",
                 "sumocoders/framework-user-bundle": "<1.4",
                 "superbig/craft-audit": "<3.0.2",
                 "svewap/a21glossary": "<=0.4.10",
@@ -25332,7 +25334,7 @@
                 "uvdesk/core-framework": "<=1.1.1",
                 "vanilla/safecurl": "<0.9.2",
                 "verbb/comments": "<1.5.5",
-                "verbb/formie": "<3.1.28",
+                "verbb/formie": "<3.1.31",
                 "verbb/image-resizer": "<2.0.9",
                 "verbb/knock-knock": "<1.2.8",
                 "verot/class.upload.php": "<=2.1.6",
@@ -25375,7 +25377,7 @@
                 "woocommerce/woocommerce": "<6.6|>=8.8,<8.8.5|>=8.9,<8.9.3",
                 "wp-cli/wp-cli": ">=0.12,<2.5",
                 "wp-coding-standards/wpcs": ">=0.14.1,<3.4.1",
-                "wp-graphql/wp-graphql": "<=2.6",
+                "wp-graphql/wp-graphql": "<2.22.2",
                 "wp-premium/gravityforms": "<2.4.21",
                 "wpanel/wpanel4-cms": "<=4.3.1",
                 "wpcloud/wp-stateless": "<3.2",
@@ -25481,7 +25483,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-18T20:28:15+00:00"
+            "time": "2026-09-23T19:28:27+00:00"
         },
         {
             "name": "rossaddison/translator-extractor",
