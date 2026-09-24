@@ -317,7 +317,6 @@ final class DeveloperSandboxHmrc extends OAuth2
      * exactly what was granted for this client_id.
      *
      * @return string
-     * @psalm-suppress LessSpecificImplementedReturnType
      */
     #[\Override]
     protected function getDefaultScope(): string
