@@ -12,7 +12,7 @@
     "govuk-frontend": "^6.5.1",
     "hono": ">=4.13.9",
     "htmx.org": "^2.0.11",
-    "libphonenumber-js": "^1.13.13"
+    "libphonenumber-js": "^1.13.14"
   },
   "devDependencies": {
     "@babel/core": "8.0.6",
@@ -22,7 +22,7 @@
     "@typescript-eslint/eslint-plugin": "^8.70.1",
     "@typescript-eslint/parser": "^8.70.1",
     "@typescript/native-preview": "^7.0.0-dev.20260707.2",
-    "@vitest/coverage-v8": "^5.0.1",
+    "@vitest/coverage-v8": "^5.0.2",
     "esbuild": "^0.28.2",
     "eslint": "^10.11.0",
     "globals": "^17.12.0",
@@ -33,12 +33,12 @@
     "otplib": "^13.5.0",
     "picomatch": "^4.0.7",
     "prettier": "^4.0.0-alpha.13",
-    "rollup": ">=4.63.4",
+    "rollup": ">=4.63.5",
     "sass": "^1.105.0",
     "typedoc": "^0.28.20",
     "typescript": "^7.0.2",
     "vitepress": "^2.0.0-alpha.18",
-    "vitest": "^5.0.1"
+    "vitest": "^5.0.2"
   },
   "scripts": {
     "build": "npm run build:all",
