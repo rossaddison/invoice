@@ -46,7 +46,7 @@ final class MolliePaymentService implements PaymentGatewayInterface
             return new PaymentVerificationResult(
                 paid: $payment->isPaid(),
                 providerReference: $providerReference,
-                message: $payment->status,
+                message: PaymentInformationQueryHelper::mollieStatusToString($payment->status),
             );
         } catch (ApiException $e) {
             $this->logger->warning('Mollie verifyPayment failed.', ['error' => $e->getMessage()]);
@@ -70,7 +70,7 @@ final class MolliePaymentService implements PaymentGatewayInterface
             return new PaymentRefundResult(
                 refunded: true,
                 providerReference: $refund->id,
-                message: $refund->status,
+                message: PaymentInformationQueryHelper::mollieStatusToString($refund->status),
             );
         } catch (ApiException $e) {
             $this->logger->error('Mollie refund failed.', [

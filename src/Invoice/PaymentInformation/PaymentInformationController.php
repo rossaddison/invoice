@@ -869,9 +869,6 @@ final class PaymentInformationController
         }
         $payments = $mollie->payments->page();
         $metadataInvoiceUrlKey = '';
-        /**
-         * @var MolliePayment $payment
-         */
         foreach ($payments as $payment) {
             /**
              * Related logic: see https://www.php.net/manual/en/class.stdclass.php
@@ -911,7 +908,7 @@ final class PaymentInformationController
                 );
                 $this->paymentRecorder->record(
                     new PaymentRecordContext(
-                        reference: $invoiceNumber . '-' . $lastPayment->status,
+                        reference: $invoiceNumber . '-' . PaymentInformationQueryHelper::mollieStatusToString($lastPayment->status),
                         invoice_id: (string) $invoice_amount_record->reqInvId(),
                         balance: $balance > 0.00 ? $balance : 0.00,
                         invoice_payment_method: $payment_method,
