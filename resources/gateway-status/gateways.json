@@ -73,8 +73,8 @@
             "key": "adyen",
             "name": "Adyen",
             "composer_package": "adyen/php-api-library",
-            "sdk_version": "v30.0.2",
-            "last_updated": "2026-08-11",
+            "sdk_version": "v30.1.0",
+            "last_updated": "2026-09-25",
             "sandbox_env_var": [
                 "ADYEN_SANDBOX_API_KEY",
                 "ADYEN_SANDBOX_MERCHANT_ACCOUNT"
@@ -99,8 +99,8 @@
             "key": "gocardless",
             "name": "GoCardless",
             "composer_package": "gocardless/gocardless-pro",
-            "sdk_version": "8.3.2",
-            "last_updated": "2026-09-24",
+            "sdk_version": "8.4.0",
+            "last_updated": "2026-09-25",
             "sandbox_env_var": "GOCARDLESS_SANDBOX_ACCESS_TOKEN",
             "sandbox_tested_at": "2026-09-21",
             "sandbox_status": "pass",
