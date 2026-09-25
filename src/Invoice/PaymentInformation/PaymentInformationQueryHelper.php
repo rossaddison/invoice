@@ -24,6 +24,20 @@ final class PaymentInformationQueryHelper
         return implode($array_version);
     }
 
+    /**
+     * Mollie's Payment::$status and Refund::$status are typed as their own backed enum unioned with
+     * plain string (PaymentStatus|string, RefundStatus|string|null) — the SDK's own transition to PHP
+     * enums, kept union-typed for backward compatibility. Neither concatenates or casts to string
+     * directly; this reads the enum's value when it is one, and passes a plain string straight through.
+     */
+    public static function mollieStatusToString(\BackedEnum|string|null $status): string
+    {
+        if ($status instanceof \BackedEnum) {
+            return (string) $status->value;
+        }
+        return $status ?? '';
+    }
+
     public static function mollieSetTestOrLiveApiKey(sR $sR, MollieClient $mollieClient): bool
     {
         /** @var string $testOrLiveApiKey */

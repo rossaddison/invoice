@@ -136,7 +136,7 @@ final class MollieWebhookHandler
 
         $this->recorder->record(
             new PaymentRecordContext(
-                reference: $invoiceNumber . '-' . $payment->status,
+                reference: $invoiceNumber . '-' . PaymentInformationQueryHelper::mollieStatusToString($payment->status),
                 invoice_id: (string) $invoiceAmountRecord->reqInvId(),
                 balance: $invoiceAmountRecord->getBalance() ?? 0.00,
                 invoice_payment_method: 4,
