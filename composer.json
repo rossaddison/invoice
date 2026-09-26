@@ -158,7 +158,7 @@
         "yiisoft/yii-runner-console": "^2.2.1",
         "yiisoft/yii-runner-http": "^3.2.1",
         "yiisoft/yii-view-renderer": "^7.4.1",
-        "zircote/swagger-php": ">=6.9.0"
+        "zircote/swagger-php": ">=6.11.0"
     },
     "require-dev": {
         "codeception/c3": "^2.9",
@@ -183,8 +183,8 @@
         "squizlabs/php_codesniffer": "^4.0.4",
         "testo/bridge-mockery": "^0.1.2",
         "testo/facade": ">=0.1.1",
-        "testo/testo": "^0.10.48",
-        "vimeo/psalm": ">=6.17.2"
+        "testo/testo": "^0.10.52",
+        "vimeo/psalm": ">=6.18.1"
     },
     "autoload": {
         "psr-4": {

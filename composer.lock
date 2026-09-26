@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "428632b0d8899607252b000058cd4b27",
+    "content-hash": "7d485008ecf8ab9762d72504e9bdb0ea",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -14630,16 +14630,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "6.18.0",
+            "version": "6.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "536dd6236b39a5115385b0307b42d6d1ad431a02"
+                "reference": "79465b8dc674127f442ae31ea114c11bc4dd7ed6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/536dd6236b39a5115385b0307b42d6d1ad431a02",
-                "reference": "536dd6236b39a5115385b0307b42d6d1ad431a02",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/79465b8dc674127f442ae31ea114c11bc4dd7ed6",
+                "reference": "79465b8dc674127f442ae31ea114c11bc4dd7ed6",
                 "shasum": ""
             },
             "require": {
@@ -14744,7 +14744,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm"
             },
-            "time": "2026-09-21T08:32:57+00:00"
+            "time": "2026-09-23T10:02:42+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -20428,16 +20428,16 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "6.10.0",
+            "version": "6.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "66a3b923188f69b7ad3a35986d34c16b673678c5"
+                "reference": "f998f7e712658fba61f86fccbdcf8e301a982175"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/66a3b923188f69b7ad3a35986d34c16b673678c5",
-                "reference": "66a3b923188f69b7ad3a35986d34c16b673678c5",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/f998f7e712658fba61f86fccbdcf8e301a982175",
+                "reference": "f998f7e712658fba61f86fccbdcf8e301a982175",
                 "shasum": ""
             },
             "require": {
@@ -20505,7 +20505,7 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/6.10.0"
+                "source": "https://github.com/zircote/swagger-php/tree/6.11.0"
             },
             "funding": [
                 {
@@ -20513,22 +20513,22 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-21T23:32:10+00:00"
+            "time": "2026-09-26T07:11:30+00:00"
         }
     ],
     "packages-dev": [
         {
             "name": "behat/gherkin",
-            "version": "v4.17.0",
+            "version": "v4.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/Gherkin.git",
-                "reference": "5c8b3149fac39b5a79942b64eeec59a5ee4001c0"
+                "reference": "496248b29d9d7848311a263c2d17c1860e4c7b6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/Gherkin/zipball/5c8b3149fac39b5a79942b64eeec59a5ee4001c0",
-                "reference": "5c8b3149fac39b5a79942b64eeec59a5ee4001c0",
+                "url": "https://api.github.com/repos/Behat/Gherkin/zipball/496248b29d9d7848311a263c2d17c1860e4c7b6c",
+                "reference": "496248b29d9d7848311a263c2d17c1860e4c7b6c",
                 "shasum": ""
             },
             "require": {
@@ -20536,11 +20536,12 @@
                 "php": ">=8.1 <8.6"
             },
             "require-dev": {
-                "cucumber/gherkin-monorepo": "dev-gherkin-v39.1.0",
+                "cucumber/gherkin-monorepo": "dev-gherkin-v42.0.1",
                 "friendsofphp/php-cs-fixer": "^3.77",
                 "mikey179/vfsstream": "^1.6",
                 "phpstan/extension-installer": "^1",
-                "phpstan/phpstan": "^2",
+                "phpstan/phpstan": "2.2.14",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
                 "phpstan/phpstan-phpunit": "^2",
                 "phpunit/phpunit": "^10.5",
                 "symfony/yaml": "^5.4 || ^6.4 || ^7.0"
@@ -20582,7 +20583,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Behat/Gherkin/issues",
-                "source": "https://github.com/Behat/Gherkin/tree/v4.17.0"
+                "source": "https://github.com/Behat/Gherkin/tree/v4.18.0"
             },
             "funding": [
                 {
@@ -20598,7 +20599,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-18T09:33:47+00:00"
+            "time": "2026-09-25T21:26:10+00:00"
         },
         {
             "name": "clue/ndjson-react",
@@ -27187,22 +27188,22 @@
         },
         {
             "name": "testo/assert",
-            "version": "0.1.15",
+            "version": "0.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/assert.git",
-                "reference": "e9287a5815676386b204aa0b43d8081ade985060"
+                "reference": "b63b4f6ae8e4d1481bb2e2e323ca63675b767def"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/assert/zipball/e9287a5815676386b204aa0b43d8081ade985060",
-                "reference": "e9287a5815676386b204aa0b43d8081ade985060",
+                "url": "https://api.github.com/repos/php-testo/assert/zipball/b63b4f6ae8e4d1481bb2e2e323ca63675b767def",
+                "reference": "b63b4f6ae8e4d1481bb2e2e323ca63675b767def",
                 "shasum": ""
             },
             "require": {
                 "internal/container": "^1.1",
                 "php": ">=8.2",
-                "testo/testo": "0.10.47 - 1"
+                "testo/testo": "0.10.52 - 1"
             },
             "type": "library",
             "extra": {
@@ -27235,7 +27236,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/assert/tree/0.1.15"
+                "source": "https://github.com/php-testo/assert/tree/0.1.16"
             },
             "funding": [
                 {
@@ -27243,32 +27244,32 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-09-14T13:28:57+00:00"
+            "time": "2026-09-25T20:50:42+00:00"
         },
         {
             "name": "testo/bench",
-            "version": "0.1.12",
+            "version": "0.1.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/bench.git",
-                "reference": "3934a5f27a34e236ee99ba57a7e60654edbcab4c"
+                "reference": "ea08629b62a0dd0b0cd9d1e5f25b7f9937c7b40c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/bench/zipball/3934a5f27a34e236ee99ba57a7e60654edbcab4c",
-                "reference": "3934a5f27a34e236ee99ba57a7e60654edbcab4c",
+                "url": "https://api.github.com/repos/php-testo/bench/zipball/ea08629b62a0dd0b0cd9d1e5f25b7f9937c7b40c",
+                "reference": "ea08629b62a0dd0b0cd9d1e5f25b7f9937c7b40c",
                 "shasum": ""
             },
             "require": {
                 "internal/container": "^1.1",
                 "php": ">=8.2",
-                "testo/data": "^0.1.9",
+                "testo/data": "^0.1.10",
                 "testo/filter": "^0.1.8",
                 "testo/inline": "^0.1.9",
-                "testo/testo": "0.10.47 - 1"
+                "testo/testo": "0.10.52 - 1"
             },
             "require-dev": {
-                "testo/assert": "^0.1.15"
+                "testo/assert": "^0.1.16"
             },
             "suggest": {
                 "testo/assert": "Enables the benchmark verdict as an assertion: current must be the fastest within tolerance, otherwise the test fails."
@@ -27303,7 +27304,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/bench/tree/0.1.12"
+                "source": "https://github.com/php-testo/bench/tree/0.1.13"
             },
             "funding": [
                 {
@@ -27311,7 +27312,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-09-14T13:30:16+00:00"
+            "time": "2026-09-25T20:50:43+00:00"
         },
         {
             "name": "testo/bridge-mockery",
@@ -27378,22 +27379,22 @@
         },
         {
             "name": "testo/bridge-symfony-console",
-            "version": "0.1.13",
+            "version": "0.1.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/bridge-symfony-console.git",
-                "reference": "a02634523b87a1b88eb7a89039e5b9f4feae6679"
+                "reference": "65a8435b8a219b18b2cc78bd0a75fd0dd8b549c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/bridge-symfony-console/zipball/a02634523b87a1b88eb7a89039e5b9f4feae6679",
-                "reference": "a02634523b87a1b88eb7a89039e5b9f4feae6679",
+                "url": "https://api.github.com/repos/php-testo/bridge-symfony-console/zipball/65a8435b8a219b18b2cc78bd0a75fd0dd8b549c8",
+                "reference": "65a8435b8a219b18b2cc78bd0a75fd0dd8b549c8",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
                 "symfony/console": "^6.4 || ^7 || ^8.0",
-                "testo/testo": "0.10.47 - 1"
+                "testo/testo": "0.10.49 - 1"
             },
             "bin": [
                 "bin/testo"
@@ -27426,7 +27427,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/bridge-symfony-console/tree/0.1.13"
+                "source": "https://github.com/php-testo/bridge-symfony-console/tree/0.1.14"
             },
             "funding": [
                 {
@@ -27434,20 +27435,20 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-09-14T13:29:41+00:00"
+            "time": "2026-09-19T22:13:40+00:00"
         },
         {
             "name": "testo/codecov",
-            "version": "0.2.2",
+            "version": "0.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/codecov.git",
-                "reference": "26a42d74698d2db76c6e8c274625049762549d9c"
+                "reference": "bfd04182b9fef55177f8464c63063f6e9ddb314d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/codecov/zipball/26a42d74698d2db76c6e8c274625049762549d9c",
-                "reference": "26a42d74698d2db76c6e8c274625049762549d9c",
+                "url": "https://api.github.com/repos/php-testo/codecov/zipball/bfd04182b9fef55177f8464c63063f6e9ddb314d",
+                "reference": "bfd04182b9fef55177f8464c63063f6e9ddb314d",
                 "shasum": ""
             },
             "require": {
@@ -27456,7 +27457,7 @@
                 "php": ">=8.2",
                 "testo/data": "^0.1.9",
                 "testo/inline": "^0.1.9",
-                "testo/testo": "0.10.47 - 1"
+                "testo/testo": "0.10.51 - 1"
             },
             "type": "library",
             "extra": {
@@ -27485,7 +27486,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/codecov/tree/0.2.2"
+                "source": "https://github.com/php-testo/codecov/tree/0.2.3"
             },
             "funding": [
                 {
@@ -27493,7 +27494,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-09-14T13:29:43+00:00"
+            "time": "2026-09-25T08:59:27+00:00"
         },
         {
             "name": "testo/convention",
@@ -27552,22 +27553,22 @@
         },
         {
             "name": "testo/data",
-            "version": "0.1.9",
+            "version": "0.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/data.git",
-                "reference": "411748b7eb0b7a190d6744e802da6e4473223e5b"
+                "reference": "910d7ee39d8e0f8272cc64629665e44ed076cdb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/data/zipball/411748b7eb0b7a190d6744e802da6e4473223e5b",
-                "reference": "411748b7eb0b7a190d6744e802da6e4473223e5b",
+                "url": "https://api.github.com/repos/php-testo/data/zipball/910d7ee39d8e0f8272cc64629665e44ed076cdb2",
+                "reference": "910d7ee39d8e0f8272cc64629665e44ed076cdb2",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
-                "testo/filter": "^0.1.6",
-                "testo/testo": "0.10.44 - 1"
+                "testo/filter": "^0.1.8",
+                "testo/testo": "0.10.52 - 1"
             },
             "type": "library",
             "extra": {
@@ -27596,7 +27597,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/data/tree/0.1.9"
+                "source": "https://github.com/php-testo/data/tree/0.1.10"
             },
             "funding": [
                 {
@@ -27604,7 +27605,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-08-27T22:11:20+00:00"
+            "time": "2026-09-25T20:52:03+00:00"
         },
         {
             "name": "testo/facade",
@@ -27842,21 +27843,21 @@
         },
         {
             "name": "testo/lifecycle",
-            "version": "0.1.6",
+            "version": "0.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/lifecycle.git",
-                "reference": "48892437f702bf79831bfe78886bf79313e6ecdc"
+                "reference": "76844e4dc090a4734e8ee0764418ab5572876019"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/lifecycle/zipball/48892437f702bf79831bfe78886bf79313e6ecdc",
-                "reference": "48892437f702bf79831bfe78886bf79313e6ecdc",
+                "url": "https://api.github.com/repos/php-testo/lifecycle/zipball/76844e4dc090a4734e8ee0764418ab5572876019",
+                "reference": "76844e4dc090a4734e8ee0764418ab5572876019",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
-                "testo/testo": "0.10.46 - 1"
+                "testo/testo": "0.10.49 - 1"
             },
             "type": "library",
             "extra": {
@@ -27885,7 +27886,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/lifecycle/tree/0.1.6"
+                "source": "https://github.com/php-testo/lifecycle/tree/0.1.7"
             },
             "funding": [
                 {
@@ -27893,7 +27894,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-09-07T20:36:00+00:00"
+            "time": "2026-09-19T22:13:23+00:00"
         },
         {
             "name": "testo/repeat",
@@ -28013,6 +28014,65 @@
             "time": "2026-08-06T07:43:03+00:00"
         },
         {
+            "name": "testo/skip",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-testo/skip.git",
+                "reference": "3bb91c1433817583bd23a2e180c06790a214ba9f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-testo/skip/zipball/3bb91c1433817583bd23a2e180c06790a214ba9f",
+                "reference": "3bb91c1433817583bd23a2e180c06790a214ba9f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "testo/testo": "0.10.49 - 1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Skip.php"
+                ],
+                "psr-4": {
+                    "Testo\\Skip\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksei Gagarin (roxblnfk)",
+                    "homepage": "https://github.com/roxblnfk"
+                }
+            ],
+            "description": "Skip attribute plugin for the Testo testing framework.",
+            "keywords": [
+                "skip",
+                "test",
+                "testo"
+            ],
+            "support": {
+                "source": "https://github.com/php-testo/skip/tree/0.1.1"
+            },
+            "funding": [
+                {
+                    "url": "https://boosty.to/roxblnfk",
+                    "type": "boosty"
+                }
+            ],
+            "time": "2026-09-19T22:14:06+00:00"
+        },
+        {
             "name": "testo/test",
             "version": "0.1.8",
             "source": {
@@ -28072,16 +28132,16 @@
         },
         {
             "name": "testo/testo",
-            "version": "0.10.48",
+            "version": "0.10.52",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/testo.git",
-                "reference": "892205f6c9f81302f370f6915f0fbceaa4fec2be"
+                "reference": "a0d6a207f4b76f7a6684f9bd411c35308e52fdc9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/testo/zipball/892205f6c9f81302f370f6915f0fbceaa4fec2be",
-                "reference": "892205f6c9f81302f370f6915f0fbceaa4fec2be",
+                "url": "https://api.github.com/repos/php-testo/testo/zipball/a0d6a207f4b76f7a6684f9bd411c35308e52fdc9",
+                "reference": "a0d6a207f4b76f7a6684f9bd411c35308e52fdc9",
                 "shasum": ""
             },
             "require": {
@@ -28095,18 +28155,19 @@
                 "psr/log": "^2.0 || ^3.0",
                 "symfony/console": "^6.4 || ^7 || ^8.0",
                 "symfony/finder": "^6.4 || ^7 || ^8.0",
-                "testo/assert": "^0.1.15",
-                "testo/bench": "^0.1.12",
-                "testo/bridge-symfony-console": "^0.1.13",
-                "testo/codecov": "^0.2.2",
+                "testo/assert": "^0.1.16",
+                "testo/bench": "^0.1.13",
+                "testo/bridge-symfony-console": "^0.1.14",
+                "testo/codecov": "^0.2.3",
                 "testo/convention": "^0.1.5",
-                "testo/data": "^0.1.9",
+                "testo/data": "^0.1.10",
                 "testo/fiber": "^0.1.3",
                 "testo/filter": "^0.1.8",
                 "testo/inline": "^0.1.9",
-                "testo/lifecycle": "^0.1.6",
+                "testo/lifecycle": "^0.1.7",
                 "testo/repeat": "^0.1.9",
                 "testo/retry": "^0.1.5",
+                "testo/skip": "^0.1.1",
                 "testo/test": "^0.1.8",
                 "yiisoft/injector": "^1.2"
             },
@@ -28118,7 +28179,7 @@
                 "buggregator/trap": "^1.10",
                 "llm/skills": "^1.3",
                 "roxblnfk/unpoly": "1.8.2",
-                "testo/bridge-infection": "^0.1.8",
+                "testo/bridge-infection": "^0.1.9",
                 "testo/facade": "^0.1.1"
             },
             "suggest": {
@@ -28173,7 +28234,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-09-17T11:08:07+00:00"
+            "time": "2026-09-25T20:49:53+00:00"
         },
         {
             "name": "thecodingmachine/safe",
