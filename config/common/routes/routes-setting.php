@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Auth\Permissions;
 use App\Bookkeeping\Controller\BookkeepingExportController;
+use App\Bookkeeping\Controller\FrontAccountingLookupSyncController;
 use App\Bookkeeping\Controller\QuickBooksConnectController;
 use App\Invoice\PaymentInformation\AdyenHmacKeyVerificationController;
 use App\Invoice\Setting\SettingController;
@@ -87,5 +88,9 @@ return [
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([BookkeepingExportController::class, 'export'])
                 ->name('bookkeeping/export'),
+        Route::post('/bookkeeping/frontaccountingSyncLookups')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([FrontAccountingLookupSyncController::class, 'sync'])
+                ->name('bookkeeping/frontaccountingSyncLookups'),
     ), // invoice
 ];

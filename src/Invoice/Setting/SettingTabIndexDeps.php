@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Setting;
 
+use App\Bookkeeping\Infrastructure\FrontAccounting\FrontAccountingLookupRepository as FALR;
 use App\Invoice\CategorySecondary\CategorySecondaryRepository as CSR;
 use App\Invoice\EmailTemplate\EmailTemplateRepository as ER;
 use App\Invoice\Group\GroupRepository as GR;
@@ -18,6 +19,7 @@ final class SettingTabIndexDeps
         public readonly PM $pm,
         public readonly TR $tR,
         public readonly CSR $csR,
+        public readonly FALR $faLookupR,
     ) {
     }
 }

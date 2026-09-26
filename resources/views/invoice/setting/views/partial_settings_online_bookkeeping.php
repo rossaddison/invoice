@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Bookkeeping\Infrastructure\FrontAccounting\FrontAccountingLookupKind;
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\Option;
 
@@ -13,6 +14,10 @@ use Yiisoft\Html\Tag\Option;
 * @var string $quickbooks_connect_url
 * @var string $bookkeeping_export_url
 * @var bool $quickbooks_connected
+* @var array<string, array<string, string>> $frontaccounting_lookups Keyed by
+*     FrontAccountingLookupKind::value => [external_id => label], from
+*     FrontAccountingLookupSyncService's cache.
+* @var string $frontaccounting_lookup_sync_url
 */
 
 $row = ['class' => 'row'];
@@ -55,12 +60,12 @@ $providers = [
             'company' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.company')],
             'username' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.username')],
             'password' => ['type' => 'password', 'label' => $translator->translate('bookkeeping.frontaccounting.password')],
-            'bank_account' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.bank.account')],
-            'stock_id' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.stock.id')],
-            'vat_stock_id' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.vat.stock.id')],
-            'tax_group' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.tax.group')],
+            'bank_account' => ['type' => 'select', 'kind' => FrontAccountingLookupKind::BankAccount, 'label' => $translator->translate('bookkeeping.frontaccounting.bank.account')],
+            'stock_id' => ['type' => 'select', 'kind' => FrontAccountingLookupKind::StockItem, 'label' => $translator->translate('bookkeeping.frontaccounting.stock.id')],
+            'vat_stock_id' => ['type' => 'select', 'kind' => FrontAccountingLookupKind::StockItem, 'label' => $translator->translate('bookkeeping.frontaccounting.vat.stock.id')],
+            'tax_group' => ['type' => 'select', 'kind' => FrontAccountingLookupKind::TaxGroup, 'label' => $translator->translate('bookkeeping.frontaccounting.tax.group')],
             'sales_type' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.sales.type')],
-            'payment_terms' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.payment.terms')],
+            'payment_terms' => ['type' => 'select', 'kind' => FrontAccountingLookupKind::PaymentTerms, 'label' => $translator->translate('bookkeeping.frontaccounting.payment.terms')],
             'location' => ['type' => 'text', 'label' => $translator->translate('bookkeeping.frontaccounting.location')],
         ],
     ],
@@ -109,7 +114,7 @@ echo H::openTag('div', $row); //0
 
   /**
    * @var string $providerKey
-   * @var array{title: string, fields: array<string, array{type: string, label: string, hint?: string}>} $provider
+   * @var array{title: string, fields: array<string, array{type: string, label: string, hint?: string, kind?: FrontAccountingLookupKind}>} $provider
    */
   foreach ($providers as $providerKey => $provider) {
 // NOT class "gateway-settings" -- that exact class name is queried
@@ -174,6 +179,23 @@ echo H::openTag('div', $row); //0
     echo H::closeTag('div'); //4
     }
 
+    if ($providerKey === 'frontaccounting') {
+    echo H::openTag('div', $formGroup); //4
+     echo H::openTag('button', [
+      'type' => 'submit',
+      'formaction' => $frontaccounting_lookup_sync_url,
+      'formmethod' => 'post',
+      'formnovalidate' => true,
+      'class' => 'btn btn-outline-primary',
+     ]); //5
+      echo $translator->translate('bookkeeping.frontaccounting.lookup.sync.now');
+     echo H::closeTag('button'); //5
+     echo H::openTag('div', $formText); //5
+      echo $translator->translate('bookkeeping.frontaccounting.lookup.sync.hint');
+     echo H::closeTag('div'); //5
+    echo H::closeTag('div'); //4
+    }
+
     foreach ($provider['fields'] as $key => $field) {
     $fieldId = $pfx . $key . ']';
     $body[$fieldId] = $s->getSetting('bookkeeping_' . $providerKey . '_' . $key);
@@ -196,6 +218,46 @@ echo H::openTag('div', $row); //0
      echo H::openTag('label', ['class' => 'form-check-label', 'for' => $fieldId]); //5
       echo $field['label'];
      echo H::closeTag('label'); //5
+    echo H::closeTag('div'); //4
+    continue;
+    }
+
+    if ($field['type'] === 'select') {
+    $kind = $field['kind'] ?? null;
+    $options = $kind !== null ? ($frontaccounting_lookups[$kind->value] ?? []) : [];
+    $currentValue = $body[$fieldId];
+    echo H::openTag('div', $formGroup); //4
+     echo H::openTag('label', ['for' => $fieldId]); //5
+      echo $field['label'];
+     echo H::closeTag('label'); //5
+     if ($options === []) {
+// Not synced yet (or FrontAccounting unreachable) -- fall back to a
+// plain text input rather than blocking the form on an empty list.
+     echo H::openTag('input', [
+      'type' => 'text',
+      'class' => 'form-control',
+      'name' => $fieldId,
+      'id' => $fieldId,
+      'value' => $currentValue,
+     ]); //5
+     echo H::openTag('div', $formText); //5
+      echo $translator->translate('bookkeeping.frontaccounting.lookup.not.synced');
+     echo H::closeTag('div'); //5
+     } else {
+     echo H::openTag('select', [
+      'name' => $fieldId,
+      'id' => $fieldId,
+      'class' => 'form-select',
+     ]); //5
+      echo new Option()->value('')->content('');
+      foreach ($options as $externalId => $label) {
+      echo new Option()
+       ->value($externalId)
+       ->selected($currentValue === $externalId)
+       ->content($label . ' (' . $externalId . ')');
+      }
+     echo H::closeTag('select'); //5
+     }
     echo H::closeTag('div'); //4
     continue;
     }

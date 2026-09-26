@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Command\Bookkeeping\BookkeepingExportCommand;
+use App\Command\Bookkeeping\FrontAccountingLookupSyncCommand;
 use App\Command\CacheClearCommand;
 use App\Command\InstallCommand;
 use App\Command\Invoice\AutoIncrementSetToOneAfterTruncate6Command;
@@ -49,6 +50,7 @@ return [
             'serve' => Serve::class,
             'install' => InstallCommand::class,
             'bookkeeping/export'  => BookkeepingExportCommand::class,
+            'bookkeeping/frontaccounting-sync-lookups' => FrontAccountingLookupSyncCommand::class,
             'as4/retry'         => As4RetryCommand::class,
             'as4/status'          => As4StatusCommand::class,
             'as4/resend'          => As4ResendCommand::class,

@@ -7,6 +7,7 @@ namespace App\Invoice\Setting;
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
 // App
+use App\Bookkeeping\Infrastructure\FrontAccounting\FrontAccountingLookupKind;
 use App\Infrastructure\Persistence\Setting\Setting;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\CountryHelper;
@@ -142,6 +143,20 @@ final class SettingController extends BaseController
         $peppol_arrays = new PeppolArrays();
         $languages = $this->sR->localeLanguageArray();
         $body = $request->getParsedBody();
+        /**
+         * Grouped by kind for the Online Bookkeeping tab's FrontAccounting
+         * dropdowns — see FrontAccountingLookupSyncService's own docblock
+         * for where these rows come from.
+         *
+         * @var array<string, array<string, string>> $frontAccountingLookups
+         */
+        $frontAccountingLookups = [];
+        foreach (FrontAccountingLookupKind::cases() as $kind) {
+            $frontAccountingLookups[$kind->value] = [];
+            foreach ($deps->faLookupR->findByKind($kind) as $lookup) {
+                $frontAccountingLookups[$kind->value][$lookup->getExternalId()] = $lookup->getLabel();
+            }
+        }
         $p = '//invoice/setting/views/partial_settings_';
         $parameters = [
             'actionName' => 'setting/tabIndex',
@@ -249,6 +264,11 @@ final class SettingController extends BaseController
                 ),
                 'quickbooks_connected' => $this->sR->getSetting('bookkeeping_quickbooks_realm_id') !== ''
                     && $this->sR->getSetting('bookkeeping_quickbooks_refresh_token') !== '',
+                'frontaccounting_lookups' => $frontAccountingLookups,
+                'frontaccounting_lookup_sync_url' => $urlFastRouteGenerator->generate(
+                    'bookkeeping/frontaccountingSyncLookups',
+                    ['_language' => (string) $this->session->get('_language')],
+                ),
             ]),
             'mpdf' => $this->webViewRenderer->renderPartialAsString($p . 'mpdf'),
             'mtd' => $this->webViewRenderer->renderPartialAsString($p . 'making_tax_digital'),
