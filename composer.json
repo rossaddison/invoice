@@ -183,7 +183,7 @@
         "squizlabs/php_codesniffer": "^4.0.4",
         "testo/bridge-mockery": "^0.1.2",
         "testo/facade": ">=0.1.1",
-        "testo/testo": "^0.10.52",
+        "testo/testo": "^0.10.53",
         "vimeo/psalm": ">=6.18.1"
     },
     "autoload": {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "40d7bf7282e9393b67e29a45719b268f",
+    "content-hash": "7d8932df36baed780fd2073232b53113",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -3238,23 +3238,23 @@
         },
         {
             "name": "fidry/cpu-core-counter",
-            "version": "1.3.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/theofidry/cpu-core-counter.git",
-                "reference": "db9508f7b1474469d9d3c53b86f817e344732678"
+                "reference": "7cbeb03e286fa81b2bbe0e6bd6b8a27c71a3144d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theofidry/cpu-core-counter/zipball/db9508f7b1474469d9d3c53b86f817e344732678",
-                "reference": "db9508f7b1474469d9d3c53b86f817e344732678",
+                "url": "https://api.github.com/repos/theofidry/cpu-core-counter/zipball/7cbeb03e286fa81b2bbe0e6bd6b8a27c71a3144d",
+                "reference": "7cbeb03e286fa81b2bbe0e6bd6b8a27c71a3144d",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2 || ^8.0"
             },
             "require-dev": {
-                "fidry/makefile": "^0.2.0",
+                "fidry/makefile": "^0.2.0 || ^1.1.2",
                 "fidry/php-cs-fixer-config": "^1.1.2",
                 "phpstan/extension-installer": "^1.2.0",
                 "phpstan/phpstan": "^2.0",
@@ -3262,6 +3262,7 @@
                 "phpstan/phpstan-phpunit": "^2.0",
                 "phpstan/phpstan-strict-rules": "^2.0",
                 "phpunit/phpunit": "^8.5.31 || ^9.5.26",
+                "symfony/polyfill-mbstring": "^1.33",
                 "webmozarts/strict-phpunit": "^7.5"
             },
             "type": "library",
@@ -3287,7 +3288,7 @@
             ],
             "support": {
                 "issues": "https://github.com/theofidry/cpu-core-counter/issues",
-                "source": "https://github.com/theofidry/cpu-core-counter/tree/1.3.0"
+                "source": "https://github.com/theofidry/cpu-core-counter/tree/1.4.0"
             },
             "funding": [
                 {
@@ -3295,7 +3296,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-14T07:29:31+00:00"
+            "time": "2026-09-27T17:40:20+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -5737,16 +5738,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "3.14.0",
+            "version": "3.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CarbonPHP/carbon.git",
-                "reference": "0023eaa2c9110e47446dd512a263c69c40cd41f2"
+                "reference": "34e9109535165bf1d7ff17a610492372ae73a896"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/0023eaa2c9110e47446dd512a263c69c40cd41f2",
-                "reference": "0023eaa2c9110e47446dd512a263c69c40cd41f2",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/34e9109535165bf1d7ff17a610492372ae73a896",
+                "reference": "34e9109535165bf1d7ff17a610492372ae73a896",
                 "shasum": ""
             },
             "require": {
@@ -5838,7 +5839,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-12T20:45:19+00:00"
+            "time": "2026-09-27T12:07:26+00:00"
         },
         {
             "name": "netresearch/jsonmapper",
@@ -7033,20 +7034,25 @@
         },
         {
             "name": "phpdocumentor/reflection-common",
-            "version": "2.2.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionCommon.git",
-                "reference": "1d01c49d4ed62f25aa84a747ad35d5a16924662b"
+                "reference": "ee15a5a2022c8383906b225055e9496a6a5e6e3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/1d01c49d4ed62f25aa84a747ad35d5a16924662b",
-                "reference": "1d01c49d4ed62f25aa84a747ad35d5a16924662b",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/ee15a5a2022c8383906b225055e9496a6a5e6e3b",
+                "reference": "ee15a5a2022c8383906b225055e9496a6a5e6e3b",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0"
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.8",
+                "phpunit/phpunit": "^9.5",
+                "vimeo/psalm": "^4.25"
             },
             "type": "library",
             "extra": {
@@ -7070,7 +7076,7 @@
                 }
             ],
             "description": "Common reflection classes used by phpdocumentor to reflect the code structure",
-            "homepage": "http://www.phpdoc.org",
+            "homepage": "https://www.phpdoc.org",
             "keywords": [
                 "FQSEN",
                 "phpDocumentor",
@@ -7080,9 +7086,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpDocumentor/ReflectionCommon/issues",
-                "source": "https://github.com/phpDocumentor/ReflectionCommon/tree/2.x"
+                "source": "https://github.com/phpDocumentor/ReflectionCommon/tree/2.2.1"
             },
-            "time": "2020-06-27T09:03:43+00:00"
+            "time": "2025-11-10T21:21:55+00:00"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -27188,22 +27194,23 @@
         },
         {
             "name": "testo/assert",
-            "version": "0.1.16",
+            "version": "0.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/assert.git",
-                "reference": "b63b4f6ae8e4d1481bb2e2e323ca63675b767def"
+                "reference": "923d3ddf8c75d12ff240ccd90a5586236e0dc2c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/assert/zipball/b63b4f6ae8e4d1481bb2e2e323ca63675b767def",
-                "reference": "b63b4f6ae8e4d1481bb2e2e323ca63675b767def",
+                "url": "https://api.github.com/repos/php-testo/assert/zipball/923d3ddf8c75d12ff240ccd90a5586236e0dc2c5",
+                "reference": "923d3ddf8c75d12ff240ccd90a5586236e0dc2c5",
                 "shasum": ""
             },
             "require": {
                 "internal/container": "^1.1",
                 "php": ">=8.2",
-                "testo/testo": "0.10.52 - 1"
+                "symfony/polyfill-mbstring": "^1.0",
+                "testo/testo": "0.10.53 - 1"
             },
             "type": "library",
             "extra": {
@@ -27236,7 +27243,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/assert/tree/0.1.16"
+                "source": "https://github.com/php-testo/assert/tree/0.1.17"
             },
             "funding": [
                 {
@@ -27244,7 +27251,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-09-25T20:50:42+00:00"
+            "time": "2026-09-26T14:31:31+00:00"
         },
         {
             "name": "testo/bench",
@@ -28132,16 +28139,16 @@
         },
         {
             "name": "testo/testo",
-            "version": "0.10.52",
+            "version": "0.10.53",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/testo.git",
-                "reference": "a0d6a207f4b76f7a6684f9bd411c35308e52fdc9"
+                "reference": "2e59eeeb7804ffcf4d0b194cd2a23573708331eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/testo/zipball/a0d6a207f4b76f7a6684f9bd411c35308e52fdc9",
-                "reference": "a0d6a207f4b76f7a6684f9bd411c35308e52fdc9",
+                "url": "https://api.github.com/repos/php-testo/testo/zipball/2e59eeeb7804ffcf4d0b194cd2a23573708331eb",
+                "reference": "2e59eeeb7804ffcf4d0b194cd2a23573708331eb",
                 "shasum": ""
             },
             "require": {
@@ -28155,7 +28162,8 @@
                 "psr/log": "^2.0 || ^3.0",
                 "symfony/console": "^6.4 || ^7 || ^8.0",
                 "symfony/finder": "^6.4 || ^7 || ^8.0",
-                "testo/assert": "^0.1.16",
+                "symfony/polyfill-mbstring": "^1.0",
+                "testo/assert": "^0.1.17",
                 "testo/bench": "^0.1.13",
                 "testo/bridge-symfony-console": "^0.1.14",
                 "testo/codecov": "^0.2.3",
@@ -28234,7 +28242,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-09-25T20:49:53+00:00"
+            "time": "2026-09-26T14:30:43+00:00"
         },
         {
             "name": "thecodingmachine/safe",
