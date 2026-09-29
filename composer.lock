@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d8932df36baed780fd2073232b53113",
+    "content-hash": "39bed3cfa9596222dabbad0bf97734f8",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -27850,21 +27850,21 @@
         },
         {
             "name": "testo/lifecycle",
-            "version": "0.1.7",
+            "version": "0.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/lifecycle.git",
-                "reference": "76844e4dc090a4734e8ee0764418ab5572876019"
+                "reference": "fdcc292396ffbe5bd293ecd2de0b0fefd7403716"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/lifecycle/zipball/76844e4dc090a4734e8ee0764418ab5572876019",
-                "reference": "76844e4dc090a4734e8ee0764418ab5572876019",
+                "url": "https://api.github.com/repos/php-testo/lifecycle/zipball/fdcc292396ffbe5bd293ecd2de0b0fefd7403716",
+                "reference": "fdcc292396ffbe5bd293ecd2de0b0fefd7403716",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
-                "testo/testo": "0.10.49 - 1"
+                "testo/testo": "0.10.54 - 1"
             },
             "type": "library",
             "extra": {
@@ -27893,7 +27893,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/lifecycle/tree/0.1.7"
+                "source": "https://github.com/php-testo/lifecycle/tree/0.1.8"
             },
             "funding": [
                 {
@@ -27901,7 +27901,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-09-19T22:13:23+00:00"
+            "time": "2026-09-29T11:17:44+00:00"
         },
         {
             "name": "testo/repeat",
@@ -28139,16 +28139,16 @@
         },
         {
             "name": "testo/testo",
-            "version": "0.10.53",
+            "version": "0.10.54",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/testo.git",
-                "reference": "2e59eeeb7804ffcf4d0b194cd2a23573708331eb"
+                "reference": "5ac7a5c47cabd2abc6a20d193775b3d9648748ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/testo/zipball/2e59eeeb7804ffcf4d0b194cd2a23573708331eb",
-                "reference": "2e59eeeb7804ffcf4d0b194cd2a23573708331eb",
+                "url": "https://api.github.com/repos/php-testo/testo/zipball/5ac7a5c47cabd2abc6a20d193775b3d9648748ff",
+                "reference": "5ac7a5c47cabd2abc6a20d193775b3d9648748ff",
                 "shasum": ""
             },
             "require": {
@@ -28172,7 +28172,7 @@
                 "testo/fiber": "^0.1.3",
                 "testo/filter": "^0.1.8",
                 "testo/inline": "^0.1.9",
-                "testo/lifecycle": "^0.1.7",
+                "testo/lifecycle": "^0.1.8",
                 "testo/repeat": "^0.1.9",
                 "testo/retry": "^0.1.5",
                 "testo/skip": "^0.1.1",
@@ -28242,7 +28242,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-09-26T14:30:43+00:00"
+            "time": "2026-09-29T11:16:42+00:00"
         },
         {
             "name": "thecodingmachine/safe",
