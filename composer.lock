@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d8932df36baed780fd2073232b53113",
+    "content-hash": "edd9bb956e1e315c570fa0c59b6d4fe8",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -1880,16 +1880,16 @@
         },
         {
             "name": "cycle/annotated",
-            "version": "v4.6.0",
+            "version": "v4.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/annotated.git",
-                "reference": "e04328c7e532ba109c3a3cfd21856f63bacf3453"
+                "reference": "47f7e5ea9b3779dd284a9bb4a6cc60fe4dd1d13d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/annotated/zipball/e04328c7e532ba109c3a3cfd21856f63bacf3453",
-                "reference": "e04328c7e532ba109c3a3cfd21856f63bacf3453",
+                "url": "https://api.github.com/repos/cycle/annotated/zipball/47f7e5ea9b3779dd284a9bb4a6cc60fe4dd1d13d",
+                "reference": "47f7e5ea9b3779dd284a9bb4a6cc60fe4dd1d13d",
                 "shasum": ""
             },
             "require": {
@@ -1909,7 +1909,23 @@
                 "spiral/dumper": "^3.3",
                 "vimeo/psalm": "^5.26 || ^6.16"
             },
+            "suggest": {
+                "llm/skills": "To sync the cycle-orm-attributes AI skill into your project"
+            },
             "type": "library",
+            "extra": {
+                "skills": {
+                    "sources": [
+                        {
+                            "from": "github",
+                            "skills": [
+                                "cycle-orm-attributes"
+                            ],
+                            "package": "cycle/skills"
+                        }
+                    ]
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Cycle\\Annotated\\": "src/"
@@ -1951,7 +1967,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-15T20:56:29+00:00"
+            "time": "2026-09-29T17:35:56+00:00"
         },
         {
             "name": "cycle/database",
