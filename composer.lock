@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d8932df36baed780fd2073232b53113",
+    "content-hash": "ad17fbe643ceb0e1733992dfca85e0ed",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -1094,16 +1094,16 @@
         },
         {
             "name": "brick/money",
-            "version": "0.15.1",
+            "version": "0.15.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/money.git",
-                "reference": "1d07d80d8f1c04ee0efa8b8c2bccf129e7805646"
+                "reference": "d025eb4a105071028764859d93537d394a147c31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/money/zipball/1d07d80d8f1c04ee0efa8b8c2bccf129e7805646",
-                "reference": "1d07d80d8f1c04ee0efa8b8c2bccf129e7805646",
+                "url": "https://api.github.com/repos/brick/money/zipball/d025eb4a105071028764859d93537d394a147c31",
+                "reference": "d025eb4a105071028764859d93537d394a147c31",
                 "shasum": ""
             },
             "require": {
@@ -1139,7 +1139,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/money/issues",
-                "source": "https://github.com/brick/money/tree/0.15.1"
+                "source": "https://github.com/brick/money/tree/0.15.2"
             },
             "funding": [
                 {
@@ -1147,7 +1147,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-14T19:55:26+00:00"
+            "time": "2026-09-29T22:27:31+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
