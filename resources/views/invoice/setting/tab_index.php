@@ -23,6 +23,7 @@ use Yiisoft\Html\Html as H;
  * @var string $taxes
  * @var string $email
  * @var string $online_payment
+ * @var string $online_bookkeeping
  * @var string $projects_tasks
  * @var string $google_translate
  * @var string $vat_registered
@@ -144,6 +145,14 @@ $tabs = [
      'aria'  => 'settings-online-payment',
      'role'  => true,
      'content' => $online_payment
+ ],
+ 'online-bookkeeping' => [
+     'label' => $translator->translate('online.bookkeeping'),
+     'icon'  => 'bi bi-journal-text',
+     'color' => '#6f42c1',
+     'aria'  => 'settings-online-bookkeeping',
+     'role'  => true,
+     'content' => $online_bookkeeping
  ],
  'projects-tasks' => [
      'label' => $translator->translate('projects'),

@@ -13,26 +13,38 @@ use App\Bookkeeping\Infrastructure\QuickBooks\QuickBooksGateway;
 use App\Infrastructure\Persistence\Setting\Setting;
 use App\Invoice\Setting\SettingRepository;
 use DateTimeImmutable;
+use Exception;
 use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Request as Psr7Request;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Testo\Assert;
 use Testo\Test;
+use Yiisoft\Factory\Factory;
 
 /**
  * Covers QuickBooksGateway against a mocked Guzzle handler — no real
- * network calls. Endpoints/OAuth2 flow match `bin/quickbooks/
- * QuickBooksOAuthClient.php` (PR #1339, live-verified against the real
- * Intuit sandbox); this test only proves the request/response mapping
+ * network calls. Endpoints/OAuth2 flow were live-verified against the
+ * real Intuit sandbox in PR #1339 (superseded by App\Auth\Client\Intuit,
+ * see PR #1343); this test only proves the request/response mapping
  * around them, following PaypalPaymentServiceTest's own MockHandler
  * convention.
  */
 #[Test]
 final class QuickBooksGatewayTest
 {
+    private const string TOKEN_URL = 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer';
+    private const string SANDBOX_BASE_URL = 'https://sandbox-quickbooks.api.intuit.com/';
+    private const string CONNECTION_REFUSED = 'Connection refused';
+
     /**
      * @return array<string, string>
      */
@@ -85,13 +97,31 @@ final class QuickBooksGatewayTest
     private function makeGateway(
         MockHandler $mock,
         ?SettingRepository $settings = null,
+        ?ClientInterface $authHttpClient = null,
+        ?RequestFactoryInterface $requestFactory = null,
+        ?LoggerInterface $logger = null,
     ): QuickBooksGateway {
-        /** @var LoggerInterface&m\MockInterface $logger */
-        $logger = m::spy(LoggerInterface::class);
+        if ($logger === null) {
+            /** @var LoggerInterface&m\MockInterface $logger */
+            $logger = m::spy(LoggerInterface::class);
+        }
+        /** @var Factory&m\MockInterface $factory */
+        $factory = m::mock(Factory::class);
+        if ($authHttpClient === null) {
+            /** @var ClientInterface&m\MockInterface $authHttpClient */
+            $authHttpClient = m::mock(ClientInterface::class);
+        }
+        if ($requestFactory === null) {
+            /** @var RequestFactoryInterface&m\MockInterface $requestFactory */
+            $requestFactory = m::mock(RequestFactoryInterface::class);
+        }
 
         return new QuickBooksGateway(
             $settings ?? $this->makeSettingRepository(),
             $logger,
+            $authHttpClient,
+            $requestFactory,
+            $factory,
             $this->makeHttpClient($mock),
         );
     }
@@ -132,7 +162,7 @@ final class QuickBooksGatewayTest
     {
         $gateway = $this->makeGateway(new MockHandler([]));
 
-        Assert::same('quickbooks', $gateway->getDriverKey());
+        Assert::same($gateway->getDriverKey(), 'quickbooks');
     }
 
     public function isConfiguredReturnsTrueWhenAllCredentialsArePresent(): void
@@ -159,19 +189,19 @@ final class QuickBooksGatewayTest
 
         $create = $gateway->createTransaction($transaction);
         Assert::false($create->success);
-        Assert::same($notConfigured, $create->message);
+        Assert::same($create->message, $notConfigured);
 
         $update = $gateway->updateTransaction($transaction);
         Assert::false($update->success);
-        Assert::same($notConfigured, $update->message);
+        Assert::same($update->message, $notConfigured);
 
         $lookup = $gateway->getTransaction($transaction->getReference());
         Assert::false($lookup->found);
-        Assert::same($notConfigured, $lookup->message);
+        Assert::same($lookup->message, $notConfigured);
 
         $delete = $gateway->deleteTransaction($transaction->getReference());
         Assert::false($delete->success);
-        Assert::same($notConfigured, $delete->message);
+        Assert::same($delete->message, $notConfigured);
     }
 
     public function createTransactionPostsAJournalEntryWithTheCachedAccessTokenAndReturnsTheProviderReference(): void
@@ -182,23 +212,23 @@ final class QuickBooksGatewayTest
         $result = $gateway->createTransaction($this->paymentReceivedTransaction());
 
         Assert::true($result->success);
-        Assert::same('QB-1', $result->providerReference);
+        Assert::same($result->providerReference, 'QB-1');
 
         $sentRequest = $mock->getLastRequest();
         Assert::notNull($sentRequest);
-        Assert::same('Bearer cached-access-token', $sentRequest->getHeaderLine('Authorization'));
+        Assert::same($sentRequest->getHeaderLine('Authorization'), 'Bearer cached-access-token');
 
         /** @var array{DocNumber: string, TxnDate: string, CurrencyRef: array{value: string}, Line: list<array{Amount: int|float, JournalEntryLineDetail: array{PostingType: string, AccountRef: array{value: string}}}>} $body */
         $body = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        Assert::same('INV-501-payment', $body['DocNumber']);
-        Assert::same('2026-09-18', $body['TxnDate']);
-        Assert::same('GBP', $body['CurrencyRef']['value']);
+        Assert::same($body['DocNumber'], 'INV-501-payment');
+        Assert::same($body['TxnDate'], '2026-09-18');
+        Assert::same($body['CurrencyRef']['value'], 'GBP');
         Assert::count($body['Line'], 2);
-        Assert::same('Debit', $body['Line'][0]['JournalEntryLineDetail']['PostingType']);
-        Assert::same('14', $body['Line'][0]['JournalEntryLineDetail']['AccountRef']['value']);
-        Assert::same(120.00, (float) $body['Line'][0]['Amount']);
-        Assert::same('Credit', $body['Line'][1]['JournalEntryLineDetail']['PostingType']);
-        Assert::same('11', $body['Line'][1]['JournalEntryLineDetail']['AccountRef']['value']);
+        Assert::same($body['Line'][0]['JournalEntryLineDetail']['PostingType'], 'Debit');
+        Assert::same($body['Line'][0]['JournalEntryLineDetail']['AccountRef']['value'], '14');
+        Assert::same((float) $body['Line'][0]['Amount'], 120.00);
+        Assert::same($body['Line'][1]['JournalEntryLineDetail']['PostingType'], 'Credit');
+        Assert::same($body['Line'][1]['JournalEntryLineDetail']['AccountRef']['value'], '11');
     }
 
     public function createTransactionRefreshesAnExpiredAccessTokenAndPersistsTheRotatedPair(): void
@@ -212,24 +242,31 @@ final class QuickBooksGatewayTest
         $settings->shouldReceive('withKey')->times(3)->andReturn($storedSetting);
         $settings->shouldReceive('save')->times(3)->with($storedSetting);
 
-        $mock = new MockHandler([
-            new Response(200, [], json_encode([
-                'access_token' => 'new-access-token',
-                'refresh_token' => 'new-refresh-token',
-                'expires_in' => 3600,
-            ], JSON_THROW_ON_ERROR)),
-            $this->journalEntryResponse('QB-2'),
-        ]);
-        $gateway = $this->makeGateway($mock, $settings);
+        /** @var RequestFactoryInterface&m\MockInterface $requestFactory */
+        $requestFactory = m::mock(RequestFactoryInterface::class);
+        $requestFactory->shouldReceive('createRequest')
+            ->with('POST', self::TOKEN_URL)
+            ->andReturn(new Psr7Request('POST', self::TOKEN_URL));
+
+        /** @var ClientInterface&m\MockInterface $authHttpClient */
+        $authHttpClient = m::mock(ClientInterface::class);
+        $authHttpClient->shouldReceive('sendRequest')->once()->andReturn(new Response(200, [], json_encode([
+            'access_token' => 'new-access-token',
+            'refresh_token' => 'new-refresh-token',
+            'expires_in' => 3600,
+        ], JSON_THROW_ON_ERROR)));
+
+        $mock = new MockHandler([$this->journalEntryResponse('QB-2')]);
+        $gateway = $this->makeGateway($mock, $settings, $authHttpClient, $requestFactory);
 
         $result = $gateway->createTransaction($this->paymentReceivedTransaction('INV-502-payment'));
 
         Assert::true($result->success);
-        Assert::same('QB-2', $result->providerReference);
+        Assert::same($result->providerReference, 'QB-2');
 
         $sentRequest = $mock->getLastRequest();
         Assert::notNull($sentRequest);
-        Assert::same('Bearer new-access-token', $sentRequest->getHeaderLine('Authorization'));
+        Assert::same($sentRequest->getHeaderLine('Authorization'), 'Bearer new-access-token');
     }
 
     public function createTransactionFailsWhenAnAccountRoleHasNoConfiguredAccount(): void
@@ -240,7 +277,7 @@ final class QuickBooksGatewayTest
         $result = $gateway->createTransaction($this->paymentReceivedTransaction());
 
         Assert::false($result->success);
-        Assert::same('No QuickBooks account configured for role bank.', $result->message);
+        Assert::same($result->message, 'No QuickBooks account configured for role bank.');
     }
 
     public function createTransactionReportsUnableToObtainAnAccessTokenWhenRefreshResponseIsMalformed(): void
@@ -248,15 +285,23 @@ final class QuickBooksGatewayTest
         $settings = $this->makeSettingRepository([
             'bookkeeping_quickbooks_access_token_expires_at' => (string) (time() - 10),
         ]);
-        $mock = new MockHandler([
-            new Response(200, [], json_encode(['token_type' => 'bearer'], JSON_THROW_ON_ERROR)),
-        ]);
-        $gateway = $this->makeGateway($mock, $settings);
+
+        /** @var RequestFactoryInterface&m\MockInterface $requestFactory */
+        $requestFactory = m::mock(RequestFactoryInterface::class);
+        $requestFactory->shouldReceive('createRequest')
+            ->andReturn(new Psr7Request('POST', self::TOKEN_URL));
+
+        /** @var ClientInterface&m\MockInterface $authHttpClient */
+        $authHttpClient = m::mock(ClientInterface::class);
+        $authHttpClient->shouldReceive('sendRequest')
+            ->andReturn(new Response(200, [], json_encode(['token_type' => 'bearer'], JSON_THROW_ON_ERROR)));
+
+        $gateway = $this->makeGateway(new MockHandler([]), $settings, $authHttpClient, $requestFactory);
 
         $result = $gateway->createTransaction($this->paymentReceivedTransaction());
 
         Assert::false($result->success);
-        Assert::same('Unable to obtain a QuickBooks access token.', $result->message);
+        Assert::same($result->message, 'Unable to obtain a QuickBooks access token.');
     }
 
     public function getTransactionReturnsFoundWhenQueryMatchesAJournalEntry(): void
@@ -267,7 +312,7 @@ final class QuickBooksGatewayTest
         $result = $gateway->getTransaction('INV-503-payment');
 
         Assert::true($result->found);
-        Assert::same('QB-3', $result->providerReference);
+        Assert::same($result->providerReference, 'QB-3');
     }
 
     public function getTransactionReturnsNotFoundWhenQueryResponseIsEmpty(): void
@@ -278,7 +323,7 @@ final class QuickBooksGatewayTest
         $result = $gateway->getTransaction('INV-504-payment');
 
         Assert::false($result->found);
-        Assert::same('', $result->message);
+        Assert::same($result->message, '');
     }
 
     public function updateTransactionUpdatesTheExistingJournalEntryUsingItsSyncToken(): void
@@ -292,14 +337,14 @@ final class QuickBooksGatewayTest
         $result = $gateway->updateTransaction($this->paymentReceivedTransaction('INV-505-payment'));
 
         Assert::true($result->success);
-        Assert::same('QB-5', $result->providerReference);
+        Assert::same($result->providerReference, 'QB-5');
 
         $sentRequest = $mock->getLastRequest();
         Assert::notNull($sentRequest);
         /** @var array{Id: string, SyncToken: string} $body */
         $body = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        Assert::same('QB-5', $body['Id']);
-        Assert::same('3', $body['SyncToken']);
+        Assert::same($body['Id'], 'QB-5');
+        Assert::same($body['SyncToken'], '3');
     }
 
     public function updateTransactionFailsWhenNoMatchingJournalEntryExists(): void
@@ -311,8 +356,8 @@ final class QuickBooksGatewayTest
 
         Assert::false($result->success);
         Assert::same(
-            'Cannot update: no QuickBooks JournalEntry found for reference INV-506-payment.',
             $result->message,
+            'Cannot update: no QuickBooks JournalEntry found for reference INV-506-payment.',
         );
     }
 
@@ -327,14 +372,14 @@ final class QuickBooksGatewayTest
         $result = $gateway->deleteTransaction('INV-507-payment');
 
         Assert::true($result->success);
-        Assert::same('QB-7', $result->providerReference);
+        Assert::same($result->providerReference, 'QB-7');
 
         $sentRequest = $mock->getLastRequest();
         Assert::notNull($sentRequest);
         /** @var array{Id: string, SyncToken: string} $body */
         $body = json_decode((string) $sentRequest->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        Assert::same('QB-7', $body['Id']);
-        Assert::same('5', $body['SyncToken']);
+        Assert::same($body['Id'], 'QB-7');
+        Assert::same($body['SyncToken'], '5');
     }
 
     public function deleteTransactionFailsWhenNoMatchingJournalEntryExists(): void
@@ -345,6 +390,125 @@ final class QuickBooksGatewayTest
         $result = $gateway->deleteTransaction('INV-508-payment');
 
         Assert::false($result->success);
-        Assert::same('No QuickBooks JournalEntry found for reference INV-508-payment.', $result->message);
+        Assert::same($result->message, 'No QuickBooks JournalEntry found for reference INV-508-payment.');
+    }
+
+    public function createTransactionReturnsFailureWhenTheJournalEntryRequestThrows(): void
+    {
+        $mock = new MockHandler([
+            new ConnectException(self::CONNECTION_REFUSED, new Psr7Request('POST', self::SANDBOX_BASE_URL)),
+        ]);
+        $gateway = $this->makeGateway($mock);
+
+        $result = $gateway->createTransaction($this->paymentReceivedTransaction());
+
+        Assert::false($result->success);
+        Assert::same($result->message, self::CONNECTION_REFUSED);
+    }
+
+    public function updateTransactionReturnsFailureWhenTheUpdateRequestThrows(): void
+    {
+        $mock = new MockHandler([
+            $this->queryResponse('QB-9', '1'),
+            new ConnectException(self::CONNECTION_REFUSED, new Psr7Request('POST', self::SANDBOX_BASE_URL)),
+        ]);
+        $gateway = $this->makeGateway($mock);
+
+        $result = $gateway->updateTransaction($this->paymentReceivedTransaction('INV-509-payment'));
+
+        Assert::false($result->success);
+        Assert::same($result->message, self::CONNECTION_REFUSED);
+    }
+
+    public function getTransactionReturnsFailedWhenTheQueryRequestThrows(): void
+    {
+        $mock = new MockHandler([
+            new ConnectException(self::CONNECTION_REFUSED, new Psr7Request('GET', self::SANDBOX_BASE_URL)),
+        ]);
+        $gateway = $this->makeGateway($mock);
+
+        $result = $gateway->getTransaction('INV-510-payment');
+
+        Assert::false($result->found);
+        Assert::same($result->message, self::CONNECTION_REFUSED);
+    }
+
+    public function deleteTransactionReturnsFailureWhenTheDeleteRequestThrows(): void
+    {
+        $mock = new MockHandler([
+            $this->queryResponse('QB-11', '1'),
+            new ConnectException(self::CONNECTION_REFUSED, new Psr7Request('POST', self::SANDBOX_BASE_URL)),
+        ]);
+        $gateway = $this->makeGateway($mock);
+
+        $result = $gateway->deleteTransaction('INV-511-payment');
+
+        Assert::false($result->success);
+        Assert::same($result->message, self::CONNECTION_REFUSED);
+    }
+
+    public function refreshAccessTokenReturnsNullWhenTheAuthHttpClientThrows(): void
+    {
+        $settings = $this->makeSettingRepository([
+            'bookkeeping_quickbooks_access_token_expires_at' => (string) (time() - 10),
+        ]);
+
+        /** @var RequestFactoryInterface&m\MockInterface $requestFactory */
+        $requestFactory = m::mock(RequestFactoryInterface::class);
+        $requestFactory->shouldReceive('createRequest')
+            ->andReturn(new Psr7Request('POST', self::TOKEN_URL));
+
+        $clientException = new class (self::CONNECTION_REFUSED) extends Exception implements ClientExceptionInterface {
+        };
+        /** @var ClientInterface&m\MockInterface $authHttpClient */
+        $authHttpClient = m::mock(ClientInterface::class);
+        $authHttpClient->shouldReceive('sendRequest')->andThrow($clientException);
+
+        $gateway = $this->makeGateway(new MockHandler([]), $settings, $authHttpClient, $requestFactory);
+
+        $result = $gateway->createTransaction($this->paymentReceivedTransaction());
+
+        Assert::false($result->success);
+        Assert::same($result->message, 'Unable to obtain a QuickBooks access token.');
+    }
+
+    public function errorLogContextExtractsTheQuickBooksFaultDetailFromARequestException(): void
+    {
+        $faultResponse = new Response(400, [], json_encode([
+            'Fault' => [
+                'Error' => [[
+                    'Message' => 'Invalid Reference Id',
+                    'Detail' => 'AccountRef: Invalid account id 999',
+                    'code' => '2020',
+                ]],
+                'type' => 'ValidationFault',
+            ],
+        ], JSON_THROW_ON_ERROR));
+        $mock = new MockHandler([
+            new RequestException(
+                'Bad Request',
+                new Psr7Request('POST', self::SANDBOX_BASE_URL),
+                $faultResponse,
+            ),
+        ]);
+
+        /** @var LoggerInterface&m\MockInterface $logger */
+        $logger = m::mock(LoggerInterface::class);
+        $logger->shouldReceive('error')
+            ->once()
+            ->with(
+                'QuickBooks createTransaction failed.',
+                m::on(static function (array $context): bool {
+                    /** @var array{Message?: string}|null $quickbooksError */
+                    $quickbooksError = $context['quickbooks_error'] ?? null;
+                    return $quickbooksError !== null && ($quickbooksError['Message'] ?? null) === 'Invalid Reference Id';
+                }),
+            );
+
+        $gateway = $this->makeGateway($mock, null, null, null, $logger);
+
+        $result = $gateway->createTransaction($this->paymentReceivedTransaction());
+
+        Assert::false($result->success);
     }
 }

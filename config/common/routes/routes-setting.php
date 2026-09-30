@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Auth\Permissions;
+use App\Bookkeeping\Controller\QuickBooksConnectController;
 use App\Invoice\PaymentInformation\AdyenHmacKeyVerificationController;
 use App\Invoice\Setting\SettingController;
 use App\Middleware\RoutePermission;
@@ -67,5 +68,19 @@ return [
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([AdyenHmacKeyVerificationController::class, 'verifyHmacKey'])
                 ->name('setting/adyenVerifyHmacKey'),
+        // Not nested under Group::create('/{_language}') -- deliberately,
+        // matching every payment-gateway webhook/complete route in
+        // routes-payment-information.php: the callback's redirect_uri is
+        // a single fixed URL registered in the Intuit app dashboard, and
+        // generateAbsolute() needs no _language argument for a route
+        // that was never under that group to begin with.
+        Route::get('/bookkeeping/quickbooksConnect')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([QuickBooksConnectController::class, 'connect'])
+                ->name('bookkeeping/quickbooksConnect'),
+        Route::get('/bookkeeping/quickbooksCallback')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([QuickBooksConnectController::class, 'callback'])
+                ->name('bookkeeping/quickbooksCallback'),
     ), // invoice
 ];

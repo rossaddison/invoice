@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Bookkeeping\Infrastructure\QuickBooks;
 
+use App\Auth\Client\Intuit;
 use App\Bookkeeping\Application\BookkeepingGatewayInterface;
 use App\Bookkeeping\Application\BookkeepingResult;
 use App\Bookkeeping\Application\BookkeepingTransactionLookupResult;
@@ -15,7 +16,13 @@ use App\Invoice\Setting\SettingRepository;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Yiisoft\Factory\Factory;
+use Yiisoft\Session\Session;
+use Yiisoft\Yii\AuthClient\OAuthToken;
+use Yiisoft\Yii\AuthClient\StateStorage\DummyStateStorage;
 
 /**
  * QuickBooks Online adapter for BookkeepingGatewayInterface — this app's
@@ -55,7 +62,6 @@ use Psr\Log\LoggerInterface;
  */
 final class QuickBooksGateway implements BookkeepingGatewayInterface
 {
-    private const string TOKEN_URL = 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer';
     private const string SANDBOX_BASE_URL = 'https://sandbox-quickbooks.api.intuit.com';
     private const string PRODUCTION_BASE_URL = 'https://quickbooks.api.intuit.com';
 
@@ -73,11 +79,39 @@ final class QuickBooksGateway implements BookkeepingGatewayInterface
     private const string MESSAGE_NOT_CONFIGURED = 'QuickBooks is not configured.';
     private const string MESSAGE_NO_ACCESS_TOKEN = 'Unable to obtain a QuickBooks access token.';
 
+    private readonly Intuit $intuit;
+
+    /**
+     * $authHttpClient/$requestFactory/$factory are plain framework
+     * services (already safely injectable in both web and console
+     * context) used only to build $intuit -- Intuit::class itself is
+     * deliberately NOT container-bound here, since yiisoft/config's
+     * Merger throws a hard error on a duplicate top-level key across a
+     * group's source files, and config/web/di/yii-auth-client.php
+     * already binds Intuit::class for the web app's own "Connect to
+     * QuickBooks" flow (App\Bookkeeping\Controller\
+     * QuickBooksConnectController). Building this gateway's own instance
+     * directly here means it works from a console command with no
+     * shared binding at all, matching every other gateway class in this
+     * app's `new HttpClient()`-as-default-param convention for
+     * collaborators DI can't cleanly express.
+     *
+     * DummyStateStorage/Session are real no-op-for-our-purposes
+     * instances, never a plain default param value here (this
+     * constructor body runs at object-construction time, not in a
+     * compile-time default-value context) -- refreshAccessToken() itself
+     * touches neither, confirmed by reading its body directly in the
+     * fork.
+     */
     public function __construct(
         private readonly SettingRepository $settings,
         private readonly LoggerInterface $logger,
+        ClientInterface $authHttpClient,
+        RequestFactoryInterface $requestFactory,
+        Factory $factory,
         private readonly HttpClient $httpClient = new HttpClient(),
     ) {
+        $this->intuit = new Intuit($authHttpClient, $requestFactory, new DummyStateStorage(), $factory, new Session());
     }
 
     #[\Override]
@@ -337,7 +371,7 @@ final class QuickBooksGateway implements BookkeepingGatewayInterface
         $cached = $this->settings->getSetting(self::KEY_ACCESS_TOKEN);
         $expiresAt = (int) $this->settings->getSetting(self::KEY_ACCESS_TOKEN_EXPIRES_AT);
         if ($cached !== '' && $expiresAt - time() > 60) {
-            return $cached;
+            return (string) $this->settings->decode($cached);
         }
 
         return $this->refreshAccessToken();
@@ -350,39 +384,36 @@ final class QuickBooksGateway implements BookkeepingGatewayInterface
             return null;
         }
 
-        try {
-            $response = $this->httpClient->post(self::TOKEN_URL, [
-                'headers' => [
-                    'Authorization' => 'Basic ' . base64_encode($this->clientId() . ':' . $this->clientSecret()),
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'Accept' => self::CONTENT_TYPE_JSON,
-                ],
-                'form_params' => [
-                    'grant_type' => 'refresh_token',
-                    'refresh_token' => $refreshToken,
-                ],
-            ]);
-            /** @var array{access_token?: string, refresh_token?: string, expires_in?: int} $data */
-            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-            $accessToken = $data['access_token'] ?? null;
-            $newRefreshToken = $data['refresh_token'] ?? null;
-            $expiresIn = $data['expires_in'] ?? null;
-            if ($accessToken === null || $newRefreshToken === null || $expiresIn === null) {
-                $this->logger->error('QuickBooks token refresh: unexpected response shape.');
-                return null;
-            }
+        $this->intuit->setClientId($this->clientId());
+        $this->intuit->setClientSecret($this->clientSecret());
+        $requestToken = new OAuthToken();
+        $requestToken->setParam('refresh_token', $refreshToken);
 
-            $this->persistTokens($accessToken, $newRefreshToken, $expiresIn);
-            return $accessToken;
-        } catch (GuzzleException|\JsonException $e) {
-            $this->logger->error('QuickBooks token refresh failed.', $this->errorLogContext($e));
+        try {
+            $newToken = $this->intuit->refreshAccessToken($requestToken);
+        } catch (\Psr\Http\Client\ClientExceptionInterface $e) {
+            $this->logger->error('QuickBooks token refresh failed.', ['error' => $e->getMessage()]);
             return null;
         }
+
+        $accessToken = $newToken->getParam('access_token');
+        $newRefreshToken = $newToken->getParam('refresh_token');
+        $expiresIn = $newToken->getParam('expires_in');
+        if (!is_string($accessToken) || $accessToken === ''
+            || !is_string($newRefreshToken) || $newRefreshToken === ''
+            || !is_numeric($expiresIn)
+        ) {
+            $this->logger->error('QuickBooks token refresh: unexpected response shape.');
+            return null;
+        }
+
+        $this->persistTokens($accessToken, $newRefreshToken, (int) $expiresIn);
+        return $accessToken;
     }
 
     private function persistTokens(string $accessToken, string $refreshToken, int $expiresIn): void
     {
-        $this->persistSetting(self::KEY_ACCESS_TOKEN, $accessToken);
+        $this->persistSetting(self::KEY_ACCESS_TOKEN, (string) $this->settings->encode($accessToken));
         $this->persistSetting(self::KEY_ACCESS_TOKEN_EXPIRES_AT, (string) (time() + $expiresIn));
         $this->persistSetting(self::KEY_REFRESH_TOKEN, (string) $this->settings->encode($refreshToken));
     }

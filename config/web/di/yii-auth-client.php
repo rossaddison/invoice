@@ -5,6 +5,7 @@ declare(strict_types=1);
 // Clients specific to the UK and EU
 use App\Auth\Client\DeveloperSandboxHmrc;
 use App\Auth\Client\GovUk;
+use App\Auth\Client\Intuit;
 use RossAddison\OpenBankingClient\OpenBanking;
 use RossAddison\OpenBankingClient\OpenBankingProviderRegistry;
 use RossAddison\OpenBankingClient\OpenBankingProviderRegistryInterface;
@@ -108,6 +109,15 @@ return [
         $setClientId => [$developersandboxhmrcClient['clientId']],
         $setClientSecret => [$developersandboxhmrcClient['clientSecret']],
         $setReturnUrl => [$developersandboxhmrcClient['returnUrl']],
+    ],
+    // clientId/clientSecret/returnUrl are Settings-driven (bookkeeping_quickbooks_*),
+    // not params-driven like every other client here -- set at runtime by
+    // QuickBooksConnectController/QuickBooksGateway themselves, never here.
+    // Deliberately NOT added to Collection::class's clients list below --
+    // that list is the login page's identity-provider choices; connecting
+    // to QuickBooks isn't a login.
+    Intuit::class => [
+        $construct => $constructArray,
     ],
     Facebook::class => [
         $construct => $constructArray,
