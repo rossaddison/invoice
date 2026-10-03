@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ba7085c07b48a5f9b43888c331cfecb",
+    "content-hash": "a5c3d9abc42690c8150437e967bd390a",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -2186,20 +2186,20 @@
         },
         {
             "name": "cycle/orm",
-            "version": "v2.18.0",
+            "version": "v2.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/orm.git",
-                "reference": "a7a1db351df8037ff7a1196e19688bfc7d35c63e"
+                "reference": "4dd4ed48c267b4a0458b3f1a67bdf4e3c75a57e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/orm/zipball/a7a1db351df8037ff7a1196e19688bfc7d35c63e",
-                "reference": "a7a1db351df8037ff7a1196e19688bfc7d35c63e",
+                "url": "https://api.github.com/repos/cycle/orm/zipball/4dd4ed48c267b4a0458b3f1a67bdf4e3c75a57e1",
+                "reference": "4dd4ed48c267b4a0458b3f1a67bdf4e3c75a57e1",
                 "shasum": ""
             },
             "require": {
-                "cycle/database": "^2.19.0",
+                "cycle/database": "^2.22.0",
                 "doctrine/instantiator": "^1.3.1 || ^2.0",
                 "php": ">=8.1",
                 "spiral/core": "^2.8 || ^3.0"
@@ -2218,8 +2218,22 @@
                 "spiral/tokenizer": "^2.8 || ^3.0",
                 "vimeo/psalm": "^6.0"
             },
+            "suggest": {
+                "llm/skills": "To sync the cycle-orm AI skill into your project"
+            },
             "type": "library",
             "extra": {
+                "skills": {
+                    "sources": [
+                        {
+                            "from": "github",
+                            "skills": [
+                                "cycle-orm"
+                            ],
+                            "package": "cycle/skills"
+                        }
+                    ]
+                },
                 "branch-alias": {
                     "dev-2.x": "2.x-dev"
                 }
@@ -2275,7 +2289,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-15T16:45:48+00:00"
+            "time": "2026-10-02T15:05:04+00:00"
         },
         {
             "name": "cycle/schema-builder",
