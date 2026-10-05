@@ -3731,6 +3731,287 @@
                     "its": 7
                 }
             }
+        },
+        {
+            "id": "2026-10-05T08:17:25+00:00",
+            "date": "2026-10-05",
+            "commit": "8a2d17c",
+            "commit_message": "Update dependency hono to v4.13.13 (#1356)",
+            "branch": "main",
+            "php_version": "8.4.26",
+            "os": "Linux x86_64",
+            "results": {
+                "di::benchSingletonGet": {
+                    "mean_μs": 0.03606,
+                    "stdev_μs": 0.0019,
+                    "min_μs": 0.0347,
+                    "max_μs": 0.03958,
+                    "ops_per_sec": 27728667,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "di::benchDeepChainGet": {
+                    "mean_μs": 0.04178,
+                    "stdev_μs": 0.01225,
+                    "min_μs": 0.03451,
+                    "max_μs": 0.066,
+                    "ops_per_sec": 23937372,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "di::benchWideConstructorGet": {
+                    "mean_μs": 0.03977,
+                    "stdev_μs": 0.00128,
+                    "min_μs": 0.03889,
+                    "max_μs": 0.04228,
+                    "ops_per_sec": 25146428,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "di::benchContainerBuild": {
+                    "mean_μs": 2.68059,
+                    "stdev_μs": 0.28589,
+                    "min_μs": 2.41446,
+                    "max_μs": 3.07725,
+                    "ops_per_sec": 373052,
+                    "revs": 200,
+                    "its": 5
+                },
+                "di::benchHasDefinition": {
+                    "mean_μs": 0.04307,
+                    "stdev_μs": 0.00012,
+                    "min_μs": 0.04293,
+                    "max_μs": 0.0433,
+                    "ops_per_sec": 23220346,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "injector::benchInvokeOneDep_cached": {
+                    "mean_μs": 1.43735,
+                    "stdev_μs": 0.00834,
+                    "min_μs": 1.42621,
+                    "max_μs": 1.45204,
+                    "ops_per_sec": 695723,
+                    "revs": 2000,
+                    "its": 7
+                },
+                "injector::benchInvokeThreeDeps_cached": {
+                    "mean_μs": 2.80715,
+                    "stdev_μs": 0.0439,
+                    "min_μs": 2.7424,
+                    "max_μs": 2.87954,
+                    "ops_per_sec": 356233,
+                    "revs": 2000,
+                    "its": 7
+                },
+                "injector::benchInvokeClosure_cached": {
+                    "mean_μs": 2.55215,
+                    "stdev_μs": 0.03587,
+                    "min_μs": 2.51373,
+                    "max_μs": 2.59935,
+                    "ops_per_sec": 391827,
+                    "revs": 2000,
+                    "its": 7
+                },
+                "injector::benchInvokeThreeDeps_uncached": {
+                    "mean_μs": 2.72317,
+                    "stdev_μs": 0.00526,
+                    "min_μs": 2.7158,
+                    "max_μs": 2.73202,
+                    "ops_per_sec": 367220,
+                    "revs": 2000,
+                    "its": 7
+                },
+                "injector::benchMakeClass": {
+                    "mean_μs": 1.92844,
+                    "stdev_μs": 0.01053,
+                    "min_μs": 1.91639,
+                    "max_μs": 1.943,
+                    "ops_per_sec": 518553,
+                    "revs": 2000,
+                    "its": 7
+                },
+                "router::benchMatchRoot": {
+                    "mean_μs": 10.62285,
+                    "stdev_μs": 0.02951,
+                    "min_μs": 10.5985,
+                    "max_μs": 10.67958,
+                    "ops_per_sec": 94137,
+                    "revs": 1000,
+                    "its": 7
+                },
+                "router::benchMatchStaticMid": {
+                    "mean_μs": 10.79831,
+                    "stdev_μs": 0.03266,
+                    "min_μs": 10.75806,
+                    "max_μs": 10.8385,
+                    "ops_per_sec": 92607,
+                    "revs": 1000,
+                    "its": 7
+                },
+                "router::benchMatchParametrised": {
+                    "mean_μs": 10.80758,
+                    "stdev_μs": 0.00872,
+                    "min_μs": 10.79163,
+                    "max_μs": 10.81695,
+                    "ops_per_sec": 92528,
+                    "revs": 1000,
+                    "its": 7
+                },
+                "router::benchMatchDeepParam": {
+                    "mean_μs": 11.70181,
+                    "stdev_μs": 0.01663,
+                    "min_μs": 11.68231,
+                    "max_μs": 11.72241,
+                    "ops_per_sec": 85457,
+                    "revs": 1000,
+                    "its": 7
+                },
+                "router::benchMatchWorstCase": {
+                    "mean_μs": 11.91519,
+                    "stdev_μs": 0.02083,
+                    "min_μs": 11.89196,
+                    "max_μs": 11.9496,
+                    "ops_per_sec": 83926,
+                    "revs": 1000,
+                    "its": 7
+                },
+                "router::benchMatch404": {
+                    "mean_μs": 12.16481,
+                    "stdev_μs": 0.01468,
+                    "min_μs": 12.13979,
+                    "max_μs": 12.18125,
+                    "ops_per_sec": 82204,
+                    "revs": 1000,
+                    "its": 7
+                },
+                "strings::benchStartsWith": {
+                    "mean_μs": 0.02395,
+                    "stdev_μs": 7.0e-5,
+                    "min_μs": 0.02382,
+                    "max_μs": 0.02405,
+                    "ops_per_sec": 41759233,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "strings::benchEndsWith": {
+                    "mean_μs": 0.02907,
+                    "stdev_μs": 0.00013,
+                    "min_μs": 0.02895,
+                    "max_μs": 0.02924,
+                    "ops_per_sec": 34405500,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "strings::benchTruncateEnd": {
+                    "mean_μs": 0.20086,
+                    "stdev_μs": 0.0027,
+                    "min_μs": 0.19576,
+                    "max_μs": 0.20377,
+                    "ops_per_sec": 4978559,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchCountWords": {
+                    "mean_μs": 0.58531,
+                    "stdev_μs": 0.05698,
+                    "min_μs": 0.54535,
+                    "max_μs": 0.69294,
+                    "ops_per_sec": 1708489,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "strings::benchToSnakeCase": {
+                    "mean_μs": 0.5309,
+                    "stdev_μs": 0.00393,
+                    "min_μs": 0.5259,
+                    "max_μs": 0.5375,
+                    "ops_per_sec": 1883578,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchToCamelCase": {
+                    "mean_μs": 1.8106,
+                    "stdev_μs": 0.00209,
+                    "min_μs": 1.8072,
+                    "max_μs": 1.81303,
+                    "ops_per_sec": 552302,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchToPascalCase": {
+                    "mean_μs": 1.63444,
+                    "stdev_μs": 0.00763,
+                    "min_μs": 1.62815,
+                    "max_μs": 1.6485,
+                    "ops_per_sec": 611830,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchToPlural": {
+                    "mean_μs": 1.94417,
+                    "stdev_μs": 0.01838,
+                    "min_μs": 1.93043,
+                    "max_μs": 1.97929,
+                    "ops_per_sec": 514358,
+                    "revs": 2000,
+                    "its": 7
+                },
+                "strings::benchToSingular": {
+                    "mean_μs": 2.79644,
+                    "stdev_μs": 0.00447,
+                    "min_μs": 2.79164,
+                    "max_μs": 2.80429,
+                    "ops_per_sec": 357597,
+                    "revs": 2000,
+                    "its": 7
+                },
+                "strings::benchClassToTable": {
+                    "mean_μs": 2.64232,
+                    "stdev_μs": 0.00265,
+                    "min_μs": 2.64002,
+                    "max_μs": 2.64719,
+                    "ops_per_sec": 378455,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchWildcardMatch_hit": {
+                    "mean_μs": 0.14197,
+                    "stdev_μs": 0.00466,
+                    "min_μs": 0.13407,
+                    "max_μs": 0.14841,
+                    "ops_per_sec": 7043744,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "strings::benchWildcardMatch_miss": {
+                    "mean_μs": 0.10978,
+                    "stdev_μs": 0.00127,
+                    "min_μs": 0.1083,
+                    "max_μs": 0.11149,
+                    "ops_per_sec": 9109237,
+                    "revs": 5000,
+                    "its": 7
+                },
+                "strings::benchCombinedRegexp_hit": {
+                    "mean_μs": 0.08056,
+                    "stdev_μs": 0.0012,
+                    "min_μs": 0.0799,
+                    "max_μs": 0.08297,
+                    "ops_per_sec": 12413149,
+                    "revs": 3000,
+                    "its": 7
+                },
+                "strings::benchMemoizedRegexp_hit": {
+                    "mean_μs": 0.03893,
+                    "stdev_μs": 0.00048,
+                    "min_μs": 0.03864,
+                    "max_μs": 0.03989,
+                    "ops_per_sec": 25684932,
+                    "revs": 3000,
+                    "its": 7
+                }
+            }
         }
     ]
 }
