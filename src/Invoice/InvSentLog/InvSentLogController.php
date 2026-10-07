@@ -339,8 +339,9 @@ final class InvSentLogController extends BaseController
         foreach ($invsentlogs as $invSentLog) {
             $invNumber = $invSentLog->getInv()?->getNumber();
             if (null !== $invNumber) {
-                $invUserId = $invSentLog->getInv()?->getUser()->reqId();
-                if ($user_id == $invUserId && !in_array($invNumber, $optionsDataGuestInvNumbers)) {
+                $invUserId = $invSentLog->getInv()?->getUser()?->reqId();
+                if (($user_id == $invUserId)
+                        && (!in_array($invNumber, $optionsDataGuestInvNumbers))) {
                     $optionsDataGuestInvNumbers[$invNumber] = $invNumber;
                 }
             }

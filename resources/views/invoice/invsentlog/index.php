@@ -65,7 +65,10 @@ $columns = [
     new DataColumn(
         'inv_id',
         header: $translator->translate('setup.db.username.info'),
-        content: static fn (InvSentLog $model) => $model->getInv()?->getUser()->getLogin(),
+        content: static function (InvSentLog $model): string {
+            return ($user = $model->getInv()?->getUser())
+                    ? $user->getLogin() : '❓';
+        }
     ),
     new DataColumn(
         'date_sent',
