@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8db2f93e7250046435eaccba5ef113dd",
+    "content-hash": "4e98520f5da03d6a6749acb2146fc722",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -922,16 +922,16 @@
         },
         {
             "name": "anthropic-ai/sdk",
-            "version": "v0.54.0",
+            "version": "v0.56.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/anthropics/anthropic-sdk-php.git",
-                "reference": "107c4880edfbd358155521539bb2b02614a6bcf0"
+                "reference": "ef83cd146c4a1bd41c4a93fcbf9c407274a62fe0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/anthropics/anthropic-sdk-php/zipball/107c4880edfbd358155521539bb2b02614a6bcf0",
-                "reference": "107c4880edfbd358155521539bb2b02614a6bcf0",
+                "url": "https://api.github.com/repos/anthropics/anthropic-sdk-php/zipball/ef83cd146c4a1bd41c4a93fcbf9c407274a62fe0",
+                "reference": "ef83cd146c4a1bd41c4a93fcbf9c407274a62fe0",
                 "shasum": ""
             },
             "require": {
@@ -953,7 +953,7 @@
                 "pestphp/pest": "^3",
                 "php-http/mock-client": "^1",
                 "phpstan/extension-installer": "^1",
-                "phpstan/phpstan": "2.2.1",
+                "phpstan/phpstan": "2.2.13",
                 "phpstan/phpstan-phpunit": "^2",
                 "phpunit/phpunit": "^11",
                 "symfony/http-client": "^7"
@@ -979,9 +979,9 @@
             "description": "Anthropic PHP SDK",
             "support": {
                 "issues": "https://github.com/anthropics/anthropic-sdk-php/issues",
-                "source": "https://github.com/anthropics/anthropic-sdk-php/tree/v0.54.0"
+                "source": "https://github.com/anthropics/anthropic-sdk-php/tree/v0.56.0"
             },
-            "time": "2026-09-30T22:57:46+00:00"
+            "time": "2026-10-07T17:57:01+00:00"
         },
         {
             "name": "braintree/braintree_php",
