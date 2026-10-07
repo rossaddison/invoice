@@ -24379,12 +24379,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "7ffb508d0fec1adae95e086e0c7e2cdf1ee5f02f"
+                "reference": "e2f95eabb82ca59bc3550d72a553e68319b748b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/7ffb508d0fec1adae95e086e0c7e2cdf1ee5f02f",
-                "reference": "7ffb508d0fec1adae95e086e0c7e2cdf1ee5f02f",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e2f95eabb82ca59bc3550d72a553e68319b748b1",
+                "reference": "e2f95eabb82ca59bc3550d72a553e68319b748b1",
                 "shasum": ""
             },
             "conflict": {
@@ -24841,6 +24841,8 @@
                 "krayin/laravel-crm": "<=2.2",
                 "kreait/firebase-php": ">=3.2,<3.8.1",
                 "kumbiaphp/kumbiapp": "<=1.1.1",
+                "kunstmaan/bundles-cms": "<7.3.2",
+                "kunstmaan/media-bundle": "<7.3.2",
                 "la-haute-societe/tcpdf": "<6.2.22",
                 "laktak/hjson": "<2.3",
                 "laminas/laminas-diactoros": "<2.18.1|==2.19|==2.20|==2.21|==2.22|==2.23|>=2.24,<2.24.2|>=2.25,<2.25.2",
@@ -25521,7 +25523,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-07T17:18:05+00:00"
+            "time": "2026-10-07T22:47:26+00:00"
         },
         {
             "name": "rossaddison/translator-extractor",
