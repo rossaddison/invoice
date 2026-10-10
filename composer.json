@@ -37,7 +37,7 @@
         "ext-zend-opcache": "*",
         "ext-zlib": "*",
         "adyen/php-api-library": "^30.1.0",
-        "anthropic-ai/sdk": "^0.56.0",
+        "anthropic-ai/sdk": "^0.57.0",
         "braintree/braintree_php": ">=6.38.0",
         "brick/math": ">=1",
         "brick/money": ">=0.15.2",
