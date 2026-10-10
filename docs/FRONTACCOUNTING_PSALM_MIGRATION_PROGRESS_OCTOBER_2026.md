@@ -12,7 +12,7 @@ is a file-by-file Psalm static-analysis cleanup ahead of raising the project's
 minimum PHP version to 8.5, run at Psalm's strictest `errorLevel=1`. Every
 first-party source file also now declares `strict_types=1`.
 
-**Progress:** 13,353 → 10,158 → 7,220 → **6,968** Psalm errors so far,
+**Progress:** 13,353 → 10,158 → 7,220 → 6,968 → **6,652** Psalm errors so far,
 tracked via a static `Psalm Level 1` badge at the top of that branch's own
 README (same hand-updated-badge convention this repo's README already
 uses). Also underway: renaming the dozen-odd function names (`trans_view`,
