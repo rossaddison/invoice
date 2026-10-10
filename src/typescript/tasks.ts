@@ -47,14 +47,14 @@ export class TaskHandler {
         // Confirm select tasks
         const confirmTask = target.closest('.select-items-confirm-task, .select-items-confirm-task-inv, .select-items-confirm-task-quote');
         if (confirmTask) {
-            this.handleSelectItemsConfirmTask(confirmTask as HTMLElement);
+            void this.handleSelectItemsConfirmTask(confirmTask as HTMLElement);
             return;
         }
 
         // Reset / load actions
         const resetButton = target.closest('#task-reset-button-inv');
         if (resetButton) {
-            this.handleTaskReset();
+            void this.handleTaskReset();
         }
     }
 

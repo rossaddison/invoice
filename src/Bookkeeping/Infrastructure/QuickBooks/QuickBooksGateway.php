@@ -55,29 +55,20 @@ use Psr\Log\LoggerInterface;
  */
 final class QuickBooksGateway implements BookkeepingGatewayInterface
 {
-    private const string TOKEN_URL = 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer';
-    private const string SANDBOX_BASE_URL = 'https://sandbox-quickbooks.api.intuit.com';
-    private const string PRODUCTION_BASE_URL = 'https://quickbooks.api.intuit.com';
-
-    private const string KEY_CLIENT_ID = 'bookkeeping_quickbooks_client_id';
-    private const string KEY_CLIENT_SECRET = 'bookkeeping_quickbooks_client_secret';
-    private const string KEY_REALM_ID = 'bookkeeping_quickbooks_realm_id';
-    private const string KEY_REFRESH_TOKEN = 'bookkeeping_quickbooks_refresh_token';
-    private const string KEY_ACCESS_TOKEN = 'bookkeeping_quickbooks_access_token';
-    private const string KEY_ACCESS_TOKEN_EXPIRES_AT = 'bookkeeping_quickbooks_access_token_expires_at';
-    private const string KEY_SANDBOX = 'bookkeeping_quickbooks_sandbox';
     private const string ACCOUNT_KEY_PREFIX = 'bookkeeping_quickbooks_account_';
 
     private const string PATH_JOURNAL_ENTRY = '/journalentry';
-    private const string CONTENT_TYPE_JSON = 'application/json';
     private const string MESSAGE_NOT_CONFIGURED = 'QuickBooks is not configured.';
     private const string MESSAGE_NO_ACCESS_TOKEN = 'Unable to obtain a QuickBooks access token.';
+
+    private readonly QuickBooksConnection $connection;
 
     public function __construct(
         private readonly SettingRepository $settings,
         private readonly LoggerInterface $logger,
         private readonly HttpClient $httpClient = new HttpClient(),
     ) {
+        $this->connection = new QuickBooksConnection($settings, $logger, $httpClient);
     }
 
     #[\Override]
@@ -89,10 +80,7 @@ final class QuickBooksGateway implements BookkeepingGatewayInterface
     #[\Override]
     public function isConfigured(): bool
     {
-        return $this->clientId() !== ''
-            && $this->clientSecret() !== ''
-            && $this->realmId() !== ''
-            && $this->storedRefreshToken() !== '';
+        return $this->connection->isConfigured();
     }
 
     #[\Override]
@@ -107,14 +95,40 @@ final class QuickBooksGateway implements BookkeepingGatewayInterface
             return new BookkeepingResult(false, message: $lines);
         }
 
-        $token = $this->accessToken();
+        return $this->resolveTokenAndCreate($transaction, $lines);
+    }
+
+    /**
+     * Split out of createTransaction() purely to keep its own return count
+     * within SonarCloud's php:S1142 limit (3) — the configured/lines guard
+     * clauses above already cover two of createTransaction()'s own
+     * precondition failures, so this only needs to cover the remaining
+     * token precondition plus delegating to the POST itself.
+     *
+     * @param list<array<string, mixed>> $lines
+     */
+    private function resolveTokenAndCreate(BookkeepingTransaction $transaction, array $lines): BookkeepingResult
+    {
+        $token = $this->connection->accessToken();
         if ($token === null) {
             return new BookkeepingResult(false, message: self::MESSAGE_NO_ACCESS_TOKEN);
         }
 
+        return $this->postNewJournalEntry($transaction, $lines, $token);
+    }
+
+    /**
+     * Split out of resolveTokenAndCreate() purely to keep its own return
+     * count within SonarCloud's php:S1142 limit (3) — this only needs to
+     * cover the POST's own outcomes.
+     *
+     * @param list<array<string, mixed>> $lines
+     */
+    private function postNewJournalEntry(BookkeepingTransaction $transaction, array $lines, string $token): BookkeepingResult
+    {
         try {
-            $response = $this->httpClient->post($this->companyUrl() . self::PATH_JOURNAL_ENTRY, [
-                'headers' => $this->authHeaders($token),
+            $response = $this->httpClient->post($this->connection->companyUrl() . self::PATH_JOURNAL_ENTRY, [
+                'headers' => $this->connection->authHeaders($token),
                 'json' => $this->journalEntryPayload($transaction, $lines),
             ]);
             /** @var array{JournalEntry?: array{Id?: string}} $data */
@@ -145,11 +159,37 @@ final class QuickBooksGateway implements BookkeepingGatewayInterface
             return new BookkeepingResult(false, message: $lines);
         }
 
-        $token = $this->accessToken();
+        return $this->resolveTokenAndUpdate($transaction, $lines);
+    }
+
+    /**
+     * Split out of updateTransaction() purely to keep its own return count
+     * within SonarCloud's php:S1142 limit (3) — the configured/lines guard
+     * clauses above already cover two of updateTransaction()'s own
+     * precondition failures, so this only needs to cover the remaining
+     * token precondition plus delegating to the lookup-then-POST itself.
+     *
+     * @param list<array<string, mixed>> $lines
+     */
+    private function resolveTokenAndUpdate(BookkeepingTransaction $transaction, array $lines): BookkeepingResult
+    {
+        $token = $this->connection->accessToken();
         if ($token === null) {
             return new BookkeepingResult(false, message: self::MESSAGE_NO_ACCESS_TOKEN);
         }
 
+        return $this->postUpdatedJournalEntry($transaction, $lines, $token);
+    }
+
+    /**
+     * Split out of resolveTokenAndUpdate() purely to keep its own return
+     * count within SonarCloud's php:S1142 limit (3) — this only needs to
+     * cover the lookup-then-POST's own outcomes.
+     *
+     * @param list<array<string, mixed>> $lines
+     */
+    private function postUpdatedJournalEntry(BookkeepingTransaction $transaction, array $lines, string $token): BookkeepingResult
+    {
         try {
             $entry = $this->findJournalEntry($transaction->getReference(), $token);
             if ($entry === null) {
@@ -163,8 +203,8 @@ final class QuickBooksGateway implements BookkeepingGatewayInterface
             $payload['Id'] = $entry['Id'];
             $payload['SyncToken'] = $entry['SyncToken'];
 
-            $response = $this->httpClient->post($this->companyUrl() . self::PATH_JOURNAL_ENTRY, [
-                'headers' => $this->authHeaders($token),
+            $response = $this->httpClient->post($this->connection->companyUrl() . self::PATH_JOURNAL_ENTRY, [
+                'headers' => $this->connection->authHeaders($token),
                 'json' => $payload,
             ]);
             /** @var array{JournalEntry?: array{Id?: string}} $data */
@@ -183,11 +223,22 @@ final class QuickBooksGateway implements BookkeepingGatewayInterface
             return BookkeepingTransactionLookupResult::failed(self::MESSAGE_NOT_CONFIGURED);
         }
 
-        $token = $this->accessToken();
+        $token = $this->connection->accessToken();
         if ($token === null) {
             return BookkeepingTransactionLookupResult::failed(self::MESSAGE_NO_ACCESS_TOKEN);
         }
 
+        return $this->lookUpJournalEntry($reference, $token);
+    }
+
+    /**
+     * Split out of getTransaction() purely to keep its own return count
+     * within SonarCloud's php:S1142 limit (3) — the configured/token guard
+     * clauses above already cover the two precondition failures, so this
+     * only needs to cover the lookup's own outcomes.
+     */
+    private function lookUpJournalEntry(string $reference, string $token): BookkeepingTransactionLookupResult
+    {
         try {
             $entry = $this->findJournalEntry($reference, $token);
             return $entry === null
@@ -206,19 +257,30 @@ final class QuickBooksGateway implements BookkeepingGatewayInterface
             return new BookkeepingResult(false, message: self::MESSAGE_NOT_CONFIGURED);
         }
 
-        $token = $this->accessToken();
+        $token = $this->connection->accessToken();
         if ($token === null) {
             return new BookkeepingResult(false, message: self::MESSAGE_NO_ACCESS_TOKEN);
         }
 
+        return $this->postJournalEntryDeletion($reference, $token);
+    }
+
+    /**
+     * Split out of deleteTransaction() purely to keep its own return count
+     * within SonarCloud's php:S1142 limit (3) — the configured/token guard
+     * clauses above all happen before any network request, so this only
+     * needs to cover the lookup-then-delete's own outcomes.
+     */
+    private function postJournalEntryDeletion(string $reference, string $token): BookkeepingResult
+    {
         try {
             $entry = $this->findJournalEntry($reference, $token);
             if ($entry === null) {
                 return new BookkeepingResult(false, message: 'No QuickBooks JournalEntry found for reference ' . $reference . '.');
             }
 
-            $response = $this->httpClient->post($this->companyUrl() . self::PATH_JOURNAL_ENTRY, [
-                'headers' => $this->authHeaders($token),
+            $response = $this->httpClient->post($this->connection->companyUrl() . self::PATH_JOURNAL_ENTRY, [
+                'headers' => $this->connection->authHeaders($token),
                 'query' => ['operation' => 'delete'],
                 'json' => ['Id' => $entry['Id'], 'SyncToken' => $entry['SyncToken']],
             ]);
@@ -284,8 +346,8 @@ final class QuickBooksGateway implements BookkeepingGatewayInterface
         $docNumber = substr($reference, 0, 21);
         $query = "SELECT Id, SyncToken FROM JournalEntry WHERE DocNumber = '" . str_replace("'", "\\'", $docNumber) . "'";
 
-        $response = $this->httpClient->get($this->companyUrl() . '/query', [
-            'headers' => $this->authHeaders($token),
+        $response = $this->httpClient->get($this->connection->companyUrl() . '/query', [
+            'headers' => $this->connection->authHeaders($token),
             'query' => ['query' => $query],
         ]);
         /** @var array{QueryResponse?: array{JournalEntry?: list<array{Id?: string, SyncToken?: string}>}} $data */
@@ -298,122 +360,10 @@ final class QuickBooksGateway implements BookkeepingGatewayInterface
         return ['Id' => $entry['Id'], 'SyncToken' => $entry['SyncToken']];
     }
 
-    /**
-     * @return array<string, string>
-     */
-    private function authHeaders(string $token): array
-    {
-        return [
-            'Authorization' => 'Bearer ' . $token,
-            'Content-Type' => self::CONTENT_TYPE_JSON,
-            'Accept' => self::CONTENT_TYPE_JSON,
-        ];
-    }
-
-    private function companyUrl(): string
-    {
-        return $this->baseUrl() . '/v3/company/' . rawurlencode($this->realmId());
-    }
-
-    private function baseUrl(): string
-    {
-        return $this->settings->getSetting(self::KEY_SANDBOX) === '1'
-            ? self::SANDBOX_BASE_URL
-            : self::PRODUCTION_BASE_URL;
-    }
-
     private function accountIdForRole(AccountRole $role): ?string
     {
         $value = $this->settings->getSetting(self::ACCOUNT_KEY_PREFIX . $role->value);
         return $value !== '' ? $value : null;
-    }
-
-    /**
-     * Returns a cached access token when still valid for more than 60s,
-     * otherwise refreshes (and persists the rotated pair) first.
-     */
-    private function accessToken(): ?string
-    {
-        $cached = $this->settings->getSetting(self::KEY_ACCESS_TOKEN);
-        $expiresAt = (int) $this->settings->getSetting(self::KEY_ACCESS_TOKEN_EXPIRES_AT);
-        if ($cached !== '' && $expiresAt - time() > 60) {
-            return $cached;
-        }
-
-        return $this->refreshAccessToken();
-    }
-
-    private function refreshAccessToken(): ?string
-    {
-        $refreshToken = $this->storedRefreshToken();
-        if ($refreshToken === '') {
-            return null;
-        }
-
-        try {
-            $response = $this->httpClient->post(self::TOKEN_URL, [
-                'headers' => [
-                    'Authorization' => 'Basic ' . base64_encode($this->clientId() . ':' . $this->clientSecret()),
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'Accept' => self::CONTENT_TYPE_JSON,
-                ],
-                'form_params' => [
-                    'grant_type' => 'refresh_token',
-                    'refresh_token' => $refreshToken,
-                ],
-            ]);
-            /** @var array{access_token?: string, refresh_token?: string, expires_in?: int} $data */
-            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-            $accessToken = $data['access_token'] ?? null;
-            $newRefreshToken = $data['refresh_token'] ?? null;
-            $expiresIn = $data['expires_in'] ?? null;
-            if ($accessToken === null || $newRefreshToken === null || $expiresIn === null) {
-                $this->logger->error('QuickBooks token refresh: unexpected response shape.');
-                return null;
-            }
-
-            $this->persistTokens($accessToken, $newRefreshToken, $expiresIn);
-            return $accessToken;
-        } catch (GuzzleException|\JsonException $e) {
-            $this->logger->error('QuickBooks token refresh failed.', $this->errorLogContext($e));
-            return null;
-        }
-    }
-
-    private function persistTokens(string $accessToken, string $refreshToken, int $expiresIn): void
-    {
-        $this->persistSetting(self::KEY_ACCESS_TOKEN, $accessToken);
-        $this->persistSetting(self::KEY_ACCESS_TOKEN_EXPIRES_AT, (string) (time() + $expiresIn));
-        $this->persistSetting(self::KEY_REFRESH_TOKEN, (string) $this->settings->encode($refreshToken));
-    }
-
-    private function persistSetting(string $key, string $value): void
-    {
-        $setting = $this->settings->withKey($key) ?? new Setting(setting_key: $key);
-        $setting->setSettingValue($value);
-        $this->settings->save($setting);
-    }
-
-    private function clientId(): string
-    {
-        return $this->settings->getSetting(self::KEY_CLIENT_ID);
-    }
-
-    private function clientSecret(): string
-    {
-        $encoded = $this->settings->getSetting(self::KEY_CLIENT_SECRET);
-        return $encoded !== '' ? (string) $this->settings->decode($encoded) : '';
-    }
-
-    private function realmId(): string
-    {
-        return $this->settings->getSetting(self::KEY_REALM_ID);
-    }
-
-    private function storedRefreshToken(): string
-    {
-        $encoded = $this->settings->getSetting(self::KEY_REFRESH_TOKEN);
-        return $encoded !== '' ? (string) $this->settings->decode($encoded) : '';
     }
 
     /**

@@ -241,7 +241,7 @@ export async function processBatchWithProgress<T, R>(
                     lastError = error as Error;
                     if (attempt < maxRetries) {
                         // Exponential backoff: 100ms, 200ms, 400ms
-                        await new Promise(r => setTimeout(r, 100 * Math.pow(2, attempt)));
+                        await new Promise(r => setTimeout(r, 100 * Math.pow(2, attempt))); // NOSONAR typescript:S9382 — deliberate retry delay, must happen sequentially between attempts
                     }
                 }
             }
@@ -259,7 +259,7 @@ export async function processBatchWithProgress<T, R>(
         // Process all batches sequentially to control load
         for (let i = 0; i < items.length; i += batchSize) {
             const batch = items.slice(i, i + batchSize);
-            const batchResults = await processBatch(batch, i);
+            const batchResults = await processBatch(batch, i); // NOSONAR typescript:S9382 — batches are processed sequentially on purpose, to control load
             results.push(...batchResults);
         }
 

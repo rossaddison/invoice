@@ -64,7 +64,7 @@ export class SettingsHandler {
         if (fphBtn) {
             fphBtn.addEventListener('click', e => {
                 e.preventDefault();
-                this.handleFphGenerateClick();
+                void this.handleFphGenerateClick();
             });
         }
 

@@ -62,7 +62,7 @@ export class SalesOrderHandler {
         if (statusBtn) {
             const statusId = Number.parseInt(statusBtn.dataset.statusId ?? '0', 10);
             if (statusId > 0) {
-                this.handleChangeStatus(statusId);
+                void this.handleChangeStatus(statusId);
             }
             return;
         }
@@ -84,21 +84,21 @@ export class SalesOrderHandler {
         // SO to Invoice conversion
         if (target.matches('#so_to_invoice_confirm') ||
             target.closest('#so_to_invoice_confirm')) {
-            this.handleSoToInvoiceConversion();
+            void this.handleSoToInvoiceConversion();
             return;
         }
 
         // Open sales order modal
         const openModalBtn = target.closest('.open-salesorder-modal') as HTMLElement;
         if (openModalBtn) {
-            this.handleOpenModal(openModalBtn);
+            void this.handleOpenModal(openModalBtn);
             return;
         }
 
         // Save sales order via AJAX
         const saveBtn = target.closest('.salesorder-save') as HTMLElement;
         if (saveBtn) {
-            this.handleSaveSalesOrder();
+            void this.handleSaveSalesOrder();
         }
     }
 

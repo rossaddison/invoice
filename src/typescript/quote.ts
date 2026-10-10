@@ -94,21 +94,21 @@ export class QuoteHandler {
         // Delete single item
         const deleteBtn = target.closest('.btn_delete_item') as HTMLElement;
         if (deleteBtn) {
-            this.handleDeleteItem(deleteBtn);
+            void this.handleDeleteItem(deleteBtn);
             return;
         }
 
         // Delete multiple items
         const delMulti = target.closest('.delete-items-confirm-quote') as HTMLElement;
         if (delMulti) {
-            this.handleDeleteMultipleItems(delMulti);
+            void this.handleDeleteMultipleItems(delMulti);
             return;
         }
 
         // Add row via modal
         const addRowModalBtn = target.closest('.btn_add_row_modal') as HTMLElement;
         if (addRowModalBtn) {
-            this.handleAddRowModal();
+            void this.handleAddRowModal();
             return;
         }
 
@@ -129,7 +129,7 @@ export class QuoteHandler {
         // Add client modal
         const addClientBtn = target.closest('.quote_add_client') as HTMLElement;
         if (addClientBtn) {
-            this.handleAddClientModal();
+            void this.handleAddClientModal();
             return;
         }
 
@@ -138,7 +138,7 @@ export class QuoteHandler {
             '#quote_create_confirm, .quote_create_confirm'
         ) as HTMLElement;
         if (createConfirm) {
-            this.handleQuoteCreateConfirm();
+            void this.handleQuoteCreateConfirm();
             return;
         }
 
@@ -147,7 +147,7 @@ export class QuoteHandler {
             '#quote_with_purchase_order_number_confirm, .quote_with_purchase_order_number_confirm'
         ) as HTMLElement;
         if (poConfirm) {
-            this.handleQuotePurchaseOrderConfirm(poConfirm);
+            void this.handleQuotePurchaseOrderConfirm(poConfirm);
             return;
         }
 
@@ -156,14 +156,14 @@ export class QuoteHandler {
             '#quote_to_invoice_confirm, .quote_to_invoice_confirm'
         ) as HTMLElement;
         if (toInvoice) {
-            this.handleQuoteToInvoiceConfirm(toInvoice);
+            void this.handleQuoteToInvoiceConfirm(toInvoice);
             return;
         }
 
         // Quote to sales order confirm
         const toSo = target.closest('#quote_to_so_confirm, .quote_to_so_confirm') as HTMLElement;
         if (toSo) {
-            this.handleQuoteToSalesOrderConfirm(toSo);
+            void this.handleQuoteToSalesOrderConfirm(toSo);
             return;
         }
 
@@ -172,7 +172,7 @@ export class QuoteHandler {
             '#quote_to_quote_confirm, .quote_to_quote_confirm'
         ) as HTMLElement;
         if (toQuote) {
-            this.handleQuoteToQuoteConfirm(toQuote);
+            void this.handleQuoteToQuoteConfirm(toQuote);
             return;
         }
 

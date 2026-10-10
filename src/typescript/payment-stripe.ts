@@ -61,7 +61,7 @@ export function initStripePayment(): void {
     const stripe = Stripe(publishableKey);
     let elements: StripeElementsInstance;
 
-    async function initialize(): Promise<void> {
+    function initialize(): void {
         elements = stripe.elements({ clientSecret });
         const paymentElement = elements.create('payment', { layout: 'tabs' });
         paymentElement.mount('#payment-element');
@@ -131,7 +131,7 @@ export function initStripePayment(): void {
         }
     }
 
-    void initialize();
+    initialize();
     void checkStatus();
 
     const form = document.querySelector<HTMLFormElement>('#payment-form');

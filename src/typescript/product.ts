@@ -94,45 +94,45 @@ export class ProductHandler {
         const target = event.target as HTMLElement;
 
         if (target.closest('#product_filters_submit')) {
-            this.submitProductFilters(event);
+            void this.submitProductFilters(event);
             return;
         }
 
         if (target.closest('.select-items-confirm-quote')) {
             event.preventDefault();
-            this.handleQuoteConfirm();
+            void this.handleQuoteConfirm();
             return;
         }
 
         if (target.closest('.select-items-confirm-inv')) {
             event.preventDefault();
-            this.handleInvoiceConfirm();
+            void this.handleInvoiceConfirm();
             return;
         }
 
         // Handle filter button clicks
         if (target.id === 'filter-button-inv' || target.closest('#filter-button-inv')) {
             event.preventDefault();
-            this.filterProducts('inv');
+            void this.filterProducts('inv');
             return;
         }
 
         if (target.id === 'filter-button-quote' || target.closest('#filter-button-quote')) {
             event.preventDefault();
-            this.filterProducts('quote');
+            void this.filterProducts('quote');
             return;
         }
 
         // Handle reset button clicks
         if (target.id === 'product-reset-button-inv' || target.closest('#product-reset-button-inv')) {
             event.preventDefault();
-            this.resetProducts('inv');
+            void this.resetProducts('inv');
             return;
         }
 
         if (target.id === 'product-reset-button-quote' || target.closest('#product-reset-button-quote')) {
             event.preventDefault();
-            this.resetProducts('quote');
+            void this.resetProducts('quote');
             return;
         }
 
@@ -157,24 +157,24 @@ export class ProductHandler {
 
         // Handle family dropdown changes
         if (target.id === 'filter_family_inv') {
-            this.filterProducts('inv');
+            void this.filterProducts('inv');
         }
         if (target.id === 'filter_family_quote') {
-            this.filterProducts('quote');
+            void this.filterProducts('quote');
         }
     }
 
     private handleKeydown(event: KeyboardEvent): void {
         if (event.key === 'Enter') {
             const target = event.target as HTMLElement;
-            
+
             if (target.id === 'filter_product_inv') {
                 event.preventDefault();
-                this.filterProducts('inv');
+                void this.filterProducts('inv');
             }
             if (target.id === 'filter_product_quote') {
                 event.preventDefault();
-                this.filterProducts('quote');
+                void this.filterProducts('quote');
             }
         }
     }

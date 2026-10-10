@@ -78,7 +78,7 @@ export class FamilyHandler {
         }
 
         if (target.closest('#process-generate-products')) {
-            this.processProductGeneration();
+            void this.processProductGeneration();
         }
     }
 

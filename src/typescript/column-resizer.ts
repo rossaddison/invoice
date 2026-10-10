@@ -200,7 +200,12 @@ export class ColumnResizer {
 
     private onHandleKeydown(e: KeyboardEvent, th: HTMLTableCellElement, col: HTMLTableColElement, index: number): void {
         const step = 10;
-        const delta = e.key === 'ArrowLeft' ? -step : e.key === 'ArrowRight' ? step : null;
+        let delta: number | null = null;
+        if (e.key === 'ArrowLeft') {
+            delta = -step;
+        } else if (e.key === 'ArrowRight') {
+            delta = step;
+        }
         if (delta === null) return;
         e.preventDefault();
         // col.style.width is empty right after reset() -- falling back to

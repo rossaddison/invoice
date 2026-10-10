@@ -144,14 +144,14 @@ export class InvoiceHandler {
         // Mark as sent
         const markAsSent = closestSafe(target, '#btn-mark-as-sent');
         if (markAsSent) {
-            this.handleMarkAsSent();
+            void this.handleMarkAsSent();
             return;
         }
 
         // Mark sent as draft
         const markDraft = closestSafe(target, '#btn-mark-sent-as-draft');
         if (markDraft) {
-            this.handleMarkSentAsDraft();
+            void this.handleMarkSentAsDraft();
             return;
         }
 
@@ -161,7 +161,7 @@ export class InvoiceHandler {
             '.create_recurring_confirm_multiple'
         );
         if (createRecurring) {
-            this.handleCreateRecurringMultiple(createRecurring);
+            void this.handleCreateRecurringMultiple(createRecurring);
             return;
         }
 
@@ -170,7 +170,7 @@ export class InvoiceHandler {
             closestSafe<HTMLElement>(target, '.delete-items-confirm-inv') ||
             closestSafe<HTMLElement>(target, '#delete-items-confirm-inv');
         if (deleteItemsConfirm) {
-            this.handleDeleteInvoiceItems(deleteItemsConfirm);
+            void this.handleDeleteInvoiceItems(deleteItemsConfirm);
             return;
         }
 
@@ -218,7 +218,7 @@ export class InvoiceHandler {
         const invTaxSubmit = closestSafe<HTMLElement>(target, '#inv_tax_submit');
         if (invTaxSubmit) {
             event.preventDefault();
-            this.handleAddInvoiceTax(invTaxSubmit);
+            void this.handleAddInvoiceTax(invTaxSubmit);
             return;
         }
 
@@ -227,7 +227,7 @@ export class InvoiceHandler {
         // Payment modal submit
         const paymentSubmit = closestSafe<HTMLElement>(target, '#btn_modal_payment_submit');
         if (paymentSubmit) {
-            this.handlePaymentSubmit();
+            void this.handlePaymentSubmit();
             return;
         }
 
@@ -248,7 +248,7 @@ export class InvoiceHandler {
         // Delete single item
         const deleteItem = closestSafe<HTMLElement>(target, '.btn_delete_item');
         if (deleteItem) {
-            this.handleDeleteSingleItem(deleteItem);
+            void this.handleDeleteSingleItem(deleteItem);
         }
     }
 
@@ -263,7 +263,7 @@ export class InvoiceHandler {
         // Copy multiple invoices
         const copyMultiple = closestSafe<HTMLElement>(target, '.modal_copy_inv_multiple_confirm');
         if (copyMultiple) {
-            this.handleCopyMultipleInvoices(copyMultiple);
+            void this.handleCopyMultipleInvoices(copyMultiple);
             return true;
         }
 
@@ -272,7 +272,7 @@ export class InvoiceHandler {
             closestSafe<HTMLElement>(target, '#inv_to_inv_confirm') ||
             closestSafe<HTMLElement>(target, '.inv_to_inv_confirm');
         if (invToInv) {
-            this.handleCopySingleInvoice(invToInv);
+            void this.handleCopySingleInvoice(invToInv);
             return true;
         }
 

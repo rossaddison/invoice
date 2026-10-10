@@ -93,21 +93,21 @@ export class ClientHandler {
         // Client create confirm
         const createBtn = target.closest('#client_create_confirm') as HTMLElement;
         if (createBtn) {
-            this.handleClientCreateConfirm(createBtn);
+            void this.handleClientCreateConfirm(createBtn);
             return;
         }
 
         // Save client note
         const saveNoteBtn = target.closest('#save_client_note_new') as HTMLElement;
         if (saveNoteBtn) {
-            this.handleSaveClientNote(saveNoteBtn);
+            void this.handleSaveClientNote(saveNoteBtn);
             return;
         }
 
         // Delete client note
         const deleteNoteBtn = target.closest('.client-note-delete-btn') as HTMLElement;
         if (deleteNoteBtn) {
-            this.handleDeleteClientNote(deleteNoteBtn);
+            void this.handleDeleteClientNote(deleteNoteBtn);
         }
     }
 
@@ -246,7 +246,7 @@ export class ClientHandler {
         });
     }
 
-    private async handleQuoteFormSubmit(event: SubmitEvent): Promise<void> {
+    private handleQuoteFormSubmit(event: SubmitEvent): void {
         event.preventDefault(); // Prevent default form submission
 
         const form = event.target as HTMLFormElement;
@@ -280,7 +280,7 @@ export class ClientHandler {
         }, 300);
     }
 
-    private async handleInvoiceFormSubmit(event: SubmitEvent): Promise<void> {
+    private handleInvoiceFormSubmit(event: SubmitEvent): void {
         event.preventDefault(); // Prevent default form submission
 
         const form = event.target as HTMLFormElement;
