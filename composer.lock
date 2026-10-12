@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f5fae620fdbcdd979e47f6b3605f70de",
+    "content-hash": "af7615793ea00dcd6c06d88da15efff7",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -3404,16 +3404,16 @@
         },
         {
             "name": "gocardless/gocardless-pro",
-            "version": "8.14.2",
+            "version": "8.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gocardless/gocardless-pro-php.git",
-                "reference": "2dde932969a394e55867606519e4056ad8e0088b"
+                "reference": "93a2971b8d73a2c3f4837a41016faed31689bdc5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gocardless/gocardless-pro-php/zipball/2dde932969a394e55867606519e4056ad8e0088b",
-                "reference": "2dde932969a394e55867606519e4056ad8e0088b",
+                "url": "https://api.github.com/repos/gocardless/gocardless-pro-php/zipball/93a2971b8d73a2c3f4837a41016faed31689bdc5",
+                "reference": "93a2971b8d73a2c3f4837a41016faed31689bdc5",
                 "shasum": ""
             },
             "require": {
@@ -3453,9 +3453,9 @@
             ],
             "support": {
                 "issues": "https://github.com/gocardless/gocardless-pro-php/issues",
-                "source": "https://github.com/gocardless/gocardless-pro-php/tree/v8.14.2"
+                "source": "https://github.com/gocardless/gocardless-pro-php/tree/v8.15.0"
             },
-            "time": "2026-10-07T15:03:31+00:00"
+            "time": "2026-10-12T11:51:34+00:00"
         },
         {
             "name": "google/auth",
@@ -20462,16 +20462,16 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "6.12.0",
+            "version": "6.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "f7c0fc65cb9cdb84bdf0e4e21460d348888b41a2"
+                "reference": "6cbca4b611f03ae9ee58a5f2d341a0bc685c4903"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/f7c0fc65cb9cdb84bdf0e4e21460d348888b41a2",
-                "reference": "f7c0fc65cb9cdb84bdf0e4e21460d348888b41a2",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/6cbca4b611f03ae9ee58a5f2d341a0bc685c4903",
+                "reference": "6cbca4b611f03ae9ee58a5f2d341a0bc685c4903",
                 "shasum": ""
             },
             "require": {
@@ -20506,7 +20506,8 @@
             },
             "autoload": {
                 "psr-4": {
-                    "OpenApi\\": "src"
+                    "OpenApi\\": "src",
+                    "OpenApi\\Rector\\": "rector/src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -20539,7 +20540,7 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/6.12.0"
+                "source": "https://github.com/zircote/swagger-php/tree/6.13.0"
             },
             "funding": [
                 {
@@ -20547,7 +20548,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-06T03:39:01+00:00"
+            "time": "2026-10-11T02:19:20+00:00"
         }
     ],
     "packages-dev": [

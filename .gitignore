@@ -29,6 +29,7 @@ phpunit.phar
 .env
 /docker-compose.override.yml
 /config/common/params.php
+/resources/homecare
 /resources/views/site/privacypolicy.php
 /resources/views/site/termsofservice.php
 
