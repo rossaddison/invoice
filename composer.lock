@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af7615793ea00dcd6c06d88da15efff7",
+    "content-hash": "b4cee5f792be35f3a54def53cd703d29",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -27478,16 +27478,16 @@
         },
         {
             "name": "testo/codecov",
-            "version": "0.2.4",
+            "version": "0.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/codecov.git",
-                "reference": "eac3fef515f11298b1df1d3e36c6bef23978ef78"
+                "reference": "8bbef9615fde7b5b307865f21387cf4f58c52d29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/codecov/zipball/eac3fef515f11298b1df1d3e36c6bef23978ef78",
-                "reference": "eac3fef515f11298b1df1d3e36c6bef23978ef78",
+                "url": "https://api.github.com/repos/php-testo/codecov/zipball/8bbef9615fde7b5b307865f21387cf4f58c52d29",
+                "reference": "8bbef9615fde7b5b307865f21387cf4f58c52d29",
                 "shasum": ""
             },
             "require": {
@@ -27496,7 +27496,7 @@
                 "php": ">=8.2",
                 "testo/data": "^0.1.10",
                 "testo/inline": "^0.1.9",
-                "testo/testo": "0.10.55 - 1"
+                "testo/testo": "0.10.56 - 1"
             },
             "type": "library",
             "extra": {
@@ -27525,7 +27525,7 @@
                 "testo"
             ],
             "support": {
-                "source": "https://github.com/php-testo/codecov/tree/0.2.4"
+                "source": "https://github.com/php-testo/codecov/tree/0.2.5"
             },
             "funding": [
                 {
@@ -27533,7 +27533,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-10-02T20:39:49+00:00"
+            "time": "2026-10-13T19:58:56+00:00"
         },
         {
             "name": "testo/convention",
@@ -28171,16 +28171,16 @@
         },
         {
             "name": "testo/testo",
-            "version": "0.10.55",
+            "version": "0.10.56",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-testo/testo.git",
-                "reference": "a5d4c0b731f0cdd5937ed2e915c93a61d189d9a5"
+                "reference": "5301177a39c65d3e408a666793a2ca93c15629e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-testo/testo/zipball/a5d4c0b731f0cdd5937ed2e915c93a61d189d9a5",
-                "reference": "a5d4c0b731f0cdd5937ed2e915c93a61d189d9a5",
+                "url": "https://api.github.com/repos/php-testo/testo/zipball/5301177a39c65d3e408a666793a2ca93c15629e3",
+                "reference": "5301177a39c65d3e408a666793a2ca93c15629e3",
                 "shasum": ""
             },
             "require": {
@@ -28198,7 +28198,7 @@
                 "testo/assert": "^0.1.17",
                 "testo/bench": "^0.1.13",
                 "testo/bridge-symfony-console": "^0.1.14",
-                "testo/codecov": "^0.2.4",
+                "testo/codecov": "^0.2.5",
                 "testo/convention": "^0.1.5",
                 "testo/data": "^0.1.10",
                 "testo/fiber": "^0.1.3",
@@ -28274,7 +28274,7 @@
                     "type": "boosty"
                 }
             ],
-            "time": "2026-10-02T20:38:58+00:00"
+            "time": "2026-10-13T19:58:28+00:00"
         },
         {
             "name": "thecodingmachine/safe",
