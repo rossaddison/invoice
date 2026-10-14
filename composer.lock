@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "955c2294a7de0fa1b52aa6923fe3e269",
+    "content-hash": "cf2ced97a91d291ebfe01605d8529795",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -922,19 +922,20 @@
         },
         {
             "name": "anthropic-ai/sdk",
-            "version": "v0.57.0",
+            "version": "v0.58.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/anthropics/anthropic-sdk-php.git",
-                "reference": "ecf8b7faaaf9d42773ef7d6a461d9c1131adf2c3"
+                "reference": "1ba3241ace743634b3b1e30d425047f5c1e26258"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/anthropics/anthropic-sdk-php/zipball/ecf8b7faaaf9d42773ef7d6a461d9c1131adf2c3",
-                "reference": "ecf8b7faaaf9d42773ef7d6a461d9c1131adf2c3",
+                "url": "https://api.github.com/repos/anthropics/anthropic-sdk-php/zipball/1ba3241ace743634b3b1e30d425047f5c1e26258",
+                "reference": "1ba3241ace743634b3b1e30d425047f5c1e26258",
                 "shasum": ""
             },
             "require": {
+                "open-telemetry/api": "^1.0",
                 "php": "^8.1",
                 "php-http/discovery": "^1",
                 "psr/http-client": "^1",
@@ -950,6 +951,7 @@
                 "guzzlehttp/guzzle": "^7",
                 "mcp/sdk": "^0.7.1",
                 "nyholm/psr7": "^1",
+                "open-telemetry/sdk": "^1.0",
                 "pestphp/pest": "^3",
                 "php-http/mock-client": "^1",
                 "phpstan/extension-installer": "^1",
@@ -979,9 +981,9 @@
             "description": "Anthropic PHP SDK",
             "support": {
                 "issues": "https://github.com/anthropics/anthropic-sdk-php/issues",
-                "source": "https://github.com/anthropics/anthropic-sdk-php/tree/v0.57.0"
+                "source": "https://github.com/anthropics/anthropic-sdk-php/tree/v0.58.0"
             },
-            "time": "2026-10-09T15:32:00+00:00"
+            "time": "2026-10-14T17:07:59+00:00"
         },
         {
             "name": "braintree/braintree_php",
@@ -6271,6 +6273,135 @@
                 }
             ],
             "time": "2024-09-09T07:06:30+00:00"
+        },
+        {
+            "name": "open-telemetry/api",
+            "version": "1.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/opentelemetry-php/api.git",
+                "reference": "7c029c4a6fd457094a20569bf98f93d95e9a7559"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/opentelemetry-php/api/zipball/7c029c4a6fd457094a20569bf98f93d95e9a7559",
+                "reference": "7c029c4a6fd457094a20569bf98f93d95e9a7559",
+                "shasum": ""
+            },
+            "require": {
+                "open-telemetry/context": "^1.4",
+                "php": "^8.1",
+                "psr/log": "^1.1|^2.0|^3.0",
+                "symfony/polyfill-php82": "^1.26"
+            },
+            "conflict": {
+                "open-telemetry/sdk": "<=1.11"
+            },
+            "type": "library",
+            "extra": {
+                "spi": {
+                    "OpenTelemetry\\API\\Instrumentation\\AutoInstrumentation\\HookManagerInterface": [
+                        "OpenTelemetry\\API\\Instrumentation\\AutoInstrumentation\\ExtensionHookManager"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "1.8.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Trace/functions.php"
+                ],
+                "psr-4": {
+                    "OpenTelemetry\\API\\": "."
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "opentelemetry-php contributors",
+                    "homepage": "https://github.com/open-telemetry/opentelemetry-php/graphs/contributors"
+                }
+            ],
+            "description": "API for OpenTelemetry PHP.",
+            "keywords": [
+                "Metrics",
+                "api",
+                "apm",
+                "logging",
+                "opentelemetry",
+                "otel",
+                "tracing"
+            ],
+            "support": {
+                "chat": "https://app.slack.com/client/T08PSQ7BQ/C01NFPCV44V",
+                "docs": "https://opentelemetry.io/docs/languages/php",
+                "issues": "https://github.com/open-telemetry/opentelemetry-php/issues",
+                "source": "https://github.com/open-telemetry/opentelemetry-php"
+            },
+            "time": "2026-07-06T12:28:04+00:00"
+        },
+        {
+            "name": "open-telemetry/context",
+            "version": "1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/opentelemetry-php/context.git",
+                "reference": "3c414b246e0dabb7d6145404e6a5e4536ca18d07"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/opentelemetry-php/context/zipball/3c414b246e0dabb7d6145404e6a5e4536ca18d07",
+                "reference": "3c414b246e0dabb7d6145404e6a5e4536ca18d07",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1",
+                "symfony/polyfill-php82": "^1.26"
+            },
+            "suggest": {
+                "ext-ffi": "To allow context switching in Fibers"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "fiber/initialize_fiber_handler.php"
+                ],
+                "psr-4": {
+                    "OpenTelemetry\\Context\\": "."
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "opentelemetry-php contributors",
+                    "homepage": "https://github.com/open-telemetry/opentelemetry-php/graphs/contributors"
+                }
+            ],
+            "description": "Context implementation for OpenTelemetry PHP.",
+            "keywords": [
+                "Context",
+                "opentelemetry",
+                "otel"
+            ],
+            "support": {
+                "chat": "https://app.slack.com/client/T08PSQ7BQ/C01NFPCV44V",
+                "docs": "https://opentelemetry.io/docs/languages/php",
+                "issues": "https://github.com/open-telemetry/opentelemetry-php/issues",
+                "source": "https://github.com/open-telemetry/opentelemetry-php"
+            },
+            "time": "2025-10-19T06:44:33+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
