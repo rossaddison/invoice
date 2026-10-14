@@ -12,14 +12,15 @@ is a file-by-file Psalm static-analysis cleanup ahead of raising the project's
 minimum PHP version to 8.5, run at Psalm's strictest `errorLevel=1`. Every
 first-party source file also now declares `strict_types=1`.
 
-**Progress:** 13,353 → 10,158 → 7,220 → 6,968 → 6,652 → 6,102 → **5,211**
-Psalm errors so far, tracked via a static `Psalm Level 1` badge at the top
-of that branch's own README (same hand-updated-badge convention this
-repo's README already uses). Also underway: renaming the dozen-odd
-function names (`trans_view`, `edit_link`, `can_delete`, ...) independently
-declared the same way across ~50 files, each own-page pager-callback
-colliding under Psalm's cross-file name resolution and producing noise no
-local fix could resolve — first file converted and verified clean.
+**Progress:** 13,353 → 10,158 → 7,220 → 6,968 → 6,652 → 6,102 → 5,211 →
+**4,834** Psalm errors so far, tracked via a static `Psalm Level 1` badge
+at the top of that branch's own README (same hand-updated-badge
+convention this repo's README already uses). Also underway: renaming the
+dozen-odd function names (`trans_view`, `edit_link`, `can_delete`, ...)
+independently declared the same way across ~50 files, each own-page
+pager-callback colliding under Psalm's cross-file name resolution and
+producing noise no local fix could resolve — first file converted and
+verified clean.
 
 ## Why it's worth noting here
 
@@ -33,12 +34,18 @@ bug in the extensions installer, a site-wide XSS, several SQL injection
 fixes, two chained live crashes in the reporting module (a bulk Psalm pass
 that swapped `$_POST` reads for a typed accessor across 44 files without
 adding the accessor's own `include`, then a PDF-generation crash from an
-unmatched language code once that first crash was cleared), and — most
-recently — reflected XSS across nearly every basic form-field primitive
-(`text_input()`, `checkbox()`, `date_cells()`, a `<textarea>`'s actual
-content, email/link-building row helpers, ...) in the shared UI-primitives
-file every form in the app is built from, each one echoing `$_POST` values
-straight into HTML with zero escaping. Full detail lives in that repo's own
+unmatched language code once that first crash was cleared), reflected XSS
+across nearly every basic form-field primitive (`text_input()`,
+`checkbox()`, `date_cells()`, a `<textarea>`'s actual content,
+email/link-building row helpers, ...) in the shared UI-primitives file
+every form in the app is built from, and — most recently — two more
+guaranteed `ArgumentCountError` crashes (one on every company-database
+upgrade attempt, from a stray second argument to a one-parameter
+function), an unguarded `get_item()` false-return on the fixed-asset
+depreciation-posting path, and five places where an error message meant
+for a failed DB lookup had silently been attached to the wrong function
+and so was never actually shown to the user. Full detail lives in that
+repo's own
 [`doc/BUGS_FOUND.md`](https://github.com/rossaddison/FA/blob/chore/php-8.5-minimum/doc/BUGS_FOUND.md)
 and [`doc/PSALM_MIGRATION.md`](https://github.com/rossaddison/FA/blob/chore/php-8.5-minimum/doc/PSALM_MIGRATION.md) —
 not duplicated here.
