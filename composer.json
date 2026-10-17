@@ -174,7 +174,7 @@
         "phpunit/php-code-coverage": ">=14.2.2",
         "phpunit/phpunit": ">=13.1.4",
         "rector/rector": "^2.7.0",
-        "roave/better-reflection": "^6.74",
+        "roave/better-reflection": "^6.75",
         "roave/infection-static-analysis-plugin": ">=1.44",
         "roave/security-advisories": "dev-latest",
         "rossaddison/translator-extractor": "dev-master",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c6452464acab32263bbe820c4dca3b74",
+    "content-hash": "516a612f31221a9309220d3cf087bcbc",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -9139,19 +9139,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-auth-client.git",
-                "reference": "c6fc9a4ec0eb62351ab277a5cc753cb90224eec1"
+                "reference": "5cf3771188879e78b9a2fd7423273652fca5b419"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/c6fc9a4ec0eb62351ab277a5cc753cb90224eec1",
-                "reference": "c6fc9a4ec0eb62351ab277a5cc753cb90224eec1",
+                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/5cf3771188879e78b9a2fd7423273652fca5b419",
+                "reference": "5cf3771188879e78b9a2fd7423273652fca5b419",
                 "shasum": ""
             },
             "require": {
                 "ext-openssl": "*",
                 "ext-sodium": "*",
                 "php": "8.4 - 8.5",
-                "phpseclib/phpseclib": ">=4.0.1",
+                "phpseclib/phpseclib": ">=4.0.2",
                 "psr/container": ">=2.0.2",
                 "psr/http-client": ">=1.0.3",
                 "psr/http-factory": ">=1.1",
@@ -9183,11 +9183,11 @@
                 "maglnet/composer-require-checker": ">=4.24",
                 "nyholm/psr7": ">=1.8.2",
                 "phpunit/phpunit": ">=12.5.24",
-                "rector/rector": ">=2.6.7",
+                "rector/rector": ">=2.7.0",
                 "roave/infection-static-analysis-plugin": ">=1.44",
                 "spatie/phpunit-watcher": ">=1.24.4",
                 "styleci/cli": ">=1.6",
-                "vimeo/psalm": ">=6.19.1",
+                "vimeo/psalm": ">=6.20.0",
                 "yiisoft/cache": ">=3.2",
                 "yiisoft/di": ">=1.4.1",
                 "yiisoft/log": ">=2.2.1",
@@ -9241,7 +9241,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-09-30T10:02:40+00:00"
+            "time": "2026-10-17T21:53:11+00:00"
         },
         {
             "name": "rossaddison/yii-cycle-1",
@@ -24378,23 +24378,23 @@
         },
         {
             "name": "roave/better-reflection",
-            "version": "6.74.0",
+            "version": "6.75.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BetterReflection.git",
-                "reference": "76b224f120578ed156a211f04d59a5f418a2b3c0"
+                "reference": "b68eed282302be0278a2615ccb4448a9c9d1d4c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/76b224f120578ed156a211f04d59a5f418a2b3c0",
-                "reference": "76b224f120578ed156a211f04d59a5f418a2b3c0",
+                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/b68eed282302be0278a2615ccb4448a9c9d1d4c3",
+                "reference": "b68eed282302be0278a2615ccb4448a9c9d1d4c3",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "jetbrains/phpstorm-stubs": "2026.2",
                 "nikic/php-parser": "^5.9.0",
-                "php": "~8.4.1 || ~8.5.0"
+                "php": "~8.4.1 || ~8.5.0 || ~8.6.0"
             },
             "conflict": {
                 "thecodingmachine/safe": "<1.1.3"
@@ -24441,9 +24441,9 @@
             "description": "Better Reflection - an improved code reflection API",
             "support": {
                 "issues": "https://github.com/Roave/BetterReflection/issues",
-                "source": "https://github.com/Roave/BetterReflection/tree/6.74.0"
+                "source": "https://github.com/Roave/BetterReflection/tree/6.75.0"
             },
-            "time": "2026-10-16T22:44:45+00:00"
+            "time": "2026-10-17T21:34:56+00:00"
         },
         {
             "name": "roave/infection-static-analysis-plugin",
