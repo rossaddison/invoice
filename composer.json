@@ -54,7 +54,7 @@
         "doctrine/inflector": ">=2.2.0",
         "fakerphp/faker": "^1.24.1",
         "gocardless/gocardless-pro": "^8.15.1",
-        "google/cloud-translate": "^2.3.6",
+        "google/cloud-translate": "^2.3.7",
         "guzzlehttp/guzzle": ">=7.15.5",
         "guzzlehttp/psr7": ">=2.13.1",
         "httpsoft/http-message": "^1.1.6",
@@ -158,7 +158,7 @@
         "yiisoft/yii-runner-console": "^2.2.1",
         "yiisoft/yii-runner-http": "^3.2.1",
         "yiisoft/yii-view-renderer": "^7.4.1",
-        "zircote/swagger-php": ">=6.15.0"
+        "zircote/swagger-php": ">=6.16.0"
     },
     "require-dev": {
         "codeception/c3": "^2.9",
@@ -174,7 +174,7 @@
         "phpunit/php-code-coverage": ">=14.2.2",
         "phpunit/phpunit": ">=13.1.4",
         "rector/rector": "^2.7.0",
-        "roave/better-reflection": "^6.73",
+        "roave/better-reflection": "^6.74",
         "roave/infection-static-analysis-plugin": ">=1.44",
         "roave/security-advisories": "dev-latest",
         "rossaddison/translator-extractor": "dev-master",

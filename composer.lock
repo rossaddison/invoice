@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "698ebba2e9151828ebdd27d8f07aa42d",
+    "content-hash": "c6452464acab32263bbe820c4dca3b74",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -3461,16 +3461,16 @@
         },
         {
             "name": "google/auth",
-            "version": "v1.55.1",
+            "version": "v1.55.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-auth-library-php.git",
-                "reference": "ef1b92cb42470b09b3caaf23bb9b4bb9a2dc787e"
+                "reference": "293fdf064cfc5b77a22bb7406b59f149b3fb70e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/ef1b92cb42470b09b3caaf23bb9b4bb9a2dc787e",
-                "reference": "ef1b92cb42470b09b3caaf23bb9b4bb9a2dc787e",
+                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/293fdf064cfc5b77a22bb7406b59f149b3fb70e8",
+                "reference": "293fdf064cfc5b77a22bb7406b59f149b3fb70e8",
                 "shasum": ""
             },
             "require": {
@@ -3492,8 +3492,7 @@
                 "sebastian/comparator": ">=1.2.3",
                 "squizlabs/php_codesniffer": "^4.0",
                 "symfony/filesystem": "^6.4.39||^7.3",
-                "symfony/process": "^6.4.41||^7.0",
-                "webmozart/assert": "^1.11||^2.0"
+                "symfony/process": "^6.4.41||^7.0"
             },
             "suggest": {
                 "phpseclib/phpseclib": "May be used in place of OpenSSL for signing strings or for token management. Please require version ^2."
@@ -3526,9 +3525,9 @@
             "support": {
                 "docs": "https://cloud.google.com/php/docs/reference/auth/latest",
                 "issues": "https://github.com/googleapis/google-auth-library-php/issues",
-                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.55.1"
+                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.55.2"
             },
-            "time": "2026-09-28T17:51:46+00:00"
+            "time": "2026-10-16T21:30:20+00:00"
         },
         {
             "name": "google/cloud-core",
@@ -3599,16 +3598,16 @@
         },
         {
             "name": "google/cloud-translate",
-            "version": "v2.3.6",
+            "version": "v2.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-translate.git",
-                "reference": "9bc25983ea80960aa48320681a1b262b213399fe"
+                "reference": "8e919d469b526fb2c1e76695297ac0e22fc945b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/9bc25983ea80960aa48320681a1b262b213399fe",
-                "reference": "9bc25983ea80960aa48320681a1b262b213399fe",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/8e919d469b526fb2c1e76695297ac0e22fc945b3",
+                "reference": "8e919d469b526fb2c1e76695297ac0e22fc945b3",
                 "shasum": ""
             },
             "require": {
@@ -3649,9 +3648,9 @@
             ],
             "description": "Cloud Translation Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v2.3.6"
+                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v2.3.7"
             },
-            "time": "2026-09-28T17:51:46+00:00"
+            "time": "2026-10-16T21:30:20+00:00"
         },
         {
             "name": "google/common-protos",
@@ -3714,16 +3713,16 @@
         },
         {
             "name": "google/gax",
-            "version": "v1.51.0",
+            "version": "v1.51.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "4cad310c5b520be80fd89f76b54261f28f10ab54"
+                "reference": "024610fe27bc1bd71449f10fc1287c00580c0446"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/4cad310c5b520be80fd89f76b54261f28f10ab54",
-                "reference": "4cad310c5b520be80fd89f76b54261f28f10ab54",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/024610fe27bc1bd71449f10fc1287c00580c0446",
+                "reference": "024610fe27bc1bd71449f10fc1287c00580c0446",
                 "shasum": ""
             },
             "require": {
@@ -3742,11 +3741,9 @@
                 "ext-protobuf": "<4.31.0"
             },
             "require-dev": {
-                "google/cloud-tools": "^0.16.1",
                 "phpspec/prophecy-phpunit": "^2.1",
                 "phpstan/phpstan": "^2.0",
-                "phpunit/phpunit": "^9.6",
-                "webmozart/assert": "^1.11.0"
+                "phpunit/phpunit": "^9.6"
             },
             "type": "library",
             "extra": {
@@ -3773,9 +3770,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/gax-php/issues",
-                "source": "https://github.com/googleapis/gax-php/tree/v1.51.0"
+                "source": "https://github.com/googleapis/gax-php/tree/v1.51.1"
             },
-            "time": "2026-09-28T17:51:46+00:00"
+            "time": "2026-10-16T21:30:20+00:00"
         },
         {
             "name": "google/grpc-gcp",
@@ -20593,16 +20590,16 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "6.15.0",
+            "version": "6.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "892dc2ccda5fe7d1d86c765fa9877e246c5032c6"
+                "reference": "6c6c03110bfaf02a46e9906b3f0058851f3df2c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/892dc2ccda5fe7d1d86c765fa9877e246c5032c6",
-                "reference": "892dc2ccda5fe7d1d86c765fa9877e246c5032c6",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/6c6c03110bfaf02a46e9906b3f0058851f3df2c8",
+                "reference": "6c6c03110bfaf02a46e9906b3f0058851f3df2c8",
                 "shasum": ""
             },
             "require": {
@@ -20671,7 +20668,7 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/6.15.0"
+                "source": "https://github.com/zircote/swagger-php/tree/6.16.0"
             },
             "funding": [
                 {
@@ -20679,7 +20676,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-15T21:56:50+00:00"
+            "time": "2026-10-17T07:23:10+00:00"
         }
     ],
     "packages-dev": [
@@ -24381,22 +24378,22 @@
         },
         {
             "name": "roave/better-reflection",
-            "version": "6.73.0",
+            "version": "6.74.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BetterReflection.git",
-                "reference": "a6a93a3bd7681627f2750bfa8f41e586d32dc67d"
+                "reference": "76b224f120578ed156a211f04d59a5f418a2b3c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/a6a93a3bd7681627f2750bfa8f41e586d32dc67d",
-                "reference": "a6a93a3bd7681627f2750bfa8f41e586d32dc67d",
+                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/76b224f120578ed156a211f04d59a5f418a2b3c0",
+                "reference": "76b224f120578ed156a211f04d59a5f418a2b3c0",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "jetbrains/phpstorm-stubs": "2026.2",
-                "nikic/php-parser": "^5.8.0",
+                "nikic/php-parser": "^5.9.0",
                 "php": "~8.4.1 || ~8.5.0"
             },
             "conflict": {
@@ -24404,7 +24401,7 @@
             },
             "require-dev": {
                 "phpbench/phpbench": "^1.7.0",
-                "phpunit/phpunit": "^13.3.2"
+                "phpunit/phpunit": "^13.4.3"
             },
             "suggest": {
                 "composer/composer": "Required to use the ComposerSourceLocator"
@@ -24444,9 +24441,9 @@
             "description": "Better Reflection - an improved code reflection API",
             "support": {
                 "issues": "https://github.com/Roave/BetterReflection/issues",
-                "source": "https://github.com/Roave/BetterReflection/tree/6.73.0"
+                "source": "https://github.com/Roave/BetterReflection/tree/6.74.0"
             },
-            "time": "2026-09-09T19:57:09+00:00"
+            "time": "2026-10-16T22:44:45+00:00"
         },
         {
             "name": "roave/infection-static-analysis-plugin",
