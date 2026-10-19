@@ -38,7 +38,7 @@
         "ext-zlib": "*",
         "adyen/php-api-library": "^30.1.0",
         "anthropic-ai/sdk": "^0.59.0",
-        "braintree/braintree_php": ">=6.38.0",
+        "braintree/braintree_php": ">=6.39.0",
         "brick/math": ">=1",
         "brick/money": ">=0.15.2",
         "cebe/markdown": "^1.2.1@dev",
@@ -55,8 +55,8 @@
         "fakerphp/faker": "^1.24.1",
         "gocardless/gocardless-pro": "^8.15.1",
         "google/cloud-translate": "^2.3.7",
-        "guzzlehttp/guzzle": ">=7.15.5",
-        "guzzlehttp/psr7": ">=2.13.1",
+        "guzzlehttp/guzzle": ">=7.16.0",
+        "guzzlehttp/psr7": ">=2.13.2",
         "httpsoft/http-message": "^1.1.6",
         "league/iso3166": "^4.4.0",
         "maglnet/composer-require-checker": "^4.24.0",
@@ -158,7 +158,7 @@
         "yiisoft/yii-runner-console": "^2.2.1",
         "yiisoft/yii-runner-http": "^3.2.1",
         "yiisoft/yii-view-renderer": "^7.4.1",
-        "zircote/swagger-php": ">=6.16.0"
+        "zircote/swagger-php": ">=6.17.0"
     },
     "require-dev": {
         "codeception/c3": "^2.9",
@@ -169,7 +169,7 @@
         "dg/bypass-finals": "^1.11.0",
         "friendsofphp/php-cs-fixer": "^3.95.26",
         "google/protobuf": ">=5.36.2",
-        "guzzlehttp/promises": ">=2.5.3",
+        "guzzlehttp/promises": ">=2.6.0",
         "mockery/mockery": "^1.6.12",
         "phpunit/php-code-coverage": ">=14.2.2",
         "phpunit/phpunit": ">=13.1.4",
