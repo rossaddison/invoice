@@ -28,8 +28,8 @@
             "key": "braintree",
             "name": "Braintree",
             "composer_package": "braintree/braintree_php",
-            "sdk_version": "6.38.0",
-            "last_updated": "2026-09-16",
+            "sdk_version": "6.39.0",
+            "last_updated": "2026-10-19",
             "sandbox_env_var": [
                 "BRAINTREE_SANDBOX_MERCHANT_ID",
                 "BRAINTREE_SANDBOX_PUBLIC_KEY",
