@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "923d34bc7e0d4c22c729353d0b76d73d",
+    "content-hash": "b71b7ca52a7df3cb9fc477bf20c853d9",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -16474,16 +16474,16 @@
         },
         {
             "name": "yiisoft/db",
-            "version": "2.0.1",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/db.git",
-                "reference": "fae72a47856f6947de7e5e18d7e5dd0b46ee1daa"
+                "reference": "f9cb0c835641b15f508bce932442647fe9f101ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/db/zipball/fae72a47856f6947de7e5e18d7e5dd0b46ee1daa",
-                "reference": "fae72a47856f6947de7e5e18d7e5dd0b46ee1daa",
+                "url": "https://api.github.com/repos/yiisoft/db/zipball/f9cb0c835641b15f508bce932442647fe9f101ea",
+                "reference": "f9cb0c835641b15f508bce932442647fe9f101ea",
                 "shasum": ""
             },
             "require": {
@@ -16491,15 +16491,15 @@
                 "php": "8.1 - 8.5",
                 "psr/log": "^2.0|^3.0",
                 "psr/simple-cache": "^2.0|^3.0",
-                "psr/simple-cache-implementation": "*",
                 "yiisoft/db-implementation": "1.0.0"
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8.3",
+                "ext-mbstring": "*",
                 "friendsofphp/php-cs-fixer": "^3.89.1",
-                "maglnet/composer-require-checker": "^4.7.1",
                 "phpunit/phpunit": "^10.5.45",
-                "rector/rector": "^2.0.10",
+                "rector/rector": "^2.6.7",
+                "shipmonk/composer-dependency-analyser": "^1.8",
                 "spatie/phpunit-watcher": "^1.24",
                 "yiisoft/aliases": "^3.0",
                 "yiisoft/di": "^1.3",
@@ -16562,7 +16562,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-02-09T19:21:43+00:00"
+            "time": "2026-10-20T07:44:20+00:00"
         },
         {
             "name": "yiisoft/db-mysql",
