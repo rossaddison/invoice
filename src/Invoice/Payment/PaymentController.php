@@ -419,14 +419,12 @@ final class PaymentController extends BaseController
             return $this->webViewRenderer->render('_form', $params);
         }
         $form = $this->saveFormFields($body, $currentRoute, $fmHyd, $deps->pmtR);
-        if (isset($params['errors'])) {
+        if (null === $form) {
             $this->processPaymentEditCustom($body, $deps, $payment_id, $inv_id, $fmHyd);
             return $this->webService->getRedirectResponse('payment/index');
         }
-        if (null !== $form) {
-            $params['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-            $params['form'] = $form;
-        }
+        $params['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+        $params['form'] = $form;
         return $this->webViewRenderer->render('_form', $params);
     }
 
