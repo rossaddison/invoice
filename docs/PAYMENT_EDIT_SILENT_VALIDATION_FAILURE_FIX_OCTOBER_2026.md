@@ -49,11 +49,50 @@ place.
   fix above now actually surfacing form errors, this rule turns that
   edge case into the latter.
 
+## The actual root cause (found after live retesting)
+
+The two fixes above were real but insufficient on their own — live
+retesting still showed no redirect and the date field blank on
+redisplay. Reproduced directly against the real `FormHydrator`/
+`Validator` stack (not mocked, unlike every existing test touching
+this class) with a throwaway script: `populateAndValidate()` came
+back `false` on an otherwise-valid submission, with
+`payment_date` landing as `''` even though the posted value was a
+real date string.
+
+The culprit was `PaymentForm::$payment_date`'s own declared type —
+`mixed`. `Yiisoft\Hydrator\TypeCaster\PhpNativeTypeCaster::cast()`
+switches on each candidate type's name (`'string'`, `'int'`,
+`'float'`, `'bool'`, `'array'`, plus matching against non-builtin
+class types) and has no case at all for `'mixed'` — so a
+`mixed`-typed property can never be successfully cast by this
+Hydrator version; it silently returns `Result::fail()` and the
+property is left at whatever its PHP default was. This had always
+been true of this property — it just never mattered before, because
+`payment_date` had no validation rule (so the failed hydration was
+never checked) and the real save path uses the raw POST array
+directly, not this temporary validation-only `$form`. Adding
+`#[Required]` (above) was what first made the pre-existing hydration
+failure actually surface as "payment_date cannot be blank" on every
+submission.
+
+Fixed by declaring the property as `string|DateTimeImmutable|null`
+instead of `mixed` — the real union of what it's ever assigned,
+matching `getPaymentDate()`'s own return type and `Payment::getPaymentDate()`'s
+`string|DateTimeImmutable` return. `PhpNativeTypeCaster` handles this
+union natively (a plain string from the posted body matches the
+`string` arm directly; a `DateTimeImmutable` from `PaymentForm::show()`
+matches via the class-instance check), confirmed via the same
+throwaway script: `populateAndValidate()` now returns `true` and
+`payment_date` hydrates to the real posted value.
+
 ## Verified
 
-`php -l` clean; Psalm clean on both changed files (single-file runs);
-full `vendor/bin/phpunit --filter Payment`: 217 passed, 540 assertions,
-no regressions. No existing test exercised this exact branch — none
-mocked `handlePaymentEditBody()`'s full request flow — so this was
-caught and fixed by direct code reading rather than a failing test. A
-dedicated regression test for the branch is still worth adding.
+`php -l` clean; Psalm clean on all three changed files (single-file
+runs); full `vendor/bin/phpunit --filter Payment`: 217 passed, 540
+assertions, no regressions across all three fixes. No existing test
+exercises the real `FormHydrator`/`Validator` stack against this
+form — every existing test mocks `FormHydrator` outright — so none of
+this would have been caught without live retesting and a direct
+reproduction. A dedicated test against the real validator stack is
+still worth adding.

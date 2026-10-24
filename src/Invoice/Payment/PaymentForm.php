@@ -17,7 +17,7 @@ final class PaymentForm extends FormModel
     #[Required]
     private ?int $payment_method_id = null;
     #[Required]
-    private mixed $payment_date = '';
+    private string|DateTimeImmutable|null $payment_date = '';
     #[GreaterThan(0)]
     private ?float $amount = null;
     #[Required]
@@ -45,9 +45,6 @@ final class PaymentForm extends FormModel
 
     public function getPaymentDate(): string|DateTimeImmutable|null
     {
-        /**
-         * @var DateTimeImmutable|string|null $this->payment_date
-         */
         return $this->payment_date;
     }
 
