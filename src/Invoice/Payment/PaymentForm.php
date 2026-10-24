@@ -16,6 +16,7 @@ final class PaymentForm extends FormModel
 {
     #[Required]
     private ?int $payment_method_id = null;
+    #[Required]
     private mixed $payment_date = '';
     #[GreaterThan(0)]
     private ?float $amount = null;

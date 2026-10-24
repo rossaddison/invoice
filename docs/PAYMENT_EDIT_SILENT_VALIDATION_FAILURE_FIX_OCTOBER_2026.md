@@ -36,12 +36,24 @@ place.
 - On failure (`$form !== null`): the form is now actually re-rendered
   with its real validation errors (`$params['errors']`/`$params['form']`)
   instead of silently redirecting as if nothing had gone wrong.
+- `PaymentForm::$payment_date` gains `#[Required]`. It previously had
+  no validation rule at all — harmless under normal use, since the
+  field is only ever picked via the native `<input type="date">`
+  picker, but any submission that bypassed that UI constraint (a
+  hand-crafted request, JS disabled, the field simply missing from
+  the body) reached `PaymentService::savePayment()`, where
+  `DateTime::createFromFormat()` failing silently wrote `null` into
+  `Payment::$payment_date`, a column declared
+  `#[Column(type: 'date', nullable: false)]` — a DB constraint crash
+  instead of a clean, recoverable validation error. With the branch
+  fix above now actually surfacing form errors, this rule turns that
+  edge case into the latter.
 
 ## Verified
 
-`php -l` clean; Psalm clean on the changed file (single-file run); full
-`vendor/bin/phpunit --filter Payment`: 217 passed, 540 assertions, no
-regressions. No existing test exercised this exact branch — none
+`php -l` clean; Psalm clean on both changed files (single-file runs);
+full `vendor/bin/phpunit --filter Payment`: 217 passed, 540 assertions,
+no regressions. No existing test exercised this exact branch — none
 mocked `handlePaymentEditBody()`'s full request flow — so this was
 caught and fixed by direct code reading rather than a failing test. A
 dedicated regression test for the branch is still worth adding.
