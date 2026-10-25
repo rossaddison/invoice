@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c24b20ba22f1d7ada051f6757859c3c7",
+    "content-hash": "2ba997f03f9f53f7fc35ae85e1e6bde2",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -17674,29 +17674,33 @@
         },
         {
             "name": "yiisoft/injector",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/injector.git",
-                "reference": "d3f718256b734933670ad11143cca724d340fc90"
+                "reference": "a3627145dc1d214d78d061dbef4f90773aadd747"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/injector/zipball/d3f718256b734933670ad11143cca724d340fc90",
-                "reference": "d3f718256b734933670ad11143cca724d340fc90",
+                "url": "https://api.github.com/repos/yiisoft/injector/zipball/a3627145dc1d214d78d061dbef4f90773aadd747",
+                "reference": "a3627145dc1d214d78d061dbef4f90773aadd747",
                 "shasum": ""
             },
             "require": {
-                "php": "7.4 - 8.5"
+                "php": "7.4 - 8.6"
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8.3",
-                "maglnet/composer-require-checker": "^3.8 || ^4.2",
+                "ext-filter": "*",
+                "friendsofphp/php-cs-fixer": "^3.93",
                 "phpbench/phpbench": "^1.1",
+                "phpstan/phpstan": "^2.1",
                 "phpunit/phpunit": "^9.5",
                 "psr/container": "^1.0 || ^2.0",
-                "rector/rector": "^2.0.10",
+                "rector/rector": "^2.5.8",
+                "shipmonk/composer-dependency-analyser": "^1.8",
                 "spatie/phpunit-watcher": "^1.23",
+                "yiisoft/code-style": "^1.1",
                 "yiisoft/test-support": "^1.4 || ^3.1"
             },
             "suggest": {
@@ -17746,7 +17750,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-12-01T11:14:17+00:00"
+            "time": "2026-10-25T19:11:06+00:00"
         },
         {
             "name": "yiisoft/input-http",
