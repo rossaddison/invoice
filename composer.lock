@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8a8e43670f3fb00848b2ed04e4bc3ea8",
+    "content-hash": "abad2fee8eccd1041ef5dd27b2772f2e",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -7655,27 +7655,30 @@
         },
         {
             "name": "phptg/bot-api",
-            "version": "0.22",
+            "version": "0.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phptg/bot-api.git",
-                "reference": "d2ea861dc333944f3d2f802cc76e6adf921d31bb"
+                "reference": "31909d4f8d9f58894d280b7e3bc110eb67666c83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phptg/bot-api/zipball/d2ea861dc333944f3d2f802cc76e6adf921d31bb",
-                "reference": "d2ea861dc333944f3d2f802cc76e6adf921d31bb",
+                "url": "https://api.github.com/repos/phptg/bot-api/zipball/31909d4f8d9f58894d280b7e3bc110eb67666c83",
+                "reference": "31909d4f8d9f58894d280b7e3bc110eb67666c83",
                 "shasum": ""
             },
             "require": {
-                "php-64bit": "8.2 - 8.5"
+                "php-64bit": "8.2 - 8.6"
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.9.1",
                 "ext-curl": "*",
                 "php-http/curl-client": "^2.4.0",
+                "phpstan/phpstan": "^2.3.2",
+                "phpstan/phpstan-phpunit": "^2.1.1",
                 "phpunit/phpunit": "^11.5.55",
                 "psr/log": "^3.0.2",
+                "shipmonk/dead-code-detector": "^1.4.2",
                 "yiisoft/files": "^2.1",
                 "yiisoft/test-support": "^3.2.0"
             },
@@ -7727,7 +7730,8 @@
                     "type": "cloudtips"
                 }
             ],
-            "time": "2026-08-25T09:40:22+00:00"
+            "time": "2026-10-30T08:39:41+00:00",
+            "published-time": "2026-10-30T08:40:57+00:00"
         },
         {
             "name": "promphp/prometheus_client_php",
@@ -28695,5 +28699,5 @@
         "ext-zlib": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }
