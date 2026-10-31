@@ -16,23 +16,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface as Logger;
 use Yiisoft\Json\Json;
 
-/**
- * Receives GoCardless's HMAC-signed webhook notifications — the sole writer
- * for GoCardless payment status. Mirrors AdyenWebhookHandler's shape, with
- * one structural difference: GoCardless batches multiple events into a
- * single request body (`{"events": [...]}`), so handle() loops over all of
- * them rather than processing exactly one. Lives as its own class so it
- * never counts toward a controller's method total (php:S1448).
- *
- * The webhook route itself is CSRF-exempt and unauthenticated by design;
- * see routes-payment-information.php and App\Middleware\CsrfExemptMiddleware.
- *
- * Unlike Adyen/Stripe, a GoCardless webhook event carries only
- * links.payment (the GoCardless payment id) — not our own invoice
- * reference — so resolveContext() makes an extra API call
- * (GoCardlessPaymentService::getPaymentMetadata()) to read back the
- * invoice_url_key set in scheduleDirectDebitPayment()'s metadata.
- */
 final class GoCardlessWebhookHandler
 {
     /** @var list<string> */
@@ -43,6 +26,7 @@ final class GoCardlessWebhookHandler
 
     public function __construct(
         private readonly GoCardlessPaymentService $goCardlessPaymentService,
+        private readonly GoCardlessMandateCollectionService $mandateCollectionService,
         private readonly iR $iR,
         private readonly iaR $iaR,
         private readonly sR $sR,
@@ -57,14 +41,29 @@ final class GoCardlessWebhookHandler
     {
         $rawBody = $request->getBody()->getContents();
         $signature = $request->getHeaderLine('Webhook-Signature');
+
         if (!$this->goCardlessPaymentService->isValidWebhookSignature($rawBody, $signature)) {
             $response = $this->responseFactory->createResponse(401);
             $response->getBody()->write('invalid signature');
+
             return $response;
         }
 
-        /** @var array{events?: list<array{resource_type?: string, action?: string, links?: array{payment?: string}}>} $payload */
+        /**
+         * @var array{
+         *     events?: list<array{
+         *         id?: string,
+         *         resource_type?: string,
+         *         action?: string,
+         *         links?: array{
+         *             payment?: string,
+         *             billing_request?: string
+         *         }
+         *     }>
+         * } $payload
+         */
         $payload = (array) Json::decode($rawBody);
+
         foreach ($payload['events'] ?? [] as $event) {
             $this->processEvent($event);
         }
@@ -73,48 +72,88 @@ final class GoCardlessWebhookHandler
     }
 
     /**
-     * @param array{resource_type?: string, action?: string, links?: array{payment?: string}} $event
+     * @param array{
+     *     id?: string,
+     *     resource_type?: string,
+     *     action?: string,
+     *     links?: array{
+     *         payment?: string,
+     *         billing_request?: string
+     *     }
+     * } $event
      */
     private function processEvent(array $event): void
     {
-        if (($event['resource_type'] ?? '') !== 'payments') {
+        $resourceType = $event['resource_type'] ?? '';
+        $action = $event['action'] ?? '';
+
+        if ($resourceType === 'billing_requests' && $action === 'fulfilled') {
+            $billingRequestId = $event['links']['billing_request'] ?? '';
+
+            if ($billingRequestId !== '') {
+                $this->mandateCollectionService->scheduleFromBillingRequest(
+                    $billingRequestId,
+                );
+            }
+
             return;
         }
-        $action = $event['action'] ?? '';
+
+        if ($resourceType !== 'payments') {
+            return;
+        }
+
         $succeeded = in_array($action, self::SUCCESS_ACTIONS, true);
         $failed = in_array($action, self::FAILURE_ACTIONS, true);
+
         if (!$succeeded && !$failed) {
-            // Not-yet-actionable transitional state (created, submitted, etc.)
             return;
         }
 
         $paymentId = $event['links']['payment'] ?? '';
-        $context = $paymentId !== '' ? $this->resolveContext($paymentId, $succeeded) : null;
-        if (null === $context) {
+
+        if ($paymentId === '') {
             return;
         }
 
-        $this->applyEvent($context);
+        $context = $this->resolveContext($paymentId, $succeeded);
+
+        if ($context !== null) {
+            $this->applyEvent($context);
+        }
     }
 
     private function resolveContext(string $paymentId, bool $succeeded): ?GoCardlessWebhookContext
     {
         $metadata = $this->goCardlessPaymentService->getPaymentMetadata($paymentId);
         $invoiceUrlKey = $metadata['invoice_url_key'] ?? '';
-        $invoice = $invoiceUrlKey !== '' ? $this->iR->repoUrlKeyGuestLoaded($invoiceUrlKey) : null;
-        if (null === $invoice) {
+        $invoice = $invoiceUrlKey !== ''
+            ? $this->iR->repoUrlKeyGuestLoaded($invoiceUrlKey)
+            : null;
+
+        if ($invoice === null) {
             $this->logger->warning(
                 'GoCardless webhook: invoice not found for payment metadata.',
                 ['paymentId' => $paymentId],
             );
+
             return null;
         }
 
         /** @var InvAmount $invoiceAmountRecord */
         $invoiceAmountRecord = $this->iaR->repoInvquery($invoice->reqId());
-        return 0.00 === $invoiceAmountRecord->getBalance()
-            ? null
-            : new GoCardlessWebhookContext($invoice, $invoiceAmountRecord, $invoiceUrlKey, $paymentId, $succeeded);
+
+        if ($invoiceAmountRecord->getBalance() === 0.00) {
+            return null;
+        }
+
+        return new GoCardlessWebhookContext(
+            $invoice,
+            $invoiceAmountRecord,
+            $invoiceUrlKey,
+            $paymentId,
+            $succeeded,
+        );
     }
 
     private function applyEvent(GoCardlessWebhookContext $context): void
@@ -124,11 +163,6 @@ final class GoCardlessWebhookHandler
         $invoiceNumber = $invoice->getNumber() ?? 'unknown';
         $balance = $invoiceAmountRecord->getBalance() ?? 0.00;
 
-        // Write the payment/merchant audit record BEFORE finalising the
-        // invoice's own status/balance — same ordering as
-        // AdyenWebhookHandler/StripeWebhookHandler, for the same reason: a
-        // failure here must leave the invoice unpaid/retryable rather than
-        // "paid" with no audit trail.
         $this->recorder->record(
             new PaymentRecordContext(
                 reference: $invoiceNumber . '-' . $context->paymentId,
@@ -146,7 +180,10 @@ final class GoCardlessWebhookHandler
         );
 
         if ($context->succeeded) {
-            $this->invPaymentSettlementService->markInvoicePaidAndAdjustStock($invoice, $invoiceAmountRecord);
+            $this->invPaymentSettlementService->markInvoicePaidAndAdjustStock(
+                $invoice,
+                $invoiceAmountRecord,
+            );
         } else {
             $invoice->setStatusId(6);
             $this->iR->save($invoice);

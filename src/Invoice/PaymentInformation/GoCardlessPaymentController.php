@@ -9,6 +9,7 @@ use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvAmount\InvAmount;
 use App\Invoice\Inv\InvRepository as iR;
 use App\Invoice\InvAmount\InvAmountRepository as iaR;
+use App\Invoice\PaymentInformation\Service\GoCardlessMandateCollectionService;
 use App\Invoice\PaymentInformation\Service\GoCardlessPaymentService;
 use App\Invoice\PaymentInformation\Service\GoCardlessWebhookHandler;
 use App\Invoice\Setting\SettingRepository as sR;
@@ -21,43 +22,23 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
-use Yiisoft\Security\Random;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
-/**
- * Kept separate from PaymentInformationController deliberately — same
- * reasoning as AdyenPaymentController (see that class's docblock): the
- * shared controller is already at SonarQube's php:S1448 method-count
- * ceiling, and a redirect can't carry loaded context across requests anyway.
- *
- * Unlike every other gateway here, GoCardless's own hosted pages ARE the
- * entire "in-form" step — there's no local page to render at all, just a
- * 302 straight to GoCardless. Setup happens once per invoice (no mandate
- * reuse across invoices yet — a client's recurring invoices each still
- * complete their own redirect flow; a real "already has a mandate, skip
- * straight to scheduling" path is a follow-up, not built here).
- */
 final class GoCardlessPaymentController
 {
     use FlashMessage;
 
-    private const string SESSION_TOKEN_KEY = 'gocardless_session_token';
-
-    /**
-     * GoCardless enforces its own minimum charge-date lead time per payment
-     * scheme (e.g. BACS) and rejects an earlier date outright — this is a
-     * conservative default clamp so the common case doesn't round-trip a
-     * validation error first. date_due is used as-is whenever it's already
-     * further out than this.
-     */
-    private const int MINIMUM_LEAD_DAYS = 5;
+    private const string BILLING_REQUEST_ID_KEY = 'gocardless_billing_request_id';
+    private const string BILLING_REQUEST_FLOW_ID_KEY = 'gocardless_billing_request_flow_id';
+    private const string BILLING_REQUEST_URL_KEY = 'gocardless_billing_request_url_key';
 
     public function __construct(
         private GoCardlessPaymentService $goCardlessPaymentService,
         private GoCardlessWebhookHandler $goCardlessWebhookHandler,
+        private GoCardlessMandateCollectionService $mandateCollectionService,
         private iR $iR,
         private iaR $iaR,
         private sR $sR,
@@ -76,6 +57,7 @@ final class GoCardlessPaymentController
                 ->withControllerName('invoice/paymentinformation')
                 ->withLayout('@views/layout/guest.php');
         }
+
         if ($this->userService->hasPermission(Permissions::VIEW_INV)
                 && $this->userService->hasPermission(Permissions::EDIT_INV)) {
             $this->webViewRenderer = $webViewRenderer
@@ -84,93 +66,126 @@ final class GoCardlessPaymentController
         }
     }
 
-    /**
-     * Starts the redirect flow and sends the customer straight to
-     * GoCardless's hosted mandate-setup pages — there's nothing of ours to
-     * render first.
-     */
     public function goCardlessInForm(CurrentRoute $currentRoute): Response
     {
         $ctx = $this->loadInvoiceContext($currentRoute);
+
         if ($ctx instanceof Response) {
             return $ctx;
         }
+
         if (!$this->goCardlessPaymentService->isConfigured()) {
-            $this->flashMessage('warning', 'GoCardless payment gateway is not properly configured.');
+            $this->flashMessage(
+                'warning',
+                'GoCardless payment gateway is not properly configured.',
+            );
+
             return $this->webService->getNotFoundResponse();
         }
 
-        [$urlKey, $invoice] = $ctx;
-        $sessionToken = Random::string(32);
-        $this->session->set(self::SESSION_TOKEN_KEY, $sessionToken);
-        $this->session->set(self::SESSION_TOKEN_KEY . '_url_key', $urlKey);
+        [$urlKey] = $ctx;
 
         $successRedirectUrl = $this->urlGenerator->generateAbsolute(
             'paymentinformation/goCardlessComplete',
             ['url_key' => $urlKey],
         );
-        $flow = $this->goCardlessPaymentService->createRedirectFlow(
-            'Invoice ' . ($invoice->getNumber() ?? $urlKey),
-            $sessionToken,
+
+        $flow = $this->goCardlessPaymentService->createBillingRequestFlow(
+            $urlKey,
             $successRedirectUrl,
         );
 
-        return $this->responseFactory->createResponse(302)->withHeader('Location', $flow['redirect_url']);
+        $this->session->set(
+            self::BILLING_REQUEST_ID_KEY,
+            $flow['billing_request_id'],
+        );
+        $this->session->set(
+            self::BILLING_REQUEST_FLOW_ID_KEY,
+            $flow['billing_request_flow_id'],
+        );
+        $this->session->set(self::BILLING_REQUEST_URL_KEY, $urlKey);
+
+        return $this->responseFactory
+            ->createResponse(302)
+            ->withHeader('Location', $flow['redirect_url']);
     }
 
-    /**
-     * Customer returns here from GoCardless's hosted pages with
-     * redirect_flow_id in the query string. Completes the mandate, then
-     * immediately schedules the actual Direct Debit collection against it —
-     * GoCardless payments aren't synchronous, so the invoice is only
-     * actually marked paid later, by GoCardlessWebhookHandler.
-     *
-     * A redirect flow can only be completed once — GoCardless rejects a
-     * second attempt with a 422 InvalidStateException. Since the invoice's
-     * balance is usually still > 0 at this point (the webhook hasn't
-     * cleared it yet), loadInvoiceContext()'s balance check doesn't catch a
-     * refresh/back-button retry here, so direct_debit_date being already
-     * set is the guard: skip straight to re-rendering the completion page
-     * instead of calling GoCardless (and scheduling a second collection)
-     * again.
-     */
     public function goCardlessComplete(CurrentRoute $currentRoute, Request $request): Response
     {
         $ctx = $this->loadInvoiceContext($currentRoute);
+
         if ($ctx instanceof Response) {
             return $ctx;
         }
+
         [$urlKey, $invoice] = $ctx;
 
         if ($invoice->getDirectDebitDate() === null) {
-            $redirectFlowId = (string) ($request->getQueryParams()['redirect_flow_id'] ?? '');
-            /** @var string|null $sessionToken */
-            $sessionToken = $this->session->get(self::SESSION_TOKEN_KEY);
+            $queryParams = $request->getQueryParams();
+
+            $billingRequestId = (string) ($queryParams['billing_request_id'] ?? '');
+            $billingRequestFlowId = (string) ($queryParams['billing_request_flow_id'] ?? '');
+
+            /** @var string|null $sessionBillingRequestId */
+            $sessionBillingRequestId = $this->session->get(self::BILLING_REQUEST_ID_KEY);
+
+            /** @var string|null $sessionBillingRequestFlowId */
+            $sessionBillingRequestFlowId = $this->session->get(self::BILLING_REQUEST_FLOW_ID_KEY);
+
             /** @var string|null $sessionUrlKey */
-            $sessionUrlKey = $this->session->get(self::SESSION_TOKEN_KEY . '_url_key');
-            if ($redirectFlowId === '' || null === $sessionToken || $sessionUrlKey !== $urlKey) {
-                $this->flashMessage('warning', 'GoCardless session expired — please try again.');
+            $sessionUrlKey = $this->session->get(self::BILLING_REQUEST_URL_KEY);
+
+            if (
+                $billingRequestId === ''
+                || $billingRequestFlowId === ''
+                || $sessionBillingRequestId === null
+                || $sessionBillingRequestFlowId === null
+                || $sessionUrlKey === null
+                || !hash_equals($sessionBillingRequestId, $billingRequestId)
+                || !hash_equals($sessionBillingRequestFlowId, $billingRequestFlowId)
+                || !hash_equals($sessionUrlKey, $urlKey)
+            ) {
+                $this->flashMessage(
+                    'warning',
+                    'GoCardless session expired — please try again.',
+                );
+
                 return $this->webService->getNotFoundResponse();
             }
 
-            $mandate = $this->goCardlessPaymentService->completeRedirectFlow($redirectFlowId, $sessionToken);
-            $this->scheduleCollection($invoice, $urlKey, $mandate['mandate_id']);
-            $this->session->remove(self::SESSION_TOKEN_KEY);
-            $this->session->remove(self::SESSION_TOKEN_KEY . '_url_key');
+            $processedInvoice = $this->mandateCollectionService
+                ->scheduleFromBillingRequest($billingRequestId);
+
+            if ($processedInvoice === null) {
+                $this->flashMessage(
+                    'warning',
+                    'GoCardless authorisation has not yet been completed. Please try again shortly.',
+                );
+
+                return $this->webService->getNotFoundResponse();
+            }
+
+            $invoice = $processedInvoice;
+
+            $this->clearBillingRequestSession();
+        } else {
+            $this->clearBillingRequestSession();
         }
 
-        // direct_debit_date is guaranteed set at this point — either just
-        // scheduled above, or already set on a prior request (the
-        // direct_debit_date-not-null branch above skips straight here).
         $directDebitDate = $invoice->getDirectDebitDate();
+
         $message = $directDebitDate instanceof DateTimeImmutable
             ? sprintf(
-                $this->translator->translate('gocardless.direct.debit.collection.scheduled.for'),
+                $this->translator->translate(
+                    'gocardless.direct.debit.collection.scheduled.for',
+                ),
                 $directDebitDate->format('jS F Y'),
             )
-            : $this->translator->translate('payment') . ':' . $this->translator->translate('complete');
+            : $this->translator->translate('payment')
+                . ':'
+                . $this->translator->translate('complete');
 
-        $view_data = [
+        $viewData = [
             'render' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/paymentinformation/payment_message',
                 [
@@ -186,7 +201,11 @@ final class GoCardlessPaymentController
                 ],
             ),
         ];
-        return $this->webViewRenderer->render('payment_completion_page', $view_data);
+
+        return $this->webViewRenderer->render(
+            'payment_completion_page',
+            $viewData,
+        );
     }
 
     public function goCardlessWebhook(Request $request): Response
@@ -194,32 +213,11 @@ final class GoCardlessPaymentController
         return $this->goCardlessWebhookHandler->handle($request);
     }
 
-    private function scheduleCollection(Inv $invoice, string $urlKey, string $mandateId): void
+    private function clearBillingRequestSession(): void
     {
-        /** @var InvAmount $invoiceAmountRecord */
-        $invoiceAmountRecord = $this->iaR->repoInvquery($invoice->reqId());
-        $chargeDate = $this->resolveChargeDate($invoice->getDateDue());
-        $currency = !empty($this->sR->getSetting('currency_code'))
-            ? $this->sR->getSetting('currency_code')
-            : 'GBP';
-
-        $payment = $this->goCardlessPaymentService->scheduleDirectDebitPayment(
-            $mandateId,
-            $invoiceAmountRecord->getBalance() ?? 0.00,
-            $currency,
-            $chargeDate,
-            ['invoice_url_key' => $urlKey],
-        );
-
-        $invoice->setDirectDebitDate(new DateTimeImmutable($payment['charge_date']));
-        $invoice->setPaymentMethod(6);
-        $this->iR->save($invoice);
-    }
-
-    private function resolveChargeDate(DateTimeImmutable $dateDue): DateTimeImmutable
-    {
-        $earliest = new DateTimeImmutable()->modify('+' . self::MINIMUM_LEAD_DAYS . ' days');
-        return $dateDue > $earliest ? $dateDue : $earliest;
+        $this->session->remove(self::BILLING_REQUEST_ID_KEY);
+        $this->session->remove(self::BILLING_REQUEST_FLOW_ID_KEY);
+        $this->session->remove(self::BILLING_REQUEST_URL_KEY);
     }
 
     /**
@@ -227,19 +225,28 @@ final class GoCardlessPaymentController
      */
     private function loadInvoiceContext(CurrentRoute $currentRoute): Response|array
     {
-        $url_key = $currentRoute->getArgument('url_key');
-        $invoice = null !== $url_key ? $this->iR->repoUrlKeyGuestLoaded($url_key) : null;
-        if (null === $url_key || null === $invoice) {
+        $urlKey = $currentRoute->getArgument('url_key');
+
+        $invoice = $urlKey !== null
+            ? $this->iR->repoUrlKeyGuestLoaded($urlKey)
+            : null;
+
+        if ($urlKey === null || $invoice === null) {
             return $this->webService->getNotFoundResponse();
         }
 
         /** @var InvAmount $invoiceAmountRecord */
         $invoiceAmountRecord = $this->iaR->repoInvquery($invoice->reqId());
+
         if (($invoiceAmountRecord->getBalance() ?? 0.00) <= 0.00) {
-            $this->flashMessage('warning', $this->translator->translate('already.paid'));
+            $this->flashMessage(
+                'warning',
+                $this->translator->translate('already.paid'),
+            );
+
             return $this->webService->getNotFoundResponse();
         }
 
-        return [$url_key, $invoice];
+        return [$urlKey, $invoice];
     }
 }
