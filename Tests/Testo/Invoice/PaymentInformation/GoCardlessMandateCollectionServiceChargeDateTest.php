@@ -4,30 +4,30 @@ declare(strict_types=1);
 
 namespace Tests\Testo\Invoice\PaymentInformation;
 
-use App\Invoice\PaymentInformation\GoCardlessPaymentController;
+use App\Invoice\PaymentInformation\Service\GoCardlessMandateCollectionService;
 use DateTimeImmutable;
 use ReflectionClass;
 use Testo\Assert;
 use Testo\Test;
 
 /**
- * Covers GoCardlessPaymentController::resolveChargeDate() — GoCardless
+ * Covers GoCardlessMandateCollectionService::resolveChargeDate() — GoCardless
  * enforces its own minimum charge-date lead time per payment scheme and
  * rejects an earlier date outright, so this clamps forward to a
  * conservative default (5 days) whenever date_due is sooner than that,
  * and otherwise uses date_due as-is.
  */
 #[Test]
-final class GoCardlessPaymentControllerChargeDateTest
+final class GoCardlessMandateCollectionServiceChargeDateTest
 {
     private function resolveChargeDate(DateTimeImmutable $dateDue): DateTimeImmutable
     {
-        $reflectionClass = new ReflectionClass(GoCardlessPaymentController::class);
-        $controller = $reflectionClass->newInstanceWithoutConstructor();
+        $reflectionClass = new ReflectionClass(GoCardlessMandateCollectionService::class);
+        $service = $reflectionClass->newInstanceWithoutConstructor();
         $method = $reflectionClass->getMethod('resolveChargeDate');
 
         /** @var DateTimeImmutable */
-        return $method->invoke($controller, $dateDue);
+        return $method->invoke($service, $dateDue);
     }
 
     public function usesDateDueWhenAlreadyBeyondTheMinimumLeadTime(): void
