@@ -12,7 +12,7 @@ echo "<?php\n";
 
 declare(strict_types=1);
 
-namespace <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName() . ';' . "\n"; ?>
+namespace <?= $generator->getNamespacePath() . '\\' . $generator->getCamelcaseCapitalName() . ';' . "\n"; ?>
 
 use App\Infrastructure\Persistence\<?= $generator->getCamelcaseCapitalName(); ?>\<?= $generator->getCamelcaseCapitalName(); ?>;
 

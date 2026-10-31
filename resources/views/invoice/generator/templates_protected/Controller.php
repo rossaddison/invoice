@@ -14,13 +14,13 @@ echo "<?php\n";
 
 declare(strict_types=1);
 
-namespace <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName(); ?>;
+namespace <?= $generator->getNamespacePath() . '\\' . $generator->getCamelcaseCapitalName(); ?>;
 
 use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\<?= $generator->getCamelcaseCapitalName(); ?>\<?= $generator->getCamelcaseCapitalName(); ?>;
-use <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName(); ?>Form;
-use <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName(); ?>Service;
-use <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName(); ?>Repository;
+use <?= $generator->getNamespacePath() . '\\' . $generator->getCamelcaseCapitalName() . '\\' . $generator->getCamelcaseCapitalName(); ?>Form;
+use <?= $generator->getNamespacePath() . '\\' . $generator->getCamelcaseCapitalName() . '\\' . $generator->getCamelcaseCapitalName(); ?>Service;
+use <?= $generator->getNamespacePath() . '\\' . $generator->getCamelcaseCapitalName() . '\\' . $generator->getCamelcaseCapitalName(); ?>Repository;
 use App\Invoice\Setting\SettingRepository as sR;
 <?php
   /**
@@ -29,9 +29,9 @@ use App\Invoice\Setting\SettingRepository as sR;
   foreach ($relations as $relation) {
       echo 'use '
         . $generator->getNamespacePath()
-        . DIRECTORY_SEPARATOR
+        . '\\'
         . ($relation->getCamelcaseName() ?? '#')
-        . DIRECTORY_SEPARATOR
+        . '\\'
         . ($relation->getCamelcaseName() ?? '#')
         . 'Repository;' . "\n";
   }

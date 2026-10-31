@@ -10,6 +10,10 @@ declare(strict_types=1);
  */
 
 echo "<?php\n";
+// Same snake_case -> PascalCase accessor-name helper as _view.php/Entity.php/
+// Form.php/Service.php -- $form's getters (on the Form model) are named from
+// this, not the raw column name.
+$toPascalCase = static fn (string $name): string => str_replace('_', '', ucwords($name, '_'));
 ?>
 
 declare(strict_types=1);
@@ -109,7 +113,7 @@ foreach ($orm_schema->getColumns() as $column) {
             echo '<?= Field::date($form,' . "'" . $column->getName() . "')";
             echo "    ->label()";
             echo "    ->addInputAttributes(['data-action' => 'show-picker'])";
-            echo '    ->value($form->get' . ucfirst($column->getName()) . '() ? ($form->get' . ucfirst($column->getName()) . '())->format(\'Y-m-d\') : \'\')';
+            echo '    ->value($form->get' . ucfirst($toPascalCase($column->getName())) . '() ? ($form->get' . ucfirst($toPascalCase($column->getName())) . '())->format(\'Y-m-d\') : \'\')';
             echo '?>';
             echo '<?= Html::closeTag(\'div\'); ?>';
         }
@@ -121,11 +125,11 @@ foreach ($orm_schema->getColumns() as $column) {
         if (($column->getType() === 'float') && ($column->getAbstractType() === 'decimal')) {
             echo "<?= Html::openTag('div'); ?>";
             echo '<?= Field::text($form,' . "'" . $column->getName() . "')";
-            echo '    ->label($translator->translate(' . $column->getName() . '))';
+            echo '    ->label($translator->translate(' . "'" . $column->getName() . '))';
             echo '    ->addInputAttributes([';
             echo "        'class' => 'form-control form-control-lg',";
             echo '    ])';
-            echo '    ->value($s->formatAmount((float)($form->get' . ucfirst($column->getName()) . '() ?? 0.00)))';
+            echo '    ->value($s->formatAmount((float)($form->get' . ucfirst($toPascalCase($column->getName())) . '() ?? 0.00)))';
             echo '    ->placeholder($translator->translate(' . "'" . $column->getName() . '))';
             echo '?>';
             echo '<?= Html::closeTag(\'div\'); ?>';
@@ -138,11 +142,11 @@ foreach ($orm_schema->getColumns() as $column) {
         if (($column->getType() === 'string') && ($column->getAbstractType() <> 'date')) {
             echo "<?= Html::openTag('div'); ?>";
             echo '<?= Field::text($form,' . "'" . $column->getName() . "')";
-            echo '    ->label($translator->translate(' . $column->getName() . '))';
+            echo '    ->label($translator->translate(' . "'" . $column->getName() . '))';
             echo '    ->addInputAttributes([';
             echo "        'class' => 'form-control form-control-lg',";
             echo '    ])';
-            echo '    ->value(Html::encode(' . '$' . 'form->get' . $column->getName() . '()' . '))';
+            echo '    ->value(Html::encode(' . '$' . 'form->get' . ucfirst($toPascalCase($column->getName())) . '()' . '))';
             echo '    ->placeholder($' . 'translator->translate(' . "'" . $column->getName() . '))';
             echo '?>';
             echo '<?= Html::closeTag(\'div\'); ?>';
@@ -151,11 +155,11 @@ foreach ($orm_schema->getColumns() as $column) {
         if (($column->getType() === 'int') && ($column->getAbstractType() <> 'date') && ($column->getAbstractType() <> 'primary')) {
             echo "<?= Html::openTag('div'); ?>";
             echo '<?= Field::text($form,' . "'" . $column->getName() . "')";
-            echo '    ->label($translator->translate(' . $column->getName() . '))';
+            echo '    ->label($translator->translate(' . "'" . $column->getName() . '))';
             echo '    ->addInputAttributes([';
             echo "        'class' => 'form-control form-control-lg',";
             echo '    ])';
-            echo '    ->value(Html::encode(' . '$' . 'form->get' . $column->getName() . '))';
+            echo '    ->value(Html::encode(' . '$' . 'form->get' . ucfirst($toPascalCase($column->getName())) . '()' . '))';
             echo '    ->placeholder($' . 'translator->translate(' . "'" . $column->getName() . '))';
             echo '?>';
             echo '<?= Html::closeTag(\'div\'); ?>';

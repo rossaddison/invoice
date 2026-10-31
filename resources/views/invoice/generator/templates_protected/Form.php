@@ -18,11 +18,13 @@ $TYPE_PRIMARY = 'primary';
 $TYPE_DATE = 'date';
 $TYPE_DATETIME = 'datetime';
 $TYPE_TIME = 'time';
+// Same snake_case -> PascalCase accessor-name helper as _view.php/Entity.php.
+$toPascalCase = static fn (string $name): string => str_replace('_', '', ucwords($name, '_'));
 ?>
 
 declare(strict_types=1);
 
-namespace <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName(); ?>;
+namespace <?= $generator->getNamespacePath() . '\\' . $generator->getCamelcaseCapitalName(); ?>;
 
 use App\Infrastructure\Persistence\<?= $generator->getCamelcaseCapitalName();?>
 \<?= $generator->getCamelcaseCapitalName();?>;
@@ -96,7 +98,7 @@ $bo = '';
 foreach ($orm_schema->getColumns() as $column) {
     // Ignore the id field
     if ($column->getAbstractType() <> $TYPE_PRIMARY) {
-        $bo .= '        $form->' . $column->getName() . " = $" . $generator->getSmallSingularName() . "->get" . ucfirst($column->getName()) . "();\n";
+        $bo .= '        $form->' . $column->getName() . " = $" . $generator->getSmallSingularName() . "->get" . ucfirst($toPascalCase($column->getName())) . "();\n";
     }
 }
 echo rtrim($bo, ",\n") . "\n";
@@ -111,14 +113,14 @@ echo rtrim($bo, ",\n") . "\n";
 foreach ($orm_schema->getColumns() as $column) {
     if (($column->getAbstractType() <> $TYPE_PRIMARY) && ($column->getAbstractType() <> $TYPE_DATE) && ($column->getAbstractType() <> $TYPE_TIME)) {
         echo "\n";
-        echo '    public function get' . ucfirst($column->getName()) . '() : ' . $column->getType() . '|null' . "\n";
+        echo '    public function get' . ucfirst($toPascalCase($column->getName())) . '() : ' . $column->getType() . '|null' . "\n";
         echo '    {' . "\n";
         echo '      return $this->' . $column->getName() . ';' . "\n";
         echo '    }' . "\n";
     }
     if (($column->getAbstractType() === $TYPE_DATE) || ($column->getAbstractType() === $TYPE_DATETIME)) {
         echo "\n";
-        echo '    public function get' . ucfirst($column->getName()) . '() : ' . ($column->isNullable() ? 'null|' : '') . 'string|DateTimeImmutable' . "\n";
+        echo '    public function get' . ucfirst($toPascalCase($column->getName())) . '() : ' . ($column->isNullable() ? 'null|' : '') . 'string|DateTimeImmutable' . "\n";
         echo '    {' . "\n";
         echo '           /**' . "\n";
         echo '            * @var string|' . ($column->isNullable() ? 'null|' : '') . 'DateTimeImmutable $this->' . $column->getName() . "\n";
@@ -128,7 +130,7 @@ foreach ($orm_schema->getColumns() as $column) {
     }
     if ($column->getAbstractType() === $TYPE_TIME) {
         echo "\n";
-        echo '    public function get' . ucfirst($column->getName()) . '() : ?\DateTime' . "\n";
+        echo '    public function get' . ucfirst($toPascalCase($column->getName())) . '() : ?\DateTime' . "\n";
         echo '    {' . "\n";
         echo '      return $this->' . $column->getName() . '=new DateTime(date(' . "'" . 'H:i:s' . "'" . '));' . "\n";
         echo '    }' . "\n";

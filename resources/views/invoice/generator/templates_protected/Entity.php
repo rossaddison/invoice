@@ -24,6 +24,15 @@ $FUNC_CLOSE = '    }' . "\n";
 $RETURN_THIS = '        return $this->';
 $VOID_EOL = '): void';
 $THIS_ARROW = '        $this->';
+$EXT_MUT_FREE = '    /** @psalm-external-mutation-free */' . "\n";
+// Column names are snake_case (DB convention); accessor method names should
+// be PascalCase/camelCase (PHP convention) -- e.g. curr_code -> CurrCode, so
+// getCurr_code()/setCurr_code() become getCurrCode()/setCurrCode(). The
+// underlying property/parameter name is left as-is (it must match the real
+// column name for Cycle's annotation mapping). Same helper already used by
+// _view.php -- applied here too, and in Form.php/Service.php/_form.php, for
+// consistency across every generated file for this entity.
+$toPascalCase = static fn (string $name): string => str_replace('_', '', ucwords($name, '_'));
 ?>
 
 declare(strict_types=1);
@@ -48,25 +57,35 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
     /**
      * @var Cycle\Database\Schema\AbstractColumn $column
      */
+    $needsDateTimeImmutable = false;
     foreach ($orm_schema->getColumns() as $column) {
-        if ($column->getAbstractType() === $TYPE_DATE) {
-            echo 'use \DateTime;' . "\n";
+        if ($column->getAbstractType() === $TYPE_DATE || $column->getAbstractType() === $TYPE_DATETIME) {
+            $needsDateTimeImmutable = true;
         }
-        if ($column->getAbstractType() === $TYPE_DATETIME) {
-            echo 'use \DateTimeImmutable;' . "\n";
-        }
+    }
+    if ($needsDateTimeImmutable) {
+        echo 'use \DateTimeImmutable;' . "\n";
     }
 ?>
 
 <?php
+    // table: is required, not cosmetic -- Cycle otherwise guesses the table
+    // name by pluralizing the entity's role (lowercased class name), which
+    // only coincidentally matches the real table for some names (TaxType ->
+    // tax_types) and silently targets the wrong/a nonexistent table for most
+    // others (e.g. FiscalYear -> Cycle's default guess is fiscal_years,
+    // grn_batch -> GrnBatch would guess grn_batches). Always pin it to the
+    // real table this entity was actually generated from.
     echo '#[Entity(repository: '
-            . DIRECTORY_SEPARATOR
+            . '\\'
             . $generator->getNamespacePath()
-            . DIRECTORY_SEPARATOR
+            . '\\'
             . $generator->getCamelcaseCapitalName()
-            . DIRECTORY_SEPARATOR
+            . '\\'
             . $generator->getCamelcaseCapitalName()
-            . 'Repository::class)]' . "\n";
+            . 'Repository::class, table: '
+            . "'" . $generator->getPreEntityTable() . "'"
+            . ')]' . "\n";
 if ($generator->isCreatedInclude()
         || $generator->isUpdatedInclude()
                 || $generator->isModifiedInclude()) {
@@ -83,6 +102,13 @@ if ($generator->isCreatedInclude()
             . 'date_modified' . $COL_SEP . 'date_modified' . ')]' : '';
 }
 ?>
+// Do NOT mark this class final: Cycle ORM generates a lazy-loading proxy
+// subclass of every entity at runtime (visible as "<Entity> Cycle ORM
+// Proxy" if you var_dump a hydrated instance) -- a final class can't be
+// subclassed, which breaks Cycle's own proxy mechanism, not just some
+// hypothetical external extender. Left as an accepted, visible
+// ClassMustBeFinal finding rather than suppressed.
+/** @psalm-external-mutation-free */
 class <?= $generator->getCamelcaseCapitalName() . "\n"; ?>
 {
     use RequireId;
@@ -111,6 +137,7 @@ class <?= $generator->getCamelcaseCapitalName() . "\n"; ?>
     echo '    private ?int $id = null;' . "\n";
     echo "\n";
 ?>
+    /** @psalm-mutation-free */
     public function __construct(
 <?php
 /**
@@ -130,16 +157,18 @@ foreach ($orm_schema->getColumns() as $column) {
             $init = "''";
             break;
         case 'float':
-            $init = 'null';
+            $init = $column->isNullable() ? 'null' : '0.0';
             break;
         case 'int':
-            $init = 'null';
+            $init = $column->isNullable() ? 'null' : '0';
             break;
         case 'bool':
             if ($column->hasDefaultValue()) {
                 /** @var mixed $dv */
                 $dv = $column->getDefaultValue();
-                $init = ($dv === 1) ? 'false' : 'true';
+                // MySQL reports a tinyint(1) default as int 1/0 or string '1'/'0'
+                // depending on driver version -- check both forms.
+                $init = ($dv === 1 || $dv === '1' || $dv === true) ? 'true' : 'false';
             } else {
                 $init = 'false';
             }
@@ -154,8 +183,8 @@ foreach ($orm_schema->getColumns() as $column) {
     // Column annotation for the constructor parameter
     switch ($column->getAbstractType()) {
         case $TYPE_BOOLEAN:
-            $ab = "        #[Column(type: 'bool'"
-                  . ($column->isNullable() ? ', nullable: true' : ', nullable: false, default: false')
+            $ab = "        #[Column(type: 'bool', typecast: 'bool'"
+                  . ($column->isNullable() ? ', nullable: true' : ', nullable: false, default: ' . $init)
                   . ')]' . "\n";
             break;
         case 'integer':
@@ -226,7 +255,7 @@ foreach ($orm_schema->getColumns() as $column) {
     } elseif ($column->getAbstractType() === $TYPE_DATETIME) {
         echo '        private ?\\DateTimeImmutable $' . $column->getName() . ' = null,' . "\n";
     } elseif ($column->getAbstractType() === $TYPE_DATE) {
-        echo '        private mixed $' . $column->getName() . ' = null,' . "\n";
+        echo '        private \\DateTimeImmutable|string|null $' . $column->getName() . ' = null,' . "\n";
     } else {
         echo '        private ' . $questionmark . $column->getType() . ' $' . $column->getName() . ' = ' . $init . ',' . "\n";
     }
@@ -235,16 +264,19 @@ foreach ($orm_schema->getColumns() as $column) {
 ?>
     ) {}
 
+    /** @psalm-mutation-free */
     public function reqId(): int
     {
         return $this->requireId($this->id, '<?= $generator->getCamelcaseCapitalName(); ?>');
     }
 
+    /** @psalm-mutation-free */
     public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
 
+    /** @psalm-external-mutation-free */
     public function setId(int $id): void
     {
         $this->id = $id;
@@ -262,6 +294,7 @@ foreach ($relations as $relation) {
     echo $RETURN_THIS . ($relation->getLowercaseName() ?? '#') . ';' . "\n";
     echo $FUNC_CLOSE;
     echo "\n";
+    echo $EXT_MUT_FREE;
     echo $PUB_SET . ($relation->getCamelcaseName() ?? '#')
             . '(?' . ($relation->getCamelcaseName() ?? '#') . ' $'
             . ($relation->getCamelcaseName() ?? '#') . $VOID_EOL . "\n";
@@ -288,18 +321,19 @@ foreach ($orm_schema->getColumns() as $column) {
 
     // FK _id fields: req + get + set
     if (substr($column->getName(), -3) === '_id') {
-        echo '    public function req' . ucfirst($column->getName()) . '(): int' . "\n";
+        echo '    public function req' . ucfirst($toPascalCase($column->getName())) . '(): int' . "\n";
         echo $FUNC_OPEN;
         echo '        return $this->requireId($this->' . $column->getName()
                 . ", '" . $generator->getCamelcaseCapitalName() . ' ' . $column->getName() . "');" . "\n";
         echo $FUNC_CLOSE;
         echo "\n";
-        echo $PUB_GET . ucfirst($column->getName()) . '(): ?int' . "\n";
+        echo $PUB_GET . ucfirst($toPascalCase($column->getName())) . '(): ?int' . "\n";
         echo $FUNC_OPEN;
         echo $RETURN_THIS . $column->getName() . ';' . "\n";
         echo $FUNC_CLOSE;
         echo "\n";
-        echo $PUB_SET . ucfirst($column->getName()) . '(int $' . $column->getName() . $VOID_EOL . "\n";
+        echo $EXT_MUT_FREE;
+        echo $PUB_SET . ucfirst($toPascalCase($column->getName())) . '(int $' . $column->getName() . $VOID_EOL . "\n";
         echo $FUNC_OPEN;
         echo $THIS_ARROW . $column->getName() . ' = $' . $column->getName() . ';' . "\n";
         echo $FUNC_CLOSE;
@@ -308,13 +342,14 @@ foreach ($orm_schema->getColumns() as $column) {
 
     // date fields
     if ($column->getAbstractType() === $TYPE_DATE) {
-        echo $PUB_GET . ucfirst($column->getName())
+        echo $PUB_GET . ucfirst($toPascalCase($column->getName()))
                 . '(): \\DateTimeImmutable|string|null' . "\n";
         echo $FUNC_OPEN;
         echo $RETURN_THIS . $column->getName() . ';' . "\n";
         echo $FUNC_CLOSE;
         echo "\n";
-        echo $PUB_SET . ucfirst($column->getName())
+        echo $EXT_MUT_FREE;
+        echo $PUB_SET . ucfirst($toPascalCase($column->getName()))
                 . '(\\DateTimeImmutable|string|null $' . $column->getName() . $VOID_EOL . "\n";
         echo $FUNC_OPEN;
         echo $THIS_ARROW . $column->getName() . ' = $' . $column->getName() . ';' . "\n";
@@ -324,13 +359,14 @@ foreach ($orm_schema->getColumns() as $column) {
 
     // datetime fields
     if ($column->getAbstractType() === $TYPE_DATETIME) {
-        echo $PUB_GET . ucfirst($column->getName())
+        echo $PUB_GET . ucfirst($toPascalCase($column->getName()))
                 . '(): ?\\DateTimeImmutable' . "\n";
         echo $FUNC_OPEN;
         echo $RETURN_THIS . $column->getName() . ';' . "\n";
         echo $FUNC_CLOSE;
         echo "\n";
-        echo $PUB_SET . ucfirst($column->getName())
+        echo $EXT_MUT_FREE;
+        echo $PUB_SET . ucfirst($toPascalCase($column->getName()))
                 . '(\\DateTimeImmutable $' . $column->getName() . $VOID_EOL . "\n";
         echo $FUNC_OPEN;
         echo $THIS_ARROW . $column->getName() . ' = $' . $column->getName() . ';' . "\n";
@@ -340,14 +376,15 @@ foreach ($orm_schema->getColumns() as $column) {
 
     // boolean fields
     if ($column->getAbstractType() === $TYPE_BOOLEAN) {
-        echo $PUB_GET . ucfirst($column->getName())
-                . '(): ?bool' . "\n";
+        echo $PUB_GET . ucfirst($toPascalCase($column->getName()))
+                . '(): ' . $questionmark . 'bool' . "\n";
         echo $FUNC_OPEN;
         echo $RETURN_THIS . $column->getName() . ';' . "\n";
         echo $FUNC_CLOSE;
         echo "\n";
-        echo $PUB_SET . ucfirst($column->getName())
-                . '(?bool $' . $column->getName() . $VOID_EOL . "\n";
+        echo $EXT_MUT_FREE;
+        echo $PUB_SET . ucfirst($toPascalCase($column->getName()))
+                . '(' . $questionmark . 'bool $' . $column->getName() . $VOID_EOL . "\n";
         echo $FUNC_OPEN;
         echo $THIS_ARROW . $column->getName() . ' = $' . $column->getName() . ';' . "\n";
         echo $FUNC_CLOSE;
@@ -355,13 +392,14 @@ foreach ($orm_schema->getColumns() as $column) {
     }
 
     // all other fields
-    echo $PUB_GET . ucfirst($column->getName())
+    echo $PUB_GET . ucfirst($toPascalCase($column->getName()))
             . '(): ' . $questionmark . $column->getType() . "\n";
     echo $FUNC_OPEN;
     echo $RETURN_THIS . $column->getName() . ';' . "\n";
     echo $FUNC_CLOSE;
     echo "\n";
-    echo $PUB_SET . ucfirst($column->getName())
+    echo $EXT_MUT_FREE;
+    echo $PUB_SET . ucfirst($toPascalCase($column->getName()))
             . '(' . $column->getType() . ' $' . $column->getName() . $VOID_EOL . "\n";
     echo $FUNC_OPEN;
     echo $THIS_ARROW . $column->getName() . ' = $' . $column->getName() . ';' . "\n";

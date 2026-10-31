@@ -14,11 +14,14 @@ $TYPE_DATE = 'date';
 $TYPECAST_INT = '(int)';
 $TYPECAST_STRING = '(string)';
 $MODEL_SET = '$model->set';
+// Same snake_case -> PascalCase accessor-name helper as _view.php/Entity.php/Form.php
+// -- $model's setters (on the Entity class) are named from this, not the raw column name.
+$toPascalCase = static fn (string $name): string => str_replace('_', '', ucwords($name, '_'));
 ?>
 
 declare(strict_types=1);
 
-namespace <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName() . ";\n"; ?>
+namespace <?= $generator->getNamespacePath() . '\\' . $generator->getCamelcaseCapitalName() . ";\n"; ?>
 
 use App\Infrastructure\Persistence\<?= $generator->getCamelcaseCapitalName(); ?>\<?= $generator->getCamelcaseCapitalName(); ?>;
 
@@ -132,16 +135,16 @@ foreach ($orm_schema->getColumns() as $column) {
                 break;
         }
         if ($column->getAbstractType() <> $TYPE_DATE) {
-            echo '   isset($array[' . "'" . $column->getName() . "']) ? " . $MODEL_SET . ucfirst($column->getName()) . '(' . $typecast . '$array[' . "'" . $column->getName() . "']) : '';" . "\n";
+            echo '   isset($array[' . "'" . $column->getName() . "']) ? " . $MODEL_SET . ucfirst($toPascalCase($column->getName())) . '(' . $typecast . '$array[' . "'" . $column->getName() . "']) : '';" . "\n";
         }
         if ($column->getAbstractType() === $TYPE_DATE) {
-            echo '   isset($array[' . "'" . $column->getName() . "']) ? " . $MODEL_SET . ucfirst($column->getName()) . '(' . $typecast . '$array[' . "'" . $column->getName() . "']) : '';" . "\n";
+            echo '   isset($array[' . "'" . $column->getName() . "']) ? " . $MODEL_SET . ucfirst($toPascalCase($column->getName())) . '(' . $typecast . '$array[' . "'" . $column->getName() . "']) : '';" . "\n";
             echo '$datetime = new \DateTime();';
             echo '/**';
             echo ' * @var string $array[' . "'" . $column->getName() . "'" . ']';
             echo ' */';
             echo '$date = $array' . "['" . $column->getName() . "'] ?? '';";
-            echo $MODEL_SET . ucfirst($column->getName()) . '($datetime::createFromFormat(' . "'" . "Y-m-d" . "'," . '$date));';
+            echo $MODEL_SET . ucfirst($toPascalCase($column->getName())) . '($datetime::createFromFormat(' . "'" . "Y-m-d" . "'," . '$date));';
         }
     }
 }
