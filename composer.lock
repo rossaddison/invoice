@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cbd9d905231a877b3a0e4163ed469d8a",
+    "content-hash": "8ecc110a6345a72f80a2eed6d606100f",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -15268,31 +15268,39 @@
         },
         {
             "name": "yiisoft/access",
-            "version": "2.0.1",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/access.git",
-                "reference": "434612e7a26108d0ec97223c882f3c4cafded037"
+                "reference": "c93a1b62d40361dc8b7a1ab47e2ddc7ac9924ec4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/access/zipball/434612e7a26108d0ec97223c882f3c4cafded037",
-                "reference": "434612e7a26108d0ec97223c882f3c4cafded037",
+                "url": "https://api.github.com/repos/yiisoft/access/zipball/c93a1b62d40361dc8b7a1ab47e2ddc7ac9924ec4",
+                "reference": "c93a1b62d40361dc8b7a1ab47e2ddc7ac9924ec4",
                 "shasum": ""
             },
             "require": {
-                "php": "8.0 - 8.5"
+                "php": "8.0 - 8.6"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.66",
-                "maglnet/composer-require-checker": "^4.4",
-                "phpunit/phpunit": "^9.6.22",
+                "bamarni/composer-bin-plugin": "^1.9",
+                "friendsofphp/php-cs-fixer": "^3.95",
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^9.6.35",
                 "rector/rector": "^2.0.8",
-                "roave/infection-static-analysis-plugin": "^1.25",
+                "shipmonk/composer-dependency-analyser": "^1.8",
                 "spatie/phpunit-watcher": "^1.23.6",
-                "vimeo/psalm": "^4.30 || ^5.26.1 || ^6.5"
+                "yiisoft/code-style": "^1.0"
             },
             "type": "library",
+            "extra": {
+                "bamarni-bin": {
+                    "bin-links": true,
+                    "forward-command": true,
+                    "target-directory": "tools"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Yiisoft\\Access\\": "src"
@@ -15328,7 +15336,8 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-12-13T10:12:01+00:00"
+            "time": "2026-10-31T13:05:54+00:00",
+            "published-time": "2026-10-31T13:06:35+00:00"
         },
         {
             "name": "yiisoft/aliases",
@@ -28658,5 +28667,5 @@
         "ext-zlib": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }
