@@ -88,21 +88,47 @@ final class GoCardlessWebhookHandler
         $action = $event['action'] ?? '';
 
         if ($resourceType === 'billing_requests' && $action === 'fulfilled') {
-            $billingRequestId = $event['links']['billing_request'] ?? '';
-
-            if ($billingRequestId !== '') {
-                $this->mandateCollectionService->scheduleFromBillingRequest(
-                    $billingRequestId,
-                );
-            }
-
-            return;
+            $this->processBillingRequestFulfilled($event);
+        } elseif ($resourceType === 'payments') {
+            $this->processPaymentEvent($event, $action);
         }
+    }
 
-        if ($resourceType !== 'payments') {
-            return;
+    /**
+     * @param array{
+     *     id?: string,
+     *     resource_type?: string,
+     *     action?: string,
+     *     links?: array{
+     *         payment?: string,
+     *         billing_request?: string
+     *     }
+     * } $event
+     */
+    private function processBillingRequestFulfilled(array $event): void
+    {
+        $billingRequestId = $event['links']['billing_request'] ?? '';
+
+        if ($billingRequestId !== '') {
+            $this->mandateCollectionService->scheduleFromBillingRequest(
+                $billingRequestId,
+            );
         }
+    }
 
+    /**
+     * @param array{
+     *     id?: string,
+     *     resource_type?: string,
+     *     action?: string,
+     *     links?: array{
+     *         payment?: string,
+     *         billing_request?: string
+     *     }
+     * } $event
+     */
+    private function processPaymentEvent(array $event, string $action): void
+    {
         $succeeded = in_array($action, self::SUCCESS_ACTIONS, true);
         $failed = in_array($action, self::FAILURE_ACTIONS, true);
 

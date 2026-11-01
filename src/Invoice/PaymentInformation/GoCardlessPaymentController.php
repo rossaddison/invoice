@@ -121,53 +121,13 @@ final class GoCardlessPaymentController
         [$urlKey, $invoice] = $ctx;
 
         if ($invoice->getDirectDebitDate() === null) {
-            $queryParams = $request->getQueryParams();
+            $resolved = $this->resolveInvoiceAfterBillingRequest($urlKey, $request);
 
-            $billingRequestId = (string) ($queryParams['billing_request_id'] ?? '');
-            $billingRequestFlowId = (string) ($queryParams['billing_request_flow_id'] ?? '');
-
-            /** @var string|null $sessionBillingRequestId */
-            $sessionBillingRequestId = $this->session->get(self::BILLING_REQUEST_ID_KEY);
-
-            /** @var string|null $sessionBillingRequestFlowId */
-            $sessionBillingRequestFlowId = $this->session->get(self::BILLING_REQUEST_FLOW_ID_KEY);
-
-            /** @var string|null $sessionUrlKey */
-            $sessionUrlKey = $this->session->get(self::BILLING_REQUEST_URL_KEY);
-
-            if (
-                $billingRequestId === ''
-                || $billingRequestFlowId === ''
-                || $sessionBillingRequestId === null
-                || $sessionBillingRequestFlowId === null
-                || $sessionUrlKey === null
-                || !hash_equals($sessionBillingRequestId, $billingRequestId)
-                || !hash_equals($sessionBillingRequestFlowId, $billingRequestFlowId)
-                || !hash_equals($sessionUrlKey, $urlKey)
-            ) {
-                $this->flashMessage(
-                    'warning',
-                    'GoCardless session expired — please try again.',
-                );
-
-                return $this->webService->getNotFoundResponse();
+            if ($resolved instanceof Response) {
+                return $resolved;
             }
 
-            $processedInvoice = $this->mandateCollectionService
-                ->scheduleFromBillingRequest($billingRequestId);
-
-            if ($processedInvoice === null) {
-                $this->flashMessage(
-                    'warning',
-                    'GoCardless authorisation has not yet been completed. Please try again shortly.',
-                );
-
-                return $this->webService->getNotFoundResponse();
-            }
-
-            $invoice = $processedInvoice;
-
-            $this->clearBillingRequestSession();
+            $invoice = $resolved;
         } else {
             $this->clearBillingRequestSession();
         }
@@ -211,6 +171,62 @@ final class GoCardlessPaymentController
     public function goCardlessWebhook(Request $request): Response
     {
         return $this->goCardlessWebhookHandler->handle($request);
+    }
+
+    /**
+     * Validates the GoCardless billing-request session against the one the
+     * redirect came back with, then schedules the direct debit from it.
+     * Always clears the billing-request session before returning.
+     */
+    private function resolveInvoiceAfterBillingRequest(string $urlKey, Request $request): Response|Inv
+    {
+        $queryParams = $request->getQueryParams();
+
+        $billingRequestId = (string) ($queryParams['billing_request_id'] ?? '');
+        $billingRequestFlowId = (string) ($queryParams['billing_request_flow_id'] ?? '');
+
+        /** @var string|null $sessionBillingRequestId */
+        $sessionBillingRequestId = $this->session->get(self::BILLING_REQUEST_ID_KEY);
+
+        /** @var string|null $sessionBillingRequestFlowId */
+        $sessionBillingRequestFlowId = $this->session->get(self::BILLING_REQUEST_FLOW_ID_KEY);
+
+        /** @var string|null $sessionUrlKey */
+        $sessionUrlKey = $this->session->get(self::BILLING_REQUEST_URL_KEY);
+
+        if (
+            $billingRequestId === ''
+            || $billingRequestFlowId === ''
+            || $sessionBillingRequestId === null
+            || $sessionBillingRequestFlowId === null
+            || $sessionUrlKey === null
+            || !hash_equals($sessionBillingRequestId, $billingRequestId)
+            || !hash_equals($sessionBillingRequestFlowId, $billingRequestFlowId)
+            || !hash_equals($sessionUrlKey, $urlKey)
+        ) {
+            $this->flashMessage(
+                'warning',
+                'GoCardless session expired — please try again.',
+            );
+
+            return $this->webService->getNotFoundResponse();
+        }
+
+        $processedInvoice = $this->mandateCollectionService
+            ->scheduleFromBillingRequest($billingRequestId);
+
+        if ($processedInvoice === null) {
+            $this->flashMessage(
+                'warning',
+                'GoCardless authorisation has not yet been completed. Please try again shortly.',
+            );
+
+            return $this->webService->getNotFoundResponse();
+        }
+
+        $this->clearBillingRequestSession();
+
+        return $processedInvoice;
     }
 
     private function clearBillingRequestSession(): void

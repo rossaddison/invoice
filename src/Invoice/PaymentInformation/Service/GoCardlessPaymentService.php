@@ -101,59 +101,71 @@ final class GoCardlessPaymentService implements PaymentGatewayInterface
         ];
     }
 
-/**
- * Retrieves a fulfilled Billing Request.
- *
- * @return array{mandate_id: non-empty-string, invoice_url_key: non-empty-string}|null
- */
-public function getCompletedBillingRequest(string $billingRequestId): ?array
-{
-    $billingRequest = $this->client()->billingRequests()->get($billingRequestId);
+    /**
+     * Retrieves a fulfilled Billing Request.
+     *
+     * @return array{mandate_id: non-empty-string, invoice_url_key: non-empty-string}|null
+     */
+    public function getCompletedBillingRequest(string $billingRequestId): ?array
+    {
+        $billingRequest = $this->client()->billingRequests()->get($billingRequestId);
 
-    if ($billingRequest->status !== 'fulfilled') {
-        return null;
+        if ($billingRequest->status !== 'fulfilled') {
+            return null;
+        }
+
+        // The GoCardless SDK response exposes links/metadata as mixed.
+        $mandateId = $this->extractMandateId($billingRequest->links ?? null, $billingRequestId);
+        $invoiceUrlKey = $this->extractInvoiceUrlKey($billingRequest->metadata ?? [], $billingRequestId);
+
+        if ($mandateId === null || $invoiceUrlKey === null) {
+            return null;
+        }
+
+        return [
+            'mandate_id' => $mandateId,
+            'invoice_url_key' => $invoiceUrlKey,
+        ];
     }
 
-    // The GoCardless SDK response exposes links as mixed.
-    $links = $billingRequest->links ?? null;
+    /**
+     * @return non-empty-string|null
+     */
+    private function extractMandateId(mixed $links, string $billingRequestId): ?string
+    {
+        $candidate = is_object($links) ? ($links->mandate_request_mandate ?? null) : null;
 
-    if (!is_object($links)) {
-        $this->logger->warning(
-            'GoCardless Billing Request has no mandate link.',
-            ['billing_request_id' => $billingRequestId]
-        );
+        if (!is_string($candidate) || $candidate === '') {
+            $this->logger->warning(
+                'GoCardless Billing Request has no mandate link.',
+                ['billing_request_id' => $billingRequestId]
+            );
 
-        return null;
+            return null;
+        }
+
+        return $candidate;
     }
 
-    $candidate = $links->mandate_request_mandate ?? null;
+    /**
+     * @return non-empty-string|null
+     */
+    private function extractInvoiceUrlKey(mixed $metadata, string $billingRequestId): ?string
+    {
+        $metadata = (array) $metadata;
+        $invoiceUrlKey = $metadata['invoice_url_key'] ?? null;
 
-    if (!is_string($candidate) || $candidate === '') {
-        $this->logger->warning(
-            'GoCardless Billing Request has no mandate link.',
-            ['billing_request_id' => $billingRequestId]
-        );
+        if (!is_string($invoiceUrlKey) || $invoiceUrlKey === '') {
+            $this->logger->error(
+                'GoCardless Billing Request is missing its invoice metadata.',
+                ['billing_request_id' => $billingRequestId]
+            );
 
-        return null;
+            return null;
+        }
+
+        return $invoiceUrlKey;
     }
-
-    $metadata = (array) ($billingRequest->metadata ?? []);
-    $invoiceUrlKey = $metadata['invoice_url_key'] ?? null;
-
-    if (!is_string($invoiceUrlKey) || $invoiceUrlKey === '') {
-        $this->logger->error(
-            'GoCardless Billing Request is missing its invoice metadata.',
-            ['billing_request_id' => $billingRequestId]
-        );
-
-        return null;
-    }
-
-    return [
-        'mandate_id' => $candidate,
-        'invoice_url_key' => $invoiceUrlKey,
-    ];
-}
 
     /**
      * Schedules a Direct Debit collection against an existing mandate.

@@ -76,9 +76,7 @@ final class TelegramHelper
         return $this->botApi->getWebhookInfo();
     }
 
-    
     /**
-     * 
      * @param UrlGenerator $urlGenerator
      * @param string|null $ipAddress
      * @param int|null $maxConnections

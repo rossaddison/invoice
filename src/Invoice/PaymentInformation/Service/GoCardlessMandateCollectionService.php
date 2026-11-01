@@ -27,37 +27,19 @@ final class GoCardlessMandateCollectionService
 
     public function scheduleFromBillingRequest(string $billingRequestId): ?Inv
     {
-        $mandate = $this->paymentService->getCompletedBillingRequest($billingRequestId);
+        $resolved = $this->resolveMandateAndInvoice($billingRequestId);
 
-        if ($mandate === null) {
+        if ($resolved === null) {
             return null;
         }
 
-        $urlKey = $mandate['invoice_url_key'];
-        $invoice = $this->iR->repoUrlKeyGuestLoaded($urlKey);
-
-        if ($invoice === null) {
-            $this->logger->warning(
-                'GoCardless: invoice not found for Billing Request.',
-                [
-                    'billing_request_id' => $billingRequestId,
-                    'invoice_url_key' => $urlKey,
-                ],
-            );
-
-            return null;
-        }
-
-        if ($invoice->getDirectDebitDate() !== null) {
-            return $invoice;
-        }
+        [$mandate, $invoice, $urlKey] = $resolved;
 
         /** @var InvAmount $invoiceAmountRecord */
         $invoiceAmountRecord = $this->iaR->repoInvquery($invoice->reqId());
-
         $balance = $invoiceAmountRecord->getBalance() ?? 0.00;
 
-        if ($balance <= 0.00) {
+        if ($invoice->getDirectDebitDate() !== null || $balance <= 0.00) {
             return $invoice;
         }
 
@@ -87,6 +69,35 @@ final class GoCardlessMandateCollectionService
         $this->iR->save($invoice);
 
         return $invoice;
+    }
+
+    /**
+     * @return array{0: array{mandate_id: non-empty-string, invoice_url_key: non-empty-string}, 1: Inv, 2: non-empty-string}|null
+     */
+    private function resolveMandateAndInvoice(string $billingRequestId): ?array
+    {
+        $mandate = $this->paymentService->getCompletedBillingRequest($billingRequestId);
+
+        if ($mandate === null) {
+            return null;
+        }
+
+        $urlKey = $mandate['invoice_url_key'];
+        $invoice = $this->iR->repoUrlKeyGuestLoaded($urlKey);
+
+        if ($invoice === null) {
+            $this->logger->warning(
+                'GoCardless: invoice not found for Billing Request.',
+                [
+                    'billing_request_id' => $billingRequestId,
+                    'invoice_url_key' => $urlKey,
+                ],
+            );
+
+            return null;
+        }
+
+        return [$mandate, $invoice, $urlKey];
     }
 
     private function resolveChargeDate(DateTimeImmutable $dateDue): DateTimeImmutable
