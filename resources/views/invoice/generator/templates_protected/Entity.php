@@ -36,16 +36,22 @@ $EXT_MUT_FREE = '    /** @psalm-external-mutation-free */' . "\n";
 // consistency across every generated file for this entity.
 $toPascalCase = static fn (string $name): string => str_replace('_', '', ucwords($name, '_'));
 // Shared by the primary-key detection below and the relation-key
-// resolution further down -- walks a table's columns for the one(s)
-// marked primary/bigPrimary and returns its real name, or null if none.
-$findPrimaryColumnName = static function (\Cycle\Database\TableInterface $table): ?string {
-    $name = null;
-    foreach ($table->getColumns() as $col) {
-        if ($col->getAbstractType() === 'primary' || $col->getAbstractType() === 'bigPrimary') {
-            $name = $col->getName();
-        }
-    }
-    return $name;
+// resolution further down. Uses TableInterface::getPrimaryKeys() -- the
+// actual DB-reflected primary key, independent of Cycle's "abstract type"
+// classification -- NOT a column-walk checking getAbstractType() ===
+// 'primary'/'bigPrimary'. That classification is reserved for
+// auto-increment integer columns: confirmed directly (dumping every
+// column's abstract type for fa_spike.currencies) that a plain,
+// non-auto-increment string primary key like curr_abrev comes back as
+// abstract type 'string', with no primary-key marker on the column at
+// all, so the column-walk silently found nothing for tables like that.
+// getPrimaryKeys() has no such blind spot; it's generic to any column
+// type. Returns null only if the table genuinely has no primary key.
+// Composite primary keys (rare in this schema) return multiple names;
+// this generator doesn't support those yet, so only the first is used --
+// callers needing to know about that should check count() themselves.
+$findPrimaryColumnNames = static function (\Cycle\Database\TableInterface $table): array {
+    return $table->getPrimaryKeys();
 };
 ?>
 
@@ -168,11 +174,37 @@ class <?= $generator->getCamelcaseCapitalName() . "\n"; ?>
             );
         }
         $targetSchema = $dbal->database('default')->table($targetTable);
-        $outerKey = $findPrimaryColumnName($targetSchema);
-        if ($outerKey === null) {
+        $targetPrimaryKeys = $findPrimaryColumnNames($targetSchema);
+        if (count($targetPrimaryKeys) === 0) {
             throw new \RuntimeException(
                 "Cannot generate relation '$relationLowercaseName': target table '$targetTable' has no detectable " .
                 'primary key.'
+            );
+        }
+        if (count($targetPrimaryKeys) > 1) {
+            throw new \RuntimeException(
+                "Cannot generate relation '$relationLowercaseName': target table '$targetTable' has a composite " .
+                'primary key (' . implode(', ', $targetPrimaryKeys) . '), which this generator doesn\'t support yet.'
+            );
+        }
+        $outerKey = $targetPrimaryKeys[0];
+        $outerKeyIsAutoIncrementInt = false;
+        foreach ($targetSchema->getColumns() as $col) {
+            if ($col->getName() === $outerKey
+                    && ($col->getAbstractType() === $TYPE_PRIMARY || $col->getAbstractType() === $TYPE_BIG_PRIMARY)) {
+                $outerKeyIsAutoIncrementInt = true;
+            }
+        }
+        if (!$outerKeyIsAutoIncrementInt) {
+            // Same reasoning as the entity's own primary-key check above:
+            // this generator's BelongsTo relations assume an int FK
+            // pointing at an auto-increment int PK. A natural/string
+            // target key (e.g. currencies.curr_abrev) needs a genuinely
+            // different relation shape, not attempted here.
+            throw new \RuntimeException(
+                "Cannot generate relation '$relationLowercaseName': target table '$targetTable''s primary key " .
+                "('$outerKey') is not an auto-increment integer. This generator doesn't support relations to " .
+                'natural/string primary keys yet.'
             );
         }
 
@@ -201,15 +233,50 @@ class <?= $generator->getCamelcaseCapitalName() . "\n"; ?>
     // called "id" (e.g. suppliers.supplier_id, currencies.curr_abrev) and
     // Cycle's Column attribute defaults the DB column name to the PHP
     // property name when none is given, so this must be explicit.
+    $sourcePrimaryKeys = $findPrimaryColumnNames($orm_schema);
+    if (count($sourcePrimaryKeys) === 0) {
+        throw new \RuntimeException(
+            "Cannot generate entity '" . $generator->getCamelcaseCapitalName() . "': table '"
+                . $generator->getPreEntityTable() . "' has no detectable primary key."
+        );
+    }
+    if (count($sourcePrimaryKeys) > 1) {
+        throw new \RuntimeException(
+            "Cannot generate entity '" . $generator->getCamelcaseCapitalName() . "': table '"
+                . $generator->getPreEntityTable() . "' has a composite primary key ("
+                . implode(', ', $sourcePrimaryKeys) . "), which this generator doesn't support yet."
+        );
+    }
+    $primaryColumnName = $sourcePrimaryKeys[0];
     $primaryType = $TYPE_PRIMARY;
-    $primaryColumnName = 'id';
+    $primaryColumnIsAutoIncrementInt = false;
     foreach ($orm_schema->getColumns() as $col) {
+        if ($col->getName() !== $primaryColumnName) {
+            continue;
+        }
         if ($col->getAbstractType() === $TYPE_PRIMARY || $col->getAbstractType() === $TYPE_BIG_PRIMARY) {
-            $primaryColumnName = $col->getName();
+            $primaryColumnIsAutoIncrementInt = true;
         }
         if ($col->getAbstractType() === $TYPE_BIG_PRIMARY) {
             $primaryType = 'bigPrimary';
         }
+    }
+    if (!$primaryColumnIsAutoIncrementInt) {
+        // This generator's whole convention (a PHP property always named
+        // $id, always typed int, RequireId's reqId()/hasIdentity() always
+        // returning/checking an int) assumes an auto-increment integer
+        // surrogate key. A natural/string primary key like
+        // currencies.curr_abrev needs a genuinely different shape (the
+        // property typed to match, no auto-increment default, reqId()
+        // not making sense the same way) -- not attempted here. Fail
+        // loudly rather than silently emit a mismatched int property for
+        // a non-int column.
+        throw new \RuntimeException(
+            "Cannot generate entity '" . $generator->getCamelcaseCapitalName() . "': primary key column '"
+                . $primaryColumnName . "' on table '" . $generator->getPreEntityTable()
+                . "' is not an auto-increment integer. This generator doesn't support natural/string primary "
+                . 'keys yet.'
+        );
     }
     echo "    #[Column(type: '" . $primaryType . "', name: '" . $primaryColumnName . "')]" . "\n";
     echo '    private ?int $id = null;' . "\n";
