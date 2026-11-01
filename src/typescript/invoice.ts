@@ -1,4 +1,5 @@
 import { parsedata, getJson, ApiResponse, RequestParams, closestSafe } from './utils.js';
+import { getSelectedDates } from './multi-date-picker.js';
 
 // Invoice-specific interfaces
 interface RecurringInvoiceData extends RequestParams {
@@ -15,7 +16,7 @@ interface DeleteInvoiceItemsData extends RequestParams {
 
 interface CopyMultipleInvoicesData extends RequestParams {
     keylist: string[];
-    modal_created_date: string;
+    modal_created_dates: string[];
     client_ids: string[];
 }
 
@@ -545,7 +546,8 @@ export class InvoiceHandler {
         }
 
         try {
-            const modalCreatedDate = getFieldValue('modal_created_date');
+            const calendar = document.getElementById('modal_created_dates_calendar');
+            const modalCreatedDates = calendar ? getSelectedDates(calendar) : [];
             const selected = this.getCheckedInvoiceIds();
 
             if (selected.length === 0) {
@@ -568,7 +570,7 @@ export class InvoiceHandler {
 
             const payload: CopyMultipleInvoicesData = {
                 keylist: selected,
-                modal_created_date: modalCreatedDate,
+                modal_created_dates: modalCreatedDates,
                 client_ids: clientIds,
             };
 

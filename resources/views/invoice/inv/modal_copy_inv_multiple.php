@@ -36,13 +36,17 @@ echo H::openTag('div', ['id' => 'modal-copy-inv-multiple', 'class' => 'modal',
       echo H::openTag('label', ['for' => 'modal_created_date']); //6
        echo $translator->translate('date.created');
       echo H::closeTag('label'); //6
-      echo H::tag('input', '', [
-       'name'         => 'modal_created_date',
-       'id'           => 'modal_created_date',
-       'class'        => 'form-control form-control-lg',
-       'type'         => 'date',
-       'autocomplete' => 'off',
-       'data-action'  => 'show-picker',
+      // Multi-day calendar: see typescript/multi-date-picker.ts. Each selected
+      // day produces one copy of every ticked invoice (none selected = today).
+      echo H::tag('div', '', [
+       'id'         => 'modal_created_dates_calendar',
+       'class'      => 'border rounded p-2',
+       'data-summary-id' => 'modal_created_dates_summary',
+      ]);
+      echo H::tag('small', '', [
+       'id'    => 'modal_created_dates_summary',
+       'class' => 'text-muted d-block mt-1',
+       'aria-live' => 'polite',
       ]);
      echo H::closeTag('div'); //5
      echo H::openTag('div', ['class' => 'mb-2']); //5

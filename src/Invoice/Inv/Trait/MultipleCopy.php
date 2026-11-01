@@ -54,6 +54,18 @@ trait MultipleCopy
             array_filter(array_map('intval', (array)($data['client_ids'] ?? [])))
         );
 
+        // One copy per selected day; no day selected = a single copy dated
+        // today (resolveCopyCreatedDate() treats '' as now).
+        /** @var list<string> $createdDates */
+        $createdDates = array_values(array_unique(array_filter(
+            array_map('strval', (array)($data['modal_created_dates'] ?? [])),
+            static fn (string $date): bool =>
+                \DateTimeImmutable::createFromFormat('Y-m-d', $date) !== false
+        )));
+        if ($createdDates === []) {
+            $createdDates = [''];
+        }
+
         $anySuccess = false;
 
         /**
@@ -72,18 +84,20 @@ trait MultipleCopy
                 ? $selectedClientIds
                 : [$original->reqClientId()];
 
-            $opts = new CopyInvOptions(createdDate: (string) ($data['modal_created_date'] ?? ''));
-            foreach ($targets as $targetClientId) {
-                if ($this->copyInvToClient(
-                    $invId,
-                    $original,
-                    $targetClientId,
-                    $d,
-                    $formHydrator,
-                    $productIds,
-                    $opts
-                )) {
-                    $anySuccess = true;
+            foreach ($createdDates as $createdDate) {
+                $opts = new CopyInvOptions(createdDate: $createdDate);
+                foreach ($targets as $targetClientId) {
+                    if ($this->copyInvToClient(
+                        $invId,
+                        $original,
+                        $targetClientId,
+                        $d,
+                        $formHydrator,
+                        $productIds,
+                        $opts
+                    )) {
+                        $anySuccess = true;
+                    }
                 }
             }
         }
