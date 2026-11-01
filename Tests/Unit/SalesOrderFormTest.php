@@ -349,7 +349,6 @@ final class SalesOrderFormTest extends TestCase
         foreach ($data as $property => $value) {
             if ($reflection->hasProperty($property)) {
                 $prop = $reflection->getProperty($property);
-                $prop->setAccessible(true);
                 $prop->setValue($form, $value);
             }
         }
