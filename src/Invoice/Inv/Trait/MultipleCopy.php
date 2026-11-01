@@ -13,6 +13,7 @@ use App\Infrastructure\Persistence\
 use App\Invoice\{
     InvAllowanceCharge\InvAllowanceChargeForm, InvCustom\InvCustomForm,
     InvItem\IiAddProductDeps, InvItem\InvItemForm, InvTaxRate\InvTaxRateForm,
+    Inv\CopyCreatedDates,
     Inv\CopyInvOptions,
     Inv\CsvDateNormaliser,
     Inv\InvCopyDeps,
@@ -32,9 +33,6 @@ use Psr\{Http\Message\ResponseInterface as Response,
 
 trait MultipleCopy
 {
-    private const int MAX_COPY_DATES = 62;
-    private const int MAX_COPIES_PER_REQUEST = 500;
-
     public function multiplecopy(
         Request $request,
         FormHydrator $formHydrator,
@@ -58,31 +56,9 @@ trait MultipleCopy
         );
 
         // One copy per selected day; no day selected = a single copy dated
-        // today (resolveCopyCreatedDate() treats '' as now).
-        // modal_created_date (single) is the legacy parameter, still honoured
-        // when modal_created_dates is absent.
-        $createdDates = array_values(array_unique(array_filter(
-            array_map(
-                // Non-scalars become '' and fail the date check below.
-                static fn (mixed $date): string => is_scalar($date) ? (string) $date : '',
-                (array)($data['modal_created_dates'] ?? $data['modal_created_date'] ?? [])
-            ),
-            static function (string $date): bool {
-                $parsed = \DateTimeImmutable::createFromFormat('!Y-m-d', $date);
-                // Reject dates PHP rolls over, e.g. 2026-02-31 -> 2026-03-03.
-                return $parsed !== false && $parsed->format('Y-m-d') === $date;
-            }
-        )));
-        if ($createdDates === []) {
-            $createdDates = [''];
-        }
-
-        // Reject the whole request up front rather than partially commit it.
-        $plannedCopies = count($keyList)
-            * count($createdDates)
-            * max(1, count($selectedClientIds));
-        if (count($createdDates) > self::MAX_COPY_DATES
-            || $plannedCopies > self::MAX_COPIES_PER_REQUEST) {
+        // today. Reject an over-limit request up front, not part-way through.
+        $createdDates = CopyCreatedDates::fromRequest($data);
+        if (!CopyCreatedDates::withinLimits(count($keyList), $createdDates, count($selectedClientIds))) {
             return $this->factory->createResponse(Json::encode(['success' => 0]));
         }
 
