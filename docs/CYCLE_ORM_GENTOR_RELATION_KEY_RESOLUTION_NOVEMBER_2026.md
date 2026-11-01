@@ -195,7 +195,7 @@ into one `$relationTargets` lookup built once per entity, used by both.
   works unaffected.
 - `php -l` on every touched file.
 
-### A follow-on gap found during verification, not yet fixed
+### A follow-on gap found during verification — fixed in rossaddison/yii-cycle-1
 
 Compiling the schema for a natural-key entity at all requires
 `Cycle\Annotated\MergeIndexes` in the generator pipeline (it's what
@@ -209,11 +209,23 @@ a natural-key entity accordingly. But `MergeIndexes` must run **before**
 all (`GenerateRelations` reads the target's primary columns eagerly) —
 confirmed directly: the compile throws `"Entity \`currencie\` must have
 defined primary key"` with `MergeIndexes` ordered after
-`GenerateRelations`, and succeeds with it ordered before. This app's own
-real schema-building pipeline
-(`rossaddison/yii-cycle-1`'s `SchemaConveyor`) appends `MergeIndexes` to
-the same stage as `GenerateRelations`, *after* it — meaning, as that
-package stands today, the very first real relation to a natural-key
-target wired up through the live app (not a standalone scratch script
-like this one) will hit the same compile error. Flagged here rather than
-fixed, since it lives in a separate package/repository from this one.
+`GenerateRelations`, and succeeds with it ordered before.
+
+This app's own real schema-building pipeline
+(`rossaddison/yii-cycle-1`'s `MetadataSchemaConveyor`) registered
+`MergeIndexes` into `STAGE_RENDER`, which already starts with
+`GenerateRelations` — the wrong stage, confirmed by its own docblock
+("Add some generators in this conveyor into the INDEX stage"), which the
+actual code just didn't follow for that one line. Fixed there by moving
+it into `STAGE_INDEX` instead (alongside `Entities`/`MergeColumns`,
+which it already depends on), landing before every `STAGE_RENDER`
+generator. Verified through the real production path — a scratch script
+driving the actual `MetadataSchemaConveyor` → `FromConveyorSchemaProvider`
+→ `Cycle\Schema\Compiler` pipeline, not a hand-picked generator list —
+confirming the real `Supplier belongsTo Currencie` relation now compiles
+and loads correctly that way too, plus the existing
+`rossaddison/yii-cycle-1` test suite (113/113) and a full Psalm rescan
+("No errors found!"), with the three `MetadataSchemaConveyorTest`
+assertions that had hardcoded the previous (buggy) generator order
+updated to match. Committed locally to that repo's `master`
+(not yet pushed).
