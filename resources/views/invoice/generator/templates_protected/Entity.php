@@ -113,10 +113,10 @@ foreach ($orm_schema->getColumns() as $col) {
 // relation, which spans two different bounded-context namespaces
 // (Purchasing and Currency). The target's real namespace now comes from
 // its own Gentor record, same as everything else resolved here.
+$relationTargets = [];
 /**
  * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
  */
-$relationTargets = [];
 foreach ($relations as $relation) {
     $relationLowercaseName = $relation->getLowercaseName() ?? '';
     $relationCamelcaseName = $relation->getCamelcaseName() ?? '';
@@ -184,6 +184,9 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\<?= $generator->getCamelcaseCapitalName(); ?>;
 
 <?php
+/**
+ * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
+ */
 foreach ($relations as $relation) {
     $t = $relationTargets[$relation->getLowercaseName() ?? ''];
     echo 'use ' . $t['namespacePath'] . '\\'
