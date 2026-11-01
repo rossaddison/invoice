@@ -32,8 +32,8 @@ use Psr\{Http\Message\ResponseInterface as Response,
 
 trait MultipleCopy
 {
-    private const MAX_COPY_DATES = 62;
-    private const MAX_COPIES_PER_REQUEST = 500;
+    private const int MAX_COPY_DATES = 62;
+    private const int MAX_COPIES_PER_REQUEST = 500;
 
     public function multiplecopy(
         Request $request,
@@ -63,11 +63,9 @@ trait MultipleCopy
         // when modal_created_dates is absent.
         $createdDates = array_values(array_unique(array_filter(
             array_map(
-                'strval',
-                array_filter(
-                    (array)($data['modal_created_dates'] ?? $data['modal_created_date'] ?? []),
-                    'is_scalar'
-                )
+                // Non-scalars become '' and fail the date check below.
+                static fn (mixed $date): string => is_scalar($date) ? (string) $date : '',
+                (array)($data['modal_created_dates'] ?? $data['modal_created_date'] ?? [])
             ),
             static function (string $date): bool {
                 $parsed = \DateTimeImmutable::createFromFormat('!Y-m-d', $date);
@@ -80,7 +78,7 @@ trait MultipleCopy
         }
 
         // Reject the whole request up front rather than partially commit it.
-        $plannedCopies = count((array) $keyList)
+        $plannedCopies = count($keyList)
             * count($createdDates)
             * max(1, count($selectedClientIds));
         if (count($createdDates) > self::MAX_COPY_DATES
