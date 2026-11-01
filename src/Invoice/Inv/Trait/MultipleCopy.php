@@ -32,6 +32,9 @@ use Psr\{Http\Message\ResponseInterface as Response,
 
 trait MultipleCopy
 {
+    private const MAX_COPY_DATES = 62;
+    private const MAX_COPIES_PER_REQUEST = 500;
+
     public function multiplecopy(
         Request $request,
         FormHydrator $formHydrator,
@@ -56,14 +59,33 @@ trait MultipleCopy
 
         // One copy per selected day; no day selected = a single copy dated
         // today (resolveCopyCreatedDate() treats '' as now).
-        /** @var list<string> $createdDates */
+        // modal_created_date (single) is the legacy parameter, still honoured
+        // when modal_created_dates is absent.
         $createdDates = array_values(array_unique(array_filter(
-            array_map('strval', (array)($data['modal_created_dates'] ?? [])),
-            static fn (string $date): bool =>
-                \DateTimeImmutable::createFromFormat('Y-m-d', $date) !== false
+            array_map(
+                'strval',
+                array_filter(
+                    (array)($data['modal_created_dates'] ?? $data['modal_created_date'] ?? []),
+                    'is_scalar'
+                )
+            ),
+            static function (string $date): bool {
+                $parsed = \DateTimeImmutable::createFromFormat('!Y-m-d', $date);
+                // Reject dates PHP rolls over, e.g. 2026-02-31 -> 2026-03-03.
+                return $parsed !== false && $parsed->format('Y-m-d') === $date;
+            }
         )));
         if ($createdDates === []) {
             $createdDates = [''];
+        }
+
+        // Reject the whole request up front rather than partially commit it.
+        $plannedCopies = count((array) $keyList)
+            * count($createdDates)
+            * max(1, count($selectedClientIds));
+        if (count($createdDates) > self::MAX_COPY_DATES
+            || $plannedCopies > self::MAX_COPIES_PER_REQUEST) {
+            return $this->factory->createResponse(Json::encode(['success' => 0]));
         }
 
         $anySuccess = false;

@@ -45,9 +45,12 @@ function renderMonth(container: HTMLElement, year: number, month: number, select
     for (let d = 1; d <= daysInMonth; d++) {
         const iso = toIso(year, month, d);
         const isSelected = selected.has(iso);
-        const cls = isSelected
-            ? 'btn btn-primary btn-sm'
-            : (iso === todayIso ? 'btn btn-outline-primary btn-sm' : 'btn btn-light btn-sm');
+        let cls = 'btn btn-light btn-sm';
+        if (isSelected) {
+            cls = 'btn btn-primary btn-sm';
+        } else if (iso === todayIso) {
+            cls = 'btn btn-outline-primary btn-sm';
+        }
         html += `<button type="button" class="${cls}" data-mdp-date="${iso}" aria-pressed="${isSelected}">${d}</button>`;
     }
     html += '</div>';
@@ -64,16 +67,17 @@ function updateSummary(container: HTMLElement): void {
 
 export function initMultiDatePicker(containerId = 'modal_created_dates_calendar'): void {
     const container = document.getElementById(containerId);
-    if (!container) {
+    if (!container || container.dataset.mdpReady === '1') {
         return;
     }
+    container.dataset.mdpReady = '1';
     const selected = new Set<string>();
     const now = new Date();
     let year = now.getFullYear();
     let month = now.getMonth();
 
     const refresh = (): void => {
-        container.dataset.selected = Array.from(selected).sort().join(',');
+        container.dataset.selected = Array.from(selected).sort((a, b) => a.localeCompare(b)).join(',');
         renderMonth(container, year, month, selected);
         updateSummary(container);
     };
