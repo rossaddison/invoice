@@ -27,6 +27,7 @@ $RETURN_THIS = '        return $this->';
 $VOID_EOL = '): void';
 $THIS_ARROW = '        $this->';
 $EXT_MUT_FREE = '    /** @psalm-external-mutation-free */' . "\n";
+$MUT_FREE = '    /** @psalm-mutation-free */' . "\n";
 // Column names are snake_case (DB convention); accessor method names should
 // be PascalCase/camelCase (PHP convention) -- e.g. curr_code -> CurrCode, so
 // getCurr_code()/setCurr_code() become getCurrCode()/setCurrCode(). The
@@ -442,7 +443,7 @@ foreach ($relations as $relation) {
     echo $EXT_MUT_FREE;
     echo $PUB_SET . ($relation->getCamelcaseName() ?? '#')
             . '(?' . ($relation->getCamelcaseName() ?? '#') . ' $'
-            . ($relation->getCamelcaseName() ?? '#') . $VOID_EOL . "\n";
+            . ($relation->getLowercaseName() ?? '#') . $VOID_EOL . "\n";
     echo $FUNC_OPEN;
     echo $THIS_ARROW . ($relation->getLowercaseName() ?? '#')
             . ' = $' . ($relation->getLowercaseName() ?? '#') . ';' . "\n";
@@ -466,6 +467,7 @@ foreach ($orm_schema->getColumns() as $column) {
 
     // FK _id fields: req + get + set
     if (substr($column->getName(), -3) === '_id') {
+        echo $MUT_FREE;
         echo '    public function req' . ucfirst($toPascalCase($column->getName())) . '(): int' . "\n";
         echo $FUNC_OPEN;
         echo '        return $this->requireId($this->' . $column->getName()
