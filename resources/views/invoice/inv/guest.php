@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Infrastructure\Persistence\Inv\Inv;
+use App\Invoice\Dwelling\DwellingPostcodeLink;
 use App\Invoice\Enum\DoNotSendReason;
 use App\Widget\Button;
 use Yiisoft\Html\Html;
@@ -32,6 +33,7 @@ const NATIVE_RESET_INV_AMOUNT_FILTER = 'native-reset inv-amount-filter';
 /**
  * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var App\Infrastructure\Persistence\UserInv\UserInv $userInv
+ * @var App\Invoice\Dwelling\DwellingRepository $dwR
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Inv\InvRepository $iR
  * @var App\Invoice\InvAmount\InvAmountRepository $iaR
@@ -158,6 +160,20 @@ $columns = [
                 ])
                 ->optionsData($optionsInvNumberDropDownFilter),
         withSorting: false,
+    ),
+    // HomeCare postcode (Inv → Client → Dwelling), linking to Google Maps.
+    // Same content as the staff inv/index column, InvsDwellingPostcodeColumnTrait.
+    new DataColumn(
+        property: 'filterDwellingPostcode',
+        header: $translator->translate('dwelling.postcode'),
+        content: static fn (Inv $model): string => DwellingPostcodeLink::html(
+            $model->getClientDwellingId(),
+            $dwR,
+            $translator->translate('dwelling.postcode.pending')
+        ),
+        encodeContent: false,
+        withSorting: false,
+        visible: $homeCareEnabled,
     ),
     new DataColumn(
         property: 'filterInvAmountPaid',

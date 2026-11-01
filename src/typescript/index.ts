@@ -38,6 +38,7 @@ import { initCompanyPrivate } from './company-private.js';
 import { initStickyNavbarOffset } from './sticky-navbar-offset.js';
 import { initCalendar } from './calendar.js';
 import { initMultiDatePicker } from './multi-date-picker.js';
+import { initClientAddresses } from './client-addresses.js';
 import { initNavFlyoutSubmenu } from './nav-flyout-submenu.js';
 
 declare global {
@@ -97,6 +98,7 @@ class InvoiceApp {
         initE164PhoneFields();
         initCalendar();
         initMultiDatePicker();
+        initClientAddresses();
         initNavFlyoutSubmenu();
         globalThis.NProgress?.start();
         globalThis.NProgress?.done();

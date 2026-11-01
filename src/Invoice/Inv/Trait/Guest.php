@@ -45,6 +45,7 @@ trait Guest
     public function guest(
         InvGuestDeps $d,
         InvGuestFilter $filter,
+        DwR $dwR,
         #[RouteArgument('page')]
         string $page = '1',
         #[RouteArgument('status')]
@@ -76,7 +77,7 @@ trait Guest
             // with the explanatory message, not a blank tab.
             return $this->webService->getRedirectResponse('shop/catalog/index');
         }
-        return $this->renderGuestView($d, $filter, $page, $status, $user_id, $access);
+        return $this->renderGuestView($d, $filter, $page, $status, $user_id, $access, $dwR);
     }
 
     /**
@@ -359,6 +360,7 @@ trait Guest
         string $status,
         int $user_id,
         InvGuestAccess $access,
+        DwR $dwR,
     ): Response {
         $userInv = $access->userInv;
         $user_clients = $access->clients;
@@ -402,6 +404,7 @@ trait Guest
             'iaR' => $d->iaR,
             'iR' => $d->iR,
             'irR' => $d->irR,
+            'dwR' => $dwR,
             'invs' => $invs,
             'label' => $label,
             // the guest will not have access to the pageSizeLimiter

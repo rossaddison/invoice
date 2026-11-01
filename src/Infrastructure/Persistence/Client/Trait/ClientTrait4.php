@@ -94,7 +94,7 @@ trait ClientTrait4
      * {@see \App\Infrastructure\Persistence\Dwelling\Dwelling} class docblock for why, and for the
      * accepted one-Client-to-at-most-one-Dwelling trade-off (no multi-property-landlord support).
      */
-    public function setDwellingId(int $dwelling_id): void
+    public function setDwellingId(?int $dwelling_id): void
     {
         $this->dwelling_id = $dwelling_id;
     }

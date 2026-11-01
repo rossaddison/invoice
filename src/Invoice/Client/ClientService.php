@@ -130,6 +130,10 @@ final readonly class ClientService
         isset($body['client_age']) ? $model->setClientAge((int) $body['client_age']) : '';
         isset($body['client_gender']) ? $model->setClientGender((int) $body['client_gender']) : '';
         isset($body['postaladdress_id']) ? $model->setPostaladdressId((int) $body['postaladdress_id']) : '';
+        if (array_key_exists('dwelling_id', $body)) {
+            $dwellingId = (int) $body['dwelling_id'];
+            $model->setDwellingId($dwellingId > 0 ? $dwellingId : null);
+        }
         $model->setClientTelegramChatId(isset($body['client_telegram_chat_id']) ? (string) $body['client_telegram_chat_id'] : null);
     }
 

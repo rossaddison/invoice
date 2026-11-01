@@ -159,6 +159,7 @@ final class ClientController extends BaseController
         FormHydrator $formHydrator,
         cfR $cfR,
         cvR $cvR,
+        ClientDwellingPicker $dwellingPicker,
     ): Response {
         $origin     = $currentRoute->getArgument('origin');
         $new_client = new Client();
@@ -171,11 +172,16 @@ final class ClientController extends BaseController
             $origin
         );
         $parameters['form'] = $form;
+        $parameters = array_merge($parameters, $this->dwellingParameters($dwellingPicker, null));
 
         if ($request->getMethod() === Method::POST) {
             if (!$formHydrator->populateFromPostAndValidate($form, $request)) {
                 $parameters['errors'] = $form->getValidationResult()
                                              ->getErrorMessagesIndexedByProperty();
+                return $this->webViewRenderer->render('_form', $parameters);
+            }
+            if ($this->dwellingClaimed($form->dwelling_id, null, $dwellingPicker)) {
+                $parameters['errors'] = ['dwelling_id' => [$this->translator->translate('client.dwelling.already.claimed')]];
                 return $this->webViewRenderer->render('_form', $parameters);
             }
             /** @var array<string, mixed> $body */
@@ -329,10 +335,13 @@ final class ClientController extends BaseController
         );
         /** @var ClientForm $form */
         $form = $parameters['form'];
+        $parameters = array_merge($parameters, $this->dwellingParameters($d->dwellingPicker, $client->getDwellingId()));
 
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
-            if (is_array($body)) {
+            if (is_array($body) && $this->dwellingClaimed(self::postedDwellingId($body), $client->reqId(), $d->dwellingPicker)) {
+                $parameters['errors'] = ['dwelling_id' => [$this->translator->translate('client.dwelling.already.claimed')]];
+            } elseif (is_array($body)) {
                 $returned_form = $this->saveFormFields($body, $form, $client, $formHydrator);
                 $parameters['body'] = $body;
                 if ($returned_form->isValid() && $client->hasIdentity()) {
@@ -494,6 +503,35 @@ final class ClientController extends BaseController
             );
             return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
         }
+    }
+
+    /**
+     * Dwelling dropdown options and the per-Dwelling data the form's
+     * client-addresses.ts uses for its summary line and "use as billing" button.
+     *
+     * @return array{optionsDataDwellings: array<int|string, string>, dwellingData: array<int, array{street: string, number: string, flat: string, postcode: string}>}
+     */
+    private function dwellingParameters(ClientDwellingPicker $picker, ?int $currentDwellingId): array
+    {
+        $built = $picker->forClient($currentDwellingId);
+        return [
+            'optionsDataDwellings' => ['' => $this->translator->translate('client.dwelling.none')] + $built['options'],
+            'dwellingData'         => $built['data'],
+        ];
+    }
+
+    /**
+     * @param array<array-key, mixed> $body
+     */
+    private static function postedDwellingId(array $body): ?int
+    {
+        $id = (int) ($body['dwelling_id'] ?? 0);
+        return $id > 0 ? $id : null;
+    }
+
+    private function dwellingClaimed(?int $dwellingId, ?int $clientId, ClientDwellingPicker $picker): bool
+    {
+        return $dwellingId !== null && $dwellingId > 0 && $picker->isClaimedByAnother($dwellingId, $clientId);
     }
 
     /**

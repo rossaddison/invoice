@@ -17,6 +17,7 @@ final class ClientEditDeps
         public readonly cfR $cfR,
         public readonly cvR $cvR,
         public readonly paR $paR,
+        public readonly ClientDwellingPicker $dwellingPicker,
     ) {
     }
 }

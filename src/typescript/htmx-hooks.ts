@@ -7,6 +7,7 @@
  */
 
 import { initMultiDatePicker } from './multi-date-picker.js';
+import { initClientAddresses } from './client-addresses.js';
 
 interface HtmxAfterRequestDetail {
     successful: boolean;
@@ -70,6 +71,7 @@ function pageSizeRefresh(btn: HTMLElement): void {
                 current.replaceWith(fresh);
                 globalThis.htmx?.process(fresh);
                 initMultiDatePicker(); // the copy modal's calendar lives in the swapped #main-area
+                initClientAddresses();
             }
         })
         .catch(err => console.error('Page size refresh failed:', err));

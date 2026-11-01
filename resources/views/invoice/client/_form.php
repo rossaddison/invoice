@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
+use Yiisoft\Json\Json;
 
 /**
  * @var App\Invoice\Client\ClientForm $form
@@ -25,6 +26,7 @@ use Yiisoft\Html\Tag\Form;
  * @var array $customValues
  * @var array $customFields
  * @var array $clientCustomValues
+ * @var array $dwellingData
  * @var int $postal_address_count
  * @var string $actionName
  * @var string $alert
@@ -40,6 +42,7 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataGender
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClientFrequencyDropdownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataPostalAddresses
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataDwellings
  */
 
 ?>
@@ -93,7 +96,7 @@ use Yiisoft\Html\Tag\Form;
 
  <?= Html::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); ?>
   <?= Html::tag('button', '<i class="bi bi-house-fill me-1"></i>'
-          . $translator->translate('address'),
+          . $translator->translate('client.addresses'),
     ['class' => 'nav-link bg-success text-white', 'id' => 'tab-address',
      'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-address',
      'type' => 'button', 'role' => 'tab'])->encode(false); ?>
@@ -101,31 +104,23 @@ use Yiisoft\Html\Tag\Form;
 
  <?= Html::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); ?>
   <?= Html::tag('button', '<i class="bi bi-telephone-fill me-1"></i>'
-          . $translator->translate('contact.information')
-          . '➕'
-          . $translator->translate('client.postaladdress'),
-    ['class' => 'nav-link bg-info text-white', 'id' => 'tab-contact',
-     'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-contact',
-     'type' => 'button', 'role' => 'tab'])->encode(false); ?>
- <?= Html::closeTag('li'); ?>
-
- <?= Html::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); ?>
-  <?= Html::tag('button', '<i class="bi bi-graph-up me-1"></i>'
-          . $translator->translate('demographics'),
-    ['class' => 'nav-link bg-warning text-dark', 'id' => 'tab-demographics',
-     'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-demographics',
-     'type' => 'button', 'role' => 'tab'])->encode(false); ?>
- <?= Html::closeTag('li'); ?>
-
- <?= Html::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); ?>
-  <?= Html::tag('button', '<i class="bi bi-receipt me-1"></i>'
-          . $translator->translate('tax.information'),
-    ['class' => 'nav-link bg-danger text-white', 'id' => 'tab-tax',
-     'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-tax',
+          . $translator->translate('client.details'),
+    ['class' => 'nav-link bg-info text-white', 'id' => 'tab-details',
+     'data-bs-toggle' => 'tab', 'data-bs-target' => '#pane-details',
      'type' => 'button', 'role' => 'tab'])->encode(false); ?>
  <?= Html::closeTag('li'); ?>
 
 <?= Html::closeTag('ul'); ?>
+
+<?php
+  // Rarely-used fields sit behind a "More" toggle that opens itself when any
+  // of them already holds a value or has a validation error, so nothing is
+  // ever hidden from a user who needs it.
+  $moreAddressOpen = ($form->client_address_2 ?? '') !== '' || ($form->client_state ?? '') !== ''
+      || isset($errors['client_address_2']) || isset($errors['client_state']);
+  $moreContactOpen = ($form->client_fax ?? '') !== '' || ($form->client_telegram_chat_id ?? '') !== ''
+      || isset($errors['client_fax']) || isset($errors['client_telegram_chat_id']);
+?>
 
 <!-- Tab panes -->
 <?= Html::openTag('div', ['class' => 'tab-content border border-top-0 rounded-bottom p-3']); ?>
@@ -182,46 +177,70 @@ use Yiisoft\Html\Tag\Form;
   <?= $formFields->clientLanguageSelect($form, $languageOptions, $selectedLanguage); ?>
  <?= Html::closeTag('div'); ?>
 
- <!-- Address -->
+ <!-- Addresses: billing, delivery and (HomeCare) service address -->
  <?= Html::openTag('div', ['class' => 'tab-pane', 'id' => 'pane-address', 'role' => 'tabpanel']); ?>
-  <?= $formFields->clientTextField($form, 'client_address_1', 'street.address', false); ?>
-  <?= $formFields->clientTextField($form, 'client_address_2', 'street.address.2', false); ?>
-  <?= $formFields->clientTextField($form, 'client_building_number', 'client.building.number', false); ?>
-  <?= $formFields->clientTextField($form, 'client_city', 'city', false); ?>
-  <?= $formFields->clientTextField($form, 'client_state', 'state', false); ?>
-  <?= $formFields->clientTextField($form, 'client_zip', 'zip', false); ?>
-  <?php
-    $countryOptions = [];
-    /** @var string $country */
-    foreach ($countries as $country) {
-        $countryOptions[$country] = ucfirst($country);
-    }
-  ?>
-  <?= $formFields->clientCountrySelect($form, $countryOptions, $selectedCountry); ?>
-  <?php
-    /** @var App\Infrastructure\Persistence\CustomField\CustomField $customField */
-    foreach ($customFields as $customField):
-        if ($customField->getLocation() !== 1) { continue; }
-        $cvH->printFieldForForm($customField, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
-    endforeach;
-  ?>
- <?= Html::closeTag('div'); ?>
 
- <!-- Contact Information -->
- <?= Html::openTag('div', ['class' => 'tab-pane', 'id' => 'pane-contact', 'role' => 'tabpanel']); ?>
-  <?= $formFields->clientTelephoneField($form, 'client_phone', 'phone'); ?>
-  <?= $formFields->clientTelephoneField($form, 'client_fax', 'fax'); ?>
-  <?= Field::text($form, 'client_telegram_chat_id')
-      ->label($translator->translate('client.telegram.chat.id'))
-      ->addInputAttributes([
-          'placeholder' => $translator->translate('client.telegram.chat.id'),
-          'value' => Html::encode($form->client_telegram_chat_id ?? ''),
-          'class' => 'form-control form-control-lg',
-          'id' => 'client_telegram_chat_id',
-      ])
-      ->required(false)
-      ->hint($translator->translate('hint.this.field.is.not.required')); ?>
-  <?= $formFields->clientUrlField($form); ?>
+  <!-- Billing / registered address -->
+  <?= Html::openTag('div', ['class' => 'card mb-3']); ?>
+   <?= Html::openTag('div', ['class' => 'card-header bg-success text-white']); ?>
+    <?= $translator->translate('client.address.billing'); ?>
+   <?= Html::closeTag('div'); ?>
+   <?= Html::openTag('div', ['class' => 'card-body']); ?>
+    <?= Html::tag('p', $translator->translate('client.address.billing.hint'), ['class' => 'text-muted small']); ?>
+    <?= $formFields->clientTextField($form, 'client_address_1', 'street.address', false); ?>
+    <?= $formFields->clientTextField($form, 'client_building_number', 'client.building.number', false); ?>
+    <?= $formFields->clientTextField($form, 'client_city', 'city', false); ?>
+    <?= $formFields->clientTextField($form, 'client_zip', 'zip', false); ?>
+    <?php
+      $countryOptions = [];
+      /** @var string $country */
+      foreach ($countries as $country) {
+          $countryOptions[$country] = ucfirst($country);
+      }
+    ?>
+    <?= $formFields->clientCountrySelect($form, $countryOptions, $selectedCountry); ?>
+    <?= Html::tag('button', $translator->translate('client.address.more'), [
+        'type' => 'button',
+        'class' => 'btn btn-link p-0 mb-2',
+        'data-bs-toggle' => 'collapse',
+        'data-bs-target' => '#client-more-address',
+        'aria-expanded' => $moreAddressOpen ? 'true' : 'false',
+        'aria-controls' => 'client-more-address',
+    ]); ?>
+    <?= Html::openTag('div', ['id' => 'client-more-address', 'class' => 'collapse' . ($moreAddressOpen ? ' show' : '')]); ?>
+     <?= $formFields->clientTextField($form, 'client_address_2', 'street.address.2', false); ?>
+     <?= $formFields->clientTextField($form, 'client_state', 'state', false); ?>
+    <?= Html::closeTag('div'); ?>
+    <?php
+      /** @var App\Infrastructure\Persistence\CustomField\CustomField $customField */
+      foreach ($customFields as $customField):
+          if ($customField->getLocation() !== 1) { continue; }
+          $cvH->printFieldForForm($customField, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
+      endforeach;
+    ?>
+   <?= Html::closeTag('div'); ?>
+  <?= Html::closeTag('div'); ?>
+
+  <!-- Delivery / correspondence address (Peppol postal address) -->
+  <?= Html::openTag('div', ['class' => 'card mb-3']); ?>
+   <?= Html::openTag('div', ['class' => 'card-header bg-warning text-dark']); ?>
+    <?= $translator->translate('client.address.delivery'); ?>
+   <?= Html::closeTag('div'); ?>
+   <?= Html::openTag('div', ['class' => 'card-body']); ?>
+    <?= Html::tag('p', $translator->translate('client.address.delivery.hint'), ['class' => 'text-muted small']); ?>
+    <?= Html::openTag('div', ['class' => 'form-check mb-3']); ?>
+     <?= Html::tag('input', '', [
+         'type' => 'checkbox',
+         'class' => 'form-check-input',
+         'id' => 'client_delivery_same_as_billing',
+         'checked' => $postal_address_count === 0,
+     ]); ?>
+     <?= Html::tag('label', $translator->translate('client.address.delivery.same'), [
+         'class' => 'form-check-label',
+         'for' => 'client_delivery_same_as_billing',
+     ]); ?>
+    <?= Html::closeTag('div'); ?>
+    <?= Html::openTag('div', ['id' => 'client-delivery-fields']); ?>
   <?= /**
        * Anchor for the "fix it now" link Inv\Trait\Peppol's
        * friendlyPeppolExceptionMessage() appends to
@@ -229,6 +248,8 @@ use Yiisoft\Html\Tag\Form;
        * (client/edit/{id}#postaladdress_field) -- a distinct id from
        * whatever Field::select() below auto-generates for the
        * 'postaladdress_id' attribute itself, so the two never collide.
+       * client-addresses.ts un-ticks "Same as billing" when the page is
+       * opened on this anchor so the target is never hidden.
        */
       Html::openTag('div', ['class' => 'mb-3', 'id' => 'postaladdress_field']); ?>
    <?= Html::label($translator->translate('client.postaladdress.available') . ': ', 'postaladdress_id'); ?>
@@ -293,6 +314,78 @@ use Yiisoft\Html\Tag\Form;
     <?php endif; ?>
    <?php endif; ?>
   <?= Html::closeTag('div'); ?>
+    <?= Html::closeTag('div'); ?><!-- /client-delivery-fields -->
+   <?= Html::closeTag('div'); ?>
+  <?= Html::closeTag('div'); ?>
+
+  <!-- Service address (HomeCare Dwelling) -->
+  <?= Html::openTag('div', ['class' => 'card mb-3']); ?>
+   <?= Html::openTag('div', ['class' => 'card-header bg-info text-white']); ?>
+    <?= $translator->translate('client.address.service'); ?>
+   <?= Html::closeTag('div'); ?>
+   <?= Html::openTag('div', [
+       'class' => 'card-body',
+       'id' => 'client-dwelling-picker',
+       'data-dwellings' => Json::encode($dwellingData),
+   ]); ?>
+    <?= Html::tag('p', $translator->translate('client.address.service.hint'), ['class' => 'text-muted small']); ?>
+    <?= Html::tag('input', '', [
+        'type' => 'text',
+        'id' => 'client_dwelling_search',
+        'class' => 'form-control form-control-sm mb-2',
+        'placeholder' => $translator->translate('client.dwelling.search'),
+        'aria-label' => $translator->translate('client.dwelling.search'),
+        'autocomplete' => 'off',
+    ]); ?>
+    <?= Field::select($form, 'dwelling_id')
+        ->label($translator->translate('client.dwelling'))
+        ->required(false)
+        ->addInputAttributes([
+            'value' => Html::encode($form->dwelling_id ?? ''),
+            'class' => 'form-select',
+        ])
+        ->optionsData($optionsDataDwellings); ?>
+    <?php if (isset($errors['dwelling_id'][0])): ?>
+     <?= Html::tag('div', $errors['dwelling_id'][0], ['class' => 'text-danger small mb-2']); ?>
+    <?php endif; ?>
+    <?= Html::tag('div', '', ['id' => 'client_dwelling_summary', 'class' => 'text-muted small mb-2', 'aria-live' => 'polite']); ?>
+    <?= Html::tag('button', $translator->translate('client.dwelling.use.as.billing'), [
+        'type' => 'button',
+        'id' => 'client_use_service_address',
+        'class' => 'btn btn-outline-secondary btn-sm',
+    ]); ?>
+   <?= Html::closeTag('div'); ?>
+  <?= Html::closeTag('div'); ?>
+
+ <?= Html::closeTag('div'); ?>
+
+ <!-- Contact, demographics and tax -->
+ <?= Html::openTag('div', ['class' => 'tab-pane', 'id' => 'pane-details', 'role' => 'tabpanel']); ?>
+
+  <?= Html::tag('h5', $translator->translate('contact.information'), ['class' => 'mb-3']); ?>
+  <?= $formFields->clientTelephoneField($form, 'client_phone', 'phone'); ?>
+  <?= $formFields->clientUrlField($form); ?>
+  <?= Html::tag('button', $translator->translate('client.contact.more'), [
+      'type' => 'button',
+      'class' => 'btn btn-link p-0 mb-2',
+      'data-bs-toggle' => 'collapse',
+      'data-bs-target' => '#client-more-contact',
+      'aria-expanded' => $moreContactOpen ? 'true' : 'false',
+      'aria-controls' => 'client-more-contact',
+  ]); ?>
+  <?= Html::openTag('div', ['id' => 'client-more-contact', 'class' => 'collapse' . ($moreContactOpen ? ' show' : '')]); ?>
+   <?= $formFields->clientTelephoneField($form, 'client_fax', 'fax'); ?>
+   <?= Field::text($form, 'client_telegram_chat_id')
+       ->label($translator->translate('client.telegram.chat.id'))
+       ->addInputAttributes([
+           'placeholder' => $translator->translate('client.telegram.chat.id'),
+           'value' => Html::encode($form->client_telegram_chat_id ?? ''),
+           'class' => 'form-control form-control-lg',
+           'id' => 'client_telegram_chat_id',
+       ])
+       ->required(false)
+       ->hint($translator->translate('hint.this.field.is.not.required')); ?>
+  <?= Html::closeTag('div'); ?>
   <?php
     /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */
     foreach ($customFields as $custom_field):
@@ -300,10 +393,8 @@ use Yiisoft\Html\Tag\Form;
         $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
     endforeach;
   ?>
- <?= Html::closeTag('div'); ?>
 
- <!-- Demographics -->
- <?= Html::openTag('div', ['class' => 'tab-pane', 'id' => 'pane-demographics', 'role' => 'tabpanel']); ?>
+  <?= Html::tag('h5', $translator->translate('demographics'), ['class' => 'mt-4 mb-3']); ?>
   <?= Field::select($form, 'client_gender')
     ->label($translator->translate('gender'))
     ->addInputAttributes(['class' => 'form-select'])
@@ -338,10 +429,8 @@ use Yiisoft\Html\Tag\Form;
         $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
     endforeach;
   ?>
- <?= Html::closeTag('div'); ?>
 
- <!-- Tax Information -->
- <?= Html::openTag('div', ['class' => 'tab-pane', 'id' => 'pane-tax', 'role' => 'tabpanel']); ?>
+  <?= Html::tag('h5', $translator->translate('tax.information'), ['class' => 'mt-4 mb-3']); ?>
   <?= $formFields->clientTextField($form, 'client_vat_id', 'vat.id', false); ?>
   <?= $formFields->clientTextField($form, 'client_tax_code', 'tax.code', false); ?>
   <?php

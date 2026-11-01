@@ -16,6 +16,7 @@ use App\Invoice\Inv\Widget\Trait\InvsCategorySecondaryRunColumnTrait;
 use App\Invoice\Inv\Widget\Trait\InvsColumnVisibilityTrait;
 use App\Invoice\Inv\Widget\Trait\InvsDoNotSendColumnTrait;
 use App\Invoice\Inv\Widget\Trait\InvsDwellingHouseNumberColumnTrait;
+use App\Invoice\Inv\Widget\Trait\InvsDwellingPostcodeColumnTrait;
 use App\Invoice\Inv\Widget\Trait\InvsWorkerColumnTrait;
 use App\Widget\NoOpFilterFactory;
 use App\Invoice\Setting\SettingRepository as SR;
@@ -51,6 +52,7 @@ final class InvsColumnBuilder
     use InvsColumnVisibilityTrait;
     use InvsDoNotSendColumnTrait;
     use InvsDwellingHouseNumberColumnTrait;
+    use InvsDwellingPostcodeColumnTrait;
     use InvsWorkerColumnTrait;
 
     private const string ROUTE_EDIT          = 'inv/edit';
@@ -108,6 +110,7 @@ final class InvsColumnBuilder
             $this->buildInvNumberColumn(),
             $this->buildFamilyNameColumn(!$isHidden('family_name')),
             $this->buildDwellingHouseNumberColumn($p->dwR, $homeCareEnabled),
+            $this->buildDwellingPostcodeColumn($p->dwR, $homeCareEnabled),
             $this->buildCategorySecondaryRunColumn($p->csR, $homeCareEnabled),
             $this->buildYearMonthColumn(!$isHidden('year_month')),
             $this->buildStatusColumn($iR, $irR, $sR),

@@ -30,15 +30,29 @@ final class ClientDwellingRepository extends Select\Repository
     public function repoClaimedDwellingIds(): array
     {
         $query = $this->select()
-            ->where(['dwelling_id' => ['not' => null]]);
+            ->where(['dwelling_id' => ['!=' => null]]);
         $ids = [];
         /** @var Client $client */
-        foreach ($query as $client) {
+        foreach ($query->fetchAll() as $client) {
             $dwellingId = $client->getDwellingId();
             if ($dwellingId !== null) {
                 $ids[] = $dwellingId;
             }
         }
         return $ids;
+    }
+
+    /**
+     * Whether a Client other than $clientId (null = a brand-new Client) already occupies the Dwelling.
+     */
+    public function isClaimedByAnother(int $dwellingId, ?int $clientId): bool
+    {
+        /** @var Client $client */
+        foreach ($this->select()->where(['dwelling_id' => $dwellingId])->fetchAll() as $client) {
+            if (!$client->hasIdentity() || $client->reqId() !== $clientId) {
+                return true;
+            }
+        }
+        return false;
     }
 }
