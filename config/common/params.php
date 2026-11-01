@@ -62,6 +62,17 @@ switch ($env) {
     default:
         $dbHost = $_ENV['DB_HOST_IP_ADDRESS'] ?? 'localhost';
 }
+
+// Second, separate Cycle connection for FrontAccounting's own database (the
+// Bookkeeping module's data source, alongside QuickBooks) -- deliberately
+// its own set of env vars, defaulting to this dev box's FA checkout
+// (config_db.php's own 'fa_spike'/root/no-password/127.0.0.1), not reusing
+// $dbHost/$dbName/etc above, since this is genuinely a different database
+// on a different schema, not an alternate environment for the same one.
+$faDbHost = ($_ENV['FA_DB_HOST'] ?? '') ?: '127.0.0.1';
+$faDbName = ($_ENV['FA_DB_NAME'] ?? '') ?: 'fa_spike';
+$faDbUser = ($_ENV['FA_DB_USERNAME'] ?? '') ?: 'root';
+$faDbPassword = ($_ENV['FA_DB_PASSWORD'] ?? '') ?: null;
 $buttonClass = 'buttonClass()';
 $containerClass = 'containerClass()';
 $submitButtonConfigs = [
@@ -456,6 +467,12 @@ return [
                 // data) — deliberately its own SQLite file, decoupled from
                 // the main MySQL database. See docs/GATEWAY_STATUS_PAGE_AUGUST_2026.md.
                 'gateway_status' => ['connection' => 'sqlite'],
+                // FrontAccounting's own database (Bookkeeping module source,
+                // alongside QuickBooks) -- see $faDbHost/etc above. Cycle
+                // connections are lazy (nothing connects until a query
+                // actually runs against 'frontaccounting'), so registering
+                // this has no effect on requests that never touch it.
+                'frontaccounting' => ['connection' => 'frontaccounting_mysql'],
             ],
             'connections' => [
                 'mysql' => new Cycle\Database\Config\MySQLDriverConfig(
@@ -475,6 +492,14 @@ return [
                         dirname(__DIR__, 2) . '/resources/gateway-status/gateway-status.sqlite',
                     ),
                     driver: Cycle\Database\Driver\SQLite\SQLiteDriver::class,
+                ),
+                'frontaccounting_mysql' => new Cycle\Database\Config\MySQLDriverConfig(
+                    connection: new Cycle\Database\Config\MySQL\DsnConnectionConfig(
+                        'mysql:host=' . $faDbHost . ';dbname='. $faDbName . ';charset=utf8mb4',
+                        $faDbUser,
+                        $faDbPassword,
+                    ),
+                    driver: Cycle\Database\Driver\MySQL\MySQLDriver::class,
                 ),
             ],
         ],
