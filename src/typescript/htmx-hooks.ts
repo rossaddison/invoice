@@ -6,6 +6,8 @@
  * (`allowEval`) as defense in depth now that nothing in the app relies on it.
  */
 
+import { initMultiDatePicker } from './multi-date-picker.js';
+
 interface HtmxAfterRequestDetail {
     successful: boolean;
 }
@@ -67,6 +69,7 @@ function pageSizeRefresh(btn: HTMLElement): void {
             if (fresh && current) {
                 current.replaceWith(fresh);
                 globalThis.htmx?.process(fresh);
+                initMultiDatePicker(); // the copy modal's calendar lives in the swapped #main-area
             }
         })
         .catch(err => console.error('Page size refresh failed:', err));

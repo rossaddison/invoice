@@ -13,6 +13,7 @@ use App\Infrastructure\Persistence\
 use App\Invoice\{
     InvAllowanceCharge\InvAllowanceChargeForm, InvCustom\InvCustomForm,
     InvItem\IiAddProductDeps, InvItem\InvItemForm, InvTaxRate\InvTaxRateForm,
+    Inv\CopyCreatedDates,
     Inv\CopyInvOptions,
     Inv\CsvDateNormaliser,
     Inv\InvCopyDeps,
@@ -54,6 +55,13 @@ trait MultipleCopy
             array_filter(array_map('intval', (array)($data['client_ids'] ?? [])))
         );
 
+        // One copy per selected day; no day selected = a single copy dated
+        // today. Reject an over-limit request up front, not part-way through.
+        $createdDates = CopyCreatedDates::fromRequest($data);
+        if (!CopyCreatedDates::withinLimits(count($keyList), $createdDates, count($selectedClientIds))) {
+            return $this->factory->createResponse(Json::encode(['success' => 0]));
+        }
+
         $anySuccess = false;
 
         /**
@@ -72,18 +80,20 @@ trait MultipleCopy
                 ? $selectedClientIds
                 : [$original->reqClientId()];
 
-            $opts = new CopyInvOptions(createdDate: (string) ($data['modal_created_date'] ?? ''));
-            foreach ($targets as $targetClientId) {
-                if ($this->copyInvToClient(
-                    $invId,
-                    $original,
-                    $targetClientId,
-                    $d,
-                    $formHydrator,
-                    $productIds,
-                    $opts
-                )) {
-                    $anySuccess = true;
+            foreach ($createdDates as $createdDate) {
+                $opts = new CopyInvOptions(createdDate: $createdDate);
+                foreach ($targets as $targetClientId) {
+                    if ($this->copyInvToClient(
+                        $invId,
+                        $original,
+                        $targetClientId,
+                        $d,
+                        $formHydrator,
+                        $productIds,
+                        $opts
+                    )) {
+                        $anySuccess = true;
+                    }
                 }
             }
         }
