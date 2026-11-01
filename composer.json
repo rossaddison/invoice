@@ -184,7 +184,7 @@
         "testo/bridge-mockery": "^0.1.2",
         "testo/facade": ">=0.1.1",
         "testo/testo": "^0.10.56",
-        "vimeo/psalm": ">=6.20.4"
+        "vimeo/psalm": ">=6.20.5"
     },
     "autoload": {
         "psr-4": {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8ecc110a6345a72f80a2eed6d606100f",
+    "content-hash": "37bafbe85521e70984f216169a4fdad1",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -186,16 +186,16 @@
         },
         {
             "name": "amphp/byte-stream",
-            "version": "v2.1.2",
+            "version": "v2.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/byte-stream.git",
-                "reference": "55a6bd071aec26fa2a3e002618c20c35e3df1b46"
+                "reference": "1511cdfdf868a706307358bd48f155c3df2c490f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/byte-stream/zipball/55a6bd071aec26fa2a3e002618c20c35e3df1b46",
-                "reference": "55a6bd071aec26fa2a3e002618c20c35e3df1b46",
+                "url": "https://api.github.com/repos/amphp/byte-stream/zipball/1511cdfdf868a706307358bd48f155c3df2c490f",
+                "reference": "1511cdfdf868a706307358bd48f155c3df2c490f",
                 "shasum": ""
             },
             "require": {
@@ -211,7 +211,7 @@
                 "amphp/php-cs-fixer-config": "^2",
                 "amphp/phpunit-util": "^3",
                 "phpunit/phpunit": "^9",
-                "psalm/phar": "5.22.1"
+                "psalm/phar": "6.16.1"
             },
             "type": "library",
             "autoload": {
@@ -249,7 +249,7 @@
             ],
             "support": {
                 "issues": "https://github.com/amphp/byte-stream/issues",
-                "source": "https://github.com/amphp/byte-stream/tree/v2.1.2"
+                "source": "https://github.com/amphp/byte-stream/tree/v2.1.3"
             },
             "funding": [
                 {
@@ -257,7 +257,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-16T17:10:27+00:00"
+            "time": "2026-10-31T19:10:04+00:00"
         },
         {
             "name": "amphp/cache",
@@ -326,16 +326,16 @@
         },
         {
             "name": "amphp/dns",
-            "version": "v2.4.1",
+            "version": "v2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/dns.git",
-                "reference": "ec5948bfafac808f410406e18bc7b52a2d4629b7"
+                "reference": "2e2b4daa214a18b1528919d6781988ea65a9a47d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/dns/zipball/ec5948bfafac808f410406e18bc7b52a2d4629b7",
-                "reference": "ec5948bfafac808f410406e18bc7b52a2d4629b7",
+                "url": "https://api.github.com/repos/amphp/dns/zipball/2e2b4daa214a18b1528919d6781988ea65a9a47d",
+                "reference": "2e2b4daa214a18b1528919d6781988ea65a9a47d",
                 "shasum": ""
             },
             "require": {
@@ -403,7 +403,7 @@
             ],
             "support": {
                 "issues": "https://github.com/amphp/dns/issues",
-                "source": "https://github.com/amphp/dns/tree/v2.4.1"
+                "source": "https://github.com/amphp/dns/tree/v2.4.2"
             },
             "funding": [
                 {
@@ -411,7 +411,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-26T17:53:54+00:00"
+            "time": "2026-10-31T19:53:43+00:00"
         },
         {
             "name": "amphp/parallel",
@@ -847,16 +847,16 @@
         },
         {
             "name": "amphp/sync",
-            "version": "v2.3.0",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/sync.git",
-                "reference": "217097b785130d77cfcc58ff583cf26cd1770bf1"
+                "reference": "2f711b6651270449d59c770ffb518698655022f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/sync/zipball/217097b785130d77cfcc58ff583cf26cd1770bf1",
-                "reference": "217097b785130d77cfcc58ff583cf26cd1770bf1",
+                "url": "https://api.github.com/repos/amphp/sync/zipball/2f711b6651270449d59c770ffb518698655022f7",
+                "reference": "2f711b6651270449d59c770ffb518698655022f7",
                 "shasum": ""
             },
             "require": {
@@ -870,7 +870,7 @@
                 "amphp/php-cs-fixer-config": "^2",
                 "amphp/phpunit-util": "^3",
                 "phpunit/phpunit": "^9",
-                "psalm/phar": "5.23"
+                "psalm/phar": "6.16.1"
             },
             "type": "library",
             "autoload": {
@@ -910,7 +910,7 @@
             ],
             "support": {
                 "issues": "https://github.com/amphp/sync/issues",
-                "source": "https://github.com/amphp/sync/tree/v2.3.0"
+                "source": "https://github.com/amphp/sync/tree/v2.3.1"
             },
             "funding": [
                 {
@@ -918,7 +918,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-08-03T19:31:26+00:00"
+            "time": "2026-06-14T17:37:39+00:00"
         },
         {
             "name": "anthropic-ai/sdk",
@@ -9251,12 +9251,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-cycle-1.git",
-                "reference": "6df64a6d464e86a8e998a6a9fd981dcca8f86e86"
+                "reference": "9338ae92a5f7c9df1134f35c885bfac7fd36f1c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-cycle-1/zipball/6df64a6d464e86a8e998a6a9fd981dcca8f86e86",
-                "reference": "6df64a6d464e86a8e998a6a9fd981dcca8f86e86",
+                "url": "https://api.github.com/repos/rossaddison/yii-cycle-1/zipball/9338ae92a5f7c9df1134f35c885bfac7fd36f1c3",
+                "reference": "9338ae92a5f7c9df1134f35c885bfac7fd36f1c3",
                 "shasum": ""
             },
             "require": {
@@ -9277,20 +9277,21 @@
                 "spiral/tokenizer": "^3.15.8",
                 "symfony/console": "^6.4 || ^7.2 || ^8.0",
                 "symfony/finder": "^6.4 || ^7.2 || ^8.0",
-                "webmozart/glob": "^4.7",
                 "yiisoft/aliases": "^3.0",
                 "yiisoft/friendly-exception": "^1.1",
                 "yiisoft/injector": "^1.1"
             },
             "require-dev": {
                 "cycle/entity-behavior": "^1.0",
+                "friendsofphp/php-cs-fixer": "^3.64",
                 "jetbrains/phpstorm-attributes": "^1.0",
-                "maglnet/composer-require-checker": "^4.3",
                 "phpunit/phpunit": "^10.5",
                 "rector/rector": "^2.0.15",
                 "roave/infection-static-analysis-plugin": "^1.25",
+                "shipmonk/composer-dependency-analyser": "^1.8",
                 "spatie/phpunit-watcher": "^1.23",
                 "vimeo/psalm": "^5.26.1 || ^6.8.9",
+                "yiisoft/code-style": "^1.1",
                 "yiisoft/definitions": "^3.2",
                 "yiisoft/di": "^1.2",
                 "yiisoft/test-support": "^3.0"
@@ -9350,7 +9351,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-05-08T07:44:44+00:00"
+            "time": "2026-11-01T09:29:38+00:00"
         },
         {
             "name": "rossaddison/yii-gii",
@@ -14833,16 +14834,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "6.20.4",
+            "version": "6.20.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "e53db692e6600cf729c88190b892bcf96e1c550e"
+                "reference": "e447b655502f2058630e6ee03f2ea1c3789fe166"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/e53db692e6600cf729c88190b892bcf96e1c550e",
-                "reference": "e53db692e6600cf729c88190b892bcf96e1c550e",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/e447b655502f2058630e6ee03f2ea1c3789fe166",
+                "reference": "e447b655502f2058630e6ee03f2ea1c3789fe166",
                 "shasum": ""
             },
             "require": {
@@ -14947,7 +14948,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm"
             },
-            "time": "2026-10-29T10:26:19+00:00"
+            "time": "2026-10-31T16:01:17+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -15336,8 +15337,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-10-31T13:05:54+00:00",
-            "published-time": "2026-10-31T13:06:35+00:00"
+            "time": "2026-10-31T13:05:54+00:00"
         },
         {
             "name": "yiisoft/aliases",
@@ -19984,12 +19984,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-dataview.git",
-                "reference": "daae6f4a803d64d5827bac31a2b0b9accde84a87"
+                "reference": "70b9295eb661c7d3e4485d539e505789bcdbe28d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/daae6f4a803d64d5827bac31a2b0b9accde84a87",
-                "reference": "daae6f4a803d64d5827bac31a2b0b9accde84a87",
+                "url": "https://api.github.com/repos/yiisoft/yii-dataview/zipball/70b9295eb661c7d3e4485d539e505789bcdbe28d",
+                "reference": "70b9295eb661c7d3e4485d539e505789bcdbe28d",
                 "shasum": ""
             },
             "require": {
@@ -20008,9 +20008,9 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.91",
+                "infection/infection": "^0.29.8 || ^0.35.8",
                 "phpunit/phpunit": "^10.5.58",
                 "rector/rector": "^2.1.7",
-                "roave/infection-static-analysis-plugin": "^1.35",
                 "shipmonk/composer-dependency-analyser": "^1.8",
                 "spatie/phpunit-watcher": "^1.24",
                 "vimeo/psalm": "^5.26.1 || ^6.12",
@@ -20070,7 +20070,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-09-15T18:24:30+00:00"
+            "time": "2026-11-01T08:41:46+00:00"
         },
         {
             "name": "yiisoft/yii-event",
@@ -28667,5 +28667,5 @@
         "ext-zlib": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.11.0"
+    "plugin-api-version": "2.9.0"
 }
