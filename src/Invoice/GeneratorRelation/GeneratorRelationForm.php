@@ -22,6 +22,11 @@ final class GeneratorRelationForm extends FormModel
     #[Required]
     private ?int $gentor_id = null;
 
+    // Optional: see GentorRelation::getForeignKeyColumn() -- only needed
+    // when the target entity's primary key isn't an auto-increment int,
+    // so unlike the other fields here it's genuinely not required.
+    private ?string $foreign_key_column = '';
+
     public static function show(GentorRelation $gentorRelation): self
     {
         $form = new self();
@@ -29,6 +34,7 @@ final class GeneratorRelationForm extends FormModel
         $form->camelcasename = $gentorRelation->getCamelcaseName();
         $form->view_field_name = $gentorRelation->getViewFieldName();
         $form->gentor_id = $gentorRelation->reqGentorId();
+        $form->foreign_key_column = $gentorRelation->getForeignKeyColumn();
         return $form;
     }
 
@@ -50,6 +56,11 @@ final class GeneratorRelationForm extends FormModel
     public function reqGentorId(): ?int
     {
         return $this->gentor_id;
+    }
+
+    public function getForeignKeyColumn(): ?string
+    {
+        return $this->foreign_key_column;
     }
 
     /**

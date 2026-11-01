@@ -1066,6 +1066,13 @@ return [
     . ' (eg. tax_rate_id \'foreign key/relation\' in'
     . ' Product table simplified to tax.rate) ',
   'generator.relation.form.view.field.name' => 'View Field Name',
+  'generator.relation.form.foreign.key.column' => 'Foreign Key Column',
+  'generator.relation.form.foreign.key.column.hint' =>
+    'Optional. Only needed when the target entity\'s primary key is NOT'
+    . ' an auto-increment integer (e.g. currencies.curr_abrev) -- set this'
+    . ' to the real source column name for this relation (e.g. curr_code),'
+    . ' since the generator can\'t derive it automatically in that case.'
+    . ' Leave blank for a normal auto-increment-int relation.',
   'generator.relations' => 'Generator Relations',
   'generator.relations.add' => 'Generators Relation Add',
   'generator.route.prefix' => 'Route Prefix eg.'

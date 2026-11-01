@@ -54,6 +54,129 @@ $toPascalCase = static fn (string $name): string => str_replace('_', '', ucwords
 $findPrimaryColumnNames = static function (\Cycle\Database\TableInterface $table): array {
     return $table->getPrimaryKeys();
 };
+// Detect the entity's own primary key up front -- needed below both for
+// the #[Column]/property emission further down AND for deciding whether
+// the RequireId trait/import are even used (see $usesRequireId), which
+// has to be known before the class's `use` statements are emitted.
+$sourcePrimaryKeys = $findPrimaryColumnNames($orm_schema);
+if (count($sourcePrimaryKeys) === 0) {
+    throw new \RuntimeException(
+        "Cannot generate entity '" . $generator->getCamelcaseCapitalName() . "': table '"
+            . $generator->getPreEntityTable() . "' has no detectable primary key."
+    );
+}
+if (count($sourcePrimaryKeys) > 1) {
+    throw new \RuntimeException(
+        "Cannot generate entity '" . $generator->getCamelcaseCapitalName() . "': table '"
+            . $generator->getPreEntityTable() . "' has a composite primary key ("
+            . implode(', ', $sourcePrimaryKeys) . "), which this generator doesn't support yet."
+    );
+}
+$primaryColumnName = $sourcePrimaryKeys[0];
+$primaryType = $TYPE_PRIMARY;
+$primaryColumnIsAutoIncrementInt = false;
+foreach ($orm_schema->getColumns() as $col) {
+    if ($col->getName() !== $primaryColumnName) {
+        continue;
+    }
+    if ($col->getAbstractType() === $TYPE_PRIMARY || $col->getAbstractType() === $TYPE_BIG_PRIMARY) {
+        $primaryColumnIsAutoIncrementInt = true;
+    }
+    if ($col->getAbstractType() === $TYPE_BIG_PRIMARY) {
+        $primaryType = 'bigPrimary';
+    }
+}
+// A natural-key entity (e.g. currencies.curr_abrev) is known up front and
+// never DB-assigned, so it gets no $id/reqId()/hasIdentity()/setId()
+// machinery at all -- it's just a regular column below. RequireId's
+// requireId() is only actually called from reqId() (auto-increment PK)
+// and from req<Column>Id() helpers generated further down for int-typed
+// "_id" FK columns, so skip emitting the trait/import entirely when
+// neither applies, rather than leaving an always-unused import behind.
+$usesRequireId = $primaryColumnIsAutoIncrementInt;
+foreach ($orm_schema->getColumns() as $col) {
+    if ($col->getName() === $primaryColumnName && $primaryColumnIsAutoIncrementInt) {
+        continue;
+    }
+    if ($col->getType() === 'int' && substr($col->getName(), -3) === '_id') {
+        $usesRequireId = true;
+    }
+}
+// Resolve every relation's target ONCE, up front -- shared by the `use`
+// import statement below AND the #[BelongsTo] key resolution further
+// down in the class body, which used to redo this same lookup. Keeping
+// it in one place also fixes a real bug: the import statement used to
+// hardcode App\Infrastructure\Persistence as every relation target's
+// namespace root, correct only when the target happens to live in the
+// same namespace tree as the entity being generated -- wrong the moment
+// it doesn't, found generating FrontAccounting's Supplier -> Currencie
+// relation, which spans two different bounded-context namespaces
+// (Purchasing and Currency). The target's real namespace now comes from
+// its own Gentor record, same as everything else resolved here.
+/**
+ * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
+ */
+$relationTargets = [];
+foreach ($relations as $relation) {
+    $relationLowercaseName = $relation->getLowercaseName() ?? '';
+    $relationCamelcaseName = $relation->getCamelcaseName() ?? '';
+    if ($dbal === null || $gr === null) {
+        throw new \RuntimeException(
+            "Cannot generate relation '$relationLowercaseName': this template needs \$dbal/\$gr to resolve " .
+            "the target's real namespace, table and FK column (see GeneratorCodeController::entity())."
+        );
+    }
+    $targetGentor = $gr->findByCamelcaseCapitalName($relationCamelcaseName);
+    if ($targetGentor === null) {
+        throw new \RuntimeException(
+            "Cannot generate relation '$relationLowercaseName': no Gentor record found for target entity " .
+            "'$relationCamelcaseName'. Create one first -- it's how this generator discovers the target's " .
+            'real namespace/table/primary key column.'
+        );
+    }
+    $targetNamespacePath = $targetGentor->getNamespacePath();
+    if ($targetNamespacePath === '') {
+        throw new \RuntimeException(
+            "Cannot generate relation '$relationLowercaseName': the Gentor record for '$relationCamelcaseName' " .
+            'has no namespace_path set.'
+        );
+    }
+    $targetTable = $targetGentor->getPreEntityTable();
+    if ($targetTable === '') {
+        throw new \RuntimeException(
+            "Cannot generate relation '$relationLowercaseName': the Gentor record for '$relationCamelcaseName' " .
+            'has no pre_entity_table set.'
+        );
+    }
+    $targetSchema = $dbal->database('default')->table($targetTable);
+    $targetPrimaryKeys = $findPrimaryColumnNames($targetSchema);
+    if (count($targetPrimaryKeys) === 0) {
+        throw new \RuntimeException(
+            "Cannot generate relation '$relationLowercaseName': target table '$targetTable' has no detectable " .
+            'primary key.'
+        );
+    }
+    if (count($targetPrimaryKeys) > 1) {
+        throw new \RuntimeException(
+            "Cannot generate relation '$relationLowercaseName': target table '$targetTable' has a composite " .
+            'primary key (' . implode(', ', $targetPrimaryKeys) . '), which this generator doesn\'t support yet.'
+        );
+    }
+    $outerKey = $targetPrimaryKeys[0];
+    $outerKeyIsAutoIncrementInt = false;
+    foreach ($targetSchema->getColumns() as $col) {
+        if ($col->getName() === $outerKey
+                && ($col->getAbstractType() === $TYPE_PRIMARY || $col->getAbstractType() === $TYPE_BIG_PRIMARY)) {
+            $outerKeyIsAutoIncrementInt = true;
+        }
+    }
+    $relationTargets[$relationLowercaseName] = [
+        'camelcaseName' => $relationCamelcaseName,
+        'namespacePath' => $targetNamespacePath,
+        'outerKey' => $outerKey,
+        'outerKeyIsAutoIncrementInt' => $outerKeyIsAutoIncrementInt,
+    ];
+}
 ?>
 
 declare(strict_types=1);
@@ -61,19 +184,22 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\<?= $generator->getCamelcaseCapitalName(); ?>;
 
 <?php
-/**
- * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
- */
 foreach ($relations as $relation) {
-    echo 'use App\\Infrastructure\\Persistence\\'
-        . ($relation->getCamelcaseName() ?? '#') . '\\'
-        . ($relation->getCamelcaseName() ?? '#') . ';' . "\n";
+    $t = $relationTargets[$relation->getLowercaseName() ?? ''];
+    echo 'use ' . $t['namespacePath'] . '\\'
+        . $t['camelcaseName'] . '\\'
+        . $t['camelcaseName'] . ';' . "\n";
 }
 ?>
+<?php if ($usesRequireId) : ?>
 use App\Infrastructure\Persistence\Trait\RequireId;
+<?php endif; ?>
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
+<?php if (!$primaryColumnIsAutoIncrementInt) : ?>
+use Cycle\Annotated\Annotation\Table\PrimaryKey;
+<?php endif; ?>
 <?php
     /**
      * @var Cycle\Database\Schema\AbstractColumn $column
@@ -97,6 +223,20 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
     // others (e.g. FiscalYear -> Cycle's default guess is fiscal_years,
     // grn_batch -> GrnBatch would guess grn_batches). Always pin it to the
     // real table this entity was actually generated from.
+    // A natural/string PK (e.g. currencies.curr_abrev) has no abstract
+    // 'primary'/'bigPrimary' column type for Cycle to detect on its own --
+    // that classification is reserved for auto-increment surrogate keys
+    // (see $findPrimaryColumnNames's own comment above). Without this
+    // explicit #[PrimaryKey] index annotation, Cycle\Annotated\MergeIndexes
+    // (part of the real schema-compile pipeline, confirmed via
+    // yii-cycle's MetadataSchemaConveyor) never registers a primary key
+    // for this entity at all, and any relation targeting it fails to
+    // compile with "Entity `<role>` must have defined primary key" --
+    // confirmed by generating this exact failure against currencies
+    // before adding this.
+    if (!$primaryColumnIsAutoIncrementInt) {
+        echo "#[PrimaryKey(columns: ['" . $primaryColumnName . "'])]" . "\n";
+    }
     echo '#[Entity(repository: '
             . '\\'
             . $generator->getNamespacePath()
@@ -132,156 +272,77 @@ if ($generator->isCreatedInclude()
 /** @psalm-external-mutation-free */
 class <?= $generator->getCamelcaseCapitalName() . "\n"; ?>
 {
+<?php if ($usesRequireId) : ?>
     use RequireId;
 
+<?php endif; ?>
 <?php
     /**
      * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
      */
     foreach ($relations as $relation) {
         $relationLowercaseName = $relation->getLowercaseName() ?? '';
-        $relationCamelcaseName = $relation->getCamelcaseName() ?? '';
+        $t = $relationTargets[$relationLowercaseName];
+        $outerKey = $t['outerKey'];
 
-        // Resolve the target's real table + primary key column instead of
-        // trusting Cycle's default {relation}_{outerKey} relation-key
-        // convention (see cycle/schema-builder's BelongsTo.php): that
-        // convention assumes the target's PK FIELD is always named "id"
-        // (true here, by this generator's own design) AND that the
-        // source table's FK column is exactly "{relation}_id" -- false
-        // for FrontAccounting's many string-keyed FKs (curr_code,
-        // loc_code, stock_id, ...), and fragile in general since it
-        // depends on lowercasename being typed in to exactly match
-        // whatever the real column happens to be called. Fail loudly at
-        // generation time instead of ever emitting a guessed key.
-        if ($dbal === null || $gr === null) {
+        // The conventional '{relation}_id' guess (Cycle's own default --
+        // see cycle/schema-builder's BelongsTo.php) only ever made sense
+        // for an auto-increment int target (this generator's own id-
+        // always-named-"id" convention). For a natural/string target key
+        // (e.g. currencies.curr_abrev), the source FK column name doesn't
+        // follow any derivable convention in this schema (it's curr_code,
+        // not curr_abrev, not currencie_id), so it must be stated
+        // explicitly via GentorRelation::foreign_key_column. Fail loudly
+        // if it's needed but wasn't set, rather than ever guessing wrong.
+        $explicitForeignKeyColumn = $relation->getForeignKeyColumn();
+        if ($explicitForeignKeyColumn !== null && $explicitForeignKeyColumn !== '') {
+            $innerKey = $explicitForeignKeyColumn;
+        } elseif ($t['outerKeyIsAutoIncrementInt']) {
+            $innerKey = $relationLowercaseName . '_id';
+        } else {
             throw new \RuntimeException(
-                "Cannot generate relation '$relationLowercaseName': this template needs \$dbal/\$gr to resolve " .
-                "the real target table and FK column (see GeneratorCodeController::entity())."
+                "Cannot generate relation '$relationLowercaseName': target's primary key ('$outerKey') is not " .
+                "an auto-increment integer, so the conventional '{relation}_id' naming doesn't apply. Set this " .
+                "GentorRelation's foreign_key_column to the real source FK column name on " .
+                "'" . $generator->getPreEntityTable() . "' for this relation."
             );
         }
-        $targetGentor = $gr->findByCamelcaseCapitalName($relationCamelcaseName);
-        if ($targetGentor === null) {
-            throw new \RuntimeException(
-                "Cannot generate relation '$relationLowercaseName': no Gentor record found for target entity " .
-                "'$relationCamelcaseName'. Create one first -- it's how this generator discovers the target's " .
-                'real table/primary key column.'
-            );
-        }
-        $targetTable = $targetGentor->getPreEntityTable();
-        if ($targetTable === null || $targetTable === '') {
-            throw new \RuntimeException(
-                "Cannot generate relation '$relationLowercaseName': the Gentor record for '$relationCamelcaseName' " .
-                'has no pre_entity_table set.'
-            );
-        }
-        $targetSchema = $dbal->database('default')->table($targetTable);
-        $targetPrimaryKeys = $findPrimaryColumnNames($targetSchema);
-        if (count($targetPrimaryKeys) === 0) {
-            throw new \RuntimeException(
-                "Cannot generate relation '$relationLowercaseName': target table '$targetTable' has no detectable " .
-                'primary key.'
-            );
-        }
-        if (count($targetPrimaryKeys) > 1) {
-            throw new \RuntimeException(
-                "Cannot generate relation '$relationLowercaseName': target table '$targetTable' has a composite " .
-                'primary key (' . implode(', ', $targetPrimaryKeys) . '), which this generator doesn\'t support yet.'
-            );
-        }
-        $outerKey = $targetPrimaryKeys[0];
-        $outerKeyIsAutoIncrementInt = false;
-        foreach ($targetSchema->getColumns() as $col) {
-            if ($col->getName() === $outerKey
-                    && ($col->getAbstractType() === $TYPE_PRIMARY || $col->getAbstractType() === $TYPE_BIG_PRIMARY)) {
-                $outerKeyIsAutoIncrementInt = true;
-            }
-        }
-        if (!$outerKeyIsAutoIncrementInt) {
-            // Same reasoning as the entity's own primary-key check above:
-            // this generator's BelongsTo relations assume an int FK
-            // pointing at an auto-increment int PK. A natural/string
-            // target key (e.g. currencies.curr_abrev) needs a genuinely
-            // different relation shape, not attempted here.
-            throw new \RuntimeException(
-                "Cannot generate relation '$relationLowercaseName': target table '$targetTable''s primary key " .
-                "('$outerKey') is not an auto-increment integer. This generator doesn't support relations to " .
-                'natural/string primary keys yet.'
-            );
-        }
-
-        $innerKey = $relationLowercaseName . '_id';
         if (!$orm_schema->hasColumn($innerKey)) {
             throw new \RuntimeException(
                 "Cannot generate relation '$relationLowercaseName': expected a '$innerKey' column on " .
-                "'" . $generator->getPreEntityTable() . "' (the conventional {relation}_id foreign key) but it " .
-                "doesn't exist. This generator can't yet infer a differently-named or non-integer foreign key " .
-                "column automatically -- rename the relation's lowercasename to match the real column, or wire " .
-                'this one relation up by hand.'
+                "'" . $generator->getPreEntityTable() . "' but it doesn't exist. " .
+                ($explicitForeignKeyColumn !== null && $explicitForeignKeyColumn !== ''
+                    ? 'Check foreign_key_column on this GentorRelation.'
+                    : "This generator can't yet infer a differently-named foreign key column automatically -- " .
+                        "rename the relation's lowercasename to match the real column, set foreign_key_column " .
+                        'explicitly, or wire this one relation up by hand.')
             );
         }
 
-        echo '    #[BelongsTo(target:' . $relationCamelcaseName
+        echo '    #[BelongsTo(target:' . $t['camelcaseName']
                 . "::class, innerKey: '" . $innerKey . "', outerKey: '" . $outerKey . "'"
                 . ', nullable: false, fkAction:' . "'NO ACTION'" . ')]'
                 . "\n";
-        echo '    private ?' . $relationCamelcaseName . ' $'
+        echo '    private ?' . $t['camelcaseName'] . ' $'
                 . $relationLowercaseName . ' = null;' . "\n";
         echo "\n";
     }
-    // Detect primary key type and its real column name -- the PHP property
-    // is always named $id for consistency with RequireId/reqId()/
-    // hasIdentity() below, but the real column is very often NOT literally
-    // called "id" (e.g. suppliers.supplier_id, currencies.curr_abrev) and
-    // Cycle's Column attribute defaults the DB column name to the PHP
-    // property name when none is given, so this must be explicit.
-    $sourcePrimaryKeys = $findPrimaryColumnNames($orm_schema);
-    if (count($sourcePrimaryKeys) === 0) {
-        throw new \RuntimeException(
-            "Cannot generate entity '" . $generator->getCamelcaseCapitalName() . "': table '"
-                . $generator->getPreEntityTable() . "' has no detectable primary key."
-        );
+    // $primaryColumnName/$primaryType/$primaryColumnIsAutoIncrementInt were
+    // already resolved up top (needed there to decide $usesRequireId before
+    // the class's `use` statements). Auto-increment int PKs get the
+    // dedicated $id property + reqId()/hasIdentity()/setId() shape below,
+    // since the real value is unknown until Cycle assigns it post-insert.
+    // A natural/string PK (e.g.
+    // currencies.curr_abrev) is known up front and never DB-assigned, so
+    // it's deliberately NOT special-cased here -- it flows through the
+    // same per-column loop as every other field below (real column name
+    // as the property name, ordinary getter/setter), emitting nothing in
+    // this block at all.
+    if ($primaryColumnIsAutoIncrementInt) {
+        echo "    #[Column(type: '" . $primaryType . "', name: '" . $primaryColumnName . "')]" . "\n";
+        echo '    private ?int $id = null;' . "\n";
+        echo "\n";
     }
-    if (count($sourcePrimaryKeys) > 1) {
-        throw new \RuntimeException(
-            "Cannot generate entity '" . $generator->getCamelcaseCapitalName() . "': table '"
-                . $generator->getPreEntityTable() . "' has a composite primary key ("
-                . implode(', ', $sourcePrimaryKeys) . "), which this generator doesn't support yet."
-        );
-    }
-    $primaryColumnName = $sourcePrimaryKeys[0];
-    $primaryType = $TYPE_PRIMARY;
-    $primaryColumnIsAutoIncrementInt = false;
-    foreach ($orm_schema->getColumns() as $col) {
-        if ($col->getName() !== $primaryColumnName) {
-            continue;
-        }
-        if ($col->getAbstractType() === $TYPE_PRIMARY || $col->getAbstractType() === $TYPE_BIG_PRIMARY) {
-            $primaryColumnIsAutoIncrementInt = true;
-        }
-        if ($col->getAbstractType() === $TYPE_BIG_PRIMARY) {
-            $primaryType = 'bigPrimary';
-        }
-    }
-    if (!$primaryColumnIsAutoIncrementInt) {
-        // This generator's whole convention (a PHP property always named
-        // $id, always typed int, RequireId's reqId()/hasIdentity() always
-        // returning/checking an int) assumes an auto-increment integer
-        // surrogate key. A natural/string primary key like
-        // currencies.curr_abrev needs a genuinely different shape (the
-        // property typed to match, no auto-increment default, reqId()
-        // not making sense the same way) -- not attempted here. Fail
-        // loudly rather than silently emit a mismatched int property for
-        // a non-int column.
-        throw new \RuntimeException(
-            "Cannot generate entity '" . $generator->getCamelcaseCapitalName() . "': primary key column '"
-                . $primaryColumnName . "' on table '" . $generator->getPreEntityTable()
-                . "' is not an auto-increment integer. This generator doesn't support natural/string primary "
-                . 'keys yet.'
-        );
-    }
-    echo "    #[Column(type: '" . $primaryType . "', name: '" . $primaryColumnName . "')]" . "\n";
-    echo '    private ?int $id = null;' . "\n";
-    echo "\n";
 ?>
     /** @psalm-mutation-free */
     public function __construct(
@@ -290,8 +351,10 @@ class <?= $generator->getCamelcaseCapitalName() . "\n"; ?>
  * @var Cycle\Database\Schema\AbstractColumn $column
  */
 foreach ($orm_schema->getColumns() as $column) {
-    // id is declared separately above
-    if ($column->getAbstractType() === $TYPE_PRIMARY || $column->getAbstractType() === $TYPE_BIG_PRIMARY) {
+    // The auto-increment PK's $id is declared separately above and
+    // skipped here; a natural-key PK is NOT skipped -- it's generated
+    // below like any other column, using its real column name.
+    if ($column->getName() === $primaryColumnName && $primaryColumnIsAutoIncrementInt) {
         continue;
     }
 
@@ -409,6 +472,7 @@ foreach ($orm_schema->getColumns() as $column) {
 }
 ?>
     ) {}
+<?php if ($primaryColumnIsAutoIncrementInt) : ?>
 
     /** @psalm-mutation-free */
     public function reqId(): int
@@ -427,6 +491,7 @@ foreach ($orm_schema->getColumns() as $column) {
     {
         $this->id = $id;
     }
+<?php endif; ?>
 
 <?php
 /**
@@ -456,8 +521,10 @@ foreach ($relations as $relation) {
  * @var Cycle\Database\Schema\AbstractColumn $column
  */
 foreach ($orm_schema->getColumns() as $column) {
-    // primary key already handled by reqId/hasIdentity/setId
-    if ($column->getAbstractType() === $TYPE_PRIMARY || $column->getAbstractType() === $TYPE_BIG_PRIMARY) {
+    // auto-increment PK already handled by reqId/hasIdentity/setId;
+    // a natural-key PK falls through and gets an ordinary getter/setter
+    // like any other column, via the branches below.
+    if ($column->getName() === $primaryColumnName && $primaryColumnIsAutoIncrementInt) {
         continue;
     }
 
@@ -465,8 +532,12 @@ foreach ($orm_schema->getColumns() as $column) {
 
     echo "\n";
 
-    // FK _id fields: req + get + set
-    if (substr($column->getName(), -3) === '_id') {
+    // FK _id fields: req + get + set. Guarded on real int type, not just
+    // the "_id" name suffix -- FrontAccounting has at least one natural
+    // string key that happens to be named that way (stock_master.stock_id
+    // is a varchar product code, not an auto-increment int), which would
+    // otherwise get a wrong int-typed requireId()-based helper here.
+    if ($column->getType() === 'int' && substr($column->getName(), -3) === '_id') {
         echo $MUT_FREE;
         echo '    public function req' . ucfirst($toPascalCase($column->getName())) . '(): int' . "\n";
         echo $FUNC_OPEN;

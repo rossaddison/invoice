@@ -65,6 +65,10 @@ $selectLabel = static function (array $optionsData, int|string|null $value): str
             $translator->translate('generator.relation.form.view.field.name'),
             $form->getViewFieldName(),
         );
+        ReadOnlyField::render(
+            $translator->translate('generator.relation.form.foreign.key.column'),
+            $form->getForeignKeyColumn(),
+        );
     ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

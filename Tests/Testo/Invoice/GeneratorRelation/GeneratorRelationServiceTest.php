@@ -33,6 +33,7 @@ final class GeneratorRelationServiceTest
             'camelcasename' => 'Invoice',
             'view_field_name' => 'number',
             'gentor_id' => 11,
+            'foreign_key_column' => 'curr_code',
         ];
 
         /** @var GeneratorRelationRepository&m\MockInterface $repository */
@@ -47,6 +48,7 @@ final class GeneratorRelationServiceTest
         Assert::same('Invoice', $model->getCamelcaseName());
         Assert::same('number', $model->getViewFieldName());
         Assert::same(11, $model->reqGentorId());
+        Assert::same('curr_code', $model->getForeignKeyColumn());
     }
 
     public function saveGeneratorRelationSkipsFieldsWhenMissing(): void
@@ -63,6 +65,7 @@ final class GeneratorRelationServiceTest
 
         Assert::same('', $model->getLowercaseName());
         Assert::null($model->reqGentorId());
+        Assert::same('', $model->getForeignKeyColumn());
     }
 
     public function deleteGeneratorRelationCallsRepositoryDelete(): void

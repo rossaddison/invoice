@@ -19,6 +19,7 @@ class GeneratorRelationFormTest extends TestCase
         $this->assertSame('', $form->getViewFieldName());
         $this->assertNull($form->reqGentorId());
         $this->assertSame('', $form->getFormName());
+        $this->assertSame('', $form->getForeignKeyColumn());
     }
 
     public function testGetFormNameReturnsEmptyString(): void
@@ -33,6 +34,7 @@ class GeneratorRelationFormTest extends TestCase
         $entity->setCamelcaseName('Invoice');
         $entity->setViewFieldName('inv_number');
         $entity->setGentorId(3);
+        $entity->setForeignKeyColumn('curr_code');
 
         $form = GeneratorRelationForm::show($entity);
 
@@ -40,6 +42,7 @@ class GeneratorRelationFormTest extends TestCase
         $this->assertSame('Invoice', $form->getCamelcaseName());
         $this->assertSame('inv_number', $form->getViewFieldName());
         $this->assertSame(3, $form->reqGentorId());
+        $this->assertSame('curr_code', $form->getForeignKeyColumn());
     }
 
     public function testShowWithNoGentorIdReturnsNull(): void

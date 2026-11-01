@@ -22,6 +22,7 @@ final readonly class GeneratorRelationService
         isset($array['camelcasename']) ? $model->setCamelcaseName((string) $array['camelcasename']) : '';
         isset($array['view_field_name']) ? $model->setViewFieldName((string) $array['view_field_name']) : '';
         isset($array['gentor_id']) ? $model->setGentorId((int) $array['gentor_id']) : '';
+        isset($array['foreign_key_column']) ? $model->setForeignKeyColumn((string) $array['foreign_key_column']) : '';
         $this->repository->save($model);
     }
 

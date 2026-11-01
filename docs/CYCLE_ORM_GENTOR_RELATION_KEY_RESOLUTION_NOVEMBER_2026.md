@@ -109,9 +109,111 @@ generated-code inspection:
 A natural follow-up question: does any of this rename FA's own FK columns?
 No — for auto-increment-int PK/FK pairs this is already proven end to end:
 `grn_batch.supplier_id` stays `supplier_id` on both sides, nothing is
-renamed to a generic `id`-based guess. For string/natural-keyed FKs, the
-generator doesn't support the relation case at all yet (see above); when
-that support is added, the expectation — not yet proven, since it doesn't
-exist yet — is that it will behave the same way, since Cycle's `Column`
-`name:` parameter already maps a property straight onto its real column
-name regardless of type.
+renamed to a generic `id`-based guess. For string/natural-keyed FKs, see
+below — now supported, and proven the same way.
+
+## Natural/String Primary Key Support (added same month)
+
+The deferred limitation above — this generator couldn't generate an entity
+*for* a natural-key table at all, nor a relation *to* one — was closed
+immediately after, since it was the direct next blocker for FrontAccounting
+(`currencies.curr_abrev`, `stock_master.stock_id`, and others are natural
+keys, and several tables carry FKs to them).
+
+### Entity's own primary key
+
+A natural-key PK (any PK column whose real type isn't an auto-increment
+int) is no longer special-cased into the `$id`/`reqId()`/`hasIdentity()`/
+`setId()` shape at all — that shape only ever made sense for a DB-assigned
+surrogate key. Instead it flows through the exact same per-column loop as
+every other field: its real column name becomes the property name
+directly (no `name:` override needed, since they're already identical),
+with an ordinary getter/setter. `RequireId`'s trait/import are now only
+emitted at all when something on the entity actually needs
+`requireId()` — the auto-increment PK, or an int-typed `_id` FK column —
+checked explicitly so a natural-key entity with neither doesn't carry a
+dead import.
+
+One related latent bug surfaced while generalizing this: the "FK `_id`
+fields get a `req*Id()`/int-typed accessor" branch matched purely on the
+`_id` *name suffix*, which breaks for `stock_master.stock_id` — a real
+FrontAccounting column that's a natural (`varchar`) key despite the name.
+Now guarded on the column's real type being `int`, not just the suffix.
+
+### Relations to a natural-key target: the new `foreign_key_column` field
+
+Resolving a relation's `outerKey` to the target's real PK (via
+`getPrimaryKeys()`, from the earlier fix) works for any PK type. But the
+conventional `innerKey = '{relation}_id'` guess only ever made sense for
+an auto-increment-int target — for a natural key, the source FK column
+name doesn't follow any derivable convention in this schema at all (e.g.
+`suppliers.curr_code` points at `currencies.curr_abrev`: neither
+`curr_abrev` nor `currencie_id`). There's nothing in `GentorRelation` that
+already captures this (`view_field_name` is a display-only field, used for
+listing/dropdown labels, not a source FK column name), so a new nullable
+`foreign_key_column` column was added to `GentorRelation` — set explicitly
+by a developer when wiring up a relation to a natural-key target, left
+blank otherwise. The generator now: uses it verbatim as `innerKey` when
+set; falls back to the old `{relation}_id` convention when the target *is*
+auto-increment-int (unchanged, fully backward compatible); and throws
+`\RuntimeException` — rather than guessing — if the target is natural-key
+and `foreign_key_column` wasn't set.
+
+### A second latent bug, found generating a real cross-namespace relation
+
+Generating `Supplier belongsTo Currencie` for real (via `suppliers.curr_code`)
+surfaced a bug independent of natural keys: the relation's `use` import
+statement hardcoded `App\Infrastructure\Persistence` as every target's
+namespace root — correct only because every entity this generator had
+produced so far happened to share one namespace tree with its relations.
+It silently emitted the *source* entity's own namespace for the *target*
+import the moment the two differ, which they do for
+`Supplier` (`...\Purchasing\Infrastructure\Persistence`) and `Currencie`
+(`...\Currency\Infrastructure\Persistence`). Fixed by resolving each
+relation's target namespace from its own `Gentor` record's
+`namespace_path`, same as every other piece of per-target data here — and,
+while fixing it, the whole target-resolution block (previously duplicated
+between the `use` statement loop and the `#[BelongsTo]` loop) was hoisted
+into one `$relationTargets` lookup built once per entity, used by both.
+
+### Verification
+
+- Scratch tests confirming: a natural-key entity (`currencies`) generates
+  with no `$id`/`RequireId`/`reqId()`/`hasIdentity()`, a real `curr_abrev`
+  property with a getter; a relation to it with `foreign_key_column` set
+  resolves `innerKey`/`outerKey` correctly; the same relation *without* it
+  set fails loudly instead of guessing.
+- A genuine `Cycle\ORM\ORM` schema compile of real, generated
+  `FrontAccounting\Currency\...\Currencie`,
+  `FrontAccounting\Purchasing\...\Supplier`, and
+  `FrontAccounting\Purchasing\...\GrnBatch` entities together, with a real
+  eager-loaded `->load('currencie')` query against live `fa_spike` data,
+  confirming `Supplier::getCurrencie()->getCurrAbrev()` matches
+  `Supplier::getCurrCode()` — the actual natural-key join resolving the
+  correct row, plus a regression check that `GrnBatch`'s existing
+  `Supplier` relation (auto-increment-int, from the earlier fix) still
+  works unaffected.
+- `php -l` on every touched file.
+
+### A follow-on gap found during verification, not yet fixed
+
+Compiling the schema for a natural-key entity at all requires
+`Cycle\Annotated\MergeIndexes` in the generator pipeline (it's what
+actually registers a `#[Table\PrimaryKey]`-annotated column as the
+entity's primary key — Cycle's own `'primary'`/`'bigPrimary'` abstract
+column type, which is all `RenderTables`/`GenerateRelations` otherwise
+know about, is reserved for auto-increment surrogate keys and never
+applies here). `Entity.php` now emits `#[PrimaryKey(columns: [...])]` for
+a natural-key entity accordingly. But `MergeIndexes` must run **before**
+`GenerateRelations` for a relation targeting that entity to compile at
+all (`GenerateRelations` reads the target's primary columns eagerly) —
+confirmed directly: the compile throws `"Entity \`currencie\` must have
+defined primary key"` with `MergeIndexes` ordered after
+`GenerateRelations`, and succeeds with it ordered before. This app's own
+real schema-building pipeline
+(`rossaddison/yii-cycle-1`'s `SchemaConveyor`) appends `MergeIndexes` to
+the same stage as `GenerateRelations`, *after* it — meaning, as that
+package stands today, the very first real relation to a natural-key
+target wired up through the live app (not a standalone scratch script
+like this one) will hit the same compile error. Flagged here rather than
+fixed, since it lives in a separate package/repository from this one.

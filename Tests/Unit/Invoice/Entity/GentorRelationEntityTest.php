@@ -30,6 +30,7 @@ class GentorRelationEntityTest extends TestCase
         $this->assertSame('', $gr->getViewFieldName());
         $this->assertNull($gr->reqGentorId());
         $this->assertNull($gr->getGentor());
+        $this->assertSame('', $gr->getForeignKeyColumn());
     }
 
     public function testSetAndGetLowercaseName(): void
@@ -58,5 +59,12 @@ class GentorRelationEntityTest extends TestCase
         $gr = new GentorRelation();
         $gr->setGentorId(3);
         $this->assertSame(3, $gr->reqGentorId());
+    }
+
+    public function testSetAndGetForeignKeyColumn(): void
+    {
+        $gr = new GentorRelation();
+        $gr->setForeignKeyColumn('curr_code');
+        $this->assertSame('curr_code', $gr->getForeignKeyColumn());
     }
 }

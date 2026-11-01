@@ -112,6 +112,19 @@ echo Field::select($form, 'gentor_id')
 ?>
 <?= Html::closeTag('div'); ?>
 
+<?= Html::openTag('div', ['class' => 'col mb-3']); ?>
+<?= Field::text($form, 'foreign_key_column')
+    ->label($translator->translate('generator.relation.form.foreign.key.column'))
+    ->addInputAttributes([
+        'placeholder' => $translator->translate('generator.relation.form.foreign.key.column'),
+        'class' => 'form-control form-control-lg',
+        'id' => 'foreign_key_column',
+    ])
+    ->value(Html::encode($form->getForeignKeyColumn()))
+    ->hint($translator->translate('generator.relation.form.foreign.key.column.hint'));
+?>
+<?= Html::closeTag('div'); ?>
+
 <?= $button::backSave(); ?>
 <?=  new Form()->close(); ?>
 

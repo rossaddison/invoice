@@ -26,7 +26,8 @@ class GentorRelation
         private ?string $lowercasename = '', #[Column(type: 'text', nullable: true)]
         private ?string $camelcasename = '', #[Column(type: 'text', nullable: true)]
         private ?string $view_field_name = '', #[Column(type: 'integer(11)', nullable: true, default: null)]
-        private ?int $gentor_id = null)
+        private ?int $gentor_id = null, #[Column(type: 'text', nullable: true)]
+        private ?string $foreign_key_column = '')
     {
     }
 
@@ -84,5 +85,22 @@ class GentorRelation
     public function setGentorId(int $gentor_id): void
     {
         $this->gentor_id = $gentor_id;
+    }
+
+    // Explicit override of the real source FK column name on the owning
+    // entity's table for this relation, used by the Entity.php generator
+    // template when the target's primary key isn't an auto-increment int
+    // -- see docs/CYCLE_ORM_GENTOR_RELATION_KEY_RESOLUTION_NOVEMBER_2026.md.
+    // Left blank, the generator falls back to its conventional
+    // '{relation}_id' guess, which only applies to auto-increment int
+    // targets.
+    public function getForeignKeyColumn(): ?string
+    {
+        return $this->foreign_key_column;
+    }
+
+    public function setForeignKeyColumn(string $foreign_key_column): void
+    {
+        $this->foreign_key_column = $foreign_key_column;
     }
 }

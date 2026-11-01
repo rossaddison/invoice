@@ -30,6 +30,7 @@ class GentorRelationEntityTest extends TestCase
         $this->assertSame('', $gentorRelation->getViewFieldName());
         $this->assertNull($gentorRelation->reqGentorId());
         $this->assertNull($gentorRelation->getGentor());
+        $this->assertSame('', $gentorRelation->getForeignKeyColumn());
     }
 
     public function testConstructorWithAllParameters(): void
@@ -103,6 +104,17 @@ class GentorRelationEntityTest extends TestCase
 
         $gentorRelation->setGentorId(25);
         $this->assertSame(25, $gentorRelation->reqGentorId());
+    }
+
+    public function testForeignKeyColumnSetterAndGetter(): void
+    {
+        $gentorRelation = new GentorRelation();
+
+        $gentorRelation->setForeignKeyColumn('curr_code');
+        $this->assertSame('curr_code', $gentorRelation->getForeignKeyColumn());
+
+        $gentorRelation->setForeignKeyColumn('loc_code');
+        $this->assertSame('loc_code', $gentorRelation->getForeignKeyColumn());
     }
 
     public function testGetGentor(): void
