@@ -77,4 +77,24 @@ final class GeneratorRepository extends Select\Repository
             ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
+
+    /**
+     * Find the Gentor record for a relation's target entity by its class
+     * name. GentorRelation only stores the target's name as free text
+     * (camelcasename) -- there is no real foreign key to the target's own
+     * Gentor record -- so this is a best-effort name match, used by the
+     * Entity template to resolve the target's real table/primary key
+     * column instead of guessing them from Cycle's default relation
+     * key-naming convention. Returns null if no Gentor record was ever
+     * created for that entity, or its name doesn't match exactly.
+     *
+     * @psalm-return TEntity|null
+     */
+    public function findByCamelcaseCapitalName(string $camelcaseCapitalName): ?Gentor
+    {
+        $query = $this
+            ->select()
+            ->where(['camelcase_capital_name' => $camelcaseCapitalName]);
+        return $query->fetchOne() ?: null;
+    }
 }

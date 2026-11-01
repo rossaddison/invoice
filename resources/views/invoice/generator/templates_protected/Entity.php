@@ -7,6 +7,8 @@ declare(strict_types=1);
 * @var App\Infrastructure\Persistence\Gentor\Gentor $generator
 * @var Cycle\Database\Table $orm_schema
 * @var array $relations
+* @var Cycle\Database\DatabaseManager|null $dbal
+* @var App\Invoice\Generator\GeneratorRepository|null $gr
 */
 
 echo "<?php\n";
@@ -33,6 +35,18 @@ $EXT_MUT_FREE = '    /** @psalm-external-mutation-free */' . "\n";
 // _view.php -- applied here too, and in Form.php/Service.php/_form.php, for
 // consistency across every generated file for this entity.
 $toPascalCase = static fn (string $name): string => str_replace('_', '', ucwords($name, '_'));
+// Shared by the primary-key detection below and the relation-key
+// resolution further down -- walks a table's columns for the one(s)
+// marked primary/bigPrimary and returns its real name, or null if none.
+$findPrimaryColumnName = static function (\Cycle\Database\TableInterface $table): ?string {
+    $name = null;
+    foreach ($table->getColumns() as $col) {
+        if ($col->getAbstractType() === 'primary' || $col->getAbstractType() === 'bigPrimary') {
+            $name = $col->getName();
+        }
+    }
+    return $name;
+};
 ?>
 
 declare(strict_types=1);
@@ -118,22 +132,86 @@ class <?= $generator->getCamelcaseCapitalName() . "\n"; ?>
      * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
      */
     foreach ($relations as $relation) {
-        echo '    #[BelongsTo(target:' . ($relation->getCamelcaseName() ?? '')
-                . "::class, nullable: false, fkAction:" . "'NO ACTION'" . ")]"
+        $relationLowercaseName = $relation->getLowercaseName() ?? '';
+        $relationCamelcaseName = $relation->getCamelcaseName() ?? '';
+
+        // Resolve the target's real table + primary key column instead of
+        // trusting Cycle's default {relation}_{outerKey} relation-key
+        // convention (see cycle/schema-builder's BelongsTo.php): that
+        // convention assumes the target's PK FIELD is always named "id"
+        // (true here, by this generator's own design) AND that the
+        // source table's FK column is exactly "{relation}_id" -- false
+        // for FrontAccounting's many string-keyed FKs (curr_code,
+        // loc_code, stock_id, ...), and fragile in general since it
+        // depends on lowercasename being typed in to exactly match
+        // whatever the real column happens to be called. Fail loudly at
+        // generation time instead of ever emitting a guessed key.
+        if ($dbal === null || $gr === null) {
+            throw new \RuntimeException(
+                "Cannot generate relation '$relationLowercaseName': this template needs \$dbal/\$gr to resolve " .
+                "the real target table and FK column (see GeneratorCodeController::entity())."
+            );
+        }
+        $targetGentor = $gr->findByCamelcaseCapitalName($relationCamelcaseName);
+        if ($targetGentor === null) {
+            throw new \RuntimeException(
+                "Cannot generate relation '$relationLowercaseName': no Gentor record found for target entity " .
+                "'$relationCamelcaseName'. Create one first -- it's how this generator discovers the target's " .
+                'real table/primary key column.'
+            );
+        }
+        $targetTable = $targetGentor->getPreEntityTable();
+        if ($targetTable === null || $targetTable === '') {
+            throw new \RuntimeException(
+                "Cannot generate relation '$relationLowercaseName': the Gentor record for '$relationCamelcaseName' " .
+                'has no pre_entity_table set.'
+            );
+        }
+        $targetSchema = $dbal->database('default')->table($targetTable);
+        $outerKey = $findPrimaryColumnName($targetSchema);
+        if ($outerKey === null) {
+            throw new \RuntimeException(
+                "Cannot generate relation '$relationLowercaseName': target table '$targetTable' has no detectable " .
+                'primary key.'
+            );
+        }
+
+        $innerKey = $relationLowercaseName . '_id';
+        if (!$orm_schema->hasColumn($innerKey)) {
+            throw new \RuntimeException(
+                "Cannot generate relation '$relationLowercaseName': expected a '$innerKey' column on " .
+                "'" . $generator->getPreEntityTable() . "' (the conventional {relation}_id foreign key) but it " .
+                "doesn't exist. This generator can't yet infer a differently-named or non-integer foreign key " .
+                "column automatically -- rename the relation's lowercasename to match the real column, or wire " .
+                'this one relation up by hand.'
+            );
+        }
+
+        echo '    #[BelongsTo(target:' . $relationCamelcaseName
+                . "::class, innerKey: '" . $innerKey . "', outerKey: '" . $outerKey . "'"
+                . ', nullable: false, fkAction:' . "'NO ACTION'" . ')]'
                 . "\n";
-        echo '    private ?' . ($relation->getCamelcaseName() ?? '') . " $"
-                . ($relation->getLowercaseName() ?? '') . ' = null;' . "\n";
+        echo '    private ?' . $relationCamelcaseName . ' $'
+                . $relationLowercaseName . ' = null;' . "\n";
         echo "\n";
     }
-    // Detect primary key type
+    // Detect primary key type and its real column name -- the PHP property
+    // is always named $id for consistency with RequireId/reqId()/
+    // hasIdentity() below, but the real column is very often NOT literally
+    // called "id" (e.g. suppliers.supplier_id, currencies.curr_abrev) and
+    // Cycle's Column attribute defaults the DB column name to the PHP
+    // property name when none is given, so this must be explicit.
     $primaryType = $TYPE_PRIMARY;
+    $primaryColumnName = 'id';
     foreach ($orm_schema->getColumns() as $col) {
+        if ($col->getAbstractType() === $TYPE_PRIMARY || $col->getAbstractType() === $TYPE_BIG_PRIMARY) {
+            $primaryColumnName = $col->getName();
+        }
         if ($col->getAbstractType() === $TYPE_BIG_PRIMARY) {
             $primaryType = 'bigPrimary';
-            break;
         }
     }
-    echo "    #[Column(type: '" . $primaryType . "')]" . "\n";
+    echo "    #[Column(type: '" . $primaryType . "', name: '" . $primaryColumnName . "')]" . "\n";
     echo '    private ?int $id = null;' . "\n";
     echo "\n";
 ?>

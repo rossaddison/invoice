@@ -78,7 +78,7 @@ final class GeneratorCodeController extends BaseController
         $id = $g->reqGentorId();
         $relations = $grr->findRelations($id);
         $orm = $dbal->database('default')->table($table_name);
-        $content = $this->getContent($view, $g, $relations, $orm, $file);
+        $content = $this->getContent($view, $g, $relations, $orm, $file, $dbal, $gr);
         $build_file = $this->buildAndSave($viewPath, $content, '.php', $g->getCamelcaseCapitalName());
         $this->flashMessage('success', $camelcaseFileName . $this->translator->translate('generator.generated') . $viewPath . '/' . $camelcaseFileName);
         $parameters = [
@@ -380,13 +380,28 @@ final class GeneratorCodeController extends BaseController
         return $canEdit;
     }
 
-    private function getContent(View $view, Gentor $generator, \Yiisoft\Data\Reader\DataReaderInterface $relations, \Cycle\Database\TableInterface $orm_schema, string $file): string
-    {
+    private function getContent(
+        View $view,
+        Gentor $generator,
+        \Yiisoft\Data\Reader\DataReaderInterface $relations,
+        \Cycle\Database\TableInterface $orm_schema,
+        string $file,
+        ?DatabaseManager $dbal = null,
+        ?GeneratorRepository $gr = null,
+    ): string {
         return $view->render('//invoice/generator/templates_protected/' . $file, [
             'generator' => $generator,
             'relations' => $relations,
             'orm_schema' => $orm_schema,
             'body' => $this->body($generator),
+            // Only Entity.php uses these, to resolve each relation's real
+            // target table/primary-key column instead of trusting Cycle's
+            // default {relation}_{outerKey} naming guess -- see that
+            // template's own comment for why. Null for every other
+            // generated file type (repo/service/form/controller), which
+            // never need to resolve a real FK column, only a relation name.
+            'dbal' => $dbal,
+            'gr' => $gr,
         ]);
     }
 
