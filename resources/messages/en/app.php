@@ -509,6 +509,7 @@ return [
     'This will copy every invoice currently shown by your filters above'
     . ' to the date below, each staying with its own client.',
   'copy.invoice' => 'Copy Invoice',
+  'copy.invoice.suppress.fields' => 'Leave these fields empty on the copy:',
   'copy.quote' => 'Copy Quote',
   'count' => 'Invoice Count',
   'country' => 'Country',

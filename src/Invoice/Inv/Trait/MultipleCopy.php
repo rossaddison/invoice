@@ -62,6 +62,7 @@ trait MultipleCopy
             return $this->factory->createResponse(Json::encode(['success' => 0]));
         }
 
+        $suppressFields = CopyInvOptions::suppressFieldsFromRequest($data);
         $anySuccess = false;
 
         /**
@@ -81,7 +82,7 @@ trait MultipleCopy
                 : [$original->reqClientId()];
 
             foreach ($createdDates as $createdDate) {
-                $opts = new CopyInvOptions(createdDate: $createdDate);
+                $opts = new CopyInvOptions(createdDate: $createdDate, suppressFields: $suppressFields);
                 foreach ($targets as $targetClientId) {
                     if ($this->copyInvToClient(
                         $invId,
@@ -231,13 +232,20 @@ trait MultipleCopy
                 ? (string) $d->gR->generateNumber($original->reqGroupId(), true)
                 : '',
             'discount_amount'         => (float) $original->getDiscountAmount(),
-            'terms'                   => $original->getTerms(),
-            'note'                    => $opts->note !== '' ? $opts->note : ($original->getNote() ?? ''),
-            'document_description'    => $original->getDocumentDescription(),
+            'terms'                   => $opts->suppresses(CopyInvOptions::FIELD_TERMS)
+                ? '' : $original->getTerms(),
+            'note'                    => $opts->suppresses(CopyInvOptions::FIELD_NOTE)
+                ? '' : ($opts->note !== '' ? $opts->note : ($original->getNote() ?? '')),
+            'document_description'    => $opts->suppresses(CopyInvOptions::FIELD_DOCUMENT_DESCRIPTION)
+                ? '' : $original->getDocumentDescription(),
+            'client_po_number'        => $opts->suppresses(CopyInvOptions::FIELD_CLIENT_PO_NUMBER)
+                ? '' : $original->getClientPoNumber(),
+            'client_po_person'        => $opts->suppresses(CopyInvOptions::FIELD_CLIENT_PO_PERSON)
+                ? '' : $original->getClientPoPerson(),
             'url_key'                 => Random::string(32),
             'payment_method'          => $original->getPaymentMethod(),
             'creditinvoice_parent_id' => null,
-            'delivery_id'             => $original->getDeliveryId(),
+            'delivery_id'           => $original->getDeliveryId(),
             'delivery_location_id'    => $original->getDeliveryLocationId(),
             'postal_address_id'       => $original->getPostalAddressId(),
             'contract_id'             => $original->getContractId(),
@@ -271,6 +279,10 @@ trait MultipleCopy
                     $this->sR
                 );
                 $copied->setDateCreated($opts->createdDate);
+                // copyInv() falls back to the default payment term when empty.
+                if ($opts->suppresses(CopyInvOptions::FIELD_TERMS)) {
+                    $copied->setTerms('');
+                }
                 $d->iR->save($copied);
                 $copied_id = $copied->reqId();
                 if ($copied_id <= 0) {

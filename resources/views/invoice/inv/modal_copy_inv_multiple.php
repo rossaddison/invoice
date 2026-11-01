@@ -51,6 +51,33 @@ echo H::openTag('div', ['id' => 'modal-copy-inv-multiple', 'class' => 'modal',
        'aria-live' => 'polite',
       ]);
      echo H::closeTag('div'); //5
+     // Checked = left empty on the copies. Terms and document description are
+     // copied by default; note and the client PO fields are suppressed.
+     echo H::openTag('div', ['class' => 'mb-3', 'id' => 'modal_copy_inv_suppress_fields']); //5
+      echo H::tag('small', $translator->translate('copy.invoice.suppress.fields'), ['class' => 'text-muted d-block']);
+      foreach ([
+       'terms'                => ['terms', false],
+       'note'                 => ['note', true],
+       'document_description' => ['document.description', false],
+       'client_po_number'     => ['client.po.number', true],
+       'client_po_person'     => ['client.po.person', true],
+      ] as $field => [$labelKey, $checked]) {
+       echo H::openTag('div', ['class' => 'form-check']); //6
+        echo H::tag('input', '', [
+         'class'   => 'form-check-input',
+         'type'    => 'checkbox',
+         'name'    => 'copy_inv_suppress_fields[]',
+         'value'   => $field,
+         'id'      => 'copy_inv_suppress_' . $field,
+         'checked' => $checked,
+        ]);
+        echo H::tag('label', $translator->translate($labelKey), [
+         'class' => 'form-check-label',
+         'for'   => 'copy_inv_suppress_' . $field,
+        ]);
+       echo H::closeTag('div'); //6
+      }
+     echo H::closeTag('div'); //5
      echo H::openTag('div', ['class' => 'mb-2']); //5
       echo H::tag('input', '', [
        'type'         => 'text',

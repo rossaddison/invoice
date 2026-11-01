@@ -122,6 +122,27 @@ if (empty($flashMessages)) {
     opacity: 0;
     transform: translateX(100%);
 }
+
+/* Alerts sit side by side and wrap onto the next row when out of room. */
+.flash-message-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Shrink-wrap each alert to its text (no growing) and trim the room
+   Bootstrap reserves for the absolutely positioned close button. */
+.flash-message-row > .alert {
+    flex: 0 1 auto;
+    max-width: 100%;
+    margin-bottom: 0;
+    padding-right: 2rem;
+}
+
+.flash-message-row > .alert .btn-close {
+    padding: 0.5rem;
+}
 </style>
 
 <?php
@@ -129,6 +150,7 @@ if (empty($flashMessages)) {
 // into invoice-typescript-iife.js) so script-src no longer needs
 // 'unsafe-inline'. It self-initializes unconditionally from index.ts.
 
+echo '<div class="flash-message-row">';
 foreach ($flashMessages as $key => $value) {
     if (is_array($value)) {
         /**
@@ -164,3 +186,4 @@ foreach ($flashMessages as $key => $value) {
         }
     }
 }
+echo '</div>';

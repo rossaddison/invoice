@@ -18,6 +18,7 @@ interface CopyMultipleInvoicesData extends RequestParams {
     keylist: string[];
     modal_created_dates: string[];
     client_ids: string[];
+    suppress_fields: string[];
 }
 
 interface CopyInvSpreadsheetRow {
@@ -572,6 +573,11 @@ export class InvoiceHandler {
                 keylist: selected,
                 modal_created_dates: modalCreatedDates,
                 client_ids: clientIds,
+                suppress_fields: Array.from(
+                    document.querySelectorAll<HTMLInputElement>(
+                        'input[name="copy_inv_suppress_fields[]"]:checked'
+                    )
+                ).map(cb => cb.value),
             };
 
             const url = `${location.origin}/invoice/inv/multiplecopy`;
