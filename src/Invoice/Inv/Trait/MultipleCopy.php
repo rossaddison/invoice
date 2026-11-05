@@ -45,12 +45,8 @@ trait MultipleCopy
          * @var array $data['keylist']
          */
         $keyList = $data['keylist'] ?? [];
-        if (empty($keyList)) {
-            return $this->factory->createResponse(Json::encode(['success' => 0]));
-        }
 
         // Accept client_ids[] (multiselect modal); fall back to each invoice's own client
-        /** @var int[] $selectedClientIds */
         $selectedClientIds = array_values(
             array_filter(array_map('intval', (array)($data['client_ids'] ?? [])))
         );
@@ -58,7 +54,9 @@ trait MultipleCopy
         // One copy per selected day; no day selected = a single copy dated
         // today. Reject an over-limit request up front, not part-way through.
         $createdDates = CopyCreatedDates::fromRequest($data);
-        if (!CopyCreatedDates::withinLimits(count($keyList), $createdDates, count($selectedClientIds))) {
+        if (empty($keyList)
+            || !CopyCreatedDates::withinLimits(count($keyList), $createdDates, count($selectedClientIds))
+        ) {
             return $this->factory->createResponse(Json::encode(['success' => 0]));
         }
 
@@ -71,37 +69,53 @@ trait MultipleCopy
         foreach ($keyList as $value) {
             $invId    = (int) $value;
             $original = $d->iR->repoInvUnloadedquery($invId);
-            if (!$original) {
-                continue;
-            }
-
-            $productIds = $this->collectInvProductIds($invId, $d);
-
-            $targets = !empty($selectedClientIds)
-                ? $selectedClientIds
-                : [$original->reqClientId()];
-
-            foreach ($createdDates as $createdDate) {
-                $opts = new CopyInvOptions(createdDate: $createdDate, suppressFields: $suppressFields);
-                foreach ($targets as $targetClientId) {
-                    if ($this->copyInvToClient(
-                        $invId,
-                        $original,
-                        $targetClientId,
-                        $d,
-                        $formHydrator,
-                        $productIds,
-                        $opts
-                    )) {
-                        $anySuccess = true;
-                    }
-                }
+            if ($original && $this->copyInvToDatesAndClients(
+                $invId,
+                $original,
+                $selectedClientIds,
+                $createdDates,
+                $suppressFields,
+                $d,
+                $formHydrator
+            )) {
+                $anySuccess = true;
             }
         }
 
         return $this->factory->createResponse(
             Json::encode(['success' => $anySuccess ? 1 : 0])
         );
+    }
+
+    /**
+     * One invoice copied to every selected day for every target client (its
+     * own client when none were selected).
+     *
+     * @param list<int> $selectedClientIds
+     * @param list<string> $createdDates
+     * @param list<string> $suppressFields
+     */
+    private function copyInvToDatesAndClients(
+        int $invId,
+        Inv $original,
+        array $selectedClientIds,
+        array $createdDates,
+        array $suppressFields,
+        InvCopyDeps $d,
+        FormHydrator $formHydrator,
+    ): bool {
+        $productIds = $this->collectInvProductIds($invId, $d);
+        $targets = $selectedClientIds !== [] ? $selectedClientIds : [$original->reqClientId()];
+        $anySuccess = false;
+        foreach ($createdDates as $createdDate) {
+            $opts = new CopyInvOptions(createdDate: $createdDate, suppressFields: $suppressFields);
+            foreach ($targets as $targetClientId) {
+                if ($this->copyInvToClient($invId, $original, $targetClientId, $d, $formHydrator, $productIds, $opts)) {
+                    $anySuccess = true;
+                }
+            }
+        }
+        return $anySuccess;
     }
 
     /**
@@ -203,6 +217,28 @@ trait MultipleCopy
     }
 
     /**
+     * The free-text fields a user may choose to leave empty on the copy (the
+     * Copy Invoice modal's "leave these fields empty" checkboxes). A note
+     * typed into the spreadsheet import replaces the original's note.
+     *
+     * @return array<string, mixed>
+     */
+    private function copyUserEditableFields(Inv $original, CopyInvOptions $opts): array
+    {
+        $note = $opts->note !== '' ? $opts->note : ($original->getNote() ?? '');
+        return [
+            'terms'                => $opts->suppresses(CopyInvOptions::FIELD_TERMS) ? '' : $original->getTerms(),
+            'note'                 => $opts->suppresses(CopyInvOptions::FIELD_NOTE) ? '' : $note,
+            'document_description' => $opts->suppresses(CopyInvOptions::FIELD_DOCUMENT_DESCRIPTION)
+                ? '' : $original->getDocumentDescription(),
+            'client_po_number'     => $opts->suppresses(CopyInvOptions::FIELD_CLIENT_PO_NUMBER)
+                ? '' : $original->getClientPoNumber(),
+            'client_po_person'     => $opts->suppresses(CopyInvOptions::FIELD_CLIENT_PO_PERSON)
+                ? '' : $original->getClientPoPerson(),
+        ];
+    }
+
+    /**
      * @param int[] $productIds
      */
     private function copyInvToClient(
@@ -232,16 +268,6 @@ trait MultipleCopy
                 ? (string) $d->gR->generateNumber($original->reqGroupId(), true)
                 : '',
             'discount_amount'         => (float) $original->getDiscountAmount(),
-            'terms'                   => $opts->suppresses(CopyInvOptions::FIELD_TERMS)
-                ? '' : $original->getTerms(),
-            'note'                    => $opts->suppresses(CopyInvOptions::FIELD_NOTE)
-                ? '' : ($opts->note !== '' ? $opts->note : ($original->getNote() ?? '')),
-            'document_description'    => $opts->suppresses(CopyInvOptions::FIELD_DOCUMENT_DESCRIPTION)
-                ? '' : $original->getDocumentDescription(),
-            'client_po_number'        => $opts->suppresses(CopyInvOptions::FIELD_CLIENT_PO_NUMBER)
-                ? '' : $original->getClientPoNumber(),
-            'client_po_person'        => $opts->suppresses(CopyInvOptions::FIELD_CLIENT_PO_PERSON)
-                ? '' : $original->getClientPoPerson(),
             'url_key'                 => Random::string(32),
             'payment_method'          => $original->getPaymentMethod(),
             'creditinvoice_parent_id' => null,
@@ -250,6 +276,7 @@ trait MultipleCopy
             'postal_address_id'       => $original->getPostalAddressId(),
             'contract_id'             => $original->getContractId(),
         ];
+        $invoice_body += $this->copyUserEditableFields($original, $opts);
         $copy = new Inv();
         $form = new InvForm();
         if (!$formHydrator->populateAndValidate($form, $invoice_body)) {
