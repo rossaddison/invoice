@@ -6,7 +6,9 @@ namespace App\Invoice\Client\Traits;
 
 use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Client\ClientDwellingPicker;
+use App\Infrastructure\Persistence\ClientCustom\ClientCustom;
 use App\Invoice\Client\ClientForm;
+use App\Invoice\ClientCustom\ClientCustomForm;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\FormModel\FormHydrator;
@@ -18,6 +20,8 @@ use Yiisoft\FormModel\FormHydrator;
  *
  * Requires the consuming class to expose:
  * @property \App\Invoice\Client\ClientService $clientService
+ * @property \App\Invoice\ClientCustom\ClientCustomService $clientCustomService
+ * @property \App\Service\WebControllerService $webService
  * @property \Yiisoft\Translator\TranslatorInterface $translator
  */
 trait ClientAddTrait
@@ -70,5 +74,57 @@ trait ClientAddTrait
             $this->translator->translate('record.successfully.created')
         );
         return $this->redirectAfterAdd($origin);
+    }
+
+    /**
+     * Save each custom field submitted with a newly created client.
+     *
+     * @param array<string, mixed> $body
+     * @param int|string $cId
+     * @param FormHydrator $formHydrator
+     * @return void
+     */
+    private function saveNewClientCustomFields(
+        array $body,
+        int|string $cId,
+        FormHydrator $formHydrator,
+    ): void {
+        if (!isset($body['custom'])) {
+            return;
+        }
+        /**
+         * @var array<int|string, array<mixed>|string> $custom
+         */
+        $custom = $body['custom'];
+        foreach ($custom as $custom_field_id => $value) {
+            $clientCustom     = new ClientCustom();
+            $clientCustomForm = new ClientCustomForm();
+            $client_custom    = [
+                'client_id'       => $cId,
+                'custom_field_id' => $custom_field_id,
+                'value'           => is_array($value) ? serialize($value) : $value,
+            ];
+            if ($formHydrator->populateAndValidate($clientCustomForm, $client_custom)) {
+                $this->clientCustomService->saveClientCustom($clientCustom, $client_custom);
+            }
+        }
+    }
+
+    /**
+     * Return the appropriate redirect after a successful client add, or null
+     * if the origin does not map to a known route (falls back to re-rendering).
+     *
+     * @param string|null $origin
+     * @return Response|null
+     */
+    private function redirectAfterAdd(?string $origin): ?Response
+    {
+        if ($origin === 'dashboard') {
+            return $this->webService->getRedirectResponse('invoice/dashboard');
+        }
+        if ($origin === 'main' || $origin === 'add') {
+            return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
+        }
+        return null;
     }
 }
