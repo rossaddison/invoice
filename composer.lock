@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "37bafbe85521e70984f216169a4fdad1",
+    "content-hash": "f119385c9d6f9e9c22c24ba6b617abcf",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -1659,7 +1659,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-29T14:10:42+00:00"
+            "time": "2026-10-29T14:10:42+00:00",
+            "published-time": "2026-10-29T14:45:12+00:00"
         },
         {
             "name": "composer/pcre",
@@ -5332,16 +5333,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v4.0.0",
+            "version": "v4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "265dfcb58339ec4fec726012ca40c672316bf8de"
+                "reference": "5a5da2d71096c11a9e55cea758321a4a165158d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/265dfcb58339ec4fec726012ca40c672316bf8de",
-                "reference": "265dfcb58339ec4fec726012ca40c672316bf8de",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/5a5da2d71096c11a9e55cea758321a4a165158d6",
+                "reference": "5a5da2d71096c11a9e55cea758321a4a165158d6",
                 "shasum": ""
             },
             "require": {
@@ -5357,7 +5358,7 @@
                 "symfony/var-dumper": "^5.4|^6.4|^7.2|^8.0"
             },
             "require-dev": {
-                "guzzlehttp/guzzle": "^7.6",
+                "guzzlehttp/guzzle": "^7.6|^8.0",
                 "laravel/pint": "1.30.4",
                 "pestphp/pest": "^3.0",
                 "phpstan/phpstan": "^2.0",
@@ -5423,9 +5424,10 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v4.0.0"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v4.1.0"
             },
-            "time": "2026-09-23T13:16:56+00:00"
+            "time": "2026-11-04T11:35:34+00:00",
+            "published-time": "2026-11-04T11:36:55+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -11693,7 +11695,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-06-05T06:23:12+00:00"
+            "time": "2026-06-05T06:23:12+00:00",
+            "published-time": "2026-06-27T21:46:34+00:00"
         },
         {
             "name": "symfony/error-handler",
@@ -13308,7 +13311,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-28T09:35:49+00:00"
+            "time": "2026-10-28T09:35:49+00:00",
+            "published-time": "2026-10-28T10:07:45+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
@@ -13392,7 +13396,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-25T15:50:05+00:00"
+            "time": "2026-09-25T15:50:05+00:00",
+            "published-time": "2026-09-30T10:23:35+00:00"
         },
         {
             "name": "symfony/polyfill-php82",
@@ -14541,7 +14546,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-26T21:55:04+00:00"
+            "time": "2026-10-26T21:55:04+00:00",
+            "published-time": "2026-10-28T18:25:26+00:00"
         },
         {
             "name": "symfony/var-exporter",
@@ -28667,5 +28673,5 @@
         "ext-zlib": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }
