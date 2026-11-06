@@ -136,6 +136,21 @@ trait InvGuestTrait
         return $this->workerVisibleDataReader($query);
     }
 
+    /**
+     * Every live invoice that still carries a legacy single `worker_id` --
+     * the source rows for the one-off carry-over into InvWorkerAllocation
+     * (see InvWorkerAllocationService::backfillLegacy()).
+     *
+     * @return list<\App\Infrastructure\Persistence\Inv\Inv>
+     */
+    public function repoWithWorkerAllocated(): array
+    {
+        return $this->select()
+            ->where(['worker_id' => ['!=' => null]])
+            ->where('deleted_at', null)
+            ->fetchAll();
+    }
+
     private function workerVisibleDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(

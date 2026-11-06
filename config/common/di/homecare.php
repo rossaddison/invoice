@@ -14,6 +14,8 @@ use App\Invoice\Inv\InvRepository;
 use App\Invoice\Inv\InvRepositoryInterface;
 use App\Invoice\InvItem\InvItemRepository;
 use App\Invoice\InvItem\InvItemRepositoryInterface;
+use App\Invoice\InvWorkerAllocation\InvWorkerAllocationRepository;
+use App\Invoice\InvWorkerAllocation\InvWorkerAllocationRepositoryInterface;
 use App\Invoice\Payment\PaymentRepository;
 use App\Invoice\Payment\PaymentRepositoryInterface;
 use App\Invoice\Product\ProductRepository;
@@ -40,4 +42,5 @@ return [
     ClientRepositoryInterface::class => ClientRepository::class,
     HomeCareRunSheetRepositoryInterface::class => HomeCareRunSheetRepository::class,
     HomeCareRunSheetItemRepositoryInterface::class => HomeCareRunSheetItemRepository::class,
+    InvWorkerAllocationRepositoryInterface::class => InvWorkerAllocationRepository::class,
 ];
