@@ -38,6 +38,30 @@ final class InvBlocksSendingTest
         Assert::true($inv->blocksSending());
     }
 
+    public function theAllocationGateBlocksSendingWithoutTheDoNotSendFlag(): void
+    {
+        $inv = new Inv();
+
+        $inv->setAllocationBlocksSending(true);
+
+        Assert::true($inv->getAllocationBlocksSending());
+        Assert::false($inv->getDoNotSend());
+        Assert::true($inv->blocksSending());
+    }
+
+    public function eitherFlagAloneBlocksAndBothMustClearToUnblock(): void
+    {
+        $inv = new Inv();
+        $inv->setDoNotSend(true);
+        $inv->setAllocationBlocksSending(true);
+
+        $inv->setDoNotSend(false);
+        Assert::true($inv->blocksSending());
+
+        $inv->setAllocationBlocksSending(false);
+        Assert::false($inv->blocksSending());
+    }
+
     public function clearingDoNotSendUnblocksSending(): void
     {
         $inv = new Inv();

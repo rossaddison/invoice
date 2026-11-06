@@ -10,6 +10,7 @@ use App\Invoice\Enum\AllocationStatus;
 use App\Invoice\Enum\PostponeReason;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\Inv\WorkerInvAccess;
+use App\Invoice\InvWorkerAllocation\AllocationSendGate;
 use App\Invoice\InvWorkerAllocation\InvWorkerAllocationService;
 use App\Invoice\Worker\WorkerRepository as WR;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -21,7 +22,9 @@ use Yiisoft\Router\HydratorAttribute\RouteArgument;
  * VIEW_INV (a worker's only invoice permission, which customer guests hold
  * too), so the real checks live here: only the lead may allocate; only the
  * allocated worker or the lead may settle. Anyone else, an unknown id, or
- * invalid input all get the same 404, so ids can't be probed.
+ * invalid input all get the same 404, so ids can't be probed. Both actions
+ * refresh the invoice's send gate (AllocationSendGate): a draft cannot be
+ * sent until its job is done.
  *
  * Requires the consuming class to expose:
  * @property \App\Service\WebControllerService $webService
@@ -43,6 +46,7 @@ trait HomeCareAllocation
         WR $wR,
         WorkerInvAccess $access,
         InvWorkerAllocationService $allocations,
+        AllocationSendGate $gate,
     ): Response {
         $user = $this->userService->getUser();
         $body = $request->getParsedBody();
@@ -67,6 +71,7 @@ trait HomeCareAllocation
         // Set while ANY side is allocated (not just a whole-house one): the
         // worker grids sort by it, so split houses keep allocation order.
         $inv->setWorkerAllocatedAt($allocations->hasAllocations($inv->reqId()) ? new \DateTimeImmutable() : null);
+        $gate->apply($inv);
         $iR->save($inv);
         $this->flashMessage('info', $this->translator->translate('worker.assigned'));
         return $this->webService->getRedirectResponse('inv/guest');
@@ -81,6 +86,8 @@ trait HomeCareAllocation
         #[RouteArgument('allocation_id')] string $allocation_id,
         WorkerInvAccess $access,
         InvWorkerAllocationService $allocations,
+        IR $iR,
+        AllocationSendGate $gate,
     ): Response {
         $user = $this->userService->getUser();
         $worker = $access->workerFor($user instanceof User ? $user->reqId() : 0);
@@ -104,6 +111,11 @@ trait HomeCareAllocation
                 $access->leadWorkerId(),
                 PostponeReason::tryFrom((string) ($body['reason'] ?? '')),
             );
+            $inv = $iR->repoInvUnLoadedquery($allocation->reqInvId());
+            if (null !== $inv) {
+                $gate->apply($inv);
+                $iR->save($inv);
+            }
             $this->flashMessage('info', $this->translator->translate('allocation.settled'));
         } catch (\LogicException) {
             $this->flashMessage('warning', $this->translator->translate('allocation.already.settled'));

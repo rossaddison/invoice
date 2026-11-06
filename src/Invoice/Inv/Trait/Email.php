@@ -246,9 +246,12 @@ trait Email
             return 'email.not.sent';
         }
         $d = $invEmailService->d;
-        $blocksSending = $d->core->iR->repoInvUnloadedquery($inv_id)?->blocksSending() === true;
+        $inv = $d->core->iR->repoInvUnloadedquery($inv_id);
+        $doNotSend = $inv?->getDoNotSend() === true;
+        $blocksSending = $inv?->blocksSending() === true;
         return match (true) {
-            $blocksSending => 'do.not.send.blocksEmail',
+            $doNotSend => 'do.not.send.blocksEmail',
+            $blocksSending => 'allocation.blocksEmail',
             !$invEmailService->mailerConfigured() => 'email.not.configured',
             default => null,
         };

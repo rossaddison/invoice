@@ -85,7 +85,21 @@ trait InvTrait3
      */
     public function blocksSending(): bool
     {
-        return $this->do_not_send;
+        return $this->do_not_send || $this->allocation_blocks_sending;
+    }
+
+    /**
+     * True while a draft's per-side job is not done (see SendReadiness).
+     * Distinct from the worker's do-not-send flag so a message can say why.
+     */
+    public function getAllocationBlocksSending(): bool
+    {
+        return $this->allocation_blocks_sending;
+    }
+
+    public function setAllocationBlocksSending(bool $allocation_blocks_sending): void
+    {
+        $this->allocation_blocks_sending = $allocation_blocks_sending;
     }
 
     public function getPassword(): ?string

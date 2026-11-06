@@ -14,6 +14,7 @@ use App\Invoice\Enum\AllocationStatus;
 use App\Invoice\Enum\PostponeReason;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\Inv\WorkerInvAccess;
+use App\Invoice\InvWorkerAllocation\AllocationSendGate;
 use App\Invoice\InvWorkerAllocation\InvWorkerAllocationRepositoryInterface;
 use App\Invoice\InvWorkerAllocation\InvWorkerAllocationService;
 use App\Invoice\Setting\SettingRepository;
@@ -164,6 +165,29 @@ final class HomeCareAllocationActionsTest
         return $wR;
     }
 
+    /**
+     * The send gate: expect it to refresh the invoice $times times.
+     */
+    private function gate(int $times): AllocationSendGate&m\MockInterface
+    {
+        /** @var AllocationSendGate&m\MockInterface $gate */
+        $gate = m::mock(AllocationSendGate::class);
+        $gate->shouldReceive('apply')->times($times)->andReturn(false);
+        return $gate;
+    }
+
+    /**
+     * Invoice repository for settleAllocation(): expect $times load+save of the invoice.
+     */
+    private function settleInvRepository(int $times): InvRepository&m\MockInterface
+    {
+        /** @var InvRepository&m\MockInterface $iR */
+        $iR = m::mock(InvRepository::class);
+        $iR->shouldReceive('repoInvUnLoadedquery')->with(self::INV)->times($times)->andReturn($this->inv());
+        $iR->shouldReceive('save')->times($times);
+        return $iR;
+    }
+
     private function allocations(): InvWorkerAllocationService&m\MockInterface
     {
         /** @var InvWorkerAllocationService&m\MockInterface $allocations */
@@ -187,6 +211,7 @@ final class HomeCareAllocationActionsTest
             $this->workerRepository($this->worker(7), 7),
             $this->access($this->worker(3), 1, false),
             $allocations,
+            $this->gate(0),
         );
 
         Assert::same($result, $notFound);
@@ -207,6 +232,7 @@ final class HomeCareAllocationActionsTest
             $this->workerRepository($this->worker(7), 7),
             $lead,
             $allocations,
+            $this->gate(0),
         );
         $badSide = $harness->allocateSide(
             $this->request(['side' => 'roof', 'worker_id' => '7']),
@@ -215,6 +241,7 @@ final class HomeCareAllocationActionsTest
             $this->workerRepository($this->worker(7), 7),
             $lead,
             $allocations,
+            $this->gate(0),
         );
         $unknownWorker = $harness->allocateSide(
             $this->request(['side' => 'front', 'worker_id' => '7']),
@@ -223,6 +250,7 @@ final class HomeCareAllocationActionsTest
             $this->workerRepository(null, 7),
             $lead,
             $allocations,
+            $this->gate(0),
         );
         $inactiveWorker = $harness->allocateSide(
             $this->request(['side' => 'front', 'worker_id' => '7']),
@@ -231,6 +259,7 @@ final class HomeCareAllocationActionsTest
             $this->workerRepository($this->worker(7, false), 7),
             $lead,
             $allocations,
+            $this->gate(0),
         );
 
         Assert::same($unknownInv, $notFound);
@@ -257,6 +286,7 @@ final class HomeCareAllocationActionsTest
             $this->workerRepository($this->worker(7), 7),
             $this->access($this->worker(1), 1, true),
             $allocations,
+            $this->gate(1),
         );
 
         Assert::same($result, $redirect);
@@ -283,6 +313,7 @@ final class HomeCareAllocationActionsTest
             $this->workerRepository($this->worker(7), 7),
             $this->access($this->worker(1), 1, true),
             $allocations,
+            $this->gate(1),
         );
 
         Assert::same($result, $redirect);
@@ -310,6 +341,7 @@ final class HomeCareAllocationActionsTest
             $this->workerRepository(null, 0),
             $this->access($this->worker(1), 1, true),
             $allocations,
+            $this->gate(1),
         );
 
         Assert::same($result, $redirect);
@@ -345,6 +377,8 @@ final class HomeCareAllocationActionsTest
             '3',
             $this->access($this->worker(7), 1, false),
             $service,
+            $this->settleInvRepository(1),
+            $this->gate(1),
         );
 
         Assert::same($result, $redirect);
@@ -365,6 +399,8 @@ final class HomeCareAllocationActionsTest
             '3',
             $this->access($this->worker(1), 1, true),
             $service,
+            $this->settleInvRepository(1),
+            $this->gate(1),
         );
 
         Assert::same($result, $redirect);
@@ -385,6 +421,8 @@ final class HomeCareAllocationActionsTest
             '3',
             $this->access(null, 1, false),
             $service,
+            $this->settleInvRepository(0),
+            $this->gate(0),
         );
 
         Assert::same($result, $notFound);
@@ -403,6 +441,8 @@ final class HomeCareAllocationActionsTest
             '3',
             $this->access($this->worker(8), 1, false),
             $service,
+            $this->settleInvRepository(0),
+            $this->gate(0),
         );
 
         Assert::same($result, $notFound);
@@ -418,9 +458,9 @@ final class HomeCareAllocationActionsTest
         [$service, $repository] = $this->realService($this->allocation(7));
         $repository->shouldNotReceive('save');
 
-        $unknown = $harness->settleAllocation($this->request(['status' => 'completed']), '999', $worker, $unknownService);
-        $invalid = $harness->settleAllocation($this->request(['status' => 'finished']), '3', $worker, $service);
-        $notADecision = $harness->settleAllocation($this->request(['status' => 'allocated']), '3', $worker, $service);
+        $unknown = $harness->settleAllocation($this->request(['status' => 'completed']), '999', $worker, $unknownService, $this->settleInvRepository(0), $this->gate(0));
+        $invalid = $harness->settleAllocation($this->request(['status' => 'finished']), '3', $worker, $service, $this->settleInvRepository(0), $this->gate(0));
+        $notADecision = $harness->settleAllocation($this->request(['status' => 'allocated']), '3', $worker, $service, $this->settleInvRepository(0), $this->gate(0));
 
         Assert::same($unknown, $notFound);
         Assert::same($invalid, $notFound);
@@ -440,6 +480,8 @@ final class HomeCareAllocationActionsTest
             '3',
             $this->access($this->worker(7), 1, false),
             $service,
+            $this->settleInvRepository(0),
+            $this->gate(0),
         );
 
         Assert::same($result, $redirect);

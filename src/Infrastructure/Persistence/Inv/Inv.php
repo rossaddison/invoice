@@ -205,6 +205,14 @@ class Inv
         // https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
         #[Column(type: 'string(100)', nullable: true)]
         private ?string $client_po_person = '',
+        // Derived from the invoice's InvWorkerAllocation rows by
+        // AllocationSendGate (see SendReadiness): true while a draft's job is
+        // not done. Folded into blocksSending() so every status-to-"sent"
+        // path honours it without knowing about allocations. Always false
+        // for invoices with no allocations. Appended last so no positional
+        // constructor argument shifts.
+        #[Column(type: 'boolean', nullable: false, default: false)]
+        private bool $allocation_blocks_sending = false,
     ) {
         $this->items = new ArrayCollection();
         // create also the invoice amount when the invoice is created.
