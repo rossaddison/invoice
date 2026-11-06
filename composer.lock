@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5f78bc51e8662a5a455a4c563c7b722c",
+    "content-hash": "2efb5106c16ce59b4a1d60a60b225fdf",
     "packages": [
         {
             "name": "adyen/php-api-library",
@@ -6190,7 +6190,8 @@
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
                 "source": "https://github.com/nikic/PHP-Parser/tree/v5.9.0"
             },
-            "time": "2026-09-13T18:51:52+00:00"
+            "time": "2026-09-13T18:51:52+00:00",
+            "published-time": "2026-09-13T18:53:16+00:00"
         },
         {
             "name": "nyholm/psr7",
@@ -7654,7 +7655,8 @@
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
                 "source": "https://github.com/phpstan/phpdoc-parser/tree/2.4.1"
             },
-            "time": "2026-10-30T19:36:28+00:00"
+            "time": "2026-10-30T19:36:28+00:00",
+            "published-time": "2026-10-30T19:37:11+00:00"
         },
         {
             "name": "phptg/bot-api",
@@ -8505,7 +8507,8 @@
                 "issues": "https://github.com/DerManoMann/type-info-extras/issues",
                 "source": "https://github.com/DerManoMann/type-info-extras/tree/1.0.11"
             },
-            "time": "2026-10-26T22:24:45+00:00"
+            "time": "2026-10-26T22:24:45+00:00",
+            "published-time": "2026-10-26T22:25:56+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -11695,7 +11698,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-16T14:15:10+00:00"
+            "time": "2026-09-16T14:15:10+00:00",
+            "published-time": "2026-11-04T11:25:34+00:00"
         },
         {
             "name": "symfony/error-handler",
@@ -12148,7 +12152,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-02T10:58:30+00:00"
+            "time": "2026-11-02T10:58:30+00:00",
+            "published-time": "2026-11-04T11:31:20+00:00"
         },
         {
             "name": "symfony/framework-bundle",
@@ -12884,7 +12889,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-04-10T16:19:22+00:00"
+            "time": "2026-04-10T16:19:22+00:00",
+            "published-time": "2026-04-26T14:44:50+00:00"
         },
         {
             "name": "symfony/polyfill-deepclone",
@@ -13394,7 +13400,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-25T15:50:05+00:00"
+            "time": "2026-09-25T15:50:05+00:00",
+            "published-time": "2026-09-30T10:23:35+00:00"
         },
         {
             "name": "symfony/polyfill-php82",
@@ -14456,7 +14463,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-02T10:58:30+00:00"
+            "time": "2026-11-02T10:58:30+00:00",
+            "published-time": "2026-11-04T11:31:29+00:00"
         },
         {
             "name": "symfony/var-dumper",
@@ -14702,7 +14710,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-04T08:39:20+00:00"
+            "time": "2026-11-04T08:39:20+00:00",
+            "published-time": "2026-11-04T11:31:03+00:00"
         },
         {
             "name": "truelayer/client",
@@ -20650,16 +20659,16 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "7.2.0",
+            "version": "7.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "59335dfc233a25fefd9b20cd797c059e5cbbd89a"
+                "reference": "0b24dce8431353e3aeb7712b6a16c7ee00b0992a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/59335dfc233a25fefd9b20cd797c059e5cbbd89a",
-                "reference": "59335dfc233a25fefd9b20cd797c059e5cbbd89a",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/0b24dce8431353e3aeb7712b6a16c7ee00b0992a",
+                "reference": "0b24dce8431353e3aeb7712b6a16c7ee00b0992a",
                 "shasum": ""
             },
             "require": {
@@ -20730,7 +20739,7 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/7.2.0"
+                "source": "https://github.com/zircote/swagger-php/tree/7.3.0"
             },
             "funding": [
                 {
@@ -20738,7 +20747,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-04T04:03:43+00:00"
+            "time": "2026-11-05T22:30:41+00:00",
+            "published-time": "2026-11-05T22:37:40+00:00"
         }
     ],
     "packages-dev": [
@@ -27370,7 +27380,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-26T12:45:58+00:00"
+            "time": "2026-05-26T12:45:58+00:00",
+            "published-time": "2026-05-26T13:40:34+00:00"
         },
         {
             "name": "symfony/stopwatch",
@@ -28673,5 +28684,5 @@
         "ext-zlib": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }
