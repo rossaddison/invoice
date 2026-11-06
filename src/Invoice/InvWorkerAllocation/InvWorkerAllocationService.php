@@ -125,6 +125,53 @@ final readonly class InvWorkerAllocationService
         return $this->repository->repoAllocationquery($allocationId);
     }
 
+    /**
+     * True when the house is allocated side by side (front and/or back), so a
+     * single worker cannot describe it.
+     */
+    public function isSplit(int $invId): bool
+    {
+        foreach ($this->forInv($invId) as $allocation) {
+            if (AllocationSide::Both !== $allocation->getSide()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Gives an existing whole-house allocation to another worker (a paper run
+     * sheet reassigning the house). A house with no whole-house row is left
+     * alone; returns whether one was reassigned.
+     */
+    public function reassignWholeHouse(int $invId, int $workerId): bool
+    {
+        if (null === $this->repository->repoForInvSidequery($invId, AllocationSide::Both)) {
+            return false;
+        }
+        $this->allocate($invId, AllocationSide::Both, $workerId);
+        return true;
+    }
+
+    /**
+     * The paper run sheet, checked thoroughly before it is submitted, says the
+     * house was done: complete every still-open allocation on it, recorded as
+     * settled by the office (no worker). Returns how many were completed.
+     */
+    public function settleFromRunSheet(int $invId, ?DateTimeImmutable $at = null): int
+    {
+        $at ??= new DateTimeImmutable();
+        $settled = 0;
+        foreach ($this->forInv($invId) as $allocation) {
+            if (!$allocation->isDecided()) {
+                $allocation->decide(AllocationStatus::Completed, null, $at);
+                $this->repository->save($allocation);
+                $settled++;
+            }
+        }
+        return $settled;
+    }
+
     public function mayDecide(InvWorkerAllocation $allocation, int $actorWorkerId, ?int $leadWorkerId): bool
     {
         return $allocation->reqWorkerId() === $actorWorkerId

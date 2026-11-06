@@ -10,6 +10,8 @@ use App\Invoice\Enum\HomeCareRunSheetStatus;
 use App\Invoice\HomeCareRunSheetItem\HomeCareRunSheetItemRepository as RSIR;
 use App\Invoice\Inv\InvMarkSentService;
 use App\Invoice\Inv\InvRepository as IR;
+use App\Invoice\InvWorkerAllocation\AllocationSendGate;
+use App\Invoice\InvWorkerAllocation\InvWorkerAllocationService;
 use App\Invoice\Worker\WorkerRepository as WR;
 use DateTimeImmutable;
 use LogicException;
@@ -34,6 +36,14 @@ use LogicException;
  * its invoice is still included in the final mark-sent pass, since
  * rejecting a mis-read adjustment doesn't mean the invoice shouldn't be
  * sent, just that the detected change itself wasn't real.
+ *
+ * Per-side allocations (InvWorkerAllocation): the paper sheet is checked
+ * thoroughly before it is submitted, so an invoice that is about to be marked
+ * sent and is not do-not-send has its still-open allocations completed
+ * (recorded as settled by the office) and its send gate refreshed BEFORE the
+ * mark-sent pass -- otherwise the gate would skip it. A paper worker
+ * reassignment keeps a whole-house allocation in step; a house allocated
+ * side by side is left alone, since the paper cannot say which side.
  */
 final readonly class HomeCareRunSheetApplyService
 {
@@ -43,6 +53,8 @@ final readonly class HomeCareRunSheetApplyService
         private IR $iR,
         private WR $wR,
         private InvMarkSentService $invMarkSentService,
+        private InvWorkerAllocationService $allocations,
+        private AllocationSendGate $gate,
     ) {
     }
 
@@ -64,6 +76,7 @@ final readonly class HomeCareRunSheetApplyService
             if ($item->hasDetectedChange() && $item->getAccepted()) {
                 $this->applyItem($item);
             }
+            $this->settleAllocationsIfDone($item->reqInvId());
             $invIds[] = $item->reqInvId();
         }
 
@@ -85,9 +98,10 @@ final readonly class HomeCareRunSheetApplyService
         $detectedWorkerId = $item->getDetectedWorkerId();
         if ($detectedWorkerId !== null && $detectedWorkerId !== $inv->getWorker()?->reqId()) {
             $worker = $this->wR->repoWorkerquery($detectedWorkerId);
-            if ($worker !== null) {
+            if ($worker !== null && !$this->allocations->isSplit($inv->reqId())) {
                 $inv->setWorker($worker);
                 $inv->setWorkerAllocatedAt(new DateTimeImmutable('now'));
+                $this->allocations->reassignWholeHouse($inv->reqId(), $worker->reqId());
             }
         }
 
@@ -96,6 +110,26 @@ final readonly class HomeCareRunSheetApplyService
             $inv->setDoNotSendReason($item->getDetectedReasonCode() ?? '');
         }
 
+        $this->iR->save($inv);
+    }
+
+    /**
+     * Completes the invoice's open allocations (and refreshes its send gate)
+     * when this run is about to mark it sent. A do-not-send invoice is left
+     * alone: its job was not completed. Looks the invoice up only when it
+     * actually has allocations.
+     */
+    private function settleAllocationsIfDone(int $invId): void
+    {
+        if (!$this->allocations->hasAllocations($invId)) {
+            return;
+        }
+        $inv = $this->iR->repoInvUnLoadedquery($invId);
+        if ($inv === null || $inv->getDoNotSend()) {
+            return;
+        }
+        $this->allocations->settleFromRunSheet($invId, new DateTimeImmutable('now'));
+        $this->gate->apply($inv);
         $this->iR->save($inv);
     }
 }

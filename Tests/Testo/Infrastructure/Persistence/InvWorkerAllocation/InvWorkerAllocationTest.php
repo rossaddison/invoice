@@ -97,6 +97,17 @@ final class InvWorkerAllocationTest
         Assert::same($allocation->getDecidedByWorkerId(), 7);
     }
 
+    public function theOfficeCanSettleWithNoWorkerAndItIsRecordedAsSuch(): void
+    {
+        $allocation = $this->allocation();
+
+        $allocation->decide(AllocationStatus::Completed, null, new DateTimeImmutable());
+
+        Assert::same($allocation->getStatus(), AllocationStatus::Completed);
+        Assert::null($allocation->getDecidedByWorkerId());
+        Assert::true($allocation->getDecidedAt() instanceof DateTimeImmutable);
+    }
+
     public function postponingKeepsTheReason(): void
     {
         $allocation = $this->allocation();

@@ -273,6 +273,57 @@ final class InvWorkerAllocationServiceTest
         Assert::null($service->find(4));
     }
 
+    public function aHouseIsSplitWhenAnySideIsFrontOrBackAndNotWhenWhole(): void
+    {
+        $split = $this->repository([$this->row(AllocationSide::Front, 7)]);
+        $whole = $this->repository([$this->row(AllocationSide::Both, 7)]);
+        $none = $this->repository([]);
+
+        Assert::true((new InvWorkerAllocationService($split))->isSplit(self::INV));
+        Assert::false((new InvWorkerAllocationService($whole))->isSplit(self::INV));
+        Assert::false((new InvWorkerAllocationService($none))->isSplit(self::INV));
+    }
+
+    public function reassigningAWholeHouseMovesItsWholeHouseRowToTheNewWorker(): void
+    {
+        $both = $this->row(AllocationSide::Both, 7);
+        $repository = $this->repository([$both]);
+        $repository->shouldReceive('repoForInvSidequery')->with(self::INV, AllocationSide::Both)->andReturn($both);
+        $repository->shouldReceive('save')->once()->with($both);
+
+        $moved = (new InvWorkerAllocationService($repository))->reassignWholeHouse(self::INV, 9);
+
+        Assert::true($moved);
+        Assert::same($both->reqWorkerId(), 9);
+    }
+
+    public function reassigningAHouseWithNoWholeHouseRowDoesNothing(): void
+    {
+        $repository = $this->repository([$this->row(AllocationSide::Front, 7)]);
+        $repository->shouldReceive('repoForInvSidequery')->with(self::INV, AllocationSide::Both)->andReturn(null);
+        $repository->shouldNotReceive('save');
+
+        Assert::false((new InvWorkerAllocationService($repository))->reassignWholeHouse(self::INV, 9));
+    }
+
+    public function settlingFromTheRunSheetCompletesOnlyOpenRowsAsTheOffice(): void
+    {
+        $open = $this->row(AllocationSide::Front, 7);
+        $alreadyPostponed = $this->row(AllocationSide::Back, 8);
+        $alreadyPostponed->decide(AllocationStatus::Postponed, 8, new DateTimeImmutable(), PostponeReason::GateLocked);
+        $repository = $this->repository([$open, $alreadyPostponed]);
+        $repository->shouldReceive('save')->once()->with($open);
+        $at = new DateTimeImmutable('2026-11-07 17:00:00');
+
+        $settled = (new InvWorkerAllocationService($repository))->settleFromRunSheet(self::INV, $at);
+
+        Assert::same($settled, 1);
+        Assert::same($open->getStatus(), AllocationStatus::Completed);
+        Assert::null($open->getDecidedByWorkerId());
+        Assert::same($open->getDecidedAt(), $at);
+        Assert::same($alreadyPostponed->getStatus(), AllocationStatus::Postponed);
+    }
+
     public function backfillCarriesALegacyWorkerOverAsAWholeHouseAllocationKeepingItsTime(): void
     {
         $repository = $this->repository([]);

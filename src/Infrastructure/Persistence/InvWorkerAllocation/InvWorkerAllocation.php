@@ -61,7 +61,7 @@ class InvWorkerAllocation
         private string $status = 'allocated',
         #[Column(type: 'datetime', nullable: true, typecast: 'datetime')]
         private ?DateTimeImmutable $decided_at = null,
-        /** Who settled it: the allocated worker, or the lead. */
+        /** Who settled it: the allocated worker, the lead, or null for the office (run sheet). */
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $decided_by_worker_id = null,
         /** A {@see PostponeReason} value; only ever set on a postponed row. */
@@ -163,13 +163,14 @@ class InvWorkerAllocation
     /**
      * Settles the allocation. Only an undecided allocation can be settled,
      * and only into completed, postponed or cancelled; a reason is kept only
-     * when postponing.
+     * when postponing. $byWorkerId is null when the office settled it (the
+     * paper run sheet's Apply step), not a worker.
      *
      * @throws \LogicException when already decided, or $status is not a decision
      */
     public function decide(
         AllocationStatus $status,
-        int $byWorkerId,
+        ?int $byWorkerId,
         DateTimeImmutable $at,
         ?PostponeReason $reason = null,
     ): void {
