@@ -248,6 +248,18 @@ final class InvWorkerAllocationServiceTest
         Assert::null($service->legacyWorkerId(self::INV));
     }
 
+    public function aHouseHasAllocationsWhileAnySideIsAllocated(): void
+    {
+        /** @var InvWorkerAllocationRepositoryInterface&m\MockInterface $repository */
+        $repository = m::mock(InvWorkerAllocationRepositoryInterface::class);
+        $repository->shouldReceive('repoForInvquery')->with(self::INV)
+            ->andReturn([$this->row(AllocationSide::Back, 8)], []);
+        $service = new InvWorkerAllocationService($repository);
+
+        Assert::true($service->hasAllocations(self::INV));
+        Assert::false($service->hasAllocations(self::INV));
+    }
+
     public function anAllocationIsFoundByItsId(): void
     {
         $front = $this->row(AllocationSide::Front, 7);

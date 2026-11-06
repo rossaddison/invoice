@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Infrastructure\Persistence\Inv\Inv;
+use Cycle\Database\Injection\Fragment;
 use Cycle\Database\Injection\Parameter;
 use Cycle\ORM\Select;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
@@ -12,6 +13,38 @@ use Yiisoft\Data\Reader\Sort;
 
 trait InvGuestTrait
 {
+    /**
+     * Statuses a HomeCare worker sees on inv/guest: everything a customer
+     * guest sees (2-13) plus drafts (1). A draft stays draft until the job is
+     * completed, so the worker must see their allocated drafts to complete
+     * them. Customer-scoped queries keep excluding drafts.
+     */
+    private const array WORKER_VISIBLE_STATUSES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+
+    private const array GUEST_VISIBLE_STATUSES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+
+    /**
+     * Restricts a query to the invoices allocated to a worker: the legacy
+     * single Inv.worker_id, OR any InvWorkerAllocation row of theirs (a split
+     * front/back house has no single worker_id). One query, no extra round
+     * trip; verified against MySQL for each combination.
+     *
+     * @param Select<Inv> $query
+     * @return Select<Inv>
+     */
+    private function whereAllocatedToWorker(Select $query, int $workerId): Select
+    {
+        return $query->where([
+            '@or' => [
+                ['worker_id' => $workerId],
+                ['id' => ['in' => new Fragment(
+                    '(SELECT inv_id FROM inv_worker_allocation WHERE worker_id = ?)',
+                    $workerId
+                )]],
+            ],
+        ]);
+    }
+
     /**
      * @return Inv|null
      */
@@ -101,8 +134,9 @@ trait InvGuestTrait
 
     /**
      * Invoices currently allocated to a HomeCare worker — the worker-scoped
-     * counterpart to repoGuestClientsPostDraft(), keyed on worker_id instead
-     * of client_id.
+     * counterpart to repoGuestClientsPostDraft(), keyed on the worker's
+     * allocation (legacy worker_id or an InvWorkerAllocation row) instead of
+     * client_id, and including drafts (see WORKER_VISIBLE_STATUSES).
      *
      * Sorted by worker_allocated_at ascending — earliest-allocated first —
      * rather than the shared prepareDataReader()'s id-desc default. Staff
@@ -122,16 +156,14 @@ trait InvGuestTrait
     public function repoWorkerVisible(int $status_id, int $worker_id): EntityReader
     {
         if ($status_id > 0) {
-            $query = $this->select()
-                    ->where(['status_id' => $status_id])
-                    ->where(['worker_id' => $worker_id])
-                    ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+            $query = $this->whereAllocatedToWorker($this->select(), $worker_id)
+                    ->andWhere(['status_id' => $status_id])
+                    ->andWhere(['status_id' => ['in' => new Parameter(self::WORKER_VISIBLE_STATUSES)]])
                     ->where('deleted_at', null);
             return $this->workerVisibleDataReader($query);
         }
-        $query = $this->select()
-                     ->where(['worker_id' => $worker_id])
-                     ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+        $query = $this->whereAllocatedToWorker($this->select(), $worker_id)
+                     ->andWhere(['status_id' => ['in' => new Parameter(self::WORKER_VISIBLE_STATUSES)]])
                      ->where('deleted_at', null);
         return $this->workerVisibleDataReader($query);
     }
@@ -161,8 +193,8 @@ trait InvGuestTrait
 
     /**
      * inv/guest/calendar's worker-scoped source query -- the
-     * repoWorkerVisible() of the calendar feature: same worker_id scoping
-     * and non-draft status exclusion, but over a date range instead of a
+     * repoWorkerVisible() of the calendar feature: same allocation scoping
+     * and status set (drafts included), but over a date range instead of a
      * single status. items.product.family is eager-loaded because
      * Trait\Calendar::calendarBucketInvoices() (reused here by
      * Trait\GuestCalendar) walks exactly that relation chain per invoice
@@ -174,10 +206,11 @@ trait InvGuestTrait
         \DateTimeImmutable $toExclusive,
         int $workerId,
     ): EntityReader {
-        $query = $this->select()
-                ->load(['client', 'group', 'user', 'items.product.family'])
-                ->where(['worker_id' => $workerId])
-                ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+        $query = $this->whereAllocatedToWorker(
+            $this->select()->load(['client', 'group', 'user', 'items.product.family']),
+            $workerId
+        )
+                ->andWhere(['status_id' => ['in' => new Parameter(self::WORKER_VISIBLE_STATUSES)]])
                 ->andWhere('date_created', '>=', $from->format('Y-m-d H:i:s'))
                 ->andWhere('date_created', '<', $toExclusive->format('Y-m-d H:i:s'))
                 ->where('deleted_at', null);
@@ -225,9 +258,10 @@ trait InvGuestTrait
     ): EntityReader {
         $query = $this->select()->load(['client', 'group', 'user']);
         $query = $workerId !== null
-            ? $query->where(['worker_id' => $workerId])
+            ? $this->whereAllocatedToWorker($query, $workerId)
             : $query->where(['client_id' => ['in' => new Parameter($clientIds)]]);
-        $query = $query->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+        $statuses = $workerId !== null ? self::WORKER_VISIBLE_STATUSES : self::GUEST_VISIBLE_STATUSES;
+        $query = $query->andWhere(['status_id' => ['in' => new Parameter($statuses)]])
             ->where('deleted_at', null);
 
         // Shared with InvCombinedFilterTrait::applyExactDateCondition() --

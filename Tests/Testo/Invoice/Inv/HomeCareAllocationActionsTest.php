@@ -239,7 +239,7 @@ final class HomeCareAllocationActionsTest
         Assert::same($inactiveWorker, $notFound);
     }
 
-    public function theLeadAllocatingASplitSideLeavesTheLegacySingleWorkerEmpty(): void
+    public function theLeadAllocatingASplitSideLeavesTheLegacySingleWorkerEmptyButStampsTheAllocationTime(): void
     {
         [$webService, , $redirect] = $this->webService();
         $inv = $this->inv();
@@ -248,6 +248,7 @@ final class HomeCareAllocationActionsTest
         $allocations = $this->allocations();
         $allocations->shouldReceive('allocate')->once()->with(self::INV, AllocationSide::Front, 7);
         $allocations->shouldReceive('legacyWorkerId')->with(self::INV)->andReturn(null);
+        $allocations->shouldReceive('hasAllocations')->with(self::INV)->andReturn(true);
 
         $result = $this->harness($webService)->allocateSide(
             $this->request(['side' => 'front', 'worker_id' => '7']),
@@ -260,7 +261,8 @@ final class HomeCareAllocationActionsTest
 
         Assert::same($result, $redirect);
         Assert::null($inv->getWorkerId());
-        Assert::null($inv->getWorkerAllocatedAt());
+        // the worker grids sort by this, so a split house keeps allocation order
+        Assert::true($inv->getWorkerAllocatedAt() instanceof \DateTimeImmutable);
     }
 
     public function theLeadAllocatingTheWholeHouseKeepsTheLegacySingleWorkerInStep(): void
@@ -272,6 +274,7 @@ final class HomeCareAllocationActionsTest
         $allocations = $this->allocations();
         $allocations->shouldReceive('allocate')->once()->with(self::INV, AllocationSide::Both, 7);
         $allocations->shouldReceive('legacyWorkerId')->with(self::INV)->andReturn(7);
+        $allocations->shouldReceive('hasAllocations')->with(self::INV)->andReturn(true);
 
         $result = $this->harness($webService)->allocateSide(
             $this->request(['side' => 'both', 'worker_id' => '7']),
@@ -297,6 +300,8 @@ final class HomeCareAllocationActionsTest
         $allocations->shouldReceive('clear')->once()->with(self::INV, AllocationSide::Back);
         $allocations->shouldNotReceive('allocate');
         $allocations->shouldReceive('legacyWorkerId')->andReturn(null);
+        $allocations->shouldReceive('hasAllocations')->andReturn(false);
+        $inv->setWorkerAllocatedAt(new \DateTimeImmutable('2026-11-06 09:00:00'));
 
         $result = $this->harness($webService)->allocateSide(
             $this->request(['side' => 'back', 'worker_id' => '']),
@@ -308,6 +313,7 @@ final class HomeCareAllocationActionsTest
         );
 
         Assert::same($result, $redirect);
+        Assert::null($inv->getWorkerAllocatedAt());
     }
 
     /**

@@ -105,6 +105,11 @@ final readonly class InvWorkerAllocationService
         return null === $both ? null : $both->reqWorkerId();
     }
 
+    public function hasAllocations(int $invId): bool
+    {
+        return [] !== $this->repository->repoForInvquery($invId);
+    }
+
     public function find(int $allocationId): ?InvWorkerAllocation
     {
         return $this->repository->repoAllocationquery($allocationId);

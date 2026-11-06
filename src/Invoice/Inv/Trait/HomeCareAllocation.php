@@ -34,7 +34,7 @@ trait HomeCareAllocation
      * The lead allocates one side of a house to a worker, or clears it
      * (empty worker_id). Keeps the legacy single Inv.worker_id in step for a
      * whole-house allocation; a split house has no single worker, so it reads
-     * null there until the worker views read the allocation table directly.
+     * null there (the worker views read the allocation table directly).
      */
     public function allocateSide(
         Request $request,
@@ -64,7 +64,9 @@ trait HomeCareAllocation
         $legacyWorkerId = $allocations->legacyWorkerId($inv->reqId());
         $legacyWorker = null !== $legacyWorkerId ? $wR->repoWorkerquery($legacyWorkerId) : null;
         $inv->setWorker($legacyWorker);
-        $inv->setWorkerAllocatedAt(null !== $legacyWorker ? new \DateTimeImmutable() : null);
+        // Set while ANY side is allocated (not just a whole-house one): the
+        // worker grids sort by it, so split houses keep allocation order.
+        $inv->setWorkerAllocatedAt($allocations->hasAllocations($inv->reqId()) ? new \DateTimeImmutable() : null);
         $iR->save($inv);
         $this->flashMessage('info', $this->translator->translate('worker.assigned'));
         return $this->webService->getRedirectResponse('inv/guest');
