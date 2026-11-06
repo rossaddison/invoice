@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Dwelling\DwellingPostcodeLink;
 use App\Invoice\Enum\DoNotSendReason;
+use App\Invoice\Inv\Widget\InvAllocationCell;
 use App\Widget\Button;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
@@ -34,6 +35,9 @@ const NATIVE_RESET_INV_AMOUNT_FILTER = 'native-reset inv-amount-filter';
  * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var App\Infrastructure\Persistence\UserInv\UserInv $userInv
  * @var App\Invoice\Dwelling\DwellingRepository $dwR
+ * @var App\Invoice\InvWorkerAllocation\InvWorkerAllocationService $allocations
+ * @var array<int, string> $workerNames
+ * @var int|null $leadWorkerId
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Inv\InvRepository $iR
  * @var App\Invoice\InvAmount\InvAmountRepository $iaR
@@ -125,6 +129,19 @@ echo new Div();
 /**
  * @var ColumnInterface[] $columns
  */
+// The per-side allocation cell is a HomeCare field worker (or lead) feature:
+// null for an ordinary client guest, which hides the column entirely.
+$allocationCell = $worker !== null
+    ? new InvAllocationCell(
+        $allocations,
+        $urlGenerator,
+        $translator,
+        $csrf,
+        $worker->reqId(),
+        $leadWorkerId,
+        $workerNames,
+    )
+    : null;
 // Build enabled payment gateways list once for use in the paid column
 $enabledGateways = $s->paymentGatewaysEnabledDriverList();
 
@@ -396,6 +413,15 @@ $columns = [
         },
         encodeContent: false,
         visible: $worker !== null,
+        withSorting: false,
+    ),
+    // HomeCare per-side allocation: who has the fronts/backs, their status,
+    // the settle buttons, and (lead only) the allocate form.
+    new DataColumn(
+        header: $translator->translate('allocation'),
+        content: static fn (Inv $model): string => $allocationCell?->render($model) ?? '',
+        encodeContent: false,
+        visible: $allocationCell !== null,
         withSorting: false,
     ),
     // Credit note for the invoice

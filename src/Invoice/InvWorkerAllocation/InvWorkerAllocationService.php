@@ -105,9 +105,19 @@ final readonly class InvWorkerAllocationService
         return null === $both ? null : $both->reqWorkerId();
     }
 
+    /**
+     * Every allocation on one house, whichever side.
+     *
+     * @return list<InvWorkerAllocation>
+     */
+    public function forInv(int $invId): array
+    {
+        return $this->repository->repoForInvquery($invId);
+    }
+
     public function hasAllocations(int $invId): bool
     {
-        return [] !== $this->repository->repoForInvquery($invId);
+        return [] !== $this->forInv($invId);
     }
 
     public function find(int $allocationId): ?InvWorkerAllocation

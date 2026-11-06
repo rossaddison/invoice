@@ -20,6 +20,7 @@ use App\Invoice\{
     Inv\InvGuestAccess,
     Inv\InvGuestDeps,
     Inv\InvGuestFilter,
+    Inv\InvGuestHomeCare,
     Inv\InvRepository as IR,
     Inv\RunSheetPdfRowBuilder,
     Inv\WorkerInvAccess,
@@ -46,7 +47,7 @@ trait Guest
     public function guest(
         InvGuestDeps $d,
         InvGuestFilter $filter,
-        DwR $dwR,
+        InvGuestHomeCare $homeCare,
         #[RouteArgument('page')]
         string $page = '1',
         #[RouteArgument('status')]
@@ -78,7 +79,7 @@ trait Guest
             // with the explanatory message, not a blank tab.
             return $this->webService->getRedirectResponse('shop/catalog/index');
         }
-        return $this->renderGuestView($d, $filter, $page, $status, $user_id, $access, $dwR);
+        return $this->renderGuestView($d, $filter, $page, $status, $user_id, $access, $homeCare);
     }
 
     /**
@@ -361,7 +362,7 @@ trait Guest
         string $status,
         int $user_id,
         InvGuestAccess $access,
-        DwR $dwR,
+        InvGuestHomeCare $homeCare,
     ): Response {
         $userInv = $access->userInv;
         $user_clients = $access->clients;
@@ -405,7 +406,10 @@ trait Guest
             'iaR' => $d->iaR,
             'iR' => $d->iR,
             'irR' => $d->irR,
-            'dwR' => $dwR,
+            'dwR' => $homeCare->dwR,
+            'allocations' => $homeCare->allocations,
+            'workerNames' => $homeCare->workerNames(),
+            'leadWorkerId' => $homeCare->leadWorkerId(),
             'invs' => $invs,
             'label' => $label,
             // the guest will not have access to the pageSizeLimiter
