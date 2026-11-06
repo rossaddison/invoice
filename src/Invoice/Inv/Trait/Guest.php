@@ -22,6 +22,7 @@ use App\Invoice\{
     Inv\InvGuestFilter,
     Inv\InvRepository as IR,
     Inv\RunSheetPdfRowBuilder,
+    Inv\WorkerInvAccess,
 };
 use Yiisoft\{
     Data\Reader\DataReaderInterface as DRI,
@@ -519,26 +520,32 @@ trait Guest
     /**
      * HomeCare field worker flags/clears do-not-send from their own
      * inv/guest row. Gated by VIEW_INV (routes-inv.php), not EDIT_INV, so
-     * the worker RBAC role can actually reach it.
+     * the worker RBAC role can actually reach it -- but customer guests hold
+     * VIEW_INV too, so the invoice must also be allocated to the signed-in
+     * worker (WorkerInvAccess); anyone else, or an unknown id, gets the same
+     * 404 so ids can't be probed.
      */
     public function setDoNotSend(
         Request $request,
         #[RouteArgument('inv_id')] string $inv_id,
         IR $iR,
+        WorkerInvAccess $workerAccess,
     ): Response {
+        $user = $this->userService->getUser();
+        $inv = $inv_id !== '' ? $iR->repoInvUnLoadedquery((int) $inv_id) : null;
+        if (null === $inv || !$workerAccess->isAllocated($inv, $user instanceof User ? $user->reqId() : 0)) {
+            return $this->webService->getNotFoundResponse();
+        }
         $body = $request->getParsedBody() ?? [];
         /** @var string $reason */
         $reason = is_array($body) ? ($body['reason'] ?? '') : '';
         $validReason = DoNotSendReason::tryFrom($reason) !== null ? $reason : '';
-        $inv = $inv_id !== '' ? $iR->repoInvUnLoadedquery((int) $inv_id) : null;
-        if ($inv !== null) {
-            $inv->setDoNotSend($validReason !== '');
-            $inv->setDoNotSendReason($validReason);
-            $iR->save($inv);
-            $this->flashMessage('info', $this->translator->translate(
-                $validReason !== '' ? 'do.not.send.flashSet' : 'do.not.send.flashCleared'
-            ));
-        }
+        $inv->setDoNotSend($validReason !== '');
+        $inv->setDoNotSendReason($validReason);
+        $iR->save($inv);
+        $this->flashMessage('info', $this->translator->translate(
+            $validReason !== '' ? 'do.not.send.flashSet' : 'do.not.send.flashCleared'
+        ));
         return $this->webService->getRedirectResponse('inv/guest');
     }
 }
