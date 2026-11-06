@@ -14,6 +14,7 @@ use Yiisoft\Html\Tag\Option;
 * @var array $hidden_inv_columns
 * @var array $hidden_inv_guest_columns
 * @var array $category_secondaries
+* @var array<int, string> $workers
 * @var array $body
 */
 
@@ -129,6 +130,41 @@ echo H::openTag('div', ['class' => 'row']); //1
        )
         ->content(
          $categorySecondaryName
+        );
+      }
+     echo H::closeTag('select');
+    echo H::closeTag('div'); //5
+
+    echo H::openTag('div', ['class' => 'mb-3']); //5
+     $shlwi = 'settings[homecare_lead_worker_id]';
+     echo H::openTag('label', [
+      'for' => $shlwi
+     ]);
+      echo $translator->translate('homecare.lead.worker');
+      echo $s->infoIcon('homecare_lead_worker_id');
+     echo H::closeTag('label');
+
+     $body[$shlwi] =
+     $s->getSetting('homecare_lead_worker_id');
+
+     echo H::openTag('select', [
+      'name' => $shlwi,
+      'id' => $shlwi,
+      'class' => 'form-select',
+     ]);
+      echo  new Option()
+       ->value('0')
+       ->content(
+        $translator->translate('not.set')
+       );
+      foreach ($workers as $workerId => $workerName) {
+       echo  new Option()
+        ->value((string) $workerId)
+        ->selected(
+         $body[$shlwi] == (string) $workerId
+       )
+        ->content(
+         $workerName
         );
       }
      echo H::closeTag('select');

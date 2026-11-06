@@ -94,6 +94,22 @@ final readonly class InvWorkerAllocationService
         $this->repository->save($allocation);
     }
 
+    /**
+     * The worker on the whole-house (`both`) allocation, if any -- what the
+     * legacy single Inv.worker_id should read while the existing views still
+     * use it. A split house has no single worker, so this is null for it.
+     */
+    public function legacyWorkerId(int $invId): ?int
+    {
+        $both = $this->repository->repoForInvSidequery($invId, AllocationSide::Both);
+        return null === $both ? null : $both->reqWorkerId();
+    }
+
+    public function find(int $allocationId): ?InvWorkerAllocation
+    {
+        return $this->repository->repoAllocationquery($allocationId);
+    }
+
     public function mayDecide(InvWorkerAllocation $allocation, int $actorWorkerId, ?int $leadWorkerId): bool
     {
         return $allocation->reqWorkerId() === $actorWorkerId

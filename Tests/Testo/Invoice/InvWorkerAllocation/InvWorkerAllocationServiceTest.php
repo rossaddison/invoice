@@ -236,6 +236,31 @@ final class InvWorkerAllocationServiceTest
         Assert::false($service->mayDecide($front, 1, null));
     }
 
+    public function theLegacySingleWorkerIsTheWholeHouseWorkerOrNullWhenSplitOrUnallocated(): void
+    {
+        /** @var InvWorkerAllocationRepositoryInterface&m\MockInterface $repository */
+        $repository = m::mock(InvWorkerAllocationRepositoryInterface::class);
+        $repository->shouldReceive('repoForInvSidequery')->with(self::INV, AllocationSide::Both)
+            ->andReturn($this->row(AllocationSide::Both, 7), null);
+        $service = new InvWorkerAllocationService($repository);
+
+        Assert::same($service->legacyWorkerId(self::INV), 7);
+        Assert::null($service->legacyWorkerId(self::INV));
+    }
+
+    public function anAllocationIsFoundByItsId(): void
+    {
+        $front = $this->row(AllocationSide::Front, 7);
+        /** @var InvWorkerAllocationRepositoryInterface&m\MockInterface $repository */
+        $repository = m::mock(InvWorkerAllocationRepositoryInterface::class);
+        $repository->shouldReceive('repoAllocationquery')->with(3)->andReturn($front);
+        $repository->shouldReceive('repoAllocationquery')->with(4)->andReturn(null);
+        $service = new InvWorkerAllocationService($repository);
+
+        Assert::same($service->find(3), $front);
+        Assert::null($service->find(4));
+    }
+
     public function backfillCarriesALegacyWorkerOverAsAWholeHouseAllocationKeepingItsTime(): void
     {
         $repository = $this->repository([]);

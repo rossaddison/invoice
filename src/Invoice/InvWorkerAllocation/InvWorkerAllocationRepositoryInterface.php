@@ -20,5 +20,7 @@ interface InvWorkerAllocationRepositoryInterface
      */
     public function repoForInvquery(int $invId): array;
 
+    public function repoAllocationquery(int $id): ?InvWorkerAllocation;
+
     public function repoForInvSidequery(int $invId, AllocationSide $side): ?InvWorkerAllocation;
 }

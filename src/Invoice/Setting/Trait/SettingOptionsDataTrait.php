@@ -6,6 +6,7 @@ namespace App\Invoice\Setting\Trait;
 
 use App\Infrastructure\Persistence\Setting\Setting;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\Worker\WorkerRepository as WR;
 
 trait SettingOptionsDataTrait
 {
@@ -41,5 +42,19 @@ trait SettingOptionsDataTrait
             }
         }
         return $optionsDataSettings;
+    }
+
+    /**
+     * Active workers for the HomeCare lead-worker dropdown.
+     *
+     * @return array<int, string> worker id => "Firstname Lastname"
+     */
+    public function optionsDataWorkers(WR $wR): array
+    {
+        $options = [];
+        foreach ($wR->findAllActive() as $worker) {
+            $options[$worker->reqId()] = trim($worker->getFirstname() . ' ' . $worker->getLastname());
+        }
+        return $options;
     }
 }

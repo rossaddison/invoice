@@ -216,6 +216,17 @@ return [
             ->middleware(RoutePermission::check(Permissions::VIEW_INV))
             ->action([InvController::class, 'setDoNotSend'])
             ->name('inv/setdonotsend'),
+        // VIEW_INV, not EDIT_INV: the lead is a worker, who only has VIEW_INV --
+        // the real gate is WorkerInvAccess::isLead() inside the action.
+        Route::methods([Method::POST], '/inv/allocateside/{inv_id}')
+            ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+            ->action([InvController::class, 'allocateSide'])
+            ->name('inv/allocateside'),
+        // Likewise: the allocated worker or the lead, checked in the action.
+        Route::methods([Method::POST], '/inv/settleallocation/{allocation_id}')
+            ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+            ->action([InvController::class, 'settleAllocation'])
+            ->name('inv/settleallocation'),
         Route::methods([Method::GET], '/inv/batchEmailPreview')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'batchEmailPreview'])

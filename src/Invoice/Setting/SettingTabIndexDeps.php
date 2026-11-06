@@ -9,6 +9,7 @@ use App\Invoice\EmailTemplate\EmailTemplateRepository as ER;
 use App\Invoice\Group\GroupRepository as GR;
 use App\Invoice\PaymentMethod\PaymentMethodRepository as PM;
 use App\Invoice\TaxRate\TaxRateRepository as TR;
+use App\Invoice\Worker\WorkerRepository as WR;
 
 final class SettingTabIndexDeps
 {
@@ -18,6 +19,7 @@ final class SettingTabIndexDeps
         public readonly PM $pm,
         public readonly TR $tR,
         public readonly CSR $csR,
+        public readonly WR $wR,
     ) {
     }
 }

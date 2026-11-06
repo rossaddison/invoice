@@ -167,6 +167,10 @@ trait InvoiceInstallTrait
             // dated on/after this are included when the Current Run filter
             // matches the configured category_secondary above.
             'homecare_current_run_last_run_date' => '',
+            // The one HomeCare worker (Worker id) who allocates houses to the
+            // crew and may settle anyone's allocation. 0 = not configured, in
+            // which case nobody can allocate. See WorkerInvAccess::isLead().
+            'homecare_lead_worker_id' => 0,
             // Comma-separated list of inv/index column keys to hide, only
             // while homecare_auto_invoice_enabled is on — the general
             // desktop grid for non-HomeCare businesses is never affected.

@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Infrastructure\Persistence\Worker\Worker;
 use App\Invoice\Inv\WorkerInvAccess;
+use App\Invoice\Setting\SettingRepository;
 use App\Invoice\UserInv\UserInvRepository;
 use App\Invoice\Worker\WorkerRepository;
 use Mockery as m;
@@ -37,8 +38,20 @@ final class WorkerInvAccessTest
         return $inv;
     }
 
-    private function access(bool $hasUserInv, bool $userInvActive, ?Worker $worker): WorkerInvAccess
+    private function settings(string $leadWorkerId): SettingRepository&m\MockInterface
     {
+        /** @var SettingRepository&m\MockInterface $sR */
+        $sR = m::mock(SettingRepository::class);
+        $sR->shouldReceive('getSetting')->with('homecare_lead_worker_id')->andReturn($leadWorkerId);
+        return $sR;
+    }
+
+    private function access(
+        bool $hasUserInv,
+        bool $userInvActive,
+        ?Worker $worker,
+        string $leadWorkerId = '0',
+    ): WorkerInvAccess {
         /** @var UserInv&m\MockInterface $userInv */
         $userInv = m::mock(UserInv::class);
         $userInv->shouldReceive('getActive')->andReturn($userInvActive);
@@ -52,7 +65,7 @@ final class WorkerInvAccessTest
         $wR = m::mock(WorkerRepository::class);
         $wR->shouldReceive('findByUserId')->andReturn($worker);
 
-        return new WorkerInvAccess($uiR, $wR);
+        return new WorkerInvAccess($uiR, $wR, $this->settings($leadWorkerId));
     }
 
     public function allocatedWorkerOwnsTheirInvoice(): void
@@ -107,8 +120,48 @@ final class WorkerInvAccessTest
         /** @var WorkerRepository&m\MockInterface $wR */
         $wR = m::mock(WorkerRepository::class);
         $wR->shouldNotReceive('findByUserId');
-        $access = new WorkerInvAccess($uiR, $wR);
+        $access = new WorkerInvAccess($uiR, $wR, $this->settings('1'));
 
         Assert::false($access->isAllocated($this->inv(7), 0));
+        Assert::false($access->isLead(0));
+    }
+
+    public function theLeadIsTheWorkerNamedInTheSetting(): void
+    {
+        $access = $this->access(true, true, $this->worker(7), '7');
+
+        Assert::same($access->leadWorkerId(), 7);
+        Assert::true($access->isLead(55));
+    }
+
+    public function anotherWorkerIsNotTheLead(): void
+    {
+        $access = $this->access(true, true, $this->worker(8), '7');
+
+        Assert::false($access->isLead(55));
+    }
+
+    public function noLeadConfiguredMeansNobodyIsTheLead(): void
+    {
+        foreach (['0', '', 'garbage', '-3'] as $setting) {
+            $access = $this->access(true, true, $this->worker(7), $setting);
+
+            Assert::null($access->leadWorkerId());
+            Assert::false($access->isLead(55));
+        }
+    }
+
+    public function aCustomerGuestIsNeverTheLeadEvenIfTheirIdMatches(): void
+    {
+        $access = $this->access(true, true, null, '55');
+
+        Assert::false($access->isLead(55));
+    }
+
+    public function anInactiveUserInvIsNotTheLead(): void
+    {
+        $access = $this->access(true, false, $this->worker(7), '7');
+
+        Assert::false($access->isLead(55));
     }
 }

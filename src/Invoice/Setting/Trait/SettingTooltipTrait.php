@@ -486,6 +486,14 @@ trait SettingTooltipTrait
                 . ' src/Invoice/Inv/Trait/Index.php'
                 . ' (indexHomeCareRunContext/homeCareRunFlash).',
             ],
+            'homecare_lead_worker_id' => [
+                'why' => 'The one worker who allocates houses to the crew from'
+                . ' inv/guest, and who may also settle (complete, postpone or'
+                . ' cancel) any worker\'s allocation. Exactly one person by'
+                . ' design. Set to "Not set" and nobody can allocate.',
+                'where' => 'src/Invoice/Inv/WorkerInvAccess.php (isLead) and'
+                . ' src/Invoice/Inv/Trait/HomeCareAllocation.php.',
+            ],
             'homecare_current_run_last_run_date' => [
                 'why' => 'Manually entered start date of the current run. Only'
                 . ' applies when the inv/index Current Run filter matches this'

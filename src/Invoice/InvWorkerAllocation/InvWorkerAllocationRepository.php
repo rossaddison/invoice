@@ -54,6 +54,14 @@ final class InvWorkerAllocationRepository extends Select\Repository implements I
     }
 
     #[\Override]
+    public function repoAllocationquery(int $id): ?InvWorkerAllocation
+    {
+        return $this->select()
+            ->where(['id' => $id])
+            ->fetchOne() ?: null;
+    }
+
+    #[\Override]
     public function repoForInvSidequery(int $invId, AllocationSide $side): ?InvWorkerAllocation
     {
         return $this->select()

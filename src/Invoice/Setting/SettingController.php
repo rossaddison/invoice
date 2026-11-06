@@ -273,6 +273,7 @@ final class SettingController extends BaseController
                     explode(',', $this->sR->getSetting('homecare_hidden_inv_guest_columns'))
                 ),
                 'category_secondaries' => $deps->csR->optionsDataCategorySecondaries(),
+                'workers' => $this->optionsDataWorkers($deps->wR),
             ]),
             // two-factor-authentication
             'tfa' => $this->webViewRenderer->renderPartialAsString($p . 'two_factor_authentication'),
