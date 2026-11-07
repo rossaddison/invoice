@@ -232,6 +232,12 @@ return [
             ->middleware(RoutePermission::check(Permissions::VIEW_INV))
             ->action([InvController::class, 'settleAllocation'])
             ->name('inv/settleallocation'),
+        // The card left at the house, as evidence it was cleaned: the allocated worker, the lead
+        // or an admin (checked in the action).
+        Route::methods([Method::POST], '/inv/cardallocation/{allocation_id}')
+            ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+            ->action([InvController::class, 'cardAllocation'])
+            ->name('inv/cardallocation'),
         Route::methods([Method::GET], '/inv/batchEmailPreview')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([InvController::class, 'batchEmailPreview'])

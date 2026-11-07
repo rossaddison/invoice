@@ -116,8 +116,12 @@ final readonly class AllocationButtons
      * Only the status picture shows, in a coloured black-edged pill the same
      * height as the buttons; the word and its explanation are the tooltip.
      */
-    public function statusBadge(AllocationStatus $status, ?PostponeReason $reason = null, bool $byCustomerScan = false): string
-    {
+    public function statusBadge(
+        AllocationStatus $status,
+        ?PostponeReason $reason = null,
+        bool $byCustomerScan = false,
+        bool $carded = false,
+    ): string {
         $word = $this->translator->translate(self::STATUS_KEY . $status->value);
         $glyph = $this->glyph($status->icon());
         $tip = $word . ': ' . $this->translator->translate('allocation.tip.status.' . $status->value);
@@ -135,7 +139,29 @@ final readonly class AllocationButtons
             $word .= ' ' . $how;
             $tip .= ' (' . $how . ')';
         }
+        if ($carded) {
+            // the card was left at the house: the evidence it was cleaned
+            $left = $this->translator->translate('allocation.carded');
+            $glyph .= $this->glyph('bi-postcard-fill', 'ms-1');
+            $word .= ' ' . $left;
+            $tip .= ' (' . $left . ')';
+        }
         return $this->picture($glyph, $word, $tip, 'badge alloc-status border border-2 border-dark ' . $this->badgeClass($status));
+    }
+
+    /**
+     * One tap records that the card was left at the house (the evidence it was cleaned). Its own
+     * small form, like the settle buttons, posting in place with htmx.
+     */
+    public function cardButton(InvWorkerAllocation $allocation, Inv $inv): string
+    {
+        $action = $this->urlGenerator->generate('inv/cardallocation', ['allocation_id' => $allocation->reqId()]);
+        $button = Html::tag(self::BUTTON, $this->glyph('bi-postcard-fill'), [
+            'type' => self::SUBMIT,
+            self::CLASS_ATTR => self::BTN . 'btn-light',
+            self::ARIA_LABEL => $this->translator->translate('allocation.card.button') . $this->numberSuffix($inv),
+        ] + $this->tip($this->translator->translate('allocation.tip.button.carded')))->encode(false)->render();
+        return $this->form($action, $button, self::INLINE, $inv);
     }
 
     /**

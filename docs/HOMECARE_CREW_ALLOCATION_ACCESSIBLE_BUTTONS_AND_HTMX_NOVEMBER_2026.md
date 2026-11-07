@@ -119,6 +119,27 @@ visit, so a scan could bill the visit twice. It now handles that case:
 Deploying this needs the schema sync for the new column: set `BUILD_DATABASE=true`,
 reload once, then set it back (or `rm runtime/schema.php` as in the deploy checklist).
 
+## Carding: evidence the house was cleaned
+
+The crew is getting into the habit of leaving a card at every house as evidence it
+was cleaned. Each side now records it:
+
+- A **card button** (a postcard icon, the same black-edged, equal-height size as the
+  others) sits first on a side's controls, before done / postpone / cancel. One tap
+  records `carded_at` (new nullable datetime on `inv_worker_allocation`). It posts in
+  place with htmx like the other controls (`POST /inv/cardallocation/{allocation_id}`).
+- It is offered on a **waiting or a completed** side, so a worker who forgot can card
+  it after marking it done. It is not offered on a postponed or cancelled side (that
+  visit was not cleaned), nor once a card is recorded.
+- A carded side's status pill shows a postcard icon, and its tooltip says "Card left at
+  the house". A completed side without the icon is the nudge: no card recorded yet.
+- Who may record it is the same as for settling: the allocated worker, the lead, or an
+  admin (`edit.inv`, from `inv/index`). Carding twice keeps the first time. Re-allocating
+  a side clears the card.
+- It is a record, not a gate: an uncarded side can still be completed and invoiced.
+
+The new column needs the schema sync on deploy (`BUILD_DATABASE=true`, reload once).
+
 ## Verification
 
 Testo (including `AllocationButtonsTest`, `AllocationCellResponderTest` and

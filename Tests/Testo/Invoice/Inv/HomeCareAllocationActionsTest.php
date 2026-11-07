@@ -829,4 +829,111 @@ final class HomeCareAllocationActionsTest
 
         Assert::same($result, $indexRedirect);
     }
+
+    public function theAllocatedWorkerCanCardTheirOwnSide(): void
+    {
+        [$webService, , $redirect] = $this->webService();
+        $allocation = $this->allocation(7);
+        [$service, $repository] = $this->realService($allocation);
+        $repository->shouldReceive('save')->once()->with($allocation);
+
+        $result = $this->harness($webService)->cardAllocation(
+            $this->request([]),
+            '3',
+            $this->access($this->worker(7), 1, false),
+            $service,
+            $this->invRepository($this->inv()),
+        );
+
+        Assert::same($result, $redirect);
+        Assert::true($allocation->isCarded());
+        Assert::same($this->flashes->getArrayCopy(), [['info', 'allocation.card.recorded']]);
+    }
+
+    public function anotherWorkerWhoIsNotTheLeadCannotCardSomeoneElsesSide(): void
+    {
+        [$webService, $notFound] = $this->webService();
+        $allocation = $this->allocation(7);
+        [$service, $repository] = $this->realService($allocation);
+        $repository->shouldNotReceive('save');
+
+        $result = $this->harness($webService)->cardAllocation(
+            $this->request([]),
+            '3',
+            $this->access($this->worker(8), 1, false),
+            $service,
+            $this->invRepository($this->inv()),
+        );
+
+        Assert::same($result, $notFound);
+        Assert::false($allocation->isCarded());
+    }
+
+    public function anAdminWithNoWorkerRowCanCardAnySideAndReturnsToInvIndex(): void
+    {
+        [$webService] = $this->webService();
+        /** @var Response&m\MockInterface $indexRedirect */
+        $indexRedirect = m::mock(Response::class);
+        $webService->shouldReceive('getRedirectResponse')->with('inv/index')->andReturn($indexRedirect);
+        $allocation = $this->allocation(7);
+        [$service, $repository] = $this->realService($allocation);
+        $repository->shouldReceive('save')->once();
+
+        $result = $this->harness($webService, true)->cardAllocation(
+            $this->request(['context' => 'index']),
+            '3',
+            $this->access(null, 1, false),
+            $service,
+            $this->invRepository($this->inv()),
+        );
+
+        Assert::same($result, $indexRedirect);
+        Assert::true($allocation->isCarded());
+    }
+
+    public function aSideThatCannotBeCardedWarnsInsteadOfFailing(): void
+    {
+        [$webService, , $redirect] = $this->webService();
+        $allocation = $this->allocation(7);
+        $allocation->decide(AllocationStatus::Cancelled, 7, new \DateTimeImmutable());
+        [$service, $repository] = $this->realService($allocation);
+        $repository->shouldNotReceive('save');
+
+        $result = $this->harness($webService)->cardAllocation(
+            $this->request([]),
+            '3',
+            $this->access($this->worker(7), 1, false),
+            $service,
+            $this->invRepository($this->inv()),
+        );
+
+        Assert::same($result, $redirect);
+        Assert::same($this->flashes->getArrayCopy(), [['warning', 'allocation.card.not.possible']]);
+    }
+
+    public function anHtmxCardTapReturnsTheReRenderedCellWithNoFlash(): void
+    {
+        [$webService] = $this->webService();
+        $allocation = $this->allocation(7);
+        [$service, $repository] = $this->realService($allocation);
+        $repository->shouldReceive('save')->once();
+        $inv = $this->inv();
+        /** @var Response&m\MockInterface $cell */
+        $cell = m::mock(Response::class);
+        $responder = $this->responder(true);
+        $responder->shouldReceive('cell')->once()->with($inv, 7, false)->andReturn($cell);
+        $harness = $this->harness($webService);
+        $harness->allocationCells = $responder;
+
+        $result = $harness->cardAllocation(
+            $this->request([]),
+            '3',
+            $this->access($this->worker(7), 1, false),
+            $service,
+            $this->invRepository($inv),
+        );
+
+        Assert::same($result, $cell);
+        Assert::same($this->flashes->getArrayCopy(), []);
+    }
 }

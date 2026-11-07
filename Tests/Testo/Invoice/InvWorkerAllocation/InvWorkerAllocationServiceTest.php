@@ -450,4 +450,51 @@ final class InvWorkerAllocationServiceTest
         Assert::null($row->getDecisionSource());
         Assert::false($row->isDecided());
     }
+
+    public function cardingAWaitingOrCompletedSideRecordsTheTimeOnceAndSavesOnce(): void
+    {
+        foreach ([null, AllocationStatus::Completed] as $decided) {
+            $row = $this->row(AllocationSide::Front, 7);
+            null !== $decided && $row->decide($decided, 7, new DateTimeImmutable());
+            $repository = $this->repository([$row]);
+            $repository->shouldReceive('save')->once()->with($row);
+            $service = new InvWorkerAllocationService($repository);
+            $at = new DateTimeImmutable('2026-11-07 10:00:00');
+
+            $service->markCarded($row, $at);
+            // a second tap keeps the first time and does not save again
+            $service->markCarded($row, new DateTimeImmutable('2026-11-07 11:00:00'));
+
+            Assert::true($row->isCarded());
+            Assert::same($row->getCardedAt(), $at);
+        }
+    }
+
+    public function aPostponedOrCancelledSideCannotBeCarded(): void
+    {
+        foreach ([AllocationStatus::Postponed, AllocationStatus::Cancelled] as $status) {
+            $row = $this->row(AllocationSide::Front, 7);
+            $row->decide($status, 7, new DateTimeImmutable());
+            $repository = $this->repository([$row]);
+            $repository->shouldNotReceive('save');
+
+            try {
+                (new InvWorkerAllocationService($repository))->markCarded($row);
+                Assert::true(false);
+            } catch (\LogicException) {
+                Assert::false($row->isCarded());
+            }
+        }
+    }
+
+    public function reallocatingASideClearsItsCard(): void
+    {
+        $row = $this->row(AllocationSide::Front, 7);
+        $row->markCarded(new DateTimeImmutable());
+
+        $row->allocateTo(9, new DateTimeImmutable());
+
+        Assert::false($row->isCarded());
+        Assert::null($row->getCardedAt());
+    }
 }

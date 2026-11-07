@@ -131,10 +131,8 @@ final readonly class InvAllocationCell
             $line .= Html::encode($this->buttons->workerName($assignedId));
         }
         if (null !== $allocation) {
-            $line .= ' ' . $this->buttons->statusBadge($allocation->getStatus(), $allocation->getPostponeReason(), $allocation->isConfirmedByCustomerScan());
-            if ($this->isOpenToViewer($allocation)) {
-                $line .= $this->buttons->settleControls($allocation, $inv);
-            }
+            $line .= ' ' . $this->buttons->statusBadge($allocation->getStatus(), $allocation->getPostponeReason(), $allocation->isConfirmedByCustomerScan(), $allocation->isCarded());
+            $line .= $this->controls($allocation, $inv);
         }
         return $this->wrap($line);
     }
@@ -142,6 +140,30 @@ final readonly class InvAllocationCell
     private function wrap(string $inner): string
     {
         return Html::div($inner, ['class' => 'd-flex flex-wrap align-items-center gap-1 mt-1 alloc-line'])->encode(false)->render();
+    }
+
+    /**
+     * What this viewer may press on a side: the card button while no card is recorded (on a
+     * waiting or a completed side, so a worker who forgot can card it afterwards), then done /
+     * postpone / cancel while it is still waiting.
+     */
+    private function controls(InvWorkerAllocation $allocation, Inv $inv): string
+    {
+        $html = '';
+        if ($this->canCard($allocation)) {
+            $html .= $this->buttons->cardButton($allocation, $inv);
+        }
+        if ($this->isOpenToViewer($allocation)) {
+            $html .= $this->buttons->settleControls($allocation, $inv);
+        }
+        return $html;
+    }
+
+    private function canCard(InvWorkerAllocation $allocation): bool
+    {
+        return !$allocation->isCarded()
+            && in_array($allocation->getStatus(), [AllocationStatus::Allocated, AllocationStatus::Completed], true)
+            && ($this->admin || $this->allocations->mayDecide($allocation, $this->viewerWorkerId, $this->leadWorkerId));
     }
 
     private function isOpenToViewer(InvWorkerAllocation $allocation): bool
@@ -160,9 +182,10 @@ final readonly class InvAllocationCell
         $workerId = $allocation->reqWorkerId();
         $line = $this->buttons->sideSymbolAndLabel($allocation->getSide())
             . ' ' . Html::encode($this->buttons->workerName($workerId))
-            . ' ' . $this->buttons->statusBadge($allocation->getStatus(), $allocation->getPostponeReason(), $allocation->isConfirmedByCustomerScan());
-        if ($this->isOpenToViewer($allocation)) {
-            $line .= $this->wrap($this->buttons->settleControls($allocation, $inv));
+            . ' ' . $this->buttons->statusBadge($allocation->getStatus(), $allocation->getPostponeReason(), $allocation->isConfirmedByCustomerScan(), $allocation->isCarded());
+        $controls = $this->controls($allocation, $inv);
+        if ('' !== $controls) {
+            $line .= $this->wrap($controls);
         }
         return Html::div($line, ['class' => 'mb-1 small'])->encode(false)->render();
     }

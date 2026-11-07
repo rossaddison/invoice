@@ -237,6 +237,21 @@ final readonly class InvWorkerAllocationService
         return $confirmed;
     }
 
+    /**
+     * Records that the card was left at the house (see {@see InvWorkerAllocation::markCarded()}).
+     * Idempotent: a side already carded keeps its first time and is not saved again.
+     *
+     * @throws \LogicException when the side is postponed or cancelled
+     */
+    public function markCarded(InvWorkerAllocation $allocation, ?DateTimeImmutable $at = null): void
+    {
+        if ($allocation->isCarded()) {
+            return;
+        }
+        $allocation->markCarded($at ?? new DateTimeImmutable());
+        $this->repository->save($allocation);
+    }
+
     public function mayDecide(InvWorkerAllocation $allocation, int $actorWorkerId, ?int $leadWorkerId): bool
     {
         return $allocation->reqWorkerId() === $actorWorkerId

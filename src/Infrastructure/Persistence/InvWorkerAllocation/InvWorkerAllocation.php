@@ -77,6 +77,13 @@ class InvWorkerAllocation
          */
         #[Column(type: 'string(20)', nullable: true)]
         private ?string $decision_source = null,
+        /**
+         * When the card was left at the house: the evidence the house was cleaned. null = no
+         * card recorded (yet). It can be recorded while the side is waiting or after it is
+         * completed, and is cleared if the side is re-allocated.
+         */
+        #[Column(type: 'datetime', nullable: true, typecast: 'datetime')]
+        private ?DateTimeImmutable $carded_at = null,
     ) {
         $this->allocated_at ??= new DateTimeImmutable();
     }
@@ -161,6 +168,30 @@ class InvWorkerAllocation
         return self::SOURCE_CUSTOMER_SCAN === $this->decision_source;
     }
 
+    public function getCardedAt(): ?DateTimeImmutable
+    {
+        return $this->carded_at;
+    }
+
+    public function isCarded(): bool
+    {
+        return null !== $this->carded_at;
+    }
+
+    /**
+     * Records that the card was left at the house. Only a waiting or a completed side can be
+     * carded (a postponed or cancelled side was not cleaned). Carding twice keeps the first time.
+     *
+     * @throws \LogicException when the side is postponed or cancelled
+     */
+    public function markCarded(DateTimeImmutable $at): void
+    {
+        if (!in_array($this->getStatus(), [AllocationStatus::Allocated, AllocationStatus::Completed], true)) {
+            throw new \LogicException('Only a waiting or completed side can be carded.');
+        }
+        $this->carded_at ??= $at;
+    }
+
     public function isDecided(): bool
     {
         return $this->getStatus()->isDecision();
@@ -179,6 +210,7 @@ class InvWorkerAllocation
         $this->decided_by_worker_id = null;
         $this->postpone_reason = null;
         $this->decision_source = null;
+        $this->carded_at = null;
     }
 
     /**

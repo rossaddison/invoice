@@ -145,6 +145,49 @@ trait HomeCareAllocation
     }
 
     /**
+     * The card was left at the house: the evidence it was cleaned. The allocated worker, the
+     * lead or an admin may record it, on a waiting or a completed side. Idempotent, and a side
+     * that cannot be carded (postponed or cancelled) just re-renders unchanged.
+     */
+    public function cardAllocation(
+        Request $request,
+        #[RouteArgument('allocation_id')] string $allocation_id,
+        WorkerInvAccess $access,
+        InvWorkerAllocationService $allocations,
+        IR $iR,
+    ): Response {
+        $user = $this->userService->getUser();
+        $worker = $access->workerFor($user instanceof User ? $user->reqId() : 0);
+        $body = $request->getParsedBody();
+        $body = is_array($body) ? $body : [];
+        $allocation = $allocation_id !== '' ? $allocations->find((int) $allocation_id) : null;
+        $mayAsWorker = null !== $worker
+            && null !== $allocation
+            && $allocations->mayDecide($allocation, $worker->reqId(), $access->leadWorkerId());
+        if (null === $allocation
+            || !($mayAsWorker || $this->userService->hasPermission(Permissions::EDIT_INV))
+        ) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $inv = $iR->repoInvUnLoadedquery($allocation->reqInvId());
+        if (null === $inv) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $flash = ['info', 'allocation.card.recorded'];
+        try {
+            $allocations->markCarded($allocation);
+        } catch (\LogicException) {
+            $flash = ['warning', 'allocation.card.not.possible'];
+        }
+        $admin = $this->fromAdminIndex($body);
+        if ($this->allocationCells->wants($request)) {
+            return $this->allocationCells->cell($inv, $worker?->reqId() ?? 0, $admin);
+        }
+        $this->flashMessage($flash[0], $this->translator->translate($flash[1]));
+        return $this->webService->getRedirectResponse($this->allocationHome($admin));
+    }
+
+    /**
      * Ends an allocation post. An htmx request (the page stays put) gets just the
      * invoice's re-rendered cell, with no flash banner (the changed cell is the
      * feedback); an ordinary post flashes, if there is a message, and redirects.

@@ -290,9 +290,9 @@ final class InvAllocationCellTest
         foreach (['completed', 'postponed', 'cancelled'] as $status) {
             Assert::true(str_contains($html, 'title="allocation.tip.button.' . $status . '"'));
         }
-        // side picture + status badge + done + postpone (on its wrapper) + cancel: each a Bootstrap
-        // tooltip, which the page initialises on load
-        Assert::same(substr_count($html, 'data-bs-toggle="tooltip"'), 5);
+        // side picture + status badge + card + done + postpone (on its wrapper) + cancel: each a
+        // Bootstrap tooltip, which the page initialises on load
+        Assert::same(substr_count($html, 'data-bs-toggle="tooltip"'), 6);
     }
 
     public function theStatusBadgeExplainsWhatTheStatusMeans(): void
@@ -543,8 +543,8 @@ final class InvAllocationCellTest
             ->render($this->inv());
         $fallback = $this->cell([], self::LEAD)->render($this->inv());
 
-        // front line: 1 pressed + 1 free chip, back line: 2 free chips, plus done / pause / cancel
-        Assert::same(substr_count($crew, 'alloc-btn'), 7);
+        // front line: 1 pressed + 1 free chip, back line: 2 free chips, plus card / done / pause / cancel
+        Assert::same(substr_count($crew, 'alloc-btn'), 8);
         // the fallback form: both selects and the save button too
         Assert::same(substr_count($fallback, 'alloc-btn'), 3);
         // badges get a black edge as well
@@ -644,14 +644,14 @@ final class InvAllocationCellTest
         $html = $this->cell([$this->allocation(3, AllocationSide::Front, self::ME)], self::LEAD, self::LEAD, [1, 7], true)
             ->render($this->inv());
 
-        // 4 chips + 3 settle forms: every one an htmx post that swaps this invoice's cell
-        Assert::same(substr_count($html, '<form '), 7);
-        Assert::same(substr_count($html, 'hx-target="#alloc-12"'), 7);
-        Assert::same(substr_count($html, 'hx-swap="outerHTML"'), 7);
+        // 4 chips + the card form + 3 settle forms: every one an htmx post that swaps this invoice's cell
+        Assert::same(substr_count($html, '<form '), 8);
+        Assert::same(substr_count($html, 'hx-target="#alloc-12"'), 8);
+        Assert::same(substr_count($html, 'hx-swap="outerHTML"'), 8);
         Assert::true(str_contains($html, 'hx-post="/inv/allocateside/12"'));
         Assert::true(str_contains($html, 'hx-post="/inv/settleallocation/3"'));
         // and each stays an ordinary POST form for when htmx is not there
-        Assert::same(substr_count($html, 'action="'), 7);
+        Assert::same(substr_count($html, 'action="'), 8);
     }
 
     public function theFallbackAllocateFormAlsoPostsInPlace(): void
@@ -694,8 +694,8 @@ final class InvAllocationCellTest
             ->render($this->inv());
         $fallback = $this->cell([], 0, null, [], false, true)->render($this->inv());
 
-        // 4 chips + 3 settle forms, all carrying the context; and the fallback allocate form
-        Assert::same(substr_count($admin, 'name="context" value="index"'), 7);
+        // 4 chips + the card form + 3 settle forms, all carrying the context; and the fallback allocate form
+        Assert::same(substr_count($admin, 'name="context" value="index"'), 8);
         Assert::same(substr_count($fallback, 'name="context" value="index"'), 1);
     }
 
@@ -736,5 +736,54 @@ final class InvAllocationCellTest
         // a worker's completion carries no such mark
         Assert::false(str_contains($worker, 'bi-qr-code'));
         Assert::false(str_contains($worker, 'allocation.confirmed.by.scan'));
+    }
+
+    public function aWaitingSideOffersTheCardButtonBeforeDoneToItsWorkerTheLeadAndAdmin(): void
+    {
+        foreach ([[self::ME, self::LEAD, false], [self::LEAD, self::LEAD, false], [0, null, true]] as [$viewer, $lead, $admin]) {
+            $html = $this->cell([$this->allocation(3, AllocationSide::Front, self::ME)], $viewer, $lead, [], false, $admin)
+                ->render($this->inv());
+
+            Assert::true(str_contains($html, 'hx-post="/inv/cardallocation/3"'));
+            // the card comes first, then done / pause / cancel
+            Assert::true(strpos($html, 'cardallocation/3') < strpos($html, 'settleallocation/3'));
+        }
+    }
+
+    public function aCompletedSideWithNoCardStillOffersJustTheCardButton(): void
+    {
+        $html = $this->cell([$this->allocation(3, AllocationSide::Front, self::ME, AllocationStatus::Completed)], self::ME)
+            ->render($this->inv());
+
+        Assert::true(str_contains($html, 'hx-post="/inv/cardallocation/3"'));
+        Assert::false(str_contains($html, 'settleallocation'));
+    }
+
+    public function aCardedSideShowsTheCardOnItsPillAndOffersNoCardButton(): void
+    {
+        $carded = $this->allocation(3, AllocationSide::Front, self::ME, AllocationStatus::Completed);
+        $carded->markCarded(new \DateTimeImmutable());
+
+        $html = $this->cell([$carded], self::ME)->render($this->inv());
+
+        Assert::true(str_contains($html, 'bi bi-postcard-fill ms-1'));
+        Assert::true(str_contains($html, 'allocation.carded'));
+        Assert::false(str_contains($html, 'cardallocation'));
+    }
+
+    public function aPostponedOrCancelledSideCannotBeCardedAndShowsNoCardButton(): void
+    {
+        foreach ([AllocationStatus::Postponed, AllocationStatus::Cancelled] as $status) {
+            $html = $this->cell([$this->allocation(3, AllocationSide::Front, self::ME, $status)], self::LEAD)->render($this->inv());
+
+            Assert::false(str_contains($html, 'cardallocation'));
+        }
+    }
+
+    public function anotherWorkerWhoIsNotTheLeadIsNotOfferedTheCardButton(): void
+    {
+        $html = $this->cell([$this->allocation(3, AllocationSide::Front, 8)], self::ME, self::LEAD)->render($this->inv());
+
+        Assert::false(str_contains($html, 'cardallocation'));
     }
 }
