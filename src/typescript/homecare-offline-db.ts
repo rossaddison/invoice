@@ -35,6 +35,17 @@ export interface OfflineInvoiceClient {
     email: string;
 }
 
+/** Which side of the house is whose; absent from a snapshot downloaded before sides were added. */
+export interface OfflineInvoiceSide {
+    side: string;
+    sideLabel: string;
+    workerName: string;
+    mine: boolean;
+    status: string;
+    statusLabel: string;
+    carded: boolean;
+}
+
 export interface OfflineInvoice {
     id: number;
     number: string | null;
@@ -48,6 +59,8 @@ export interface OfflineInvoice {
     urlKey: string;
     client: OfflineInvoiceClient | null;
     items: OfflineInvoiceItem[];
+    /** Absent from a snapshot downloaded before sides were added. */
+    sides?: OfflineInvoiceSide[];
 }
 
 export interface OfflineDataPayload {

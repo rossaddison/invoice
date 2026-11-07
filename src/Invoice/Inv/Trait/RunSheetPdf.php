@@ -12,7 +12,10 @@ use App\Invoice\Helpers\PdfCreateContext;
 use App\Invoice\Inv\InvIndexFilter;
 use App\Invoice\Inv\InvIndexListDeps;
 use App\Invoice\Inv\InvIndexNavDeps;
+use App\Invoice\Enum\AllocationSide;
+use App\Invoice\Enum\AllocationStatus;
 use App\Invoice\Inv\RunSheetPdfRowBuilder;
+use App\Invoice\InvWorkerAllocation\AllocationSidesSummary;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -62,6 +65,7 @@ trait RunSheetPdf
         InvIndexNavDeps $nav,
         FR $fR,
         RunSheetPdfRowBuilder $rowBuilder,
+        AllocationSidesSummary $sides,
     ): Response|\Mpdf\Mpdf|array|string {
         $effectiveStatus = isset($filter->filterStatus)
             && !empty($filter->filterStatus)
@@ -70,7 +74,7 @@ trait RunSheetPdf
         $run  = $this->indexHomeCareRunContext($request, $filter);
         $invs = $list->invRepo->filterCombined($filter, $run, $effectiveStatus);
 
-        return $this->renderRunSheetPdf($invs, $nav->dwR, $fR, $rowBuilder);
+        return $this->renderRunSheetPdf($invs, $nav->dwR, $fR, $rowBuilder, $sides);
     }
 
     /**
@@ -82,8 +86,16 @@ trait RunSheetPdf
         DwR $dwR,
         FR $fR,
         RunSheetPdfRowBuilder $rowBuilder,
+        AllocationSidesSummary $sides,
     ): Response|\Mpdf\Mpdf|array|string {
         $rows = $rowBuilder->build($invs, $dwR, $fR);
+        // each row also says which side is whose ("Front: Dave; Back: Sam"), in the user's language
+        $rows = $rowBuilder->withSides(
+            $rows,
+            $sides,
+            fn (AllocationSide $side): string => $this->translator->translate('allocation.side.' . $side->value),
+            fn (AllocationStatus $status): string => $this->translator->translate('allocation.status.' . $status->value),
+        );
         $title = $this->translator->translate('run.sheet.pdf');
         $html = $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/run_sheet_pdf',

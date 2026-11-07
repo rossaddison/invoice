@@ -8,10 +8,13 @@ use App\Infrastructure\Persistence\HomeCareRunSheet\HomeCareRunSheet;
 use App\Infrastructure\Persistence\HomeCareRunSheetItem\HomeCareRunSheetItem;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Dwelling\DwellingRepository as DwR;
+use App\Invoice\Enum\AllocationSide;
+use App\Invoice\Enum\AllocationStatus;
 use App\Invoice\Enum\DoNotSendReason;
 use App\Invoice\HomeCareRunSheet\Exception\RunSheetCsvWriteException;
 use App\Invoice\HomeCareRunSheetItem\HomeCareRunSheetItemRepository as RSIR;
 use App\Invoice\Inv\InvRepository as IR;
+use App\Invoice\InvWorkerAllocation\AllocationSidesSummary;
 use App\Invoice\Setting\SettingRepository as SR;
 use DateTimeImmutable;
 
@@ -34,6 +37,7 @@ final readonly class HomeCareRunSheetExportService
         private RSIR $rsiR,
         private DwR $dwR,
         private SR $sR,
+        private ?AllocationSidesSummary $sides = null,
     ) {
     }
 
@@ -99,16 +103,26 @@ final readonly class HomeCareRunSheetExportService
         fputcsv($handle, ['seq', 'invoice_id', 'client', 'house_no', 'assigned_worker',
             'actual_worker', 'completed_y_n', 'reason_code']);
         $seq = 1;
+        $workerNames = $this->sides?->workerNames() ?? [];
         foreach ($invoices as $inv) {
             $dwellingId = $inv->getClientDwellingId();
             $house = $dwellingId !== null ? $this->dwR->repoDwellingQuery($dwellingId)?->getHouseNumberDisplay() : '';
             $worker = $inv->getWorker();
+            // A whole house keeps its single legacy worker name, as before. A split house has no
+            // single legacy worker, so its column used to come out blank: say who has which side.
+            $perSide = null !== $worker ? '' : $this->sides?->describe(
+                $inv->reqId(),
+                $workerNames,
+                static fn (AllocationSide $side): string => $side->plainLabel(),
+                static fn (AllocationStatus $status): string => ucfirst($status->value),
+            ) ?? '';
+            $assigned = $worker !== null ? $worker->getFirstname() . ' ' . $worker->getLastname() : $perSide;
             fputcsv($handle, [
                 $seq++,
                 $inv->reqId(),
                 $inv->getClient()?->getClientFullName() ?? '',
                 $house ?? '',
-                $worker !== null ? $worker->getFirstname() . ' ' . $worker->getLastname() : '',
+                $assigned,
                 '', // actual_worker — filled in by hand
                 '', // completed_y_n — filled in by hand
                 '', // reason_code — filled in by hand, see legend below

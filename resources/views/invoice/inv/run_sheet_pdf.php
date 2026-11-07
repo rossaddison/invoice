@@ -31,6 +31,7 @@ $this->beginPage();
             <?= H::encode($translator->translate('street.address')); ?>
         </th>
         <th><?= H::encode($translator->translate('client')); ?></th>
+        <th><?= H::encode($translator->translate('allocation')); ?></th>
         <th><?= H::encode($translator->translate('phone')); ?></th>
         <th><?= H::encode($translator->translate('invoice')); ?></th>
         <th class="text-end">
@@ -53,6 +54,7 @@ $this->beginPage();
             <?php } ?>
         </td>
         <td><?= H::encode($row->clientName); ?></td>
+        <td><?= H::encode($row->sides !== '' ? $row->sides : '—'); ?></td>
         <td><?= H::encode($row->phone ?? '—'); ?></td>
         <td><?= H::encode($row->invNumber); ?></td>
         <td class="text-end">

@@ -29,7 +29,10 @@ export {};
 
 const sw = self as unknown as ServiceWorkerGlobalScope;
 
-const CACHE_NAME = 'homecare-offline-shell-v1';
+// Bumped whenever the precached shell page or its script changes (v2: side labels): a changed
+// sw.js is what makes an installed worker re-install and fetch the new shell instead of serving
+// the old precached one indefinitely.
+const CACHE_NAME = 'homecare-offline-shell-v2';
 const SHELL_URL = '/client_invoices/offline';
 const SHELL_JS_URL = '/homecare-offline-shell.js';
 const PRECACHE_URLS = [SHELL_URL, SHELL_JS_URL];

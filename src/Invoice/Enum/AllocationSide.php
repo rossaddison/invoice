@@ -32,6 +32,18 @@ enum AllocationSide: string
     }
 
     /**
+     * Plain English, for exports that have no translator (the run sheet CSV).
+     */
+    public function plainLabel(): string
+    {
+        return match ($this) {
+            self::Both => 'Whole house',
+            self::Front => 'Front',
+            self::Back => 'Back',
+        };
+    }
+
+    /**
      * The Bootstrap Icons class for the side (door, tree, house): the picture carries the meaning.
      */
     public function icon(): string

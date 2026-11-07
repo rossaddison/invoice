@@ -40,6 +40,10 @@ h1 { font-size: 1.3rem; margin: 0 0 1rem; }
 .offline-card .client { font-weight: 600; margin: 0.3rem 0; }
 .offline-card .address, .offline-card .contact, .offline-card .note { font-size: 0.9rem; color: #444; margin: 0.15rem 0; }
 .offline-card ul.items { margin: 0.5rem 0 0; padding-left: 1.1rem; font-size: 0.9rem; }
+.offline-sides { margin: 0.4rem 0; }
+.offline-side { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; min-height: 2.25rem; padding: 0.2rem 0.6rem; margin: 0.25rem 0; border: 2px solid #000; border-radius: 6px; background: #fff; font-size: 0.95rem; }
+.offline-side.mine { background: #fff3b0; font-weight: 600; }
+.offline-side .symbol { font-size: 1.3rem; }
 .offline-downloaded-at { font-size: 0.8rem; color: #777; margin-bottom: 1rem; }
 CSS;
 

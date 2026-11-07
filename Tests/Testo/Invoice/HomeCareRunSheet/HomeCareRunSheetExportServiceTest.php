@@ -202,4 +202,80 @@ final class HomeCareRunSheetExportServiceTest
             @rmdir($tempDir);
         }
     }
+
+    public function aSplitHouseNamesWhoHasWhichSideWhereItsAssignedWorkerUsedToBeBlank(): void
+    {
+        $runDate = new DateTimeImmutable('2026-08-26');
+        $tempDir = sys_get_temp_dir() . '/homecare-run-sheets-' . uniqid();
+        mkdir($tempDir, 0777, true);
+
+        try {
+            $amy = new Worker(firstname: 'Amy', lastname: 'Lee');
+            $amy->setId(7);
+            // a whole house (legacy worker set), a split house (none), and a house with nothing
+            $whole = $this->inv(321, $this->client(101, 'Whole House'), $amy);
+            $split = $this->inv(322, $this->client(102, 'Split House'));
+            $none = $this->inv(323, $this->client(103, 'Unallocated House'));
+
+            /** @var IR&m\MockInterface $iR */
+            $iR = m::mock(IR::class);
+            $iR->shouldReceive('repoForHomeCareRunquery')->andReturn([$whole, $split, $none]);
+            /** @var DwR&m\MockInterface $dwR */
+            $dwR = m::mock(DwR::class);
+            $dwR->shouldReceive('repoDwellingQuery')->with(101)->andReturn($this->dwelling(101, 1));
+            $dwR->shouldReceive('repoDwellingQuery')->with(102)->andReturn($this->dwelling(102, 2));
+            $dwR->shouldReceive('repoDwellingQuery')->with(103)->andReturn($this->dwelling(103, 3));
+            /** @var RSIR&m\MockInterface $rsiR */
+            $rsiR = m::mock(RSIR::class);
+            $rsiR->shouldReceive('save');
+            /** @var RSR&m\MockInterface $rsR */
+            $rsR = m::mock(RSR::class);
+            $rsR->shouldReceive('repoOpenForRunquery')->andReturn(null);
+            $rsR->shouldReceive('save')->andReturnUsing(function (HomeCareRunSheet $runSheet): void {
+                if (!$runSheet->isPersisted()) {
+                    $runSheet->setId(98);
+                }
+            });
+            $aliases = new Aliases(['@homecare_run_sheets' => $tempDir]);
+            /** @var SR&m\MockInterface $sR */
+            $sR = m::mock(SR::class);
+            $sR->shouldReceive('getHomeCareRunSheetsFolderAliases')->andReturn($aliases);
+
+            $front = new \App\Infrastructure\Persistence\InvWorkerAllocation\InvWorkerAllocation(322, 'front', 7);
+            $back = new \App\Infrastructure\Persistence\InvWorkerAllocation\InvWorkerAllocation(322, 'back', 8);
+            $back->decide(\App\Invoice\Enum\AllocationStatus::Completed, 8, new DateTimeImmutable());
+            /** @var \App\Invoice\InvWorkerAllocation\InvWorkerAllocationService&m\MockInterface $allocations */
+            $allocations = m::mock(\App\Invoice\InvWorkerAllocation\InvWorkerAllocationService::class);
+            $allocations->shouldReceive('forInv')->with(322)->andReturn([$front, $back]);
+            $allocations->shouldReceive('forInv')->andReturn([]);
+            $sam = new Worker(firstname: 'Sam', lastname: 'Jones');
+            $sam->setId(8);
+            /** @var \App\Invoice\Worker\WorkerRepository&m\MockInterface $workers */
+            $workers = m::mock(\App\Invoice\Worker\WorkerRepository::class);
+            $workers->shouldReceive('findAllActive')->andReturn([$amy, $sam]);
+            $sides = new \App\Invoice\InvWorkerAllocation\AllocationSidesSummary($allocations, $workers);
+
+            (new HomeCareRunSheetExportService($iR, $rsR, $rsiR, $dwR, $sR, $sides))->export(9, $runDate, 1);
+
+            $lines = file($tempDir . DIRECTORY_SEPARATOR . 'runsheet_98.csv', FILE_IGNORE_NEW_LINES);
+            Assert::false($lines === false);
+            /** @var list<string> $lines */
+            $rows = array_map('str_getcsv', $lines);
+
+            // a whole house keeps its single worker name, exactly as before
+            Assert::same('Amy Lee', $rows[1][4]);
+            // a split house now says who has which side, with the status once settled
+            Assert::same('Front: Amy Lee; Back: Sam Jones (Completed)', $rows[2][4]);
+            // a house with no allocation at all stays blank
+            Assert::same('', $rows[3][4]);
+        } finally {
+            $files = glob($tempDir . DIRECTORY_SEPARATOR . '*');
+            if ($files !== false) {
+                foreach ($files as $file) {
+                    unlink($file);
+                }
+            }
+            rmdir($tempDir);
+        }
+    }
 }

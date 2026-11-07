@@ -168,6 +168,33 @@ sides' pictures and a "person +" icon (same black-edged, equal-height style):
 - Only the "nothing allocated" case folds. A house with any allocation, a whole-house
   holder, a lone empty side, and whole-house mode (one line already) are left as they are.
 
+## Side labels on the run sheets and the offline data
+
+The run sheets and the offline snapshot knew nothing about sides: a split house has no single
+legacy `Inv.worker_id`, so its "assigned worker" came out blank. They now say who has which side,
+all from one small reader, `AllocationSidesSummary` (the workers are looked up once per run, not
+per row):
+
+- **Run sheet PDF** (`inv/index` and `inv/guest`): a new **Allocation** column with one line per
+  house, for example `Fronts: Dave Smith; Backs: Sam Jones (Completed)`, in the user's language.
+  The status is added only once a side is settled. A house with no allocation shows a dash.
+- **Run sheet CSV** (the paper sign-off export): the `assigned_worker` column. A whole house keeps
+  its single worker name exactly as before; a split house now reads `Front: Dave Smith; Back: Sam
+  Jones (Completed)` instead of being blank, in plain English because the export has no
+  translator. The column count and order are unchanged, so nothing that reads the sheet is
+  affected.
+- **Offline snapshot and offline page**: each invoice carries a `sides` list (side, the worker's
+  language labels, who holds it, `mine`, status, card left). The offline page shows one
+  black-edged line per side with a picture (🏠 🚪 🌳), the words, the worker and the status, the
+  worker's own sides highlighted, and a mark once the card has been left. The page is a
+  standalone document with no icon font, so it uses plain Unicode symbols, beside the words
+  rather than instead of them.
+
+Two deployment details for the offline page: a snapshot downloaded before this has no `sides`, so
+it simply shows no side lines until the worker taps **Download for Offline** again; and the
+service worker's cache name is bumped to `homecare-offline-shell-v2` so installed workers fetch
+the new shell instead of serving the old precached one. No schema change.
+
 ## Verification
 
 Testo (including `AllocationButtonsTest`, `AllocationCellResponderTest` and

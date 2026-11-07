@@ -167,7 +167,7 @@ final class GuestOfflineTest
         $harness = $this->makeHarness(null, $factory, $webViewRenderer, $webService);
         /** @var InvRepository&m\MockInterface $iR */
         $iR = m::mock(InvRepository::class);
-        $result = $harness->guestOfflineData($this->makeDeps(null, null, $iR));
+        $result = $harness->guestOfflineData($this->makeDeps(null, null, $iR), $this->sides([]));
 
         Assert::same($notFound, $result);
     }
@@ -190,9 +190,21 @@ final class GuestOfflineTest
         $iR = m::mock(InvRepository::class);
         $deps = $this->makeDeps($this->makeUserInv(), null, $iR);
 
-        $result = $harness->guestOfflineData($deps);
+        $result = $harness->guestOfflineData($deps, $this->sides([]));
 
         Assert::same($notFound, $result);
+    }
+
+    /**
+     * @param list<\App\Invoice\InvWorkerAllocation\AllocationSideSummary> $sides what every house reports
+     */
+    private function sides(array $sides): \App\Invoice\InvWorkerAllocation\AllocationSidesSummary&m\MockInterface
+    {
+        /** @var \App\Invoice\InvWorkerAllocation\AllocationSidesSummary&m\MockInterface $summary */
+        $summary = m::mock(\App\Invoice\InvWorkerAllocation\AllocationSidesSummary::class);
+        $summary->shouldReceive('workerNames')->andReturn([55 => 'Dave Smith', 56 => 'Sam Jones']);
+        $summary->shouldReceive('forInv')->andReturn($sides);
+        return $summary;
     }
 
     public function guestOfflineDataReturnsWorkerScopedInvoicesWithoutAmountFields(): void
@@ -272,7 +284,16 @@ final class GuestOfflineTest
         $harness = $this->makeHarness($this->makeUser(9), $factory, $webViewRenderer, $webService);
         $deps = $this->makeDeps($this->makeUserInv(), $worker, $iR);
 
-        $result = $harness->guestOfflineData($deps);
+        // the worker (55) holds the front; Sam (56) holds the back, which the customer has confirmed
+        $sideRows = [
+            new \App\Invoice\InvWorkerAllocation\AllocationSideSummary(
+                \App\Invoice\Enum\AllocationSide::Front, 55, 'Dave Smith', \App\Invoice\Enum\AllocationStatus::Allocated, false
+            ),
+            new \App\Invoice\InvWorkerAllocation\AllocationSideSummary(
+                \App\Invoice\Enum\AllocationSide::Back, 56, 'Sam Jones', \App\Invoice\Enum\AllocationStatus::Completed, true
+            ),
+        ];
+        $result = $harness->guestOfflineData($deps, $this->sides($sideRows));
 
         Assert::same($response, $result);
         Assert::notNull($capturedJson);
@@ -281,6 +302,7 @@ final class GuestOfflineTest
          *     number: string, statusLabel: string, urlKey: string,
          *     client: array{fullName: string, email: string},
          *     items: list<array{name: string}>,
+         *     sides: list<array{side: string, workerName: string, mine: bool, status: string, carded: bool, sideLabel: string, statusLabel: string}>,
          * }>} $decoded
          */
         $decoded = json_decode($capturedJson, true, 512, JSON_THROW_ON_ERROR);
@@ -293,6 +315,14 @@ final class GuestOfflineTest
         Assert::same('Jane Smith', $payloadInvoice['client']['fullName']);
         Assert::same('jane@example.com', $payloadInvoice['client']['email']);
         Assert::same('Standard Clean', $payloadInvoice['items'][0]['name']);
+
+        // which side is whose, in the worker's words, with their own sides marked
+        $sides = $payloadInvoice['sides'];
+        Assert::same(2, count($sides));
+        Assert::same(['front', 'Dave Smith', true, 'allocated', false], [$sides[0]['side'], $sides[0]['workerName'], $sides[0]['mine'], $sides[0]['status'], $sides[0]['carded']]);
+        Assert::same(['back', 'Sam Jones', false, 'completed', true], [$sides[1]['side'], $sides[1]['workerName'], $sides[1]['mine'], $sides[1]['status'], $sides[1]['carded']]);
+        Assert::same('translated', $sides[0]['sideLabel']);
+        Assert::same('translated', $sides[1]['statusLabel']);
 
         // Deliberately excluded — see Guest.php::serializeInvoiceForOffline()'s
         // own docblock: matches the worker RBAC role's existing

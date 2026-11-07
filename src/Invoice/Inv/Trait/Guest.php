@@ -23,6 +23,8 @@ use App\Invoice\{
     Inv\InvGuestHomeCare,
     Inv\InvRepository as IR,
     Inv\RunSheetPdfRowBuilder,
+    InvWorkerAllocation\AllocationSideSummary,
+    InvWorkerAllocation\AllocationSidesSummary,
     Inv\WorkerInvAccess,
 };
 use Yiisoft\{
@@ -101,6 +103,7 @@ trait Guest
         DwR $dwR,
         FR $fR,
         RunSheetPdfRowBuilder $rowBuilder,
+        AllocationSidesSummary $sides,
     ): Response|\Mpdf\Mpdf|array|string {
         $user = $this->userService->getUser();
         $user_id = ($user instanceof User) ? $user->reqId() : 0;
@@ -132,7 +135,7 @@ trait Guest
         // confirmed by a real Psalm failure on the full-project CI scan
         // (InvalidArgument: SDI provided where iterable expected), not
         // guessed.
-        return $this->renderRunSheetPdf($invs->read(), $dwR, $fR, $rowBuilder);
+        return $this->renderRunSheetPdf($invs->read(), $dwR, $fR, $rowBuilder, $sides);
     }
 
     /**
@@ -179,7 +182,7 @@ trait Guest
      *
      * Related logic: see Route::get('/client_invoices/offline-data')
      */
-    public function guestOfflineData(InvGuestDeps $d): Response
+    public function guestOfflineData(InvGuestDeps $d, AllocationSidesSummary $sides): Response
     {
         $user = $this->userService->getUser();
         $user_id = ($user instanceof User) ? $user->reqId() : 0;
@@ -190,16 +193,42 @@ trait Guest
         if (null === $access || null === $access->worker) {
             return $this->webService->getNotFoundResponse();
         }
-        $invs = $d->iR->repoWorkerVisible(0, $access->worker->reqId());
+        $workerId = $access->worker->reqId();
+        $invs = $d->iR->repoWorkerVisible(0, $workerId);
+        $workerNames = $sides->workerNames();
         $invoices = [];
         /** @var Inv $inv */
         foreach ($invs as $inv) {
-            $invoices[] = $this->serializeInvoiceForOffline($inv, $d->iR);
+            $invoices[] = $this->serializeInvoiceForOffline($inv, $d->iR)
+                + ['sides' => $this->offlineSides($sides->forInv($inv->reqId(), $workerNames), $workerId)];
         }
         return $this->factory->createResponse(Json::encode([
             'downloadedAt' => (new \DateTimeImmutable('now'))->format(DATE_ATOM),
             'invoices' => $invoices,
         ]));
+    }
+
+    /**
+     * Which side of the house is whose, with the words already in the worker's language (the
+     * offline page has no translator). "mine" lets the page mark the sides this worker holds.
+     *
+     * @param list<AllocationSideSummary> $sides
+     * @return list<array{side: string, sideLabel: string, workerName: string, mine: bool, status: string, statusLabel: string, carded: bool}>
+     */
+    private function offlineSides(array $sides, int $viewerWorkerId): array
+    {
+        return array_map(
+            fn (AllocationSideSummary $s): array => [
+                'side' => $s->side->value,
+                'sideLabel' => $this->translator->translate('allocation.side.' . $s->side->value),
+                'workerName' => $s->workerName,
+                'mine' => $s->workerId === $viewerWorkerId,
+                'status' => $s->status->value,
+                'statusLabel' => $this->translator->translate('allocation.status.' . $s->status->value),
+                'carded' => $s->carded,
+            ],
+            $sides
+        );
     }
 
     /**

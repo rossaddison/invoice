@@ -14,6 +14,7 @@
  */
 
 import { loadOfflineSnapshot, type OfflineInvoice } from './homecare-offline-db.js';
+import { renderSides } from './homecare-offline-sides.js';
 
 const ROOT_ID = 'homecare-offline-root';
 const I18N_ISLAND_ID = 'homecare-offline-shell-i18n';
@@ -96,6 +97,10 @@ function renderInvoiceCard(inv: OfflineInvoice): HTMLElement {
 
     if (inv.doNotSend) {
         card.appendChild(textEl('div', 'note', '🚫 ' + inv.doNotSendReason));
+    }
+    const sides = renderSides(inv.sides);
+    if (sides) {
+        card.appendChild(sides);
     }
     if (inv.client) {
         card.appendChild(renderClientBlock(inv.client));

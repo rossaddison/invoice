@@ -9,6 +9,9 @@ use App\Infrastructure\Persistence\Dwelling\Dwelling;
 use App\Infrastructure\Persistence\Family\Family;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Dwelling\DwellingRepository as DwR;
+use App\Invoice\Enum\AllocationSide;
+use App\Invoice\Enum\AllocationStatus;
+use App\Invoice\InvWorkerAllocation\AllocationSidesSummary;
 use App\Invoice\Family\FamilyRepository as FR;
 
 /**
@@ -34,6 +37,26 @@ final class RunSheetPdfRowBuilder
         }
         usort($rows, [$this, 'compareRows']);
         return $rows;
+    }
+
+    /**
+     * Adds each row's per-side allocations ("Front: Dave Smith; Back: Sam Jones") so the printed
+     * run sheet says which side is whose; a row whose house has no allocation keeps ''.
+     *
+     * @param list<RunSheetPdfRow> $rows
+     * @param callable(AllocationSide): string $sideLabel
+     * @param callable(AllocationStatus): string $statusLabel
+     * @return list<RunSheetPdfRow>
+     */
+    public function withSides(array $rows, AllocationSidesSummary $sides, callable $sideLabel, callable $statusLabel): array
+    {
+        $workerNames = $sides->workerNames();
+        return array_map(
+            static fn (RunSheetPdfRow $row): RunSheetPdfRow => $row->withSides(
+                $sides->describe($row->invId, $workerNames, $sideLabel, $statusLabel)
+            ),
+            $rows
+        );
     }
 
     public function compareRows(RunSheetPdfRow $a, RunSheetPdfRow $b): int
@@ -112,6 +135,7 @@ final class RunSheetPdfRowBuilder
             invNumber: $inv->getNumber() ?? '',
             balance: $inv->getInvAmount()->getBalance(),
             streetSortOrder: $family?->getStreetSortOrder(),
+            invId: $inv->hasIdentity() ? $inv->reqId() : 0,
         );
     }
 
@@ -132,6 +156,7 @@ final class RunSheetPdfRowBuilder
             invNumber: $inv->getNumber() ?? '',
             balance: $inv->getInvAmount()->getBalance(),
             streetSortOrder: null,
+            invId: $inv->hasIdentity() ? $inv->reqId() : 0,
         );
     }
 
