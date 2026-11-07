@@ -66,6 +66,14 @@ return [
         ->middleware(RateLimiter::perIp(10, 'homecare_scan_route'))
         ->action([InvController::class, 'homeCareScan'])
         ->name('public/homecare-scan'),
+    // The customer's "Yes, it has been cleaned" button on the scan page. A POST (with the
+    // CSRF token the page embeds), so a link preview or scanner that merely loads the GET
+    // page can never confirm a visit. Same limits as the scan.
+    Route::post('/scan/{token}')
+        ->middleware(RateLimiter::global(60))
+        ->middleware(RateLimiter::perIp(10, 'homecare_scan_confirm_route'))
+        ->action([InvController::class, 'homeCareScanConfirm'])
+        ->name('public/homecare-scan-confirm'),
     // Admin dashboard that can use the existing authentication middleware
     // if needed.
     Route::get('/prometheus/dashboard')

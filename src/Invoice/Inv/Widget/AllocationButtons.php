@@ -116,7 +116,7 @@ final readonly class AllocationButtons
      * Only the status picture shows, in a coloured black-edged pill the same
      * height as the buttons; the word and its explanation are the tooltip.
      */
-    public function statusBadge(AllocationStatus $status, ?PostponeReason $reason = null): string
+    public function statusBadge(AllocationStatus $status, ?PostponeReason $reason = null, bool $byCustomerScan = false): string
     {
         $word = $this->translator->translate(self::STATUS_KEY . $status->value);
         $glyph = $this->glyph($status->icon());
@@ -127,6 +127,13 @@ final readonly class AllocationButtons
             $glyph .= $this->glyph($reason->icon(), 'ms-1');
             $word .= ' ' . $why;
             $tip .= ' (' . $why . ')';
+        }
+        if ($byCustomerScan) {
+            // not a crew member's work: say so with a QR icon beside the flag, and in the tooltip
+            $how = $this->translator->translate('allocation.confirmed.by.scan');
+            $glyph .= $this->glyph('bi-qr-code', 'ms-1');
+            $word .= ' ' . $how;
+            $tip .= ' (' . $how . ')';
         }
         return $this->picture($glyph, $word, $tip, 'badge alloc-status border border-2 border-dark ' . $this->badgeClass($status));
     }

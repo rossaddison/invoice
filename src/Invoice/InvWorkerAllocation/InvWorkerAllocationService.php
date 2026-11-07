@@ -211,6 +211,32 @@ final readonly class InvWorkerAllocationService
         return $settled;
     }
 
+    /**
+     * The customer scanned their QR code and confirmed the house was cleaned: every side
+     * still waiting is completed, recorded as a customer-scan confirmation (no worker).
+     * Sides already completed, postponed or cancelled are left as they are. Returns how
+     * many were completed.
+     */
+    public function confirmByCustomerScan(int $invId, ?DateTimeImmutable $at = null): int
+    {
+        $at ??= new DateTimeImmutable();
+        $confirmed = 0;
+        foreach ($this->forInv($invId) as $allocation) {
+            if (!$allocation->isDecided()) {
+                $allocation->decide(
+                    AllocationStatus::Completed,
+                    null,
+                    $at,
+                    null,
+                    InvWorkerAllocation::SOURCE_CUSTOMER_SCAN,
+                );
+                $this->repository->save($allocation);
+                $confirmed++;
+            }
+        }
+        return $confirmed;
+    }
+
     public function mayDecide(InvWorkerAllocation $allocation, int $actorWorkerId, ?int $leadWorkerId): bool
     {
         return $allocation->reqWorkerId() === $actorWorkerId

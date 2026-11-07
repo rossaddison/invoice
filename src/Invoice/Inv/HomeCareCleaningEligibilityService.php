@@ -85,7 +85,7 @@ final readonly class HomeCareCleaningEligibilityService
      * True when the feature is switched on globally, not paused for this
      * specific client, and the client has at least one invoice on file.
      */
-    private function isFeatureEnabledForClient(int $clientId): bool
+    public function isFeatureEnabledForClient(int $clientId): bool
     {
         if ($this->settingRepository->getSetting('homecare_auto_invoice_enabled') !== '1') {
             return false;

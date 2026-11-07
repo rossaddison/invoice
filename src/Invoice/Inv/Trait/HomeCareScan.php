@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\HomeCareVisit\HomeCareVisit;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Client\ClientRepository as ClientR;
 use App\Invoice\HomeCareVisit\HomeCareVisitRepositoryInterface;
+use App\Invoice\Inv\HomeCareScanConfirmer;
 use App\Invoice\Inv\InvCopyDeps;
 use App\Invoice\Inv\HomeCareCleaningEligibilityService;
 use DateTimeImmutable;
@@ -35,6 +36,10 @@ trait HomeCareScan
      * replaying the first attempt's outcome until midnight. See
      * docs/HOMECARE_AUTOINVOICE_PITFALLS_AUGUST_2026.md.
      *
+     * A client with a planned draft still waiting on its allocations is NOT given a second
+     * invoice: the page asks the customer to confirm the visit instead (no side effect on
+     * this GET), and homeCareScanConfirm() acts on the button.
+     *
      * Related logic: see Route::get('/scan/{token}')
      */
     public function homeCareScan(
@@ -45,10 +50,22 @@ trait HomeCareScan
         HomeCareVisitRepositoryInterface $visitRepository,
         InvCopyDeps $d,
         FormHydrator $formHydrator,
+        HomeCareScanConfirmer $confirmer,
     ): Response {
         $client = $clientR->repoClientByQrTokenquery($token);
         if (null === $client) {
             return $this->webService->getNotFoundResponse();
+        }
+
+        $pending = $eligibilityService->isFeatureEnabledForClient($client->reqId())
+            ? $confirmer->pendingDraft($client->reqId(), new DateTimeImmutable('today'))
+            : null;
+        if (null !== $pending) {
+            return $this->webViewRenderer->renderPartial('homecare_scan_result', [
+                'outcome' => 'confirm',
+                'token' => $token,
+                'visitDate' => $pending->getDateCreated()->format('Y-m-d'),
+            ]);
         }
 
         $claim = $this->claimTodaysHomeCareVisit($client->reqId(), $visitRepository);
@@ -68,6 +85,43 @@ trait HomeCareScan
     }
 
     /**
+     * The customer pressed "Yes, it has been cleaned" on the confirm page. Claims today's
+     * visit slot (so a repeat press or a second device is a no-op), re-checks that a planned
+     * draft is still pending, then completes its sides and marks it Sent (no email).
+     *
+     * Related logic: see Route::post('/scan/{token}')
+     */
+    public function homeCareScanConfirm(
+        #[RouteArgument('token')]
+        string $token,
+        ClientR $clientR,
+        HomeCareCleaningEligibilityService $eligibilityService,
+        HomeCareVisitRepositoryInterface $visitRepository,
+        HomeCareScanConfirmer $confirmer,
+    ): Response {
+        $client = $clientR->repoClientByQrTokenquery($token);
+        if (null === $client) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $claim = $this->claimTodaysHomeCareVisit($client->reqId(), $visitRepository);
+        if ($claim instanceof Response) {
+            return $claim;
+        }
+        [$clientId, $visit] = $claim;
+
+        $pending = $eligibilityService->isFeatureEnabledForClient($clientId)
+            ? $confirmer->pendingDraft($clientId, new DateTimeImmutable('today'))
+            : null;
+        if (null === $pending) {
+            $visit->setOutcome('not_eligible');
+            $visitRepository->save($visit);
+            return $this->renderHomeCareScanResult('not_eligible');
+        }
+        $confirmer->confirm($pending, $visit);
+        return $this->renderHomeCareScanResult('confirmed');
+    }
+
+    /**
      * Attempts to claim (or reclaim, after deleting a stale non-terminal
      * row) today's HomeCareVisit slot for this client.
      *
@@ -81,7 +135,9 @@ trait HomeCareScan
         $visit = $visitRepository->tryCreatePendingVisit($clientId, $today);
         if (null === $visit) {
             $existing = $visitRepository->repoFindByClientAndDatequery($clientId, $today);
-            if ($existing !== null && $existing->getOutcome() !== 'generated') {
+            // 'generated' and 'confirmed' are terminal: an invoice was created, or a planned one
+            // was confirmed and sent, so neither may ever be repeated
+            if ($existing !== null && !in_array($existing->getOutcome(), ['generated', 'confirmed'], true)) {
                 $visitRepository->delete($existing);
                 $visit = $visitRepository->tryCreatePendingVisit($clientId, $today);
             }

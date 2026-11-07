@@ -229,6 +229,39 @@ final class InvRepository extends Select\Repository implements InvRepositoryInte
     }
 
     /**
+     * Whether the client has at least one paid (status 4) invoice: an established customer.
+     */
+    public function repoClientHasPaidInvoicequery(int $clientId): bool
+    {
+        return $this->select()
+            ->where(['client_id' => $clientId, 'status_id' => 4])
+            ->andWhere('deleted_at', null)
+            ->count() > 0;
+    }
+
+    /**
+     * The client's most recent DRAFT invoice dated today or earlier that still has a side
+     * waiting to be done (allocation status 'allocated'): the planned visit a customer's QR
+     * scan can confirm. Newest first, so only the latest is ever returned; a future-dated
+     * draft (a later run copied ahead) is never touched.
+     */
+    public function repoClientPendingAllocatedDraftquery(int $clientId, \DateTimeImmutable $today): ?Inv
+    {
+        $tomorrow = $today->modify('+1 day')->format('Y-m-d 00:00:00');
+        return $this->select()
+            ->where(['client_id' => $clientId, 'status_id' => 1])
+            ->andWhere('date_created', '<', $tomorrow)
+            ->andWhere('deleted_at', null)
+            ->andWhere(['id' => ['in' => new \Cycle\Database\Injection\Fragment(
+                '(SELECT inv_id FROM inv_worker_allocation WHERE status = ?)',
+                'allocated'
+            )]])
+            ->orderBy('date_created', 'DESC')
+            ->orderBy('id', 'DESC')
+            ->fetchOne() ?: null;
+    }
+
+    /**
      * @param int $id
      * @return Inv|null
      */

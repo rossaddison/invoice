@@ -86,10 +86,43 @@ allocating and the crew; the allocated worker, the lead or `edit.inv` for
 settling), so forging it gains nothing. A lead who is also an admin still settles
 under their own worker id when they post from `inv/guest`.
 
+## QR scan as the safety net for a forgotten completion
+
+The customer's QR scan (`/scan/{token}`) used to do one thing: generate a new Sent
+invoice. That ignored a planned draft the lead had already allocated for the same
+visit, so a scan could bill the visit twice. It now handles that case:
+
+- **GET /scan/{token}** (a scan, a link preview, anything that merely loads the
+  page) has no side effect. If the client is an established customer (at least one
+  paid invoice) and has a **planned draft** (dated today or earlier, newest first)
+  with a side still waiting (status Allocated), the page asks "Has it been cleaned?"
+  and shows the visit date and nothing else about the account.
+- **POST /scan/{token}** (the customer's "Yes, it has been cleaned" button, with a
+  CSRF token) claims today's visit slot, then
+  `HomeCareScanConfirmer::confirm()` completes every waiting side, refreshes the send
+  gate and marks the invoice **Sent without emailing anyone**
+  (`InvMarkSentService::markSentWithoutEmail()`, which also writes the sent log).
+  **No second invoice is generated** for that visit. The visit is recorded with
+  outcome `confirmed`, which, like `generated`, is terminal: a repeat press or a second
+  device the same day is a no-op.
+- **No planned draft waiting:** the scan behaves exactly as before and generates the
+  invoice. Both paths respect `homecare_auto_invoice_enabled` and the per-client pause.
+- **The completion is labelled.** A side completed this way has
+  `decision_source = customer_scan` (new nullable column on `inv_worker_allocation`),
+  no worker, and shows a QR icon and "Confirmed by the customer (QR scan)" in its
+  tooltip on `inv/guest` and `inv/index`, so it is never mistaken for a crew member's
+  work. Sides a worker already completed, and postponed or cancelled sides, are left
+  untouched. Re-allocating a side clears the label.
+- Only the **newest** pending draft is confirmed, and a future-dated draft (a later
+  run copied ahead) never is.
+
+Deploying this needs the schema sync for the new column: set `BUILD_DATABASE=true`,
+reload once, then set it back (or `rm runtime/schema.php` as in the deploy checklist).
+
 ## Verification
 
 Testo (including `AllocationButtonsTest`, `AllocationCellResponderTest` and
 the htmx branches of `HomeCareAllocationActionsTest`), Vitest
 (`htmx-hooks.test.ts`), `tsc --noEmit` and full-project Psalm level 1 are all
-clean, and the page has been clicked through in a real browser.
+clean, and the page has been clicked through in a real browser. The QR confirmation was also exercised end to end against the local site (GET changes nothing, POST without CSRF is rejected, POST completes the sides, marks the invoice sent with no email, and records the visit; repeat presses are no-ops).
 Rebuild the bundles with `npm run build:typescript` after pulling.

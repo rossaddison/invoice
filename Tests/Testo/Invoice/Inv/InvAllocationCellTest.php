@@ -720,4 +720,21 @@ final class InvAllocationCellTest
 
         Assert::false(str_contains($html, 'hx-post="/inv/settleallocation/3"'));
     }
+
+    public function aSideConfirmedByTheCustomerScanShowsAQrMarkAndSaysSoInItsTooltip(): void
+    {
+        $scan = $this->allocation(3, AllocationSide::Front, self::ME, AllocationStatus::Completed);
+        $viaScan = new \App\Infrastructure\Persistence\InvWorkerAllocation\InvWorkerAllocation(self::INV, AllocationSide::Front->value, self::ME);
+        $viaScan->setId(4);
+        $viaScan->decide(AllocationStatus::Completed, null, new \DateTimeImmutable(), null, 'customer_scan');
+
+        $worker = $this->cell([$scan], self::LEAD)->render($this->inv());
+        $html = $this->cell([$viaScan], self::LEAD)->render($this->inv());
+
+        Assert::true(str_contains($html, 'bi bi-qr-code'));
+        Assert::true(str_contains($html, 'allocation.confirmed.by.scan'));
+        // a worker's completion carries no such mark
+        Assert::false(str_contains($worker, 'bi-qr-code'));
+        Assert::false(str_contains($worker, 'allocation.confirmed.by.scan'));
+    }
 }

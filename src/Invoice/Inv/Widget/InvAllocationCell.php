@@ -131,7 +131,7 @@ final readonly class InvAllocationCell
             $line .= Html::encode($this->buttons->workerName($assignedId));
         }
         if (null !== $allocation) {
-            $line .= ' ' . $this->buttons->statusBadge($allocation->getStatus(), $allocation->getPostponeReason());
+            $line .= ' ' . $this->buttons->statusBadge($allocation->getStatus(), $allocation->getPostponeReason(), $allocation->isConfirmedByCustomerScan());
             if ($this->isOpenToViewer($allocation)) {
                 $line .= $this->buttons->settleControls($allocation, $inv);
             }
@@ -160,7 +160,7 @@ final readonly class InvAllocationCell
         $workerId = $allocation->reqWorkerId();
         $line = $this->buttons->sideSymbolAndLabel($allocation->getSide())
             . ' ' . Html::encode($this->buttons->workerName($workerId))
-            . ' ' . $this->buttons->statusBadge($allocation->getStatus(), $allocation->getPostponeReason());
+            . ' ' . $this->buttons->statusBadge($allocation->getStatus(), $allocation->getPostponeReason(), $allocation->isConfirmedByCustomerScan());
         if ($this->isOpenToViewer($allocation)) {
             $line .= $this->wrap($this->buttons->settleControls($allocation, $inv));
         }

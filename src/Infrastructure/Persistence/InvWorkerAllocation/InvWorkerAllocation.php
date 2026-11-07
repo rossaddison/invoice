@@ -43,6 +43,9 @@ class InvWorkerAllocation
 {
     use RequireId;
 
+    /** decision_source of a side the customer confirmed by scanning their QR code. */
+    public const string SOURCE_CUSTOMER_SCAN = 'customer_scan';
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -67,6 +70,13 @@ class InvWorkerAllocation
         /** A {@see PostponeReason} value; only ever set on a postponed row. */
         #[Column(type: 'string(30)', nullable: true)]
         private ?string $postpone_reason = null,
+        /**
+         * How it was settled when not by a worker, the lead or an admin: null, or
+         * {@see self::SOURCE_CUSTOMER_SCAN}. Lets the grid say "confirmed by customer scan"
+         * so a completion nobody on the crew recorded is never mistaken for one.
+         */
+        #[Column(type: 'string(20)', nullable: true)]
+        private ?string $decision_source = null,
     ) {
         $this->allocated_at ??= new DateTimeImmutable();
     }
@@ -141,6 +151,16 @@ class InvWorkerAllocation
         return $this->postpone_reason === null ? null : PostponeReason::from($this->postpone_reason);
     }
 
+    public function getDecisionSource(): ?string
+    {
+        return $this->decision_source;
+    }
+
+    public function isConfirmedByCustomerScan(): bool
+    {
+        return self::SOURCE_CUSTOMER_SCAN === $this->decision_source;
+    }
+
     public function isDecided(): bool
     {
         return $this->getStatus()->isDecision();
@@ -158,13 +178,15 @@ class InvWorkerAllocation
         $this->decided_at = null;
         $this->decided_by_worker_id = null;
         $this->postpone_reason = null;
+        $this->decision_source = null;
     }
 
     /**
      * Settles the allocation. Only an undecided allocation can be settled,
      * and only into completed, postponed or cancelled; a reason is kept only
      * when postponing. $byWorkerId is null when the office settled it (the
-     * paper run sheet's Apply step), not a worker.
+     * paper run sheet's Apply step), not a worker. $source says how, when not a person:
+     * see {@see self::SOURCE_CUSTOMER_SCAN}.
      *
      * @throws \LogicException when already decided, or $status is not a decision
      */
@@ -173,6 +195,7 @@ class InvWorkerAllocation
         ?int $byWorkerId,
         DateTimeImmutable $at,
         ?PostponeReason $reason = null,
+        ?string $source = null,
     ): void {
         if (!$status->isDecision()) {
             throw new \LogicException('An allocation can only be completed, postponed or cancelled.');
@@ -184,5 +207,6 @@ class InvWorkerAllocation
         $this->decided_at = $at;
         $this->decided_by_worker_id = $byWorkerId;
         $this->postpone_reason = $status === AllocationStatus::Postponed ? $reason?->value : null;
+        $this->decision_source = $source;
     }
 }

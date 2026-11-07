@@ -417,4 +417,37 @@ final class InvWorkerAllocationServiceTest
             Assert::same($row->getStatus(), AllocationStatus::Completed);
         }
     }
+
+    public function aCustomerScanCompletesOnlyTheWaitingSidesAsAScanNotAWorker(): void
+    {
+        $waiting = $this->row(AllocationSide::Front, 7);
+        $done = $this->row(AllocationSide::Back, 8);
+        $done->decide(AllocationStatus::Completed, 8, new DateTimeImmutable());
+        $repository = $this->repository([$waiting, $done]);
+        $repository->shouldReceive('save')->once()->with($waiting);
+        $at = new DateTimeImmutable('2026-11-07 17:00:00');
+
+        $confirmed = (new InvWorkerAllocationService($repository))->confirmByCustomerScan(self::INV, $at);
+
+        Assert::same($confirmed, 1);
+        Assert::same($waiting->getStatus(), AllocationStatus::Completed);
+        Assert::null($waiting->getDecidedByWorkerId());
+        Assert::same($waiting->getDecidedAt(), $at);
+        Assert::true($waiting->isConfirmedByCustomerScan());
+        // the worker's own completion is untouched
+        Assert::same($done->getDecidedByWorkerId(), 8);
+        Assert::false($done->isConfirmedByCustomerScan());
+    }
+
+    public function aSideReallocatedAfterAScanConfirmationStartsOverWithNoScanMark(): void
+    {
+        $row = $this->row(AllocationSide::Front, 7);
+        $row->decide(AllocationStatus::Completed, null, new DateTimeImmutable(), null, InvWorkerAllocation::SOURCE_CUSTOMER_SCAN);
+        Assert::same($row->getDecisionSource(), 'customer_scan');
+
+        $row->allocateTo(9, new DateTimeImmutable());
+
+        Assert::null($row->getDecisionSource());
+        Assert::false($row->isDecided());
+    }
 }
