@@ -10,6 +10,7 @@ use App\Invoice\Enum\AllocationSide;
 use App\Invoice\Enum\AllocationStatus;
 use App\Invoice\Enum\PostponeReason;
 use App\Invoice\InvWorkerAllocation\InvWorkerAllocationService;
+use Stringable;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Option;
@@ -34,7 +35,7 @@ final readonly class InvAllocationCell
         private InvWorkerAllocationService $allocations,
         private UrlGeneratorInterface $urlGenerator,
         private TranslatorInterface $translator,
-        private string $csrf,
+        private string|Stringable $csrf,
         private int $viewerWorkerId,
         private ?int $leadWorkerId,
         private array $workerNames,

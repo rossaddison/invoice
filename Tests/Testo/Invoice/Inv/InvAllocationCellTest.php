@@ -16,6 +16,7 @@ use Testo\Assert;
 use Testo\Test;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Yii\View\Renderer\Csrf;
 
 /**
  * What the inv/guest "Allocation" cell shows each kind of viewer: the
@@ -251,5 +252,31 @@ final class InvAllocationCellTest
         $html = $this->cell([], self::ME, self::LEAD, [1, 7])->render($this->inv());
 
         Assert::same($html, '');
+    }
+
+    public function acceptsTheViewRenderersCsrfObjectNotJustAString(): void
+    {
+        /** @var UrlGeneratorInterface&m\MockInterface $urlGenerator */
+        $urlGenerator = m::mock(UrlGeneratorInterface::class);
+        $urlGenerator->shouldReceive('generate')->andReturn('/inv/allocateside/12');
+        /** @var TranslatorInterface&m\MockInterface $translator */
+        $translator = m::mock(TranslatorInterface::class);
+        $translator->shouldReceive('translate')->andReturnUsing(static fn (string $id): string => $id);
+        /** @var InvWorkerAllocationRepositoryInterface&m\MockInterface $repository */
+        $repository = m::mock(InvWorkerAllocationRepositoryInterface::class);
+        $repository->shouldReceive('repoForInvquery')->andReturn([]);
+
+        // In the guest view $csrf is a Csrf object, not a string (Yiisoft\Yii\View\Renderer\Csrf)
+        $cell = new InvAllocationCell(
+            new InvWorkerAllocationService($repository),
+            $urlGenerator,
+            $translator,
+            new Csrf('real-token', '_csrf', 'X-CSRF-Token'),
+            self::LEAD,
+            self::LEAD,
+            self::NAMES,
+        );
+
+        Assert::true(str_contains($cell->render($this->inv()), 'name="_csrf" value="real-token"'));
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Widget;
 
+use Stringable;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -24,7 +25,7 @@ final readonly class InvCrewToolbar
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
         private TranslatorInterface $translator,
-        private string $csrf,
+        private string|Stringable $csrf,
         private array $workerNames,
         private array $crewIds,
         private bool $frontBack,
@@ -64,6 +65,9 @@ final readonly class InvCrewToolbar
                 'value' => $value,
                 'id' => $id,
                 'checked' => $checked,
+                // The form shows SAVED server state; without this the browser restores
+                // whatever was ticked on an earlier visit over what the server rendered.
+                'autocomplete' => 'off',
             ])->render()
             . Html::tag('label', $label, ['class' => 'form-check-label', 'for' => $id])->render(),
             ['class' => 'form-check form-check-inline m-0']

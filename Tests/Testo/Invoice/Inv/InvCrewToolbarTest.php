@@ -10,6 +10,7 @@ use Testo\Assert;
 use Testo\Test;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Yii\View\Renderer\Csrf;
 
 /**
  * The lead's "today's crew" form above the inv/guest grid.
@@ -70,5 +71,36 @@ final class InvCrewToolbarTest
     public function noCrewAndNoFrontBackLeavesEverythingUnticked(): void
     {
         Assert::same(substr_count($this->html([], false), ' checked'), 0);
+    }
+
+    public function acceptsTheViewRenderersCsrfObjectNotJustAString(): void
+    {
+        /** @var UrlGeneratorInterface&m\MockInterface $urlGenerator */
+        $urlGenerator = m::mock(UrlGeneratorInterface::class);
+        $urlGenerator->shouldReceive('generate')->andReturn('/inv/setcrew');
+        /** @var TranslatorInterface&m\MockInterface $translator */
+        $translator = m::mock(TranslatorInterface::class);
+        $translator->shouldReceive('translate')->andReturnUsing(static fn (string $id): string => $id);
+
+        // In the guest view $csrf is a Csrf object, not a string (Yiisoft\Yii\View\Renderer\Csrf)
+        $html = (new InvCrewToolbar(
+            $urlGenerator,
+            $translator,
+            new Csrf('real-token', '_csrf', 'X-CSRF-Token'),
+            self::NAMES,
+            [],
+            false,
+        ))->render();
+
+        Assert::true(str_contains($html, 'name="_csrf" value="real-token"'));
+    }
+
+    public function everyCheckboxOptsOutOfBrowserFormRestoreSoTheSavedCrewIsWhatYouSee(): void
+    {
+        $html = $this->html([1, 7], true);
+
+        // 3 workers + the Front/Back switch
+        Assert::same(substr_count($html, 'type="checkbox"'), 4);
+        Assert::same(substr_count($html, 'autocomplete="off"'), 4);
     }
 }
