@@ -43,7 +43,6 @@ final readonly class HomeCareDemoSeeder
 {
     public const string MARKER = '[HC DEMO]';
     public const string LOGIN_PREFIX = 'hc-';
-    public const string PASSWORD = 'HomeCare-Demo-2026!';
 
     private const int GROUP_ID = 1;
     private const int TAX_RATE_ID = 1;
@@ -57,13 +56,13 @@ final readonly class HomeCareDemoSeeder
     /**
      * @return list<array{login: string, role: string, note: string}> the logins created
      */
-    public function seed(): array
+    public function seed(string $loginSecret): array
     {
         $this->cleanup();
-        $lead = $this->worker('hc-lead', 'Lee', 'Lead');
-        $dave = $this->worker('hc-dave', 'Dave', 'Smith');
-        $sam = $this->worker('hc-sam', 'Sam', 'Jones');
-        $customerUser = $this->user('hc-customer', 'Customer');
+        $lead = $this->worker('hc-lead', 'Lee', 'Lead', $loginSecret);
+        $dave = $this->worker('hc-dave', 'Dave', 'Smith', $loginSecret);
+        $sam = $this->worker('hc-sam', 'Sam', 'Jones', $loginSecret);
+        $customerUser = $this->user('hc-customer', 'Customer', $loginSecret);
         $this->role($customerUser, AppConstants::ROLE_OBSERVER);
 
         $family = new Family(family_name: self::MARKER . ' Demo Street');
@@ -135,9 +134,9 @@ final readonly class HomeCareDemoSeeder
         return array_filter($removed);
     }
 
-    private function user(string $login, string $name): User
+    private function user(string $login, string $name, string $loginSecret): User
     {
-        $user = new User($login, $login . '@homecare-demo.test', self::PASSWORD);
+        $user = new User($login, $login . '@homecare-demo.test', $loginSecret);
         $this->d->uR->save($user);
         $userInv = new UserInv();
         $userInv->setUserId($user->reqId());
@@ -155,9 +154,9 @@ final readonly class HomeCareDemoSeeder
         null !== $userInv && $this->d->urlR->upsert($userInv->reqId(), $user->reqId());
     }
 
-    private function worker(string $login, string $first, string $last): Worker
+    private function worker(string $login, string $first, string $last, string $loginSecret): Worker
     {
-        $user = $this->user($login, $first . ' ' . $last);
+        $user = $this->user($login, $first . ' ' . $last, $loginSecret);
         $this->role($user, AppConstants::ROLE_WORKER);
         $worker = new Worker($first, $last);
         $worker->setUser($user);

@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Yiisoft\Security\Random;
 use Yiisoft\Yii\Console\ExitCode;
 
 /**
@@ -48,8 +49,10 @@ final class HomeCareSeedDemoCommand extends Command
             $io->success('Demo data removed: ' . ([] === $summary ? 'nothing to remove' : implode(', ', $summary)));
             return ExitCode::OK;
         }
-        $logins = $this->seeder->seed();
-        $io->success('HomeCare demo data created. Password for every demo login: ' . HomeCareDemoSeeder::PASSWORD);
+        // a fresh random secret every run, shown once here: nothing is hardcoded in the repo
+        $loginSecret = Random::string(20);
+        $logins = $this->seeder->seed($loginSecret);
+        $io->success('HomeCare demo data created. Password for every demo login (this run only): ' . $loginSecret);
         $io->table(['Login', 'Role', 'What to try'], array_map(static fn (array $l): array => [$l['login'], $l['role'], $l['note']], $logins));
         $io->writeln([
             'Houses (drafts, one invoice each, street "' . HomeCareDemoSeeder::MARKER . ' Demo Street"):',

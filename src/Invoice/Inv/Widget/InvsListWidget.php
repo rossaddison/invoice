@@ -17,6 +17,7 @@ use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\Worker\WorkerRepository as WR;
+use App\Invoice\Inv\Widget\Trait\InvsAllocationCellTrait;
 use App\Widget\GridComponents;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
@@ -44,6 +45,8 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
  */
 final class InvsListWidget extends Widget
 {
+    use InvsAllocationCellTrait;
+
     private const string DOM_ID = 'InvsGridView';
 
     private ?OffsetPaginator $paginator = null;
@@ -57,7 +60,6 @@ final class InvsListWidget extends Widget
     private ?ETR $etR = null;
     private ?FDR $fdR = null;
     private ?WR $wR = null;
-    private ?InvAllocationCell $allocationCell = null;
     private ?CSR $csR = null;
     private ?DwR $dwR = null;
     private string|\Stringable $csrf = '';
@@ -147,17 +149,6 @@ final class InvsListWidget extends Widget
     {
         $new = clone $this;
         $new->dwR = $dwR;
-        return $new;
-    }
-
-    /**
-     * The admin's per-side allocation controls for the Worker column (null: the plain
-     * whole-house dropdown).
-     */
-    public function withAllocationCell(?InvAllocationCell $allocationCell): static
-    {
-        $new = clone $this;
-        $new->allocationCell = $allocationCell;
         return $new;
     }
 
