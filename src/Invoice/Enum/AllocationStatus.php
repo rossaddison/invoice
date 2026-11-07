@@ -27,4 +27,17 @@ enum AllocationStatus: string
     {
         return $this !== self::Allocated;
     }
+
+    /**
+     * The Bootstrap Icons class for the status. Deliberately unlike the ✓ / pause / ✖ action buttons, so "this is done" is never mistaken for "mark it done".
+     */
+    public function icon(): string
+    {
+        return match ($this) {
+            self::Allocated => 'bi-hourglass-split',
+            self::Completed => 'bi-flag-fill',
+            self::Postponed => 'bi-clock-fill',
+            self::Cancelled => 'bi-x-octagon-fill',
+        };
+    }
 }

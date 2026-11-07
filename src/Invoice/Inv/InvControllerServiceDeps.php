@@ -19,6 +19,7 @@ final class InvControllerServiceDeps
         public readonly InvCustomService $invCustomService,
         public readonly InvItemService $invItemService,
         public readonly InvTaxRateService $invTaxRateService,
+        public readonly AllocationCellResponder $allocationCells,
     ) {
     }
 }

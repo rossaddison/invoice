@@ -8,6 +8,7 @@
 
 import { initMultiDatePicker } from './multi-date-picker.js';
 import { initClientAddresses } from './client-addresses.js';
+import { initTooltips } from './scripts.js';
 
 interface HtmxAfterRequestDetail {
     successful: boolean;
@@ -25,6 +26,12 @@ export function initHtmxHooks(): void {
         // Was: hx-on::after-request="iPageSizeRefresh(this);" on each page-size link
         if (target.closest('#page-size-btn-group')) {
             pageSizeRefresh(target);
+        }
+
+        // The lead's "Today's crew" form (inv/guest): saved in the background, then the grid is
+        // refreshed in place -- every row's chips change, so one cell's swap is not enough.
+        if (target.matches('[data-hx-refresh-main]') && e.detail.successful) {
+            refreshMainArea();
         }
 
         // Was: hx-on::after-request="if(event.detail.successful) this.reset()"
@@ -56,11 +63,51 @@ export function initHtmxHooks(): void {
             globalThis.location.reload();
         }
     }) as EventListener);
+
+    initAllocationCellHooks();
+}
+
+/**
+ * inv/guest allocation cells (id "alloc-<inv id>"): each form posts with htmx and the server's reply
+ * replaces just that cell, so the lead's taps never reload the page.
+ */
+function initAllocationCellHooks(): void {
+    const isCell = (el: unknown): el is HTMLElement => el instanceof HTMLElement && el.id.startsWith('alloc-');
+
+    // a tooltip open on the tapped button would be orphaned when its button is replaced
+    document.body.addEventListener('htmx:beforeSwap', ((e: CustomEvent<{ target?: unknown }>) => {
+        const cell = e.detail.target;
+        if (!isCell(cell)) return;
+        const bs = (globalThis as any).bootstrap;
+        cell.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => bs?.Tooltip?.getInstance(el)?.dispose());
+        cell.querySelectorAll('.dropdown-toggle').forEach(el => bs?.Dropdown?.getInstance(el)?.dispose());
+    }) as EventListener);
+
+    // the new cell's tooltips
+    document.body.addEventListener('htmx:afterSwap', ((e: CustomEvent<{ target?: unknown }>) => {
+        if (isCell(e.detail.target)) initTooltips();
+    }) as EventListener);
+
+    // a failed post (expired session / CSRF, server or network error) must not leave a stale cell
+    // looking right: reload so the real state, and any message, show
+    const reloadOnFailure = ((e: CustomEvent<{ target?: unknown }>) => {
+        if (isCell(e.detail.target)) globalThis.location.reload();
+    }) as EventListener;
+    document.body.addEventListener('htmx:responseError', reloadOnFailure);
+    document.body.addEventListener('htmx:sendError', reloadOnFailure);
 }
 
 function pageSizeRefresh(btn: HTMLElement): void {
     document.querySelectorAll('#page-size-btn-group .btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    refreshMainArea();
+}
+
+/**
+ * Re-fetch this page and swap only #main-area (not htmx.ajax with `select`, which does not
+ * apply it reliably).
+ */
+function refreshMainArea(): void {
     fetch(globalThis.location.href)
         .then(r => r.text())
         .then(html => {
@@ -72,7 +119,8 @@ function pageSizeRefresh(btn: HTMLElement): void {
                 globalThis.htmx?.process(fresh);
                 initMultiDatePicker(); // the copy modal's calendar lives in the swapped #main-area
                 initClientAddresses();
+                initTooltips();
             }
         })
-        .catch(err => console.error('Page size refresh failed:', err));
+        .catch(err => console.error('Grid refresh failed:', err));
 }

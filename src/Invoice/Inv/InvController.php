@@ -94,6 +94,7 @@ final class InvController extends BaseController
     private readonly InvItemService $inv_item_service;
     private readonly InvItemAllowanceChargeService $aciis;
     private readonly InvTaxRateService $inv_tax_rate_service;
+    private readonly AllocationCellResponder $allocationCells;
     private readonly LoggerInterface $logger;
     private readonly MailerInterface $mailer;
     private readonly UrlGenerator $url_generator;
@@ -126,6 +127,7 @@ final class InvController extends BaseController
         $this->inv_custom_service           = $services->invCustomService;
         $this->inv_item_service             = $services->invItemService;
         $this->inv_tax_rate_service         = $services->invTaxRateService;
+        $this->allocationCells              = $services->allocationCells;
         $this->aciis                        = $ui->aciis;
         $this->formFields                   = $ui->formFields;
         $this->buttonsToolbarFull           = $ui->buttonsToolbarFull;

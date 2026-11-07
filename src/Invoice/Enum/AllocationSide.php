@@ -30,4 +30,16 @@ enum AllocationSide: string
             self::Front, self::Back => [self::Both],
         };
     }
+
+    /**
+     * The Bootstrap Icons class for the side (door, tree, house): the picture carries the meaning.
+     */
+    public function icon(): string
+    {
+        return match ($this) {
+            self::Both => 'bi-house-door-fill',
+            self::Front => 'bi-door-closed-fill',
+            self::Back => 'bi-tree-fill',
+        };
+    }
 }

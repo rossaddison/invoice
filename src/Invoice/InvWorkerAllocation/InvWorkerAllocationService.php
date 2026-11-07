@@ -62,6 +62,29 @@ final readonly class InvWorkerAllocationService
     }
 
     /**
+     * Turns an open whole-house allocation into the same worker on the front AND
+     * the back, so one side can then be changed without losing the other. A house
+     * with no whole-house row is left alone. Returns false only when the
+     * whole-house row is already settled (completed, postponed or cancelled):
+     * that record must not be rewritten.
+     */
+    public function splitWholeHouse(int $invId): bool
+    {
+        $both = $this->repository->repoForInvSidequery($invId, AllocationSide::Both);
+        if (null === $both) {
+            return true;
+        }
+        if ($both->isDecided()) {
+            return false;
+        }
+        $workerId = $both->reqWorkerId();
+        // allocating the front removes the whole-house row (they conflict)
+        $this->allocate($invId, AllocationSide::Front, $workerId);
+        $this->allocate($invId, AllocationSide::Back, $workerId);
+        return true;
+    }
+
+    /**
      * Removes the allocation on one side of a house, if there is one.
      */
     public function clear(int $invId, AllocationSide $side): void

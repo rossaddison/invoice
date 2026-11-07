@@ -12,6 +12,7 @@ use App\Infrastructure\Persistence\Worker\Worker;
 use App\Invoice\Enum\AllocationSide;
 use App\Invoice\Enum\AllocationStatus;
 use App\Invoice\Enum\PostponeReason;
+use App\Invoice\Inv\AllocationCellResponder;
 use App\Invoice\Inv\HomeCareCrew;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\Inv\WorkerInvAccess;
@@ -88,7 +89,7 @@ final class HomeCareAllocationActionsTest
         /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
 
-        return new HomeCareAllocationTestHarness(
+        $harness = new HomeCareAllocationTestHarness(
             $webService,
             $userService,
             $translator,
@@ -97,6 +98,17 @@ final class HomeCareAllocationActionsTest
             $sR,
             $flash,
         );
+        // an ordinary (non-htmx) post unless a test says otherwise
+        $harness->allocationCells = $this->responder(false);
+        return $harness;
+    }
+
+    private function responder(bool $htmx): AllocationCellResponder&m\MockInterface
+    {
+        /** @var AllocationCellResponder&m\MockInterface $responder */
+        $responder = m::mock(AllocationCellResponder::class);
+        $responder->shouldReceive('wants')->andReturn($htmx);
+        return $responder;
     }
 
     /**
@@ -276,6 +288,7 @@ final class HomeCareAllocationActionsTest
         $iR = $this->invRepository($inv);
         $iR->shouldReceive('save')->once()->with($inv);
         $allocations = $this->allocations();
+        $allocations->shouldReceive('splitWholeHouse')->once()->with(self::INV)->andReturn(true);
         $allocations->shouldReceive('allocate')->once()->with(self::INV, AllocationSide::Front, 7);
         $allocations->shouldReceive('legacyWorkerId')->with(self::INV)->andReturn(null);
         $allocations->shouldReceive('hasAllocations')->with(self::INV)->andReturn(true);
@@ -303,6 +316,7 @@ final class HomeCareAllocationActionsTest
         $iR = $this->invRepository($inv);
         $iR->shouldReceive('save')->once()->with($inv);
         $allocations = $this->allocations();
+        $allocations->shouldNotReceive('splitWholeHouse');
         $allocations->shouldReceive('allocate')->once()->with(self::INV, AllocationSide::Both, 7);
         $allocations->shouldReceive('legacyWorkerId')->with(self::INV)->andReturn(7);
         $allocations->shouldReceive('hasAllocations')->with(self::INV)->andReturn(true);
@@ -329,6 +343,7 @@ final class HomeCareAllocationActionsTest
         $iR = $this->invRepository($inv);
         $iR->shouldReceive('save')->once()->with($inv);
         $allocations = $this->allocations();
+        $allocations->shouldReceive('splitWholeHouse')->once()->with(self::INV)->andReturn(true);
         $allocations->shouldReceive('clear')->once()->with(self::INV, AllocationSide::Back);
         $allocations->shouldNotReceive('allocate');
         $allocations->shouldReceive('legacyWorkerId')->andReturn(null);
@@ -530,5 +545,116 @@ final class HomeCareAllocationActionsTest
         );
 
         Assert::same($result, $notFound);
+    }
+
+    public function aSettledWholeHouseIsLeftAloneWhenASideIsTapped(): void
+    {
+        [$webService, , $redirect] = $this->webService();
+        $inv = $this->inv();
+        $iR = $this->invRepository($inv);
+        $iR->shouldNotReceive('save');
+        $allocations = $this->allocations();
+        $allocations->shouldReceive('splitWholeHouse')->once()->with(self::INV)->andReturn(false);
+        $allocations->shouldNotReceive('allocate');
+        $allocations->shouldNotReceive('clear');
+
+        $result = $this->harness($webService)->allocateSide(
+            $this->request(['side' => 'front', 'worker_id' => '']),
+            '12',
+            $iR,
+            $this->workerRepository(null, 0),
+            $this->access($this->worker(1), 1, true),
+            $allocations,
+            $this->gate(0),
+        );
+
+        Assert::same($result, $redirect);
+    }
+
+    public function anHtmxAllocationReturnsTheReRenderedCellWithNoFlashAndNoRedirect(): void
+    {
+        [$webService] = $this->webService();
+        $inv = $this->inv();
+        $iR = $this->invRepository($inv);
+        $iR->shouldReceive('save')->once()->with($inv);
+        $allocations = $this->allocations();
+        $allocations->shouldReceive('splitWholeHouse')->once()->with(self::INV)->andReturn(true);
+        $allocations->shouldReceive('allocate')->once()->with(self::INV, AllocationSide::Front, 7);
+        $allocations->shouldReceive('legacyWorkerId')->andReturn(null);
+        $allocations->shouldReceive('hasAllocations')->andReturn(true);
+        /** @var Response&m\MockInterface $cell */
+        $cell = m::mock(Response::class);
+        $responder = $this->responder(true);
+        // the lead (worker 1) is the viewer
+        $responder->shouldReceive('cell')->once()->with($inv, 1)->andReturn($cell);
+        $harness = $this->harness($webService);
+        $harness->allocationCells = $responder;
+
+        $result = $harness->allocateSide(
+            $this->request(['side' => 'front', 'worker_id' => '7']),
+            '12',
+            $iR,
+            $this->workerRepository($this->worker(7), 7),
+            $this->access($this->worker(1), 1, true),
+            $allocations,
+            $this->gate(1),
+        );
+
+        Assert::same($result, $cell);
+        Assert::same($this->flashes->getArrayCopy(), []);
+    }
+
+    public function anHtmxSettleReturnsTheCellEvenWhenTheSideWasAlreadySettled(): void
+    {
+        [$webService] = $this->webService();
+        $allocation = $this->allocation(7);
+        $allocation->decide(AllocationStatus::Completed, 7, new \DateTimeImmutable());
+        [$service] = $this->realService($allocation);
+        $inv = $this->inv();
+        /** @var InvRepository&m\MockInterface $iR */
+        $iR = m::mock(InvRepository::class);
+        $iR->shouldReceive('repoInvUnLoadedquery')->with(self::INV)->andReturn($inv);
+        /** @var Response&m\MockInterface $cell */
+        $cell = m::mock(Response::class);
+        $responder = $this->responder(true);
+        $responder->shouldReceive('cell')->once()->with($inv, 7)->andReturn($cell);
+        $harness = $this->harness($webService);
+        $harness->allocationCells = $responder;
+
+        $result = $harness->settleAllocation(
+            $this->request(['status' => 'cancelled']),
+            '3',
+            $this->access($this->worker(7), 1, false),
+            $service,
+            $iR,
+            $this->gate(0),
+        );
+
+        Assert::same($result, $cell);
+        Assert::same($this->flashes->getArrayCopy(), []);
+    }
+
+    public function anHtmxCrewSaveReturnsNoContentSoThePageScriptRefreshesTheGrid(): void
+    {
+        [$webService] = $this->webService();
+        /** @var HomeCareCrew&m\MockInterface $crew */
+        $crew = m::mock(HomeCareCrew::class);
+        $crew->shouldReceive('save')->once();
+        /** @var Response&m\MockInterface $none */
+        $none = m::mock(Response::class);
+        $responder = $this->responder(true);
+        $responder->shouldReceive('nothing')->once()->andReturn($none);
+        $harness = $this->harness($webService);
+        $harness->allocationCells = $responder;
+
+        $result = $harness->setCrew(
+            $this->request(['crew' => ['1'], 'front_back' => '']),
+            $this->access($this->worker(1), 1, true),
+            $this->activeWorkers(),
+            $crew,
+        );
+
+        Assert::same($result, $none);
+        Assert::same($this->flashes->getArrayCopy(), []);
     }
 }

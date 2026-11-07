@@ -351,4 +351,42 @@ final class InvWorkerAllocationServiceTest
 
         Assert::false($created);
     }
+
+    public function splittingAnOpenWholeHouseGivesTheSameWorkerTheFrontAndTheBack(): void
+    {
+        $both = $this->row(AllocationSide::Both, 7);
+        $repository = $this->repository([$both]);
+        $repository->shouldReceive('repoForInvSidequery')->with(self::INV, AllocationSide::Both)->andReturn($both);
+        // the mock lists the house the same way each call, so the whole-house row is seen (and
+        // deleted) once per side; the real repository would no longer list it for the second
+        $repository->shouldReceive('delete')->atLeast()->once()->with($both);
+        $saved = [];
+        $repository->shouldReceive('save')->twice()->andReturnUsing(static function (InvWorkerAllocation $a) use (&$saved): void {
+            $saved[$a->getSide()->value] = $a->reqWorkerId();
+        });
+
+        Assert::true((new InvWorkerAllocationService($repository))->splitWholeHouse(self::INV));
+        Assert::same($saved, ['front' => 7, 'back' => 7]);
+    }
+
+    public function aSettledWholeHouseIsNeverSplit(): void
+    {
+        $both = $this->row(AllocationSide::Both, 7);
+        $both->decide(AllocationStatus::Completed, 7, new DateTimeImmutable());
+        $repository = $this->repository([$both]);
+        $repository->shouldReceive('repoForInvSidequery')->with(self::INV, AllocationSide::Both)->andReturn($both);
+        $repository->shouldNotReceive('save');
+        $repository->shouldNotReceive('delete');
+
+        Assert::false((new InvWorkerAllocationService($repository))->splitWholeHouse(self::INV));
+    }
+
+    public function aHouseWithNoWholeHouseRowSplitsToNothingAndIsReadyToChange(): void
+    {
+        $repository = $this->repository([$this->row(AllocationSide::Front, 7)]);
+        $repository->shouldReceive('repoForInvSidequery')->with(self::INV, AllocationSide::Both)->andReturn(null);
+        $repository->shouldNotReceive('save');
+
+        Assert::true((new InvWorkerAllocationService($repository))->splitWholeHouse(self::INV));
+    }
 }

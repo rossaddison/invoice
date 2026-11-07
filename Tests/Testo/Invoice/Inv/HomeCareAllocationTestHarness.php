@@ -15,4 +15,6 @@ use App\Invoice\Inv\Trait\HomeCareAllocation;
 final class HomeCareAllocationTestHarness extends BaseController
 {
     use HomeCareAllocation;
+
+    public \App\Invoice\Inv\AllocationCellResponder $allocationCells;
 }

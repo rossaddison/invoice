@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\User\User;
 use App\Invoice\Enum\AllocationSide;
 use App\Invoice\Enum\AllocationStatus;
@@ -31,6 +32,7 @@ use Yiisoft\Router\HydratorAttribute\RouteArgument;
  * @property \App\Service\WebControllerService $webService
  * @property \App\User\UserService $userService
  * @property \Yiisoft\Translator\TranslatorInterface $translator
+ * @property \App\Invoice\Inv\AllocationCellResponder $allocationCells
  */
 trait HomeCareAllocation
 {
@@ -63,6 +65,11 @@ trait HomeCareAllocation
         ) {
             return $this->webService->getNotFoundResponse();
         }
+        // Changing one side of a whole-house allocation first splits it into front + back for
+        // the same worker, so the other side keeps its worker. A settled whole house is left alone.
+        if (AllocationSide::Both !== $side && !$allocations->splitWholeHouse($inv->reqId())) {
+            return $this->allocationDone($request, $inv, (int) $access->leadWorkerId());
+        }
         null === $worker
             ? $allocations->clear($inv->reqId(), $side)
             : $allocations->allocate($inv->reqId(), $side, $worker->reqId());
@@ -74,8 +81,7 @@ trait HomeCareAllocation
         $inv->setWorkerAllocatedAt($allocations->hasAllocations($inv->reqId()) ? new \DateTimeImmutable() : null);
         $gate->apply($inv);
         $iR->save($inv);
-        $this->flashMessage('info', $this->translator->translate('worker.assigned'));
-        return $this->webService->getRedirectResponse('inv/guest');
+        return $this->allocationDone($request, $inv, (int) $access->leadWorkerId(), 'info', 'worker.assigned');
     }
 
     /**
@@ -104,6 +110,8 @@ trait HomeCareAllocation
         ) {
             return $this->webService->getNotFoundResponse();
         }
+        $inv = null;
+        $flash = ['info', 'allocation.settled'];
         try {
             $allocations->decide(
                 $allocation,
@@ -117,9 +125,32 @@ trait HomeCareAllocation
                 $gate->apply($inv);
                 $iR->save($inv);
             }
-            $this->flashMessage('info', $this->translator->translate('allocation.settled'));
         } catch (\LogicException) {
-            $this->flashMessage('warning', $this->translator->translate('allocation.already.settled'));
+            $flash = ['warning', 'allocation.already.settled'];
+        }
+        if ($this->allocationCells->wants($request)) {
+            // an already-settled side re-renders too, so the tapper sees the state that won
+            $inv ??= $iR->repoInvUnLoadedquery($allocation->reqInvId());
+            return null === $inv
+                ? $this->allocationCells->nothing()
+                : $this->allocationCells->cell($inv, $worker->reqId());
+        }
+        $this->flashMessage($flash[0], $this->translator->translate($flash[1]));
+        return $this->webService->getRedirectResponse('inv/guest');
+    }
+
+    /**
+     * Ends an allocation post. An htmx request (the page stays put) gets just the
+     * invoice's re-rendered cell, with no flash banner (the changed cell is the
+     * feedback); an ordinary post flashes, if there is a message, and redirects.
+     */
+    private function allocationDone(Request $request, Inv $inv, int $viewerWorkerId, ?string $flashType = null, ?string $flashKey = null): Response
+    {
+        if ($this->allocationCells->wants($request)) {
+            return $this->allocationCells->cell($inv, $viewerWorkerId);
+        }
+        if (null !== $flashType && null !== $flashKey) {
+            $this->flashMessage($flashType, $this->translator->translate($flashKey));
         }
         return $this->webService->getRedirectResponse('inv/guest');
     }
@@ -150,6 +181,10 @@ trait HomeCareAllocation
             '1' === (string) ($body['front_back'] ?? ''),
             $activeIds,
         );
+        if ($this->allocationCells->wants($request)) {
+            // every row's chips change, so the page script refreshes the grid; no reload
+            return $this->allocationCells->nothing();
+        }
         $this->flashMessage('info', $this->translator->translate('homecare.crew.saved'));
         return $this->webService->getRedirectResponse('inv/guest');
     }

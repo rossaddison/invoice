@@ -210,3 +210,106 @@
     transform: scale(0.9);
     margin: 10px 0;
 }
+/* ===============================================
+   HomeCare allocation buttons: accessible for colour-blind / dyslexic
+   workers. Every button has a solid black edge, the same height and
+   a symbol, so none relies on its colour or its word alone.
+   =============================================== */
+.alloc-btn {
+    border: 2px solid #000 !important;
+    min-height: 2.25rem;
+    min-width: 2.25rem;
+    line-height: 1.25;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.alloc-btn.alloc-on {
+    box-shadow: inset 0 0 0 2px #fff;
+}
+
+/* Touch screens: finger-sized targets (44px, WCAG / Material), a wider gap
+   between them, and the destructive cancel kept clear of done / postpone. */
+@media (pointer: coarse) {
+    .alloc-btn {
+        min-height: 2.75rem;
+        min-width: 2.75rem;
+    }
+
+    .alloc-line {
+        gap: 0.5rem !important;
+    }
+
+    .alloc-cancel {
+        margin-left: 0.5rem;
+    }
+}
+
+/* Picture-only side marker and status pill: both the height of the buttons
+   beside them; the words live in tooltips. The status pill is round (not
+   square) so it is not mistaken for something to press. */
+.alloc-icon,
+.badge.alloc-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.25rem;
+    min-width: 2.25rem;
+    font-size: 1.3rem;
+    line-height: 1;
+    box-sizing: border-box;
+}
+
+/* Bootstrap Icons inside the buttons and pills: sized to the control. */
+.alloc-btn .bi,
+.alloc-icon .bi,
+.alloc-status .bi {
+    font-size: 1.15rem;
+    line-height: 1;
+}
+
+.badge.alloc-status {
+    border-radius: 50rem;
+}
+
+@media (pointer: coarse) {
+    .alloc-icon,
+    .badge.alloc-status {
+        min-height: 2.75rem;
+        min-width: 2.75rem;
+    }
+}
+
+/* The crew form: big, black-edged tick boxes with a roomy label. */
+.alloc-check-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.25rem;
+    padding-left: 0;
+}
+
+.alloc-check-wrap .alloc-check {
+    float: none;
+    margin: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid #000;
+}
+
+.alloc-check-wrap .form-check-label {
+    font-size: 1rem;
+}
+
+@media (pointer: coarse) {
+    .alloc-check-wrap {
+        min-height: 2.75rem;
+    }
+
+    .alloc-check-wrap .alloc-check {
+        width: 1.75rem;
+        height: 1.75rem;
+    }
+}

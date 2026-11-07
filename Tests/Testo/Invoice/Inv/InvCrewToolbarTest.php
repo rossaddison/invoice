@@ -103,4 +103,34 @@ final class InvCrewToolbarTest
         Assert::same(substr_count($html, 'type="checkbox"'), 4);
         Assert::same(substr_count($html, 'autocomplete="off"'), 4);
     }
+
+    public function theCrewFormExplainsItsControls(): void
+    {
+        $html = $this->html([1], false);
+
+        Assert::true(str_contains($html, 'title="homecare.crew.tip.member"'));
+        Assert::true(str_contains($html, 'title="homecare.crew.tip.front.back"'));
+        Assert::true(str_contains($html, 'title="homecare.crew.tip.save"'));
+        // label + 3 worker checkboxes + Front/Back switch + Save button
+        Assert::same(substr_count($html, 'data-bs-toggle="tooltip"'), 6);
+    }
+
+    public function theHintAndSeparatorUseTheNormalTextColourNotGrey(): void
+    {
+        $html = $this->html([1], false);
+
+        Assert::false(str_contains($html, 'text-muted'));
+        Assert::true(str_contains($html, 'text-body small'));
+    }
+
+    public function savingTheCrewPostsInTheBackgroundAndAsksForAGridRefresh(): void
+    {
+        $html = $this->html([1], false);
+
+        Assert::true(str_contains($html, 'hx-post="/inv/setcrew"'));
+        Assert::true(str_contains($html, 'hx-swap="none"'));
+        Assert::true(str_contains($html, 'data-hx-refresh-main'));
+        // still an ordinary form without htmx
+        Assert::true(str_contains($html, 'action="/inv/setcrew"'));
+    }
 }
