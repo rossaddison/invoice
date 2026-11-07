@@ -25,6 +25,7 @@ import { initFlashMessageTimer } from './flash-message-timer.js';
 import { initFamilyFormValidation } from './family-form-validation.js';
 import { initDataActions } from './data-actions.js';
 import { initHtmxHooks } from './htmx-hooks.js';
+import { collapseAllocationSidesOnPhones } from './alloc-collapse.js';
 import { initCustomFieldPosition } from './customfield-position.js';
 import { initTabHashRestore } from './tab-hash-restore.js';
 import { initJavascriptAnalysisFaq, initCodeceptionChecklistFaq } from './faq-pages.js';
@@ -90,6 +91,7 @@ class InvoiceApp {
         initFamilyFormValidation();
         initDataActions();
         initHtmxHooks();
+        collapseAllocationSidesOnPhones();
         initCustomFieldPosition();
         initTabHashRestore();
         initStickyNavbarOffset();

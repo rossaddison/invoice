@@ -140,6 +140,22 @@ was cleaned. Each side now records it:
 
 The new column needs the schema sync on deploy (`BUILD_DATABASE=true`, reload once).
 
+## Shorter grid on a phone
+
+In Front/Back mode a house with nothing allocated (the usual state first thing) has two
+lines of crew chips, about 90px of a phone screen per house. Those two lines are now
+folded into one native `<details class="alloc-collapsible">` whose summary shows the two
+sides' pictures and a "person +" icon (same black-edged, equal-height style):
+
+- It is rendered **open**, so it works with no script and is fully open on a desktop,
+  where one-tap allocation matters most.
+- On a phone-width screen (below Bootstrap's `md`, 768px) `alloc-collapse.ts` closes it, on
+  page load, after a cell is swapped (only that cell, so a house the lead expanded
+  elsewhere stays open) and after a grid refresh. A house then takes one line until the
+  lead taps it.
+- Only the "nothing allocated" case folds. A house with any allocation, a whole-house
+  holder, a lone empty side, and whole-house mode (one line already) are left as they are.
+
 ## Verification
 
 Testo (including `AllocationButtonsTest`, `AllocationCellResponderTest` and

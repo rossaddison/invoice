@@ -150,6 +150,31 @@ final readonly class AllocationButtons
     }
 
     /**
+     * The lines of the sides nobody holds yet, folded under one summary (the pictures of those
+     * sides and a "person +" icon). Rendered open; the page script closes it on a phone, so the
+     * house takes one line until the lead taps it. Native <details>, so it needs no script to work.
+     *
+     * @param list<AllocationSide> $sides
+     */
+    public function collapsedSides(array $sides, string $lines): string
+    {
+        $icons = '';
+        foreach ($sides as $side) {
+            $icons .= $this->glyph($side->icon(), 'me-1');
+        }
+        $summary = Html::tag(
+            'summary',
+            $icons
+            . $this->glyph('bi-person-plus-fill')
+            . Html::span($this->translator->translate('allocation.assign.sides'), [self::CLASS_ATTR => 'visually-hidden'])->render(),
+            [self::CLASS_ATTR => 'alloc-summary'] + $this->tip($this->translator->translate('allocation.tip.assign.sides'))
+        )->encode(false)->render();
+        return Html::tag('details', $summary . $lines, [self::CLASS_ATTR => 'alloc-collapsible', 'open' => true])
+            ->encode(false)
+            ->render();
+    }
+
+    /**
      * One tap records that the card was left at the house (the evidence it was cleaned). Its own
      * small form, like the settle buttons, posting in place with htmx.
      */

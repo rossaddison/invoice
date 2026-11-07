@@ -9,6 +9,7 @@
 import { initMultiDatePicker } from './multi-date-picker.js';
 import { initClientAddresses } from './client-addresses.js';
 import { initTooltips } from './scripts.js';
+import { collapseAllocationSidesOnPhones } from './alloc-collapse.js';
 
 interface HtmxAfterRequestDetail {
     successful: boolean;
@@ -85,7 +86,11 @@ function initAllocationCellHooks(): void {
 
     // the new cell's tooltips
     document.body.addEventListener('htmx:afterSwap', ((e: CustomEvent<{ target?: unknown }>) => {
-        if (isCell(e.detail.target)) initTooltips();
+        const cell = e.detail.target;
+        if (!isCell(cell)) return;
+        initTooltips();
+        // only the swapped cell: a house the lead expanded elsewhere must stay open
+        collapseAllocationSidesOnPhones(document.getElementById(cell.id) ?? document);
     }) as EventListener);
 
     // a failed post (expired session / CSRF, server or network error) must not leave a stale cell
@@ -120,6 +125,7 @@ function refreshMainArea(): void {
                 initMultiDatePicker(); // the copy modal's calendar lives in the swapped #main-area
                 initClientAddresses();
                 initTooltips();
+                collapseAllocationSidesOnPhones(fresh);
             }
         })
         .catch(err => console.error('Grid refresh failed:', err));

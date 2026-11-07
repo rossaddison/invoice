@@ -83,6 +83,10 @@ final readonly class InvAllocationCell
      * house while allocating whole houses, or the reverse) still get a line,
      * without chips, so their status and controls are never hidden.
      *
+     * A house with nothing allocated in Front/Back mode (the usual state first thing) folds its two
+     * lines into one <details> that the page script closes on a phone, so the house takes one
+     * line until the lead taps it. Anything allocated stays visible, as does a lone empty side.
+     *
      * @param list<InvWorkerAllocation> $rows
      */
     private function renderCrewRows(Inv $inv, array $rows): string
@@ -92,15 +96,24 @@ final readonly class InvAllocationCell
             $bySide[$row->getSide()->value] = $row;
         }
         $modeSides = $this->frontBack ? [AllocationSide::Front, AllocationSide::Back] : [AllocationSide::Both];
-        $html = '';
+        $whole = $bySide[AllocationSide::Both->value] ?? null;
+        /** @var list<array{AllocationSide, string, bool}> $entries side, its line, whether nobody holds it */
+        $entries = [];
         foreach (AllocationSide::cases() as $side) {
             $inMode = in_array($side, $modeSides, true);
             $allocation = $bySide[$side->value] ?? null;
             if ($inMode || null !== $allocation) {
-                $html .= $this->crewRow($inv, $side, $allocation, $inMode, $bySide[AllocationSide::Both->value] ?? null);
+                $nobodyHolds = $inMode && null === $allocation && (AllocationSide::Both === $side || null === $whole);
+                $entries[] = [$side, $this->crewRow($inv, $side, $allocation, $inMode, $whole), $nobodyHolds];
             }
         }
-        return $html;
+        $lines = implode('', array_map(static fn (array $e): string => $e[1], $entries));
+        // Two empty sides only arise in Front/Back mode with nothing allocated (a whole-house row
+        // would make both held), so then every line is an empty side and the whole cell folds.
+        $empty = array_values(array_filter($entries, static fn (array $e): bool => $e[2]));
+        return count($empty) >= 2
+            ? $this->buttons->collapsedSides(array_map(static fn (array $e): AllocationSide => $e[0], $empty), $lines)
+            : $lines;
     }
 
     /**

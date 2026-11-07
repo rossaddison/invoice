@@ -786,4 +786,43 @@ final class InvAllocationCellTest
 
         Assert::false(str_contains($html, 'cardallocation'));
     }
+
+    public function aHouseWithTwoUnallocatedSidesFoldsThemUnderOneOpenSummary(): void
+    {
+        $html = $this->cell([], self::LEAD, self::LEAD, [1, 7], true)->render($this->inv());
+
+        Assert::same(substr_count($html, '<details class="alloc-collapsible" open>'), 1);
+        Assert::same(substr_count($html, '<summary class="alloc-summary"'), 1);
+        // both sides' chips are inside it, and the summary shows both sides' pictures
+        $inside = substr($html, (int) strpos($html, '<details'));
+        Assert::same(substr_count($inside, 'name="side" value="front"'), 2);
+        Assert::same(substr_count($inside, 'name="side" value="back"'), 2);
+        Assert::true(str_contains($html, 'bi bi-door-closed-fill me-1'));
+        Assert::true(str_contains($html, 'bi bi-tree-fill me-1'));
+        Assert::true(str_contains($html, 'allocation.assign.sides'));
+    }
+
+    public function anAllocatedSideStaysOutsideTheFoldAndASingleEmptySideIsNotFolded(): void
+    {
+        $html = $this->cell([$this->allocation(3, AllocationSide::Front, self::ME)], self::LEAD, self::LEAD, [1, 7], true)
+            ->render($this->inv());
+
+        // front is held, back is the only empty side: nothing to fold
+        Assert::false(str_contains($html, '<details'));
+    }
+
+    public function aWholeHouseHolderMeansNoSideIsEmptyAndNothingFolds(): void
+    {
+        $html = $this->cell([$this->allocation(3, AllocationSide::Both, self::ME)], self::LEAD, self::LEAD, [1, 7], true)
+            ->render($this->inv());
+
+        Assert::false(str_contains($html, '<details'));
+    }
+
+    public function wholeHouseModeHasOneEmptyLineSoItIsNotFolded(): void
+    {
+        $html = $this->cell([], self::LEAD, self::LEAD, [1, 7], false)->render($this->inv());
+
+        Assert::false(str_contains($html, '<details'));
+    }
 }
