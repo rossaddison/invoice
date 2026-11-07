@@ -8,6 +8,7 @@ use App\Invoice\Enum\DoNotSendReason;
 use App\Invoice\Inv\Widget\HomeCareInstallBanner;
 use App\Invoice\Inv\Widget\InvAllocationCell;
 use App\Invoice\Inv\Widget\InvCrewToolbar;
+use App\Invoice\Inv\Widget\RowActionsDropdown;
 use App\Widget\Button;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
@@ -268,23 +269,9 @@ $columns = [
         header: '',
         // WCAG 4.1.2: this toggle button had no visible text and no
         // aria-label -- a screen reader announced it as a nameless button.
-        before: Html::openTag('div', ['class' => 'dropdown'])
-            . Html::openTag('button', [
-                'class' => 'btn btn-info dropdown-toggle',
-                'type' => 'button',
-                'id' => 'dropdownMenuButton',
-                'data-bs-toggle' => 'dropdown',
-                'aria-haspopup' => 'true',
-                'aria-expanded' => 'false',
-                'aria-label' => $translator->translate('download.pdf'),
-            ])
-            . Html::closeTag('button')
-            . Html::openTag('div', [
-                'class' => 'dropdown-menu',
-                'aria-labelledby' => 'dropdownMenuButton'
-            ])
-            . Html::openTag('div',
-                ['class' => 'btn-group', 'role' => 'group']),
+        // The shared helper carries no id: this string is reused for every row (see
+        // RowActionsDropdown's docblock -- it used to repeat id="dropdownMenuButton").
+        before: RowActionsDropdown::open($translator->translate('download.pdf')),
         buttons: [
             new ActionButton(
                 url: static function (Inv $inv) use ($urlGenerator): string {

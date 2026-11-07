@@ -845,23 +845,10 @@ final class InvsColumnBuilder
         $t  = $this->translator;
         return new ActionColumn(
             header: '',
-            before: Html::openTag('div', ['class' => 'dropdown'])
-                // Was 'data-toggle' (Bootstrap 4) -- Bootstrap 5's JS only
-                // wires up 'data-bs-toggle', so this dropdown never opened
-                // at all, for anyone. Also had no accessible name (empty
-                // button, no aria-label) -- added one.
-                . Html::openTag('button', [
-                    'class' => 'btn btn-info dropdown-toggle', 'type' => 'button',
-                    'id' => 'dropdownMenuButton', 'data-bs-toggle' => 'dropdown',
-                    'aria-haspopup' => 'true', 'aria-expanded' => 'false',
-                    'aria-label' => $t->translate('download.pdf') . ' / ' . $t->translate('email'),
-                ])
-                . Html::closeTag('button')
-                . Html::openTag('div', [
-                    'class' => 'dropdown-menu',
-                    'aria-labelledby' => 'dropdownMenuButton',
-                ])
-                . Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']),
+            // No id: this string is reused for every row (see RowActionsDropdown's
+            // docblock). It also used to carry 'data-toggle' (Bootstrap 4), so it
+            // never opened; 'data-bs-toggle' and an accessible name are in the helper.
+            before: RowActionsDropdown::open($t->translate('download.pdf') . ' / ' . $t->translate('email')),
             buttons: [
                 new ActionButton(
                     url: static fn (Inv $inv): string =>
