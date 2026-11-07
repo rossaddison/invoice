@@ -19,6 +19,9 @@ final readonly class InvGuestAccess
         public UserInv $userInv,
         public array $clients,
         public ?Worker $worker = null,
+        // The one worker who allocates the run: sees every HomeCare house, not
+        // only the ones allocated to him (see InvGuestTrait::whereAllocatedToWorker()).
+        public bool $isLead = false,
     ) {
     }
 }

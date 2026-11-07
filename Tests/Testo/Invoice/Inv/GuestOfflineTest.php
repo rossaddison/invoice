@@ -87,6 +87,8 @@ final class GuestOfflineTest
 
         /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
+        // resolveGuestAccess() reads the lead worker id; these tests have no lead configured
+        $sR->shouldReceive('getSetting')->with('homecare_lead_worker_id')->andReturn('0');
         return new GuestOfflineTestHarness(
             $webService,
             $userService,

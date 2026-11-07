@@ -118,7 +118,7 @@ trait Guest
             ? (int) $filter->filterStatus
             : 0;
         $invs = null !== $access->worker
-            ? $d->iR->repoWorkerVisible($effectiveStatus, $access->worker->reqId())
+            ? $d->iR->repoWorkerVisible($effectiveStatus, $access->worker->reqId(), $access->isLead)
             : $this->invsStatusGuest($d->iR, $effectiveStatus, $access->clients);
         $invs = $this->applyGuestFilters($filter, $d->iR, $invs, $access);
 
@@ -149,7 +149,8 @@ trait Guest
         $worker = (null !== $userInv && $userInv->getActive())
             ? $d->wR->findByUserId($user_id) : null;
         if (null !== $userInv && null !== $worker) {
-            return new InvGuestAccess($userInv, [], $worker);
+            $leadId = (int) $this->sR->getSetting('homecare_lead_worker_id');
+            return new InvGuestAccess($userInv, [], $worker, $leadId > 0 && $leadId === $worker->reqId());
         }
         $user_clients = (null !== $userInv && $userInv->getActive())
             ? $d->ucR->getAssignedToUser($user_id) : [];
@@ -370,7 +371,7 @@ trait Guest
         $effectiveStatus = (isset($filter->filterStatus) && !empty($filter->filterStatus))
             ? (int) $filter->filterStatus : (int) $status;
         $invs = null !== $worker
-            ? $d->iR->repoWorkerVisible($effectiveStatus, $worker->reqId())
+            ? $d->iR->repoWorkerVisible($effectiveStatus, $worker->reqId(), $access->isLead)
             : $this->invsStatusGuest($d->iR, $effectiveStatus, $user_clients);
         $preFilterInvs = $invs;
         $invs = $this->applyGuestFilters($filter, $d->iR, $invs, $access);
@@ -502,6 +503,7 @@ trait Guest
                 $filter->filterDateCreatedExact,
                 $access->worker?->reqId(),
                 $access->clients,
+                $access->isLead,
             );
         }
         return $invs;

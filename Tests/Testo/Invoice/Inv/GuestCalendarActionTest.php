@@ -57,7 +57,7 @@ final class GuestCalendarActionTest
     /**
      * @return array{0: InvController, 1: UserService&m\MockInterface, 2: WebControllerService&m\MockInterface, 3: WebViewRenderer&m\MockInterface, 4: SettingRepository&m\MockInterface}
      */
-    private function makeController(): array
+    private function makeController(string $leadWorkerId = '0'): array
     {
         $reflectionClass = new ReflectionClass(InvController::class);
         $controller = $reflectionClass->newInstanceWithoutConstructor();
@@ -71,6 +71,8 @@ final class GuestCalendarActionTest
         $webViewRenderer->shouldReceive('renderPartialAsString')->andReturn('');
         /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
+        // declared first: Mockery uses the first matching expectation, and the lead id is what varies
+        $sR->shouldReceive('getSetting')->with('homecare_lead_worker_id')->andReturn($leadWorkerId);
         $sR->shouldReceive('getSetting')->andReturn('primary');
         /** @var Flash&m\MockInterface $flash */
         $flash = m::mock(Flash::class);
@@ -181,8 +183,55 @@ final class GuestCalendarActionTest
         /** @var IR&m\MockInterface $iR */
         $iR = m::mock(IR::class);
         $iR->shouldReceive('repoWorkerDateRangeQuery')
-            ->withArgs(function (\DateTimeImmutable $from, \DateTimeImmutable $to, int $workerId): bool {
-                return $workerId === 55 && $from < $to;
+            ->withArgs(function (\DateTimeImmutable $from, \DateTimeImmutable $to, int $workerId, bool $lead): bool {
+                return $workerId === 55 && $from < $to && false === $lead;
+            })
+            ->once()
+            ->andReturn($this->emptyEntityReader());
+        $iR->shouldReceive('repoGuestClientsDateRangeQuery')->never();
+
+        /** @var Response&m\MockInterface $response */
+        $response = m::mock(Response::class);
+        /** @var array<string, mixed>|null $captured */
+        $captured = null;
+        $webViewRenderer->shouldReceive('render')
+            ->withArgs(function (string $view, array $parameters) use (&$captured): bool {
+                $captured = $parameters;
+                return $view === 'guest_calendar';
+            })
+            ->andReturn($response);
+
+        /** @var CSR&m\MockInterface $csR */
+        $csR = m::mock(CSR::class);
+        $csR->shouldReceive('optionsDataCategorySecondaries')->andReturn([]);
+
+        $result = $controller->guestCalendar(
+            $this->makeDeps($this->makeUserInv(), $worker, $iR),
+            $csR,
+            '2026',
+            '9',
+        );
+
+        Assert::same($response, $result);
+        Assert::notNull($captured);
+        /** @psalm-var array{months: list<mixed>} $captured */
+        Assert::same(7, count($captured['months']));
+    }
+
+    public function theLeadGetsTheLeadScopeAcrossTheWindow(): void
+    {
+        [$controller, $userService, , $webViewRenderer] = $this->makeController('55');
+        $userService->shouldReceive('getUser')->andReturn($this->makeUser(9));
+
+        /** @var Worker&m\MockInterface $worker */
+        $worker = m::mock(Worker::class);
+        $worker->shouldReceive('reqId')->andReturn(55);
+
+        /** @var IR&m\MockInterface $iR */
+        $iR = m::mock(IR::class);
+        $iR->shouldReceive('repoWorkerDateRangeQuery')
+            ->withArgs(function (\DateTimeImmutable $from, \DateTimeImmutable $to, int $workerId, bool $lead): bool {
+                return $workerId === 55 && $from < $to && true === $lead;
             })
             ->once()
             ->andReturn($this->emptyEntityReader());

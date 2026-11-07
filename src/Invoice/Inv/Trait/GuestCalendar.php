@@ -94,7 +94,7 @@ trait GuestCalendar
         \DateTimeImmutable $toExclusive,
     ): iterable {
         return null !== $access->worker
-            ? $d->iR->repoWorkerDateRangeQuery($from, $toExclusive, $access->worker->reqId())
+            ? $d->iR->repoWorkerDateRangeQuery($from, $toExclusive, $access->worker->reqId(), $access->isLead)
             : $d->iR->repoGuestClientsDateRangeQuery($from, $toExclusive, $access->clients);
     }
 }

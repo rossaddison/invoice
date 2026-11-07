@@ -29,20 +29,26 @@ trait InvGuestTrait
      * front/back house has no single worker_id). One query, no extra round
      * trip; verified against MySQL for each combination.
      *
+     * The lead (the one worker who allocates the run) also sees every house
+     * of the run -- any invoice whose client has a Dwelling -- because he
+     * cannot allocate a house he cannot see.
+     *
      * @param Select<Inv> $query
      * @return Select<Inv>
      */
-    private function whereAllocatedToWorker(Select $query, int $workerId): Select
+    private function whereAllocatedToWorker(Select $query, int $workerId, bool $lead = false): Select
     {
-        return $query->where([
-            '@or' => [
-                ['worker_id' => $workerId],
-                ['id' => ['in' => new Fragment(
-                    '(SELECT inv_id FROM inv_worker_allocation WHERE worker_id = ?)',
-                    $workerId
-                )]],
-            ],
-        ]);
+        $scope = [
+            ['worker_id' => $workerId],
+            ['id' => ['in' => new Fragment(
+                '(SELECT inv_id FROM inv_worker_allocation WHERE worker_id = ?)',
+                $workerId
+            )]],
+        ];
+        if ($lead) {
+            $scope[] = ['client.dwelling_id' => ['!=' => null]];
+        }
+        return $query->where(['@or' => $scope]);
     }
 
     /**
@@ -151,18 +157,19 @@ trait InvGuestTrait
      *
      * @param int $status_id
      * @param int $worker_id
+     * @param bool $lead true for the one lead worker, who sees every HomeCare house
      * @return EntityReader
      */
-    public function repoWorkerVisible(int $status_id, int $worker_id): EntityReader
+    public function repoWorkerVisible(int $status_id, int $worker_id, bool $lead = false): EntityReader
     {
         if ($status_id > 0) {
-            $query = $this->whereAllocatedToWorker($this->select(), $worker_id)
+            $query = $this->whereAllocatedToWorker($this->select(), $worker_id, $lead)
                     ->andWhere(['status_id' => $status_id])
                     ->andWhere(['status_id' => ['in' => new Parameter(self::WORKER_VISIBLE_STATUSES)]])
                     ->where('deleted_at', null);
             return $this->workerVisibleDataReader($query);
         }
-        $query = $this->whereAllocatedToWorker($this->select(), $worker_id)
+        $query = $this->whereAllocatedToWorker($this->select(), $worker_id, $lead)
                      ->andWhere(['status_id' => ['in' => new Parameter(self::WORKER_VISIBLE_STATUSES)]])
                      ->where('deleted_at', null);
         return $this->workerVisibleDataReader($query);
@@ -205,10 +212,12 @@ trait InvGuestTrait
         \DateTimeImmutable $from,
         \DateTimeImmutable $toExclusive,
         int $workerId,
+        bool $lead = false,
     ): EntityReader {
         $query = $this->whereAllocatedToWorker(
             $this->select()->load(['client', 'group', 'user', 'items.product.family']),
-            $workerId
+            $workerId,
+            $lead
         )
                 ->andWhere(['status_id' => ['in' => new Parameter(self::WORKER_VISIBLE_STATUSES)]])
                 ->andWhere('date_created', '>=', $from->format('Y-m-d H:i:s'))
@@ -255,10 +264,11 @@ trait InvGuestTrait
         string $filterDateCreatedExact,
         ?int $workerId,
         array $clientIds,
+        bool $lead = false,
     ): EntityReader {
         $query = $this->select()->load(['client', 'group', 'user']);
         $query = $workerId !== null
-            ? $this->whereAllocatedToWorker($query, $workerId)
+            ? $this->whereAllocatedToWorker($query, $workerId, $lead)
             : $query->where(['client_id' => ['in' => new Parameter($clientIds)]]);
         $statuses = $workerId !== null ? self::WORKER_VISIBLE_STATUSES : self::GUEST_VISIBLE_STATUSES;
         $query = $query->andWhere(['status_id' => ['in' => new Parameter($statuses)]])
