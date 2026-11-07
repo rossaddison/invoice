@@ -95,19 +95,24 @@ final class ProductClientRepository extends Select\Repository
 
     /**
      * Find all product-client associations for a specific client
+     *
+     * findAll() is typed iterable (a lazy result set), so it is materialised here to honour
+     * the array return type rather than relying on how a given Psalm release treats iterable.
+     *
+     * @return list<ProductClient>
      */
     public function findByClientId(int $clientId): array
     {
-        return $this->findAll(['client_id' => $clientId]);
+        return iterator_to_array($this->findAll(['client_id' => $clientId]), false);
     }
 
     /**
      * Find all client associations for a specific product
-     * @return array<array-key, \App\Infrastructure\Persistence\ProductClient\ProductClient>
+     * @return list<ProductClient>
      */
     public function findByProductId(int $productId): array
     {
-        return $this->findAll(['product_id' => $productId]);
+        return iterator_to_array($this->findAll(['product_id' => $productId]), false);
     }
 
     /**
