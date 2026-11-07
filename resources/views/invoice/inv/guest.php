@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Dwelling\DwellingPostcodeLink;
 use App\Invoice\Enum\DoNotSendReason;
+use App\Invoice\Inv\Widget\HomeCareInstallBanner;
 use App\Invoice\Inv\Widget\InvAllocationCell;
 use App\Invoice\Inv\Widget\InvCrewToolbar;
 use App\Widget\Button;
@@ -655,37 +656,7 @@ $homeCareOfflineButtons = $worker !== null
 // (src/typescript/homecare-install-prompt.ts) decides at runtime
 // whether to reveal it at all, and which of the two message spans
 // applies, since that depends on the actual browser/platform.
-$homeCareInstallBanner = $worker !== null
-    ? Html::openTag('div', [
-            'id' => 'homecare-install-banner',
-            'class' => 'alert alert-info d-none d-flex align-items-center justify-content-between mb-3',
-            'role' => 'alert',
-        ])
-        . Html::openTag('div')
-        . Html::tag('span', $translator->translate('homecare.offline.install.ios.message'), [
-            'id' => 'homecare-install-message-ios', 'class' => 'd-none',
-        ])
-        . Html::tag('span', $translator->translate('homecare.offline.install.generic.message'), [
-            'id' => 'homecare-install-message-generic', 'class' => 'd-none',
-        ])
-        . Html::closeTag('div')
-        . Html::openTag('div', ['class' => 'd-flex align-items-center'])
-        . Html::openTag('button', [
-            'type' => 'button',
-            'id' => 'homecare-install-button',
-            'class' => 'btn btn-sm btn-primary ms-2 d-none',
-        ])
-        . Html::encode($translator->translate('homecare.offline.install.button'))
-        . Html::closeTag('button')
-        . Html::tag('button', '', [
-            'type' => 'button',
-            'id' => 'homecare-install-dismiss',
-            'class' => 'btn-close ms-2',
-            'aria-label' => $translator->translate('close'),
-        ])
-        . Html::closeTag('div')
-        . Html::closeTag('div')
-    : '';
+$homeCareInstallBanner = $worker !== null ? HomeCareInstallBanner::html($translator) : '';
 
 $toolbarString =  new Form()->post(
                 $urlGenerator->generate('inv/guest'))->csrf($csrf)->open()
