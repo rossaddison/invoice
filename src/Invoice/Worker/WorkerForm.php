@@ -17,10 +17,13 @@ final class WorkerForm extends FormModel
     #[Length(min: 0, max: 100)]
     private ?string $lastname = null;
     private bool $active = true;
+    /** The id of the business the worker is registered under; '' for none. */
+    private ?string $company_id = null;
 
-    public static function show(Worker $worker): self
+    public static function show(Worker $worker, ?int $companyId = null): self
     {
         $form = new self();
+        $form->company_id = null === $companyId ? '' : (string) $companyId;
         $form->firstname = $worker->getFirstname();
         $form->lastname = $worker->getLastname();
         $form->active = $worker->getActive();
@@ -40,6 +43,11 @@ final class WorkerForm extends FormModel
     public function getActive(): bool
     {
         return $this->active;
+    }
+
+    public function getCompanyId(): ?string
+    {
+        return $this->company_id;
     }
 
     /**

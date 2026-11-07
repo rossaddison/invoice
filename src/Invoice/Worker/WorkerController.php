@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Invoice\Worker;
 
+use App\Infrastructure\Persistence\Company\Company;
 use App\Invoice\BaseController;
+use App\Invoice\Company\CompanyRepository;
+use App\Invoice\WorkerCompany\WorkerCompanyService;
 use App\Infrastructure\Persistence\Worker\Worker;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
@@ -27,6 +30,7 @@ final class WorkerController extends BaseController
 
     public function __construct(
         private WorkerService $workerService,
+        private WorkerCompanyService $workerCompanyService,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -39,8 +43,11 @@ final class WorkerController extends BaseController
         $this->workerService = $workerService;
     }
 
-    public function index(CurrentRoute $currentRoute, WorkerRepository $workerRepository): Response
-    {
+    public function index(
+        CurrentRoute $currentRoute,
+        WorkerRepository $workerRepository,
+        CompanyRepository $companyRepository,
+    ): Response {
         $workers = $this->workers($workerRepository);
         $pageNum = (int) $currentRoute->getArgument('page', '1');
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
@@ -51,11 +58,13 @@ final class WorkerController extends BaseController
             'alert' => $this->alert(),
             'paginator' => $paginator,
             'workers' => $workers,
+            // worker id => the names of the businesses it is registered under
+            'businessNames' => $this->businessNamesByWorker($companyRepository),
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }
 
-    public function add(Request $request, FormHydrator $formHydrator): Response
+    public function add(Request $request, FormHydrator $formHydrator, CompanyRepository $companyRepository): Response
     {
         $worker = new Worker();
         $form = new WorkerForm();
@@ -65,12 +74,14 @@ final class WorkerController extends BaseController
             'actionArguments' => [],
             'form' => $form,
             'errors' => [],
+            'businesses' => $this->businessOptions($companyRepository),
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->workerService->saveWorker($worker, $body);
+                    $this->workerCompanyService->syncFromChoice($worker->reqId(), (string) ($body['company_id'] ?? ''));
                     $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('worker/index');
                 }
@@ -87,22 +98,25 @@ final class WorkerController extends BaseController
         string $worker_id,
         WorkerRepository $workerRepository,
         FormHydrator $formHydrator,
+        CompanyRepository $companyRepository,
     ): Response {
         $worker = $this->worker((int) $worker_id, $workerRepository);
         if ($worker) {
-            $form = WorkerForm::show($worker);
+            $form = WorkerForm::show($worker, $this->workerCompanyService->companyIdsFor($worker->reqId())[0] ?? null);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'worker/edit',
                 'actionArguments' => ['worker_id' => $worker_id],
                 'form' => $form,
                 'errors' => [],
+                'businesses' => $this->businessOptions($companyRepository),
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $this->workerService->saveWorker($worker, $body);
+                        $this->workerCompanyService->syncFromChoice($worker->reqId(), (string) ($body['company_id'] ?? ''));
                         $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse('worker/index');
                     }
@@ -120,6 +134,7 @@ final class WorkerController extends BaseController
         try {
             /** @var Worker $worker */
             $worker = $this->worker((int) $worker_id, $workerRepository);
+            $this->workerCompanyService->unlinkWorker($worker->reqId());
             $this->workerService->deleteWorker($worker);
             $this->flashMessage('success', $this->translator->translate('record.successfully.deleted'));
             return $this->webService->getRedirectResponse('worker/index');
@@ -144,6 +159,38 @@ final class WorkerController extends BaseController
             return $this->webViewRenderer->render('__view', $parameters);
         }
         return $this->webService->getRedirectResponse('worker/index');
+    }
+
+    /**
+     * The businesses a worker can be registered under: id => name.
+     *
+     * @return array<int, string>
+     */
+    private function businessOptions(CompanyRepository $companyRepository): array
+    {
+        $options = [];
+        /** @var iterable<array-key, Company> $companies */
+        $companies = $companyRepository->findAllPreloaded()->read();
+        foreach ($companies as $company) {
+            $options[$company->reqId()] = (string) $company->getName();
+        }
+        return $options;
+    }
+
+    /**
+     * @return array<int, string> worker id => the business names, comma separated
+     */
+    private function businessNamesByWorker(CompanyRepository $companyRepository): array
+    {
+        $options = $this->businessOptions($companyRepository);
+        $names = [];
+        foreach ($this->workerCompanyService->companyIdsByWorker() as $workerId => $companyIds) {
+            $names[$workerId] = implode(', ', array_map(
+                static fn (int $id): string => $options[$id] ?? ('#' . $id),
+                $companyIds
+            ));
+        }
+        return $names;
     }
 
     private function worker(int $worker_id, WorkerRepository $workerRepository): ?Worker

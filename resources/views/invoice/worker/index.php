@@ -19,6 +19,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var App\Infrastructure\Persistence\Worker\Worker $worker
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
+ * @var array<int, string> $businessNames worker id => the businesses it is registered under
  * @var string $alert
  * @var string $csrf
  * @var OffsetPaginator $paginator
@@ -53,6 +54,12 @@ $columns = [
         property: 'lastname',
         header: $translator->translate('worker.lastname'),
         content: static fn (Worker $model) => Html::encode($model->getLastname()),
+    ),
+    new DataColumn(
+        property: 'company',
+        header: $translator->translate('worker.company'),
+        content: static fn (Worker $model): string => Html::encode($businessNames[$model->reqId()] ?? $translator->translate('worker.company.none')),
+        encodeContent: false,
     ),
     new DataColumn(
         property: 'active',

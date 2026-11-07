@@ -8,6 +8,7 @@ use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\Worker\WorkerForm $form
+ * @var array<int, string> $businesses
  * @var App\Widget\Button $button
  * @var Yiisoft\View\View $this
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -58,6 +59,16 @@ use Yiisoft\Html\Tag\Form;
                     <?= Field::text($form, 'lastname')
     ->label($translator->translate('worker.lastname'))
     ->value(Html::encode($form->getLastname() ?? ''));
+?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3']); ?>
+                    <?= Field::select($form, 'company_id')
+    ->label($translator->translate('worker.company'))
+    ->addInputAttributes(['class' => 'form-select', 'id' => 'company_id'])
+    ->value(Html::encode($form->getCompanyId() ?? ''))
+    ->optionsData($businesses, true)
+    ->prompt($translator->translate('worker.company.none'))
+    ->hint($translator->translate('worker.company.hint'));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
