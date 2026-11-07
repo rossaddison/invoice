@@ -497,4 +497,48 @@ final class InvWorkerAllocationServiceTest
         Assert::false($row->isCarded());
         Assert::null($row->getCardedAt());
     }
+
+    private function duplicateKey(): \Cycle\Database\Exception\StatementException\ConstrainException
+    {
+        return new \Cycle\Database\Exception\StatementException\ConstrainException(
+            new \PDOException('Duplicate entry for key inv_id_side'),
+            'INSERT INTO inv_worker_allocation'
+        );
+    }
+
+    public function whenTwoRequestsRaceTheLoserTakesTheWinnersRowAndTheLaterTapWins(): void
+    {
+        // our read saw no row for the front, but another request inserted one (worker 8) first
+        $winner = $this->row(AllocationSide::Front, 8);
+        $repository = $this->repository([]);
+        $saved = [];
+        $repository->shouldReceive('save')->twice()->andReturnUsing(function (InvWorkerAllocation $a) use (&$saved): void {
+            $saved[] = $a;
+            if (1 === count($saved)) {
+                throw $this->duplicateKey();   // the unique (inv_id, side) index rejects our insert
+            }
+        });
+        $repository->shouldReceive('repoForInvSidequery')->with(self::INV, AllocationSide::Front)->andReturn($winner);
+
+        $result = (new InvWorkerAllocationService($repository))->allocate(self::INV, AllocationSide::Front, 7);
+
+        // still one row for the side: the winner's, restarted for worker 7 (the later tap)
+        Assert::same($result, $winner);
+        Assert::same($winner->reqWorkerId(), 7);
+        Assert::same($saved[1], $winner);
+    }
+
+    public function aConstraintErrorWithNoRowForTheSideIsARealErrorAndIsNotSwallowed(): void
+    {
+        $repository = $this->repository([]);
+        $repository->shouldReceive('save')->once()->andThrow($this->duplicateKey());
+        $repository->shouldReceive('repoForInvSidequery')->andReturn(null);
+
+        try {
+            (new InvWorkerAllocationService($repository))->allocate(self::INV, AllocationSide::Front, 7);
+            Assert::true(false);
+        } catch (\Cycle\Database\Exception\StatementException\ConstrainException) {
+            Assert::true(true);
+        }
+    }
 }

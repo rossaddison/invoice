@@ -11,6 +11,7 @@ use App\Invoice\Enum\PostponeReason;
 use App\Invoice\InvWorkerAllocation\InvWorkerAllocationRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Table\Index;
 use DateTimeImmutable;
 
 /**
@@ -28,17 +29,22 @@ use DateTimeImmutable;
  * inv_id and the two worker ids are plain scalar FKs, deliberately not Cycle
  * `#[BelongsTo]` relations, matching Dwelling/Client::$dwelling_id.
  *
- * No `#[Index]` yet, deliberately: with MergeIndexes registered in STAGE_INDEX
- * (rossaddison/yii-cycle-1, see docs/CYCLE_ORM_GENTOR_RELATION_KEY_RESOLUTION_
- * NOVEMBER_2026.md) an index on a table that does not exist in the database
- * yet fails the whole schema build with "Undefined column" -- which would
- * take the app down on a fresh `rm runtime/schema.php`. One worker per
- * (inv_id, side) is enforced by InvWorkerAllocationService::allocate() for
- * now; add `#[Index(columns: ['inv_id', 'side'], unique: true)]` and
- * `#[Index(columns: ['worker_id'])]` once the table exists (or the ordering
- * is fixed in the fork).
+ * One worker per (inv_id, side) is enforced by the database, not only by
+ * InvWorkerAllocationService::allocate(): two requests at the same moment (the lead on one
+ * device, an admin on another) could both read "no row for this side yet" and both insert, and
+ * the rest of the code assumes at most one row per side. The unique index makes the second
+ * insert fail, and allocate() then re-reads the winner and updates it. The index on worker_id
+ * serves the lookup behind "which houses does this worker see".
+ *
+ * These were added after the table existed (the table was first shipped index-free: with
+ * MergeIndexes registered in STAGE_INDEX in rossaddison/yii-cycle-1 an index on a table that
+ * does not yet exist can fail the whole schema build with "Undefined column"). Creating the
+ * unique index fails if duplicate (inv_id, side) rows already exist, so check first:
+ * SELECT inv_id, side, COUNT(*) FROM inv_worker_allocation GROUP BY inv_id, side HAVING COUNT(*) > 1
  */
 #[Entity(repository: InvWorkerAllocationRepository::class)]
+#[Index(columns: ['inv_id', 'side'], unique: true)]
+#[Index(columns: ['worker_id'])]
 class InvWorkerAllocation
 {
     use RequireId;

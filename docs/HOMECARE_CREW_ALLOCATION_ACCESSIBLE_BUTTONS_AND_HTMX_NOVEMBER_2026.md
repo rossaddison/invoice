@@ -195,6 +195,39 @@ it simply shows no side lines until the worker taps **Download for Offline** aga
 service worker's cache name is bumped to `homecare-offline-shell-v2` so installed workers fetch
 the new shell instead of serving the old precached one. No schema change.
 
+## One worker per side, enforced by the database
+
+"One worker per side of a house" used to be enforced only by `InvWorkerAllocationService::allocate()`:
+read the house's rows, find none for the side, insert. Two requests at the same instant (the lead on
+one device, an admin on another) could both find none and both insert, leaving two rows for one side;
+the rest of the code assumes at most one. The fast-tap queue only serialises taps within one browser
+tab, so it cannot prevent this.
+
+`inv_worker_allocation` now has a **unique index on `(inv_id, side)`** and an index on `worker_id`
+(which serves the "which houses does this worker see" lookup). `allocate()` treats the unique
+violation (`Cycle\Database\Exception\StatementException\ConstrainException`) as "lost a race": it
+re-reads the row that got in first and restarts it for its own worker, so the **later tap wins** and
+there is still one row. A constraint error with no row for the side is a real error and is rethrown.
+
+Measured on the local database by racing two real PHP processes at the same instant on the same
+house and side: **without the index every race (12 of 12) left two rows** and no error; **with it,
+30 of 30 left exactly one row** (the constraint rejected one insert in every round and the loser
+recovered), with no errors and both workers winning in different rounds.
+
+The index was added after the table existed. The table was first shipped index-free, because an
+index on a table that does not yet exist could fail the whole schema build in the fork's
+`MergeIndexes` ordering; adding one to an existing table worked.
+
+**Deploying:** a unique index cannot be created if duplicate rows already exist, and the schema sync
+would then fail at boot. Check the production database FIRST:
+
+```sql
+SELECT inv_id, side, COUNT(*) FROM inv_worker_allocation GROUP BY inv_id, side HAVING COUNT(*) > 1;
+```
+
+It must return nothing. If it returns rows, remove the unwanted duplicates (keep the one that is
+correct) before the sync. Then `BUILD_DATABASE=true`, reload once, set it back.
+
 ## Verification
 
 Testo (including `AllocationButtonsTest`, `AllocationCellResponderTest` and

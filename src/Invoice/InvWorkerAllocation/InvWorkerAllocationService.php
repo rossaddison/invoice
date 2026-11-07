@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\InvWorkerAllocation\InvWorkerAllocation;
 use App\Invoice\Enum\AllocationSide;
 use App\Invoice\Enum\AllocationStatus;
 use App\Invoice\Enum\PostponeReason;
+use Cycle\Database\Exception\StatementException\ConstrainException;
 use DateTimeImmutable;
 
 /**
@@ -32,6 +33,11 @@ final readonly class InvWorkerAllocationService
      * cannot coexist with this one is removed; an existing allocation on this
      * side is reused (and restarted when the worker changes or it was already
      * settled), so a repeat of the same call changes nothing.
+     *
+     * Two requests at the same moment can both find no row for the side and both insert; the
+     * unique (inv_id, side) index lets only one in. The other then takes the row that got in
+     * first and restarts it for its own worker, so the later tap wins and there is still only
+     * one row for the side.
      */
     public function allocate(
         int $invId,
@@ -50,9 +56,14 @@ final readonly class InvWorkerAllocationService
             }
         }
         if (null === $existing) {
-            $allocation = new InvWorkerAllocation($invId, $side->value, $workerId, $at);
-            $this->repository->save($allocation);
-            return $allocation;
+            try {
+                $allocation = new InvWorkerAllocation($invId, $side->value, $workerId, $at);
+                $this->repository->save($allocation);
+                return $allocation;
+            } catch (ConstrainException $e) {
+                // lost the race: update the row that got in first (any other constraint is a real error)
+                $existing = $this->repository->repoForInvSidequery($invId, $side) ?? throw $e;
+            }
         }
         if ($existing->reqWorkerId() !== $workerId || $existing->isDecided()) {
             $existing->allocateTo($workerId, $at);
