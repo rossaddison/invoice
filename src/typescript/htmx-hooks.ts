@@ -10,6 +10,7 @@ import { initMultiDatePicker } from './multi-date-picker.js';
 import { initClientAddresses } from './client-addresses.js';
 import { initTooltips } from './scripts.js';
 import { collapseAllocationSidesOnPhones } from './alloc-collapse.js';
+import { initAllocationRequestQueue } from './alloc-queue.js';
 
 interface HtmxAfterRequestDetail {
     successful: boolean;
@@ -74,6 +75,9 @@ export function initHtmxHooks(): void {
  */
 function initAllocationCellHooks(): void {
     const isCell = (el: unknown): el is HTMLElement => el instanceof HTMLElement && el.id.startsWith('alloc-');
+
+    // taps on one cell go to the server one at a time, in the order tapped
+    initAllocationRequestQueue();
 
     // a tooltip open on the tapped button would be orphaned when its button is replaced
     document.body.addEventListener('htmx:beforeSwap', ((e: CustomEvent<{ target?: unknown }>) => {

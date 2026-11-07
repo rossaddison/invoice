@@ -60,8 +60,20 @@ house is never rewritten; its derived chips are shown but disabled.
 - Without htmx or JavaScript the forms still POST and redirect. A failed
   post reloads the page so a stale cell never looks right. Tooltips are
   disposed before a swap and re-initialised after it.
-- Known limits: only the cell updates (other columns such as the send gate
-  refresh on the next load), and two very fast taps can finish out of order.
+- Known limit: only the cell updates (other columns such as the send gate
+  refresh on the next load).
+- **Fast taps are serialised per cell** (`alloc-queue.ts`): while one request for a
+  house's cell is in flight, later taps on that cell are held and replayed in the order
+  tapped once its reply has been swapped in. Otherwise two quick taps were parallel
+  requests: the server could finish them in either order (the last write wins), and the
+  second tap's reply landed in a cell the first reply had already replaced, so the screen
+  stayed stale. htmx's own `hx-sync` queue cannot do this, because every tap swaps the
+  cell it came from out of the page and htmx will not issue a queued request whose element
+  is gone. Different houses never wait for each other, a lock older than 20 seconds is
+  ignored so a lost reply cannot freeze a cell, and a tap that cannot be replayed is let
+  through rather than dropped. Checked in a real browser (Chromium + real htmx): without
+  it the second tap's result was lost from the screen; with it the server handled A then B
+  and the screen ended on B, three runs in a row.
 
 ## Admin override on inv/index
 
