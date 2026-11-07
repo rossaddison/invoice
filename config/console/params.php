@@ -9,6 +9,7 @@ use App\Command\Invoice\GeneratorTruncateCommand;
 use App\Command\Invoice\InvTruncate1Command;
 use App\Command\Invoice\ItemsCommand;
 use App\Command\Invoice\NonUserRelatedTruncate4Command;
+use App\Command\Invoice\HomeCareSeedDemoCommand;
 use App\Command\Invoice\InvWorkerAllocationBackfillCommand;
 use App\Command\Invoice\ProductSeedDemoCommand;
 use App\Command\Invoice\QuoteTruncate2Command;
@@ -76,6 +77,7 @@ return [
             'invoice/items' => ItemsCommand::class,
             'product/seed-demo' => ProductSeedDemoCommand::class,
             'homecare/backfill-allocations' => InvWorkerAllocationBackfillCommand::class,
+            'homecare/seed-demo' => HomeCareSeedDemoCommand::class,
             'invoice/render-pdf' => RenderInvoicePdfCommand::class,
             'invoice/setting/truncate' => SettingTruncateCommand::class,
             'invoice/generator/truncate' => GeneratorTruncateCommand::class,
