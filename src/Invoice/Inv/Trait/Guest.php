@@ -410,6 +410,8 @@ trait Guest
             'allocations' => $homeCare->allocations,
             'workerNames' => $homeCare->workerNames(),
             'leadWorkerId' => $homeCare->leadWorkerId(),
+            'crewIds' => $homeCare->crewIds(),
+            'crewFrontBack' => $homeCare->crewFrontBack(),
             'invs' => $invs,
             'label' => $label,
             // the guest will not have access to the pageSizeLimiter

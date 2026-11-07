@@ -12,6 +12,7 @@ use App\Infrastructure\Persistence\Worker\Worker;
 use App\Invoice\Enum\AllocationSide;
 use App\Invoice\Enum\AllocationStatus;
 use App\Invoice\Enum\PostponeReason;
+use App\Invoice\Inv\HomeCareCrew;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\Inv\WorkerInvAccess;
 use App\Invoice\InvWorkerAllocation\AllocationSendGate;
@@ -115,7 +116,7 @@ final class HomeCareAllocationActionsTest
     }
 
     /**
-     * @param array<string, string> $body
+     * @param array<string, string|list<string>> $body
      */
     private function request(array $body): ServerRequestInterface&m\MockInterface
     {
@@ -487,5 +488,47 @@ final class HomeCareAllocationActionsTest
         Assert::same($result, $redirect);
         Assert::same($allocation->getStatus(), AllocationStatus::Completed);
         Assert::same($this->flashes->getArrayCopy(), [['warning', 'allocation.already.settled']]);
+    }
+
+    private function activeWorkers(): WorkerRepository&m\MockInterface
+    {
+        /** @var WorkerRepository&m\MockInterface $wR */
+        $wR = m::mock(WorkerRepository::class);
+        $wR->shouldReceive('findAllActive')->andReturn([$this->worker(1), $this->worker(2), $this->worker(3)]);
+        return $wR;
+    }
+
+    public function theLeadSavesTheCrewAndFrontBackModeFilteredToActiveWorkers(): void
+    {
+        [$webService, , $redirect] = $this->webService();
+        /** @var HomeCareCrew&m\MockInterface $crew */
+        $crew = m::mock(HomeCareCrew::class);
+        $crew->shouldReceive('save')->once()->with([2, 1, 99], true, [1, 2, 3]);
+
+        $result = $this->harness($webService)->setCrew(
+            $this->request(['crew' => ['2', '1', '99'], 'front_back' => '1']),
+            $this->access($this->worker(1), 1, true),
+            $this->activeWorkers(),
+            $crew,
+        );
+
+        Assert::same($result, $redirect);
+    }
+
+    public function anotherWorkerCannotSetTheCrew(): void
+    {
+        [$webService, $notFound] = $this->webService();
+        /** @var HomeCareCrew&m\MockInterface $crew */
+        $crew = m::mock(HomeCareCrew::class);
+        $crew->shouldNotReceive('save');
+
+        $result = $this->harness($webService)->setCrew(
+            $this->request([]),
+            $this->access($this->worker(7), 1, false),
+            $this->activeWorkers(),
+            $crew,
+        );
+
+        Assert::same($result, $notFound);
     }
 }

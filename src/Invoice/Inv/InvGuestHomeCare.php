@@ -19,6 +19,7 @@ final readonly class InvGuestHomeCare
         public InvWorkerAllocationService $allocations,
         private WorkerInvAccess $access,
         private WorkerRepository $wR,
+        private HomeCareCrew $crew,
     ) {
     }
 
@@ -34,6 +35,21 @@ final readonly class InvGuestHomeCare
             $names[$worker->reqId()] = trim($worker->getFirstname() . ' ' . $worker->getLastname());
         }
         return $names;
+    }
+
+    /**
+     * Today's crew (the lead's chips) and the Front/Back mode.
+     *
+     * @return list<int>
+     */
+    public function crewIds(): array
+    {
+        return $this->crew->workerIds();
+    }
+
+    public function crewFrontBack(): bool
+    {
+        return $this->crew->frontBack();
     }
 
     public function leadWorkerId(): ?int

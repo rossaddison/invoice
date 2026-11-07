@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\User\User;
 use App\Invoice\Enum\AllocationSide;
 use App\Invoice\Enum\AllocationStatus;
 use App\Invoice\Enum\PostponeReason;
+use App\Invoice\Inv\HomeCareCrew;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\Inv\WorkerInvAccess;
 use App\Invoice\InvWorkerAllocation\AllocationSendGate;
@@ -120,6 +121,36 @@ trait HomeCareAllocation
         } catch (\LogicException) {
             $this->flashMessage('warning', $this->translator->translate('allocation.already.settled'));
         }
+        return $this->webService->getRedirectResponse('inv/guest');
+    }
+
+    /**
+     * The lead saves today's crew (two or three workers, the lead included)
+     * and the Front/Back mode that drive the one-tap chips on inv/guest.
+     * Lead only; anyone else gets the same 404.
+     */
+    public function setCrew(
+        Request $request,
+        WorkerInvAccess $access,
+        WR $wR,
+        HomeCareCrew $crew,
+    ): Response {
+        $user = $this->userService->getUser();
+        if (!$access->isLead($user instanceof User ? $user->reqId() : 0)) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $body = $request->getParsedBody();
+        $body = is_array($body) ? $body : [];
+        $activeIds = [];
+        foreach ($wR->findAllActive() as $worker) {
+            $activeIds[] = $worker->reqId();
+        }
+        $crew->save(
+            array_values(array_map('intval', (array) ($body['crew'] ?? []))),
+            '1' === (string) ($body['front_back'] ?? ''),
+            $activeIds,
+        );
+        $this->flashMessage('info', $this->translator->translate('homecare.crew.saved'));
         return $this->webService->getRedirectResponse('inv/guest');
     }
 }

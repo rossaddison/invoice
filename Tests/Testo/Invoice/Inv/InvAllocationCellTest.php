@@ -50,9 +50,15 @@ final class InvAllocationCellTest
 
     /**
      * @param list<InvWorkerAllocation> $allocations
+     * @param list<int> $crew
      */
-    private function cell(array $allocations, int $viewer, ?int $lead = self::LEAD): InvAllocationCell
-    {
+    private function cell(
+        array $allocations,
+        int $viewer,
+        ?int $lead = self::LEAD,
+        array $crew = [],
+        bool $frontBack = false,
+    ): InvAllocationCell {
         /** @var InvWorkerAllocationRepositoryInterface&m\MockInterface $repository */
         $repository = m::mock(InvWorkerAllocationRepositoryInterface::class);
         $repository->shouldReceive('repoForInvquery')->with(self::INV)->andReturn($allocations);
@@ -78,6 +84,8 @@ final class InvAllocationCellTest
             $viewer,
             $lead,
             self::NAMES,
+            $crew,
+            $frontBack,
         );
     }
 
@@ -174,5 +182,74 @@ final class InvAllocationCellTest
 
         Assert::true(str_contains($forLead, 'inv/allocateside'));
         Assert::same($forWorker, '');
+    }
+
+    public function withACrewTheLeadGetsOneTapChipsForTheWholeHouseInsteadOfTheDropdown(): void
+    {
+        $html = $this->cell([], self::LEAD, self::LEAD, [1, 7, 8])->render($this->inv());
+
+        Assert::true(str_contains($html, 'action="/inv/allocateside/12"'));
+        Assert::true(str_contains($html, 'name="side" value="both"'));
+        foreach (['Lee Lead', 'Dave Smith', 'Sam &lt;b&gt;Jones&lt;/b&gt;'] as $name) {
+            Assert::true(str_contains($html, '>' . $name . '</button>'));
+        }
+        Assert::true(str_contains($html, 'name="worker_id" value="7"'));
+        // chips replace the dropdown form
+        Assert::false(str_contains($html, '<select'));
+        Assert::false(str_contains($html, 'name="side"><'));
+        Assert::false(str_contains($html, 'name="side" value="front"'));
+    }
+
+    public function inFrontBackModeThereIsOneChipRowPerSide(): void
+    {
+        $html = $this->cell([], self::LEAD, self::LEAD, [1, 7], true)->render($this->inv());
+
+        Assert::true(str_contains($html, 'name="side" value="front"'));
+        Assert::true(str_contains($html, 'name="side" value="back"'));
+        Assert::false(str_contains($html, 'name="side" value="both"'));
+        Assert::same(substr_count($html, 'name="side" value="front"'), 2);
+        Assert::same(substr_count($html, 'name="side" value="back"'), 2);
+    }
+
+    public function theAssignedChipIsPressedAndTappingItClearsTheSide(): void
+    {
+        $html = $this->cell(
+            [$this->allocation(3, AllocationSide::Front, self::ME)],
+            self::LEAD,
+            self::LEAD,
+            [1, 7],
+            true,
+        )->render($this->inv());
+
+        // Dave (7) holds the front: his front chip is pressed and posts an empty worker_id to clear it
+        Assert::true(str_contains($html, 'aria-pressed="true"'));
+        Assert::true(str_contains($html, 'btn btn-sm btn-primary'));
+        Assert::true(str_contains($html, 'name="worker_id" value>'));
+        // the unassigned crew member's chip posts their own id
+        Assert::true(str_contains($html, 'name="worker_id" value="1"'));
+        // the back is unassigned, so no back chip is pressed
+        Assert::same(substr_count($html, 'aria-pressed="true"'), 1);
+    }
+
+    public function aCrewMemberWhoIsNoLongerActiveShowsTheirIdOnTheirChip(): void
+    {
+        $html = $this->cell([], self::LEAD, self::LEAD, [1, 42])->render($this->inv());
+
+        Assert::true(str_contains($html, '>#42</button>'));
+    }
+
+    public function anEmptyCrewFallsBackToTheAllocateDropdown(): void
+    {
+        $html = $this->cell([], self::LEAD, self::LEAD, [])->render($this->inv());
+
+        Assert::true(str_contains($html, 'name="worker_id"'));
+        Assert::true(str_contains($html, '<select'));
+    }
+
+    public function chipsAreOnlyForTheLead(): void
+    {
+        $html = $this->cell([], self::ME, self::LEAD, [1, 7])->render($this->inv());
+
+        Assert::same($html, '');
     }
 }

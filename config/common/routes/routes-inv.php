@@ -222,6 +222,11 @@ return [
             ->middleware(RoutePermission::check(Permissions::VIEW_INV))
             ->action([InvController::class, 'allocateSide'])
             ->name('inv/allocateside'),
+        // Lead only (WorkerInvAccess::isLead() inside the action).
+        Route::methods([Method::POST], '/inv/setcrew')
+            ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+            ->action([InvController::class, 'setCrew'])
+            ->name('inv/setcrew'),
         // Likewise: the allocated worker or the lead, checked in the action.
         Route::methods([Method::POST], '/inv/settleallocation/{allocation_id}')
             ->middleware(RoutePermission::check(Permissions::VIEW_INV))

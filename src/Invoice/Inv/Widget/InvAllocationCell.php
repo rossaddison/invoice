@@ -27,6 +27,8 @@ final readonly class InvAllocationCell
 {
     /**
      * @param array<int, string> $workerNames active worker id => name
+     * @param list<int> $crewIds today's crew; when non-empty the lead gets one-tap chips
+     * @param bool $frontBack whether chips allocate Fronts and Backs separately (else the whole house)
      */
     public function __construct(
         private InvWorkerAllocationService $allocations,
@@ -36,16 +38,67 @@ final readonly class InvAllocationCell
         private int $viewerWorkerId,
         private ?int $leadWorkerId,
         private array $workerNames,
+        private array $crewIds = [],
+        private bool $frontBack = false,
     ) {
     }
 
     public function render(Inv $inv): string
     {
         $html = '';
-        foreach ($this->allocations->forInv($inv->reqId()) as $allocation) {
+        $rows = $this->allocations->forInv($inv->reqId());
+        foreach ($rows as $allocation) {
             $html .= $this->renderAllocation($allocation, $inv);
         }
-        return $html . ($this->isLead() ? $this->renderAllocateForm($inv) : '');
+        if (!$this->isLead()) {
+            return $html;
+        }
+        return $html . ([] !== $this->crewIds ? $this->renderChips($inv, $rows) : $this->renderAllocateForm($inv));
+    }
+
+    /**
+     * One row of crew chips per side being allocated (the whole house, or
+     * Fronts and Backs). Tapping an unassigned chip gives the side to that
+     * worker; tapping the assigned one clears it.
+     *
+     * @param list<InvWorkerAllocation> $rows
+     */
+    private function renderChips(Inv $inv, array $rows): string
+    {
+        $html = '';
+        foreach ($this->frontBack ? [AllocationSide::Front, AllocationSide::Back] : [AllocationSide::Both] as $side) {
+            $assigned = null;
+            foreach ($rows as $row) {
+                $row->getSide() === $side && $assigned = $row->reqWorkerId();
+            }
+            $chips = '';
+            foreach ($this->crewIds as $workerId) {
+                $chips .= $this->chip($inv, $side, $workerId, $assigned === $workerId);
+            }
+            $html .= Html::div(
+                Html::span($this->translator->translate('allocation.side.' . $side->value), ['class' => 'fw-semibold me-1'])->render() . $chips,
+                ['class' => 'd-flex flex-wrap align-items-center gap-1 mt-1']
+            )->encode(false)->render();
+        }
+        return Html::div($html, ['class' => 'border-top pt-1 mt-1'])->encode(false)->render();
+    }
+
+    private function chip(Inv $inv, AllocationSide $side, int $workerId, bool $assigned): string
+    {
+        $name = $this->workerNames[$workerId] ?? ('#' . $workerId);
+        $hidden = Html::hiddenInput('side', $side->value)->render()
+            . Html::hiddenInput('worker_id', $assigned ? '' : (string) $workerId)->render();
+        $button = Html::tag('button', $name, [
+            'type' => 'submit',
+            'class' => 'btn btn-sm ' . ($assigned ? 'btn-primary' : 'btn-outline-secondary'),
+            'aria-pressed' => $assigned ? 'true' : 'false',
+            'aria-label' => $this->translator->translate('allocation.side.' . $side->value) . ' ' . $name . ' #' . ($inv->getNumber() ?? ''),
+        ])->render();
+        return $this->form(
+            $this->urlGenerator->generate('inv/allocateside', ['inv_id' => $inv->reqId()]),
+            $hidden . $button,
+            'd-inline'
+        );
     }
 
     private function isLead(): bool

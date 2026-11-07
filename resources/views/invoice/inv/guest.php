@@ -6,6 +6,7 @@ use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Dwelling\DwellingPostcodeLink;
 use App\Invoice\Enum\DoNotSendReason;
 use App\Invoice\Inv\Widget\InvAllocationCell;
+use App\Invoice\Inv\Widget\InvCrewToolbar;
 use App\Widget\Button;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
@@ -38,6 +39,8 @@ const NATIVE_RESET_INV_AMOUNT_FILTER = 'native-reset inv-amount-filter';
  * @var App\Invoice\InvWorkerAllocation\InvWorkerAllocationService $allocations
  * @var array<int, string> $workerNames
  * @var int|null $leadWorkerId
+ * @var list<int> $crewIds
+ * @var bool $crewFrontBack
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Inv\InvRepository $iR
  * @var App\Invoice\InvAmount\InvAmountRepository $iaR
@@ -140,8 +143,15 @@ $allocationCell = $worker !== null
         $worker->reqId(),
         $leadWorkerId,
         $workerNames,
+        $crewIds,
+        $crewFrontBack,
     )
     : null;
+// The lead's "today's crew" form above the grid (the lead is the one worker
+// whose id is the homecare_lead_worker_id setting).
+$crewToolbar = $worker !== null && $leadWorkerId !== null && $leadWorkerId === $worker->reqId()
+    ? new InvCrewToolbar($urlGenerator, $translator, $csrf, $workerNames, $crewIds, $crewFrontBack)->render()
+    : '';
 // Build enabled payment gateways list once for use in the paid column
 $enabledGateways = $s->paymentGatewaysEnabledDriverList();
 
@@ -710,6 +720,7 @@ $order =  OrderHelper::stringToArray($sortString);
 $urlCreator->__invoke([], $order);
 
 echo $homeCareInstallBanner;
+echo $crewToolbar;
 
 // Per-observer preference (UserInv.sticky_grid_header), not the
 // admin-controlled shared 'grid_sticky_header' setting the four

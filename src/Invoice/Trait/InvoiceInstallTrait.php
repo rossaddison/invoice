@@ -171,6 +171,11 @@ trait InvoiceInstallTrait
             // crew and may settle anyone's allocation. 0 = not configured, in
             // which case nobody can allocate. See WorkerInvAccess::isLead().
             'homecare_lead_worker_id' => 0,
+            // Today's crew: up to three worker ids (comma-separated, the lead
+            // included) and whether the lead allocates Fronts/Backs separately
+            // ('1') or whole houses ('0'). See Inv\HomeCareCrew.
+            'homecare_crew_worker_ids' => '',
+            'homecare_crew_front_back' => '0',
             // Comma-separated list of inv/index column keys to hide, only
             // while homecare_auto_invoice_enabled is on — the general
             // desktop grid for non-HomeCare businesses is never affected.
