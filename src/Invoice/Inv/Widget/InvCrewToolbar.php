@@ -29,6 +29,7 @@ final readonly class InvCrewToolbar
         private array $workerNames,
         private array $crewIds,
         private bool $frontBack,
+        private bool $admin = false,
     ) {
     }
 
@@ -61,7 +62,8 @@ final readonly class InvCrewToolbar
                 'hx-swap' => 'none',
                 'data-hx-refresh-main' => '1',
             ])
-            ->content($inner)
+            // an admin's inv/index form says so, so the server returns to inv/index
+            ->content(($this->admin ? Html::hiddenInput('context', 'index')->render() : '') . $inner)
             ->encode(false)
             ->render();
     }

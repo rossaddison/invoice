@@ -53,7 +53,7 @@ final class HomeCareAllocationActionsTest
         $this->flashes = new \ArrayObject();
     }
 
-    private function harness(WebControllerService&m\MockInterface $webService): HomeCareAllocationTestHarness
+    private function harness(WebControllerService&m\MockInterface $webService, bool $admin = false): HomeCareAllocationTestHarness
     {
         /** @var UserService&m\MockInterface $userService */
         $userService = m::mock(UserService::class);
@@ -61,7 +61,7 @@ final class HomeCareAllocationActionsTest
         $user->shouldReceive('reqId')->andReturn(self::USER);
         $userService->shouldReceive('getUser')->andReturn($user);
         $userService->shouldReceive('hasPermission')->with(Permissions::VIEW_INV)->andReturn(true);
-        $userService->shouldReceive('hasPermission')->with(Permissions::EDIT_INV)->andReturn(false);
+        $userService->shouldReceive('hasPermission')->with(Permissions::EDIT_INV)->andReturn($admin);
 
         /** @var SessionInterface&m\MockInterface $session */
         $session = m::mock(SessionInterface::class);
@@ -586,7 +586,7 @@ final class HomeCareAllocationActionsTest
         $cell = m::mock(Response::class);
         $responder = $this->responder(true);
         // the lead (worker 1) is the viewer
-        $responder->shouldReceive('cell')->once()->with($inv, 1)->andReturn($cell);
+        $responder->shouldReceive('cell')->once()->with($inv, 1, false)->andReturn($cell);
         $harness = $this->harness($webService);
         $harness->allocationCells = $responder;
 
@@ -617,7 +617,7 @@ final class HomeCareAllocationActionsTest
         /** @var Response&m\MockInterface $cell */
         $cell = m::mock(Response::class);
         $responder = $this->responder(true);
-        $responder->shouldReceive('cell')->once()->with($inv, 7)->andReturn($cell);
+        $responder->shouldReceive('cell')->once()->with($inv, 7, false)->andReturn($cell);
         $harness = $this->harness($webService);
         $harness->allocationCells = $responder;
 
@@ -656,5 +656,177 @@ final class HomeCareAllocationActionsTest
 
         Assert::same($result, $none);
         Assert::same($this->flashes->getArrayCopy(), []);
+    }
+
+    public function anAdminWhoIsNotTheLeadCanAllocateASideFromInvIndexAndReturnsThere(): void
+    {
+        [$webService] = $this->webService();
+        /** @var Response&m\MockInterface $indexRedirect */
+        $indexRedirect = m::mock(Response::class);
+        $webService->shouldReceive('getRedirectResponse')->with('inv/index')->andReturn($indexRedirect);
+        $inv = $this->inv();
+        $iR = $this->invRepository($inv);
+        $iR->shouldReceive('save')->once()->with($inv);
+        $allocations = $this->allocations();
+        $allocations->shouldReceive('splitWholeHouse')->once()->with(self::INV)->andReturn(true);
+        $allocations->shouldReceive('allocate')->once()->with(self::INV, AllocationSide::Back, 7);
+        $allocations->shouldReceive('legacyWorkerId')->andReturn(null);
+        $allocations->shouldReceive('hasAllocations')->andReturn(true);
+
+        // not the lead (isLead false) and no worker row of their own: admin permission is enough
+        $result = $this->harness($webService, true)->allocateSide(
+            $this->request(['side' => 'back', 'worker_id' => '7', 'context' => 'index']),
+            '12',
+            $iR,
+            $this->workerRepository($this->worker(7), 7),
+            $this->access(null, 1, false),
+            $allocations,
+            $this->gate(1),
+        );
+
+        Assert::same($result, $indexRedirect);
+        Assert::same($this->flashes->getArrayCopy(), [['info', 'worker.assigned']]);
+    }
+
+    public function anAdminPostingWithoutTheIndexContextStillGoesBackToInvGuest(): void
+    {
+        [$webService, , $redirect] = $this->webService();
+        $inv = $this->inv();
+        $iR = $this->invRepository($inv);
+        $iR->shouldReceive('save')->once()->with($inv);
+        $allocations = $this->allocations();
+        $allocations->shouldReceive('splitWholeHouse')->andReturn(true);
+        $allocations->shouldReceive('allocate')->once();
+        $allocations->shouldReceive('legacyWorkerId')->andReturn(null);
+        $allocations->shouldReceive('hasAllocations')->andReturn(true);
+
+        $result = $this->harness($webService, true)->allocateSide(
+            $this->request(['side' => 'back', 'worker_id' => '7']),
+            '12',
+            $iR,
+            $this->workerRepository($this->worker(7), 7),
+            $this->access(null, 1, false),
+            $allocations,
+            $this->gate(1),
+        );
+
+        Assert::same($result, $redirect);
+    }
+
+    public function theIndexContextAloneGrantsNothingToANonAdmin(): void
+    {
+        [$webService, $notFound] = $this->webService();
+        $allocations = $this->allocations();
+        $allocations->shouldNotReceive('allocate');
+
+        $result = $this->harness($webService)->allocateSide(
+            $this->request(['side' => 'back', 'worker_id' => '7', 'context' => 'index']),
+            '12',
+            $this->invRepository($this->inv()),
+            $this->workerRepository($this->worker(7), 7),
+            $this->access(null, 1, false),
+            $allocations,
+            $this->gate(0),
+        );
+
+        Assert::same($result, $notFound);
+    }
+
+    public function anHtmxAdminAllocationRendersTheAdminCell(): void
+    {
+        [$webService] = $this->webService();
+        $inv = $this->inv();
+        $iR = $this->invRepository($inv);
+        $iR->shouldReceive('save')->once();
+        $allocations = $this->allocations();
+        $allocations->shouldReceive('splitWholeHouse')->andReturn(true);
+        $allocations->shouldReceive('allocate')->once();
+        $allocations->shouldReceive('legacyWorkerId')->andReturn(null);
+        $allocations->shouldReceive('hasAllocations')->andReturn(true);
+        /** @var Response&m\MockInterface $cell */
+        $cell = m::mock(Response::class);
+        $responder = $this->responder(true);
+        $responder->shouldReceive('cell')->once()->with($inv, 1, true)->andReturn($cell);
+        $harness = $this->harness($webService, true);
+        $harness->allocationCells = $responder;
+
+        $result = $harness->allocateSide(
+            $this->request(['side' => 'back', 'worker_id' => '7', 'context' => 'index']),
+            '12',
+            $iR,
+            $this->workerRepository($this->worker(7), 7),
+            $this->access(null, 1, false),
+            $allocations,
+            $this->gate(1),
+        );
+
+        Assert::same($result, $cell);
+    }
+
+    public function anAdminCanSettleAnyonesSideRecordedAsTheOfficeAndReturnsToInvIndex(): void
+    {
+        [$webService] = $this->webService();
+        /** @var Response&m\MockInterface $indexRedirect */
+        $indexRedirect = m::mock(Response::class);
+        $webService->shouldReceive('getRedirectResponse')->with('inv/index')->andReturn($indexRedirect);
+        $allocation = $this->allocation(7);
+        [$service, $repository] = $this->realService($allocation);
+        $repository->shouldReceive('save')->once()->with($allocation);
+
+        // no worker row for the admin, and the side belongs to worker 7
+        $result = $this->harness($webService, true)->settleAllocation(
+            $this->request(['status' => 'postponed', 'reason' => 'no_access', 'context' => 'index']),
+            '3',
+            $this->access(null, 1, false),
+            $service,
+            $this->settleInvRepository(1),
+            $this->gate(1),
+        );
+
+        Assert::same($result, $indexRedirect);
+        Assert::same($allocation->getStatus(), AllocationStatus::Postponed);
+        Assert::same($allocation->getPostponeReason(), PostponeReason::NoAccess);
+        // decided by the office, not by a worker
+        Assert::null($allocation->getDecidedByWorkerId());
+    }
+
+    public function aLeadWhoIsAlsoAnAdminStillSettlesUnderTheirOwnWorkerId(): void
+    {
+        [$webService, , $redirect] = $this->webService();
+        $allocation = $this->allocation(7);
+        [$service, $repository] = $this->realService($allocation);
+        $repository->shouldReceive('save')->once()->with($allocation);
+
+        $result = $this->harness($webService, true)->settleAllocation(
+            $this->request(['status' => 'completed']),
+            '3',
+            $this->access($this->worker(1), 1, true),
+            $service,
+            $this->settleInvRepository(1),
+            $this->gate(1),
+        );
+
+        Assert::same($result, $redirect);
+        Assert::same($allocation->getDecidedByWorkerId(), 1);
+    }
+
+    public function anAdminCanSaveTheCrewAndReturnsToInvIndex(): void
+    {
+        [$webService] = $this->webService();
+        /** @var Response&m\MockInterface $indexRedirect */
+        $indexRedirect = m::mock(Response::class);
+        $webService->shouldReceive('getRedirectResponse')->with('inv/index')->andReturn($indexRedirect);
+        /** @var HomeCareCrew&m\MockInterface $crew */
+        $crew = m::mock(HomeCareCrew::class);
+        $crew->shouldReceive('save')->once();
+
+        $result = $this->harness($webService, true)->setCrew(
+            $this->request(['crew' => ['1'], 'front_back' => '1', 'context' => 'index']),
+            $this->access(null, 1, false),
+            $this->activeWorkers(),
+            $crew,
+        );
+
+        Assert::same($result, $indexRedirect);
     }
 }

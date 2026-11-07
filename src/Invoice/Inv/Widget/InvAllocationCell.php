@@ -29,6 +29,8 @@ final readonly class InvAllocationCell
      * @param array<int, string> $workerNames active worker id => name
      * @param list<int> $crewIds today's crew; when non-empty the lead gets one-tap chips
      * @param bool $frontBack whether chips allocate Fronts and Backs separately (else the whole house)
+     * @param bool $admin an admin overrides everything: sees the lead's controls and may settle
+     *     any open side (inv/index), whoever holds it
      */
     public function __construct(
         private InvWorkerAllocationService $allocations,
@@ -40,8 +42,9 @@ final readonly class InvAllocationCell
         array $workerNames,
         private array $crewIds = [],
         private bool $frontBack = false,
+        private bool $admin = false,
     ) {
-        $this->buttons = new AllocationButtons($urlGenerator, $translator, $csrf, $workerNames);
+        $this->buttons = new AllocationButtons($urlGenerator, $translator, $csrf, $workerNames, $admin);
     }
 
     /**
@@ -144,12 +147,12 @@ final readonly class InvAllocationCell
     private function isOpenToViewer(InvWorkerAllocation $allocation): bool
     {
         return AllocationStatus::Allocated === $allocation->getStatus()
-            && $this->allocations->mayDecide($allocation, $this->viewerWorkerId, $this->leadWorkerId);
+            && ($this->admin || $this->allocations->mayDecide($allocation, $this->viewerWorkerId, $this->leadWorkerId));
     }
 
     private function isLead(): bool
     {
-        return null !== $this->leadWorkerId && $this->leadWorkerId === $this->viewerWorkerId;
+        return $this->admin || (null !== $this->leadWorkerId && $this->leadWorkerId === $this->viewerWorkerId);
     }
 
     private function renderAllocation(InvWorkerAllocation $allocation, Inv $inv): string

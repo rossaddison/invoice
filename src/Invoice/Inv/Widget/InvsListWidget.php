@@ -57,6 +57,7 @@ final class InvsListWidget extends Widget
     private ?ETR $etR = null;
     private ?FDR $fdR = null;
     private ?WR $wR = null;
+    private ?InvAllocationCell $allocationCell = null;
     private ?CSR $csR = null;
     private ?DwR $dwR = null;
     private string|\Stringable $csrf = '';
@@ -146,6 +147,17 @@ final class InvsListWidget extends Widget
     {
         $new = clone $this;
         $new->dwR = $dwR;
+        return $new;
+    }
+
+    /**
+     * The admin's per-side allocation controls for the Worker column (null: the plain
+     * whole-house dropdown).
+     */
+    public function withAllocationCell(?InvAllocationCell $allocationCell): static
+    {
+        $new = clone $this;
+        $new->allocationCell = $allocationCell;
         return $new;
     }
 
@@ -304,6 +316,7 @@ final class InvsListWidget extends Widget
             qR:           $this->qR,
             soR:          $this->soR,
             dlR:          $this->dlR,
+            allocationCell: $this->allocationCell,
         ));
 
         $columnCount = count(array_filter(

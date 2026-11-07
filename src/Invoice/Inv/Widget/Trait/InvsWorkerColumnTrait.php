@@ -32,10 +32,16 @@ trait InvsWorkerColumnTrait
         $ug            = $this->urlGenerator;
         $csrf          = $this->csrf;
         $activeWorkers = $p->wR->findAllActive();
+        $allocationCell = $p->allocationCell;
         return new DataColumn(
             'worker_id',
             header: $t->translate('worker'),
-            content: static function (Inv $model) use ($ug, $t, $activeWorkers, $csrf): string {
+            content: static function (Inv $model) use ($ug, $t, $activeWorkers, $csrf, $allocationCell): string {
+                // An admin sees the full per-side controls (chips, settle buttons, allocate form):
+                // the same cell as the lead's inv/guest, with every override.
+                if (null !== $allocationCell) {
+                    return $allocationCell->render($model);
+                }
                 $current = $model->getWorker();
                 $number = $model->getNumber();
                 $options = (new Option())

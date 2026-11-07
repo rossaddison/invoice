@@ -60,6 +60,7 @@ final class InvAllocationCellTest
         ?int $lead = self::LEAD,
         array $crew = [],
         bool $frontBack = false,
+        bool $admin = false,
     ): InvAllocationCell {
         /** @var InvWorkerAllocationRepositoryInterface&m\MockInterface $repository */
         $repository = m::mock(InvWorkerAllocationRepositoryInterface::class);
@@ -88,6 +89,7 @@ final class InvAllocationCellTest
             self::NAMES,
             $crew,
             $frontBack,
+            $admin,
         );
     }
 
@@ -663,5 +665,59 @@ final class InvAllocationCellTest
     public function anEmptyCellIsStillEmptyNotAnEmptyWrapper(): void
     {
         Assert::same($this->cell([], self::ME)->render($this->inv()), '');
+    }
+
+    public function anAdminWhoIsNoWorkerGetsTheLeadsControlsAndMaySettleAnyOpenSide(): void
+    {
+        // viewer 0 (no worker row), nobody is the lead, yet the admin sees the allocate form and
+        // the settle buttons for a side held by worker 7
+        $html = $this->cell([$this->allocation(3, AllocationSide::Front, self::ME)], 0, null, [], false, true)
+            ->render($this->inv());
+
+        Assert::true(str_contains($html, 'hx-post="/inv/allocateside/12"'));
+        Assert::true(str_contains($html, 'hx-post="/inv/settleallocation/3"'));
+        Assert::true(str_contains($html, '<select'));
+    }
+
+    public function anAdminGetsTheCrewChipsWhenACrewIsSaved(): void
+    {
+        $html = $this->cell([], 0, null, [1, 7], true, true)->render($this->inv());
+
+        Assert::true(str_contains($html, '>○ Dave Smith</button>'));
+        Assert::same(substr_count($html, 'name="side" value="front"'), 2);
+        Assert::false(str_contains($html, '<select'));
+    }
+
+    public function everyAdminFormSaysItIsFromInvIndexSoTheServerReturnsThere(): void
+    {
+        $admin = $this->cell([$this->allocation(3, AllocationSide::Front, self::ME)], 0, null, [1, 7], true, true)
+            ->render($this->inv());
+        $fallback = $this->cell([], 0, null, [], false, true)->render($this->inv());
+
+        // 4 chips + 3 settle forms, all carrying the context; and the fallback allocate form
+        Assert::same(substr_count($admin, 'name="context" value="index"'), 7);
+        Assert::same(substr_count($fallback, 'name="context" value="index"'), 1);
+    }
+
+    public function aWorkersOrLeadsFormsCarryNoIndexContext(): void
+    {
+        $html = $this->cell([$this->allocation(3, AllocationSide::Front, self::ME)], self::LEAD, self::LEAD, [1, 7], true)
+            ->render($this->inv());
+
+        Assert::false(str_contains($html, 'name="context"'));
+    }
+
+    public function aSettledSideStillOffersNoControlsToAnAdmin(): void
+    {
+        $html = $this->cell(
+            [$this->allocation(3, AllocationSide::Front, self::ME, AllocationStatus::Completed)],
+            0,
+            null,
+            [],
+            false,
+            true,
+        )->render($this->inv());
+
+        Assert::false(str_contains($html, 'hx-post="/inv/settleallocation/3"'));
     }
 }

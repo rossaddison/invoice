@@ -6,6 +6,7 @@ namespace App\Invoice\Inv;
 
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Inv\Widget\InvAllocationCell;
+use App\Invoice\Inv\Widget\InvCrewToolbar;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,9 +41,38 @@ final readonly class AllocationCellResponder
     /**
      * The invoice's allocation cell as the viewer sees it now.
      */
-    public function cell(Inv $inv, int $viewerWorkerId): ResponseInterface
+    public function cell(Inv $inv, int $viewerWorkerId, bool $admin = false): ResponseInterface
     {
-        $cell = new InvAllocationCell(
+        return $this->html($this->build($viewerWorkerId, $admin)->render($inv));
+    }
+
+    /**
+     * The cell for the admin's inv/index grid: every control, whoever holds the side.
+     */
+    public function adminCell(): InvAllocationCell
+    {
+        return $this->build(0, true);
+    }
+
+    /**
+     * The admin's "today's crew" form for inv/index (the lead's own is on inv/guest).
+     */
+    public function adminCrewToolbar(): string
+    {
+        return new InvCrewToolbar(
+            $this->urlGenerator,
+            $this->translator,
+            $this->csrfToken->getValue(),
+            $this->homeCare->workerNames(),
+            $this->homeCare->crewIds(),
+            $this->homeCare->crewFrontBack(),
+            true,
+        )->render();
+    }
+
+    private function build(int $viewerWorkerId, bool $admin): InvAllocationCell
+    {
+        return new InvAllocationCell(
             $this->homeCare->allocations,
             $this->urlGenerator,
             $this->translator,
@@ -52,8 +82,8 @@ final readonly class AllocationCellResponder
             $this->homeCare->workerNames(),
             $this->homeCare->crewIds(),
             $this->homeCare->crewFrontBack(),
+            $admin,
         );
-        return $this->html($cell->render($inv));
     }
 
     /**

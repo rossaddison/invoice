@@ -219,6 +219,9 @@ final class SetWorkerTestHarness extends BaseController
 {
     use Index;
 
+    // Index::index() reads it for the admin allocation controls; this harness never calls index().
+    public \App\Invoice\Inv\AllocationCellResponder $allocationCells;
+
     private const string NOT_EXERCISED = 'Not exercised by SetWorkerTest.';
 
     private readonly UrlGenerator $url_generator;

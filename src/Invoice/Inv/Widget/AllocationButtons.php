@@ -42,12 +42,15 @@ final readonly class AllocationButtons
 
     /**
      * @param array<int, string> $workerNames active worker id => name
+     * @param bool $admin the admin's inv/index grid: every form says so (context=index), so the
+     *     server replies with, and returns to, the admin's page rather than the worker's
      */
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
         private TranslatorInterface $translator,
         private string|Stringable $csrf,
         private array $workerNames,
+        private bool $admin = false,
     ) {
     }
 
@@ -305,7 +308,7 @@ final readonly class AllocationButtons
                 'hx-target' => '#' . self::cellId($inv->reqId()),
                 'hx-swap' => 'outerHTML',
             ])
-            ->content($inner)
+            ->content(($this->admin ? Html::hiddenInput('context', 'index')->render() : '') . $inner)
             ->encode(false)
             ->render();
     }

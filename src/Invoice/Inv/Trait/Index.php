@@ -13,11 +13,13 @@ use App\Invoice\{
     Inv\InvIndexNavDeps,
     Inv\InvForm,
     Inv\InvRepository as IR,
+    Inv\Widget\InvAllocationCell,
     Inv\Widget\InvsFilterOptions,
     Inv\Widget\InvsListWidget,
     InvRecurring\InvRecurringRepository as IRR,
     Worker\WorkerRepository as WR,
 };
+use App\Auth\Permissions;
 use App\Widget\Bootstrap5ModalInv;
 use Yiisoft\{
     Data\Paginator\OffsetPaginator,
@@ -29,6 +31,9 @@ use Yiisoft\{
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+/**
+ * @property \App\Invoice\Inv\AllocationCellResponder $allocationCells
+ */
 trait Index
 {
     public function index(
@@ -115,6 +120,30 @@ trait Index
     }
 
     /**
+     * An admin overrides everything: with HomeCare on, the Worker column shows the full
+     * per-side allocation controls instead of the single whole-house dropdown. Anyone
+     * without edit.inv (an observer) keeps the plain column.
+     */
+    private function adminAllocationCell(): ?InvAllocationCell
+    {
+        return $this->homeCareAdminControls() ? $this->allocationCells->adminCell() : null;
+    }
+
+    /**
+     * The admin's override of the lead's "today's crew" form, above the grid.
+     */
+    private function adminCrewToolbar(): string
+    {
+        return $this->homeCareAdminControls() ? $this->allocationCells->adminCrewToolbar() : '';
+    }
+
+    private function homeCareAdminControls(): bool
+    {
+        return '1' === $this->sR->getSetting('homecare_auto_invoice_enabled')
+            && $this->userService->hasPermission(Permissions::EDIT_INV);
+    }
+
+    /**
      * The HTMX-partial-refresh branch of index() (in-place pagination/
      * sorting) — extracted alongside buildIndexParameters() so index()
      * itself stays under SonarQube's php:S138 150-line ceiling; see
@@ -136,6 +165,7 @@ trait Index
                 ->withSR($this->sR)
                 ->withEmailRepositories($nav->etR, $nav->fdR)
                 ->withWorkerRepository($nav->wR)
+                ->withAllocationCell($this->adminAllocationCell())
                 ->withCategorySecondaryRepository($nav->csR)
                 ->withDwellingRepository($nav->dwR)
                 ->withCsrf((string) ($request->getParsedBody()['_csrf'] ?? ''))
@@ -199,6 +229,8 @@ trait Index
             'dlR'                => $nav->dlR,
             'soR'                => $nav->soR,
             'wR'                 => $nav->wR,
+            'allocationCell'     => $this->adminAllocationCell(),
+            'crewToolbar'        => $this->adminCrewToolbar(),
             'csR'                => $nav->csR,
             'dwR'                => $nav->dwR,
             'sortString'         => $computed->sortString,

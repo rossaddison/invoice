@@ -118,6 +118,22 @@ final readonly class InvWorkerAllocationService
     }
 
     /**
+     * An admin (the office) settles any open allocation. Recorded with no worker, as the
+     * run sheet does (decided_by_worker_id null = office).
+     *
+     * @throws \LogicException when already settled, or $status is not a decision
+     */
+    public function decideAsOffice(
+        InvWorkerAllocation $allocation,
+        AllocationStatus $status,
+        ?PostponeReason $reason = null,
+        ?DateTimeImmutable $at = null,
+    ): void {
+        $allocation->decide($status, null, $at ?? new DateTimeImmutable(), $reason);
+        $this->repository->save($allocation);
+    }
+
+    /**
      * The worker on the whole-house (`both`) allocation, if any -- what the
      * legacy single Inv.worker_id should read while the existing views still
      * use it. A split house has no single worker, so this is null for it.

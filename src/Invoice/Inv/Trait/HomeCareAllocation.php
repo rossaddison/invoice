@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
+use App\Auth\Permissions;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\User\User;
 use App\Invoice\Enum\AllocationSide;
@@ -37,8 +38,8 @@ use Yiisoft\Router\HydratorAttribute\RouteArgument;
 trait HomeCareAllocation
 {
     /**
-     * The lead allocates one side of a house to a worker, or clears it
-     * (empty worker_id). Keeps the legacy single Inv.worker_id in step for a
+     * The lead -- or an admin, who may override everything -- allocates one side of a
+     * house to a worker, or clears it (empty worker_id). Keeps the legacy single Inv.worker_id in step for a
      * whole-house allocation; a split house has no single worker, so it reads
      * null there (the worker views read the allocation table directly).
      */
@@ -61,14 +62,16 @@ trait HomeCareAllocation
         if (null === $inv
             || null === $side
             || ($workerId > 0 && (null === $worker || !$worker->getActive()))
-            || !$access->isLead($user instanceof User ? $user->reqId() : 0)
+            || !($this->userService->hasPermission(Permissions::EDIT_INV)
+                || $access->isLead($user instanceof User ? $user->reqId() : 0))
         ) {
             return $this->webService->getNotFoundResponse();
         }
+        $admin = $this->fromAdminIndex($body);
         // Changing one side of a whole-house allocation first splits it into front + back for
         // the same worker, so the other side keeps its worker. A settled whole house is left alone.
         if (AllocationSide::Both !== $side && !$allocations->splitWholeHouse($inv->reqId())) {
-            return $this->allocationDone($request, $inv, (int) $access->leadWorkerId());
+            return $this->allocationDone($request, $inv, (int) $access->leadWorkerId(), $admin);
         }
         null === $worker
             ? $allocations->clear($inv->reqId(), $side)
@@ -81,7 +84,7 @@ trait HomeCareAllocation
         $inv->setWorkerAllocatedAt($allocations->hasAllocations($inv->reqId()) ? new \DateTimeImmutable() : null);
         $gate->apply($inv);
         $iR->save($inv);
-        return $this->allocationDone($request, $inv, (int) $access->leadWorkerId(), 'info', 'worker.assigned');
+        return $this->allocationDone($request, $inv, (int) $access->leadWorkerId(), $admin, 'info', 'worker.assigned');
     }
 
     /**
@@ -102,24 +105,26 @@ trait HomeCareAllocation
         $body = is_array($body) ? $body : [];
         $status = AllocationStatus::tryFrom((string) ($body['status'] ?? ''));
         $allocation = $allocation_id !== '' ? $allocations->find((int) $allocation_id) : null;
-        if (null === $worker
-            || null === $allocation
+        // the allocated worker or the lead settles as themselves; an admin may settle anything,
+        // recorded as the office
+        $mayAsWorker = null !== $worker
+            && null !== $allocation
+            && $allocations->mayDecide($allocation, $worker->reqId(), $access->leadWorkerId());
+        if (null === $allocation
             || null === $status
             || !$status->isDecision()
-            || !$allocations->mayDecide($allocation, $worker->reqId(), $access->leadWorkerId())
+            || !($mayAsWorker || $this->userService->hasPermission(Permissions::EDIT_INV))
         ) {
             return $this->webService->getNotFoundResponse();
         }
+        $admin = $this->fromAdminIndex($body);
         $inv = null;
         $flash = ['info', 'allocation.settled'];
         try {
-            $allocations->decide(
-                $allocation,
-                $status,
-                $worker->reqId(),
-                $access->leadWorkerId(),
-                PostponeReason::tryFrom((string) ($body['reason'] ?? '')),
-            );
+            $reason = PostponeReason::tryFrom((string) ($body['reason'] ?? ''));
+            null !== $worker && $mayAsWorker
+                ? $allocations->decide($allocation, $status, $worker->reqId(), $access->leadWorkerId(), $reason)
+                : $allocations->decideAsOffice($allocation, $status, $reason);
             $inv = $iR->repoInvUnLoadedquery($allocation->reqInvId());
             if (null !== $inv) {
                 $gate->apply($inv);
@@ -133,10 +138,10 @@ trait HomeCareAllocation
             $inv ??= $iR->repoInvUnLoadedquery($allocation->reqInvId());
             return null === $inv
                 ? $this->allocationCells->nothing()
-                : $this->allocationCells->cell($inv, $worker->reqId());
+                : $this->allocationCells->cell($inv, $worker?->reqId() ?? 0, $admin);
         }
         $this->flashMessage($flash[0], $this->translator->translate($flash[1]));
-        return $this->webService->getRedirectResponse('inv/guest');
+        return $this->webService->getRedirectResponse($this->allocationHome($admin));
     }
 
     /**
@@ -144,21 +149,45 @@ trait HomeCareAllocation
      * invoice's re-rendered cell, with no flash banner (the changed cell is the
      * feedback); an ordinary post flashes, if there is a message, and redirects.
      */
-    private function allocationDone(Request $request, Inv $inv, int $viewerWorkerId, ?string $flashType = null, ?string $flashKey = null): Response
-    {
+    private function allocationDone(
+        Request $request,
+        Inv $inv,
+        int $viewerWorkerId,
+        bool $admin,
+        ?string $flashType = null,
+        ?string $flashKey = null,
+    ): Response {
         if ($this->allocationCells->wants($request)) {
-            return $this->allocationCells->cell($inv, $viewerWorkerId);
+            return $this->allocationCells->cell($inv, $viewerWorkerId, $admin);
         }
         if (null !== $flashType && null !== $flashKey) {
             $this->flashMessage($flashType, $this->translator->translate($flashKey));
         }
-        return $this->webService->getRedirectResponse('inv/guest');
+        return $this->webService->getRedirectResponse($this->allocationHome($admin));
+    }
+
+    /**
+     * True when an admin posted from the admin inv/index grid (its forms carry context=index).
+     * Only the page that is rendered and redirected to follows this; the permission to act is
+     * checked separately, so a forged field gains nothing.
+     *
+     * @param array<array-key, mixed> $body
+     */
+    private function fromAdminIndex(array $body): bool
+    {
+        return 'index' === (string) ($body['context'] ?? '')
+            && $this->userService->hasPermission(Permissions::EDIT_INV);
+    }
+
+    private function allocationHome(bool $admin): string
+    {
+        return $admin ? 'inv/index' : 'inv/guest';
     }
 
     /**
      * The lead saves today's crew (two or three workers, the lead included)
      * and the Front/Back mode that drive the one-tap chips on inv/guest.
-     * Lead only; anyone else gets the same 404.
+     * The lead or an admin only; anyone else gets the same 404.
      */
     public function setCrew(
         Request $request,
@@ -167,7 +196,9 @@ trait HomeCareAllocation
         HomeCareCrew $crew,
     ): Response {
         $user = $this->userService->getUser();
-        if (!$access->isLead($user instanceof User ? $user->reqId() : 0)) {
+        if (!($this->userService->hasPermission(Permissions::EDIT_INV)
+            || $access->isLead($user instanceof User ? $user->reqId() : 0))
+        ) {
             return $this->webService->getNotFoundResponse();
         }
         $body = $request->getParsedBody();
@@ -186,6 +217,6 @@ trait HomeCareAllocation
             return $this->allocationCells->nothing();
         }
         $this->flashMessage('info', $this->translator->translate('homecare.crew.saved'));
-        return $this->webService->getRedirectResponse('inv/guest');
+        return $this->webService->getRedirectResponse($this->allocationHome($this->fromAdminIndex($body)));
     }
 }

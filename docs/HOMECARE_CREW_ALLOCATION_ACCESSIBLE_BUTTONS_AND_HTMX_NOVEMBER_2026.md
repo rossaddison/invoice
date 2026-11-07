@@ -63,6 +63,29 @@ house is never rewritten; its derived chips are shown but disabled.
 - Known limits: only the cell updates (other columns such as the send gate
   refresh on the next load), and two very fast taps can finish out of order.
 
+## Admin override on inv/index
+
+An admin (anyone with `edit.inv`) can do everything the lead and the workers can,
+from the staff `inv/index` grid. With HomeCare on, the **Worker** column shows the
+same per-side cell instead of the single whole-house dropdown (an observer, who
+lacks `edit.inv`, keeps the plain column):
+
+- the crew chips (or, with no crew saved, the side + worker form) to allocate or
+  clear any side, including splitting a whole house;
+- the done / postpone / cancel buttons on **any** open side, whoever holds it;
+  an admin's settlement is recorded as the office (`decided_by_worker_id` null,
+  as the run sheet does) via `InvWorkerAllocationService::decideAsOffice()`;
+- the "Today's crew" form above the grid, to set or override the crew and the
+  Front/Back mode.
+
+The same no-reload htmx taps apply. Every admin form carries a hidden
+`context=index`, so the server answers with, and redirects to, the admin page
+(`inv/index`) rather than the worker's `inv/guest`. That field only chooses the
+page: the permission to act is checked separately (`edit.inv` or lead for
+allocating and the crew; the allocated worker, the lead or `edit.inv` for
+settling), so forging it gains nothing. A lead who is also an admin still settles
+under their own worker id when they post from `inv/guest`.
+
 ## Verification
 
 Testo (including `AllocationButtonsTest`, `AllocationCellResponderTest` and

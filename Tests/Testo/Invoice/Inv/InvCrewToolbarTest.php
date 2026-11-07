@@ -24,7 +24,7 @@ final class InvCrewToolbarTest
     /**
      * @param list<int> $crew
      */
-    private function html(array $crew, bool $frontBack): string
+    private function html(array $crew, bool $frontBack, bool $admin = false): string
     {
         /** @var UrlGeneratorInterface&m\MockInterface $urlGenerator */
         $urlGenerator = m::mock(UrlGeneratorInterface::class);
@@ -33,7 +33,7 @@ final class InvCrewToolbarTest
         $translator = m::mock(TranslatorInterface::class);
         $translator->shouldReceive('translate')->andReturnUsing(static fn (string $id): string => $id);
 
-        return (new InvCrewToolbar($urlGenerator, $translator, 'csrf-token', self::NAMES, $crew, $frontBack))->render();
+        return (new InvCrewToolbar($urlGenerator, $translator, 'csrf-token', self::NAMES, $crew, $frontBack, $admin))->render();
     }
 
     public function postsToTheSetCrewRouteWithTheCsrfToken(): void
@@ -132,5 +132,11 @@ final class InvCrewToolbarTest
         Assert::true(str_contains($html, 'data-hx-refresh-main'));
         // still an ordinary form without htmx
         Assert::true(str_contains($html, 'action="/inv/setcrew"'));
+    }
+
+    public function anAdminsFormSaysItIsFromInvIndexAndAnyoneElsesDoesNot(): void
+    {
+        Assert::true(str_contains($this->html([1], false, true), 'name="context" value="index"'));
+        Assert::false(str_contains($this->html([1], false), 'name="context"'));
     }
 }

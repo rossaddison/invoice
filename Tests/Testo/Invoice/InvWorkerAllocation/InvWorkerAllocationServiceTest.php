@@ -389,4 +389,32 @@ final class InvWorkerAllocationServiceTest
 
         Assert::true((new InvWorkerAllocationService($repository))->splitWholeHouse(self::INV));
     }
+
+    public function theOfficeCanSettleAnyonesOpenSideWithNoWorkerRecorded(): void
+    {
+        $row = $this->row(AllocationSide::Front, 7);
+        $repository = $this->repository([$row]);
+        $repository->shouldReceive('save')->once()->with($row);
+
+        (new InvWorkerAllocationService($repository))->decideAsOffice($row, AllocationStatus::Postponed, PostponeReason::NoAccess);
+
+        Assert::same($row->getStatus(), AllocationStatus::Postponed);
+        Assert::same($row->getPostponeReason(), PostponeReason::NoAccess);
+        Assert::null($row->getDecidedByWorkerId());
+    }
+
+    public function theOfficeCannotSettleASideTwice(): void
+    {
+        $row = $this->row(AllocationSide::Front, 7);
+        $row->decide(AllocationStatus::Completed, 7, new DateTimeImmutable());
+        $repository = $this->repository([$row]);
+        $repository->shouldNotReceive('save');
+
+        try {
+            (new InvWorkerAllocationService($repository))->decideAsOffice($row, AllocationStatus::Cancelled);
+            Assert::true(false);
+        } catch (\LogicException) {
+            Assert::same($row->getStatus(), AllocationStatus::Completed);
+        }
+    }
 }

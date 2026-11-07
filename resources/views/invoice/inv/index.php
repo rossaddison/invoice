@@ -25,6 +25,8 @@ use Yiisoft\Html\Html as H;
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var App\Invoice\Inv\Widget\InvAllocationCell|null $allocationCell
+ * @var string $crewToolbar
  * @var bool $visible
  * @var bool $visibleToggleInvSentLogColumn
  * @var int $clientCount
@@ -180,6 +182,9 @@ echo Breadcrumbs::widget()
  ->listId(false)
  ->render();
 
+// An admin's "today's crew" form (empty for anyone else, or with HomeCare off).
+echo $crewToolbar;
+
 echo InvsListWidget::widget()
     ->withPaginator($paginator)
     ->withIR($iR)
@@ -188,6 +193,7 @@ echo InvsListWidget::widget()
     ->withSR($s)
     ->withEmailRepositories($etR, $fdR)
     ->withWorkerRepository($wR)
+    ->withAllocationCell($allocationCell)
     ->withCategorySecondaryRepository($csR)
     ->withDwellingRepository($dwR)
     ->withCsrf($csrf)

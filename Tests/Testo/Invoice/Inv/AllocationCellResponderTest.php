@@ -54,7 +54,7 @@ final class AllocationCellResponderTest
         /** @var UrlGeneratorInterface&m\MockInterface $urls */
         $urls = m::mock(UrlGeneratorInterface::class);
         $urls->shouldReceive('generate')->andReturnUsing(
-            static fn (string $route, array $args = []): string => '/' . $route . '/' . (string) array_values($args)[0]
+            static fn (string $route, array $args = []): string => '/' . $route . ([] === $args ? '' : '/' . (string) array_values($args)[0])
         );
         /** @var TranslatorInterface&m\MockInterface $translator */
         $translator = m::mock(TranslatorInterface::class);
@@ -102,5 +102,33 @@ final class AllocationCellResponderTest
 
         Assert::same($response->getStatusCode(), 204);
         Assert::same((string) $response->getBody(), '');
+    }
+
+    public function theAdminsReplyHasEveryControlAndPostsBackAsInvIndex(): void
+    {
+        // viewer 0, an admin: the fixture's whole-house side (held by worker 7) is still settleable
+        $html = (string) $this->responder()->cell($this->inv(), 0, true)->getBody();
+
+        Assert::true(str_contains($html, 'hx-post="/inv/settleallocation/'));
+        Assert::true(str_contains($html, 'name="context" value="index"'));
+    }
+
+    public function aNonAdminViewerOfSomeoneElsesSideGetsNoSettleControls(): void
+    {
+        $html = (string) $this->responder()->cell($this->inv(), 99)->getBody();
+
+        // the mock lets mayDecide pass for anyone, so assert on the context marker only
+        Assert::false(str_contains($html, 'name="context"'));
+    }
+
+    public function theAdminGridCellAndCrewFormAreBuiltFromTheSameHouseData(): void
+    {
+        $responder = $this->responder();
+
+        Assert::true(str_contains($responder->adminCell()->render($this->inv()), 'id="alloc-12"'));
+        $toolbar = $responder->adminCrewToolbar();
+        Assert::true(str_contains($toolbar, 'hx-post="/inv/setcrew"'));
+        Assert::true(str_contains($toolbar, 'name="context" value="index"'));
+        Assert::true(str_contains($toolbar, 'name="_csrf" value="fresh-token"'));
     }
 }
