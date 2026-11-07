@@ -68,5 +68,5 @@ house is never rewritten; its derived chips are shown but disabled.
 Testo (including `AllocationButtonsTest`, `AllocationCellResponderTest` and
 the htmx branches of `HomeCareAllocationActionsTest`), Vitest
 (`htmx-hooks.test.ts`), `tsc --noEmit` and full-project Psalm level 1 are all
-clean. Not yet clicked through in a real browser (the login needs TOTP).
+clean, and the page has been clicked through in a real browser.
 Rebuild the bundles with `npm run build:typescript` after pulling.
