@@ -8,7 +8,8 @@ use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Invoice\Worker\WorkerForm $form
- * @var array<int, string> $businesses
+ * @var array<int, string> $businesses the businesses that can be ticked (the default excluded)
+ * @var string|null $defaultBusiness the business every worker belongs to (the current company)
  * @var App\Widget\Button $button
  * @var Yiisoft\View\View $this
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -62,12 +63,15 @@ use Yiisoft\Html\Tag\Form;
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-                    <?= Field::select($form, 'company_id')
+                    <?php if ($defaultBusiness !== null) { ?>
+                        <?= Html::openTag('div', ['class' => 'mb-2']); ?>
+                            <?= Html::tag('label', $translator->translate('worker.company.default'), ['class' => 'form-label']); ?>
+                            <?= Html::div(Html::encode($defaultBusiness), ['class' => 'form-control-plaintext fw-semibold'])->encode(false); ?>
+                        <?= Html::closeTag('div'); ?>
+                    <?php } ?>
+                    <?= Field::checkboxList($form, 'company_ids')
     ->label($translator->translate('worker.company'))
-    ->addInputAttributes(['class' => 'form-select', 'id' => 'company_id'])
-    ->value(Html::encode($form->getCompanyId() ?? ''))
-    ->optionsData($businesses, true)
-    ->prompt($translator->translate('worker.company.none'))
+    ->items($businesses)
     ->hint($translator->translate('worker.company.hint'));
 ?>
                 <?= Html::closeTag('div'); ?>

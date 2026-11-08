@@ -17,13 +17,16 @@ final class WorkerForm extends FormModel
     #[Length(min: 0, max: 100)]
     private ?string $lastname = null;
     private bool $active = true;
-    /** The id of the business the worker is registered under; '' for none. */
-    private ?string $company_id = null;
+    /** @var list<string> the ids of the businesses the worker is registered under (any number) */
+    private array $company_ids = [];
 
-    public static function show(Worker $worker, ?int $companyId = null): self
+    /**
+     * @param list<int> $companyIds the businesses the worker is registered under
+     */
+    public static function show(Worker $worker, array $companyIds = []): self
     {
         $form = new self();
-        $form->company_id = null === $companyId ? '' : (string) $companyId;
+        $form->company_ids = array_map('strval', $companyIds);
         $form->firstname = $worker->getFirstname();
         $form->lastname = $worker->getLastname();
         $form->active = $worker->getActive();
@@ -45,9 +48,12 @@ final class WorkerForm extends FormModel
         return $this->active;
     }
 
-    public function getCompanyId(): ?string
+    /**
+     * @return list<string>
+     */
+    public function getCompanyIds(): array
     {
-        return $this->company_id;
+        return $this->company_ids;
     }
 
     /**

@@ -74,14 +74,15 @@ final class WorkerController extends BaseController
             'actionArguments' => [],
             'form' => $form,
             'errors' => [],
-            'businesses' => $this->businessOptions($companyRepository),
+            'businesses' => $this->tickableBusinesses($companyRepository),
+            'defaultBusiness' => $this->defaultBusinessName($companyRepository),
         ];
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->workerService->saveWorker($worker, $body);
-                    $this->workerCompanyService->syncFromChoice($worker->reqId(), (string) ($body['company_id'] ?? ''));
+                    $this->workerCompanyService->syncCompanies($worker->reqId(), $this->tickedCompanies($body));
                     $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('worker/index');
                 }
@@ -102,21 +103,22 @@ final class WorkerController extends BaseController
     ): Response {
         $worker = $this->worker((int) $worker_id, $workerRepository);
         if ($worker) {
-            $form = WorkerForm::show($worker, $this->workerCompanyService->companyIdsFor($worker->reqId())[0] ?? null);
+            $form = WorkerForm::show($worker, $this->workerCompanyService->storedCompanyIdsFor($worker->reqId()));
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'worker/edit',
                 'actionArguments' => ['worker_id' => $worker_id],
                 'form' => $form,
                 'errors' => [],
-                'businesses' => $this->businessOptions($companyRepository),
+                'businesses' => $this->tickableBusinesses($companyRepository),
+                'defaultBusiness' => $this->defaultBusinessName($companyRepository),
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $this->workerService->saveWorker($worker, $body);
-                        $this->workerCompanyService->syncFromChoice($worker->reqId(), (string) ($body['company_id'] ?? ''));
+                        $this->workerCompanyService->syncCompanies($worker->reqId(), $this->tickedCompanies($body));
                         $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse('worker/index');
                     }
@@ -162,6 +164,19 @@ final class WorkerController extends BaseController
     }
 
     /**
+     * The businesses ticked on the worker form (none ticked sends nothing at all).
+     *
+     * @param array<array-key, mixed> $body
+     * @return list<int> the ticked company ids (a non-numeric tick becomes 0 and is ignored later)
+     */
+    private function tickedCompanies(array $body): array
+    {
+        return isset($body['company_ids']) && is_array($body['company_ids'])
+            ? array_map('intval', array_values($body['company_ids']))
+            : [];
+    }
+
+    /**
      * The businesses a worker can be registered under: id => name.
      *
      * @return array<int, string>
@@ -175,6 +190,31 @@ final class WorkerController extends BaseController
             $options[$company->reqId()] = (string) $company->getName();
         }
         return $options;
+    }
+
+    /**
+     * The businesses the form lets you tick: all of them except the default, which every worker
+     * belongs to and is shown separately.
+     *
+     * @return array<int, string>
+     */
+    private function tickableBusinesses(CompanyRepository $companyRepository): array
+    {
+        $options = $this->businessOptions($companyRepository);
+        $default = $this->workerCompanyService->defaultCompanyId();
+        if (null !== $default) {
+            unset($options[$default]);
+        }
+        return $options;
+    }
+
+    /**
+     * The name of the default business (the current company), or null when none is current.
+     */
+    private function defaultBusinessName(CompanyRepository $companyRepository): ?string
+    {
+        $default = $this->workerCompanyService->defaultCompanyId();
+        return null === $default ? null : ($this->businessOptions($companyRepository)[$default] ?? ('#' . $default));
     }
 
     /**
