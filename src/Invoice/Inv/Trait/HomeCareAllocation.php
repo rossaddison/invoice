@@ -164,13 +164,11 @@ trait HomeCareAllocation
         $mayAsWorker = null !== $worker
             && null !== $allocation
             && $allocations->mayDecide($allocation, $worker->reqId(), $access->leadWorkerId());
-        if (null === $allocation
-            || !($mayAsWorker || $this->userService->hasPermission(Permissions::EDIT_INV))
-        ) {
-            return $this->webService->getNotFoundResponse();
-        }
-        $inv = $iR->repoInvUnLoadedquery($allocation->reqInvId());
-        if (null === $inv) {
+        $allowed = null !== $allocation
+            && ($mayAsWorker || $this->userService->hasPermission(Permissions::EDIT_INV));
+        // not allowed, an unknown allocation and a vanished invoice all get the same 404
+        $inv = null !== $allocation && $allowed ? $iR->repoInvUnLoadedquery($allocation->reqInvId()) : null;
+        if (null === $allocation || null === $inv) {
             return $this->webService->getNotFoundResponse();
         }
         $flash = ['info', 'allocation.card.recorded'];

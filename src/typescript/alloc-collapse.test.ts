@@ -22,7 +22,7 @@ describe('collapseAllocationSidesOnPhones', () => {
 
         collapseAllocationSidesOnPhones();
 
-        expect(document.querySelectorAll('details.alloc-collapsible[open]').length).toBe(0);
+        expect(document.querySelectorAll('details.alloc-collapsible[open]')).toHaveLength(0);
     });
 
     it('leaves them open on a desktop', () => {
@@ -31,7 +31,7 @@ describe('collapseAllocationSidesOnPhones', () => {
 
         collapseAllocationSidesOnPhones();
 
-        expect(document.querySelectorAll('details.alloc-collapsible[open]').length).toBe(2);
+        expect(document.querySelectorAll('details.alloc-collapsible[open]')).toHaveLength(2);
     });
 
     it('closes only inside the given root, so a house expanded elsewhere stays open', () => {
@@ -59,6 +59,6 @@ describe('collapseAllocationSidesOnPhones', () => {
 
         collapseAllocationSidesOnPhones();
 
-        expect(document.querySelectorAll('details.alloc-collapsible[open]').length).toBe(2);
+        expect(document.querySelectorAll('details.alloc-collapsible[open]')).toHaveLength(2);
     });
 });

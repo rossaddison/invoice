@@ -37,7 +37,8 @@ function cellIdOf(target: unknown): string | null {
 function valuesOf(formData: FormData): Record<string, string> {
     const values: Record<string, string> = {};
     formData.forEach((value, key) => {
-        values[key] = String(value);
+        // a form field is text; a file input contributes its file name
+        values[key] = typeof value === 'string' ? value : value.name;
     });
     return values;
 }
@@ -45,7 +46,7 @@ function valuesOf(formData: FormData): Record<string, string> {
 function replay(cellId: string, tap: QueuedTap): void {
     replaying = true;
     try {
-        globalThis.htmx?.ajax('post', tap.path, { target: '#' + cellId, swap: 'outerHTML', values: tap.values });
+        void globalThis.htmx?.ajax('post', tap.path, { target: '#' + cellId, swap: 'outerHTML', values: tap.values });
     } finally {
         // the request's own beforeRequest has fired by now; never let the flag leak to another request
         replaying = false;
