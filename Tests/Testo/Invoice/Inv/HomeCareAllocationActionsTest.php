@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Tests\Testo\Invoice\Inv;
 
 use App\Auth\Permissions;
+use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\Dwelling\Dwelling;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvWorkerAllocation\InvWorkerAllocation;
 use App\Infrastructure\Persistence\User\User;
 use App\Infrastructure\Persistence\Worker\Worker;
+use App\Invoice\Dwelling\DwellingRepository;
 use App\Invoice\Enum\AllocationSide;
 use App\Invoice\Enum\AllocationStatus;
 use App\Invoice\Enum\PostponeReason;
@@ -935,5 +938,121 @@ final class HomeCareAllocationActionsTest
 
         Assert::same($result, $cell);
         Assert::same($this->flashes->getArrayCopy(), []);
+    }
+
+    private function invAtDwelling(int $dwellingId): Inv
+    {
+        $client = new Client();
+        $client->setDwellingId($dwellingId);
+        $inv = $this->inv();
+        $inv->setClient($client);
+        return $inv;
+    }
+
+    private function dwellingRepository(?Dwelling $dwelling, bool $expectSave): DwellingRepository&m\MockInterface
+    {
+        /** @var DwellingRepository<Dwelling>&m\MockInterface $dwR */
+        $dwR = m::mock(DwellingRepository::class);
+        $dwR->shouldReceive('repoDwellingQuery')->andReturn($dwelling);
+        $expectSave ? $dwR->shouldReceive('save')->once() : $dwR->shouldNotReceive('save');
+        return $dwR;
+    }
+
+    private function pullPoint(bool $pull): Dwelling
+    {
+        $dwelling = new Dwelling(family_id: 1, house_number_numeric: 14, postcode: 'AB12CD');
+        $dwelling->setId(8);
+        $dwelling->setPullPoint($pull);
+        return $dwelling;
+    }
+
+    public function theLeadStampsAPullPointAsDelegated(): void
+    {
+        [$webService, , $redirect] = $this->webService();
+        $dwelling = $this->pullPoint(true);
+
+        $result = $this->harness($webService)->delegatePullPoint(
+            $this->request([]),
+            '12',
+            $this->invRepository($this->invAtDwelling(8)),
+            $this->dwellingRepository($dwelling, true),
+            $this->access($this->worker(3), 3, true),
+        );
+
+        Assert::same($result, $redirect);
+        Assert::true($dwelling->getPullPointSortOrder() instanceof \DateTimeImmutable);
+        Assert::same($this->flashes->getArrayCopy(), [['info', 'dwelling.pull.point.delegated']]);
+    }
+
+    public function anAdminMayStampItToo(): void
+    {
+        [$webService, , $redirect] = $this->webService();
+        $dwelling = $this->pullPoint(true);
+
+        $result = $this->harness($webService, true)->delegatePullPoint(
+            $this->request([]),
+            '12',
+            $this->invRepository($this->invAtDwelling(8)),
+            $this->dwellingRepository($dwelling, true),
+            $this->access(null, 3, false),
+        );
+
+        Assert::same($result, $redirect);
+        Assert::true($dwelling->getPullPointSortOrder() instanceof \DateTimeImmutable);
+    }
+
+    public function aNonLeadWorkerGets404AndNothingIsStamped(): void
+    {
+        [$webService, $notFound] = $this->webService();
+        $dwelling = $this->pullPoint(true);
+
+        $result = $this->harness($webService)->delegatePullPoint(
+            $this->request([]),
+            '12',
+            $this->invRepository($this->invAtDwelling(8)),
+            $this->dwellingRepository($dwelling, false),
+            $this->access($this->worker(4), 3, false),
+        );
+
+        Assert::same($result, $notFound);
+        Assert::null($dwelling->getPullPointSortOrder());
+    }
+
+    public function aHouseThatIsNotAPullPointGets404(): void
+    {
+        [$webService, $notFound] = $this->webService();
+        $dwelling = $this->pullPoint(false);
+
+        $result = $this->harness($webService)->delegatePullPoint(
+            $this->request([]),
+            '12',
+            $this->invRepository($this->invAtDwelling(8)),
+            $this->dwellingRepository($dwelling, false),
+            $this->access($this->worker(3), 3, true),
+        );
+
+        Assert::same($result, $notFound);
+        Assert::null($dwelling->getPullPointSortOrder());
+    }
+
+    public function anUnknownInvoiceOrAnInvoiceWithNoDwellingGets404(): void
+    {
+        [$webService, $notFound] = $this->webService();
+        $access = $this->access($this->worker(3), 3, true);
+
+        Assert::same($this->harness($webService)->delegatePullPoint(
+            $this->request([]),
+            '99',
+            $this->invRepository(null),
+            $this->dwellingRepository(null, false),
+            $access,
+        ), $notFound);
+        Assert::same($this->harness($webService)->delegatePullPoint(
+            $this->request([]),
+            '12',
+            $this->invRepository($this->inv()),
+            $this->dwellingRepository(null, false),
+            $access,
+        ), $notFound);
     }
 }
