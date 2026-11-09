@@ -11,6 +11,7 @@ use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Dwelling\DwellingRepository as DwR;
 use App\Invoice\Enum\AllocationSide;
 use App\Invoice\Enum\AllocationStatus;
+use App\Invoice\Helpers\GoogleMapsLink;
 use App\Invoice\InvWorkerAllocation\AllocationSidesSummary;
 use App\Invoice\Family\FamilyRepository as FR;
 
@@ -36,7 +37,8 @@ final class RunSheetPdfRowBuilder
             $rows[] = $this->buildRow($inv, $dwR, $fR);
         }
         usort($rows, [$this, 'compareRows']);
-        return $rows;
+        // houses go under their pull points (a no-op for a run with none)
+        return (new PullPointGrouper())->group($rows);
     }
 
     /**
@@ -57,6 +59,18 @@ final class RunSheetPdfRowBuilder
             ),
             $rows
         );
+    }
+
+    /**
+     * Strips client names, phones and amounts from the rows (see {@see RunSheetPdfRow::withoutClientDetails()}),
+     * for a run sheet a field worker or the lead prints.
+     *
+     * @param list<RunSheetPdfRow> $rows
+     * @return list<RunSheetPdfRow>
+     */
+    public function withoutClientDetails(array $rows): array
+    {
+        return array_map(static fn (RunSheetPdfRow $row): RunSheetPdfRow => $row->withoutClientDetails(), $rows);
     }
 
     public function compareRows(RunSheetPdfRow $a, RunSheetPdfRow $b): int
@@ -136,6 +150,9 @@ final class RunSheetPdfRowBuilder
             balance: $inv->getInvAmount()->getBalance(),
             streetSortOrder: $family?->getStreetSortOrder(),
             invId: $inv->hasIdentity() ? $inv->reqId() : 0,
+            pullPoint: $dwelling->isPullPoint(),
+            houseNumber: $dwelling->getHouseNumberNumeric(),
+            delegatedAt: $dwelling->getPullPointSortOrder(),
         );
     }
 
@@ -195,7 +212,6 @@ final class RunSheetPdfRowBuilder
      */
     public function mapsUrl(string $destination): string
     {
-        return 'https://www.google.com/maps/dir/?api=1&destination='
-            . rawurlencode($destination) . '&travelmode=driving';
+        return GoogleMapsLink::directionsTo($destination);
     }
 }

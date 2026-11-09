@@ -87,6 +87,18 @@ class Dwelling
          */
         #[Column(type: 'string(30)', nullable: true)]
         private ?string $source = null,
+        /**
+         * True when the crew pulls the houses around it from this house: the lead stops the van here
+         * and delegates the surrounding houses to the workers.
+         */
+        #[Column(type: 'bool', typecast: 'bool', default: false)]
+        private bool $pull_point = false,
+        /**
+         * When Dan last delegated the surrounding houses to the workers from this pull point. Sorting
+         * the run's pull points by it gives the order the stops were worked; null until delegated.
+         */
+        #[Column(type: 'datetime', nullable: true)]
+        private ?\DateTimeImmutable $pull_point_sort_order = null,
     ) {
         $this->date_created = new \DateTimeImmutable();
         $this->date_modified = new \DateTimeImmutable();
@@ -214,5 +226,36 @@ class Dwelling
     public function setSource(?string $source): void
     {
         $this->source = $source;
+    }
+
+    public function isPullPoint(): bool
+    {
+        return $this->pull_point;
+    }
+
+    public function setPullPoint(bool $pull_point): void
+    {
+        $this->pull_point = $pull_point;
+        if (!$pull_point) {
+            $this->pull_point_sort_order = null;
+        }
+    }
+
+    public function getPullPointSortOrder(): ?\DateTimeImmutable
+    {
+        return $this->pull_point_sort_order;
+    }
+
+    /**
+     * Stamps the moment the houses around this pull point were delegated; a dwelling that is not a
+     * pull point is left alone and false is returned.
+     */
+    public function markDelegated(\DateTimeImmutable $at): bool
+    {
+        if (!$this->pull_point) {
+            return false;
+        }
+        $this->pull_point_sort_order = $at;
+        return true;
     }
 }

@@ -29,6 +29,10 @@ final class DwellingForm extends FormModel
 
     private ?string $source = '';
 
+    public bool $pull_point = false;
+
+    private ?\DateTimeImmutable $pull_point_sort_order = null;
+
     public static function show(Dwelling $dwelling): self
     {
         $form = new self();
@@ -40,7 +44,19 @@ final class DwellingForm extends FormModel
         $form->latitude = $dwelling->getLatitude();
         $form->longitude = $dwelling->getLongitude();
         $form->source = $dwelling->getSource();
+        $form->pull_point = $dwelling->isPullPoint();
+        $form->pull_point_sort_order = $dwelling->getPullPointSortOrder();
         return $form;
+    }
+
+    public function getPullPointSortOrder(): ?\DateTimeImmutable
+    {
+        return $this->pull_point_sort_order;
+    }
+
+    public function isPullPoint(): bool
+    {
+        return $this->pull_point;
     }
 
     public function getFamilyId(): ?int

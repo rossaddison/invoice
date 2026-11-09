@@ -114,6 +114,7 @@ final class DwellingPostcodeLinkTest
         $translator = m::mock(TranslatorInterface::class);
         $translator->shouldReceive('translate')->with('dwelling.postcode')->andReturn('Postcode');
         $translator->shouldReceive('translate')->with('dwelling.postcode.pending')->andReturn('No Dwelling yet');
+        $translator->shouldReceive('translate')->with('dwelling.pull.point')->andReturn('Pull point');
 
         $builder = new class ($translator) {
             use InvsDwellingPostcodeColumnTrait;

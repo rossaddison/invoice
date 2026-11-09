@@ -28,7 +28,7 @@ final readonly class DeliveryAddress
         return trim($this->name . ' ' . $this->surname);
     }
 
-    /** The widget's second line — e.g. "Glasgow G32 6AB", or just one of the two if only one was given. */
+    /** The widget's second line — e.g. "Townville AB1 2CD", or just one of the two if only one was given. */
     public function locationLine(): string
     {
         return trim($this->city . ' ' . $this->postcode);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv;
 
 use App\Infrastructure\Persistence\Setting\Setting;
+use App\Invoice\HomeCareSchedule\RunCalendarService;
 use App\Invoice\Setting\SettingRepository;
 
 /**
@@ -13,17 +14,74 @@ use App\Invoice\Setting\SettingRepository;
  * exactly one lead who allocates, so this is a pair of global settings rather
  * than per-user state. The inv/guest chips and crew form read it; the lead
  * saves it from the crew form.
+ *
+ * The run calendar fills it in: when the calendar names a crew for today, that crew is today's crew
+ * until the lead saves one himself today, which always wins. With no calendar crew for today the
+ * last saved crew stays, as before.
  */
 final readonly class HomeCareCrew
 {
     public const string KEY_WORKER_IDS = 'homecare_crew_worker_ids';
     public const string KEY_FRONT_BACK = 'homecare_crew_front_back';
 
+    /** The date (Y-m-d) the lead last saved the crew, so a crew saved today overrides the calendar. */
+    public const string KEY_SAVED_ON = 'homecare_crew_saved_on';
+
     /** A crew is never more than three. */
     public const int MAX_SIZE = 3;
 
-    public function __construct(private SettingRepository $sR)
+    /**
+     * @param string|null $today Y-m-d; null means the real date (a test can fix it)
+     */
+    public function __construct(
+        private SettingRepository $sR,
+        private ?RunCalendarService $calendar = null,
+        private ?string $today = null,
+    ) {
+    }
+
+    /**
+     * Today's crew: the one the lead saved today, else the run calendar's crew for today, else the
+     * last saved crew. In that order, at most three distinct worker ids.
+     *
+     * @return list<int>
+     */
+    public function workerIds(): array
     {
+        $saved = $this->savedIds();
+        $calendar = $this->calendarIds();
+        if ([] === $calendar || ([] !== $saved && $this->savedToday())) {
+            return $saved;
+        }
+        return $calendar;
+    }
+
+    /**
+     * True when today's crew came from the run calendar rather than from what the lead saved.
+     */
+    public function fromCalendar(): bool
+    {
+        return [] !== $this->calendarIds() && !([] !== $this->savedIds() && $this->savedToday());
+    }
+
+    /**
+     * The crew the run calendar names for today (empty: none, or no calendar).
+     *
+     * @return list<int>
+     */
+    private function calendarIds(): array
+    {
+        return null === $this->calendar ? [] : $this->calendar->crewFor($this->today());
+    }
+
+    private function savedToday(): bool
+    {
+        return $this->today() === $this->sR->getSetting(self::KEY_SAVED_ON);
+    }
+
+    private function today(): string
+    {
+        return $this->today ?? date('Y-m-d');
     }
 
     /**
@@ -31,7 +89,7 @@ final readonly class HomeCareCrew
      *
      * @return list<int>
      */
-    public function workerIds(): array
+    private function savedIds(): array
     {
         $ids = [];
         foreach (explode(',', $this->sR->getSetting(self::KEY_WORKER_IDS)) as $raw) {
@@ -69,6 +127,7 @@ final readonly class HomeCareCrew
         $crew = array_slice($crew, 0, self::MAX_SIZE);
         $this->persist(self::KEY_WORKER_IDS, implode(',', $crew));
         $this->persist(self::KEY_FRONT_BACK, $frontBack ? '1' : '0');
+        $this->persist(self::KEY_SAVED_ON, $this->today());
     }
 
     /**

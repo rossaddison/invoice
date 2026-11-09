@@ -1404,6 +1404,12 @@ if ((null !== $currentPath) && !$isGuest) {
             DropdownItem::link($t->translate('homecare.runsheet.nav'),
                 $urlGenerator->generate('homecarerunsheet/index'),
                 itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('homecare.schedule.nav'),
+                $urlGenerator->generate('homecareschedule/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('homecare.runimport.nav'),
+                $urlGenerator->generate('homecarerunimport/index'),
+                itemAttributes: $itemFontArray),
         ),
         // Payment
         Dropdown::widget()

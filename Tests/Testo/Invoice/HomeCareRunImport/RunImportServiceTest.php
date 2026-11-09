@@ -1,0 +1,212 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Testo\Invoice\HomeCareRunImport;
+
+use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
+use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\Dwelling\Dwelling;
+use App\Infrastructure\Persistence\Family\Family;
+use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\InvItem\InvItem;
+use App\Infrastructure\Persistence\Product\Product;
+use App\Infrastructure\Persistence\User\User;
+use App\Invoice\CategorySecondary\CategorySecondaryService;
+use App\Invoice\Client\ClientDwellingRepository;
+use App\Invoice\Client\ClientRepository;
+use App\Invoice\Dwelling\DwellingRepository;
+use App\Invoice\Dwelling\DwellingService;
+use App\Invoice\Family\FamilyRepository;
+use App\Invoice\Family\FamilyService;
+use App\Invoice\Helpers\InvRecalculator;
+use App\Invoice\HomeCareRunImport\RunHouseListParser;
+use App\Invoice\HomeCareRunImport\RunImportDeps;
+use App\Invoice\HomeCareRunImport\RunImportService;
+use App\Invoice\Inv\InvService;
+use App\Invoice\InvItem\InvItemService;
+use App\Invoice\ProductClient\ProductClientService;
+use App\Invoice\Setting\SettingRepository;
+use App\Invoice\TaxRate\TaxRateRepository;
+use App\Invoice\Unit\UnitRepository;
+use Mockery as m;
+use ReflectionClass;
+use Testo\Assert;
+use Testo\Test;
+
+/**
+ * Saving a parsed run: the run, a street per street, and for each house a dwelling, a client linked
+ * to it and a draft invoice. A house that already has a client is left alone; cancelled houses are
+ * not created.
+ */
+#[Test]
+final class RunImportServiceTest
+{
+    private const string TEXT = "RUN ONE\nBERRYHILL CRESCENT ML2 0NE (3)\n3\n14\n41 CANCELLED\nSHIELD RD ML1 2LP\n462\n";
+
+    /** @var array<string, m\MockInterface> */
+    private array $mocks = [];
+
+    private function mock(string $class): m\MockInterface
+    {
+        return $this->mocks[$class] = m::mock($class);
+    }
+
+    /**
+     * Builds the service over mocks. $claimed lists the dwelling ids that already have a client.
+     *
+     * @param list<int> $claimed
+     * @param list<string> $log filled with "client:<name>", "invoice:<client id>" ... as things happen
+     */
+    private function service(array $claimed, array &$log): RunImportService
+    {
+        $nextId = 100;
+        $csService = $this->mock(CategorySecondaryService::class);
+        $csService->shouldReceive('saveCategorySecondary')->andReturnUsing(
+            static function (CategorySecondary $c, array $body) use (&$log): void {
+                $c->setId(7);
+                $log[] = 'run:' . (string) $body['name'];
+            }
+        );
+        $fR = $this->mock(FamilyRepository::class);
+        $fR->shouldReceive('repoFamilyByNameAndSecondaryCategoryQuery')->andReturn(null);
+        $families = $this->mock(FamilyService::class);
+        $families->shouldReceive('findOrCreateByStreetName')->andReturnUsing(
+            static function (string $street) use (&$nextId, &$log): Family {
+                $family = new Family();
+                $family->setId($nextId++);
+                $log[] = 'street:' . $street;
+                return $family;
+            }
+        );
+        $families->shouldReceive('saveStreetOrders')->once();
+        $dwellings = $this->mock(DwellingService::class);
+        $dwellings->shouldReceive('findOrCreateDwelling')->andReturnUsing(
+            static function (int $familyId, string $number) use (&$nextId): Dwelling {
+                $dwelling = new Dwelling();
+                $dwelling->setId((int) $number);
+                return $dwelling;
+            }
+        );
+        $dwR = $this->mock(DwellingRepository::class);
+        $dwR->shouldReceive('save');
+        $cR = $this->mock(ClientRepository::class);
+        $cR->shouldReceive('save')->andReturnUsing(static function (Client $c) use (&$nextId, &$log): void {
+            $c->setId($nextId++);
+            $log[] = 'client:' . $c->getClientName() . '@' . (string) $c->getDwellingId();
+        });
+        $cdR = $this->mock(ClientDwellingRepository::class);
+        $cdR->shouldReceive('isClaimedByAnother')->andReturnUsing(
+            static fn (int $dwellingId): bool => in_array($dwellingId, $claimed, true)
+        );
+        $invService = $this->mock(InvService::class);
+        $invService->shouldReceive('withTransaction')->andReturnUsing(static function (callable $fn): void {
+            $fn();
+        });
+        $invService->shouldReceive('saveInv')->andReturnUsing(static function (User $u, Inv $inv, array $body) use (&$log): Inv {
+            $inv->setId(900 + (int) $body['client_id']);
+            $log[] = 'invoice:' . (string) $body['client_id'] . ':status' . (string) $body['status_id'];
+            return $inv;
+        });
+        $items = $this->mock(InvItemService::class);
+        $items->shouldReceive('addInvItemProduct')->andReturnUsing(
+            static function (InvItem $_item, array $body) use (&$log): void {
+                $log[] = 'item:product' . (string) $body['product_id'] . ':price' . (string) $body['price'];
+            }
+        );
+        $recalc = $this->mock(InvRecalculator::class);
+        $recalc->shouldReceive('recalculate');
+        $productClient = $this->mock(ProductClientService::class);
+        $productClient->shouldReceive('syncFromInvItems');
+        $settings = $this->mock(SettingRepository::class);
+        $settings->shouldReceive('getSetting')->with('default_invoice_group')->andReturn('1');
+
+        $taxRates = $this->mock(TaxRateRepository::class);
+        $taxRates->shouldReceive('repoFirstByIdQuery')->andReturn(null);
+        $units = $this->mock(UnitRepository::class);
+        $units->shouldReceive('repoFirstByIdQuery')->andReturn(null);
+
+        $reflection = new ReflectionClass(RunImportDeps::class);
+        $args = [];
+        foreach ($reflection->getConstructor()?->getParameters() ?? [] as $parameter) {
+            $type = $parameter->getType();
+            $class = $type instanceof \ReflectionNamedType ? $type->getName() : '';
+            $args[$parameter->getName()] = match ($class) {
+                CategorySecondaryService::class => $csService,
+                FamilyRepository::class => $fR,
+                FamilyService::class => $families,
+                DwellingService::class => $dwellings,
+                DwellingRepository::class => $dwR,
+                ClientRepository::class => $cR,
+                ClientDwellingRepository::class => $cdR,
+                InvService::class => $invService,
+                InvItemService::class => $items,
+                InvRecalculator::class => $recalc,
+                ProductClientService::class => $productClient,
+                SettingRepository::class => $settings,
+                TaxRateRepository::class => $taxRates,
+                UnitRepository::class => $units,
+                default => m::mock($class),
+            };
+        }
+        return new RunImportService($reflection->newInstanceArgs($args));
+    }
+
+    private function product(): Product
+    {
+        $product = new Product();
+        $product->setId(5);
+        return $product;
+    }
+
+    public function aNewRunGetsItsStreetsAndAClientDwellingAndDraftInvoiceForEachHouse(): void
+    {
+        $log = [];
+        $result = $this->service([], $log)->save(
+            (new RunHouseListParser())->parse(self::TEXT),
+            null,
+            'Run One',
+            3,
+            $this->product(),
+            12.5,
+            new User('admin', 'a@b.test', 'x'),
+        );
+
+        Assert::true($result->runCreated);
+        Assert::same($result->runId, 7);
+        Assert::same($result->streetsCreated, 2);
+        Assert::same($result->housesCreated, 3);
+        Assert::same($result->leftOut, ['41 Berryhill Crescent']);
+        Assert::same($result->alreadyThere, []);
+        Assert::true(in_array('run:Run One', $log, true));
+        Assert::true(in_array('street:Berryhill Crescent', $log, true));
+        Assert::true(in_array('street:Shield Rd', $log, true));
+        // the client is linked to the dwelling that was created for the house
+        Assert::true(in_array('client:3 Berryhill Crescent@3', $log, true));
+        Assert::true(in_array('client:462 Shield Rd@462', $log, true));
+        // a draft (status 1) invoice with the standard product at the given price
+        Assert::true(in_array('item:product5:price12.5', $log, true));
+        Assert::same(count(array_filter($log, static fn (string $l): bool => str_ends_with($l, ':status1'))), 3);
+    }
+
+    public function aHouseThatAlreadyHasAClientIsLeftAlone(): void
+    {
+        $log = [];
+        $result = $this->service([14], $log)->save(
+            (new RunHouseListParser())->parse(self::TEXT),
+            9,
+            '',
+            0,
+            $this->product(),
+            null,
+            new User('admin', 'a@b.test', 'x'),
+        );
+
+        Assert::false($result->runCreated);
+        Assert::same($result->runId, 9);
+        Assert::same($result->housesCreated, 2);
+        Assert::same($result->alreadyThere, ['14 Berryhill Crescent']);
+        Assert::false(in_array('client:14 Berryhill Crescent@14', $log, true));
+        Assert::false(in_array('run:', $log, true));
+    }
+}

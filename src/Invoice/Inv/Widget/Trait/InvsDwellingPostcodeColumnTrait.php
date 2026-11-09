@@ -22,13 +22,15 @@ trait InvsDwellingPostcodeColumnTrait
     private function buildDwellingPostcodeColumn(DwR $dwR, bool $homeCareEnabled): DataColumn
     {
         $pendingTitle = $this->translator->translate('dwelling.postcode.pending');
+        $pullPointTitle = $this->translator->translate('dwelling.pull.point');
         return new DataColumn(
             property: 'filterDwellingPostcode',
             header: $this->translator->translate('dwelling.postcode'),
             content: static fn (Inv $model): string => DwellingPostcodeLink::html(
                 $model->getClientDwellingId(),
                 $dwR,
-                $pendingTitle
+                $pendingTitle,
+                $pullPointTitle
             ),
             encodeContent: false,
             withSorting: false,

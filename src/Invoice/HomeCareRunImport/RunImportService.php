@@ -1,0 +1,156 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Invoice\HomeCareRunImport;
+
+use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
+use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\Dwelling\Dwelling;
+use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\InvItem\InvItem;
+use App\Infrastructure\Persistence\Product\Product;
+use App\Infrastructure\Persistence\User\User;
+use App\Invoice\InvItem\IiAddProductDeps;
+
+/**
+ * Saves a parsed run. The run becomes a category secondary, each street a family under it, each
+ * house a dwelling on that street with a client created for it (the client's dwelling_id pointing
+ * at the dwelling), and each client gets a draft invoice with the one standard product.
+ *
+ * Safe to run again on the same run: a house whose dwelling already has a client is left alone, so
+ * a re-import adds only the new houses. Cancelled and do-not-clean houses are not created.
+ */
+final readonly class RunImportService
+{
+    public const string SOURCE = 'run_import';
+
+    public function __construct(private RunImportDeps $d)
+    {
+    }
+
+    /**
+     * @param int|null $runId an existing run to put the houses under; null creates one
+     * @param string $runName the new run's name (used only when $runId is null)
+     * @param int $categoryPrimaryId the category a new run is filed under
+     * @param float|null $price the price of each house's invoice line; null uses the product's price
+     */
+    public function save(
+        ParsedRun $run,
+        ?int $runId,
+        string $runName,
+        int $categoryPrimaryId,
+        Product $product,
+        ?float $price,
+        User $user,
+    ): RunImportResult {
+        $runCreated = null === $runId;
+        if (null === $runId) {
+            $category = new CategorySecondary();
+            $this->d->csService->saveCategorySecondary($category, [
+                'category_primary_id' => (string) $categoryPrimaryId,
+                'name' => $runName,
+            ]);
+            $runId = $category->reqId();
+        }
+
+        $streetsCreated = 0;
+        $housesCreated = 0;
+        $alreadyThere = [];
+        $leftOut = [];
+        $familyIds = [];
+        foreach ($run->segments as $segment) {
+            if (!isset($familyIds[$segment->street])) {
+                $isNew = null === $this->d->fR->repoFamilyByNameAndSecondaryCategoryQuery($segment->street, $runId);
+                $family = $this->d->familyService->findOrCreateByStreetName($segment->street, $runId);
+                $familyIds[$segment->street] = $family->reqId();
+                $streetsCreated += $isNew ? 1 : 0;
+            }
+            foreach ($segment->houses as $house) {
+                $label = $house->number . ' ' . $segment->street;
+                if ($house->isInactive()) {
+                    $leftOut[] = $label;
+                    continue;
+                }
+                $dwelling = $this->dwelling($familyIds[$segment->street], $house, $segment->postcode);
+                if ($this->d->cdR->isClaimedByAnother($dwelling->reqId(), null)) {
+                    $alreadyThere[] = $label;
+                    continue;
+                }
+                $client = $this->client($house, $label, $segment, $dwelling);
+                $this->draftInvoice($client, $product, $house->price ?? $price, $user);
+                ++$housesCreated;
+            }
+        }
+        // the street order of the run is the order the streets are first met
+        $this->d->familyService->saveStreetOrders(array_values($familyIds));
+
+        return new RunImportResult($runId, $runCreated, $streetsCreated, $housesCreated, $alreadyThere, $leftOut);
+    }
+
+    private function dwelling(int $familyId, RunHouse $house, ?string $postcode): Dwelling
+    {
+        $dwelling = $this->d->dwellingService->findOrCreateDwelling($familyId, $house->number);
+        if (null !== $postcode && '' === $dwelling->getPostcode()) {
+            $dwelling->setPostcode(str_replace(' ', '', $postcode));
+        }
+        if ($house->has(RunHouse::FLAG_PULL_POINT)) {
+            $dwelling->setPullPoint(true);
+        }
+        if (null === $dwelling->getSource() || 'signup_freehand' === $dwelling->getSource()) {
+            $dwelling->setSource(self::SOURCE);
+        }
+        $this->d->dwR->save($dwelling);
+        return $dwelling;
+    }
+
+    private function client(RunHouse $house, string $label, RunSegment $segment, Dwelling $dwelling): Client
+    {
+        $client = new Client();
+        $client->setClientActive(true);
+        $client->setClientName('' === $house->clientName ? $label : $house->clientName);
+        if ('' !== $house->phone) {
+            $client->setClientPhone($house->phone);
+        }
+        $client->setClientAddress1($segment->street);
+        $client->setClientBuildingNumber($house->number);
+        if (null !== $segment->postcode) {
+            $client->setClientZip($segment->postcode);
+        }
+        $client->setDwellingId($dwelling->reqId());
+        $this->d->cR->save($client);
+        return $client;
+    }
+
+    private function draftInvoice(Client $client, Product $product, ?float $price, User $user): void
+    {
+        $taxRate = $product->getTaxRate() ?? $this->d->trR->repoFirstByIdQuery();
+        $unit = $product->getUnit() ?? $this->d->unR->repoFirstByIdQuery();
+        $clientId = $client->reqId();
+        $this->d->invService->withTransaction(function () use ($product, $price, $user, $taxRate, $unit, $clientId): void {
+            $body = [
+                'client_id' => $clientId,
+                'group_id' => (int) $this->d->sR->getSetting('default_invoice_group'),
+                'status_id' => 1,
+                'discount_amount' => 0.00,
+                'password' => '',
+                'terms' => '',
+                'note' => '',
+            ];
+            $inv = $this->d->invService->saveInv($user, new Inv(), $body, $this->d->sR, $this->d->gR);
+            $invId = $inv->reqId();
+            $itemBody = [
+                'tax_rate_id' => null === $taxRate ? 0 : $taxRate->reqId(),
+                'product_id' => $product->reqId(),
+                'quantity' => 1.00,
+                'price' => $price ?? ($product->getProductPrice() ?? 0.00),
+                'discount_amount' => 0.00,
+                'product_unit_id' => null === $unit ? 0 : $unit->reqId(),
+            ];
+            $deps = new IiAddProductDeps($this->d->pR, $this->d->trR, $this->d->iias, $this->d->iiaR, $this->d->sR, $this->d->unR);
+            $this->d->invItemService->addInvItemProduct(new InvItem(), $itemBody, (string) $invId, $deps);
+            $this->d->productClientService->syncFromInvItems($clientId, [$product->reqId()]);
+            $this->d->invRecalculator->recalculate($invId);
+        });
+    }
+}

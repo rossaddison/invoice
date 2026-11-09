@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Dwelling;
 
+use App\Invoice\Helpers\GoogleMapsLink;
 use Yiisoft\Html\Html;
 
 /**
@@ -18,16 +19,35 @@ final class DwellingPostcodeLink
 
     public const string PENDING_ICON = '⏳';
 
-    public static function html(?int $dwellingId, DwellingRepository $dwR, string $pendingTitle = ''): string
-    {
-        $postcode = $dwellingId === null ? '' : ($dwR->repoDwellingQuery($dwellingId)?->getPostcode() ?? '');
+    public const string PULL_POINT_ICON = '📍';
+
+    public static function html(
+        ?int $dwellingId,
+        DwellingRepository $dwR,
+        string $pendingTitle = '',
+        string $pullPointTitle = '',
+    ): string {
+        $dwelling = $dwellingId === null ? null : $dwR->repoDwellingQuery($dwellingId);
+        $postcode = $dwelling?->getPostcode() ?? '';
         if ($postcode === '') {
             return Html::span(self::PENDING_ICON, ['title' => $pendingTitle, 'aria-label' => $pendingTitle])->render();
         }
-        return Html::a(
+        $link = Html::a(
             $postcode,
             self::MAPS_SEARCH_URL . rawurlencode($postcode),
             ['target' => '_blank', 'rel' => 'noopener noreferrer']
+        )->render();
+        if ($dwelling?->isPullPoint() !== true) {
+            return $link;
+        }
+        // the houses around this one are pulled from here: mark it, with a drive-there link beside it
+        $latitude = $dwelling->getLatitude();
+        $longitude = $dwelling->getLongitude();
+        $destination = null !== $latitude && null !== $longitude ? $latitude . ',' . $longitude : $postcode;
+        return $link . ' ' . Html::a(
+            self::PULL_POINT_ICON . '🧭',
+            GoogleMapsLink::directionsTo($destination),
+            ['target' => '_blank', 'rel' => 'noopener noreferrer', 'title' => $pullPointTitle, 'aria-label' => $pullPointTitle]
         )->render();
     }
 }

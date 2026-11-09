@@ -176,6 +176,7 @@ trait InvoiceInstallTrait
             // ('1') or whole houses ('0'). See Inv\HomeCareCrew.
             'homecare_crew_worker_ids' => '',
             'homecare_crew_front_back' => '0',
+            'homecare_crew_saved_on' => '',
             // Comma-separated list of inv/index column keys to hide, only
             // while homecare_auto_invoice_enabled is on — the general
             // desktop grid for non-HomeCare businesses is never affected.

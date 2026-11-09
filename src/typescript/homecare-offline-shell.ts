@@ -51,18 +51,13 @@ function nonEmptyParts(parts: (string | null)[]): string[] {
 
 function renderClientBlock(client: NonNullable<OfflineInvoice['client']>): DocumentFragment {
     const block = document.createDocumentFragment();
-    block.appendChild(textEl('div', 'client', client.fullName));
 
     const addressParts = nonEmptyParts([client.buildingNumber, client.address1, client.address2, client.city, client.state, client.zip, client.country]);
     if (addressParts.length > 0) {
         block.appendChild(textEl('div', 'address', addressParts.join(', ')));
     }
 
-    const contactParts = nonEmptyParts([client.phone, client.mobile, client.email]);
-    if (contactParts.length > 0) {
-        block.appendChild(textEl('div', 'contact', contactParts.join(' · ')));
-    }
-
+    // no name and no contact details: data protection (customers are never contacted)
     return block;
 }
 

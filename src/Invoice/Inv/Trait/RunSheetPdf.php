@@ -74,7 +74,9 @@ trait RunSheetPdf
         $run  = $this->indexHomeCareRunContext($request, $filter);
         $invs = $list->invRepo->filterCombined($filter, $run, $effectiveStatus);
 
-        return $this->renderRunSheetPdf($invs, $nav->dwR, $fR, $rowBuilder, $sides);
+        $startPostcode = $nav->csR->repoCategorySecondaryQuery($run->categorySecondaryId)?->getStartPostcode();
+
+        return $this->renderRunSheetPdf($invs, $nav->dwR, $fR, $rowBuilder, $sides, true, $startPostcode);
     }
 
     /**
@@ -87,6 +89,8 @@ trait RunSheetPdf
         FR $fR,
         RunSheetPdfRowBuilder $rowBuilder,
         AllocationSidesSummary $sides,
+        bool $showPrivateDetails = true,
+        ?string $startPostcode = null,
     ): Response|\Mpdf\Mpdf|array|string {
         $rows = $rowBuilder->build($invs, $dwR, $fR);
         // each row also says which side is whose ("Front: Dave; Back: Sam"), in the user's language
@@ -96,11 +100,16 @@ trait RunSheetPdf
             fn (AllocationSide $side): string => $this->translator->translate('allocation.side.' . $side->value),
             fn (AllocationStatus $status): string => $this->translator->translate('allocation.status.' . $status->value),
         );
+        // a field worker's or the lead's sheet names no client and shows no phone or amount (data protection)
+        $rows = $showPrivateDetails ? $rows : $rowBuilder->withoutClientDetails($rows);
         $title = $this->translator->translate('run.sheet.pdf');
         $html = $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/run_sheet_pdf',
             [
                 'rows'         => $rows,
+                'showPrivateDetails' => $showPrivateDetails,
+                'startPostcode' => $startPostcode,
+                'startLabel'   => $this->translator->translate('run.start.postcode'),
                 'title'        => $title,
                 'numberHelper' => new NumberHelper($this->sR),
             ],

@@ -214,4 +214,31 @@ final class RunSheetPdfRowBuilderTest
         $inv->setNumber($number);
         return $inv;
     }
+
+    public function aWorkersRowsNameNoClientAndGiveNoPhoneOrAmount(): void
+    {
+        $named = new RunSheetPdfRow('12 High St, SP1 1AA', 'https://maps/x', 'Jane Smith', '01234 567890', 'INV-1', 10.0, 1, 5, 'Front: Dave');
+        // no address on file: the address was only the client's name
+        $nameAsAddress = new RunSheetPdfRow('Joe Bloggs', null, 'Joe Bloggs', '0777', 'INV-2', 5.0, null, 6);
+
+        $rows = (new RunSheetPdfRowBuilder())->withoutClientDetails([$named, $nameAsAddress]);
+
+        Assert::same($rows[0]->clientName, '');
+        Assert::null($rows[0]->phone);
+        // workers never see prices
+        Assert::null($rows[0]->balance);
+        Assert::null($rows[1]->balance);
+        // everything that identifies the house or the job is kept
+        Assert::same($rows[0]->address, '12 High St, SP1 1AA');
+        Assert::same($rows[0]->mapsUrl, 'https://maps/x');
+        Assert::same($rows[0]->invNumber, 'INV-1');
+        Assert::same($rows[0]->invId, 5);
+        Assert::same($rows[0]->sides, 'Front: Dave');
+        Assert::same($rows[0]->streetSortOrder, 1);
+        // a client's name must not survive as the address
+        Assert::same($rows[1]->address, '');
+        Assert::false(str_contains(serialize($rows), 'Jane Smith'));
+        Assert::false(str_contains(serialize($rows), 'Joe Bloggs'));
+        Assert::false(str_contains(serialize($rows), '0777'));
+    }
 }

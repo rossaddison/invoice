@@ -7,6 +7,7 @@ namespace App\Invoice\Inv\Trait;
 use App\Auth\Permissions;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\User\User;
+use App\Invoice\Dwelling\DwellingRepository as DwR;
 use App\Invoice\Enum\AllocationSide;
 use App\Invoice\Enum\AllocationStatus;
 use App\Invoice\Enum\PostponeReason;
@@ -85,6 +86,37 @@ trait HomeCareAllocation
         $gate->apply($inv);
         $iR->save($inv);
         return $this->allocationDone($request, $inv, (int) $access->leadWorkerId(), $admin, 'info', 'worker.assigned');
+    }
+
+    /**
+     * Dan (the lead) -- or an admin -- taps "Delegated" on a pull point once the surrounding houses
+     * have been handed to the workers: the dwelling is stamped with the time, so the pull points sort
+     * into the order they were worked. Anyone else, an unknown invoice, or a house that is not a
+     * pull point all get the same 404.
+     */
+    public function delegatePullPoint(
+        Request $request,
+        #[RouteArgument('inv_id')] string $inv_id,
+        IR $iR,
+        DwR $dwR,
+        WorkerInvAccess $access,
+    ): Response {
+        $user = $this->userService->getUser();
+        $inv = $inv_id !== '' ? $iR->repoInvUnLoadedquery((int) $inv_id) : null;
+        $dwellingId = $inv?->getClientDwellingId();
+        $dwelling = null !== $dwellingId ? $dwR->repoDwellingQuery($dwellingId) : null;
+        if (null === $dwelling
+            || !($this->userService->hasPermission(Permissions::EDIT_INV)
+                || $access->isLead($user instanceof User ? $user->reqId() : 0))
+            || !$dwelling->markDelegated(new \DateTimeImmutable())
+        ) {
+            return $this->webService->getNotFoundResponse();
+        }
+        $dwR->save($dwelling);
+        $body = $request->getParsedBody();
+        $admin = $this->fromAdminIndex(is_array($body) ? $body : []);
+        $this->flashMessage('info', $this->translator->translate('dwelling.pull.point.delegated'));
+        return $this->webService->getRedirectResponse($this->allocationHome($admin));
     }
 
     /**

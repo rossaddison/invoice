@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
+use App\Invoice\Helpers\GoogleMapsLink;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -46,6 +47,26 @@ $columns = [
         'name',
         header: $translator->translate('name'),
         content: static fn (CategorySecondary $model) => Html::encode($model->getName() ?? ''),
+    ),
+    // A HomeCare run's starting postcode, opening turn-by-turn directions to it in Google Maps.
+    new DataColumn(
+        'start_postcode',
+        header: $translator->translate('run.start.postcode'),
+        content: static function (CategorySecondary $model) use ($translator): string {
+            $postcode = $model->getStartPostcode();
+            return null === $postcode || '' === $postcode
+                ? ''
+                : Html::a(
+                    '🧭 ' . $postcode,
+                    GoogleMapsLink::directionsTo($postcode),
+                    [
+                        'target' => '_blank',
+                        'rel' => 'noopener noreferrer',
+                        'title' => $translator->translate('run.start.navigate'),
+                    ]
+                )->render();
+        },
+        encodeContent: false,
     ),
     new ActionColumn(buttons: [
         new ActionButton(

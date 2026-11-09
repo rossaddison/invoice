@@ -95,6 +95,7 @@ final class GuestOfflineTestHarness extends BaseController
         \App\Invoice\Family\FamilyRepository $fR,
         \App\Invoice\Inv\RunSheetPdfRowBuilder $rowBuilder,
         \App\Invoice\InvWorkerAllocation\AllocationSidesSummary $_sides,
+        bool $_showClientDetails = true,
     ): Response|\Mpdf\Mpdf|array|string {
         throw new \LogicException('Not exercised by GuestOfflineTest.');
     }

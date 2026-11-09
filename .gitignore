@@ -35,6 +35,7 @@ phpunit.phar
 
 # evolving files
 /vendor
+/imports
 /node_modules
 /resources/rbac/items.php
 /resources/rbac/assignments.php
