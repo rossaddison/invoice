@@ -299,7 +299,7 @@ final class GuestOfflineTest
         Assert::notNull($capturedJson);
         /**
          * @var array{downloadedAt: string, invoices: list<array{
-         *     number: string, statusLabel: string, urlKey: string,
+         *     number: string, statusLabel: string,
          *     client: array<string, string|null>,
          *     items: list<array{name: string}>,
          *     sides: list<array{side: string, workerName: string, mine: bool, status: string, carded: bool, sideLabel: string, statusLabel: string}>,
@@ -311,7 +311,8 @@ final class GuestOfflineTest
         $payloadInvoice = $decoded['invoices'][0];
         Assert::same('INV-101', $payloadInvoice['number']);
         Assert::same('Sent', $payloadInvoice['statusLabel']);
-        Assert::same('abc123urlkey', $payloadInvoice['urlKey']);
+        // the invoice's public key is never given to a worker (it opens the customer's invoice page)
+        Assert::false(array_key_exists('urlKey', $payloadInvoice));
         // the house's address only: a worker is never given the client's name, phone or email
         // (data protection), and customers are never contacted
         Assert::same('1 High Street', $payloadInvoice['client']['address1']);

@@ -258,4 +258,13 @@ TXT;
         Assert::same($schedule->entries[1]->crewNames, []);
         Assert::false($schedule->entries[1]->crewFromDitto);
     }
-}
+
+    public function aMonthOutsideOneToTwelveIsNotAMonth(): void
+    {
+        foreach ([0, 13] as $month) {
+            $schedule = (new RunScheduleParser())->parse("2 - A (Ross)\n3 - B", 2026, $month);
+
+            Assert::same($schedule->entries, []);
+            Assert::same(count($schedule->warnings), 1);
+        }
+    }}

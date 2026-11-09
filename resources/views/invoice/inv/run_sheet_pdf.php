@@ -67,7 +67,8 @@ $this->beginPage();
             <?= H::encode($row->address !== '' ? $row->address : '—'); ?>
             <?php } ?>
             <?php if ($row->pullPoint) { ?>
-            <span title="<?= H::encode($translator->translate('dwelling.pull.point')); ?>">📍 <?= H::encode($translator->translate('dwelling.pull.point')); ?></span>
+            <?php $pullPointLabel = H::encode($translator->translate('dwelling.pull.point')); ?>
+            <span title="<?= $pullPointLabel; ?>">📍 <?= $pullPointLabel; ?></span>
             <?php } ?>
         </td>
         <?php if ($showPrivateDetails) { ?>

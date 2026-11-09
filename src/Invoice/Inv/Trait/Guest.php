@@ -259,7 +259,6 @@ trait Guest
             'note' => $inv->getNote(),
             'doNotSend' => $inv->getDoNotSend(),
             'doNotSendReason' => $inv->getDoNotSendReason(),
-            'urlKey' => $inv->getUrlKey(),
             // The address only: no name, phone, mobile or email (data protection). Workers identify a
             // house by its address, and customers are never contacted.
             'client' => null !== $client ? [

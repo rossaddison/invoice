@@ -112,7 +112,7 @@ final class DwellingPullPointTest
     {
         $pull = new Dwelling(family_id: 1, house_number_numeric: 14, postcode: 'AB12CD');
         $pull->setPullPoint(true);
-        $pull->markDelegated(new \DateTimeImmutable('2026-11-09 10:30:00'));
+        $pull->markDelegated(new \DateTimeImmutable('today 10:30'));
         $plain = new Dwelling(family_id: 1, house_number_numeric: 12, postcode: 'AB12CD');
 
         /** @var DwellingRepository<Dwelling>&m\MockInterface $dwR */
@@ -141,4 +141,28 @@ final class DwellingPullPointTest
         Assert::true(str_contains($html, '/inv/delegatepullpoint/9'));
         Assert::true(str_contains($html, 'Delegated at 10:30'));
     }
-}
+
+    public function aStampFromAnEarlierDayShowsItsDateSoItIsNotTakenForToday(): void
+    {
+        $pull = new Dwelling(family_id: 1, house_number_numeric: 14, postcode: 'AB12CD');
+        $pull->setPullPoint(true);
+        $pull->markDelegated(new \DateTimeImmutable('2026-11-02 10:30:00'));
+        /** @var DwellingRepository<Dwelling>&m\MockInterface $dwR */
+        $dwR = m::mock(DwellingRepository::class);
+        $dwR->shouldReceive('repoDwellingQuery')->andReturn($pull);
+        /** @var \Yiisoft\Router\UrlGeneratorInterface&m\MockInterface $urls */
+        $urls = m::mock(\Yiisoft\Router\UrlGeneratorInterface::class);
+        $urls->shouldReceive('generate')->andReturn('/inv/delegatepullpoint/9');
+        /** @var \Yiisoft\Translator\TranslatorInterface&m\MockInterface $t */
+        $t = m::mock(\Yiisoft\Translator\TranslatorInterface::class);
+        $t->shouldReceive('translate')->andReturnUsing(static fn (string $k): string => $k === 'dwelling.pull.point.delegated.at' ? 'Delegated at %s' : $k);
+        $client = new \App\Infrastructure\Persistence\Client\Client();
+        $client->setDwellingId(2);
+        $inv = new \App\Infrastructure\Persistence\Inv\Inv();
+        $inv->setId(9);
+        $inv->setClient($client);
+
+        $html = (new \App\Invoice\Dwelling\PullPointDelegateCell($dwR, $urls, $t, 'tok'))->render($inv);
+
+        Assert::true(str_contains($html, 'Delegated at 2 Nov 10:30'));
+    }}

@@ -85,9 +85,14 @@ final readonly class ScheduleNameMatcher
     private function match(string $kind, string $name, array $candidates, bool $nicknames): ?int
     {
         $query = $this->normalise($name);
-        if ('' === $query) {
-            return null;
-        }
+        return '' === $query ? null : $this->matchNormalised($kind, $query, $candidates, $nicknames);
+    }
+
+    /**
+     * @param array<int, string> $candidates id => name
+     */
+    private function matchNormalised(string $kind, string $query, array $candidates, bool $nicknames): ?int
+    {
         $known = $this->aliases->repoLookupquery($kind, $query);
         if (null !== $known && isset($candidates[$known->getTargetId()])) {
             return $known->getTargetId();
@@ -115,16 +120,19 @@ final readonly class ScheduleNameMatcher
         if ($nicknames) {
             return in_array($candidate, self::NICKNAMES[$query] ?? [], true);
         }
-        $q = explode(' ', $query);
-        $c = explode(' ', $candidate);
-        if (count($q) !== count($c)) {
-            return false;
+        return $this->eachWordStartsTheOther(explode(' ', $query), explode(' ', $candidate));
+    }
+
+    /**
+     * @param list<string> $query
+     * @param list<string> $candidate
+     */
+    private function eachWordStartsTheOther(array $query, array $candidate): bool
+    {
+        $matches = count($query) === count($candidate);
+        foreach ($query as $i => $word) {
+            $matches = $matches && str_starts_with($candidate[$i], $word);
         }
-        foreach ($q as $i => $word) {
-            if (!str_starts_with($c[$i], $word)) {
-                return false;
-            }
-        }
-        return true;
+        return $matches;
     }
 }

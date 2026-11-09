@@ -62,7 +62,9 @@ final class PullPointGrouper
     private static function byStreetThenNumber(RunSheetPdfRow $a, RunSheetPdfRow $b): int
     {
         if (null !== $a->streetSortOrder && null !== $b->streetSortOrder) {
-            return ($a->streetSortOrder <=> $b->streetSortOrder) ?: ($a->houseNumber <=> $b->houseNumber);
+            return ($a->streetSortOrder <=> $b->streetSortOrder)
+                ?: ($a->familyId <=> $b->familyId)
+                ?: ($a->houseNumber <=> $b->houseNumber);
         }
         return match (true) {
             null !== $a->streetSortOrder => -1,

@@ -16,7 +16,7 @@ use Yiisoft\Html\Tag\Form;
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 echo H::openTag('div', ['class' => 'card']);
- echo H::tag('div', H::encode($translator->translate('homecare.runimport.title')), ['class' => 'card-header']);
+ echo H::tag('div', $translator->translate('homecare.runimport.title'), ['class' => 'card-header']);
  echo H::openTag('div', ['class' => 'card-body']);
   echo H::tag('p', $translator->translate('homecare.runimport.hint'), ['class' => 'text-muted']);
   echo new Form()->post($urlGenerator->generate('homecarerunimport/preview'))->csrf($csrf)->open();
@@ -28,7 +28,7 @@ echo H::closeTag('div');
 
 // The import sheet: download the blank CSV, fill it in, upload it.
 echo H::openTag('div', ['class' => 'card mt-3']);
- echo H::tag('div', H::encode($translator->translate('homecare.runimport.sheet.title')), ['class' => 'card-header']);
+ echo H::tag('div', $translator->translate('homecare.runimport.sheet.title'), ['class' => 'card-header']);
  echo H::openTag('div', ['class' => 'card-body']);
   echo H::tag('p', $translator->translate('homecare.runimport.sheet.hint'), ['class' => 'text-muted']);
   echo new Form()->post($urlGenerator->generate('homecarerunimport/template'))->csrf($csrf)->open();

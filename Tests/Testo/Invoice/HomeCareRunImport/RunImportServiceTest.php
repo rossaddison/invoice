@@ -30,6 +30,7 @@ use App\Invoice\Setting\SettingRepository;
 use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Unit\UnitRepository;
 use Mockery as m;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
 use ReflectionClass;
 use Testo\Assert;
 use Testo\Test;
@@ -56,9 +57,11 @@ final class RunImportServiceTest
      * Builds the service over mocks. $claimed lists the dwelling ids that already have a client.
      *
      * @param list<int> $claimed
+     * @param list<Family> $existingFamilies the families the run already has
+     * @param bool $invoiceFails the draft invoice cannot be saved
      * @param list<string> $log filled with "client:<name>", "invoice:<client id>" ... as things happen
      */
-    private function service(array $claimed, array &$log): RunImportService
+    private function service(array $claimed, array &$log, array $existingFamilies = [], bool $invoiceFails = false): RunImportService
     {
         $nextId = 100;
         $csService = $this->mock(CategorySecondaryService::class);
@@ -70,6 +73,12 @@ final class RunImportServiceTest
         );
         $fR = $this->mock(FamilyRepository::class);
         $fR->shouldReceive('repoFamilyByNameAndSecondaryCategoryQuery')->andReturn(null);
+        /** @var EntityReader&m\MockInterface $existing */
+        $existing = m::mock(EntityReader::class);
+        $existing->shouldReceive('getIterator')->andReturnUsing(static function () use ($existingFamilies): \Generator {
+            yield from $existingFamilies;
+        });
+        $fR->shouldReceive('repoCategorySecondaryIdQuery')->andReturn($existing);
         $families = $this->mock(FamilyService::class);
         $families->shouldReceive('findOrCreateByStreetName')->andReturnUsing(
             static function (string $street) use (&$nextId, &$log): Family {
@@ -79,7 +88,12 @@ final class RunImportServiceTest
                 return $family;
             }
         );
-        $families->shouldReceive('saveStreetOrders')->once();
+        $families->shouldReceive('saveStreetOrders')->atMost()->once()->andReturnUsing(
+            /** @param list<int> $ids */
+            static function (array $ids) use (&$log): void {
+                $log[] = 'order:' . implode(',', $ids);
+            }
+        );
         $dwellings = $this->mock(DwellingService::class);
         $dwellings->shouldReceive('findOrCreateDwelling')->andReturnUsing(
             static function (int $familyId, string $number) use (&$nextId): Dwelling {
@@ -91,6 +105,9 @@ final class RunImportServiceTest
         $dwR = $this->mock(DwellingRepository::class);
         $dwR->shouldReceive('save');
         $cR = $this->mock(ClientRepository::class);
+        $cR->shouldReceive('delete')->andReturnUsing(static function (Client $c) use (&$log): void {
+            $log[] = 'deleted:' . $c->getClientName();
+        });
         $cR->shouldReceive('save')->andReturnUsing(static function (Client $c) use (&$nextId, &$log): void {
             $c->setId($nextId++);
             $log[] = 'client:' . $c->getClientName() . '@' . (string) $c->getDwellingId();
@@ -103,7 +120,10 @@ final class RunImportServiceTest
         $invService->shouldReceive('withTransaction')->andReturnUsing(static function (callable $fn): void {
             $fn();
         });
-        $invService->shouldReceive('saveInv')->andReturnUsing(static function (User $u, Inv $inv, array $body) use (&$log): Inv {
+        $invService->shouldReceive('saveInv')->andReturnUsing(static function (User $u, Inv $inv, array $body) use (&$log, $invoiceFails): Inv {
+            if ($invoiceFails) {
+                throw new \RuntimeException('cannot save');
+            }
             $inv->setId(900 + (int) $body['client_id']);
             $log[] = 'invoice:' . (string) $body['client_id'] . ':status' . (string) $body['status_id'];
             return $inv;
@@ -208,5 +228,57 @@ final class RunImportServiceTest
         Assert::same($result->alreadyThere, ['14 Berryhill Crescent']);
         Assert::false(in_array('client:14 Berryhill Crescent@14', $log, true));
         Assert::false(in_array('run:', $log, true));
+    }
+
+    public function aFailedInvoiceDeletesTheClientSoAReImportCanTryTheHouseAgain(): void
+    {
+        $log = [];
+        $caught = null;
+        try {
+            $this->service([], $log, [], true)->save(
+                (new RunHouseListParser())->parse("RUN ONE
+EXAMPLE CRESCENT AB1 2CD
+3
+"),
+                9,
+                '',
+                0,
+                $this->product(),
+                null,
+                new User('admin', 'a@b.test', 'x'),
+            );
+        } catch (\RuntimeException $e) {
+            $caught = $e;
+        }
+
+        Assert::notNull($caught);
+        Assert::true(in_array('deleted:3 Example Crescent', $log, true));
+    }
+
+    public function streetsAlreadyOrderedKeepTheirPlaceAndNewStreetsFollow(): void
+    {
+        $ordered = static function (int $id, int $order): Family {
+            $family = new Family();
+            $family->setId($id);
+            $family->setStreetSortOrder($order);
+            return $family;
+        };
+        $log = [];
+        // the run already has families 40 (order 2) and 41 (order 1); the import meets two other streets
+        $this->service([], $log, [$ordered(40, 2), $ordered(41, 1)])->save(
+            (new RunHouseListParser())->parse(self::TEXT),
+            9,
+            '',
+            0,
+            $this->product(),
+            null,
+            new User('admin', 'a@b.test', 'x'),
+        );
+
+        $orders = array_values(array_filter($log, static fn (string $l): bool => str_starts_with($l, 'order:')));
+        Assert::same(count($orders), 1);
+        // 41 (order 1) then 40 (order 2) stay first, the two streets met for the first time follow
+        Assert::true(str_starts_with($orders[0], 'order:41,40,'));
+        Assert::same(count(explode(',', substr($orders[0], 6))), 4);
     }
 }

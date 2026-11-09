@@ -45,7 +45,7 @@ final readonly class RunScheduleParser
         $lines = $this->lines($text);
         $month = $this->monthFrom($lines) ?? $month;
         $warnings = [];
-        if (null === $month) {
+        if (null === $month || $month < 1 || $month > 12) {
             return new ParsedSchedule($year, 0, [], [], ['No month found in the text: choose the month.']);
         }
 

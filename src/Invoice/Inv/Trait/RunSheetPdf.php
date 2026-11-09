@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
+use App\Auth\Permissions;
+use App\Infrastructure\Persistence\User\User;
 use App\Invoice\Dwelling\DwellingRepository as DwR;
 use App\Invoice\Family\FamilyRepository as FR;
 use App\Invoice\Helpers\MpdfHelper;
@@ -16,6 +18,7 @@ use App\Invoice\Enum\AllocationSide;
 use App\Invoice\Enum\AllocationStatus;
 use App\Invoice\Inv\RunSheetPdfRowBuilder;
 use App\Invoice\InvWorkerAllocation\AllocationSidesSummary;
+use App\Invoice\Worker\WorkerRepository as WR;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -66,7 +69,17 @@ trait RunSheetPdf
         FR $fR,
         RunSheetPdfRowBuilder $rowBuilder,
         AllocationSidesSummary $sides,
+        WR $wR,
     ): Response|\Mpdf\Mpdf|array|string {
+        $user = $this->userService->getUser();
+        if (!$this->userService->hasPermission(Permissions::EDIT_INV)
+            && $user instanceof User
+            && null !== $wR->findByUserId($user->reqId())
+        ) {
+            // this sheet carries client names, phones and balances for every invoice: a field worker
+            // is sent to their own scoped sheet, which has none of them
+            return $this->webService->getRedirectResponse('inv/guest/runsheetpdf');
+        }
         $effectiveStatus = isset($filter->filterStatus)
             && !empty($filter->filterStatus)
             ? (int) $filter->filterStatus

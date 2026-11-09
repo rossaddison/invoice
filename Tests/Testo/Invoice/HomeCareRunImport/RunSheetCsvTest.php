@@ -97,4 +97,32 @@ final class RunSheetCsvTest
         Assert::false($run->segments[0]->houses[1]->has(RunHouse::FLAG_PULL_POINT));
         Assert::same($run->warnings, []);
     }
-}
+
+    public function aCellTheTemplateGuardedAgainstFormulasReadsBackWithoutTheApostrophe(): void
+    {
+        $run = (new RunSheetCsv())->parse("street,postcode,number,phone,note\n\"A Road\",,1,'+44 7700 900123,'-careful\n\"A Road\",,2,'plain,\n");
+
+        Assert::same($run->segments[0]->houses[0]->phone, '+44 7700 900123');
+        Assert::same($run->segments[0]->houses[0]->note, '-careful');
+        // an apostrophe that is not a guard stays
+        Assert::same($run->segments[0]->houses[1]->phone, "'plain");
+    }
+
+    public function aHouseNumberThatIsNotANumberIsSkippedWithAWarning(): void
+    {
+        $run = (new RunSheetCsv())->parse("street,postcode,number\n\"A Road\",,Flat 1\n\"A Road\",,12-14\n\"A Road\",,12a\n");
+
+        Assert::same($run->houseCount(), 1);
+        Assert::same($run->segments[0]->houses[0]->number, '12A');
+        Assert::same(count($run->warnings), 2);
+        Assert::true(str_contains($run->warnings[0], 'house number such as 14 or 12A'));
+    }
+
+    public function aPostcodeThatIsNotOneIsLeftBlankWithAWarning(): void
+    {
+        $run = (new RunSheetCsv())->parse("street,postcode,number\n\"A Road\",NOT A POSTCODE AT ALL,1\n");
+
+        Assert::null($run->segments[0]->postcode);
+        Assert::same(count($run->warnings), 1);
+        Assert::true(str_contains($run->warnings[0], 'is not a postcode'));
+    }}

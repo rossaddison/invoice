@@ -144,16 +144,24 @@ final readonly class RunHouseListParser
         $continues = 1 === preg_match('/\bCONTINUES\b/', $line);
         $name = trim((string) preg_replace('/\bCONTINUES\b/', '', $core));
         $name = trim((string) preg_replace('/\s+/', ' ', $name), " \t,.-");
-        // a mixed-case name ("Hilltop AB1 2CD") is a street only when a postcode follows it
-        $mixedCaseOk = null !== $postcode && 1 !== preg_match('/\d/', $name) && count(explode(' ', $name)) <= 5;
-        if ('' === $name || (!$mixedCaseOk && (1 === preg_match('/[a-z]/', $name) || 1 !== preg_match('/\p{Lu}{2}/u', $name)))) {
-            return null;
-        }
-        $hasStreetWord = [] !== array_intersect(explode(' ', $name), self::STREET_WORDS);
-        if (null === $postcode && null === $declared && !$continues && !$hasStreetWord) {
+        if (!$this->looksLikeAStreet($name, $postcode, $declared, $continues)) {
             return null;
         }
         return ['name' => $this->capitalise($name), 'postcode' => $postcode, 'declared' => $declared, 'continues' => $continues];
+    }
+
+    /**
+     * Whether the name read from a heading line is a street: all capitals (or, with a postcode after
+     * it, mixed case such as "Hilltop AB1 2CD"), and either a postcode, a count, "continues" or a
+     * street word (Road, Crescent...) says so.
+     */
+    private function looksLikeAStreet(string $name, ?string $postcode, ?int $declared, bool $continues): bool
+    {
+        $mixedCaseOk = null !== $postcode && 1 !== preg_match('/\d/', $name) && count(explode(' ', $name)) <= 5;
+        $shapeOk = '' !== $name
+            && ($mixedCaseOk || (1 !== preg_match('/[a-z]/', $name) && 1 === preg_match('/\p{Lu}{2}/u', $name)));
+        $hasStreetWord = [] !== array_intersect(explode(' ', $name), self::STREET_WORDS);
+        return $shapeOk && (null !== $postcode || null !== $declared || $continues || $hasStreetWord);
     }
 
     private function house(string $line, int $lineNo): ?RunHouse

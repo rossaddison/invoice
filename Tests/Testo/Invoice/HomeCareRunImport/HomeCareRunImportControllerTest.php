@@ -347,4 +347,19 @@ final class HomeCareRunImportControllerTest
 
         Assert::same($this->redirects->getArrayCopy(), ['homecareschedule/index']);
     }
-}
+
+    public function aNegativeOrNonFinitePriceIsRefusedAndNothingIsSaved(): void
+    {
+        $importer = $this->importer();
+        $importer->shouldNotReceive('save');
+
+        foreach (['-5', '1e999', 'abc'] as $price) {
+            [$controller, , $redirect] = $this->controller($importer, $this->product());
+            $response = $controller->save($this->post([
+                'run_text' => self::TEXT, 'run_id' => '7', 'product_id' => '5', 'price' => $price,
+            ]));
+
+            Assert::same($response, $redirect);
+            Assert::same($this->flashes[0], ['danger', 'homecare.runimport.save.invalid']);
+        }
+    }}

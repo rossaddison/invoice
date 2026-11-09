@@ -153,6 +153,7 @@ final class RunSheetPdfRowBuilder
             pullPoint: $dwelling->isPullPoint(),
             houseNumber: $dwelling->getHouseNumberNumeric(),
             delegatedAt: $dwelling->getPullPointSortOrder(),
+            familyId: $dwelling->getFamilyId() ?? 0,
         );
     }
 

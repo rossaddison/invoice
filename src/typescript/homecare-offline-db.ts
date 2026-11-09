@@ -56,7 +56,6 @@ export interface OfflineInvoice {
     note: string | null;
     doNotSend: boolean;
     doNotSendReason: string;
-    urlKey: string;
     client: OfflineInvoiceClient | null;
     items: OfflineInvoiceItem[];
     /** Absent from a snapshot downloaded before sides were added. */

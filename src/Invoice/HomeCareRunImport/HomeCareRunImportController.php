@@ -31,6 +31,10 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
  */
 final class HomeCareRunImportController extends BaseController
 {
+    private const string FLASH_DANGER = 'danger';
+
+    private const string ROUTE_INDEX = 'homecarerunimport/index';
+
     protected string $controllerName = 'invoice/homecarerunimport';
 
     public function __construct(
@@ -96,8 +100,8 @@ final class HomeCareRunImportController extends BaseController
         $csv = $file instanceof UploadedFileInterface && UPLOAD_ERR_OK === $file->getError()
             ? (string) $file->getStream() : '';
         if ('' === trim($csv) || !$this->sheet->isSheet($csv)) {
-            $this->flashMessage('danger', $this->translator->translate('homecare.runimport.sheet.invalid'));
-            return $this->webService->getRedirectResponse('homecarerunimport/index');
+            $this->flashMessage(self::FLASH_DANGER, $this->translator->translate('homecare.runimport.sheet.invalid'));
+            return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
         }
         return $this->previewText($csv);
     }
@@ -111,9 +115,9 @@ final class HomeCareRunImportController extends BaseController
     {
         $run = $this->read($text);
         if ([] === $run->segments) {
-            $this->flashMessage('danger',
+            $this->flashMessage(self::FLASH_DANGER,
                 $this->translator->translate('homecare.runimport.nothing.read'));
-            return $this->webService->getRedirectResponse('homecarerunimport/index');
+            return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
         }
         $products = [];
         /** @var iterable<Product> $all */
@@ -143,18 +147,22 @@ final class HomeCareRunImportController extends BaseController
         $user = $this->userService->getUser();
         $primaryId = (int) $this->field($request, 'category_primary_id');
         $runId = ctype_digit($runChoice) && (int) $runChoice > 0 ? (int) $runChoice : null;
-        if ([] === $run->segments || null === $product || !$user instanceof User || (null === $runId && ('' === $runName || $primaryId <= 0))) {
-            $this->flashMessage('danger', $this->translator->translate('homecare.runimport.save.invalid'));
-            return $this->webService->getRedirectResponse('homecarerunimport/index');
-        }
         $priceText = trim($this->field($request, 'price'));
+        $price = $this->price($priceText);
+        if ([] === $run->segments || null === $product || !$user instanceof User
+            || (null === $runId && ('' === $runName || $primaryId <= 0))
+            || ('' !== $priceText && null === $price)
+        ) {
+            $this->flashMessage(self::FLASH_DANGER, $this->translator->translate('homecare.runimport.save.invalid'));
+            return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
+        }
         $result = $this->importer->save(
             $run,
             $runId,
             $runName,
             $primaryId,
             $product,
-            is_numeric($priceText) ? (float) $priceText : null,
+            $price,
             $user,
         );
         $this->flashMessage('success', sprintf(
@@ -184,6 +192,18 @@ final class HomeCareRunImportController extends BaseController
             ->withHeader('Content-Disposition', 'attachment; filename="run-' .
                     ('' === $name ? 'file' : $name) . '.json"')
             ->withBody($this->streamFactory->createStream($json));
+    }
+
+    /**
+     * A price typed in the save form: a finite number of at least 0, or null (nothing typed, or not usable).
+     */
+    private function price(string $text): ?float
+    {
+        if ('' === $text || !is_numeric($text)) {
+            return null;
+        }
+        $value = (float) $text;
+        return is_finite($value) && $value >= 0.0 ? $value : null;
     }
 
     private function text(Request $request): string

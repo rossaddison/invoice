@@ -79,4 +79,26 @@ final class PullPointGrouperTest
             ['1 Street 2', '2 Street 2', '5 Street 1', '6 Street 1', '1 Street 1', '2 Street 1'],
         );
     }
-}
+
+    public function twoStreetsWithTheSameOrderStayContiguousInsteadOfInterleavingByHouseNumber(): void
+    {
+        $house = static fn (int $family, int $number, bool $pull = false): RunSheetPdfRow => new RunSheetPdfRow(
+            address: $number . ' Street ' . $family,
+            mapsUrl: null,
+            clientName: 'c',
+            phone: null,
+            invNumber: '',
+            balance: null,
+            streetSortOrder: 1,
+            pullPoint: $pull,
+            houseNumber: $number,
+            familyId: $family,
+        );
+        // both streets have order 1: street 2's houses come in between street 1's by number alone
+        $rows = [$house(1, 1, true), $house(2, 2), $house(1, 3), $house(2, 4)];
+
+        Assert::same(
+            $this->addresses((new PullPointGrouper())->group($rows)),
+            ['1 Street 1', '3 Street 1', '2 Street 2', '4 Street 2'],
+        );
+    }}

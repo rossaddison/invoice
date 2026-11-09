@@ -22,26 +22,26 @@ use Yiisoft\Html\Tag\Form;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-echo H::tag('h4', H::encode($run->title));
-echo H::tag('p', H::encode(sprintf(
+echo H::tag('h4', $run->title);
+echo H::tag('p', sprintf(
     $translator->translate('homecare.runimport.summary'),
     $run->houseCount(),
     count($run->streets())
-)), ['class' => 'text-muted']);
+), ['class' => 'text-muted']);
 
 if ([] !== $run->headerNotes) {
     echo H::openTag('div', ['class' => 'alert alert-info']);
      foreach ($run->headerNotes as $note) {
-         echo H::tag('div', H::encode($note));
+         echo H::tag('div', $note);
      }
     echo H::closeTag('div');
 }
 if ([] !== $run->warnings) {
     echo H::openTag('div', ['class' => 'alert alert-warning']);
-     echo H::tag('strong', H::encode($translator->translate('homecare.schedule.warnings')));
+     echo H::tag('strong', $translator->translate('homecare.schedule.warnings'));
      echo H::openTag('ul', ['class' => 'mb-0']);
       foreach ($run->warnings as $warning) {
-          echo H::tag('li', H::encode($warning));
+          echo H::tag('li', $warning);
       }
      echo H::closeTag('ul');
     echo H::closeTag('div');
@@ -50,8 +50,8 @@ if ([] !== $run->warnings) {
 foreach ($run->segments as $segment) {
     echo H::openTag('div', ['class' => 'card mb-2']);
      echo H::openTag('div', ['class' => 'card-header d-flex justify-content-between']);
-      echo H::tag('strong', H::encode($segment->street . ($segment->continues ? ' ' . $translator->translate('homecare.runimport.continues') : '')));
-      echo H::tag('span', H::encode((string) $segment->postcode), ['class' => 'text-muted']);
+      echo H::tag('strong', $segment->street . ($segment->continues ? ' ' . $translator->translate('homecare.runimport.continues') : ''));
+      echo H::tag('span', (string) $segment->postcode, ['class' => 'text-muted']);
      echo H::closeTag('div');
      echo H::openTag('div', ['class' => 'card-body py-2']);
       foreach ($segment->notes as $note) {
@@ -61,9 +61,9 @@ foreach ($run->segments as $segment) {
        foreach ($segment->houses as $house) {
            $rowClass = $house->isInactive() ? 'table-danger' : ($house->has(RunHouse::FLAG_NEW) ? 'table-success' : '');
            echo H::openTag('tr', ['class' => $rowClass]);
-            echo H::tag('td', H::encode($house->number), ['class' => 'fw-bold', 'style' => 'width:5em']);
-            echo H::tag('td', H::encode(implode(', ', $house->flags)), ['style' => 'width:14em']);
-            echo H::tag('td', H::encode($house->note));
+            echo H::tag('td', $house->number, ['class' => 'fw-bold', 'style' => 'width:5em']);
+            echo H::tag('td', implode(', ', $house->flags), ['style' => 'width:14em']);
+            echo H::tag('td', $house->note);
            echo H::closeTag('tr');
        }
       echo H::closeTag('table');
@@ -73,7 +73,7 @@ foreach ($run->segments as $segment) {
 
 // Save: the run, a client and dwelling for each house, and a draft invoice with the standard product.
 echo H::openTag('div', ['class' => 'card mb-3']);
- echo H::tag('div', H::encode($translator->translate('homecare.runimport.save.title')), ['class' => 'card-header']);
+ echo H::tag('div', $translator->translate('homecare.runimport.save.title'), ['class' => 'card-header']);
  echo H::openTag('div', ['class' => 'card-body']);
   echo H::tag('p', $translator->translate('homecare.runimport.save.hint'), ['class' => 'text-muted']);
   echo new Form()->post($urlGenerator->generate('homecarerunimport/save'))->csrf($csrf)->open();

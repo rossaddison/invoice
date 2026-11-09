@@ -7,6 +7,7 @@ namespace App\Invoice\HomeCareRunImport;
 use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Dwelling\Dwelling;
+use App\Infrastructure\Persistence\Family\Family;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\Product\Product;
@@ -78,14 +79,52 @@ final readonly class RunImportService
                     continue;
                 }
                 $client = $this->client($house, $label, $segment, $dwelling);
-                $this->draftInvoice($client, $product, $house->price ?? $price, $user);
+                try {
+                    $this->draftInvoice($client, $product, $house->price ?? $price, $user);
+                } catch (\Throwable $failure) {
+                    // a client left linked to the dwelling would make a re-import skip the house as
+                    // already there, so it never gets its invoice
+                    $this->d->cR->delete($client);
+                    throw $failure;
+                }
                 ++$housesCreated;
             }
         }
-        // the street order of the run is the order the streets are first met
-        $this->d->familyService->saveStreetOrders(array_values($familyIds));
+        // streets already ordered keep their place; the streets met for the first time follow them in
+        // the order they were met (a new run has no earlier order, so it is just the order met)
+        $this->d->familyService->saveStreetOrders(
+            $this->mergedStreetOrder($runCreated ? [] : $this->existingStreetOrder($runId), array_values($familyIds))
+        );
 
         return new RunImportResult($runId, $runCreated, $streetsCreated, $housesCreated, $alreadyThere, $leftOut);
+    }
+
+    /**
+     * The run's streets in their saved order (streets never ordered come last, by id).
+     *
+     * @return list<int>
+     */
+    private function existingStreetOrder(int $runId): array
+    {
+        $rows = [];
+        /** @var iterable<Family> $families */
+        $families = $this->d->fR->repoCategorySecondaryIdQuery($runId);
+        foreach ($families as $family) {
+            $order = $family->getStreetSortOrder();
+            $rows[] = [null === $order || $order < 1 ? PHP_INT_MAX : $order, $family->reqId()];
+        }
+        usort($rows, static fn (array $a, array $b): int => $a <=> $b);
+        return array_map(static fn (array $row): int => $row[1], $rows);
+    }
+
+    /**
+     * @param list<int> $existing
+     * @param list<int> $met
+     * @return list<int>
+     */
+    private function mergedStreetOrder(array $existing, array $met): array
+    {
+        return array_values(array_unique([...$existing, ...$met]));
     }
 
     private function dwelling(int $familyId, RunHouse $house, ?string $postcode): Dwelling

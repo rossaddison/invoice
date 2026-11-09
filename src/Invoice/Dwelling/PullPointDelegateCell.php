@@ -41,7 +41,10 @@ final readonly class PullPointDelegateCell
             'title' => $this->translator->translate('dwelling.pull.point.delegate.tip'),
         ])->render();
         $stamp = null === $at ? '' : Html::span(
-            sprintf($this->translator->translate('dwelling.pull.point.delegated.at'), $at->format('H:i')),
+            sprintf(
+                $this->translator->translate('dwelling.pull.point.delegated.at'),
+                $at->format($at->format('Y-m-d') === date('Y-m-d') ? 'H:i' : 'j M H:i')
+            ),
             ['class' => 'small text-body ms-1']
         )->render();
         return new Form()

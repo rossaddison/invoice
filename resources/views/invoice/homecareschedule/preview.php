@@ -34,10 +34,10 @@ echo H::hiddenInput('schedule', $text)->render();
 
 if ([] !== $schedule->warnings) {
     echo H::openTag('div', ['class' => 'alert alert-warning']);
-     echo H::tag('strong', H::encode($translator->translate('homecare.schedule.warnings')));
+     echo H::tag('strong', $translator->translate('homecare.schedule.warnings'));
      echo H::openTag('ul', ['class' => 'mb-0']);
       foreach ($schedule->warnings as $warning) {
-          echo H::tag('li', H::encode($warning));
+          echo H::tag('li', $warning);
       }
      echo H::closeTag('ul');
     echo H::closeTag('div');
@@ -47,13 +47,13 @@ echo H::openTag('div', ['class' => 'row']);
  // Runs
  echo H::openTag('div', ['class' => 'col-12 col-lg-6']);
   echo H::openTag('div', ['class' => 'card mb-3']);
-   echo H::tag('div', H::encode($translator->translate('homecare.schedule.runs.found')), ['class' => 'card-header']);
+   echo H::tag('div', $translator->translate('homecare.schedule.runs.found'), ['class' => 'card-header']);
    echo H::openTag('div', ['class' => 'card-body']);
     echo H::tag('p', $translator->translate('homecare.schedule.runs.hint'), ['class' => 'text-muted']);
     foreach ($runNames as $i => $name) {
         $matched = $suggested['runs'][$name] ?? null;
         echo H::openTag('div', ['class' => 'mb-2']);
-         echo H::tag('label', H::encode($name), ['class' => 'form-label fw-bold', 'for' => 'run-' . $i]);
+         echo H::tag('label', $name, ['class' => 'form-label fw-bold', 'for' => 'run-' . $i]);
          echo H::select('run[' . $i . ']')
              ->id('run-' . $i)
              ->optionsData(['new' => '➕ ' . $translator->translate('homecare.schedule.create.run')] + $runs)
@@ -62,7 +62,7 @@ echo H::openTag('div', ['class' => 'row']);
              ->addAttributes(['class' => 'form-select'])
              ->render();
          if (null !== $matched && ($startless[$matched] ?? false)) {
-             echo H::tag('div', H::encode($translator->translate('homecare.schedule.no.start.postcode')), ['class' => 'form-text text-warning']);
+             echo H::tag('div', $translator->translate('homecare.schedule.no.start.postcode'), ['class' => 'form-text text-warning']);
          }
         echo H::closeTag('div');
     }
@@ -81,12 +81,12 @@ echo H::openTag('div', ['class' => 'row']);
  // Workers
  echo H::openTag('div', ['class' => 'col-12 col-lg-6']);
   echo H::openTag('div', ['class' => 'card mb-3']);
-   echo H::tag('div', H::encode($translator->translate('homecare.schedule.crew.found')), ['class' => 'card-header']);
+   echo H::tag('div', $translator->translate('homecare.schedule.crew.found'), ['class' => 'card-header']);
    echo H::openTag('div', ['class' => 'card-body']);
     foreach ($crewNames as $i => $name) {
         $matched = $suggested['workers'][$name] ?? null;
         echo H::openTag('div', ['class' => 'mb-2']);
-         echo H::tag('label', H::encode($name), ['class' => 'form-label fw-bold', 'for' => 'worker-' . $i]);
+         echo H::tag('label', $name, ['class' => 'form-label fw-bold', 'for' => 'worker-' . $i]);
          echo H::select('worker[' . $i . ']')
              ->id('worker-' . $i)
              ->optionsData(['new' => '➕ ' . $translator->translate('homecare.schedule.create.worker')] + $workers)
@@ -103,21 +103,21 @@ echo H::closeTag('div');
 
 // The days as read
 echo H::openTag('div', ['class' => 'card mb-3']);
- echo H::tag('div', H::encode($translator->translate('homecare.schedule.days.found')), ['class' => 'card-header']);
+ echo H::tag('div', $translator->translate('homecare.schedule.days.found'), ['class' => 'card-header']);
  echo H::openTag('div', ['class' => 'card-body']);
   echo H::openTag('table', ['class' => 'table table-sm table-striped']);
    echo H::openTag('tbody');
     foreach ($schedule->entries as $entry) {
         echo H::openTag('tr');
-         echo H::tag('td', H::encode(new DateTimeImmutable($entry->date)->format('D j M')));
+         echo H::tag('td', new DateTimeImmutable($entry->date)->format('D j M'));
          if ($entry->isOpenDay()) {
-             echo H::tag('td', H::encode($translator->translate('homecare.schedule.open.day')), ['class' => 'text-muted', 'colspan' => '2']);
+             echo H::tag('td', $translator->translate('homecare.schedule.open.day'), ['class' => 'text-muted', 'colspan' => '2']);
          } else {
-             echo H::tag('td', H::encode((string) $entry->runName));
-             echo H::tag('td', H::encode(implode(', ', $entry->allCrewNames()) . ($entry->crewFromDitto ? ' (")' : '')));
+             echo H::tag('td', (string) $entry->runName);
+             echo H::tag('td', implode(', ', $entry->allCrewNames()) . ($entry->crewFromDitto ? ' (")' : ''));
          }
          echo H::tag('td', ($existing[$entry->date] ?? false)
-             ? H::tag('span', H::encode($translator->translate('homecare.schedule.replaces')), ['class' => 'badge text-bg-warning'])->render()
+             ? H::tag('span', $translator->translate('homecare.schedule.replaces'), ['class' => 'badge text-bg-warning'])->render()
              : '')->encode(false);
         echo H::closeTag('tr');
     }

@@ -26,7 +26,7 @@ $next = new DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month))->modify('+
 echo H::openTag('div', ['class' => 'row']);
  echo H::openTag('div', ['class' => 'col-12 col-lg-5']);
   echo H::openTag('div', ['class' => 'card mb-3']);
-   echo H::tag('div', H::encode($translator->translate('homecare.schedule.paste')), ['class' => 'card-header']);
+   echo H::tag('div', $translator->translate('homecare.schedule.paste'), ['class' => 'card-header']);
    echo H::openTag('div', ['class' => 'card-body']);
     echo H::tag('p', $translator->translate('homecare.schedule.paste.hint'), ['class' => 'text-muted']);
     echo new Form()->post($urlGenerator->generate('homecareschedule/preview'))->csrf($csrf)->open();
@@ -51,7 +51,7 @@ echo H::openTag('div', ['class' => 'row']);
   echo H::openTag('div', ['class' => 'card']);
    echo H::openTag('div', ['class' => 'card-header d-flex justify-content-between align-items-center']);
     echo H::a('‹', $urlGenerator->generate('homecareschedule/index', [], ['year' => $previous->format('Y'), 'month' => $previous->format('n')]), ['class' => 'btn btn-sm btn-outline-secondary', 'aria-label' => $translator->translate('homecare.schedule.previous.month')])->render();
-    echo H::tag('strong', H::encode(new DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month))->format('F Y')));
+    echo H::tag('strong', new DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month))->format('F Y'));
     echo H::a('›', $urlGenerator->generate('homecareschedule/index', [], ['year' => $next->format('Y'), 'month' => $next->format('n')]), ['class' => 'btn btn-sm btn-outline-secondary', 'aria-label' => $translator->translate('homecare.schedule.next.month')])->render();
    echo H::closeTag('div');
    echo H::openTag('div', ['class' => 'card-body']);
@@ -72,9 +72,9 @@ echo H::openTag('div', ['class' => 'row']);
           foreach ($days as $day) {
               $postcode = $day['run']?->getStartPostcode();
               echo H::openTag('tr');
-               echo H::tag('td', H::encode(new DateTimeImmutable($day['date'])->format('D j M')));
-               echo H::tag('td', H::encode($day['run']?->getName() ?? ''));
-               echo H::tag('td', H::encode(implode(', ', $day['crew'])));
+               echo H::tag('td', new DateTimeImmutable($day['date'])->format('D j M'));
+               echo H::tag('td', $day['run']?->getName() ?? '');
+               echo H::tag('td', implode(', ', $day['crew']));
                echo H::tag('td', null === $postcode || '' === $postcode
                    ? ''
                    : H::a('🧭 ' . $postcode, GoogleMapsLink::directionsTo($postcode), [

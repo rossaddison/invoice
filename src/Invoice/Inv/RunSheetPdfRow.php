@@ -29,6 +29,8 @@ final readonly class RunSheetPdfRow
         public int $houseNumber = 0,
         /** When the houses around this pull point were last delegated; null if never (or not a pull point). */
         public ?DateTimeImmutable $delegatedAt = null,
+        /** The street (family) the house is on, so two streets with the same order stay apart. */
+        public int $familyId = 0,
     ) {
     }
 
@@ -52,6 +54,7 @@ final readonly class RunSheetPdfRow
             $this->pullPoint,
             $this->houseNumber,
             $this->delegatedAt,
+            $this->familyId,
         );
     }
 
@@ -70,6 +73,7 @@ final readonly class RunSheetPdfRow
             $this->pullPoint,
             $this->houseNumber,
             $this->delegatedAt,
+            $this->familyId,
         );
     }
 }

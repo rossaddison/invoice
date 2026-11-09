@@ -27,6 +27,12 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
  */
 final class HomeCareScheduleController extends BaseController
 {
+    private const string ROUTE_INDEX = 'homecareschedule/index';
+
+    private const string YEAR = 'year';
+
+    private const string MONTH = 'month';
+
     protected string $controllerName = 'invoice/homecareschedule';
 
     public function __construct(
@@ -62,8 +68,8 @@ final class HomeCareScheduleController extends BaseController
     {
         $now = new DateTimeImmutable('now');
         $query = $request->getQueryParams();
-        $year = (int) ($query['year'] ?? $now->format('Y'));
-        $month = (int) ($query['month'] ?? $now->format('n'));
+        $year = (int) ($query[self::YEAR] ?? $now->format('Y'));
+        $month = (int) ($query[self::MONTH] ?? $now->format('n'));
         if ($month < 1 || $month > 12 || $year < 2000 || $year > 2100) {
             $year = (int) $now->format('Y');
             $month = (int) $now->format('n');
@@ -78,8 +84,8 @@ final class HomeCareScheduleController extends BaseController
             ];
         }
         return $this->webViewRenderer->render('index', [
-            'year' => $year,
-            'month' => $month,
+            self::YEAR => $year,
+            self::MONTH => $month,
             'days' => $days,
             'alert' => $this->alert(),
         ]);
@@ -92,12 +98,12 @@ final class HomeCareScheduleController extends BaseController
     {
         $body = $this->body($request);
         $text = $this->field($body, 'schedule');
-        $year = (int) $this->field($body, 'year', date('Y'));
-        $month = (int) $this->field($body, 'month', date('n'));
+        $year = (int) $this->field($body, self::YEAR, date('Y'));
+        $month = (int) $this->field($body, self::MONTH, date('n'));
         $schedule = $this->parser->parse($text, $year, $month);
         if ([] === $schedule->entries) {
             $this->flashMessage('danger', $this->translator->translate('homecare.schedule.nothing.read'));
-            return $this->webService->getRedirectResponse('homecareschedule/index', [], ['year' => (string) $year, 'month' => (string) $month]);
+            return $this->webService->getRedirectResponse(self::ROUTE_INDEX, [], [self::YEAR => (string) $year, self::MONTH => (string) $month]);
         }
         $runs = [];
         $startless = [];
@@ -132,8 +138,8 @@ final class HomeCareScheduleController extends BaseController
     public function save(Request $request): Response
     {
         $body = $this->body($request);
-        $year = (int) $this->field($body, 'year', date('Y'));
-        $month = (int) $this->field($body, 'month', date('n'));
+        $year = (int) $this->field($body, self::YEAR, date('Y'));
+        $month = (int) $this->field($body, self::MONTH, date('n'));
         $schedule = $this->parser->parse($this->field($body, 'schedule'), $year, $month);
         $primaryId = (int) $this->field($body, 'new_run_category_primary_id', '0');
 
@@ -174,7 +180,7 @@ final class HomeCareScheduleController extends BaseController
         if ([] !== $result->droppedCrewNames) {
             $this->flashMessage('warning', $this->translator->translate('homecare.schedule.dropped') . ' ' . implode(', ', $result->droppedCrewNames));
         }
-        return $this->webService->getRedirectResponse('homecareschedule/index', [], ['year' => (string) $schedule->year, 'month' => (string) $schedule->month]);
+        return $this->webService->getRedirectResponse(self::ROUTE_INDEX, [], [self::YEAR => (string) $schedule->year, self::MONTH => (string) $schedule->month]);
     }
 
     /**
@@ -188,7 +194,7 @@ final class HomeCareScheduleController extends BaseController
             return $this->webService->getNotFoundResponse();
         }
         $this->calendar->clear($date);
-        return $this->webService->getRedirectResponse('homecareschedule/index', [], ['year' => $when->format('Y'), 'month' => $when->format('n')]);
+        return $this->webService->getRedirectResponse(self::ROUTE_INDEX, [], [self::YEAR => $when->format('Y'), self::MONTH => $when->format('n')]);
     }
 
     /**

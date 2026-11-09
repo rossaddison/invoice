@@ -15,6 +15,9 @@ namespace App\Invoice\HomeCareRunImport;
  */
 final class RunSheetCsv
 {
+    /** The byte-order mark Excel puts at the start of a UTF-8 CSV. */
+    private const string BOM = "\xEF\xBB\xBF";
+
     public const array COLUMNS = ['street', 'postcode', 'number', 'client_name', 'phone', 'price', 'note', 'flags'];
 
     private const array VALID_FLAGS = [
@@ -34,7 +37,7 @@ final class RunSheetCsv
      */
     public function isSheet(string $text): bool
     {
-        $lines = preg_split('/\r\n|\r|\n/', ltrim($text, "\xEF\xBB\xBF"), 2);
+        $lines = preg_split('/\r\n|\r|\n/', ltrim($text, self::BOM), 2);
         $first = strtolower(str_replace('"', '', trim($lines[0] ?? '')));
         return str_starts_with($first, 'street,') || str_starts_with($first, 'street;');
     }
@@ -64,7 +67,7 @@ final class RunSheetCsv
                 }
             }
         }
-        $out = "\xEF\xBB\xBF";
+        $out = self::BOM;
         foreach ($rows as $row) {
             $out .= implode(',', array_map($this->quote(...), $row)) . "\r\n";
         }
@@ -78,7 +81,7 @@ final class RunSheetCsv
      */
     public function parse(string $csv, string $title = ''): ParsedRun
     {
-        $csv = ltrim($csv, "\xEF\xBB\xBF");
+        $csv = ltrim($csv, self::BOM);
         $lines = preg_split('/\r\n|\r|\n/', $csv) ?: [];
         $first = $lines[0] ?? '';
         $delimiter = substr_count($first, ';') > substr_count($first, ',') ? ';' : ',';
@@ -100,14 +103,19 @@ final class RunSheetCsv
             }
             $lineNo = $i + 1;
             $cells = str_getcsv($text, $delimiter, '"', '');
-            $get = static fn (string $column): string => isset($index[$column]) ? trim((string) ($cells[$index[$column]] ?? '')) : '';
+            $get = fn (string $column): string => isset($index[$column]) ? $this->unguard(trim((string) ($cells[$index[$column]] ?? ''))) : '';
             $rowStreet = $get('street');
             $number = strtoupper($get('number'));
-            if ('' === $rowStreet || '' === $number) {
-                $warnings[] = sprintf('Line %d skipped: it needs a street and a number.', $lineNo);
+            // the same house numbers the pasted-text parser reads: 14, 12A ("Flat 1" or "12-14" would collapse
+            // onto one dwelling)
+            if ('' === $rowStreet || 1 !== preg_match('/^\d{1,4}[A-Z]?$/', $number)) {
+                $warnings[] = sprintf('Line %d skipped: it needs a street and a house number such as 14 or 12A.', $lineNo);
                 continue;
             }
             $postcode = $this->postcode($get('postcode'));
+            if (null === $postcode && '' !== $get('postcode')) {
+                $warnings[] = sprintf('Line %d: "%s" is not a postcode, so it is left blank.', $lineNo, $get('postcode'));
+            }
             $priceText = $get('price');
             $price = null;
             if ('' !== $priceText) {
@@ -166,9 +174,20 @@ final class RunSheetCsv
     {
         $clean = strtoupper((string) preg_replace('/\s+/', '', $value));
         if (1 !== preg_match('/^[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2}$/', $clean)) {
-            return '' === $clean ? null : $value;
+            return null;
         }
         return substr($clean, 0, -3) . ' ' . substr($clean, -3);
+    }
+
+    /**
+     * Undoes {@see self::quote()}: a cell the template guarded with a leading apostrophe ("'+44 7700 900123")
+     * is read back without it.
+     */
+    private function unguard(string $value): string
+    {
+        return strlen($value) > 1 && "'" === $value[0] && in_array($value[1], ['=', '+', '-', '@'], true)
+            ? substr($value, 1)
+            : $value;
     }
 
     private function quote(string $value): string
