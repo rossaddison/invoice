@@ -376,14 +376,12 @@ trait InvClientTrait
     public function repoClientPendingAllocatedDraftquery(int $clientId, \DateTimeImmutable $today): ?Inv
     {
         $tomorrow = $today->modify('+1 day')->format('Y-m-d 00:00:00');
+        $hasASideWaiting = new \Cycle\Database\Injection\Fragment('(SELECT inv_id FROM inv_worker_allocation WHERE status = ?)', 'allocated');
         return $this->select()
             ->where(['client_id' => $clientId, 'status_id' => 1])
             ->andWhere('date_created', '<', $tomorrow)
             ->andWhere('deleted_at', null)
-            ->andWhere(['id' => ['in' => new \Cycle\Database\Injection\Fragment(
-                '(SELECT inv_id FROM inv_worker_allocation WHERE status = ?)',
-                'allocated'
-            )]])
+            ->andWhere(['id' => ['in' => $hasASideWaiting]])
             ->orderBy('date_created', 'DESC')
             ->orderBy('id', 'DESC')
             ->fetchOne() ?: null;

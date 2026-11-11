@@ -61,19 +61,11 @@ trait HomeCareScan
             ? $confirmer->pendingDraft($client->reqId(), new DateTimeImmutable('today'))
             : null;
 
-        return null !== $pending
-            ? $this->webViewRenderer->renderPartial('homecare_scan_result', [
-                'outcome' => 'confirm',
-                'token' => $token,
-                'visitDate' => $pending->getDateCreated()->format('Y-m-d'),
-            ])
-            : $this->claimAndDecideHomeCareScan(
-                $client->reqId(),
-                $eligibilityService,
-                $visitRepository,
-                $d,
-                $formHydrator,
-            );
+        if (null === $pending) {
+            return $this->claimAndDecideHomeCareScan($client->reqId(), $eligibilityService, $visitRepository, $d, $formHydrator);
+        }
+        $confirmation = ['outcome' => 'confirm', 'token' => $token, 'visitDate' => $pending->getDateCreated()->format('Y-m-d')];
+        return $this->webViewRenderer->renderPartial('homecare_scan_result', $confirmation);
     }
 
     /**
