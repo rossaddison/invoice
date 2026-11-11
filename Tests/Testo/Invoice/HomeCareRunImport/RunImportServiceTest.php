@@ -26,9 +26,13 @@ use App\Invoice\HomeCareRunImport\RunImportService;
 use App\Invoice\Inv\InvService;
 use App\Invoice\InvItem\InvItemService;
 use App\Invoice\ProductClient\ProductClientService;
+use App\Invoice\Product\ProductRepository;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Unit\UnitRepository;
+use Cycle\ORM\Heap\HeapInterface;
+use Cycle\ORM\ORMInterface;
+use Cycle\ORM\RepositoryInterface;
 use Mockery as m;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use ReflectionClass;
@@ -146,6 +150,23 @@ final class RunImportServiceTest
         $units = $this->mock(UnitRepository::class);
         $units->shouldReceive('repoFirstByIdQuery')->andReturn(null);
 
+        // each invoice is made with the user and product fetched fresh, after the unit of work is emptied
+        /** @var ProductRepository&m\MockInterface $products */
+        $products = $this->mock(ProductRepository::class);
+        $products->shouldReceive('repoProductquery')->with(5)->andReturn($this->product());
+        /** @var RepositoryInterface&m\MockInterface $userRepository */
+        $userRepository = m::mock(RepositoryInterface::class);
+        $userRepository->shouldReceive('findByPK')->with(1)->andReturn($this->user());
+        /** @var HeapInterface&m\MockInterface $heap */
+        $heap = m::mock(HeapInterface::class);
+        $heap->shouldReceive('clean')->andReturnUsing(static function () use (&$log): void {
+            $log[] = 'heap cleaned';
+        });
+        /** @var ORMInterface&m\MockInterface $orm */
+        $orm = $this->mock(ORMInterface::class);
+        $orm->shouldReceive('getRepository')->with(User::class)->andReturn($userRepository);
+        $orm->shouldReceive('getHeap')->andReturn($heap);
+
         $reflection = new ReflectionClass(RunImportDeps::class);
         $args = [];
         foreach ($reflection->getConstructor()?->getParameters() ?? [] as $parameter) {
@@ -164,12 +185,22 @@ final class RunImportServiceTest
                 InvRecalculator::class => $recalc,
                 ProductClientService::class => $productClient,
                 SettingRepository::class => $settings,
+                ProductRepository::class => $products,
+                ORMInterface::class => $orm,
                 TaxRateRepository::class => $taxRates,
                 UnitRepository::class => $units,
                 default => m::mock($class),
             };
         }
         return new RunImportService($reflection->newInstanceArgs($args));
+    }
+
+    private function user(): User
+    {
+        /** @var User&m\MockInterface $user */
+        $user = m::mock(User::class);
+        $user->shouldReceive('reqId')->andReturn(1);
+        return $user;
     }
 
     private function product(): Product
@@ -189,7 +220,7 @@ final class RunImportServiceTest
             3,
             $this->product(),
             12.5,
-            new User('admin', 'a@b.test', 'x'),
+            $this->user(),
         );
 
         Assert::true($result->runCreated);
@@ -207,6 +238,8 @@ final class RunImportServiceTest
         // a draft (status 1) invoice with the standard product at the given price
         Assert::true(in_array('item:product5:price12.5', $log, true));
         Assert::same(count(array_filter($log, static fn (string $l): bool => str_ends_with($l, ':status1'))), 3);
+        // the unit of work is emptied after each invoice (a real database needs it for the amount row)
+        Assert::same(count(array_filter($log, static fn (string $l): bool => 'heap cleaned' === $l)), 3);
     }
 
     public function aHouseThatAlreadyHasAClientIsLeftAlone(): void
@@ -219,7 +252,7 @@ final class RunImportServiceTest
             0,
             $this->product(),
             null,
-            new User('admin', 'a@b.test', 'x'),
+            $this->user(),
         );
 
         Assert::false($result->runCreated);
@@ -245,7 +278,7 @@ EXAMPLE CRESCENT AB1 2CD
                 0,
                 $this->product(),
                 null,
-                new User('admin', 'a@b.test', 'x'),
+                $this->user(),
             );
         } catch (\RuntimeException $e) {
             $caught = $e;
@@ -272,7 +305,7 @@ EXAMPLE CRESCENT AB1 2CD
             0,
             $this->product(),
             null,
-            new User('admin', 'a@b.test', 'x'),
+            $this->user(),
         );
 
         $orders = array_values(array_filter($log, static fn (string $l): bool => str_starts_with($l, 'order:')));

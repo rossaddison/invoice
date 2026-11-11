@@ -40,6 +40,7 @@ final readonly class RunImportDeps
         public ClientRepository $cR,
         public ClientDwellingRepository $cdR,
         public InvService $invService,
+        public \Cycle\ORM\ORMInterface $orm,
         public InvItemService $invItemService,
         public InvItemAmountRepository $iiaR,
         public InvItemAmountService $iias,

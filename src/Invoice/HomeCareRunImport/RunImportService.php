@@ -45,6 +45,8 @@ final readonly class RunImportService
         ?float $price,
         User $user,
     ): RunImportResult {
+        $productId = $product->reqId();
+        $userId = $user->reqId();
         $runCreated = null === $runId;
         if (null === $runId) {
             $category = new CategorySecondary();
@@ -80,11 +82,15 @@ final readonly class RunImportService
                 }
                 $client = $this->client($house, $label, $segment, $dwelling);
                 try {
-                    $this->draftInvoice($client, $product, $house->price ?? $price, $user);
+                    $this->draftInvoice($client, $productId, $house->price ?? $price, $userId);
                 } catch (\Throwable $failure) {
                     // a client left linked to the dwelling would make a re-import skip the house as
                     // already there, so it never gets its invoice
-                    $this->d->cR->delete($client);
+                    try {
+                        $this->d->cR->delete($client);
+                    } catch (\Throwable) {
+                        // the clean-up must not hide why the house failed
+                    }
                     throw $failure;
                 }
                 ++$housesCreated;
@@ -161,12 +167,20 @@ final readonly class RunImportService
         return $client;
     }
 
-    private function draftInvoice(Client $client, Product $product, ?float $price, User $user): void
+    private function draftInvoice(Client $client, int $productId, ?float $price, int $userId): void
     {
+        // Each invoice is made with entities fetched fresh: the unit of work is emptied after every
+        // invoice (see below), so a user or product held from the previous house is no longer known to it.
+        $product = $this->d->pR->repoProductquery($productId);
+        $user = $this->d->orm->getRepository(User::class)->findByPK($userId);
+        if (null === $product || !$user instanceof User) {
+            throw new \RuntimeException('The product or the user for the import is gone.');
+        }
         $taxRate = $product->getTaxRate() ?? $this->d->trR->repoFirstByIdQuery();
         $unit = $product->getUnit() ?? $this->d->unR->repoFirstByIdQuery();
         $clientId = $client->reqId();
-        $this->d->invService->withTransaction(function () use ($product, $price, $user, $taxRate, $unit, $clientId): void {
+        $invId = 0;
+        $this->d->invService->withTransaction(function () use ($product, $price, $user, $taxRate, $unit, $clientId, &$invId): void {
             $body = [
                 'client_id' => $clientId,
                 'group_id' => (int) $this->d->sR->getSetting('default_invoice_group'),
@@ -188,8 +202,13 @@ final readonly class RunImportService
             ];
             $deps = new IiAddProductDeps($this->d->pR, $this->d->trR, $this->d->iias, $this->d->iiaR, $this->d->sR, $this->d->unR);
             $this->d->invItemService->addInvItemProduct(new InvItem(), $itemBody, (string) $invId, $deps);
-            $this->d->productClientService->syncFromInvItems($clientId, [$product->reqId()]);
-            $this->d->invRecalculator->recalculate($invId);
         });
+        // The new invoice's amount row was created through the invoice (an invoice always carries one),
+        // and the unit of work still holds it without the link back to its invoice, so saving the
+        // recalculated totals onto it fails ("invAmount.inv can not be null"). Emptying the unit of
+        // work makes the recalculation load the row from the database like any other request would.
+        $this->d->orm->getHeap()->clean();
+        $this->d->productClientService->syncFromInvItems($clientId, [$productId]);
+        $this->d->invRecalculator->recalculate($invId);
     }
 }
