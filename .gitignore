@@ -80,3 +80,5 @@ test-results.xml
 *.jks
 *.keystore
 *.pfx
+# Customer run documents (personal data) must never be committed
+/imports
