@@ -879,7 +879,7 @@ return [
     'home.payment.gateway.coverage' => 'Cobertura de la pasarela de pago ➡️',
     'home.peppol.access.point.status' => 'Estado del punto de acceso Peppol ➡️',
     'home.title' => 'Yii3-i — Sistema de facturación y facturación electrónica de código abierto',
-    'home.view.source.github' => '⭐ Consulta el código fuente en GitHub — github.com/rossaddison/invoice',
+    'home.view.source.github' => '⭐ Consulta el código fuente en GitHub — github.com/rossaddison/inv',
     'homecare' => 'Cuidado en el hogar',
     'homecare.auto.invoice.enabled' => 'Habilitar la facturación automática mediante código QR para servicios de atención domiciliaria',
     'homecare.column.client.active' => 'Cliente activo',

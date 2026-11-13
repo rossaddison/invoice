@@ -113,12 +113,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rossaddison/invoice.git"
+    "url": "git+https://github.com/rossaddison/inv.git"
   },
   "bugs": {
-    "url": "https://github.com/rossaddison/invoice/issues"
+    "url": "https://github.com/rossaddison/inv/issues"
   },
-  "homepage": "https://github.com/rossaddison/invoice#readme",
+  "homepage": "https://github.com/rossaddison/inv#readme",
   "main": "eslint.config.js",
   "directories": {
     "doc": "docs"

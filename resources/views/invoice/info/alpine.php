@@ -33,7 +33,7 @@ rc-update add mariadb
 <p>Clone the repository to your desired location:</p>
 <pre>
 sh
-git clone https://github.com/rossaddison/invoice.git
+git clone https://github.com/rossaddison/inv.git
 cd invoice
 </pre>
 <p><b>4. Configure Apache2<b></p>

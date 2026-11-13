@@ -879,7 +879,7 @@ return [
     'home.payment.gateway.coverage' => 'Ukumbozwa kwesango lokukhokha ➡️',
     'home.peppol.access.point.status' => 'Isimo se-Peppol Access Point ➡️',
     'home.title' => 'I-Yii3-i — Uhlelo Lokufaka Ama-invoyisi Noku-inthanethi Oluvulekile',
-    'home.view.source.github' => '⭐ Buka umthombo ku-GitHub — github.com/rossaddison/invoice',
+    'home.view.source.github' => '⭐ Buka umthombo ku-GitHub — github.com/rossaddison/inv',
     'homecare' => 'Ukunakekelwa Kwasekhaya',
     'homecare.auto.invoice.enabled' => 'Nika amandla i-invoyisi ezenzakalelayo ye-QR Yokunakekelwa Kwasekhaya',
     'homecare.column.client.active' => 'Iklayenti Liyasebenza',

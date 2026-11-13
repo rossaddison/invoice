@@ -376,7 +376,7 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo H::closeTag('table');
     echo H::a(
      $translator->translate('oxalis.setup.guide'),
-     'https://github.com/rossaddison/invoice/blob/main/src/Invoice/Peppol/README.md',
+     'https://github.com/rossaddison/inv/blob/main/src/Invoice/Peppol/README.md',
      ['target' => '_blank', 'rel' => 'noopener noreferrer', 'class' => 'small']
     );
    echo H::closeTag('div'); //4

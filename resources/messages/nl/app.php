@@ -879,7 +879,7 @@ return [
     'home.payment.gateway.coverage' => 'Dekking van betaalgateways ➡️',
     'home.peppol.access.point.status' => 'Status van het Peppol-toegangspunt ➡️',
     'home.title' => 'Yii3-i — Open Source Facturatie- en E-facturatiesysteem',
-    'home.view.source.github' => '⭐ Bekijk de broncode op GitHub — github.com/rossaddison/invoice',
+    'home.view.source.github' => '⭐ Bekijk de broncode op GitHub — github.com/rossaddison/inv',
     'homecare' => 'Thuiszorg',
     'homecare.auto.invoice.enabled' => 'Schakel automatische QR-facturering voor thuiszorg in.',
     'homecare.column.client.active' => 'Client Active',

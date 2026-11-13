@@ -1193,7 +1193,7 @@ return [
   'home.title' => 'Yii3-i — Open Source Invoicing &amp; E-Invoicing'
     . ' System',
   'home.view.source.github' => '⭐ View the source on GitHub —'
-    . ' github.com/rossaddison/invoice',
+    . ' github.com/rossaddison/inv',
   'hostname' => 'Hostname',
   'id' => 'ID',
   'identifier.format' => 'Identifier formatting',

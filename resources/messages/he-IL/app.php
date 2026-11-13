@@ -878,7 +878,7 @@ return [
     'home.payment.gateway.coverage' => 'כיסוי שער תשלום ➡️',
     'home.peppol.access.point.status' => 'סטטוס נקודת הגישה של פפול ➡️',
     'home.title' => 'Yii3-i - מערכת חיוב וחשבוניות אלקטרוניות בקוד פתוח',
-    'home.view.source.github' => '⭐ צפה בקוד המקור ב-GitHub — github.com/rossaddison/invoice',
+    'home.view.source.github' => '⭐ צפה בקוד המקור ב-GitHub — github.com/rossaddison/inv',
     'homecare' => 'טיפול ביתי',
     'homecare.auto.invoice.enabled' => 'הפעלת חשבונית אוטומטית של QR לטיפול ביתי',
     'homecare.column.client.active' => 'לקוח פעיל',

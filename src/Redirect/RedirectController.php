@@ -49,7 +49,7 @@ final class RedirectController
      * @var array<string, string>
      */
     private const DESTINATIONS = [
-        'github' => 'https://github.com/rossaddison/invoice',
+        'github' => 'https://github.com/rossaddison/inv',
     ];
 
     public function __construct(

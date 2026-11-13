@@ -878,7 +878,7 @@ return [
     'home.payment.gateway.coverage' => 'Còmhdach geata pàighidh ➡️',
     'home.peppol.access.point.status' => 'Inbhe Puing Ruigsinneachd Peppol ➡️',
     'home.title' => 'Yii3-i — Siostam Cunntais is E-Chunntais Stòr Fosgailte',
-    'home.view.source.github' => '⭐ Seall an stòr air GitHub — github.com/rossaddison/invoice',
+    'home.view.source.github' => '⭐ Seall an stòr air GitHub — github.com/rossaddison/inv',
     'homecare' => 'Cùram Dachaigh',
     'homecare.auto.invoice.enabled' => 'Cuir an comas Fàirdeal Fèin-ghluasadach QR Cùram Dachaigh',
     'homecare.column.client.active' => 'Neach-dèiligidh Gnìomhach',

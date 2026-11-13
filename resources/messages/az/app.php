@@ -894,7 +894,7 @@ return [
     'home.payment.gateway.coverage' => 'Ödəniş qapısı əhatə dairəsi ➡️',
     'home.peppol.access.point.status' => 'Peppol Giriş Nöqtəsi statusu ➡️',
     'home.title' => 'Yii3-i — Açıq Mənbəli Faktura və Elektron Faktura Sistemi',
-    'home.view.source.github' => '⭐ Mənbəyə GitHub-da baxın — github.com/rossaddison/invoice',
+    'home.view.source.github' => '⭐ Mənbəyə GitHub-da baxın — github.com/rossaddison/inv',
     'homecare' => 'Evdə Baxım',
     'homecare.auto.invoice.enabled' => 'Evdə Baxım QR Avtomatik Fakturasını Aktivləşdirin',
     'homecare.column.client.active' => 'Müştəri Aktivdir',

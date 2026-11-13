@@ -878,7 +878,7 @@ return [
     'home.payment.gateway.coverage' => 'تغطية بوابة الدفع ➡️',
     'home.peppol.access.point.status' => 'حالة نقطة الوصول إلى بيبول ➡️',
     'home.title' => 'Yii3-i — نظام فوترة وفواتير إلكترونية مفتوح المصدر',
-    'home.view.source.github' => '⭐ اطلع على المصدر على GitHub — github.com/rossaddison/invoice',
+    'home.view.source.github' => '⭐ اطلع على المصدر على GitHub — github.com/rossaddison/inv',
     'homecare' => 'الرعاية المنزلية',
     'homecare.auto.invoice.enabled' => 'تفعيل خدمة الفواتير التلقائية للرعاية المنزلية عبر رمز الاستجابة السريعة',
     'homecare.column.client.active' => 'العميل نشط',

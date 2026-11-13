@@ -879,7 +879,7 @@ return [
     'home.payment.gateway.coverage' => '決済ゲートウェイの対応範囲➡️',
     'home.peppol.access.point.status' => 'Peppolアクセスポイントのステータス➡️',
     'home.title' => 'Yii3-i — オープンソースの請求書発行および電子請求書発行システム',
-    'home.view.source.github' => '⭐ GitHubでソースコードを見る — github.com/rossaddison/invoice',
+    'home.view.source.github' => '⭐ GitHubでソースコードを見る — github.com/rossaddison/inv',
     'homecare' => 'ホームケア',
     'homecare.auto.invoice.enabled' => '在宅介護QRコード自動請求書を有効にする',
     'homecare.column.client.active' => 'クライアントがアクティブです',

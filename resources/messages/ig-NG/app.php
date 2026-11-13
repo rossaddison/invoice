@@ -878,7 +878,7 @@ return [
     'home.payment.gateway.coverage' => 'Mkpuchi ọnụ ụzọ ịkwụ ụgwọ ➡️',
     'home.peppol.access.point.status' => 'Ọnọdụ Peppol Access Point ➡️',
     'home.title' => 'Yii3-i — Sistemụ Invoicing na Sistemụ Invoicing nke Mepee Isi Mmalite na E-Invoicing',
-    'home.view.source.github' => '⭐ Lee isi mmalite na GitHub — github.com/rossaddison/invoice',
+    'home.view.source.github' => '⭐ Lee isi mmalite na GitHub — github.com/rossaddison/inv',
     'homecare' => 'Nlekọta Ụlọ',
     'homecare.auto.invoice.enabled' => 'Mee ka akwụkwọ ọnụahịa QR nke Nlekọta Ụlọ rụọ ọrụ nke ọma',
     'homecare.column.client.active' => 'Ndị ahịa nọ n&#39;ọrụ',

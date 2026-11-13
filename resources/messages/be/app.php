@@ -878,7 +878,7 @@ return [
     'home.payment.gateway.coverage' => 'Пакрыццё плацежнага шлюза ➡️',
     'home.peppol.access.point.status' => 'Статус пункта доступу Peppol ➡️',
     'home.title' => 'Yii3-i — сістэма выстаўлення рахункаў-фактур і электронных рахункаў-фактур з адкрытым зыходным кодам',
-    'home.view.source.github' => '⭐ Глядзіце зыходны код на GitHub — github.com/rossaddison/invoice',
+    'home.view.source.github' => '⭐ Глядзіце зыходны код на GitHub — github.com/rossaddison/inv',
     'homecare' => 'Хатні догляд',
     'homecare.auto.invoice.enabled' => 'Уключыць аўтаматычны рахунак-фактуру па QR-коду для хатняга догляду',
     'homecare.column.client.active' => 'Кліент актыўны',

@@ -879,7 +879,7 @@ return [
     'home.payment.gateway.coverage' => 'Cakupan gerbang pembayaran ➡️',
     'home.peppol.access.point.status' => 'Status Titik Akses Peppol ➡️',
     'home.title' => 'Yii3-i — Sistem Faktur &amp; Faktur Elektronik Sumber Terbuka',
-    'home.view.source.github' => '⭐ Lihat kode sumber di GitHub — github.com/rossaddison/invoice',
+    'home.view.source.github' => '⭐ Lihat kode sumber di GitHub — github.com/rossaddison/inv',
     'homecare' => 'Perawatan di Rumah',
     'homecare.auto.invoice.enabled' => 'Aktifkan Faktur Otomatis QR untuk Perawatan di Rumah',
     'homecare.column.client.active' => 'Klien Aktif',

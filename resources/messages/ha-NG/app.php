@@ -878,7 +878,7 @@ return [
     'home.payment.gateway.coverage' => 'Tsarin biyan kuɗi ➡️',
     'home.peppol.access.point.status' => 'Matsayin Wurin Samun Dama na Peppol ➡️',
     'home.title' => 'Yii3-i — Tsarin Lissafin Buɗaɗɗen Tushe &amp; Tsarin Lissafin E-Tsarin',
-    'home.view.source.github' => '⭐ Duba tushen a GitHub — github.com/rossaddison/invoice',
+    'home.view.source.github' => '⭐ Duba tushen a GitHub — github.com/rossaddison/inv',
     'homecare' => 'Kula da Gida',
     'homecare.auto.invoice.enabled' => 'Kunna Takardar Rasitin QR na Kula da Gida ta atomatik',
     'homecare.column.client.active' => 'Abokin Ciniki Mai Aiki',

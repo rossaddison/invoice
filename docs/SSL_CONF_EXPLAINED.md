@@ -3,7 +3,7 @@
 > File: `/etc/apache2/conf.d/ssl.conf`  
 > Server: Apache2 on Alpine Linux, Vultr  
 > Domain: yii3i.online  
-> Repository: github.com/rossaddison/invoice  
+> Repository: github.com/rossaddison/inv  
 
 ---
 

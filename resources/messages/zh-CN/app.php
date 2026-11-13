@@ -879,7 +879,7 @@ return [
     'home.payment.gateway.coverage' => '支付网关覆盖范围➡️',
     'home.peppol.access.point.status' => 'Peppol 接入点状态 ➡️',
     'home.title' => 'Yii3-i — 开源发票和电子发票系统',
-    'home.view.source.github' => '⭐ 在 GitHub 上查看源代码 — github.com/rossaddison/invoice',
+    'home.view.source.github' => '⭐ 在 GitHub 上查看源代码 — github.com/rossaddison/inv',
     'homecare' => '家庭护理',
     'homecare.auto.invoice.enabled' => '启用家庭护理二维码自动开票',
     'homecare.column.client.active' => '客户端已激活',
