@@ -6,7 +6,7 @@
 ![Dependency Checker](https://img.shields.io/static/v1?label=Dependency%20Checker&message=Passing&color=66ff00) 
 ![Static Analysis](https://img.shields.io/static/v1?label=Static%20Analysis&message=Passing&color=66ff00)
 ![Psalm Level](https://img.shields.io/static/v1?label=Psalm%20Level&message=1&color=66ff00)
-[![type-coverage](https://shepherd.dev/github/rossaddison/invoice/coverage.svg)](https://shepherd.dev/github/rossaddison/invoice)
+[![type-coverage](https://shepherd.dev/github/rossaddison/inv/coverage.svg)](https://shepherd.dev/github/rossaddison/inv)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rossaddison_inv&metric=coverage)](https://sonarcloud.io/summary/new_code?id=rossaddison_inv)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=rossaddison_inv&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=rossaddison_inv)
 [![PHP-CS-Fixer](https://img.shields.io/badge/php--cs--fixer-enabled-blue?logo=php)](https://github.com/FriendsOfPHP/PHP-CS-Fixer)

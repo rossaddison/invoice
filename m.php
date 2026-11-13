@@ -656,7 +656,7 @@ if (isset($_GET['api']) && $_GET['api'] === 'ci_status') {
 
     // 1. Latest invoice_build run on main
     $runs = $ciGet(
-        'https://api.github.com/repos/rossaddison/invoice/actions/workflows'
+        'https://api.github.com/repos/rossaddison/inv/actions/workflows'
         . '/invoice_build.yml/runs?per_page=1&branch=main',
         $ghHeaders
     );
@@ -676,7 +676,7 @@ if (isset($_GET['api']) && $_GET['api'] === 'ci_status') {
         ];
         // 2. Jobs for this run
         $jobData = $ciGet(
-            'https://api.github.com/repos/rossaddison/invoice/actions/runs/'
+            'https://api.github.com/repos/rossaddison/inv/actions/runs/'
             . (int) $run['id'] . '/jobs',
             $ghHeaders
         );

@@ -172,7 +172,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
              * see Use the repository name to build a quick link to scrutinizer php and javascript code checks
              * in invoice/layout under debug mode
              */
-            'scrutinizerRepository' => 'rossaddison/invoice',
+            'scrutinizerRepository' => 'rossaddison/inv',
             //e.g. af-ZA split into af
             'splitterLanguage' => $localeSplitter->language(),
             //e.g. af-ZA split into ZA
