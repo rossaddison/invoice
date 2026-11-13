@@ -879,7 +879,7 @@ return [
     'home.payment.gateway.coverage' => 'Saklaw ng payment gateway ➡️',
     'home.peppol.access.point.status' => 'Katayuan ng Peppol Access Point ➡️',
     'home.title' => 'Yii3-i — Sistema ng Open Source na Pag-invoice at E-Invoice',
-    'home.view.source.github' => '⭐ Tingnan ang pinagmulan sa GitHub — github.com/rossaddison/inv',
+    'home.view.source.github' => 'Tingnan ang pinagmulan sa GitHub — github.com/rossaddison/inv',
     'homecare' => 'Pangangalaga sa Bahay',
     'homecare.auto.invoice.enabled' => 'Paganahin ang Home Care QR Auto-Invoice',
     'homecare.column.client.active' => 'Aktibo ang Kliyente',

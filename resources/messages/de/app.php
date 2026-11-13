@@ -879,7 +879,7 @@ return [
     'home.payment.gateway.coverage' => 'Abdeckung der Zahlungsportale ➡️',
     'home.peppol.access.point.status' => 'Peppol Access Point Status ➡️',
     'home.title' => 'Yii3-i – Open-Source-Rechnungssystem &amp; E-Rechnungssystem',
-    'home.view.source.github' => '⭐ Den Quellcode finden Sie auf GitHub — github.com/rossaddison/inv',
+    'home.view.source.github' => 'Den Quellcode finden Sie auf GitHub — github.com/rossaddison/inv',
     'homecare' => 'Häusliche Pflege',
     'homecare.auto.invoice.enabled' => 'Automatische QR-Rechnung für häusliche Pflege aktivieren',
     'homecare.column.client.active' => 'Client aktiv',

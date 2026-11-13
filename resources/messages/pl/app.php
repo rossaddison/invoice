@@ -894,7 +894,7 @@ return [
     'home.payment.gateway.coverage' => 'Zasięg bramki płatniczej ➡️',
     'home.peppol.access.point.status' => 'Status punktu dostępowego Peppol ➡️',
     'home.title' => 'Yii3-i — system fakturowania i e-fakturowania o otwartym kodzie źródłowym',
-    'home.view.source.github' => '⭐ Zobacz źródło na GitHub — github.com/rossaddison/inv',
+    'home.view.source.github' => 'Zobacz źródło na GitHub — github.com/rossaddison/inv',
     'homecare' => 'Opieka domowa',
     'homecare.auto.invoice.enabled' => 'Włącz automatyczną fakturę QR dla opieki domowej',
     'homecare.column.client.active' => 'Klient aktywny',

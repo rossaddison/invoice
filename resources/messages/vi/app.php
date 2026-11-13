@@ -894,7 +894,7 @@ return [
     'home.payment.gateway.coverage' => 'Phạm vi phủ sóng của cổng thanh toán ➡️',
     'home.peppol.access.point.status' => 'Trạng thái điểm truy cập Peppol ➡️',
     'home.title' => 'Yii3-i — Hệ thống lập hóa đơn và hóa đơn điện tử mã nguồn mở',
-    'home.view.source.github' => '⭐ Xem mã nguồn trên GitHub — github.com/rossaddison/inv',
+    'home.view.source.github' => 'Xem mã nguồn trên GitHub — github.com/rossaddison/inv',
     'homecare' => 'Chăm sóc tại nhà',
     'homecare.auto.invoice.enabled' => 'Kích hoạt tính năng tự động lập hóa đơn QR cho dịch vụ chăm sóc tại nhà',
     'homecare.column.client.active' => 'Máy khách đang hoạt động',
