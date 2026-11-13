@@ -428,4 +428,56 @@ final class HomeCareScanConfirmTest
         Assert::null($confirmer->pendingDraft(self::CLIENT, $today));
         Assert::same($confirmer->pendingDraft(self::CLIENT, $today), $inv);
     }
+
+    public function aScanWithNothingPendingClaimsTheVisitAndRecordsNotEligibleWhenThereIsNoInvoiceToCopy(): void
+    {
+        /** @var Response&m\MockInterface $notFound */
+        $notFound = m::mock(Response::class);
+        $visit = $this->visit();
+        $visits = $this->visits();
+        $visits->shouldReceive('tryCreatePendingVisit')->once()->andReturn($visit);
+        $visits->shouldReceive('save')->once()->with($visit);
+        $eligibility = $this->eligibility(true);
+        $eligibility->shouldReceive('findInvoiceToCopyIfEligible')->with(self::CLIENT)->andReturn(null);
+
+        $this->harness($notFound)->homeCareScan(
+            self::TOKEN,
+            $this->clients($this->client()),
+            $eligibility,
+            $visits,
+            $this->copyDeps(),
+            $this->hydrator(),
+            $this->confirmer(null),
+        );
+
+        [, $params] = $this->lastRender();
+        Assert::same($params['outcome'], 'not_eligible');
+        Assert::same($visit->getOutcome(), 'not_eligible');
+    }
+
+    public function aScanThatFindsTodaysVisitAlreadyGeneratedShowsThatOutcomeAndClaimsNothing(): void
+    {
+        /** @var Response&m\MockInterface $notFound */
+        $notFound = m::mock(Response::class);
+        $visits = $this->visits();
+        $visits->shouldReceive('tryCreatePendingVisit')->once()->andReturn(null);
+        $visits->shouldReceive('repoFindByClientAndDatequery')->once()->andReturn($this->visit('generated'));
+        $visits->shouldNotReceive('delete');
+        $visits->shouldNotReceive('save');
+        $eligibility = $this->eligibility(true);
+        $eligibility->shouldNotReceive('findInvoiceToCopyIfEligible');
+
+        $this->harness($notFound)->homeCareScan(
+            self::TOKEN,
+            $this->clients($this->client()),
+            $eligibility,
+            $visits,
+            $this->copyDeps(),
+            $this->hydrator(),
+            $this->confirmer(null),
+        );
+
+        [, $params] = $this->lastRender();
+        Assert::same($params['outcome'], 'generated');
+    }
 }
