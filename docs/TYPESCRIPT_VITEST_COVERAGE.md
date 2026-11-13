@@ -130,7 +130,7 @@ JavaScript plugin and uses the same property.
 ### 7. SonarCloud coverage badge added to README
 
 ```markdown
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rossaddison_invoice&metric=coverage)](https://sonarcloud.io/summary/new_code?id=rossaddison_invoice)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rossaddison_inv&metric=coverage)](https://sonarcloud.io/summary/new_code?id=rossaddison_inv)
 ```
 
 This is distinct from the existing Psalm type-coverage badge

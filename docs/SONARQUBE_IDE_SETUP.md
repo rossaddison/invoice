@@ -212,5 +212,5 @@ Then open the file in VS Code to search, filter, and copy paths freely.
 | SonarCloud URL | `https://sonarcloud.io` |
 | Region | EU |
 | Organisation | `rossaddison` |
-| Project key | `rossaddison_invoice` |
+| Project key | `rossaddison_inv` |
 | Config file | `sonar-project.properties` |
