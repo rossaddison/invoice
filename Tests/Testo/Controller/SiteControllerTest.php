@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\Testo\Controller;
 
 use App\Controller\SiteController;
+use App\Infrastructure\Persistence\Company\Company;
+use App\Invoice\Company\CompanyRepository;
 use App\Invoice\Peppol\PeppolStatusPageBuilder;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
@@ -249,5 +251,64 @@ final class SiteControllerTest
         $result = $controller->peppolStatus($builder, $sR, $this->webService());
 
         Assert::same($result->getStatusCode(), Status::OK);
+    }
+
+    /**
+     * The front page is the project page unless business_type is window_cleaning.
+     */
+    public function indexShowsTheProjectPageUnlessItIsAWindowCleaningInstall(): void
+    {
+        /** @var CompanyRepository<Company>&m\MockInterface $cR */
+        $cR = m::mock(CompanyRepository::class);
+        $cR->shouldNotReceive('repoCompanyActivequery');
+
+        foreach (['', 'something_else'] as $businessType) {
+            $controller = new SiteController($this->webViewRenderer());
+            $result = $controller->index($this->settingRepository('business_type', $businessType), $cR);
+
+            Assert::same($result->getHeaderLine(self::RENDERED_VIEW_HEADER), 'index');
+        }
+    }
+
+    public function indexShowsTheWindowCleaningPageWithTheCurrentCompanysDetails(): void
+    {
+        /** @var CompanyRepository<Company>&m\MockInterface $cR */
+        $cR = m::mock(CompanyRepository::class);
+        $cR->shouldReceive('repoCompanyActivequery')->andReturn(
+            new Company(name: 'Example Cleaning', email: 'info@example.test', web: 'https://example.test', whatsapp: '07700 900123'),
+        );
+        $params = [];
+        /** @var WebViewRenderer&m\MockInterface $renderer */
+        $renderer = m::mock(WebViewRenderer::class);
+        $renderer->shouldReceive('withController')->andReturnSelf();
+        $renderer->shouldReceive('render')->andReturnUsing(
+            static function (string $view, array $parameters = []) use (&$params): ResponseInterface {
+                $params = $parameters;
+                return new Psr17Factory()->createResponse(Status::OK)->withHeader(self::RENDERED_VIEW_HEADER, $view);
+            },
+        );
+
+        $result = new SiteController($renderer)->index($this->settingRepository('business_type', 'window_cleaning'), $cR);
+
+        Assert::same($result->getHeaderLine(self::RENDERED_VIEW_HEADER), 'index_windowcleaning');
+        Assert::same($params, [
+            'companyName' => 'Example Cleaning',
+            'companyEmail' => 'info@example.test',
+            'companyWeb' => 'https://example.test',
+            'companyWhatsApp' => '07700 900123',
+        ]);
+    }
+
+    public function theWindowCleaningPageStillRendersWhenThereIsNoCurrentCompany(): void
+    {
+        /** @var CompanyRepository<Company>&m\MockInterface $cR */
+        $cR = m::mock(CompanyRepository::class);
+        $cR->shouldReceive('repoCompanyActivequery')->andReturn(null);
+
+        $result = new SiteController($this->webViewRenderer())
+            ->index($this->settingRepository('business_type', 'window_cleaning'), $cR);
+
+        Assert::same($result->getStatusCode(), Status::OK);
+        Assert::same($result->getHeaderLine(self::RENDERED_VIEW_HEADER), 'index_windowcleaning');
     }
 }

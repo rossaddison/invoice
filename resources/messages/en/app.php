@@ -3809,5 +3809,16 @@ prior to importing and no existing documents e.g. Invoices.',
     'Window-cleaning setup applied: %d settings set, %d runs and %d streets created.',
   'window.cleaning.preset.no.product' =>
     'The default service could not be added to Product: add a tax rate and a unit first, then apply the setup again.',
+  'windowcleaning.home.title' => 'Window cleaning',
+  'windowcleaning.home.lead' =>
+    'Regular window cleaning for your home, on a round that comes past your street.',
+  'windowcleaning.home.how.heading' => 'How it works',
+  'windowcleaning.home.step1' => 'Sign up with your address.',
+  'windowcleaning.home.step2' => 'We clean on your street\'s round and send your invoice.',
+  'windowcleaning.home.step3' => 'After each clean, scan your QR code to request your next invoice.',
+  'windowcleaning.home.contact.heading' => 'Contact us',
+  'windowcleaning.home.contact.email' => 'Email',
+  'windowcleaning.home.contact.web' => 'Web',
+  'windowcleaning.home.contact.whatsapp' => 'WhatsApp',
 ];
 
