@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Enum\ServiceType;
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\I;
 
@@ -11,6 +12,7 @@ use Yiisoft\Html\Tag\I;
 * @var Yiisoft\Translator\TranslatorInterface $translator
 * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
 * @var array $body
+* @var list<ServiceType> $services_offered The services ticked in the services_offered setting
 */
 
 echo H::openTag('div', ['class' => 'row']); //1
@@ -323,8 +325,35 @@ echo H::openTag('div', ['class' => 'row']); //1
 
     echo H::closeTag('div'); //5
     echo H::closeTag('div'); //checkboxes wrapper
-    // Submits this same settings form to the preset route (formaction), so no form is nested inside it
     echo H::openTag('div', ['class' => 'mt-3 border-top pt-3']); //5
+     // The services the business offers: saved by Save, and used by the setup button below. The
+     // hidden field makes unticking everything still submit the key, so it can be cleared.
+     echo H::tag('h6', $translator->translate('services.offered'), ['class' => 'mb-1']);
+     echo $s->infoIcon(ServiceType::SETTING_KEY);
+     echo H::openTag('input', [
+      'type' => 'hidden',
+      'name' => 'settings[' . ServiceType::SETTING_KEY . '][]',
+      'value' => '',
+     ]);
+     foreach (ServiceType::cases() as $service) {
+      $inputId = 'service-' . $service->value;
+      echo H::openTag('div', ['class' => 'form-check']); //6
+       echo H::openTag('input', [
+        'type' => 'checkbox',
+        'class' => 'form-check-input',
+        'id' => $inputId,
+        'name' => 'settings[' . ServiceType::SETTING_KEY . '][]',
+        'value' => $service->value,
+        'checked' => in_array($service, $services_offered, true) ? 'checked' : null,
+       ]);
+       echo H::openTag('label', ['class' => 'form-check-label', 'for' => $inputId]);
+        echo $translator->translate($service->translationKey());
+       echo H::closeTag('label');
+      echo H::closeTag('div'); //6
+     }
+    echo H::closeTag('div'); //5
+    // Submits this same settings form to the preset route (formaction), so no form is nested inside it
+    echo H::openTag('div', ['class' => 'mt-3']); //5
      echo H::tag('button', $translator->translate('window.cleaning.preset'), [
       'type' => 'submit',
       'formaction' => $urlGenerator->generate('setting/windowCleaningPreset'),

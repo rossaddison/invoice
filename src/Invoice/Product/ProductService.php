@@ -247,18 +247,26 @@ final readonly class ProductService
      */
     public function findOrCreateHomeCareServiceProduct(int $familyId, int $taxRateId, int $unitId): Product
     {
-        $existing = $this->nameTypeRepository->repoProductByNameAndTypeQuery(
-            self::HOMECARE_SERVICE_PRODUCT_NAME,
-            ProductType::Service->value,
-        );
+        return $this->findOrCreateServiceProduct(self::HOMECARE_SERVICE_PRODUCT_NAME, $familyId, $taxRateId, $unitId);
+    }
+
+    /**
+     * The Service-type Product of the given name, made once (price 0.00: the price of each house lives
+     * on the invoice line). Used for the HomeCare Service product above and for the product of each
+     * service a business offers, see {@see \App\Invoice\Enum\ServiceType}. $familyId, $taxRateId and
+     * $unitId only matter the one time the product is first created.
+     */
+    public function findOrCreateServiceProduct(string $name, int $familyId, int $taxRateId, int $unitId): Product
+    {
+        $existing = $this->nameTypeRepository->repoProductByNameAndTypeQuery($name, ProductType::Service->value);
         if ($existing !== null) {
             return $existing;
         }
         $product = new Product();
         $this->saveProduct($product, [
             'ProductForm' => [
-                'product_name'        => self::HOMECARE_SERVICE_PRODUCT_NAME,
-                'product_description' => self::HOMECARE_SERVICE_PRODUCT_NAME,
+                'product_name'        => $name,
+                'product_description' => $name,
                 'product_type'        => ProductType::Service->value,
                 'product_price'       => 0.00,
                 'family_id'           => (string) $familyId,

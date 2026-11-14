@@ -11,6 +11,7 @@ use App\Invoice\CategoryPrimary\CategoryPrimaryService;
 use App\Invoice\CategorySecondary\CategorySecondaryRepository;
 use App\Invoice\CategorySecondary\CategorySecondaryService;
 use App\Invoice\Enum\BusinessType;
+use App\Invoice\Enum\ServiceType;
 use App\Invoice\Family\FamilyService;
 use App\Invoice\Setting\SettingRepository;
 
@@ -27,8 +28,9 @@ use App\Invoice\Setting\SettingRepository;
  *    run yet, so applying the preset to a working install never adds to its real runs. The names are
  *    placeholders: "Example Area 01", "Example Run 01" and, under each run, "Street 1 on Run 1" to
  *    "Street 30 on Run 1".
- * 3. The default service: the shared "HomeCare Service" product every invoice line uses, so it is in
- *    the Product catalogue from the start (see WindowCleaningServiceProduct).
+ * 3. The services (see ServiceType): services_offered is set to the ticked ones (window cleaning when
+ *    none are given), and the Product catalogue gets the shared "HomeCare Service" product and one
+ *    product for each service, from the start (see ServiceProducts).
  *
  * Applying it again is safe: settings are only set again, and nothing is added once a run exists.
  */
@@ -60,18 +62,22 @@ final readonly class WindowCleaningPreset
         private CategorySecondaryRepository $csR,
         private CategorySecondaryService $csS,
         private FamilyService $fS,
-        private WindowCleaningServiceProduct $serviceProduct,
+        private ServiceProducts $serviceProducts,
     ) {
     }
 
     /**
+     * @param list<ServiceType> $services the services the business offers; none given means window
+     *     cleaning
      * @return array{settings: int, areas: int, runs: int, streets: int, product: bool} how many
-     *     settings were set, how many areas, runs and streets were created, and whether the default
-     *     service is in the catalogue
+     *     settings were set, how many areas, runs and streets were created, and whether every service
+     *     product is in the catalogue
      */
-    public function apply(int $runs = self::DEFAULT_RUNS): array
+    public function apply(int $runs = self::DEFAULT_RUNS, array $services = []): array
     {
+        $services = [] === $services ? [ServiceType::WindowCleaning] : $services;
         $this->set(BusinessType::SETTING_KEY, BusinessType::WindowCleaning->value);
+        $this->set(ServiceType::SETTING_KEY, ServiceType::toCsv($services));
         foreach (self::HIDDEN_FRONT_PAGE_SETTINGS as $key) {
             $this->set($key, '1');
         }
@@ -81,9 +87,9 @@ final readonly class WindowCleaningPreset
             $created = $this->createAreasRunsAndStreets($runs);
         }
         // after the streets, so the product can take one of them
-        $product = $this->serviceProduct->ensure();
-        // business_type, the hidden front page links and the HomeCare switch
-        return ['settings' => 2 + count(self::HIDDEN_FRONT_PAGE_SETTINGS)] + $created + ['product' => $product];
+        $product = $this->serviceProducts->ensure($services);
+        // business_type, the services, the hidden front page links and the HomeCare switch
+        return ['settings' => 3 + count(self::HIDDEN_FRONT_PAGE_SETTINGS)] + $created + ['product' => $product];
     }
 
     private function set(string $key, string $value): void

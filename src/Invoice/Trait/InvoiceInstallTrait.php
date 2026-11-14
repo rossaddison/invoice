@@ -12,6 +12,7 @@ use App\Infrastructure\Persistence\Setting\Setting;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Infrastructure\Persistence\Unit\Unit;
 use App\Invoice\Client\ClientRepository;
+use App\Invoice\Enum\ServiceType;
 use App\Invoice\Family\FamilyRepository;
 use App\Invoice\Group\GroupRepository;
 use App\Invoice\Inv\InvRepository;
@@ -189,6 +190,10 @@ trait InvoiceInstallTrait
             // staff-only HomeCare columns (workflow_type, family_name,
             // etc.) at all. Also a no-op while HomeCare is off.
             'homecare_hidden_inv_guest_columns' => '',
+            // The services a home-services business offers: a comma-separated
+            // list of App\Invoice\Enum\ServiceType values. '' = none chosen.
+            // Set by WindowCleaningPreset; ticked on Settings > Front Page.
+            ServiceType::SETTING_KEY => '',
             // Anthropic API key for the HomeCare run-sheet vision-read step
             // (Upload & Read on the run-sheet review screen). '' = disabled,
             // fails with a flash message rather than a crash. See Settings

@@ -17,6 +17,7 @@ use Yiisoft\Html\Tag\A;
  * @var string $companyWeb
  * @var string $companyWhatsApp
  * @var list<string> $areas The areas (primary categories) the business cleans in
+ * @var list<App\Invoice\Enum\ServiceType> $services The services the business offers
  */
 $steps = ['windowcleaning.home.step1', 'windowcleaning.home.step2', 'windowcleaning.home.step3'];
 $contacts = array_filter([
@@ -30,7 +31,17 @@ $contacts = array_filter([
         <?= Html::openTag('div', ['class' => 'col-lg-8']); ?>
             <?php // Html::tag() encodes its content itself: pass the raw text, never Html::encode()d text ?>
             <?= Html::tag('h1', '' !== $companyName ? $companyName : $translator->translate('windowcleaning.home.title'), ['class' => 'display-5 fw-bold mb-3']); ?>
-            <?= Html::tag('p', $translator->translate('windowcleaning.home.lead'), ['class' => 'lead']); ?>
+            <?php // one service (or none chosen) reads as window cleaning; several read as home services ?>
+            <?= Html::tag('p', $translator->translate(count($services) > 1 ? 'windowcleaning.home.lead.services' : 'windowcleaning.home.lead'), ['class' => 'lead']); ?>
+
+            <?php if (count($services) > 1) { ?>
+                <?= Html::tag('h2', $translator->translate('windowcleaning.home.services.heading'), ['class' => 'h4 mt-4']); ?>
+                <?= Html::openTag('div', ['class' => 'd-flex flex-wrap gap-2 mb-2']); ?>
+                    <?php foreach ($services as $service) { ?>
+                        <?= Html::tag('span', $translator->translate($service->translationKey()), ['class' => 'badge text-bg-success fs-6']); ?>
+                    <?php } ?>
+                <?= Html::closeTag('div'); ?>
+            <?php } ?>
 
             <?php if ([] !== $areas) { ?>
                 <?= Html::tag('h2', $translator->translate('windowcleaning.home.areas.heading'), ['class' => 'h4 mt-4']); ?>

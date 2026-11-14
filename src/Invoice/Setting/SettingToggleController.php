@@ -6,6 +6,7 @@ namespace App\Invoice\Setting;
 
 use App\Infrastructure\Persistence\Setting\Setting;
 use App\Invoice\BaseController;
+use App\Invoice\Enum\ServiceType;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\WindowCleaning\WindowCleaningPreset;
 use App\Service\WebControllerService;
@@ -52,13 +53,14 @@ final class SettingToggleController extends BaseController
     }
 
     /**
-     * Sets the install up as a window-cleaning business: business_type, the front page links to
-     * hide, and (only when there is no run yet) the placeholder areas and runs. Posted from the
+     * Sets the install up as a home-services business: business_type, the front page links to hide,
+     * the services ticked on the form it was posted from (window cleaning when none), their products,
+     * and (only when there is no run yet) the placeholder areas, runs and streets. Posted from the
      * Front Page tab of Settings.
      */
-    public function windowCleaningPreset(WindowCleaningPreset $preset): Response
+    public function windowCleaningPreset(Request $request, WindowCleaningPreset $preset): Response
     {
-        $done = $preset->apply();
+        $done = $preset->apply(WindowCleaningPreset::DEFAULT_RUNS, $this->postedServices($request));
         $this->flashMessage('info', sprintf(
             $this->translator->translate('window.cleaning.preset.applied'),
             $done['settings'],
@@ -69,6 +71,24 @@ final class SettingToggleController extends BaseController
             $this->flashMessage('warning', $this->translator->translate('window.cleaning.preset.no.product'));
         }
         return $this->webService->getRedirectResponse('setting/tabIndex');
+    }
+
+    /**
+     * The services ticked on the settings form (settings[services_offered][]).
+     *
+     * @return list<ServiceType>
+     */
+    private function postedServices(Request $request): array
+    {
+        $body = $request->getParsedBody();
+        $values = [];
+        if (is_array($body)) {
+            /** @var array{settings?: array<string, string|list<string>>} $body */
+            foreach ((array) ($body['settings'][ServiceType::SETTING_KEY] ?? []) as $value) {
+                $values[] = $value;
+            }
+        }
+        return ServiceType::fromValues($values);
     }
 
     public function autoClient(): Response

@@ -522,6 +522,16 @@ trait SettingTooltipTrait
                 . ' effect while homecare_auto_invoice_enabled is on.',
                 'where' => 'resources/views/invoice/inv/guest.php.',
             ],
+            'services_offered' => [
+                'why' => 'The services the business offers (window cleaning, bin'
+                . ' cleaning, hedge cutting ...), as a comma-separated list of'
+                . ' ServiceType values. The setup button gives each ticked'
+                . ' service its own product, the front page lists them, and the'
+                . ' HomeCare sign up asks which one the customer wants.',
+                'where' => 'src/Invoice/Enum/ServiceType.php,'
+                . ' src/Invoice/WindowCleaning/WindowCleaningPreset.php and'
+                . ' resources/views/site/index_windowcleaning.php.',
+            ],
             'homecare_vision_api_key' => [
                 'why' => 'Anthropic API key used to read a scanned/photographed'
                 . ' HomeCare run sheet\'s hand-written annotations (worker,'

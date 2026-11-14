@@ -7,6 +7,7 @@ namespace App\Invoice\WindowCleaning;
 use App\Infrastructure\Persistence\Family\Family;
 use App\Invoice\CategorySecondary\CategorySecondaryRepository;
 use App\Invoice\Enum\ProductType;
+use App\Invoice\Enum\ServiceType;
 use App\Invoice\Family\FamilyRepository;
 use App\Invoice\Family\FamilyService;
 use App\Invoice\Product\ProductNameTypeRepository;
@@ -15,16 +16,17 @@ use App\Invoice\TaxRate\TaxRateRepository;
 use App\Invoice\Unit\UnitRepository;
 
 /**
- * Makes sure the one default service every window-cleaning invoice line uses is in the Product
- * catalogue: the shared "HomeCare Service" product (see ProductService), so it is there from the
- * start instead of appearing with the first sign up. Its price is 0.00 on purpose: the price of each
- * house lives on the invoice line.
+ * Makes sure the service products of a home-services business are in the Product catalogue: the shared
+ * "HomeCare Service" product (see ProductService) and one product for each service the business offers
+ * (see ServiceType), so they are there from the start instead of appearing with the first sign up. The
+ * price is 0.00 on purpose: the price of each house lives on the invoice line.
  *
  * A Product needs a street (family), a tax rate and a unit. The first tax rate and unit are used.
- * With no street yet a placeholder one is put under the first run, so the product is not tied to a
- * real street; nothing ever looks the product up by that street.
+ * With no street yet a placeholder one is put under the first run, so a product is not tied to a real
+ * street; nothing ever looks a product up by that street. A product already in the catalogue is left
+ * alone.
  */
-final readonly class WindowCleaningServiceProduct
+final readonly class ServiceProducts
 {
     public const string PLACEHOLDER_STREET = 'Example Street';
 
@@ -40,15 +42,14 @@ final readonly class WindowCleaningServiceProduct
     }
 
     /**
-     * @return bool whether the service is in the catalogue afterwards; false when a tax rate, a unit
+     * @param list<ServiceType> $services the services the business offers
+     * @return bool whether every product is in the catalogue afterwards; false when a tax rate, a unit
      *     or a run (to put a placeholder street under) is missing
      */
-    public function ensure(): bool
+    public function ensure(array $services = []): bool
     {
-        if (null !== $this->nameTypeRepository->repoProductByNameAndTypeQuery(
-            ProductService::HOMECARE_SERVICE_PRODUCT_NAME,
-            ProductType::Service->value,
-        )) {
+        $missing = $this->missingNames($services);
+        if ([] === $missing) {
             return true;
         }
         $taxRate = $this->trR->repoFirstByIdQuery();
@@ -57,8 +58,29 @@ final readonly class WindowCleaningServiceProduct
         if (null === $taxRate || null === $unit || null === $familyId) {
             return false;
         }
-        $this->productService->findOrCreateHomeCareServiceProduct($familyId, $taxRate->reqId(), $unit->reqId());
+        foreach ($missing as $name) {
+            $this->productService->findOrCreateServiceProduct($name, $familyId, $taxRate->reqId(), $unit->reqId());
+        }
         return true;
+    }
+
+    /**
+     * @param list<ServiceType> $services
+     * @return list<string> the names of the products not yet in the catalogue
+     */
+    private function missingNames(array $services): array
+    {
+        $names = [ProductService::HOMECARE_SERVICE_PRODUCT_NAME];
+        foreach ($services as $service) {
+            $names[] = $service->productName();
+        }
+        $missing = [];
+        foreach ($names as $name) {
+            if (null === $this->nameTypeRepository->repoProductByNameAndTypeQuery($name, ProductType::Service->value)) {
+                $missing[] = $name;
+            }
+        }
+        return $missing;
     }
 
     private function anyFamilyId(): ?int

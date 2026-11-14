@@ -9,6 +9,7 @@ use App\Infrastructure\Persistence\GatewayStatus\GatewayStatus;
 use App\Invoice\CategoryPrimary\CategoryPrimaryRepository;
 use App\Invoice\Company\CompanyRepository;
 use App\Invoice\Enum\BusinessType;
+use App\Invoice\Enum\ServiceType;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusFilter;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusRepository;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusRows;
@@ -50,6 +51,7 @@ final class SiteController
             'companyWeb' => $company?->getWeb() ?? '',
             'companyWhatsApp' => $company?->getWhatsApp() ?? '',
             'areas' => $this->areaNames($cpR),
+            'services' => ServiceType::fromCsv($sR->getSetting(ServiceType::SETTING_KEY)),
         ]);
     }
 

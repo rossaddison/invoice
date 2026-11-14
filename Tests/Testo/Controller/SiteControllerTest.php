@@ -9,6 +9,7 @@ use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 use App\Infrastructure\Persistence\Company\Company;
 use App\Invoice\CategoryPrimary\CategoryPrimaryRepository;
 use App\Invoice\Company\CompanyRepository;
+use App\Invoice\Enum\ServiceType;
 use App\Invoice\Peppol\PeppolStatusPageBuilder;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
@@ -295,7 +296,7 @@ final class SiteControllerTest
         // out of order, one blank: the page lists the named areas alphabetically
         $cpR = $this->areas([3 => 'Zone B', 1 => 'zone a', 2 => '', 4 => 'Zone 10', 5 => 'Zone 2']);
 
-        $result = new SiteController($renderer)->index($this->settingRepository('business_type', 'window_cleaning'), $cR, $cpR);
+        $result = new SiteController($renderer)->index($this->windowCleaningSettings('grass_mowing,bin_cleaning'), $cR, $cpR);
 
         Assert::same($result->getHeaderLine(self::RENDERED_VIEW_HEADER), 'index_windowcleaning');
         Assert::same($params, [
@@ -304,7 +305,20 @@ final class SiteControllerTest
             'companyWeb' => 'https://example.test',
             'companyWhatsApp' => '07700 900123',
             'areas' => ['Zone 2', 'Zone 10', 'zone a', 'Zone B'],
+            'services' => [ServiceType::BinCleaning, ServiceType::GrassMowing],
         ]);
+    }
+
+    /**
+     * @param string $services the services_offered setting value
+     */
+    private function windowCleaningSettings(string $services): sR
+    {
+        /** @var sR&m\MockInterface $s */
+        $s = m::mock(sR::class);
+        $s->shouldReceive('getSetting')->with('business_type')->andReturn('window_cleaning');
+        $s->shouldReceive('getSetting')->with('services_offered')->andReturn($services);
+        return $s;
     }
 
     /**
@@ -326,7 +340,7 @@ final class SiteControllerTest
         $cR->shouldReceive('repoCompanyActivequery')->andReturn(null);
 
         $result = new SiteController($this->webViewRenderer())
-            ->index($this->settingRepository('business_type', 'window_cleaning'), $cR, $this->areas([]));
+            ->index($this->windowCleaningSettings(''), $cR, $this->areas([]));
 
         Assert::same($result->getStatusCode(), Status::OK);
         Assert::same($result->getHeaderLine(self::RENDERED_VIEW_HEADER), 'index_windowcleaning');
