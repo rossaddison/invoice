@@ -3806,6 +3806,8 @@ prior to importing and no existing documents e.g. Invoices.',
   'window.cleaning.preset.tip' =>
     'Hides the Webshop and status links, Quote, SalesOrder, Tasks, Projects and Peppol for a window-cleaning business.',
   'window.cleaning.preset.applied' =>
-    'Window-cleaning setup applied: %d settings set, %d runs created.',
+    'Window-cleaning setup applied: %d settings set, %d runs and %d streets created.',
+  'window.cleaning.preset.no.product' =>
+    'The default service could not be added to Product: add a tax rate and a unit first, then apply the setup again.',
 ];
 

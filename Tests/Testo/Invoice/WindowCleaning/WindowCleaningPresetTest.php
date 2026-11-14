@@ -6,21 +6,23 @@ namespace Tests\Testo\Invoice\WindowCleaning;
 
 use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
+use App\Infrastructure\Persistence\Family\Family;
 use App\Infrastructure\Persistence\Setting\Setting;
-use App\Invoice\CategoryPrimary\CategoryPrimaryRepository;
 use App\Invoice\CategoryPrimary\CategoryPrimaryService;
 use App\Invoice\CategorySecondary\CategorySecondaryRepository;
 use App\Invoice\CategorySecondary\CategorySecondaryService;
 use App\Invoice\Enum\BusinessType;
+use App\Invoice\Family\FamilyService;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\WindowCleaning\WindowCleaningPreset;
+use App\Invoice\WindowCleaning\WindowCleaningServiceProduct;
 use Mockery as m;
 use Testo\Assert;
 use Testo\Test;
 
 /**
- * The window-cleaning preset: the settings it writes, and the placeholder areas and runs it creates
- * only when the install has no run yet.
+ * The window-cleaning preset: the settings it writes, and the placeholder areas, runs and streets it
+ * creates only when the install has no run yet, and the default service it asks for last.
  */
 #[Test]
 final class WindowCleaningPresetTest
@@ -34,14 +36,22 @@ final class WindowCleaningPresetTest
     /** @var list<array{category_primary_id: string, name: string}> the runs created */
     private array $runs = [];
 
+    /** @var list<array{string, int}> the streets created: name and the id of the run they are under */
+    private array $streets = [];
+
+    /** @var list<string> what happened, in order */
+    private array $order = [];
+
     /**
      * @param array<array-key, string> $existingRuns the runs the install already has (id => name)
      */
-    private function preset(array $existingRuns): WindowCleaningPreset
+    private function preset(array $existingRuns, bool $productEnsured = true): WindowCleaningPreset
     {
         $this->saved = [];
         $this->areas = [];
         $this->runs = [];
+        $this->streets = [];
+        $this->order = [];
 
         /** @var SettingRepository<Setting>&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
@@ -66,11 +76,23 @@ final class WindowCleaningPresetTest
         $csS->shouldReceive('saveCategorySecondary')->andReturnUsing(function (CategorySecondary $run, array $array): void {
             /** @var array{category_primary_id: string, name: string} $array */
             $this->runs[] = $array;
+            $run->setId(count($this->runs));
         });
-        /** @var CategoryPrimaryRepository<CategoryPrimary>&m\MockInterface $cpR */
-        $cpR = m::mock(CategoryPrimaryRepository::class);
+        /** @var FamilyService&m\MockInterface $fS */
+        $fS = m::mock(FamilyService::class);
+        $fS->shouldReceive('findOrCreateByStreetName')->andReturnUsing(function (string $name, int $runId): Family {
+            $this->streets[] = [$name, $runId];
+            $this->order[] = 'street';
+            return new Family();
+        });
+        /** @var WindowCleaningServiceProduct&m\MockInterface $serviceProduct */
+        $serviceProduct = m::mock(WindowCleaningServiceProduct::class);
+        $serviceProduct->shouldReceive('ensure')->andReturnUsing(function () use ($productEnsured): bool {
+            $this->order[] = 'product';
+            return $productEnsured;
+        });
 
-        return new WindowCleaningPreset($sR, $cpR, $cpS, $csR, $csS);
+        return new WindowCleaningPreset($sR, $cpS, $csR, $csS, $fS, $serviceProduct);
     }
 
     public function itSetsTheBusinessTypeAndHidesTheFourFrontPageLinks(): void
@@ -110,7 +132,7 @@ final class WindowCleaningPresetTest
     {
         $done = $this->preset([])->apply();
 
-        Assert::same($done, ['settings' => 6, 'areas' => 16, 'runs' => 16]);
+        Assert::same($done, ['settings' => 6, 'areas' => 16, 'runs' => 16, 'streets' => 480, 'product' => true]);
         Assert::count($this->areas, 16);
         Assert::count($this->runs, 16);
         Assert::same($this->areas[0], 'Example Area 01');
@@ -118,13 +140,25 @@ final class WindowCleaningPresetTest
         Assert::same($this->runs[15], ['category_primary_id' => '16', 'name' => 'Example Run 16']);
     }
 
+    public function itCreatesThirtyStreetsUnderEachRun(): void
+    {
+        $this->preset([])->apply();
+
+        Assert::count($this->streets, 480);
+        Assert::same($this->streets[0], ['Street 1 on Run 1', 1]);
+        Assert::same($this->streets[29], ['Street 30 on Run 1', 1]);
+        Assert::same($this->streets[30], ['Street 1 on Run 2', 2]);
+        Assert::same($this->streets[479], ['Street 30 on Run 16', 16]);
+    }
+
     public function itAddsNothingToAnInstallThatAlreadyHasARun(): void
     {
         $done = $this->preset([7 => 'A real run'])->apply();
 
-        Assert::same($done, ['settings' => 6, 'areas' => 0, 'runs' => 0]);
+        Assert::same($done, ['settings' => 6, 'areas' => 0, 'runs' => 0, 'streets' => 0, 'product' => true]);
         Assert::count($this->areas, 0);
         Assert::count($this->runs, 0);
+        Assert::count($this->streets, 0);
         // the settings are still applied
         Assert::same($this->saved[BusinessType::SETTING_KEY], 'window_cleaning');
     }
@@ -134,6 +168,22 @@ final class WindowCleaningPresetTest
         $done = $this->preset([])->apply(4);
 
         Assert::same($done['runs'], 4);
+        Assert::same($done['streets'], 120);
         Assert::count($this->runs, 4);
+    }
+
+    public function theDefaultServiceIsAskedForAfterTheStreetsExist(): void
+    {
+        $this->preset([])->apply(1);
+
+        Assert::same(end($this->order), 'product');
+        Assert::same(reset($this->order), 'street');
+    }
+
+    public function itSaysWhenTheDefaultServiceCouldNotBeAdded(): void
+    {
+        $done = $this->preset([], false)->apply();
+
+        Assert::false($done['product']);
     }
 }
