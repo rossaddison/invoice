@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Testo\Invoice\WindowCleaning;
 
-use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
-use App\Infrastructure\Persistence\Family\Family;
 use App\Infrastructure\Persistence\Setting\Setting;
-use App\Invoice\CategoryPrimary\CategoryPrimaryService;
 use App\Invoice\CategorySecondary\CategorySecondaryRepository;
-use App\Invoice\CategorySecondary\CategorySecondaryService;
 use App\Invoice\Enum\BusinessType;
 use App\Invoice\Enum\ServiceType;
-use App\Invoice\Family\FamilyService;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\WindowCleaning\CompanySeoDescription;
+use App\Invoice\WindowCleaning\PlaceholderRuns;
 use App\Invoice\WindowCleaning\ServiceProducts;
 use App\Invoice\WindowCleaning\WindowCleaningPreset;
 use Mockery as m;
@@ -23,8 +19,9 @@ use Testo\Assert;
 use Testo\Test;
 
 /**
- * The window-cleaning preset: the settings it writes, and the placeholder areas, runs and streets it
- * creates only when the install has no run yet, and the default service it asks for last.
+ * The window-cleaning preset: the settings it writes, the placeholder areas, runs and streets it asks
+ * for only when the install has no run yet, the service products it asks for last, and the company SEO
+ * description it fills.
  */
 #[Test]
 final class WindowCleaningPresetTest
@@ -32,14 +29,8 @@ final class WindowCleaningPresetTest
     /** @var array<string, string> setting key => value, as saved */
     private array $saved = [];
 
-    /** @var list<string> the names of the areas created */
-    private array $areas = [];
-
-    /** @var list<array{category_primary_id: string, name: string}> the runs created */
-    private array $runs = [];
-
-    /** @var list<array{string, int}> the streets created: name and the id of the run they are under */
-    private array $streets = [];
+    /** @var list<int> how many runs each call for placeholders asked for */
+    private array $placeholdersAskedFor = [];
 
     /** @var list<string> what happened, in order */
     private array $order = [];
@@ -61,9 +52,7 @@ final class WindowCleaningPresetTest
     ): WindowCleaningPreset {
         $this->seoFilledWith = [];
         $this->saved = [];
-        $this->areas = [];
-        $this->runs = [];
-        $this->streets = [];
+        $this->placeholdersAskedFor = [];
         $this->order = [];
         $this->ensured = [];
 
@@ -80,26 +69,14 @@ final class WindowCleaningPresetTest
         $csR = m::mock(CategorySecondaryRepository::class);
         $csR->shouldReceive('optionsDataCategorySecondaries')->andReturn($existingRuns);
 
-        /** @var CategoryPrimaryService&m\MockInterface $cpS */
-        $cpS = m::mock(CategoryPrimaryService::class);
-        $cpS->shouldReceive('saveCategoryPrimary')->andReturnUsing(function (CategoryPrimary $area, array $array): void {
-            $this->areas[] = (string) $array['name'];
-            $area->setId(count($this->areas));
+        /** @var PlaceholderRuns&m\MockInterface $placeholderRuns */
+        $placeholderRuns = m::mock(PlaceholderRuns::class);
+        $placeholderRuns->shouldReceive('create')->andReturnUsing(function (int $runs): array {
+            $this->placeholdersAskedFor[] = $runs;
+            $this->order[] = 'placeholders';
+            return ['areas' => $runs, 'runs' => $runs, 'streets' => $runs * PlaceholderRuns::STREETS_PER_RUN];
         });
-        /** @var CategorySecondaryService&m\MockInterface $csS */
-        $csS = m::mock(CategorySecondaryService::class);
-        $csS->shouldReceive('saveCategorySecondary')->andReturnUsing(function (CategorySecondary $run, array $array): void {
-            /** @var array{category_primary_id: string, name: string} $array */
-            $this->runs[] = $array;
-            $run->setId(count($this->runs));
-        });
-        /** @var FamilyService&m\MockInterface $fS */
-        $fS = m::mock(FamilyService::class);
-        $fS->shouldReceive('findOrCreateByStreetName')->andReturnUsing(function (string $name, int $runId): Family {
-            $this->streets[] = [$name, $runId];
-            $this->order[] = 'street';
-            return new Family();
-        });
+
         /** @var ServiceProducts&m\MockInterface $serviceProducts */
         $serviceProducts = m::mock(ServiceProducts::class);
         $serviceProducts->shouldReceive('ensure')->andReturnUsing(function (array $services) use ($productEnsured): bool {
@@ -122,7 +99,7 @@ final class WindowCleaningPresetTest
             },
         );
 
-        return new WindowCleaningPreset($sR, $cpS, $csR, $csS, $fS, $serviceProducts, $companySeo);
+        return new WindowCleaningPreset($sR, $csR, $placeholderRuns, $serviceProducts, $companySeo);
     }
 
     public function itFillsTheCompanySeoDescriptionWithTheServicesAndTheOnesOfferedBefore(): void
@@ -193,27 +170,12 @@ final class WindowCleaningPresetTest
         }
     }
 
-    public function itCreatesSixteenAreasEachWithOneRunWhenThereIsNoRunYet(): void
+    public function itAsksForSixteenRunsWithTheirStreetsWhenThereIsNoRunYet(): void
     {
         $done = $this->preset([])->apply();
 
         Assert::same($done, ['settings' => 7, 'areas' => 16, 'runs' => 16, 'streets' => 480, 'product' => true, 'seo' => true]);
-        Assert::count($this->areas, 16);
-        Assert::count($this->runs, 16);
-        Assert::same($this->areas[0], 'Example Area 01');
-        Assert::same($this->runs[0], ['category_primary_id' => '1', 'name' => 'Example Run 01']);
-        Assert::same($this->runs[15], ['category_primary_id' => '16', 'name' => 'Example Run 16']);
-    }
-
-    public function itCreatesThirtyStreetsUnderEachRun(): void
-    {
-        $this->preset([])->apply();
-
-        Assert::count($this->streets, 480);
-        Assert::same($this->streets[0], ['Street 1 on Run 1', 1]);
-        Assert::same($this->streets[29], ['Street 30 on Run 1', 1]);
-        Assert::same($this->streets[30], ['Street 1 on Run 2', 2]);
-        Assert::same($this->streets[479], ['Street 30 on Run 16', 16]);
+        Assert::same($this->placeholdersAskedFor, [16]);
     }
 
     public function itAddsNothingToAnInstallThatAlreadyHasARun(): void
@@ -221,9 +183,7 @@ final class WindowCleaningPresetTest
         $done = $this->preset([7 => 'A real run'])->apply();
 
         Assert::same($done, ['settings' => 7, 'areas' => 0, 'runs' => 0, 'streets' => 0, 'product' => true, 'seo' => true]);
-        Assert::count($this->areas, 0);
-        Assert::count($this->runs, 0);
-        Assert::count($this->streets, 0);
+        Assert::same($this->placeholdersAskedFor, []);
         // the settings are still applied
         Assert::same($this->saved[BusinessType::SETTING_KEY], 'window_cleaning');
     }
@@ -234,18 +194,17 @@ final class WindowCleaningPresetTest
 
         Assert::same($done['runs'], 4);
         Assert::same($done['streets'], 120);
-        Assert::count($this->runs, 4);
+        Assert::same($this->placeholdersAskedFor, [4]);
     }
 
-    public function theDefaultServiceIsAskedForAfterTheStreetsExist(): void
+    public function theServiceProductsAreAskedForAfterThePlaceholders(): void
     {
         $this->preset([])->apply(1);
 
-        Assert::same(end($this->order), 'product');
-        Assert::same(reset($this->order), 'street');
+        Assert::same($this->order, ['placeholders', 'product']);
     }
 
-    public function itSaysWhenTheDefaultServiceCouldNotBeAdded(): void
+    public function itSaysWhenTheServiceProductsCouldNotBeAdded(): void
     {
         $done = $this->preset([], false)->apply();
 
