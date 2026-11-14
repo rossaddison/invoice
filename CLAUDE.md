@@ -92,8 +92,10 @@ On 2026-11-11 a bulk `git add -A` pushed customer run documents to a public bran
 so it cannot happen again; they apply to every commit, push and pull request.
 
 - **Never** run `git add -A`, `git add .` or `git commit -a`. Stage files by explicit path, then read
-  `git diff --cached --name-only` before every commit and again before every push. Stop if anything
-  under `imports/`, or any `.docx`, `.xlsx`, `.csv`, database, archive or `.env` file, is in the list.
+  `git diff --cached --name-only` before every commit. Before every push, read the files in the
+  outgoing commits instead (`git log --name-only <remote>/main..HEAD`: once committed, nothing is
+  staged). Stop if anything under `imports/`, or any `.docx`, `.xlsx`, `.csv`, database, archive or
+  `.env` file, is in either list.
 - Customer documents (`imports/`) are read locally for verification only. Scratch files, outputs and
   scripts that touch real data go outside the repository, never into a folder that is committed.
 - Tests, fixtures and docs use **virtual** data only: emails on `example.test`/`example.com`,
