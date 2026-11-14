@@ -168,7 +168,7 @@ final class WindowCleaningPresetTest
         foreach (['no_front_webshop_page', 'no_front_gateway_status_page', 'no_front_peppol_status_page', 'no_front_hmrc_api_status_page'] as $key) {
             Assert::same($this->saved[$key], '1');
         }
-        Assert::count($this->saved, 7);
+        Assert::count($this->saved, 8);
     }
 
     public function itSwitchesOnHomeCareQrAutoInvoice(): void
@@ -178,12 +178,19 @@ final class WindowCleaningPresetTest
         Assert::same($this->saved['homecare_auto_invoice_enabled'], '1');
     }
 
-    public function itLeavesSignUpLoginAndTheBusinessOwnedHomeCareSettingsAlone(): void
+    public function itClosesTheGeneralSignUp(): void
+    {
+        $this->preset([])->apply();
+
+        Assert::same($this->saved['stop_signing_up'], '1');
+    }
+
+    public function itLeavesHomeCareSignUpLoginAndTheBusinessOwnedHomeCareSettingsAlone(): void
     {
         $this->preset([])->apply();
 
         $untouched = [
-            'stop_signing_up', 'stop_homecare_signing_up', 'stop_logging_in',
+            'stop_homecare_signing_up', 'stop_logging_in',
             'homecare_lead_worker_id', 'homecare_current_run_category_secondary_id',
             'homecare_current_run_last_run_date', 'homecare_vision_api_key',
             'homecare_hidden_inv_columns', 'homecare_hidden_inv_guest_columns',
@@ -197,7 +204,7 @@ final class WindowCleaningPresetTest
     {
         $done = $this->preset([])->apply();
 
-        Assert::same($done, ['settings' => 7, 'areas' => 16, 'runs' => 16, 'streets' => 480, 'product' => true, 'seo' => true]);
+        Assert::same($done, ['settings' => 8, 'areas' => 16, 'runs' => 16, 'streets' => 480, 'product' => true, 'seo' => true]);
         Assert::count($this->areas, 16);
         Assert::count($this->runs, 16);
         Assert::same($this->areas[0], 'Example Area 01');
@@ -220,7 +227,7 @@ final class WindowCleaningPresetTest
     {
         $done = $this->preset([7 => 'A real run'])->apply();
 
-        Assert::same($done, ['settings' => 7, 'areas' => 0, 'runs' => 0, 'streets' => 0, 'product' => true, 'seo' => true]);
+        Assert::same($done, ['settings' => 8, 'areas' => 0, 'runs' => 0, 'streets' => 0, 'product' => true, 'seo' => true]);
         Assert::count($this->areas, 0);
         Assert::count($this->runs, 0);
         Assert::count($this->streets, 0);

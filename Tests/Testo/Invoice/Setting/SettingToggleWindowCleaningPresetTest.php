@@ -29,7 +29,7 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 final class SettingToggleWindowCleaningPresetTest
 {
     /** What the preset reports when it did everything. */
-    private const array DONE = ['settings' => 7, 'areas' => 0, 'runs' => 0, 'streets' => 0, 'product' => true, 'seo' => false];
+    private const array DONE = ['settings' => 8, 'areas' => 0, 'runs' => 0, 'streets' => 0, 'product' => true, 'seo' => false];
 
     /** @var list<array{string, string}> level and message of each flash added */
     private array $flashed = [];

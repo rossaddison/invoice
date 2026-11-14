@@ -3804,7 +3804,7 @@ prior to importing and no existing documents e.g. Invoices.',
     'We could not finish setting up your account. Please contact us directly.',
   'window.cleaning.preset' => 'Set up as a home-services business',
   'window.cleaning.preset.tip' =>
-    'Hides the Webshop and status links, Quote, SalesOrder, Tasks, Projects and Peppol, and adds a product for each service ticked above.',
+    'Hides the Webshop, status links and general Signup (HomeCare Signup and Login stay), hides Quote, SalesOrder, Tasks, Projects and Peppol, and adds a product for each service ticked above.',
   'window.cleaning.preset.applied' =>
     'Home-services setup applied: %d settings set, %d runs and %d streets created.',
   'window.cleaning.preset.no.product' =>
