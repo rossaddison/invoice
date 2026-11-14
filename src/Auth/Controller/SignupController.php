@@ -102,6 +102,17 @@ final class SignupController
                     ->withHeader('Location', $clientAuthUrl);
     }
 
+    /**
+     * Whether this page is closed to the visitor: someone already signed in has no use for it, and
+     * stop_signing_up (Settings > General, and the home-services setup) closes it for everyone, not
+     * only the navbar link, so typing the address no longer gets a signup form. Same guard as
+     * HomeCare signup.
+     */
+    private function signupIsClosedTo(AuthService $authService): bool
+    {
+        return !$authService->isGuest() || '1' === $this->sR->getSetting('stop_signing_up');
+    }
+
     public function signup(
         AuthService $authService,
         CurrentRoute $currentRoute,
@@ -111,9 +122,7 @@ final class SignupController
         SignupDeps $deps,
     ): ResponseInterface {
         $uR = $deps->uR;
-        // stop_signing_up (Settings > General, and the home-services setup) closes this page, not only the
-        // navbar link: typing the address no longer gets a signup form. Same guard as HomeCare signup.
-        if (!$authService->isGuest() || '1' === $this->sR->getSetting('stop_signing_up')) {
+        if ($this->signupIsClosedTo($authService)) {
             return $this->webService->getRedirectResponse('site/index');
         }
 

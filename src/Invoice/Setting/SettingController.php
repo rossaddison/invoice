@@ -287,26 +287,16 @@ final class SettingController extends BaseController
             'backup' => $this->webViewRenderer->renderPartialAsString($p . 'backup'),
             'bootstrap5' => $this->bootstrap5Partial(),
         ];
-        if ($request->getMethod() === Method::POST) {
-            $body = $request->getParsedBody();
-            if (is_array($body)) {
-                /** @var array<string, string|list<string>> $settings */
-                $settings = (array) $body['settings'];
-                // homecare_hidden_inv_(guest_)columns are checkboxes[], not a
-                // single field — saveSubmittedSettings()/saveOneSetting()
-                // expect every value to already be a plain string, so join
-                // here.
-                $this->joinCheckboxArraySetting($settings, 'homecare_hidden_inv_columns');
-                $this->joinCheckboxArraySetting($settings, 'homecare_hidden_inv_guest_columns');
-                $this->joinCheckboxArraySetting($settings, ServiceType::SETTING_KEY);
-                /** @var array<string, string> $settings */
-                $errorResponse = $this->saveSubmittedSettings($settings, $numberhelper);
-                if ($errorResponse !== null) {
-                    return $errorResponse;
-                }
-                $this->flashMessage('info', $this->translator->translate('settings.successfully.saved'));
-                return $this->webService->getRedirectResponse('setting/tabIndex');
+        $settings = $request->getMethod() === Method::POST
+            ? $this->postedSettingsWithCheckboxesJoined($request)
+            : null;
+        if (null !== $settings) {
+            $errorResponse = $this->saveSubmittedSettings($settings, $numberhelper);
+            if ($errorResponse !== null) {
+                return $errorResponse;
             }
+            $this->flashMessage('info', $this->translator->translate('settings.successfully.saved'));
+            return $this->webService->getRedirectResponse('setting/tabIndex');
         }
         return $this->webViewRenderer->render('//invoice/setting/tab_index', $parameters);
     }
