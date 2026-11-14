@@ -16,8 +16,8 @@ use App\Invoice\Setting\SettingRepository;
  *
  * 1. Settings: business_type = window_cleaning (the front page, the staff menu and the dashboard
  *    read it), and the Webshop, Gateway status, Peppol status and HMRC API status links are taken
- *    off the public front page. Sign up, HomeCare sign up and Login are not touched. HomeCare QR
- *    Auto-Invoice is switched on. The lead worker, the current run, the last run date, the Vision API
+ *    off the public front page. The general Sign up is closed (stop_signing_up): customers use HomeCare
+ *    sign up. HomeCare sign up and Login are not touched. HomeCare QR Auto-Invoice is switched on. The lead worker, the current run, the last run date, the Vision API
  *    key and the hidden inv columns belong to the business and are never set here.
  * 2. Areas, runs and streets (CategoryPrimary, CategorySecondary and Family): so the sign up form's
  *    run dropdown is not empty and each run has streets to work with (see PlaceholderRuns). Only when
@@ -52,6 +52,12 @@ final readonly class WindowCleaningPreset
      */
     public const string HOMECARE_AUTO_INVOICE_SETTING = 'homecare_auto_invoice_enabled';
 
+    /**
+     * Customers sign up through HomeCare sign up, so the general sign up is closed (the link and the
+     * page, see SignupController). HomeCare sign up and Login stay open.
+     */
+    public const string GENERAL_SIGNUP_STOPPED_SETTING = 'stop_signing_up';
+
     public function __construct(
         private SettingRepository $sR,
         private CategorySecondaryRepository $csR,
@@ -78,6 +84,7 @@ final readonly class WindowCleaningPreset
             $this->set($key, '1');
         }
         $this->set(self::HOMECARE_AUTO_INVOICE_SETTING, '1');
+        $this->set(self::GENERAL_SIGNUP_STOPPED_SETTING, '1');
         $created = ['areas' => 0, 'runs' => 0, 'streets' => 0];
         if ([] === $this->csR->optionsDataCategorySecondaries()) {
             $created = $this->placeholderRuns->create($runs);
@@ -85,8 +92,8 @@ final readonly class WindowCleaningPreset
         // after the streets, so the product can take one of them
         $product = $this->serviceProducts->ensure($services);
         $seo = $this->companySeo->fill($services, $previous);
-        // business_type, the services, the hidden front page links and the HomeCare switch
-        return ['settings' => 3 + count(self::HIDDEN_FRONT_PAGE_SETTINGS)] + $created
+        // business_type, the services, the hidden front page links, the HomeCare switch and the stopped sign up
+        return ['settings' => 4 + count(self::HIDDEN_FRONT_PAGE_SETTINGS)] + $created
             + ['product' => $product, 'seo' => $seo];
     }
 

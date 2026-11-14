@@ -111,7 +111,9 @@ final class SignupController
         SignupDeps $deps,
     ): ResponseInterface {
         $uR = $deps->uR;
-        if (!$authService->isGuest()) {
+        // stop_signing_up (Settings > General, and the home-services setup) closes this page, not only the
+        // navbar link: typing the address no longer gets a signup form. Same guard as HomeCare signup.
+        if (!$authService->isGuest() || '1' === $this->sR->getSetting('stop_signing_up')) {
             return $this->webService->getRedirectResponse('site/index');
         }
 
