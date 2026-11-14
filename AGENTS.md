@@ -11,9 +11,12 @@ been public cannot be fully taken back: GitHub keeps every pull request's commit
 `refs/pull/<number>/head` even after the branch is deleted.
 
 - **Never** run `git add -A`, `git add .` or `git commit -a`. Stage files by explicit path, then
-  read `git diff --cached --name-only` before every commit and again before every push.
+  read `git diff --cached --name-only` before every commit.
+- Before every push, read the files in the commits that are about to leave, not the staged list
+  (once committed, nothing is staged): `git diff --name-only <remote>/<branch>..HEAD`, or
+  `git log --name-only <remote>/main..HEAD` for a new branch.
 - Stop if anything under `imports/`, or any `.docx`, `.xlsx`, `.csv`, database, archive or `.env`
-  file, is in that list.
+  file, is in either list.
 - Customer documents (`imports/`) are for local reading only. Scratch files, outputs and scripts
   that touch real data go outside the repository.
 - Tests, fixtures and docs use **virtual** data only: emails on `example.test` or `example.com`,

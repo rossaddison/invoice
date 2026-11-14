@@ -4,7 +4,8 @@ The full rules are in [`AGENTS.md`](../AGENTS.md) and apply to Copilot and to ev
 The ones that matter most:
 
 - **Never** run `git add -A`, `git add .` or `git commit -a`. Stage files by explicit path and read
-  the staged list before every commit and push.
+  the staged list before every commit, and the files in the outgoing commits before every push
+  (`git log --name-only <remote>/main..HEAD`).
 - Never commit real people's data. `imports/`, `.env`, `.docx`, `.xlsx`, `.csv`, databases and
   archives stay out of the repository. Tests and docs use virtual data only (`example.test` emails,
   `01632 960xxx` phones, `ZZ` postcodes, `Virtual`/`Test` surnames).
