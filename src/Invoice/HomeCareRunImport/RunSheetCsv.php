@@ -89,74 +89,140 @@ final class RunSheetCsv
         $header = array_map(static fn (?string $c): string => strtolower(trim((string) $c)), str_getcsv($first, $delimiter, '"', ''));
         $index = array_flip($header);
 
-        $segments = [];
         $warnings = [];
-        $street = null;
-        $segPostcode = null;
-        $segLine = 0;
-        /** @var list<RunHouse> $houses */
-        $houses = [];
+        /** @var list<array{street: string, postcode: string|null, house: RunHouse}> $rows */
+        $rows = [];
         $seen = [];
         foreach ($lines as $i => $text) {
             if (0 === $i || '' === trim($text)) {
                 continue;
             }
-            $lineNo = $i + 1;
-            $cells = str_getcsv($text, $delimiter, '"', '');
-            $get = fn (string $column): string => isset($index[$column]) ? $this->unguard(trim((string) ($cells[$index[$column]] ?? ''))) : '';
-            $rowStreet = $get('street');
-            $number = strtoupper($get('number'));
-            // the same house numbers the pasted-text parser reads: 14, 12A ("Flat 1" or "12-14" would collapse
-            // onto one dwelling)
-            if ('' === $rowStreet || 1 !== preg_match('/^\d{1,4}[A-Z]?$/', $number)) {
-                $warnings[] = sprintf('Line %d skipped: it needs a street and a house number such as 14 or 12A.', $lineNo);
+            $row = $this->readRow($i + 1, str_getcsv($text, $delimiter, '"', ''), $index, $seen, $warnings);
+            if (null !== $row) {
+                $rows[] = $row;
+            }
+        }
+
+        return new ParsedRun(
+            '' === $title ? 'Import sheet' : $title,
+            [],
+            $this->withContinuations($this->groupedByStreet($rows)),
+            $warnings,
+        );
+    }
+
+    /**
+     * One sheet row as its street, postcode and house; null (with a warning) when the row has no
+     * street or no usable house number. Other problems only add a warning.
+     *
+     * @param array<array-key, string|null> $cells
+     * @param array<string, int> $index column name => position
+     * @param array<string, int> $seen street|number => line first met on, updated here
+     * @param list<string> $warnings added to
+     * @return array{street: string, postcode: string|null, house: RunHouse}|null
+     */
+    private function readRow(int $lineNo, array $cells, array $index, array &$seen, array &$warnings): ?array
+    {
+        $get = fn (string $column): string => isset($index[$column]) ? $this->unguard(trim((string) ($cells[$index[$column]] ?? ''))) : '';
+        $street = $get('street');
+        $number = strtoupper($get('number'));
+        // the same house numbers the pasted-text parser reads: 14, 12A ("Flat 1" or "12-14" would collapse
+        // onto one dwelling)
+        if ('' === $street || 1 !== preg_match('/^\d{1,4}[A-Z]?$/', $number)) {
+            $warnings[] = sprintf('Line %d skipped: it needs a street and a house number such as 14 or 12A.', $lineNo);
+            return null;
+        }
+        $postcode = $this->postcode($get('postcode'));
+        if (null === $postcode && '' !== $get('postcode')) {
+            $warnings[] = sprintf('Line %d: "%s" is not a postcode, so it is left blank.', $lineNo, $get('postcode'));
+        }
+        $price = $this->price($get('price'), $lineNo, $warnings);
+        $flags = $this->flags($get('flags'), $lineNo, $warnings);
+        $key = strtolower($street) . '|' . $number;
+        if (isset($seen[$key])) {
+            $warnings[] = sprintf('Line %d: %s %s is already on line %d.', $lineNo, $number, $street, $seen[$key]);
+        }
+        $seen[$key] = $lineNo;
+        $house = new RunHouse($number, $get('note'), $flags, $lineNo, $get('client_name'), $get('phone'), $price);
+        return ['street' => $street, 'postcode' => $postcode, 'house' => $house];
+    }
+
+    /**
+     * @param list<string> $warnings added to
+     */
+    private function price(string $text, int $lineNo, array &$warnings): ?float
+    {
+        if ('' === $text) {
+            return null;
+        }
+        if (is_numeric($text) && (float) $text >= 0.0) {
+            return (float) $text;
+        }
+        $warnings[] = sprintf('Line %d: "%s" is not a price, so the standard price is used.', $lineNo, $text);
+        return null;
+    }
+
+    /**
+     * @param list<string> $warnings added to
+     * @return list<string> the flags that are known, unknown ones left out with a warning
+     */
+    private function flags(string $text, int $lineNo, array &$warnings): array
+    {
+        $flags = [];
+        foreach (preg_split('/[\s,]+/', strtolower($text)) ?: [] as $flag) {
+            if ('' === $flag) {
                 continue;
             }
-            $postcode = $this->postcode($get('postcode'));
-            if (null === $postcode && '' !== $get('postcode')) {
-                $warnings[] = sprintf('Line %d: "%s" is not a postcode, so it is left blank.', $lineNo, $get('postcode'));
+            if (in_array($flag, self::VALID_FLAGS, true)) {
+                $flags[] = $flag;
+            } else {
+                $warnings[] = sprintf('Line %d: unknown flag "%s" ignored.', $lineNo, $flag);
             }
-            $priceText = $get('price');
-            $price = null;
-            if ('' !== $priceText) {
-                if (is_numeric($priceText) && (float) $priceText >= 0.0) {
-                    $price = (float) $priceText;
-                } else {
-                    $warnings[] = sprintf('Line %d: "%s" is not a price, so the standard price is used.', $lineNo, $priceText);
-                }
-            }
-            $flags = [];
-            foreach (preg_split('/[\s,]+/', strtolower($get('flags'))) ?: [] as $flag) {
-                if ('' === $flag) {
-                    continue;
-                }
-                if (in_array($flag, self::VALID_FLAGS, true)) {
-                    $flags[] = $flag;
-                } else {
-                    $warnings[] = sprintf('Line %d: unknown flag "%s" ignored.', $lineNo, $flag);
-                }
-            }
-            $key = strtolower($rowStreet) . '|' . $number;
-            if (isset($seen[$key])) {
-                $warnings[] = sprintf('Line %d: %s %s is already on line %d.', $lineNo, $number, $rowStreet, $seen[$key]);
-            }
-            $seen[$key] = $lineNo;
-            if (null === $street || strtolower($street) !== strtolower($rowStreet)) {
+        }
+        return $flags;
+    }
+
+    /**
+     * Rows of the same street that follow each other make one segment.
+     *
+     * @param list<array{street: string, postcode: string|null, house: RunHouse}> $rows
+     * @return list<RunSegment>
+     */
+    private function groupedByStreet(array $rows): array
+    {
+        $segments = [];
+        $street = null;
+        $segPostcode = null;
+        $segLine = 0;
+        /** @var list<RunHouse> $houses */
+        $houses = [];
+        foreach ($rows as $row) {
+            if (null === $street || strtolower($street) !== strtolower($row['street'])) {
                 if (null !== $street) {
                     $segments[] = new RunSegment($street, $segPostcode, null, false, $houses, [], $segLine);
                 }
-                $street = $rowStreet;
-                $segPostcode = $postcode;
-                $segLine = $lineNo;
+                $street = $row['street'];
+                $segPostcode = $row['postcode'];
+                $segLine = $row['house']->line;
                 $houses = [];
             }
-            $segPostcode ??= $postcode;
-            $houses[] = new RunHouse($number, $get('note'), $flags, $lineNo, $get('client_name'), $get('phone'), $price);
+            $segPostcode ??= $row['postcode'];
+            $houses[] = $row['house'];
         }
         if (null !== $street) {
             $segments[] = new RunSegment($street, $segPostcode, null, false, $houses, [], $segLine);
         }
-        // a street that comes back later is a continuation of its earlier stretch
+        return $segments;
+    }
+
+    /**
+     * A street that comes back later is a continuation of its earlier stretch.
+     *
+     * @param list<RunSegment> $segments
+     * @return list<RunSegment>
+     */
+    private function withContinuations(array $segments): array
+    {
         $met = [];
         $result = [];
         foreach ($segments as $segment) {
@@ -166,8 +232,7 @@ final class RunSheetCsv
                 : $segment;
             $met[$name] = $segment->postcode ?? ($met[$name] ?? null);
         }
-
-        return new ParsedRun('' === $title ? 'Import sheet' : $title, [], $result, $warnings);
+        return $result;
     }
 
     private function postcode(string $value): ?string

@@ -11,6 +11,7 @@ use App\Invoice\Family\FamilyRepository;
 use App\Invoice\Inv\InvIndexFilter;
 use App\Invoice\Inv\InvIndexListDeps;
 use App\Invoice\Inv\InvIndexNavDeps;
+use App\Invoice\Inv\RunSheetPdfDeps;
 use App\Invoice\Inv\RunSheetPdfRowBuilder;
 use App\Invoice\InvWorkerAllocation\AllocationSidesSummary;
 use App\Invoice\Setting\SettingRepository;
@@ -88,9 +89,7 @@ final class RunSheetPdfWorkerTest
             $filter,
             $list,
             $nav,
-            $fR,
-            $builder,
-            $sides,
+            new RunSheetPdfDeps($fR, $builder, $sides),
             $wR,
         );
 

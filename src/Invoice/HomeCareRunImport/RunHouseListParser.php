@@ -29,13 +29,12 @@ final readonly class RunHouseListParser
         $headerNotes = [];
         /** @var list<array{street: string, postcode: string|null, declared: int|null, continues: bool, houses: list<RunHouse>, notes: list<string>, line: int}> $segments */
         $segments = [];
-        $warnings = [];
         $current = null;
 
         foreach (preg_split('/\R/u', $text) ?: [] as $index => $raw) {
             $lineNo = $index + 1;
-            $line = trim(str_replace(["\u{00A0}", "\u{FEFF}"], ' ', $raw));
-            if ('' === $line || 1 === preg_match('/^[\s.\-_=…~*]+$/u', $line)) {
+            $line = $this->cleanLine($raw);
+            if ('' === $line) {
                 continue;
             }
             if ('' === $title) {
@@ -48,23 +47,39 @@ final readonly class RunHouseListParser
                 $segments[] = $this->newSegment($heading, $segments, $lineNo);
                 continue;
             }
-            $house = $this->house($line, $lineNo);
-            if (null !== $house) {
-                if (null === $current) {
-                    // "11 PARKVILLE BACKS HAVE BEEN MISSED" before the first street is an instruction
-                    $headerNotes[] = $line;
-                    continue;
-                }
-                $segments[$current]['houses'][] = $house;
+            if (null === $current) {
+                // "11 PARKVILLE BACKS HAVE BEEN MISSED" before the first street is an instruction
+                $headerNotes[] = $line;
                 continue;
             }
-            if (null === $current) {
-                $headerNotes[] = $line;
+            $house = $this->house($line, $lineNo);
+            if (null !== $house) {
+                $segments[$current]['houses'][] = $house;
             } else {
                 $segments[$current]['notes'][] = $line;
             }
         }
 
+        return $this->built($title, $headerNotes, $segments);
+    }
+
+    /**
+     * The line with non-breaking spaces and byte-order marks turned to spaces and trimmed; empty
+     * for a blank line or a line of only rules and dots.
+     */
+    private function cleanLine(string $raw): string
+    {
+        $line = trim(str_replace(["\u{00A0}", "\u{FEFF}"], ' ', $raw));
+        return 1 === preg_match('/^[\s.\-_=…~*]+$/u', $line) ? '' : $line;
+    }
+
+    /**
+     * @param list<string> $headerNotes
+     * @param array<int, array{street: string, postcode: string|null, declared: int|null, continues: bool, houses: list<RunHouse>, notes: list<string>, line: int}> $segments
+     */
+    private function built(string $title, array $headerNotes, array $segments): ParsedRun
+    {
+        $warnings = [];
         $built = [];
         foreach ($segments as $segment) {
             $found = count($segment['houses']);
@@ -166,7 +181,7 @@ final readonly class RunHouseListParser
 
     private function house(string $line, int $lineNo): ?RunHouse
     {
-        if (1 === preg_match('/^(DO NOT CLEAN|CANCELLED)\s+(\d{1,4}[A-Za-z]?)\s*$/i', $line, $m)) {
+        if (1 === preg_match('/^(DO NOT CLEAN|CANCELLED)\s+(\d{1,4}[A-Z]?)\s*$/i', $line, $m)) {
             return new RunHouse(strtoupper($m[2]), $line, $this->flags($m[1]), $lineNo);
         }
         if (1 !== preg_match('/^(\d{1,4}[A-Za-z]?)(?![A-Za-z0-9])\s*(.*)$/', $line, $m)) {

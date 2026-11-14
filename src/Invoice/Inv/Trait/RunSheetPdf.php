@@ -16,6 +16,7 @@ use App\Invoice\Inv\InvIndexListDeps;
 use App\Invoice\Inv\InvIndexNavDeps;
 use App\Invoice\Enum\AllocationSide;
 use App\Invoice\Enum\AllocationStatus;
+use App\Invoice\Inv\RunSheetPdfDeps;
 use App\Invoice\Inv\RunSheetPdfRowBuilder;
 use App\Invoice\InvWorkerAllocation\AllocationSidesSummary;
 use App\Invoice\Worker\WorkerRepository as WR;
@@ -66,9 +67,7 @@ trait RunSheetPdf
         InvIndexFilter $filter,
         InvIndexListDeps $list,
         InvIndexNavDeps $nav,
-        FR $fR,
-        RunSheetPdfRowBuilder $rowBuilder,
-        AllocationSidesSummary $sides,
+        RunSheetPdfDeps $deps,
         WR $wR,
     ): Response|\Mpdf\Mpdf|array|string {
         $user = $this->userService->getUser();
@@ -89,7 +88,7 @@ trait RunSheetPdf
 
         $startPostcode = $nav->csR->repoCategorySecondaryQuery($run->categorySecondaryId)?->getStartPostcode();
 
-        return $this->renderRunSheetPdf($invs, $nav->dwR, $fR, $rowBuilder, $sides, true, $startPostcode);
+        return $this->renderRunSheetPdf($invs, $nav->dwR, $deps->fR, $deps->rowBuilder, $deps->sides, true, $startPostcode);
     }
 
     /**
