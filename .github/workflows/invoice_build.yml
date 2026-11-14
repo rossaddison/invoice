@@ -246,12 +246,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # PHP 8.6/9.0 workflow legs deliberately removed until 8.6 actually
-        # releases — premature to carry a pre-release matrix leg for it
-        # before then. windows-latest is paired explicitly with every PHP
-        # version rather than a free os x php cross-product, so each
+        # PHP 8.6 runs as one experimental (allowed-to-fail) ubuntu leg: it
+        # shows what breaks without turning the build red. shivammathur/setup-php
+        # still lists 8.6 as a nightly build, so this tests the 8.6 dev branch
+        # until setup-php ships a stable 8.6; make the leg required once it is
+        # stable and passing. windows-latest is paired explicitly with every
+        # PHP version rather than a free os x php cross-product, so each
         # experimental leg carries its own flag.
         include:
+          - os: ubuntu-latest
+            php: '8.6'
+            experimental: true
+            node-os: ubuntu
           - os: ubuntu-latest
             php: '8.4'
             experimental: false
