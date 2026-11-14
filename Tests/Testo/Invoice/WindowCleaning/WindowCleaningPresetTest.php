@@ -81,14 +81,27 @@ final class WindowCleaningPresetTest
         foreach (['no_front_webshop_page', 'no_front_gateway_status_page', 'no_front_peppol_status_page', 'no_front_hmrc_api_status_page'] as $key) {
             Assert::same($this->saved[$key], '1');
         }
-        Assert::count($this->saved, 5);
+        Assert::count($this->saved, 6);
     }
 
-    public function itLeavesSignUpHomeCareSignUpAndLoginAlone(): void
+    public function itSwitchesOnHomeCareQrAutoInvoice(): void
     {
         $this->preset([])->apply();
 
-        foreach (['stop_signing_up', 'stop_homecare_signing_up', 'stop_logging_in'] as $key) {
+        Assert::same($this->saved['homecare_auto_invoice_enabled'], '1');
+    }
+
+    public function itLeavesSignUpLoginAndTheBusinessOwnedHomeCareSettingsAlone(): void
+    {
+        $this->preset([])->apply();
+
+        $untouched = [
+            'stop_signing_up', 'stop_homecare_signing_up', 'stop_logging_in',
+            'homecare_lead_worker_id', 'homecare_current_run_category_secondary_id',
+            'homecare_current_run_last_run_date', 'homecare_vision_api_key',
+            'homecare_hidden_inv_columns', 'homecare_hidden_inv_guest_columns',
+        ];
+        foreach ($untouched as $key) {
             Assert::false(array_key_exists($key, $this->saved));
         }
     }
@@ -97,7 +110,7 @@ final class WindowCleaningPresetTest
     {
         $done = $this->preset([])->apply();
 
-        Assert::same($done, ['settings' => 5, 'areas' => 16, 'runs' => 16]);
+        Assert::same($done, ['settings' => 6, 'areas' => 16, 'runs' => 16]);
         Assert::count($this->areas, 16);
         Assert::count($this->runs, 16);
         Assert::same($this->areas[0], 'Example Area 01');
@@ -109,7 +122,7 @@ final class WindowCleaningPresetTest
     {
         $done = $this->preset([7 => 'A real run'])->apply();
 
-        Assert::same($done, ['settings' => 5, 'areas' => 0, 'runs' => 0]);
+        Assert::same($done, ['settings' => 6, 'areas' => 0, 'runs' => 0]);
         Assert::count($this->areas, 0);
         Assert::count($this->runs, 0);
         // the settings are still applied

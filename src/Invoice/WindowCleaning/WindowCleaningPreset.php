@@ -19,7 +19,9 @@ use App\Invoice\Setting\SettingRepository;
  *
  * 1. Settings: business_type = window_cleaning (the front page, the staff menu and the dashboard
  *    read it), and the Webshop, Gateway status, Peppol status and HMRC API status links are taken
- *    off the public front page. Sign up, HomeCare sign up and Login are not touched.
+ *    off the public front page. Sign up, HomeCare sign up and Login are not touched. HomeCare QR
+ *    Auto-Invoice is switched on. The lead worker, the current run, the last run date, the Vision API
+ *    key and the hidden inv columns belong to the business and are never set here.
  * 2. Areas and runs (CategoryPrimary and CategorySecondary): so the sign up form's run dropdown is
  *    not empty. Only when the install has no run yet, so applying the preset to a working install
  *    never adds to its real runs. The names are placeholders ("Example Area 01" / "Example Run 01");
@@ -42,6 +44,11 @@ final readonly class WindowCleaningPreset
         'no_front_hmrc_api_status_page',
     ];
 
+    /**
+     * HomeCare Settings tab: scanning a customer's QR code requests their next invoice.
+     */
+    public const string HOMECARE_AUTO_INVOICE_SETTING = 'homecare_auto_invoice_enabled';
+
     public function __construct(
         private SettingRepository $sR,
         private CategoryPrimaryRepository $cpR,
@@ -61,11 +68,13 @@ final readonly class WindowCleaningPreset
         foreach (self::HIDDEN_FRONT_PAGE_SETTINGS as $key) {
             $this->set($key, '1');
         }
+        $this->set(self::HOMECARE_AUTO_INVOICE_SETTING, '1');
         $created = ['areas' => 0, 'runs' => 0];
         if ([] === $this->csR->optionsDataCategorySecondaries()) {
             $created = $this->createAreasAndRuns($runs);
         }
-        return ['settings' => 1 + count(self::HIDDEN_FRONT_PAGE_SETTINGS)] + $created;
+        // business_type, the hidden front page links and the HomeCare switch
+        return ['settings' => 2 + count(self::HIDDEN_FRONT_PAGE_SETTINGS)] + $created;
     }
 
     private function set(string $key, string $value): void
