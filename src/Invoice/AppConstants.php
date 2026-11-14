@@ -15,4 +15,10 @@ final class AppConstants
     public const string ROLE_WORKER      = 'worker';
 
     public const string LABEL_API_KEY    = 'Api Key';
+
+    // Settings > Front Page: no_front_X_page = '1' hides X from the public front page.
+    public const string SETTING_NO_FRONT_WEBSHOP_PAGE = 'no_front_webshop_page';
+    public const string SETTING_NO_FRONT_GATEWAY_STATUS_PAGE = 'no_front_gateway_status_page';
+    public const string SETTING_NO_FRONT_PEPPOL_STATUS_PAGE = 'no_front_peppol_status_page';
+    public const string SETTING_NO_FRONT_HMRC_API_STATUS_PAGE = 'no_front_hmrc_api_status_page';
 }

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Invoice\AppConstants;
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\I;
 
@@ -214,8 +215,8 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::closeTag('div'); //6
 
      echo H::openTag('div', ['class' => 'form-check']); //6
-      $snfgsp = 'settings[no_front_gateway_status_page]';
-      $body[$snfgsp] = $s->getSetting('no_front_gateway_status_page');
+      $snfgsp = 'settings[' . AppConstants::SETTING_NO_FRONT_GATEWAY_STATUS_PAGE . ']';
+      $body[$snfgsp] = $s->getSetting(AppConstants::SETTING_NO_FRONT_GATEWAY_STATUS_PAGE);
       echo H::openTag('input', [
        'type' => 'hidden',
        'name' => $snfgsp,
@@ -224,19 +225,19 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::openTag('input', [
        'type' => 'checkbox',
        'class' => 'form-check-input',
-       'id' => 'no_front_gateway_status_page',
+       'id' => AppConstants::SETTING_NO_FRONT_GATEWAY_STATUS_PAGE,
        'name' => $snfgsp,
        'value' => '1',
        'checked' => ($body[$snfgsp] == 1) ? 'checked' : null
       ]);
-      echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'no_front_gateway_status_page']);
+      echo H::openTag('label', ['class' => 'form-check-label', 'for' => AppConstants::SETTING_NO_FRONT_GATEWAY_STATUS_PAGE]);
        echo $translator->translate('menu.gateway.status');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
 
      echo H::openTag('div', ['class' => 'form-check']); //6
-      $snfpsp = 'settings[no_front_peppol_status_page]';
-      $body[$snfpsp] = $s->getSetting('no_front_peppol_status_page');
+      $snfpsp = 'settings[' . AppConstants::SETTING_NO_FRONT_PEPPOL_STATUS_PAGE . ']';
+      $body[$snfpsp] = $s->getSetting(AppConstants::SETTING_NO_FRONT_PEPPOL_STATUS_PAGE);
       echo H::openTag('input', [
        'type' => 'hidden',
        'name' => $snfpsp,
@@ -245,19 +246,19 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::openTag('input', [
        'type' => 'checkbox',
        'class' => 'form-check-input',
-       'id' => 'no_front_peppol_status_page',
+       'id' => AppConstants::SETTING_NO_FRONT_PEPPOL_STATUS_PAGE,
        'name' => $snfpsp,
        'value' => '1',
        'checked' => ($body[$snfpsp] == 1) ? 'checked' : null
       ]);
-      echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'no_front_peppol_status_page']);
+      echo H::openTag('label', ['class' => 'form-check-label', 'for' => AppConstants::SETTING_NO_FRONT_PEPPOL_STATUS_PAGE]);
        echo $translator->translate('menu.peppol.status');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
 
      echo H::openTag('div', ['class' => 'form-check']); //6
-      $snfhasp = 'settings[no_front_hmrc_api_status_page]';
-      $body[$snfhasp] = $s->getSetting('no_front_hmrc_api_status_page');
+      $snfhasp = 'settings[' . AppConstants::SETTING_NO_FRONT_HMRC_API_STATUS_PAGE . ']';
+      $body[$snfhasp] = $s->getSetting(AppConstants::SETTING_NO_FRONT_HMRC_API_STATUS_PAGE);
       echo H::openTag('input', [
        'type' => 'hidden',
        'name' => $snfhasp,
@@ -266,22 +267,22 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::openTag('input', [
        'type' => 'checkbox',
        'class' => 'form-check-input',
-       'id' => 'no_front_hmrc_api_status_page',
+       'id' => AppConstants::SETTING_NO_FRONT_HMRC_API_STATUS_PAGE,
        'name' => $snfhasp,
        'value' => '1',
        'checked' => ($body[$snfhasp] == 1) ? 'checked' : null
       ]);
       echo H::openTag('label', [
        'class' => 'form-check-label',
-       'for' => 'no_front_hmrc_api_status_page',
+       'for' => AppConstants::SETTING_NO_FRONT_HMRC_API_STATUS_PAGE,
       ]);
        echo $translator->translate('menu.hmrc.api.status');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
 
      echo H::openTag('div', ['class' => 'form-check']); //6
-      $snfwsp = 'settings[no_front_webshop_page]';
-      $body[$snfwsp] = $s->getSetting('no_front_webshop_page');
+      $snfwsp = 'settings[' . AppConstants::SETTING_NO_FRONT_WEBSHOP_PAGE . ']';
+      $body[$snfwsp] = $s->getSetting(AppConstants::SETTING_NO_FRONT_WEBSHOP_PAGE);
       echo H::openTag('input', [
        'type' => 'hidden',
        'name' => $snfwsp,
@@ -290,12 +291,12 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::openTag('input', [
        'type' => 'checkbox',
        'class' => 'form-check-input',
-       'id' => 'no_front_webshop_page',
+       'id' => AppConstants::SETTING_NO_FRONT_WEBSHOP_PAGE,
        'name' => $snfwsp,
        'value' => '1',
        'checked' => ($body[$snfwsp] == 1) ? 'checked' : null
       ]);
-      echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'no_front_webshop_page']);
+      echo H::openTag('label', ['class' => 'form-check-label', 'for' => AppConstants::SETTING_NO_FRONT_WEBSHOP_PAGE]);
        echo $translator->translate('menu.webshop');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6

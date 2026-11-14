@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace App\Invoice\WindowCleaning;
 
-use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
-use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
 use App\Infrastructure\Persistence\Setting\Setting;
-use App\Invoice\CategoryPrimary\CategoryPrimaryService;
+use App\Invoice\AppConstants;
 use App\Invoice\CategorySecondary\CategorySecondaryRepository;
-use App\Invoice\CategorySecondary\CategorySecondaryService;
 use App\Invoice\Enum\BusinessType;
-use App\Invoice\Family\FamilyService;
 use App\Invoice\Setting\SettingRepository;
 
 /**
@@ -23,10 +19,10 @@ use App\Invoice\Setting\SettingRepository;
  *    Auto-Invoice is switched on. The lead worker, the current run, the last run date, the Vision API
  *    key and the hidden inv columns belong to the business and are never set here.
  * 2. Areas, runs and streets (CategoryPrimary, CategorySecondary and Family): so the sign up form's
- *    run dropdown is not empty and each run has streets to work with. Only when the install has no
- *    run yet, so applying the preset to a working install never adds to its real runs. The names are
- *    placeholders: "Example Area 01", "Example Run 01" and, under each run, "Street 1 on Run 1" to
- *    "Street 30 on Run 1".
+ *    run dropdown is not empty and each run has streets to work with (see PlaceholderRuns). Only when
+ *    the install has no run yet, so applying the preset to a working install never adds to its real
+ *    runs. They are created all together or not at all, so a failure part way leaves no half set that
+ *    a second press would mistake for real runs.
  * 3. The default service: the shared "HomeCare Service" product every invoice line uses, so it is in
  *    the Product catalogue from the start (see WindowCleaningServiceProduct).
  *
@@ -37,16 +33,14 @@ final readonly class WindowCleaningPreset
     /** One run in its own area, for each of the 16 runs (4 a week over a 4 week cycle). */
     public const int DEFAULT_RUNS = 16;
 
-    public const int STREETS_PER_RUN = 30;
-
     /**
      * The front page links a window-cleaning business does not use. no_front_X_page = '1' hides X.
      */
     private const array HIDDEN_FRONT_PAGE_SETTINGS = [
-        'no_front_webshop_page',
-        'no_front_gateway_status_page',
-        'no_front_peppol_status_page',
-        'no_front_hmrc_api_status_page',
+        AppConstants::SETTING_NO_FRONT_WEBSHOP_PAGE,
+        AppConstants::SETTING_NO_FRONT_GATEWAY_STATUS_PAGE,
+        AppConstants::SETTING_NO_FRONT_PEPPOL_STATUS_PAGE,
+        AppConstants::SETTING_NO_FRONT_HMRC_API_STATUS_PAGE,
     ];
 
     /**
@@ -56,10 +50,8 @@ final readonly class WindowCleaningPreset
 
     public function __construct(
         private SettingRepository $sR,
-        private CategoryPrimaryService $cpS,
         private CategorySecondaryRepository $csR,
-        private CategorySecondaryService $csS,
-        private FamilyService $fS,
+        private PlaceholderRuns $placeholderRuns,
         private WindowCleaningServiceProduct $serviceProduct,
     ) {
     }
@@ -78,7 +70,7 @@ final readonly class WindowCleaningPreset
         $this->set(self::HOMECARE_AUTO_INVOICE_SETTING, '1');
         $created = ['areas' => 0, 'runs' => 0, 'streets' => 0];
         if ([] === $this->csR->optionsDataCategorySecondaries()) {
-            $created = $this->createAreasRunsAndStreets($runs);
+            $created = $this->placeholderRuns->create($runs);
         }
         // after the streets, so the product can take one of them
         $product = $this->serviceProduct->ensure();
@@ -97,27 +89,5 @@ final readonly class WindowCleaningPreset
         $this->sR->save($setting);
         // withKey() reads the table, but getSetting() serves from a cache loaded once per request
         $this->sR->setSetting($key, $value);
-    }
-
-    /**
-     * @return array{areas: int, runs: int, streets: int}
-     */
-    private function createAreasRunsAndStreets(int $runs): array
-    {
-        $streets = 0;
-        for ($n = 1; $n <= $runs; $n++) {
-            $area = new CategoryPrimary();
-            $this->cpS->saveCategoryPrimary($area, ['name' => sprintf('Example Area %02d', $n)]);
-            $run = new CategorySecondary();
-            $this->csS->saveCategorySecondary($run, [
-                'category_primary_id' => (string) $area->reqId(),
-                'name' => sprintf('Example Run %02d', $n),
-            ]);
-            for ($s = 1; $s <= self::STREETS_PER_RUN; $s++) {
-                $this->fS->findOrCreateByStreetName(sprintf('Street %d on Run %d', $s, $n), $run->reqId());
-                ++$streets;
-            }
-        }
-        return ['areas' => $runs, 'runs' => $runs, 'streets' => $streets];
     }
 }
