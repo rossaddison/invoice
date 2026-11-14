@@ -1,0 +1,56 @@
+name: Sensitive data guard
+
+# Refuses a pull request or a push to main that carries real people's data: customer documents, env
+# files, databases, archives, big files (paths) and real-looking emails, phones, postcodes and names in
+# test data (content). The same rules as the local pre-commit and pre-push hooks, so they cannot be
+# skipped by committing with hooks off. Every commit in the range is checked, not only the final diff,
+# so a file that was added and deleted again in the same pull request is still caught.
+# See docs/SENSITIVE_TEST_DATA_GUARD_NOVEMBER_2026.md.
+
+on:
+  pull_request:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    name: Sensitive data guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      # The shas arrive as environment variables, never interpolated into the script.
+      - name: Refuse files that must not be committed (every commit in the range)
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: sh .githooks/sensitive-guard.sh range "$BASE_SHA" "$HEAD_SHA"
+
+      - name: Refuse real-looking personal data in test data
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -eu
+          case "$BASE_SHA" in
+            ""|0000000000000000000000000000000000000000) RANGE="$HEAD_SHA" ;;
+            *) RANGE="$BASE_SHA...$HEAD_SHA" ;;
+          esac
+          if [ "$RANGE" = "$HEAD_SHA" ]; then
+            git ls-tree -r --name-only "$HEAD_SHA" > /tmp/changed.txt
+          else
+            git diff --name-only --diff-filter=ACMR "$RANGE" > /tmp/changed.txt
+          fi
+          php bin/virtualize-sensitive-test-data-check.php check --baseline=.githooks/sensitive-data-baseline.tsv - < /tmp/changed.txt

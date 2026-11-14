@@ -86,6 +86,35 @@ When reviewing PHP files, Claude should:
 
 ---
 
+## Sensitive Data — Never Commit Real People's Data
+
+On 2026-11-11 a bulk `git add -A` pushed customer run documents to a public branch. These rules exist
+so it cannot happen again; they apply to every commit, push and pull request.
+
+- **Never** run `git add -A`, `git add .` or `git commit -a`. Stage files by explicit path, then read
+  `git diff --cached --name-only` before every commit and again before every push. Stop if anything
+  under `imports/`, or any `.docx`, `.xlsx`, `.csv`, database, archive or `.env` file, is in the list.
+- Customer documents (`imports/`) are read locally for verification only. Scratch files, outputs and
+  scripts that touch real data go outside the repository, never into a folder that is committed.
+- Tests, fixtures and docs use **virtual** data only: emails on `example.test`/`example.com`,
+  telephone numbers in `01632 960xxx`, postcodes starting `ZZ`, surnames starting `Virtual`/`Test`.
+  To turn a real file into a fixture run
+  `php bin/virtualize-sensitive-test-data-check.php virtualize <input> <output>` and then **read the
+  output**: street names and other free text are not detected. See
+  `App\Invoice\Testing\VirtualizeSensitiveTestDataCheck` and
+  `docs/SENSITIVE_TEST_DATA_GUARD_NOVEMBER_2026.md`.
+- Never put real customers, streets, areas or company names in code, annotations, tests, docs, commit
+  messages or pull request descriptions.
+- The pre-commit hook, the pre-push hook and the `Sensitive data guard` CI job refuse these cases.
+  Never bypass them (`--no-verify`, disabling hooks). If a legitimate file is refused, say so and add it
+  to `.githooks/sensitive-allowlist` in a reviewed commit with a reason.
+- If real data is committed or pushed anyway: stop, tell the user immediately and plainly, and push
+  nothing further. Deleting a branch does **not** remove it: GitHub keeps a pull request's commits
+  reachable under `refs/pull/<number>/head` until GitHub support removes them.
+- Never make a repository public, force-push, or delete remote refs without the user's explicit approval.
+
+---
+
 ## DDD Infrastructure Migration
 
 Entities in `src/Invoice/Entity/` are being replaced by infrastructure persistence
