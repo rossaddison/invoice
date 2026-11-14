@@ -3812,6 +3812,9 @@ prior to importing and no existing documents e.g. Invoices.',
   'windowcleaning.home.title' => 'Window cleaning',
   'windowcleaning.home.lead' =>
     'Regular window cleaning for your home, on a round that comes past your street.',
+  'windowcleaning.home.areas.heading' => 'Areas we cover',
+  'windowcleaning.home.areas.note' =>
+    'We only clean in the areas listed here, so please sign up only if your street is in one of them.',
   'windowcleaning.home.how.heading' => 'How it works',
   'windowcleaning.home.step1' => 'Sign up with your address.',
   'windowcleaning.home.step2' => 'We clean on your street\'s round and send your invoice.',

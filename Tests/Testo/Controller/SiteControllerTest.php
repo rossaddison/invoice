@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Tests\Testo\Controller;
 
 use App\Controller\SiteController;
+use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 use App\Infrastructure\Persistence\Company\Company;
+use App\Invoice\CategoryPrimary\CategoryPrimaryRepository;
 use App\Invoice\Company\CompanyRepository;
 use App\Invoice\Peppol\PeppolStatusPageBuilder;
 use App\Invoice\Setting\SettingRepository as sR;
@@ -261,10 +263,12 @@ final class SiteControllerTest
         /** @var CompanyRepository<Company>&m\MockInterface $cR */
         $cR = m::mock(CompanyRepository::class);
         $cR->shouldNotReceive('repoCompanyActivequery');
+        $cpR = $this->areas([]);
+        $cpR->shouldNotReceive('optionsDataCategoryPrimaries');
 
         foreach (['', 'something_else'] as $businessType) {
             $controller = new SiteController($this->webViewRenderer());
-            $result = $controller->index($this->settingRepository('business_type', $businessType), $cR);
+            $result = $controller->index($this->settingRepository('business_type', $businessType), $cR, $cpR);
 
             Assert::same($result->getHeaderLine(self::RENDERED_VIEW_HEADER), 'index');
         }
@@ -288,7 +292,10 @@ final class SiteControllerTest
             },
         );
 
-        $result = new SiteController($renderer)->index($this->settingRepository('business_type', 'window_cleaning'), $cR);
+        // out of order, one blank: the page lists the named areas alphabetically
+        $cpR = $this->areas([3 => 'Zone B', 1 => 'zone a', 2 => '', 4 => 'Zone 10', 5 => 'Zone 2']);
+
+        $result = new SiteController($renderer)->index($this->settingRepository('business_type', 'window_cleaning'), $cR, $cpR);
 
         Assert::same($result->getHeaderLine(self::RENDERED_VIEW_HEADER), 'index_windowcleaning');
         Assert::same($params, [
@@ -296,7 +303,20 @@ final class SiteControllerTest
             'companyEmail' => 'info@example.test',
             'companyWeb' => 'https://example.test',
             'companyWhatsApp' => '07700 900123',
+            'areas' => ['Zone 2', 'Zone 10', 'zone a', 'Zone B'],
         ]);
+    }
+
+    /**
+     * @param array<array-key, string> $names the areas (primary categories): id => name
+     * @return CategoryPrimaryRepository<CategoryPrimary>&m\MockInterface
+     */
+    private function areas(array $names): CategoryPrimaryRepository&m\MockInterface
+    {
+        /** @var CategoryPrimaryRepository<CategoryPrimary>&m\MockInterface $cpR */
+        $cpR = m::mock(CategoryPrimaryRepository::class);
+        $cpR->shouldReceive('optionsDataCategoryPrimaries')->andReturn($names);
+        return $cpR;
     }
 
     public function theWindowCleaningPageStillRendersWhenThereIsNoCurrentCompany(): void
@@ -306,7 +326,7 @@ final class SiteControllerTest
         $cR->shouldReceive('repoCompanyActivequery')->andReturn(null);
 
         $result = new SiteController($this->webViewRenderer())
-            ->index($this->settingRepository('business_type', 'window_cleaning'), $cR);
+            ->index($this->settingRepository('business_type', 'window_cleaning'), $cR, $this->areas([]));
 
         Assert::same($result->getStatusCode(), Status::OK);
         Assert::same($result->getHeaderLine(self::RENDERED_VIEW_HEADER), 'index_windowcleaning');

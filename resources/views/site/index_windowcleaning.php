@@ -16,6 +16,7 @@ use Yiisoft\Html\Tag\A;
  * @var string $companyEmail
  * @var string $companyWeb
  * @var string $companyWhatsApp
+ * @var list<string> $areas The areas (primary categories) the business cleans in
  */
 $steps = ['windowcleaning.home.step1', 'windowcleaning.home.step2', 'windowcleaning.home.step3'];
 $contacts = array_filter([
@@ -30,6 +31,16 @@ $contacts = array_filter([
             <?php // Html::tag() encodes its content itself: pass the raw text, never Html::encode()d text ?>
             <?= Html::tag('h1', '' !== $companyName ? $companyName : $translator->translate('windowcleaning.home.title'), ['class' => 'display-5 fw-bold mb-3']); ?>
             <?= Html::tag('p', $translator->translate('windowcleaning.home.lead'), ['class' => 'lead']); ?>
+
+            <?php if ([] !== $areas) { ?>
+                <?= Html::tag('h2', $translator->translate('windowcleaning.home.areas.heading'), ['class' => 'h4 mt-4']); ?>
+                <?= Html::openTag('div', ['class' => 'd-flex flex-wrap gap-2 mb-2']); ?>
+                    <?php foreach ($areas as $area) { ?>
+                        <?= Html::tag('span', $area, ['class' => 'badge text-bg-primary fs-6']); ?>
+                    <?php } ?>
+                <?= Html::closeTag('div'); ?>
+                <?= Html::tag('p', $translator->translate('windowcleaning.home.areas.note'), ['class' => 'text-body-secondary']); ?>
+            <?php } ?>
 
             <?= Html::openTag('div', ['class' => 'd-flex flex-wrap gap-2 my-4']); ?>
                 <?php if ($s->getSetting('stop_homecare_signing_up') !== '1') { ?>
