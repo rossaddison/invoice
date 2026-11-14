@@ -3804,7 +3804,7 @@ prior to importing and no existing documents e.g. Invoices.',
     'We could not finish setting up your account. Please contact us directly.',
   'window.cleaning.preset' => 'Set up as a window-cleaning business',
   'window.cleaning.preset.tip' =>
-    'Sets business_type to window_cleaning, hides the Webshop, Gateway status, Peppol status and HMRC API status links on the public front page (Sign up, HomeCare sign up and Login stay), and, only if there is no run yet, creates placeholder areas and runs for the sign up form. The staff menu then leaves out Quote, SalesOrder, Tasks, Projects and Peppol, and the dashboard shows only the Invoice Overview.',
+    'Hides the Webshop and status links, Quote, SalesOrder, Tasks, Projects and Peppol for a window-cleaning business.',
   'window.cleaning.preset.applied' =>
     'Window-cleaning setup applied: %d settings set, %d runs created.',
 ];

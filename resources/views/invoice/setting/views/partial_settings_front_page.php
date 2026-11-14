@@ -329,6 +329,9 @@ echo H::openTag('div', ['class' => 'row']); //1
       'type' => 'submit',
       'formaction' => $urlGenerator->generate('setting/windowCleaningPreset'),
       'formmethod' => 'post',
+      // the settings form has required fields in tabs that are hidden: without this the browser
+      // blocks the submit silently ("An invalid form control is not focusable")
+      'formnovalidate' => true,
       'class' => 'btn btn-outline-primary',
       'data-bs-toggle' => 'tooltip',
       'title' => $translator->translate('window.cleaning.preset.tip'),
