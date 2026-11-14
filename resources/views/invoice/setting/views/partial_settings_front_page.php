@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Invoice\AppConstants;
+use App\Invoice\Enum\ServiceType;
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\I;
 
@@ -11,6 +13,7 @@ use Yiisoft\Html\Tag\I;
 * @var Yiisoft\Translator\TranslatorInterface $translator
 * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
 * @var array $body
+* @var list<ServiceType> $services_offered The services ticked in the services_offered setting
 */
 
 echo H::openTag('div', ['class' => 'row']); //1
@@ -214,8 +217,8 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::closeTag('div'); //6
 
      echo H::openTag('div', ['class' => 'form-check']); //6
-      $snfgsp = 'settings[no_front_gateway_status_page]';
-      $body[$snfgsp] = $s->getSetting('no_front_gateway_status_page');
+      $snfgsp = 'settings[' . AppConstants::SETTING_NO_FRONT_GATEWAY_STATUS_PAGE . ']';
+      $body[$snfgsp] = $s->getSetting(AppConstants::SETTING_NO_FRONT_GATEWAY_STATUS_PAGE);
       echo H::openTag('input', [
        'type' => 'hidden',
        'name' => $snfgsp,
@@ -224,19 +227,19 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::openTag('input', [
        'type' => 'checkbox',
        'class' => 'form-check-input',
-       'id' => 'no_front_gateway_status_page',
+       'id' => AppConstants::SETTING_NO_FRONT_GATEWAY_STATUS_PAGE,
        'name' => $snfgsp,
        'value' => '1',
        'checked' => ($body[$snfgsp] == 1) ? 'checked' : null
       ]);
-      echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'no_front_gateway_status_page']);
+      echo H::openTag('label', ['class' => 'form-check-label', 'for' => AppConstants::SETTING_NO_FRONT_GATEWAY_STATUS_PAGE]);
        echo $translator->translate('menu.gateway.status');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
 
      echo H::openTag('div', ['class' => 'form-check']); //6
-      $snfpsp = 'settings[no_front_peppol_status_page]';
-      $body[$snfpsp] = $s->getSetting('no_front_peppol_status_page');
+      $snfpsp = 'settings[' . AppConstants::SETTING_NO_FRONT_PEPPOL_STATUS_PAGE . ']';
+      $body[$snfpsp] = $s->getSetting(AppConstants::SETTING_NO_FRONT_PEPPOL_STATUS_PAGE);
       echo H::openTag('input', [
        'type' => 'hidden',
        'name' => $snfpsp,
@@ -245,19 +248,19 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::openTag('input', [
        'type' => 'checkbox',
        'class' => 'form-check-input',
-       'id' => 'no_front_peppol_status_page',
+       'id' => AppConstants::SETTING_NO_FRONT_PEPPOL_STATUS_PAGE,
        'name' => $snfpsp,
        'value' => '1',
        'checked' => ($body[$snfpsp] == 1) ? 'checked' : null
       ]);
-      echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'no_front_peppol_status_page']);
+      echo H::openTag('label', ['class' => 'form-check-label', 'for' => AppConstants::SETTING_NO_FRONT_PEPPOL_STATUS_PAGE]);
        echo $translator->translate('menu.peppol.status');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
 
      echo H::openTag('div', ['class' => 'form-check']); //6
-      $snfhasp = 'settings[no_front_hmrc_api_status_page]';
-      $body[$snfhasp] = $s->getSetting('no_front_hmrc_api_status_page');
+      $snfhasp = 'settings[' . AppConstants::SETTING_NO_FRONT_HMRC_API_STATUS_PAGE . ']';
+      $body[$snfhasp] = $s->getSetting(AppConstants::SETTING_NO_FRONT_HMRC_API_STATUS_PAGE);
       echo H::openTag('input', [
        'type' => 'hidden',
        'name' => $snfhasp,
@@ -266,22 +269,22 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::openTag('input', [
        'type' => 'checkbox',
        'class' => 'form-check-input',
-       'id' => 'no_front_hmrc_api_status_page',
+       'id' => AppConstants::SETTING_NO_FRONT_HMRC_API_STATUS_PAGE,
        'name' => $snfhasp,
        'value' => '1',
        'checked' => ($body[$snfhasp] == 1) ? 'checked' : null
       ]);
       echo H::openTag('label', [
        'class' => 'form-check-label',
-       'for' => 'no_front_hmrc_api_status_page',
+       'for' => AppConstants::SETTING_NO_FRONT_HMRC_API_STATUS_PAGE,
       ]);
        echo $translator->translate('menu.hmrc.api.status');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
 
      echo H::openTag('div', ['class' => 'form-check']); //6
-      $snfwsp = 'settings[no_front_webshop_page]';
-      $body[$snfwsp] = $s->getSetting('no_front_webshop_page');
+      $snfwsp = 'settings[' . AppConstants::SETTING_NO_FRONT_WEBSHOP_PAGE . ']';
+      $body[$snfwsp] = $s->getSetting(AppConstants::SETTING_NO_FRONT_WEBSHOP_PAGE);
       echo H::openTag('input', [
        'type' => 'hidden',
        'name' => $snfwsp,
@@ -290,12 +293,12 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::openTag('input', [
        'type' => 'checkbox',
        'class' => 'form-check-input',
-       'id' => 'no_front_webshop_page',
+       'id' => AppConstants::SETTING_NO_FRONT_WEBSHOP_PAGE,
        'name' => $snfwsp,
        'value' => '1',
        'checked' => ($body[$snfwsp] == 1) ? 'checked' : null
       ]);
-      echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'no_front_webshop_page']);
+      echo H::openTag('label', ['class' => 'form-check-label', 'for' => AppConstants::SETTING_NO_FRONT_WEBSHOP_PAGE]);
        echo $translator->translate('menu.webshop');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
@@ -323,6 +326,47 @@ echo H::openTag('div', ['class' => 'row']); //1
 
     echo H::closeTag('div'); //5
     echo H::closeTag('div'); //checkboxes wrapper
+    echo H::openTag('div', ['class' => 'mt-3 border-top pt-3']); //5
+     // The services the business offers: saved by Save, and used by the setup button below. The
+     // hidden field makes unticking everything still submit the key, so it can be cleared.
+     echo H::tag('h6', $translator->translate('services.offered'), ['class' => 'mb-1']);
+     echo $s->infoIcon(ServiceType::SETTING_KEY);
+     echo H::openTag('input', [
+      'type' => 'hidden',
+      'name' => 'settings[' . ServiceType::SETTING_KEY . '][]',
+      'value' => '',
+     ]);
+     foreach (ServiceType::cases() as $service) {
+      $inputId = 'service-' . $service->value;
+      echo H::openTag('div', ['class' => 'form-check']); //6
+       echo H::openTag('input', [
+        'type' => 'checkbox',
+        'class' => 'form-check-input',
+        'id' => $inputId,
+        'name' => 'settings[' . ServiceType::SETTING_KEY . '][]',
+        'value' => $service->value,
+        'checked' => in_array($service, $services_offered, true) ? 'checked' : null,
+       ]);
+       echo H::openTag('label', ['class' => 'form-check-label', 'for' => $inputId]);
+        echo $translator->translate($service->translationKey());
+       echo H::closeTag('label');
+      echo H::closeTag('div'); //6
+     }
+    echo H::closeTag('div'); //5
+    // Submits this same settings form to the preset route (formaction), so no form is nested inside it
+    echo H::openTag('div', ['class' => 'mt-3']); //5
+     echo H::tag('button', $translator->translate('window.cleaning.preset'), [
+      'type' => 'submit',
+      'formaction' => $urlGenerator->generate('setting/windowCleaningPreset'),
+      'formmethod' => 'post',
+      // the settings form has required fields in tabs that are hidden: without this the browser
+      // blocks the submit silently ("An invalid form control is not focusable")
+      'formnovalidate' => true,
+      'class' => 'btn btn-outline-primary',
+      'data-bs-toggle' => 'tooltip',
+      'title' => $translator->translate('window.cleaning.preset.tip'),
+     ])->render();
+    echo H::closeTag('div'); //5
    echo H::closeTag('div'); //4
   echo H::closeTag('div'); //3
  echo H::closeTag('div'); //2

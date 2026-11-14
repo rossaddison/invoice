@@ -11,6 +11,7 @@ use App\Invoice\CustomField\CustomFieldRepository;
 use App\Invoice\CustomValue\CustomValueRepository;
 use App\Invoice\CustomFieldProcessor;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository;
+use App\Invoice\Enum\BusinessType;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -43,6 +44,16 @@ abstract class BaseController
         protected Flash $flash,
     ) {
         $this->initializeViewRenderer();
+    }
+
+    /**
+     * Whether the install is set up for a window-cleaning business (the business_type setting).
+     * The front page, the staff menu and the dashboard each leave out what such a business does not
+     * use; see WindowCleaningPreset.
+     */
+    protected function isWindowCleaning(): bool
+    {
+        return BusinessType::WindowCleaning->value === $this->sR->getSetting(BusinessType::SETTING_KEY);
     }
 
     protected function m(string $m): ?Flash
@@ -90,7 +101,7 @@ abstract class BaseController
             $this->webViewRenderer =
             $this->webViewRenderer->withControllerName($this->controllerName)
                      ->withLayout($this->spinner)
-                     ->withLayout('@views/layout/templates/soletrader/main.php');
+                     ->withLayout('@views/layout/templates/public.php');
         } elseif ($this->userService->hasPermission(Permissions::VIEW_INV)
             && !$this->userService->hasPermission(Permissions::EDIT_INV)
             && $this->session->get('tfa_verified') === true) {

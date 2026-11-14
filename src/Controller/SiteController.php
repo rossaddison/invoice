@@ -6,6 +6,10 @@ namespace App\Controller;
 
 use App\Auth\Client\HmrcApiCatalogue;
 use App\Infrastructure\Persistence\GatewayStatus\GatewayStatus;
+use App\Invoice\CategoryPrimary\CategoryPrimaryRepository;
+use App\Invoice\Company\CompanyRepository;
+use App\Invoice\Enum\BusinessType;
+use App\Invoice\Enum\ServiceType;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusFilter;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusRepository;
 use App\Invoice\PaymentInformation\GatewayStatus\GatewayStatusRows;
@@ -30,9 +34,43 @@ final class SiteController
         $this->webViewRenderer = $webViewRenderer->withController($this);
     }
 
-    public function index(): Response
+    /**
+     * The front page. A window-cleaning install (business_type = window_cleaning, see
+     * WindowCleaningPreset) shows its own page, drawn from the current company's details; every other
+     * install shows the project page.
+     */
+    public function index(sR $sR, CompanyRepository $cR, CategoryPrimaryRepository $cpR): Response
     {
-        return $this->webViewRenderer->render('index');
+        if (BusinessType::WindowCleaning->value !== $sR->getSetting(BusinessType::SETTING_KEY)) {
+            return $this->webViewRenderer->render('index');
+        }
+        $company = $cR->repoCompanyActivequery();
+        return $this->webViewRenderer->render('index_windowcleaning', [
+            'companyName' => $company?->getName() ?? '',
+            'companyEmail' => $company?->getEmail() ?? '',
+            'companyWeb' => $company?->getWeb() ?? '',
+            'companyWhatsApp' => $company?->getWhatsApp() ?? '',
+            'areas' => $this->areaNames($cpR),
+            'services' => ServiceType::fromCsv($sR->getSetting(ServiceType::SETTING_KEY)),
+        ]);
+    }
+
+    /**
+     * The areas (primary categories) the business cleans in, in alphabetical order, so a visitor
+     * from elsewhere sees at once that the business does not come to them.
+     *
+     * @return list<string>
+     */
+    private function areaNames(CategoryPrimaryRepository $cpR): array
+    {
+        $names = [];
+        foreach ($cpR->optionsDataCategoryPrimaries() as $name) {
+            if ('' !== $name) {
+                $names[] = $name;
+            }
+        }
+        sort($names, SORT_NATURAL | SORT_FLAG_CASE);
+        return $names;
     }
 
     /**

@@ -57,6 +57,7 @@ final class BaseControllerTest
         bool $viewInv = true,
         bool $editInv = true,
         ?bool $tfaVerified = true,
+        string $businessType = '',
     ): BaseControllerTestHarness {
         /** @var WebControllerService&m\MockInterface $webService */
         $webService = m::mock(WebControllerService::class);
@@ -76,6 +77,7 @@ final class BaseControllerTest
 
         /** @var SettingRepository&m\MockInterface $sR */
         $sR = m::mock(SettingRepository::class);
+        $sR->shouldReceive('getSetting')->with('business_type')->andReturn($businessType);
 
         /** @var Flash&m\MockInterface $flash */
         $flash = m::mock(Flash::class);
@@ -95,7 +97,20 @@ final class BaseControllerTest
     // initializeViewRenderer() -- three permission branches
     // -----------------------------------------------------------------
 
-    public function neitherPermissionUsesTheSoletraderLayout(): void
+    public function theBusinessTypeSettingSaysWhetherItIsAWindowCleaningBusiness(): void
+    {
+        /** @var WebViewRenderer&m\MockInterface $webViewRenderer */
+        $webViewRenderer = m::mock(WebViewRenderer::class);
+        $webViewRenderer->shouldReceive('withControllerName')->andReturnSelf();
+        $webViewRenderer->shouldReceive('withLayout')->andReturnSelf();
+
+        Assert::true($this->makeHarness($webViewRenderer, businessType: 'window_cleaning')->callIsWindowCleaning());
+        Assert::false($this->makeHarness($webViewRenderer, businessType: '')->callIsWindowCleaning());
+        Assert::false($this->makeHarness($webViewRenderer, businessType: 'something_else')->callIsWindowCleaning());
+    }
+
+    // public.php chooses between the soletrader and the window-cleaning template from business_type
+    public function neitherPermissionUsesThePublicLayout(): void
     {
         /** @var WebViewRenderer&m\MockInterface $webViewRenderer */
         $webViewRenderer = m::mock(WebViewRenderer::class);
@@ -103,7 +118,7 @@ final class BaseControllerTest
         $webViewRenderer->shouldReceive('withLayout')->once()
             ->with('@views/invoice/layout/fullpage-loader.php')->andReturnSelf();
         $webViewRenderer->shouldReceive('withLayout')->once()
-            ->with('@views/layout/templates/soletrader/main.php')->andReturnSelf();
+            ->with('@views/layout/templates/public.php')->andReturnSelf();
 
         $this->makeHarness($webViewRenderer, viewInv: false, editInv: false, tfaVerified: null);
     }
@@ -595,6 +610,11 @@ final class BaseControllerTestHarness extends BaseController
     public function callM(string $m): ?Flash
     {
         return $this->m($m);
+    }
+
+    public function callIsWindowCleaning(): bool
+    {
+        return $this->isWindowCleaning();
     }
 
     /**

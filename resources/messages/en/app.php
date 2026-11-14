@@ -3802,5 +3802,42 @@ prior to importing and no existing documents e.g. Invoices.',
     'This confirmation link has expired or already been used. Please sign up again.',
   'homecare.signup.confirmed.setup.incomplete' =>
     'We could not finish setting up your account. Please contact us directly.',
+  'window.cleaning.preset' => 'Set up as a home-services business',
+  'window.cleaning.preset.tip' =>
+    'Hides the Webshop and status links, Quote, SalesOrder, Tasks, Projects and Peppol, and adds a product for each service ticked above.',
+  'window.cleaning.preset.applied' =>
+    'Home-services setup applied: %d settings set, %d runs and %d streets created.',
+  'window.cleaning.preset.no.product' =>
+    'The service products could not be added to Product: add a tax rate and a unit first, then apply the setup again.',
+  'services.offered' => 'Services offered',
+  'service.window.cleaning' => 'Window Cleaning',
+  'service.bin.cleaning' => 'Bin Cleaning',
+  'service.furniture.uplift' => 'Furniture Uplift',
+  'service.clothing.uplift' => 'Clothing Uplift',
+  'service.rubbish.uplift' => 'Rubbish Uplift',
+  'service.pavement.cleaning' => 'Pavement Cleaning',
+  'service.fence.painting' => 'Fence Painting',
+  'service.hedge.cutting' => 'Hedge Cutting',
+  'service.grass.mowing' => 'Grass Mowing',
+  'service.tree.trimming' => 'Tree Trimming',
+  'service.gutter.cleaning' => 'Gutter Cleaning',
+  'service.house.painting' => 'House Painting',
+  'windowcleaning.home.title' => 'Window cleaning',
+  'windowcleaning.home.lead' =>
+    'Regular window cleaning for your home, on a round that comes past your street.',
+  'windowcleaning.home.lead.services' =>
+    'Services for your home, on a round that comes past your street.',
+  'windowcleaning.home.services.heading' => 'Services we offer',
+  'windowcleaning.home.areas.heading' => 'Areas we cover',
+  'windowcleaning.home.areas.note' =>
+    'We only work in the areas listed here, so please sign up only if your street is in one of them.',
+  'windowcleaning.home.how.heading' => 'How it works',
+  'windowcleaning.home.step1' => 'Sign up with your address.',
+  'windowcleaning.home.step2' => 'We visit on your street\'s round and send your invoice.',
+  'windowcleaning.home.step3' => 'After each visit, scan your QR code to request your next invoice.',
+  'windowcleaning.home.contact.heading' => 'Contact us',
+  'windowcleaning.home.contact.email' => 'Email',
+  'windowcleaning.home.contact.web' => 'Web',
+  'windowcleaning.home.contact.whatsapp' => 'WhatsApp',
 ];
 

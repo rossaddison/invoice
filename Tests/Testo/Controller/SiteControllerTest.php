@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace Tests\Testo\Controller;
 
 use App\Controller\SiteController;
+use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
+use App\Infrastructure\Persistence\Company\Company;
+use App\Invoice\CategoryPrimary\CategoryPrimaryRepository;
+use App\Invoice\Company\CompanyRepository;
+use App\Invoice\Enum\ServiceType;
 use App\Invoice\Peppol\PeppolStatusPageBuilder;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
@@ -249,5 +254,95 @@ final class SiteControllerTest
         $result = $controller->peppolStatus($builder, $sR, $this->webService());
 
         Assert::same($result->getStatusCode(), Status::OK);
+    }
+
+    /**
+     * The front page is the project page unless business_type is window_cleaning.
+     */
+    public function indexShowsTheProjectPageUnlessItIsAWindowCleaningInstall(): void
+    {
+        /** @var CompanyRepository<Company>&m\MockInterface $cR */
+        $cR = m::mock(CompanyRepository::class);
+        $cR->shouldNotReceive('repoCompanyActivequery');
+        $cpR = $this->areas([]);
+        $cpR->shouldNotReceive('optionsDataCategoryPrimaries');
+
+        foreach (['', 'something_else'] as $businessType) {
+            $controller = new SiteController($this->webViewRenderer());
+            $result = $controller->index($this->settingRepository('business_type', $businessType), $cR, $cpR);
+
+            Assert::same($result->getHeaderLine(self::RENDERED_VIEW_HEADER), 'index');
+        }
+    }
+
+    public function indexShowsTheWindowCleaningPageWithTheCurrentCompanysDetails(): void
+    {
+        /** @var CompanyRepository<Company>&m\MockInterface $cR */
+        $cR = m::mock(CompanyRepository::class);
+        $cR->shouldReceive('repoCompanyActivequery')->andReturn(
+            new Company(name: 'Example Cleaning', email: 'info@example.test', web: 'https://example.test', whatsapp: '07700 900123'),
+        );
+        $params = [];
+        /** @var WebViewRenderer&m\MockInterface $renderer */
+        $renderer = m::mock(WebViewRenderer::class);
+        $renderer->shouldReceive('withController')->andReturnSelf();
+        $renderer->shouldReceive('render')->andReturnUsing(
+            static function (string $view, array $parameters = []) use (&$params): ResponseInterface {
+                $params = $parameters;
+                return new Psr17Factory()->createResponse(Status::OK)->withHeader(self::RENDERED_VIEW_HEADER, $view);
+            },
+        );
+
+        // out of order, one blank: the page lists the named areas alphabetically
+        $cpR = $this->areas([3 => 'Zone B', 1 => 'zone a', 2 => '', 4 => 'Zone 10', 5 => 'Zone 2']);
+
+        $result = new SiteController($renderer)->index($this->windowCleaningSettings('grass_mowing,bin_cleaning'), $cR, $cpR);
+
+        Assert::same($result->getHeaderLine(self::RENDERED_VIEW_HEADER), 'index_windowcleaning');
+        Assert::same($params, [
+            'companyName' => 'Example Cleaning',
+            'companyEmail' => 'info@example.test',
+            'companyWeb' => 'https://example.test',
+            'companyWhatsApp' => '07700 900123',
+            'areas' => ['Zone 2', 'Zone 10', 'zone a', 'Zone B'],
+            'services' => [ServiceType::BinCleaning, ServiceType::GrassMowing],
+        ]);
+    }
+
+    /**
+     * @param string $services the services_offered setting value
+     */
+    private function windowCleaningSettings(string $services): sR
+    {
+        /** @var sR&m\MockInterface $s */
+        $s = m::mock(sR::class);
+        $s->shouldReceive('getSetting')->with('business_type')->andReturn('window_cleaning');
+        $s->shouldReceive('getSetting')->with('services_offered')->andReturn($services);
+        return $s;
+    }
+
+    /**
+     * @param array<array-key, string> $names the areas (primary categories): id => name
+     * @return CategoryPrimaryRepository<CategoryPrimary>&m\MockInterface
+     */
+    private function areas(array $names): CategoryPrimaryRepository&m\MockInterface
+    {
+        /** @var CategoryPrimaryRepository<CategoryPrimary>&m\MockInterface $cpR */
+        $cpR = m::mock(CategoryPrimaryRepository::class);
+        $cpR->shouldReceive('optionsDataCategoryPrimaries')->andReturn($names);
+        return $cpR;
+    }
+
+    public function theWindowCleaningPageStillRendersWhenThereIsNoCurrentCompany(): void
+    {
+        /** @var CompanyRepository<Company>&m\MockInterface $cR */
+        $cR = m::mock(CompanyRepository::class);
+        $cR->shouldReceive('repoCompanyActivequery')->andReturn(null);
+
+        $result = new SiteController($this->webViewRenderer())
+            ->index($this->windowCleaningSettings(''), $cR, $this->areas([]));
+
+        Assert::same($result->getStatusCode(), Status::OK);
+        Assert::same($result->getHeaderLine(self::RENDERED_VIEW_HEADER), 'index_windowcleaning');
     }
 }

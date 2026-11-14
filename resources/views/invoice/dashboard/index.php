@@ -32,6 +32,7 @@ use Yiisoft\Html\Html;
  * @var string $modal_create_client
  * @var string $invoice_status_period
  * @var string $quote_status_period
+ * @var bool $windowCleaning Only the Invoice Overview is shown (no quotes, projects or tasks).
  */
 ?>
 
@@ -39,6 +40,7 @@ use Yiisoft\Html\Html;
 
 <?= $alerts; ?>
 
+<?php if (!$windowCleaning) { ?>
     <div class="row <?= ($s->getSetting('disable_quickactions') == '1' ?
         'hidden' : ''); ?>">
         <div class="col-12">
@@ -120,10 +122,12 @@ use Yiisoft\Html\Html;
             </div>
         </div>
     </div>
+<?php } ?>
 <?php
     // Quote Overview
 ?>
     <div class = 'row'>
+<?php if (!$windowCleaning) { ?>
         <div class="col-12 col-md-6">
             <div id="panel-quote-overview"
                  class="card overview">
@@ -174,6 +178,7 @@ use Yiisoft\Html\Html;
             </div>
 
         </div>
+<?php } ?>
 <?php
     // Invoice Overview
 ?>
@@ -230,6 +235,7 @@ use Yiisoft\Html\Html;
         </div>
     </div>
 
+<?php if (!$windowCleaning) { ?>
     <div class = 'row'>
         <div class="col-12 col-md-6">
             <div id="panel-recent-quotes" class="card">
@@ -463,10 +469,11 @@ use Yiisoft\Html\Html;
             </div>
         </div>
     </div>
+<?php } ?>
 <?php
     // Projects
 ?>
-    <?php if ($s->getSetting('projects_enabled') == 1) : ?>
+    <?php if (!$windowCleaning && $s->getSetting('projects_enabled') == 1) : ?>
         <div class = 'row'>
             <div class="col-12 col-md-6">
                 <div id="panel-projects" class="card">

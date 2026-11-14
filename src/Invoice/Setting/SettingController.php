@@ -8,6 +8,7 @@ use App\Auth\Permissions;
 use App\Invoice\BaseController;
 // App
 use App\Infrastructure\Persistence\Setting\Setting;
+use App\Invoice\Enum\ServiceType;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Helpers\CurrencyHelper;
@@ -159,7 +160,9 @@ final class SettingController extends BaseController
                 ?: 'Arial',
             'fontSize' => (int) $this->sR->getSetting('bootstrap5_layout_invoice_navbar_font_size')
                 ?: 16,
-            'frontPage' => $this->webViewRenderer->renderPartialAsString($p . 'front_page'),
+            'frontPage' => $this->webViewRenderer->renderPartialAsString($p . 'front_page', [
+                'services_offered' => ServiceType::fromCsv($this->sR->getSetting(ServiceType::SETTING_KEY)),
+            ]),
             'privacyPolicy' => $this->webViewRenderer
                 ->renderPartialAsString($p . 'privacy_policy'),
             'termsOfService' => $this->webViewRenderer
@@ -295,6 +298,7 @@ final class SettingController extends BaseController
                 // here.
                 $this->joinCheckboxArraySetting($settings, 'homecare_hidden_inv_columns');
                 $this->joinCheckboxArraySetting($settings, 'homecare_hidden_inv_guest_columns');
+                $this->joinCheckboxArraySetting($settings, ServiceType::SETTING_KEY);
                 /** @var array<string, string> $settings */
                 $errorResponse = $this->saveSubmittedSettings($settings, $numberhelper);
                 if ($errorResponse !== null) {

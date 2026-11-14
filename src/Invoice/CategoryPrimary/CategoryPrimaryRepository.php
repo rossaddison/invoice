@@ -97,7 +97,7 @@ final class CategoryPrimaryRepository extends Select\Repository
     }
 
     /**
-     * @return array
+     * @return array<array-key, string> category primary id => name
      */
     public function optionsDataCategoryPrimaries(): array
     {

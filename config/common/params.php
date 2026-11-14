@@ -416,7 +416,7 @@ return [
     ],
     'yiisoft/yii-view-renderer' => [
         'viewPath' => '@views',
-        'layout' => '@views/layout/templates/soletrader/main.php',
+        'layout' => '@views/layout/templates/public.php',
         'injections' => [
             Reference::to(CommonViewInjection::class),
             Reference::to(CsrfViewInjection::class),

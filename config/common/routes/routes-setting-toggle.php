@@ -22,6 +22,10 @@ return [
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([SettingToggleController::class,
                     'invDraftHasNumberSwitch']),
+        Route::post('/setting/windowCleaningPreset')
+                ->name('setting/windowCleaningPreset')
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
+                ->action([SettingToggleController::class, 'windowCleaningPreset']),
         Route::methods([Method::GET, Method::POST], '/setting/autoClient')
                 ->name('setting/autoClient')
                 ->middleware(RoutePermission::check(Permissions::EDIT_INV))
