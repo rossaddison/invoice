@@ -41,18 +41,18 @@ Update `.vscode/settings.json` to match your connection:
 {
     "sonarlint.connectedMode.project": {
         "connectionId": "your-connection-name-here",
-        "projectKey": "rossaddison_invoice"
+        "projectKey": "rossaddison_inv"
     }
 }
 ```
 
 **Important:** 
 - Replace `your-connection-name-here` with the connection name you created
-- Keep `projectKey` as `rossaddison_invoice`
+- Keep `projectKey` as `rossaddison_inv`
 
 ### 4. Bind Project
 1. Run: `SonarLint: Update Project Binding`
-2. Confirm the binding to `rossaddison_invoice`
+2. Confirm the binding to `rossaddison_inv`
 
 ## Verification
 

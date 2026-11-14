@@ -98,7 +98,7 @@ echo H::openTag('div', $row); //1
      echo '\www\invoice\resources\messages\en\app.php into e.g. ';
      echo H::openTag('a', [
       'href' =>
-      'https://github.com/rossaddison/invoice/commit/' .
+      'https://github.com/rossaddison/inv/commit/' .
       '28188010c7965092f92484871712bf8347f0f5ed',
       'target' => '_blank'
      ]);

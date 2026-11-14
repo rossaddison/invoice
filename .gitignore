@@ -35,7 +35,6 @@ phpunit.phar
 
 # evolving files
 /vendor
-/imports
 /node_modules
 /resources/rbac/items.php
 /resources/rbac/assignments.php
@@ -81,3 +80,5 @@ test-results.xml
 *.jks
 *.keystore
 *.pfx
+# Customer run documents (personal data) must never be committed
+/imports

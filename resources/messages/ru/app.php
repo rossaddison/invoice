@@ -879,7 +879,7 @@ return [
     'home.payment.gateway.coverage' => 'Покрытие платежного шлюза ➡️',
     'home.peppol.access.point.status' => 'Статус точки доступа Peppol ➡️',
     'home.title' => 'Yii3-i — система выставления счетов и электронного выставления счетов с открытым исходным кодом',
-    'home.view.source.github' => '⭐ Посмотреть исходный код на GitHub — github.com/rossaddison/invoice',
+    'home.view.source.github' => 'Посмотреть исходный код на GitHub — github.com/rossaddison/inv',
     'homecare' => 'Уход на дому',
     'homecare.auto.invoice.enabled' => 'Включить автоматическое выставление счетов за услуги на дому с помощью QR-кода',
     'homecare.column.client.active' => 'Активный клиент',

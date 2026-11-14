@@ -894,7 +894,7 @@ return [
     'home.payment.gateway.coverage' => 'Krytie platobnou bránou ➡️',
     'home.peppol.access.point.status' => 'Stav prístupového bodu Peppol ➡️',
     'home.title' => 'Yii3-i — systém fakturácie a elektronickej fakturácie s otvoreným zdrojovým kódom',
-    'home.view.source.github' => '⭐ Zdrojový kód nájdete na GitHub — github.com/rossaddison/invoice',
+    'home.view.source.github' => 'Zdrojový kód nájdete na GitHub — github.com/rossaddison/inv',
     'homecare' => 'Domáca starostlivosť',
     'homecare.auto.invoice.enabled' => 'Povoliť automatickú faktúru QR kódu pre domácu starostlivosť',
     'homecare.column.client.active' => 'Klient aktívny',

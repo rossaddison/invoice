@@ -456,7 +456,7 @@ $MENUS = [
         ],
     ],
     'sonar' => [
-        'title' => 'SonarCloud — rossaddison_invoice',
+        'title' => 'SonarCloud — rossaddison_inv',
         'items' => [
             ['CI Pipeline Progress',          '__nav__:ci_pipeline'],
             ['All Open Issues',              'sonar_all'],
@@ -656,7 +656,7 @@ if (isset($_GET['api']) && $_GET['api'] === 'ci_status') {
 
     // 1. Latest invoice_build run on main
     $runs = $ciGet(
-        'https://api.github.com/repos/rossaddison/invoice/actions/workflows'
+        'https://api.github.com/repos/rossaddison/inv/actions/workflows'
         . '/invoice_build.yml/runs?per_page=1&branch=main',
         $ghHeaders
     );
@@ -676,7 +676,7 @@ if (isset($_GET['api']) && $_GET['api'] === 'ci_status') {
         ];
         // 2. Jobs for this run
         $jobData = $ciGet(
-            'https://api.github.com/repos/rossaddison/invoice/actions/runs/'
+            'https://api.github.com/repos/rossaddison/inv/actions/runs/'
             . (int) $run['id'] . '/jobs',
             $ghHeaders
         );
@@ -692,7 +692,7 @@ if (isset($_GET['api']) && $_GET['api'] === 'ci_status') {
 
     // 3. SonarCloud CE task (most recent)
     $ceData = $ciGet(
-        'https://sonarcloud.io/api/ce/activity?component=rossaddison_invoice&ps=1',
+        'https://sonarcloud.io/api/ce/activity?component=rossaddison_inv&ps=1',
         $sonarHeaders
     );
     $ceTask = $ceData['tasks'][0] ?? null;
@@ -705,7 +705,7 @@ if (isset($_GET['api']) && $_GET['api'] === 'ci_status') {
 
     // 4. Quality gate
     $gateData = $ciGet(
-        'https://sonarcloud.io/api/qualitygates/project_status?projectKey=rossaddison_invoice',
+        'https://sonarcloud.io/api/qualitygates/project_status?projectKey=rossaddison_inv',
         $sonarHeaders
     );
     $gateOut = isset($gateData['projectStatus']) ? [

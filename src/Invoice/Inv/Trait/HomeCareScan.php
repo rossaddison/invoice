@@ -60,22 +60,33 @@ trait HomeCareScan
         $pending = $eligibilityService->isFeatureEnabledForClient($client->reqId())
             ? $confirmer->pendingDraft($client->reqId(), new DateTimeImmutable('today'))
             : null;
-        if (null !== $pending) {
-            return $this->webViewRenderer->renderPartial('homecare_scan_result', [
-                'outcome' => 'confirm',
-                'token' => $token,
-                'visitDate' => $pending->getDateCreated()->format('Y-m-d'),
-            ]);
-        }
 
-        $claim = $this->claimTodaysHomeCareVisit($client->reqId(), $visitRepository);
+        if (null === $pending) {
+            return $this->claimAndDecideHomeCareScan($client->reqId(), $eligibilityService, $visitRepository, $d, $formHydrator);
+        }
+        $confirmation = ['outcome' => 'confirm', 'token' => $token, 'visitDate' => $pending->getDateCreated()->format('Y-m-d')];
+        return $this->webViewRenderer->renderPartial('homecare_scan_result', $confirmation);
+    }
+
+    /**
+     * Claims today's visit slot (a repeat scan gets the earlier outcome instead) and, when the claim
+     * is new, decides and records what the scan does.
+     */
+    private function claimAndDecideHomeCareScan(
+        int $clientId,
+        HomeCareCleaningEligibilityService $eligibilityService,
+        HomeCareVisitRepositoryInterface $visitRepository,
+        InvCopyDeps $d,
+        FormHydrator $formHydrator,
+    ): Response {
+        $claim = $this->claimTodaysHomeCareVisit($clientId, $visitRepository);
         if ($claim instanceof Response) {
             return $claim;
         }
-        [$clientId, $visit] = $claim;
+        [$claimedClientId, $visit] = $claim;
 
         return $this->decideAndRecordHomeCareScanOutcome(
-            $clientId,
+            $claimedClientId,
             $visit,
             $eligibilityService,
             $visitRepository,
@@ -107,8 +118,21 @@ trait HomeCareScan
         if ($claim instanceof Response) {
             return $claim;
         }
-        [$clientId, $visit] = $claim;
 
+        return $this->confirmClaimedHomeCareVisit($claim[0], $claim[1], $eligibilityService, $visitRepository, $confirmer);
+    }
+
+    /**
+     * With today's visit slot claimed: confirms the planned draft still pending for the client, or
+     * records the visit as not eligible when there is none.
+     */
+    private function confirmClaimedHomeCareVisit(
+        int $clientId,
+        HomeCareVisit $visit,
+        HomeCareCleaningEligibilityService $eligibilityService,
+        HomeCareVisitRepositoryInterface $visitRepository,
+        HomeCareScanConfirmer $confirmer,
+    ): Response {
         $pending = $eligibilityService->isFeatureEnabledForClient($clientId)
             ? $confirmer->pendingDraft($clientId, new DateTimeImmutable('today'))
             : null;

@@ -85,5 +85,5 @@ Then open `issues.txt` in VS Code to search, filter, and copy paths freely.
 - Issue statuses use `issueStatuses=OPEN,CONFIRMED` (the older `statuses`
   parameter is no longer accepted)
 - Paginates automatically — all issues are fetched regardless of count
-- Project key: `rossaddison_invoice`
+- Project key: `rossaddison_inv`
 - SonarCloud region: EU (`https://sonarcloud.io`)

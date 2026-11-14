@@ -2,7 +2,7 @@
 
 **Date:** 28 March 2026  
 **Project:** Yii3 Invoice (`yii3-i`)  
-**Repository:** https://github.com/rossaddison/invoice
+**Repository:** https://github.com/rossaddison/inv
 
 ---
 

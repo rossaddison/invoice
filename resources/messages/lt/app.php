@@ -878,7 +878,7 @@ return [
     'home.payment.gateway.coverage' => 'Mokėjimo šliuzo aprėptis ➡️',
     'home.peppol.access.point.status' => '„Peppol“ prieigos taško būsena ➡️',
     'home.title' => 'Yii3-i — atvirojo kodo sąskaitų faktūrų ir elektroninių sąskaitų faktūrų sistema',
-    'home.view.source.github' => '⭐ Peržiūrėkite šaltinio kodą „GitHub“ svetainėje — github.com/rossaddison/invoice',
+    'home.view.source.github' => 'Peržiūrėkite šaltinio kodą „GitHub“ svetainėje — github.com/rossaddison/inv',
     'homecare' => 'Namų priežiūra',
     'homecare.auto.invoice.enabled' => 'Įjungti namų priežiūros QR automatinę sąskaitą faktūrą',
     'homecare.column.client.active' => 'Klientas aktyvus',

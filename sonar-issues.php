@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 // ── Config ────────────────────────────────────────────────────────────────────
 const SONAR_HOST    = 'https://sonarcloud.io';
-const PROJECT_KEY   = 'rossaddison_invoice';
+const PROJECT_KEY   = 'rossaddison_inv';
 const SONAR_TOKEN   = ''; // fallback — prefer environment variable
 
 // ── Parse arguments ───────────────────────────────────────────────────────────

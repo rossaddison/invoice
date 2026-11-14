@@ -6,9 +6,9 @@
 ![Dependency Checker](https://img.shields.io/static/v1?label=Dependency%20Checker&message=Passing&color=66ff00) 
 ![Static Analysis](https://img.shields.io/static/v1?label=Static%20Analysis&message=Passing&color=66ff00)
 ![Psalm Level](https://img.shields.io/static/v1?label=Psalm%20Level&message=1&color=66ff00)
-[![type-coverage](https://shepherd.dev/github/rossaddison/invoice/coverage.svg)](https://shepherd.dev/github/rossaddison/invoice)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rossaddison_invoice&metric=coverage)](https://sonarcloud.io/summary/new_code?id=rossaddison_invoice)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=rossaddison_invoice&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=rossaddison_invoice)
+[![type-coverage](https://shepherd.dev/github/rossaddison/inv/coverage.svg)](https://shepherd.dev/github/rossaddison/inv)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rossaddison_inv&metric=coverage)](https://sonarcloud.io/summary/new_code?id=rossaddison_inv)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=rossaddison_inv&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=rossaddison_inv)
 [![PHP-CS-Fixer](https://img.shields.io/badge/php--cs--fixer-enabled-blue?logo=php)](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
 ![Stats](https://github-readme-stats.vercel.app/api?username=rossaddison)
 ![Hosted by Vultr](https://img.shields.io/badge/hosting-vultr%20(yii3i.online)-blue?logo=vultr&style=flat-square)
@@ -32,6 +32,8 @@ Automated generation and transmission of compliant UBL 2.4 documents via the
  Peppol network.
 
 **Recent Implementations**
+
+[Repository Move: rossaddison/invoice → rossaddison/inv](docs/REPOSITORY_MOVE_NOVEMBER_2026.md) — the project now lives at https://github.com/rossaddison/inv. A bulk `git add -A` committed a local folder of working documents to a branch of the public repository; the branch was deleted about six minutes later and the old repository was made private. Because GitHub keeps a pull request's commits reachable under `refs/pull/<number>/head` after the branch is gone (only GitHub support can remove them), a new repository was built from only the chosen branches, with no `refs/pull/*` references, so the commit does not exist there. History and commit hashes are unchanged, so an existing clone only needs `git remote set-url origin https://github.com/rossaddison/inv.git`; issues, pull requests and discussions stay in the old private repository, so the numbered links to them (such as "discussion #215") were deliberately not rewritten. `/imports` is now git-ignored on `main`, staging is by file name only, and the repository links in `composer.json`, `package.json`, the translation files and the docs now point at the new location (November 2026)
 
 [HomeCare: Worker ↔ Company Link Table](docs/HOMECARE_WORKER_COMPANY_LINK_NOVEMBER_2026.md) — the runs are split between two limited businesses so each worker can be registered as self-employed, but nothing recorded which business a worker belongs to. New `worker_company` table: a pure link table whose primary key is the combination of `worker.id` and `company.id` (no id column of its own, declared like `RbacAssignment`'s composite key), with a repository, interface and `WorkerCompanyService` (link, unlink, sync from the worker form's choice, lookups both ways). The worker add/edit form gets Businesses tick boxes (a self-employed worker has to earn from more than one business, so a worker can be registered under several; nothing assumes there are exactly two), and every worker belongs to a default company, the current company, which is chosen per run and kept as a rule rather than stored rows, the worker list a Businesses column, and deleting a worker removes its links. Nothing is scoped by business yet; this is the foundation for that. Needs the schema sync on deploy. Verified against the real database inside a rolled-back transaction; Testo and full-project Psalm clean (November 2026)
 

@@ -1198,8 +1198,8 @@ return [
   'home.peppol.access.point.status' => 'Peppol Access Point status ➡️',
   'home.title' => 'Yii3-i — Open Source Invoicing &amp; E-Invoicing'
     . ' System',
-  'home.view.source.github' => '⭐ View the source on GitHub —'
-    . ' github.com/rossaddison/invoice',
+  'home.view.source.github' => 'View the source on GitHub —'
+    . ' github.com/rossaddison/inv',
   'hostname' => 'Hostname',
   'id' => 'ID',
   'identifier.format' => 'Identifier formatting',

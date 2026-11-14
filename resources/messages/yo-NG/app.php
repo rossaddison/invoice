@@ -893,7 +893,7 @@ return [
     'home.payment.gateway.coverage' => 'Ìbòjú ìsanwó ➡️',
     'home.peppol.access.point.status' => 'Ipo aaye wiwọle Peppol ➡️',
     'home.title' => 'Yii3-i — Ètò Ìwé Ìsanwó Orísun Ṣíṣí sílẹ̀ àti Ètò Ìwé Ìsanwó E-Invoicing',
-    'home.view.source.github' => '⭐ Wo orísun náà lórí GitHub — github.com/rossaddison/invoice',
+    'home.view.source.github' => 'Wo orísun náà lórí GitHub — github.com/rossaddison/inv',
     'homecare' => 'Ìtọ́jú Ilé',
     'homecare.auto.invoice.enabled' => 'Mu Iwe-owo QR Aifọwọyi Itọju Ile ṣiṣẹ',
     'homecare.column.client.active' => 'Onibara n ṣiṣẹ',

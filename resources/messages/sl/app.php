@@ -879,7 +879,7 @@ return [
     'home.payment.gateway.coverage' => 'Pokritost plačilnega sistema ➡️',
     'home.peppol.access.point.status' => 'Stanje dostopne točke Peppol ➡️',
     'home.title' => 'Yii3-i — odprtokodni sistem za izdajanje računov in e-računov',
-    'home.view.source.github' => '⭐ Oglejte si izvorno kodo na GitHubu — github.com/rossaddison/invoice',
+    'home.view.source.github' => 'Oglejte si izvorno kodo na GitHubu — github.com/rossaddison/inv',
     'homecare' => 'Domača nega',
     'homecare.auto.invoice.enabled' => 'Omogoči samodejno izdajanje računov za nego na domu s QR kodo',
     'homecare.column.client.active' => 'Aktivna stranka',

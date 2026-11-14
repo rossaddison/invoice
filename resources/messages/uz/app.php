@@ -879,7 +879,7 @@ return [
     'home.payment.gateway.coverage' => 'To&#39;lov shlyuzi qamrovi ➡️',
     'home.peppol.access.point.status' => 'Peppol kirish nuqtasi holati ➡️',
     'home.title' => 'Yii3-i — Ochiq kodli hisob-faktura va elektron hisob-faktura tizimi',
-    'home.view.source.github' => '⭐ Manbani GitHub’da ko‘ring — github.com/rossaddison/invoice',
+    'home.view.source.github' => 'Manbani GitHub’da ko‘ring — github.com/rossaddison/inv',
     'homecare' => 'Uyda parvarish qilish',
     'homecare.auto.invoice.enabled' => 'Uyda parvarish qilish QR avtomatik hisob-fakturasini yoqish',
     'homecare.column.client.active' => 'Mijoz faol',
