@@ -12,6 +12,7 @@ use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use App\Invoice\Company\CompanyRepository;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
 use App\Invoice\AppConstants;
+use App\Invoice\Enum\BusinessType;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\UserInv\UserInvRepository;
 // Yiisoft
@@ -146,6 +147,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'noFrontPagePeppolStatus' => $bs['noFrontPagePeppolStatus'],
             'noFrontPageHmrcApiStatus' => $bs['noFrontPageHmrcApiStatus'],
             'noFrontPageWebshop' => $bs['noFrontPageWebshop'],
+            'windowCleaning' => $bs['windowCleaning'],
             'isGuest' => $userState['isGuest'],
             'user' => $userState['user'],
             'userLogin' => $userState['userLogin'],
@@ -288,6 +290,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
      *     noFrontPagePeppolStatus: bool,
      *     noFrontPageHmrcApiStatus: bool,
      *     noFrontPageWebshop: bool,
+     *     windowCleaning: bool,
      * }
      */
     private function resolveBootstrapSettings(): array
@@ -359,6 +362,9 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         // new_duplicated_lines_density).
         $settings['noFrontPageHmrcApiStatus'] =
             $this->noFrontPageFlag('no_front_hmrc_api_status_page');
+        // Kept outside the array literal for the same duplication reason.
+        $settings['windowCleaning'] =
+            BusinessType::WindowCleaning->value === $s->getSetting(BusinessType::SETTING_KEY);
         return $settings;
     }
 

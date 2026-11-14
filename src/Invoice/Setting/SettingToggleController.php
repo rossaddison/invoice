@@ -7,6 +7,7 @@ namespace App\Invoice\Setting;
 use App\Infrastructure\Persistence\Setting\Setting;
 use App\Invoice\BaseController;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\WindowCleaning\WindowCleaningPreset;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -48,6 +49,22 @@ final class SettingToggleController extends BaseController
     public function markSent(CurrentRoute $currentRoute): Response
     {
         return $this->toggleSettingToInvIndex($currentRoute);
+    }
+
+    /**
+     * Sets the install up as a window-cleaning business: business_type, the front page links to
+     * hide, and (only when there is no run yet) the placeholder areas and runs. Posted from the
+     * Front Page tab of Settings.
+     */
+    public function windowCleaningPreset(WindowCleaningPreset $preset): Response
+    {
+        $done = $preset->apply();
+        $this->flashMessage('info', sprintf(
+            $this->translator->translate('window.cleaning.preset.applied'),
+            $done['settings'],
+            $done['runs'],
+        ));
+        return $this->webService->getRedirectResponse('setting/tabIndex');
     }
 
     public function autoClient(): Response

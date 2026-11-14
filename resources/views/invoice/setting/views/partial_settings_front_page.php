@@ -323,6 +323,17 @@ echo H::openTag('div', ['class' => 'row']); //1
 
     echo H::closeTag('div'); //5
     echo H::closeTag('div'); //checkboxes wrapper
+    // Submits this same settings form to the preset route (formaction), so no form is nested inside it
+    echo H::openTag('div', ['class' => 'mt-3 border-top pt-3']); //5
+     echo H::tag('button', $translator->translate('window.cleaning.preset'), [
+      'type' => 'submit',
+      'formaction' => $urlGenerator->generate('setting/windowCleaningPreset'),
+      'formmethod' => 'post',
+      'class' => 'btn btn-outline-primary',
+      'data-bs-toggle' => 'tooltip',
+      'title' => $translator->translate('window.cleaning.preset.tip'),
+     ])->render();
+    echo H::closeTag('div'); //5
    echo H::closeTag('div'); //4
   echo H::closeTag('div'); //3
  echo H::closeTag('div'); //2

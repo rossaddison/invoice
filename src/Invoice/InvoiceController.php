@@ -171,6 +171,7 @@ final class InvoiceController extends BaseController
             ),
 
             'client_count' => $d->cR->count(),
+            'windowCleaning' => $this->isWindowCleaning(),
         ];
         return $this->webViewRenderer->render('dashboard/index', $data);
     }

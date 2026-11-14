@@ -54,6 +54,8 @@ use Yiisoft\Html\Tag\Meta;
  * @var bool $isGuest
  * @var bool $buildDatabase
  * @var bool $debugMode
+ * @var bool $windowCleaning The business_type setting is window_cleaning: Quote, SalesOrder, Tasks,
+ *     Projects, Peppol and the Sales by Product/Task reports are left out of the menu.
  * @var string $bootstrap5OffcanvasPlacement
  * @var string $bootstrap5LayoutInvoiceNavbarFont
  * @var string $bootstrap5LayoutInvoiceNavbarFontSize
@@ -523,6 +525,7 @@ if ((null !== $currentPath) && !$isGuest) {
             ),
             // E-Invoicing
             Dropdown::widget()
+            ->visible(!$windowCleaning)
             ->attributes(['class' => 'inv-warn'])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent( new Img()
@@ -1270,6 +1273,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // peppol
         Dropdown::widget()
+        ->visible(!$windowCleaning)
         ->addAttributes([
             'style' => 'font-size: 1rem; color: cornflowerblue;',
             'url' => '#',
@@ -1338,6 +1342,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Quote
         Dropdown::widget()
+        ->visible(!$windowCleaning)
         ->addClass('inv-cornflower')
         ->addTogglerCssStyle([
             'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
@@ -1357,6 +1362,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // SalesOrder
         Dropdown::widget()
+        ->visible(!$windowCleaning)
         ->addClass('inv-cornflower')
         ->addTogglerCssStyle([
             'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
@@ -1474,9 +1480,10 @@ if ((null !== $currentPath) && !$isGuest) {
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('peppol.unit'),
                 $urlGenerator->generate('unitpeppol/index'),
-                itemAttributes: $itemFontArray),
+                itemAttributes: $itemFontArray, visible: !$windowCleaning),
         ),
         Dropdown::widget()
+        ->visible(!$windowCleaning)
         ->addClass('inv-cornflower')
         ->addTogglerCssStyle([
                 'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
@@ -1496,6 +1503,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Projects
         Dropdown::widget()
+        ->visible(!$windowCleaning)
         ->addClass('inv-cornflower')
         ->addTogglerCssStyle([
                 'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
@@ -1530,10 +1538,10 @@ if ((null !== $currentPath) && !$isGuest) {
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('report.sales.by.product'),
                 $urlGenerator->generate('report/salesByProductIndex'),
-                itemAttributes: $itemFontArray),
+                itemAttributes: $itemFontArray, visible: !$windowCleaning),
             DropdownItem::link($t->translate('report.sales.by.task'),
                 $urlGenerator->generate('report/salesByTaskIndex'),
-                itemAttributes: $itemFontArray),
+                itemAttributes: $itemFontArray, visible: !$windowCleaning),
             DropdownItem::link($t->translate('sales.by.date'),
                 $urlGenerator->generate('report/salesByYearIndex'),
                 itemAttributes: $itemFontArray),
