@@ -48,16 +48,8 @@ final readonly class ScheduleImporter
      */
     public function save(ParsedSchedule $schedule, array $runIds, array $workerIds): ScheduleSaveResult
     {
-        foreach ($runIds as $name => $id) {
-            if ($id > 0) {
-                $this->matcher->remember(HomeCareAlias::KIND_RUN, $name, $id);
-            }
-        }
-        foreach ($workerIds as $name => $id) {
-            if ($id > 0) {
-                $this->matcher->remember(HomeCareAlias::KIND_WORKER, $name, $id);
-            }
-        }
+        $this->rememberConfirmed(HomeCareAlias::KIND_RUN, $runIds);
+        $this->rememberConfirmed(HomeCareAlias::KIND_WORKER, $workerIds);
         $created = 0;
         $changed = 0;
         $skipped = [];
@@ -80,5 +72,19 @@ final readonly class ScheduleImporter
             $this->calendar->schedule($entry->date, $runId, $crew) ? $created++ : $changed++;
         }
         return new ScheduleSaveResult($created, $changed, $skipped, array_map('strval', array_keys($dropped)));
+    }
+
+    /**
+     * Remembers each confirmed name (id above zero) so the next schedule maps it by itself.
+     *
+     * @param array<string, int> $ids written name => id
+     */
+    private function rememberConfirmed(string $kind, array $ids): void
+    {
+        foreach ($ids as $name => $id) {
+            if ($id > 0) {
+                $this->matcher->remember($kind, $name, $id);
+            }
+        }
     }
 }

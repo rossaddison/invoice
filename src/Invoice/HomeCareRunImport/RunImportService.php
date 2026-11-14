@@ -26,6 +26,10 @@ final readonly class RunImportService
 {
     public const string SOURCE = 'run_import';
 
+    private const string HOUSE_CREATED = 'created';
+    private const string LEFT_OUT = 'left_out';
+    private const string ALREADY_THERE = 'already_there';
+
     public function __construct(private RunImportDeps $d)
     {
     }
@@ -48,14 +52,7 @@ final readonly class RunImportService
         $productId = $product->reqId();
         $userId = $user->reqId();
         $runCreated = null === $runId;
-        if (null === $runId) {
-            $category = new CategorySecondary();
-            $this->d->csService->saveCategorySecondary($category, [
-                'category_primary_id' => (string) $categoryPrimaryId,
-                'name' => $runName,
-            ]);
-            $runId = $category->reqId();
-        }
+        $runId ??= $this->createRun($runName, $categoryPrimaryId);
 
         $streetsCreated = 0;
         $housesCreated = 0;
@@ -67,33 +64,17 @@ final readonly class RunImportService
                 $isNew = null === $this->d->fR->repoFamilyByNameAndSecondaryCategoryQuery($segment->street, $runId);
                 $family = $this->d->familyService->findOrCreateByStreetName($segment->street, $runId);
                 $familyIds[$segment->street] = $family->reqId();
-                $streetsCreated += $isNew ? 1 : 0;
+                $streetsCreated += (int) $isNew;
             }
             foreach ($segment->houses as $house) {
-                $label = $house->number . ' ' . $segment->street;
-                if ($house->isInactive()) {
-                    $leftOut[] = $label;
-                    continue;
+                $outcome = $this->importHouse($familyIds[$segment->street], $house, $segment, $productId, $price, $userId);
+                if (self::LEFT_OUT === $outcome) {
+                    $leftOut[] = $this->label($house, $segment);
+                } elseif (self::ALREADY_THERE === $outcome) {
+                    $alreadyThere[] = $this->label($house, $segment);
+                } else {
+                    ++$housesCreated;
                 }
-                $dwelling = $this->dwelling($familyIds[$segment->street], $house, $segment->postcode);
-                if ($this->d->cdR->isClaimedByAnother($dwelling->reqId(), null)) {
-                    $alreadyThere[] = $label;
-                    continue;
-                }
-                $client = $this->client($house, $label, $segment, $dwelling);
-                try {
-                    $this->draftInvoice($client, $productId, $house->price ?? $price, $userId);
-                } catch (\Throwable $failure) {
-                    // a client left linked to the dwelling would make a re-import skip the house as
-                    // already there, so it never gets its invoice
-                    try {
-                        $this->d->cR->delete($client);
-                    } catch (\Throwable) {
-                        // the clean-up must not hide why the house failed
-                    }
-                    throw $failure;
-                }
-                ++$housesCreated;
             }
         }
         // streets already ordered keep their place; the streets met for the first time follow them in
@@ -103,6 +84,56 @@ final readonly class RunImportService
         );
 
         return new RunImportResult($runId, $runCreated, $streetsCreated, $housesCreated, $alreadyThere, $leftOut);
+    }
+
+    private function createRun(string $runName, int $categoryPrimaryId): int
+    {
+        $category = new CategorySecondary();
+        $this->d->csService->saveCategorySecondary($category, [
+            'category_primary_id' => (string) $categoryPrimaryId,
+            'name' => $runName,
+        ]);
+        return $category->reqId();
+    }
+
+    private function label(RunHouse $house, RunSegment $segment): string
+    {
+        return $house->number . ' ' . $segment->street;
+    }
+
+    /**
+     * Imports one house and says what became of it: HOUSE_CREATED, LEFT_OUT (cancelled or do not
+     * clean) or ALREADY_THERE (its dwelling already has a client).
+     */
+    private function importHouse(
+        int $familyId,
+        RunHouse $house,
+        RunSegment $segment,
+        int $productId,
+        ?float $price,
+        int $userId,
+    ): string {
+        if ($house->isInactive()) {
+            return self::LEFT_OUT;
+        }
+        $dwelling = $this->dwelling($familyId, $house, $segment->postcode);
+        if ($this->d->cdR->isClaimedByAnother($dwelling->reqId(), null)) {
+            return self::ALREADY_THERE;
+        }
+        $client = $this->client($house, $this->label($house, $segment), $segment, $dwelling);
+        try {
+            $this->draftInvoice($client, $productId, $house->price ?? $price, $userId);
+        } catch (\Throwable $failure) {
+            // a client left linked to the dwelling would make a re-import skip the house as
+            // already there, so it never gets its invoice
+            try {
+                $this->d->cR->delete($client);
+            } catch (\Throwable) {
+                // the clean-up must not hide why the house failed
+            }
+            throw $failure;
+        }
+        return self::HOUSE_CREATED;
     }
 
     /**
@@ -174,7 +205,7 @@ final readonly class RunImportService
         $product = $this->d->pR->repoProductquery($productId);
         $user = $this->d->orm->getRepository(User::class)->findByPK($userId);
         if (null === $product || !$user instanceof User) {
-            throw new \RuntimeException('The product or the user for the import is gone.');
+            throw new RunImportSubjectGoneException('The product or the user for the import is gone.');
         }
         $taxRate = $product->getTaxRate() ?? $this->d->trR->repoFirstByIdQuery();
         $unit = $product->getUnit() ?? $this->d->unR->repoFirstByIdQuery();
