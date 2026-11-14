@@ -70,6 +70,9 @@ final class SettingToggleController extends BaseController
         if (!$done['product']) {
             $this->flashMessage('warning', $this->translator->translate('window.cleaning.preset.no.product'));
         }
+        if ($done['seo']) {
+            $this->flashMessage('info', $this->translator->translate('window.cleaning.preset.seo'));
+        }
         return $this->webService->getRedirectResponse('setting/tabIndex');
     }
 

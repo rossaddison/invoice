@@ -29,7 +29,7 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 final class SettingToggleWindowCleaningPresetTest
 {
     /** What the preset reports when it did everything. */
-    private const array DONE = ['settings' => 7, 'areas' => 0, 'runs' => 0, 'streets' => 0, 'product' => true];
+    private const array DONE = ['settings' => 7, 'areas' => 0, 'runs' => 0, 'streets' => 0, 'product' => true, 'seo' => false];
 
     /** @var list<array{string, string}> level and message of each flash added */
     private array $flashed = [];
@@ -130,5 +130,26 @@ final class SettingToggleWindowCleaningPresetTest
 
         Assert::count($this->flashed, 2);
         Assert::same($this->flashed[1][0], 'warning');
+    }
+
+    public function itSaysWhenTheCompanySeoDescriptionWasFilled(): void
+    {
+        [$controller, $preset] = $this->controller();
+        $preset->shouldReceive('apply')->andReturn(['seo' => true] + self::DONE);
+
+        $controller->windowCleaningPreset($this->request(['settings' => []]), $preset);
+
+        Assert::count($this->flashed, 2);
+        Assert::same($this->flashed[1], ['info', 'window.cleaning.preset.seo']);
+    }
+
+    public function itSaysNothingAboutTheSeoDescriptionWhenItWasLeftAlone(): void
+    {
+        [$controller, $preset] = $this->controller();
+        $preset->shouldReceive('apply')->andReturn(self::DONE);
+
+        $controller->windowCleaningPreset($this->request(['settings' => []]), $preset);
+
+        Assert::count($this->flashed, 1);
     }
 }
