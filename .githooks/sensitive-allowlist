@@ -1,0 +1,18 @@
+# Paths that may be committed although they match a rule in sensitive-guard.sh. One exact path per
+# line. Add a path only in a reviewed commit, with a comment saying why it is not personal data.
+
+# Template for local settings, no values.
+.env.example
+
+# Prometheus settings, no secrets (checked when the guard was introduced).
+config/.env.prometheus
+
+# Gateway status data: SDK versions, sandbox status and fees. No credentials, no personal data.
+resources/gateway-status/gateway-status.sqlite
+
+# The tolerated-values baseline of the test-data check: file paths, rule names and counts only.
+.githooks/sensitive-data-baseline.tsv
+
+# Vulnerability-scanner state and the Psalm binary (12 MB): tooling, not data.
+snyk-resolved.db
+psalm.phar

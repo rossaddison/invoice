@@ -1,6 +1,28 @@
 #!/bin/sh
-# Rebuild all TypeScript IIFE bundles before every commit so compiled
-# output is never stale relative to source files.
+# 1. Refuse to commit real people's data: customer documents, env files, databases, archives, big
+#    files (paths), and real-looking emails, phones, postcodes and names in test data (content).
+#    Runs first, before anything is rebuilt or staged. See .githooks/sensitive-guard.sh and
+#    docs/SENSITIVE_TEST_DATA_GUARD_NOVEMBER_2026.md.
+# 2. Rebuild all TypeScript IIFE bundles before every commit so compiled
+#    output is never stale relative to source files.
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR)
+if [ -n "$STAGED" ]; then
+    echo "[pre-commit] Checking staged files for sensitive data..."
+    printf '%s\n' "$STAGED" | sh "$(dirname "$0")/sensitive-guard.sh" paths ""
+    if [ $? -ne 0 ]; then
+        echo "[pre-commit] Commit aborted: a staged file must not be committed (see above)." >&2
+        echo "[pre-commit] Unstage it with: git restore --staged <path>. Do not bypass this hook." >&2
+        exit 1
+    fi
+    if command -v php >/dev/null 2>&1; then
+        printf '%s\n' "$STAGED" | php bin/virtualize-sensitive-test-data-check.php check --baseline=.githooks/sensitive-data-baseline.tsv -
+        if [ $? -ne 0 ]; then
+            echo "[pre-commit] Commit aborted: test data must be virtual (see above)." >&2
+            exit 1
+        fi
+    fi
+fi
 
 echo "[pre-commit] Building TypeScript IIFE..."
 npm run build:typescript:prod
