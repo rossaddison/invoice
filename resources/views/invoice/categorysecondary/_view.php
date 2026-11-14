@@ -45,6 +45,7 @@ $selectLabel = static function (array $optionsData, int|string|null $value): str
             $selectLabel($category_primarys, $form->getCategoryPrimaryId()),
         );
         ReadOnlyField::render($translator->translate('name'), $form->getName());
+        ReadOnlyField::render($translator->translate('run.start.postcode'), $form->getStartPostcode());
     ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

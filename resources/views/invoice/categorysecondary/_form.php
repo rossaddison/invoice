@@ -62,6 +62,14 @@ use Yiisoft\Html\Tag\Form;
                                                ->value(Html::encode($form->getname()))
                                                ->placeholder($translator->translate('name')); ?>
                                        <?= Html::closeTag('div'); ?>
+                                       <?= Html::openTag('div'); ?>
+                                            <?= Field::text($form, 'start_postcode')
+                                                ->label($translator->translate('run.start.postcode'))
+                                                ->addInputAttributes(['class' => 'form-control form-control-lg'])
+                                               ->value(Html::encode($form->getStartPostcode() ?? ''))
+                                               ->placeholder('AB1 2CD')
+                                               ->hint($translator->translate('run.start.postcode.hint')); ?>
+                                       <?= Html::closeTag('div'); ?>
                                     <?= Html::closeTag('div'); ?>
                                 <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('div'); ?>

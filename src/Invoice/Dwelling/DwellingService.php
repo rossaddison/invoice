@@ -41,6 +41,8 @@ final readonly class DwellingService
         isset($array['latitude']) ? $model->setLatitude(self::nullableFloat($array['latitude'])) : '';
         isset($array['longitude']) ? $model->setLongitude(self::nullableFloat($array['longitude'])) : '';
         isset($array['source']) ? $model->setSource(self::nullableString($array['source'])) : '';
+        // a checkbox posts its hidden "0" when unticked, so a missing key (a partial save) leaves it alone
+        isset($array['pull_point']) ? $model->setPullPoint(in_array($array['pull_point'], ['1', 1, true], true)) : '';
     }
 
     private static function nullableString(mixed $value): ?string

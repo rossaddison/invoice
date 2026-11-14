@@ -228,6 +228,28 @@ SELECT inv_id, side, COUNT(*) FROM inv_worker_allocation GROUP BY inv_id, side H
 It must return nothing. If it returns rows, remove the unwanted duplicates (keep the one that is
 correct) before the sync. Then `BUILD_DATABASE=true`, reload once, set it back.
 
+## Data protection: what a field worker never sees
+
+Workers (the lead included) identify a house by its **number, street and postcode**. They are never
+given the client's name, phone or email, because customers are not contacted (the bell is rung, and
+if the gate stays shut only the fronts are done), and they never see amounts. Every worker-facing
+surface now follows that:
+
+- **inv/guest grid:** no Client column for a worker (customers still see their own).
+- **Run sheet PDF from inv/guest:** no client, phone or balance column; a row whose only "address" was
+  the client's name keeps no address rather than the name. The office's sheet from inv/index is
+  unchanged. Checked by rendering the real view with and without the flag.
+- **Offline snapshot and page:** the snapshot carries the address only (no name, phone, mobile or
+  email), and the page shows only the address. Snapshots already stored on workers' phones still hold
+  the old fields, so the stored database moves to version 2, which throws the old store away (the
+  worker downloads a fresh one), and the service worker cache moves to `homecare-offline-shell-v3`
+  so installed workers fetch the new shell.
+- `inv/view` was already closed to workers (it renders only for an observer, admin or accountant), so
+  its client details and prices were never reachable.
+
+Not changed: the run sheet CSV (the office's paper sign-off export) still carries the client name,
+since it is an office document; say if workers ever receive it.
+
 ## Verification
 
 Testo (including `AllocationButtonsTest`, `AllocationCellResponderTest` and

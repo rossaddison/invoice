@@ -222,6 +222,11 @@ return [
             ->middleware(RoutePermission::check(Permissions::VIEW_INV))
             ->action([InvController::class, 'allocateSide'])
             ->name('inv/allocateside'),
+        // The lead taps this on a pull point once the houses are delegated (isLead() inside the action).
+        Route::methods([Method::POST], '/inv/delegatepullpoint/{inv_id}')
+            ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+            ->action([InvController::class, 'delegatePullPoint'])
+            ->name('inv/delegatepullpoint'),
         // Lead only (WorkerInvAccess::isLead() inside the action).
         Route::methods([Method::POST], '/inv/setcrew')
             ->middleware(RoutePermission::check(Permissions::VIEW_INV))

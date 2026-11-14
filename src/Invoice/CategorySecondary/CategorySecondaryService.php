@@ -6,6 +6,7 @@ namespace App\Invoice\CategorySecondary;
 
 use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary as CS;
 use App\Invoice\CategoryPrimary\CategoryPrimaryRepository as cpR;
+use App\Invoice\HomeCareSchedule\UkPostcode;
 
 final readonly class CategorySecondaryService
 {
@@ -26,6 +27,10 @@ final readonly class CategorySecondaryService
             ) : '';
         isset($array['name']) ?
             $model->setName((string) $array['name']) : '';
+        if (array_key_exists('start_postcode', $array)) {
+            // stored in the one canonical form; blank (or not a postcode) clears it
+            $model->setStartPostcode(UkPostcode::normalise((string) $array['start_postcode']));
+        }
         $this->repository->save($model);
     }
 

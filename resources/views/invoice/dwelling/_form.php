@@ -93,6 +93,13 @@ use Yiisoft\Html\Tag\Form;
                                                 ->addInputAttributes(['class' => 'form-control form-control-lg', 'type' => 'number', 'step' => 'any'])
                                                 ->value($form->getLongitude() !== null ? (string) $form->getLongitude() : ''); ?>
                                        <?= Html::closeTag('div'); ?>
+                                       <?= Html::openTag('div', ['class' => 'mt-2']); ?>
+                                            <?= Field::checkbox($form, 'pull_point')
+                                                ->inputLabelAttributes(['class' => 'form-check-label'])
+                                                ->inputClass('form-check-input')
+                                                ->label($translator->translate('dwelling.pull.point'))
+                                                ->hint($translator->translate('dwelling.pull.point.hint')); ?>
+                                       <?= Html::closeTag('div'); ?>
                                     <?= Html::closeTag('div'); ?>
                                 <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('div'); ?>

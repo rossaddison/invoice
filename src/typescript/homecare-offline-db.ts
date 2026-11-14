@@ -21,8 +21,11 @@ export interface OfflineInvoiceItem {
     note: string | null;
 }
 
+/**
+ * The house's address only. A worker is never given the client's name, phone or email (data
+ * protection), so the snapshot no longer carries them.
+ */
 export interface OfflineInvoiceClient {
-    fullName: string;
     address1: string | null;
     address2: string | null;
     buildingNumber: string | null;
@@ -30,9 +33,6 @@ export interface OfflineInvoiceClient {
     state: string | null;
     zip: string | null;
     country: string | null;
-    phone: string | null;
-    mobile: string | null;
-    email: string;
 }
 
 /** Which side of the house is whose; absent from a snapshot downloaded before sides were added. */
@@ -56,7 +56,6 @@ export interface OfflineInvoice {
     note: string | null;
     doNotSend: boolean;
     doNotSendReason: string;
-    urlKey: string;
     client: OfflineInvoiceClient | null;
     items: OfflineInvoiceItem[];
     /** Absent from a snapshot downloaded before sides were added. */
@@ -69,15 +68,20 @@ export interface OfflineDataPayload {
 }
 
 const DB_NAME = 'homecare-offline';
-const DB_VERSION = 1;
+// v2: a snapshot saved before client names, phones and emails were removed still holds them, so
+// moving to v2 throws the old store away; the worker downloads a fresh one.
+const DB_VERSION = 2;
 const STORE_NAME = 'snapshot';
 const SNAPSHOT_KEY = 'current';
 
 function openDb(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(DB_NAME, DB_VERSION);
-        request.onupgradeneeded = () => {
+        request.onupgradeneeded = (event) => {
             const db = request.result;
+            if (event.oldVersion > 0 && db.objectStoreNames.contains(STORE_NAME)) {
+                db.deleteObjectStore(STORE_NAME);
+            }
             if (!db.objectStoreNames.contains(STORE_NAME)) {
                 db.createObjectStore(STORE_NAME);
             }

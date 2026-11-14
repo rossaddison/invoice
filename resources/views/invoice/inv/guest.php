@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Dwelling\DwellingPostcodeLink;
+use App\Invoice\Dwelling\PullPointDelegateCell;
 use App\Invoice\Enum\DoNotSendReason;
 use App\Invoice\Inv\Widget\HomeCareInstallBanner;
 use App\Invoice\Inv\Widget\InvAllocationCell;
 use App\Invoice\Inv\Widget\InvCrewToolbar;
 use App\Invoice\Inv\Widget\RowActionsDropdown;
+use App\Invoice\Helpers\GoogleMapsLink;
 use App\Widget\Button;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
@@ -43,6 +45,7 @@ const NATIVE_RESET_INV_AMOUNT_FILTER = 'native-reset inv-amount-filter';
  * @var int|null $leadWorkerId
  * @var list<int> $crewIds
  * @var bool $crewFrontBack
+ * @var array{name: string, postcode: string|null}|null $todayRun
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Inv\InvRepository $iR
  * @var App\Invoice\InvAmount\InvAmountRepository $iaR
@@ -149,10 +152,24 @@ $allocationCell = $worker !== null
         $crewFrontBack,
     )
     : null;
+// The lead's "Delegated" button on a pull point (the lead only).
+$pullPointCell = $worker !== null && $leadWorkerId !== null && $leadWorkerId === $worker->reqId()
+    ? new PullPointDelegateCell($dwR, $urlGenerator, $translator, $csrf)
+    : null;
 // The lead's "today's crew" form above the grid (the lead is the one worker
 // whose id is the homecare_lead_worker_id setting).
 $crewToolbar = $worker !== null && $leadWorkerId !== null && $leadWorkerId === $worker->reqId()
     ? new InvCrewToolbar($urlGenerator, $translator, $csrf, $workerNames, $crewIds, $crewFrontBack)->render()
+    : '';
+// The lead's Start button: today's run from the run calendar, opening its starting postcode in
+// Google Maps for the van.
+$startButton = $worker !== null && $leadWorkerId !== null && $leadWorkerId === $worker->reqId()
+    && null !== $todayRun && null !== $todayRun['postcode']
+    ? Html::a(
+        '🧭 ' . $translator->translate('run.start.navigate') . ': ' . $todayRun['name'] . ' (' . $todayRun['postcode'] . ')',
+        GoogleMapsLink::directionsTo($todayRun['postcode']),
+        ['class' => 'btn btn-primary mb-2', 'target' => '_blank', 'rel' => 'noopener noreferrer']
+    )->render()
     : '';
 // Build enabled payment gateways list once for use in the paid column
 $enabledGateways = $s->paymentGatewaysEnabledDriverList();
@@ -198,11 +215,19 @@ $columns = [
         content: static fn (Inv $model): string => DwellingPostcodeLink::html(
             $model->getClientDwellingId(),
             $dwR,
-            $translator->translate('dwelling.postcode.pending')
+            $translator->translate('dwelling.postcode.pending'),
+            $translator->translate('dwelling.pull.point')
         ),
         encodeContent: false,
         withSorting: false,
         visible: $homeCareEnabled,
+    ),
+    new DataColumn(
+        header: $translator->translate('dwelling.pull.point'),
+        content: static fn (Inv $model): string => $pullPointCell?->render($model) ?? '',
+        encodeContent: false,
+        withSorting: false,
+        visible: $pullPointCell !== null,
     ),
     new DataColumn(
         property: 'filterInvAmountPaid',
@@ -485,7 +510,9 @@ $columns = [
                 ])
                 ->optionsData($optionsClientsDropDownFilter),
         withSorting: false,
-        visible: !$isGuestColumnHidden('client'),
+        // A field worker (or the lead) never sees client names: data protection. The workers
+        // identify a house by its number, street and postcode.
+        visible: null === $worker && !$isGuestColumnHidden('client'),
     ),
     new DataColumn(
         'date_created',
@@ -678,6 +705,7 @@ $order =  OrderHelper::stringToArray($sortString);
 $urlCreator->__invoke([], $order);
 
 echo $homeCareInstallBanner;
+echo $startButton;
 echo $crewToolbar;
 
 // Per-observer preference (UserInv.sticky_grid_header), not the

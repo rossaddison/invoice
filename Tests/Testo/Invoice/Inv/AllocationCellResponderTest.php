@@ -10,6 +10,8 @@ use App\Invoice\Dwelling\DwellingRepository;
 use App\Invoice\Enum\AllocationSide;
 use App\Invoice\Inv\AllocationCellResponder;
 use App\Invoice\Inv\HomeCareCrew;
+use App\Invoice\CategorySecondary\CategorySecondaryRepository;
+use App\Invoice\HomeCareSchedule\RunCalendarService;
 use App\Invoice\Inv\InvGuestHomeCare;
 use App\Invoice\Inv\WorkerInvAccess;
 use App\Invoice\InvWorkerAllocation\InvWorkerAllocationService;
@@ -49,7 +51,13 @@ final class AllocationCellResponderTest
         $crew->shouldReceive('frontBack')->andReturn(false);
         /** @var DwellingRepository&m\MockInterface $dwellings */
         $dwellings = m::mock(DwellingRepository::class);
-        $homeCare = new InvGuestHomeCare($dwellings, $allocations, $access, $workers, $crew);
+        /** @var RunCalendarService&m\MockInterface $calendar */
+        $calendar = m::mock(RunCalendarService::class);
+        /** @var CategorySecondaryRepository&m\MockInterface $runs */
+        $runs = m::mock(CategorySecondaryRepository::class);
+        /** @var \App\Invoice\Inv\GuestPullPointOrder&m\MockInterface $pullPointOrder */
+        $pullPointOrder = m::mock(\App\Invoice\Inv\GuestPullPointOrder::class);
+        $homeCare = new InvGuestHomeCare($dwellings, $allocations, $access, $workers, $crew, $calendar, $runs, $pullPointOrder);
 
         /** @var UrlGeneratorInterface&m\MockInterface $urls */
         $urls = m::mock(UrlGeneratorInterface::class);

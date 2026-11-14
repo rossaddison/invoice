@@ -299,8 +299,8 @@ final class GuestOfflineTest
         Assert::notNull($capturedJson);
         /**
          * @var array{downloadedAt: string, invoices: list<array{
-         *     number: string, statusLabel: string, urlKey: string,
-         *     client: array{fullName: string, email: string},
+         *     number: string, statusLabel: string,
+         *     client: array<string, string|null>,
          *     items: list<array{name: string}>,
          *     sides: list<array{side: string, workerName: string, mine: bool, status: string, carded: bool, sideLabel: string, statusLabel: string}>,
          * }>} $decoded
@@ -311,9 +311,22 @@ final class GuestOfflineTest
         $payloadInvoice = $decoded['invoices'][0];
         Assert::same('INV-101', $payloadInvoice['number']);
         Assert::same('Sent', $payloadInvoice['statusLabel']);
-        Assert::same('abc123urlkey', $payloadInvoice['urlKey']);
-        Assert::same('Jane Smith', $payloadInvoice['client']['fullName']);
-        Assert::same('jane@example.com', $payloadInvoice['client']['email']);
+        // the invoice's public key is never given to a worker (it opens the customer's invoice page)
+        Assert::false(array_key_exists('urlKey', $payloadInvoice));
+        // the house's address only: a worker is never given the client's name, phone or email
+        // (data protection), and customers are never contacted
+        Assert::same('1 High Street', $payloadInvoice['client']['address1']);
+        Assert::same('SP1 1AA', $payloadInvoice['client']['zip']);
+        foreach (['fullName', 'phone', 'mobile', 'email'] as $private) {
+            Assert::false(array_key_exists($private, $payloadInvoice['client']));
+        }
+        Assert::same(
+            ['address1', 'address2', 'buildingNumber', 'city', 'state', 'zip', 'country'],
+            array_keys($payloadInvoice['client']),
+        );
+        Assert::false(str_contains($capturedJson, 'Jane Smith'));
+        Assert::false(str_contains($capturedJson, 'jane@example.com'));
+        Assert::false(str_contains($capturedJson, '01234 567890'));
         Assert::same('Standard Clean', $payloadInvoice['items'][0]['name']);
 
         // which side is whose, in the worker's words, with their own sides marked

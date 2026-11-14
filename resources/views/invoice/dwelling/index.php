@@ -57,6 +57,11 @@ $columns = [
         header: $translator->translate('dwelling.postcode'),
         content: static fn (Dwelling $model) => Html::encode($model->getPostcode()),
     ),
+    new DataColumn(
+        'pull_point',
+        header: $translator->translate('dwelling.pull.point'),
+        content: static fn (Dwelling $model) => $model->isPullPoint() ? '✔' : '',
+    ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',

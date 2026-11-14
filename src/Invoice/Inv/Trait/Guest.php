@@ -135,7 +135,8 @@ trait Guest
         // confirmed by a real Psalm failure on the full-project CI scan
         // (InvalidArgument: SDI provided where iterable expected), not
         // guessed.
-        return $this->renderRunSheetPdf($invs->read(), $dwR, $fR, $rowBuilder, $sides);
+        // a worker (the lead included) gets the sheet without client names, phones or amounts
+        return $this->renderRunSheetPdf($invs->read(), $dwR, $fR, $rowBuilder, $sides, null === $access->worker);
     }
 
     /**
@@ -258,9 +259,9 @@ trait Guest
             'note' => $inv->getNote(),
             'doNotSend' => $inv->getDoNotSend(),
             'doNotSendReason' => $inv->getDoNotSendReason(),
-            'urlKey' => $inv->getUrlKey(),
+            // The address only: no name, phone, mobile or email (data protection). Workers identify a
+            // house by its address, and customers are never contacted.
             'client' => null !== $client ? [
-                'fullName' => $client->getClientFullName(),
                 'address1' => $client->getClientAddress1(),
                 'address2' => $client->getClientAddress2(),
                 'buildingNumber' => $client->getClientBuildingNumber(),
@@ -268,9 +269,6 @@ trait Guest
                 'state' => $client->getClientState(),
                 'zip' => $client->getClientZip(),
                 'country' => $client->getClientCountry(),
-                'phone' => $client->getClientPhone(),
-                'mobile' => $client->getClientMobile(),
-                'email' => $client->getClientEmail(),
             ] : null,
             'items' => $items,
         ];
@@ -404,6 +402,11 @@ trait Guest
             : $this->invsStatusGuest($d->iR, $effectiveStatus, $user_clients);
         $preFilterInvs = $invs;
         $invs = $this->applyGuestFilters($filter, $d->iR, $invs, $access);
+        // a HomeCare worker who has not picked a column sort sees the houses under their pull points
+        $groupByPullPoint = null !== $worker && '' === ($filter->sort ?? '');
+        /** @var iterable<Inv> $visible */
+        $visible = $invs->read();
+        $gridInvs = $groupByPullPoint ? $homeCare->byPullPoint($visible) : $invs;
         $inv_statuses = $d->iR->getStatuses($this->translator);
         $label = $d->iR->getSpecificStatusArrayLabel($status);
         // Payment isn't relevant to a worker's job — see the worker branch
@@ -442,7 +445,8 @@ trait Guest
             'leadWorkerId' => $homeCare->leadWorkerId(),
             'crewIds' => $homeCare->crewIds(),
             'crewFrontBack' => $homeCare->crewFrontBack(),
-            'invs' => $invs,
+            'todayRun' => $homeCare->todayRun(),
+            'invs' => $gridInvs,
             'label' => $label,
             // the guest will not have access to the pageSizeLimiter
             'viewInv' => $this->userService->hasPermission(Permissions::VIEW_INV),
@@ -461,7 +465,7 @@ trait Guest
             // Clicking on a grid column sort hyperlink will
             // generate a url query_param eg. ?sort=
             'sortOrder' => $filter->sort ?? '',
-            'sortString' => $filter->sort ?? '-id',
+            'sortString' => $groupByPullPoint ? '' : ($filter->sort ?? '-id'),
             'status' => $status,
         ];
         return $this->webViewRenderer->render('guest', $parameters);

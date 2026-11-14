@@ -57,6 +57,23 @@ final class CategorySecondaryServiceTest
         Assert::same('Cloud Hosting', $model->getName());
     }
 
+    public function saveCategorySecondaryStoresTheStartPostcodeInCanonicalForm(): void
+    {
+        $model = new CategorySecondary();
+
+        /** @var CategorySecondaryRepository&m\MockInterface $repository */
+        $repository = m::mock(CategorySecondaryRepository::class);
+        $e = $repository->expects('save');
+        $e->twice()->with($model);
+
+        $service = $this->makeService($repository);
+        $service->saveCategorySecondary($model, ['name' => 'Bellshill 1', 'start_postcode' => ' ml1 2fd ']);
+        Assert::same('ML1 2FD', $model->getStartPostcode());
+
+        $service->saveCategorySecondary($model, ['start_postcode' => '']);
+        Assert::null($model->getStartPostcode());
+    }
+
     public function saveCategorySecondarySkipsRelationWhenIdMissing(): void
     {
         $model = new CategorySecondary();

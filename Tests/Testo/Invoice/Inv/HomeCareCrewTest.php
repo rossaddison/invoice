@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Testo\Invoice\Inv;
 
 use App\Infrastructure\Persistence\Setting\Setting;
+use App\Invoice\HomeCareSchedule\RunCalendarService;
 use App\Invoice\Inv\HomeCareCrew;
 use App\Invoice\Setting\SettingRepository;
 use Mockery as m;
@@ -54,12 +55,15 @@ final class HomeCareCrewTest
         $existingMode = new Setting(HomeCareCrew::KEY_FRONT_BACK, '0');
         $sR->shouldReceive('withKey')->with(HomeCareCrew::KEY_WORKER_IDS)->andReturn($existingIds);
         $sR->shouldReceive('withKey')->with(HomeCareCrew::KEY_FRONT_BACK)->andReturn($existingMode);
-        $sR->shouldReceive('save')->twice();
+        $existingDay = new Setting(HomeCareCrew::KEY_SAVED_ON, '');
+        $sR->shouldReceive('withKey')->with(HomeCareCrew::KEY_SAVED_ON)->andReturn($existingDay);
+        $sR->shouldReceive('save')->times(3);
         $sR->shouldReceive('setSetting')->with(HomeCareCrew::KEY_WORKER_IDS, '2,1,4');
         $sR->shouldReceive('setSetting')->with(HomeCareCrew::KEY_FRONT_BACK, '1');
+        $sR->shouldReceive('setSetting')->with(HomeCareCrew::KEY_SAVED_ON, '2026-11-09');
 
         // 99 is not active, the second 2 is a duplicate, 5 is a fourth member
-        (new HomeCareCrew($sR))->save([2, 99, 1, 2, 4, 5], true, [1, 2, 4, 5]);
+        (new HomeCareCrew($sR, null, '2026-11-09'))->save([2, 99, 1, 2, 4, 5], true, [1, 2, 4, 5]);
 
         Assert::same($existingIds->getSettingValue(), '2,1,4');
         Assert::same($existingMode->getSettingValue(), '1');
@@ -71,14 +75,14 @@ final class HomeCareCrewTest
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('withKey')->andReturn(null);
         $saved = [];
-        $sR->shouldReceive('save')->twice()->andReturnUsing(static function (Setting $setting) use (&$saved): void {
+        $sR->shouldReceive('save')->times(3)->andReturnUsing(static function (Setting $setting) use (&$saved): void {
             $saved[$setting->getSettingKey()] = $setting->getSettingValue();
         });
         $sR->shouldReceive('setSetting');
 
         (new HomeCareCrew($sR))->save([7, 8], false, [7, 8]);
 
-        Assert::same($saved, [HomeCareCrew::KEY_WORKER_IDS => '7,8', HomeCareCrew::KEY_FRONT_BACK => '0']);
+        Assert::same($saved, [HomeCareCrew::KEY_WORKER_IDS => '7,8', HomeCareCrew::KEY_FRONT_BACK => '0', HomeCareCrew::KEY_SAVED_ON => date('Y-m-d')]);
     }
 
     public function savingAnEmptyCrewClearsIt(): void
@@ -87,7 +91,7 @@ final class HomeCareCrewTest
         $sR = m::mock(SettingRepository::class);
         $sR->shouldReceive('withKey')->andReturn(null);
         $saved = [];
-        $sR->shouldReceive('save')->twice()->andReturnUsing(static function (Setting $setting) use (&$saved): void {
+        $sR->shouldReceive('save')->times(3)->andReturnUsing(static function (Setting $setting) use (&$saved): void {
             $saved[$setting->getSettingKey()] = $setting->getSettingValue();
         });
         $sR->shouldReceive('setSetting');
@@ -95,5 +99,51 @@ final class HomeCareCrewTest
         (new HomeCareCrew($sR))->save([99], false, [1, 2]);
 
         Assert::same($saved[HomeCareCrew::KEY_WORKER_IDS], '');
+    }
+
+    private function crewOnCalendar(array $ids): RunCalendarService&m\MockInterface
+    {
+        /** @var RunCalendarService&m\MockInterface $calendar */
+        $calendar = m::mock(RunCalendarService::class);
+        $calendar->shouldReceive('crewFor')->with('2026-11-09')->andReturn($ids);
+        return $calendar;
+    }
+
+    private function settingsSavedOn(string $ids, string $savedOn): SettingRepository&m\MockInterface
+    {
+        $sR = $this->settings($ids);
+        $sR->shouldReceive('getSetting')->with(HomeCareCrew::KEY_SAVED_ON)->andReturn($savedOn);
+        return $sR;
+    }
+
+    public function theCalendarCrewIsTodaysCrewWhenTheLeadHasNotSavedOneToday(): void
+    {
+        $crew = new HomeCareCrew($this->settingsSavedOn('9', '2026-11-08'), $this->crewOnCalendar([4, 5]), '2026-11-09');
+
+        Assert::same($crew->workerIds(), [4, 5]);
+        Assert::true($crew->fromCalendar());
+    }
+
+    public function aCrewTheLeadSavedTodayOverridesTheCalendar(): void
+    {
+        $crew = new HomeCareCrew($this->settingsSavedOn('9,8', '2026-11-09'), $this->crewOnCalendar([4, 5]), '2026-11-09');
+
+        Assert::same($crew->workerIds(), [9, 8]);
+        Assert::false($crew->fromCalendar());
+    }
+
+    public function withNoCalendarCrewTodayTheLastSavedCrewStays(): void
+    {
+        $crew = new HomeCareCrew($this->settingsSavedOn('9,8', '2026-11-08'), $this->crewOnCalendar([]), '2026-11-09');
+
+        Assert::same($crew->workerIds(), [9, 8]);
+        Assert::false($crew->fromCalendar());
+    }
+
+    public function aCalendarCrewIsUsedEvenWhenNothingWasEverSaved(): void
+    {
+        $crew = new HomeCareCrew($this->settingsSavedOn('', ''), $this->crewOnCalendar([4]), '2026-11-09');
+
+        Assert::same($crew->workerIds(), [4]);
     }
 }

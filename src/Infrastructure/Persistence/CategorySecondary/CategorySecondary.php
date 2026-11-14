@@ -26,6 +26,12 @@ class CategorySecondary
         private ?int $category_primary_id = null,
         #[Column(type: 'text', nullable: true)]
         private ?string $name = '',
+        /**
+         * Where a HomeCare run starts: a UK postcode, canonical ("AB1 2CD"), which the run's "Start"
+         * button opens in Google Maps. Null for a category that is not a run, or a run not set up yet.
+         */
+        #[Column(type: 'string(10)', nullable: true)]
+        private ?string $start_postcode = null,
     ) {
     }
 
@@ -57,6 +63,16 @@ class CategorySecondary
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    public function getStartPostcode(): ?string
+    {
+        return $this->start_postcode;
+    }
+
+    public function setStartPostcode(?string $startPostcode): void
+    {
+        $this->start_postcode = $startPostcode;
     }
 
     public function setName(string $name): void

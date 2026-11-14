@@ -51,6 +51,8 @@ $selectLabel = static function (array $optionsData, int|string|null $value): str
         ReadOnlyField::render($translator->translate('dwelling.latitude'), $form->getLatitude() !== null ? (string) $form->getLatitude() : '');
         ReadOnlyField::render($translator->translate('dwelling.longitude'), $form->getLongitude() !== null ? (string) $form->getLongitude() : '');
         ReadOnlyField::render($translator->translate('dwelling.source'), $form->getSource() ?? '');
+        ReadOnlyField::render($translator->translate('dwelling.pull.point'), $form->isPullPoint() ? $translator->translate('yes') : $translator->translate('no'));
+        ReadOnlyField::render($translator->translate('dwelling.pull.point.delegate'), $form->getPullPointSortOrder()?->format('Y-m-d H:i') ?? '');
     ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

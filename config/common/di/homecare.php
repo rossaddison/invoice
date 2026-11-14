@@ -16,6 +16,10 @@ use App\Invoice\InvItem\InvItemRepository;
 use App\Invoice\InvItem\InvItemRepositoryInterface;
 use App\Invoice\InvWorkerAllocation\InvWorkerAllocationRepository;
 use App\Invoice\InvWorkerAllocation\InvWorkerAllocationRepositoryInterface;
+use App\Invoice\HomeCareSchedule\HomeCareAliasRepository;
+use App\Invoice\HomeCareSchedule\HomeCareAliasRepositoryInterface;
+use App\Invoice\HomeCareSchedule\HomeCareRunDayRepository;
+use App\Invoice\HomeCareSchedule\HomeCareRunDayRepositoryInterface;
 use App\Invoice\WorkerCompany\WorkerCompanyRepository;
 use App\Invoice\WorkerCompany\WorkerCompanyRepositoryInterface;
 use App\Invoice\Payment\PaymentRepository;
@@ -46,4 +50,6 @@ return [
     HomeCareRunSheetItemRepositoryInterface::class => HomeCareRunSheetItemRepository::class,
     InvWorkerAllocationRepositoryInterface::class => InvWorkerAllocationRepository::class,
     WorkerCompanyRepositoryInterface::class => WorkerCompanyRepository::class,
+    HomeCareRunDayRepositoryInterface::class => HomeCareRunDayRepository::class,
+    HomeCareAliasRepositoryInterface::class => HomeCareAliasRepository::class,
 ];
