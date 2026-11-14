@@ -26,7 +26,9 @@ use App\Invoice\Setting\SettingRepository;
  *    a second press would mistake for real runs.
  * 3. The services (see ServiceType): services_offered is set to the ticked ones (window cleaning when
  *    none are given), and the Product catalogue gets the shared "HomeCare Service" product and one
- *    product for each service, from the start (see ServiceProducts).
+ *    product for each service, from the start (see ServiceProducts). The current company's SEO
+ *    description is filled with the services too, when it is empty or still the preset's own text (see
+ *    CompanySeoDescription).
  *
  * Applying it again is safe: settings are only set again, and nothing is added once a run exists.
  */
@@ -55,19 +57,21 @@ final readonly class WindowCleaningPreset
         private CategorySecondaryRepository $csR,
         private PlaceholderRuns $placeholderRuns,
         private ServiceProducts $serviceProducts,
+        private CompanySeoDescription $companySeo,
     ) {
     }
 
     /**
      * @param list<ServiceType> $services the services the business offers; none given means window
      *     cleaning
-     * @return array{settings: int, areas: int, runs: int, streets: int, product: bool} how many
-     *     settings were set, how many areas, runs and streets were created, and whether every service
-     *     product is in the catalogue
+     * @return array{settings: int, areas: int, runs: int, streets: int, product: bool, seo: bool} how
+     *     many settings were set, how many areas, runs and streets were created, whether every service
+     *     product is in the catalogue, and whether the company's SEO description was written
      */
     public function apply(int $runs = self::DEFAULT_RUNS, array $services = []): array
     {
         $services = [] === $services ? [ServiceType::WindowCleaning] : $services;
+        $previous = ServiceType::fromCsv($this->sR->getSetting(ServiceType::SETTING_KEY));
         $this->set(BusinessType::SETTING_KEY, BusinessType::WindowCleaning->value);
         $this->set(ServiceType::SETTING_KEY, ServiceType::toCsv($services));
         foreach (self::HIDDEN_FRONT_PAGE_SETTINGS as $key) {
@@ -80,8 +84,10 @@ final readonly class WindowCleaningPreset
         }
         // after the streets, so the product can take one of them
         $product = $this->serviceProducts->ensure($services);
+        $seo = $this->companySeo->fill($services, $previous);
         // business_type, the services, the hidden front page links and the HomeCare switch
-        return ['settings' => 3 + count(self::HIDDEN_FRONT_PAGE_SETTINGS)] + $created + ['product' => $product];
+        return ['settings' => 3 + count(self::HIDDEN_FRONT_PAGE_SETTINGS)] + $created
+            + ['product' => $product, 'seo' => $seo];
     }
 
     private function set(string $key, string $value): void

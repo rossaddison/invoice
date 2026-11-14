@@ -22,6 +22,7 @@ use Yiisoft\Translator\TranslatorInterface;
  * @var string                     $turnstileSiteKey
  * @var list<int>                  $allowedPrices
  * @var array<int, string>         $categorySecondaryOptions
+ * @var array<string, string>      $serviceOptions Empty unless the business offers several services
  * @var array                      $class
  * @var \Yiisoft\View\WebView      $this
  */
@@ -71,6 +72,12 @@ foreach ($allowedPrices as $price) {
      <?= F::select($formModel, 'secondaryCategoryId')
          ->optionsData($categorySecondaryOptions)
          ->label($translator->translate('category.secondary')) ?>
+     <?php if ([] !== $serviceOptions) { ?>
+         <?= F::select($formModel, 'service')
+             ->optionsData($serviceOptions)
+             ->prompt($translator->translate('homecare.signup.service.prompt'))
+             ->label($translator->translate('homecare.signup.service')) ?>
+     <?php } ?>
      <?= F::select($formModel, 'price')
          ->optionsData($priceOptions)
          ->label($translator->translate('price')) ?>

@@ -23,6 +23,7 @@ use App\Infrastructure\Persistence\User\User;
 use App\Infrastructure\Persistence\UserClient\UserClient;
 use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\AppConstants;
+use App\Invoice\Enum\ServiceType;
 use App\Invoice\Inv\InvForm;
 use App\Invoice\InvItem\IiAddProductDeps;
 use App\Invoice\Setting\SettingRepository as sR;
@@ -118,6 +119,7 @@ final class HomeCareSignupController
             'errors' => $errors,
             'allowedPrices' => HomeCareSignupForm::ALLOWED_PRICES,
             'categorySecondaryOptions' => $categorySecondaryOptions,
+            'serviceOptions' => $signupForm->serviceOptions(),
             'turnstileSiteKey' => $this->sR->getSetting('turnstile_site_key'),
         ]);
     }
@@ -527,6 +529,12 @@ final class HomeCareSignupController
                     'discount_amount' => 0.00,
                     'product_unit_id' => $unitId,
                 ];
+                // the line stays on the shared HomeCare Service product; the service the customer
+                // chose (if any) is what the line says it is for
+                $service = ServiceType::tryFrom($pending->getService());
+                if (null !== $service) {
+                    $itemBody['description'] = $service->productName();
+                }
                 $d->invItemService->addInvItemProduct($invItem, $itemBody, (string) $invId, $iiaDeps);
             }
         );

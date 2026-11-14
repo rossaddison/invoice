@@ -6,6 +6,8 @@ namespace App\Auth\Form;
 
 use App\Infrastructure\Persistence\User\User;
 use App\Invoice\CategorySecondary\CategorySecondaryRepository;
+use App\Invoice\Enum\ServiceType;
+use App\Invoice\Setting\SettingRepository;
 use App\User\UserRepository;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Translator\TranslatorInterface;
@@ -63,18 +65,20 @@ final class HomeCareSignupForm extends FormModel implements RulesProviderInterfa
     private int $price = 0;
     private string $paymentOption = '';
     private int $secondaryCategoryId = self::NEW_AREA_SECONDARY_CATEGORY_ID;
+    private string $service = '';
 
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly UserRepository $userRepository,
         private readonly CategorySecondaryRepository $categorySecondaryRepository,
+        private readonly SettingRepository $settingRepository,
     ) {
     }
 
     /**
      * @psalm-return array{login: string, email: string, password: string, passwordVerify: string,
      *     clientName: string, clientSurname: string, street: string, buildingNumber: string,
-     *     price: string, paymentOption: string, secondaryCategoryId: string}
+     *     price: string, paymentOption: string, secondaryCategoryId: string, service: string}
      */
     public function getAttributeLabels(): array
     {
@@ -90,7 +94,47 @@ final class HomeCareSignupForm extends FormModel implements RulesProviderInterfa
             'price' => $this->translator->translate('price'),
             'paymentOption' => $this->translator->translate('payment.option'),
             'secondaryCategoryId' => $this->translator->translate('category.secondary'),
+            'service' => $this->translator->translate('homecare.signup.service'),
         ];
+    }
+
+    /**
+     * The services the business offers (the services_offered setting).
+     *
+     * @return list<ServiceType>
+     */
+    public function offeredServices(): array
+    {
+        return ServiceType::fromCsv($this->settingRepository->getSetting(ServiceType::SETTING_KEY));
+    }
+
+    /**
+     * The services to choose from on the form, as value => label: only when the business offers more
+     * than one, since with one (or none) there is nothing to choose.
+     *
+     * @return array<string, string>
+     */
+    public function serviceOptions(): array
+    {
+        $offered = $this->offeredServices();
+        if (count($offered) < 2) {
+            return [];
+        }
+        $options = [];
+        foreach ($offered as $service) {
+            $options[$service->value] = $this->translator->translate($service->translationKey());
+        }
+        return $options;
+    }
+
+    /**
+     * The service the customer is signing up for: the one they chose, or the only one on offer, or ''
+     * when the business has not said which services it offers.
+     */
+    public function getService(): string
+    {
+        $offered = $this->offeredServices();
+        return 1 === count($offered) ? $offered[0]->value : $this->service;
     }
 
     #[\Override]
@@ -229,6 +273,17 @@ final class HomeCareSignupForm extends FormModel implements RulesProviderInterfa
                     self::NEW_AREA_SECONDARY_CATEGORY_ID,
                     ...array_keys($this->categorySecondaryRepository->optionsDataCategorySecondaries()),
                 ]),
+            ],
+            // only a choice when the business offers several services; see serviceOptions()
+            'service' => [
+                function (mixed $value): Result {
+                    $result = new Result();
+                    $choices = array_keys($this->serviceOptions());
+                    if ([] !== $choices && !in_array($value, $choices, true)) {
+                        $result->addError($this->translator->translate('homecare.signup.service.required'));
+                    }
+                    return $result;
+                },
             ],
         ];
     }

@@ -42,6 +42,10 @@ class HomeCarePendingSignup
         private string $payment_option = '',
         #[Column(type: 'integer(11)', nullable: false, default: 0)]
         private int $secondary_category_id = 0,
+        // The service the customer chose (an App\Invoice\Enum\ServiceType value), '' when there was
+        // nothing to choose. Becomes the description of the first invoice's line.
+        #[Column(type: 'string(30)', nullable: false, default: '')]
+        private string $service = '',
     ) {
     }
 
@@ -138,5 +142,15 @@ class HomeCarePendingSignup
     public function setSecondaryCategoryId(int $secondary_category_id): void
     {
         $this->secondary_category_id = $secondary_category_id;
+    }
+
+    public function getService(): string
+    {
+        return $this->service;
+    }
+
+    public function setService(string $service): void
+    {
+        $this->service = $service;
     }
 }

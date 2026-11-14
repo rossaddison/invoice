@@ -54,6 +54,7 @@ final readonly class HomeCareSignupEmailService
         $pending->setPrice((float) $signupForm->getPrice());
         $pending->setPaymentOption($signupForm->getPaymentOption());
         $pending->setSecondaryCategoryId($signupForm->getSecondaryCategoryId());
+        $pending->setService($signupForm->getService());
         $d->pendingR->save($pending);
     }
 

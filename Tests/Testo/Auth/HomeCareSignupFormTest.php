@@ -6,7 +6,9 @@ namespace Tests\Testo\Auth;
 
 use App\Auth\Form\HomeCareSignupForm;
 use App\Infrastructure\Persistence\User\User;
+use App\Infrastructure\Persistence\Setting\Setting;
 use App\Invoice\CategorySecondary\CategorySecondaryRepository;
+use App\Invoice\Setting\SettingRepository;
 use App\User\UserRepository;
 use Mockery as m;
 use Testo\Assert;
@@ -32,8 +34,14 @@ final class HomeCareSignupFormTest
         $mock = m::mock(User::class);
         return $mock;
     }
-    private function makeForm(?UserRepository $userR = null, ?CategorySecondaryRepository $csR = null): HomeCareSignupForm
-    {
+    /**
+     * @param string $services the services_offered setting value ('' = the business has not said)
+     */
+    private function makeForm(
+        ?UserRepository $userR = null,
+        ?CategorySecondaryRepository $csR = null,
+        string $services = '',
+    ): HomeCareSignupForm {
         /** @var TranslatorInterface&m\MockInterface $translator */
         $translator = m::mock(TranslatorInterface::class);
         $e = $translator->shouldReceive('translate');
@@ -55,7 +63,11 @@ final class HomeCareSignupFormTest
             $e4->andReturn([7 => 'Weekly Round A']);
         }
 
-        return new HomeCareSignupForm($translator, $userR, $csR);
+        /** @var SettingRepository<Setting>&m\MockInterface $sR */
+        $sR = m::mock(SettingRepository::class);
+        $sR->shouldReceive('getSetting')->with('services_offered')->andReturn($services);
+
+        return new HomeCareSignupForm($translator, $userR, $csR, $sR);
     }
 
     /** @param array<string, string|int> $values */
@@ -200,5 +212,55 @@ final class HomeCareSignupFormTest
         $result = new Validator()->validate($form);
 
         Assert::false($result->isValid());
+    }
+
+    public function withNoServicesOfferedThereIsNothingToChooseAndNoServiceIsKept(): void
+    {
+        $form = $this->makeForm(services: '');
+        $this->hydrate($form, $this->validValues());
+
+        Assert::same($form->serviceOptions(), []);
+        Assert::same($form->getService(), '');
+        Assert::true(new Validator()->validate($form)->isValid());
+    }
+
+    public function withOneServiceOfferedItIsTheServiceWithoutAskingTheCustomer(): void
+    {
+        $form = $this->makeForm(services: 'bin_cleaning');
+        $this->hydrate($form, $this->validValues());
+
+        Assert::same($form->serviceOptions(), []);
+        Assert::same($form->getService(), 'bin_cleaning');
+        Assert::true(new Validator()->validate($form)->isValid());
+    }
+
+    public function withSeveralServicesOfferedTheCustomerChoosesOne(): void
+    {
+        $form = $this->makeForm(services: 'grass_mowing,bin_cleaning');
+        $this->hydrate($form, [...$this->validValues(), 'service' => 'grass_mowing']);
+
+        // labels come back translated (the test translator returns the key); in the order of the enum
+        Assert::same($form->serviceOptions(), [
+            'bin_cleaning' => 'service.bin.cleaning',
+            'grass_mowing' => 'service.grass.mowing',
+        ]);
+        Assert::same($form->getService(), 'grass_mowing');
+        Assert::true(new Validator()->validate($form)->isValid());
+    }
+
+    public function withSeveralServicesOfferedNotChoosingOneFailsValidation(): void
+    {
+        $form = $this->makeForm(services: 'grass_mowing,bin_cleaning');
+        $this->hydrate($form, [...$this->validValues(), 'service' => '']);
+
+        Assert::false(new Validator()->validate($form)->isValid());
+    }
+
+    public function withSeveralServicesOfferedAServiceNotOnOfferFailsValidation(): void
+    {
+        $form = $this->makeForm(services: 'grass_mowing,bin_cleaning');
+        $this->hydrate($form, [...$this->validValues(), 'service' => 'tree_trimming']);
+
+        Assert::false(new Validator()->validate($form)->isValid());
     }
 }

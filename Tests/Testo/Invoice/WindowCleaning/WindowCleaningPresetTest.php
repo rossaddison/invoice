@@ -10,6 +10,7 @@ use App\Invoice\CategorySecondary\CategorySecondaryRepository;
 use App\Invoice\Enum\BusinessType;
 use App\Invoice\Enum\ServiceType;
 use App\Invoice\Setting\SettingRepository;
+use App\Invoice\WindowCleaning\CompanySeoDescription;
 use App\Invoice\WindowCleaning\PlaceholderRuns;
 use App\Invoice\WindowCleaning\ServiceProducts;
 use App\Invoice\WindowCleaning\WindowCleaningPreset;
@@ -19,7 +20,8 @@ use Testo\Test;
 
 /**
  * The window-cleaning preset: the settings it writes, the placeholder areas, runs and streets it asks
- * for only when the install has no run yet, and the service products it asks for last.
+ * for only when the install has no run yet, the service products it asks for last, and the company SEO
+ * description it fills.
  */
 #[Test]
 final class WindowCleaningPresetTest
@@ -36,11 +38,19 @@ final class WindowCleaningPresetTest
     /** @var list<ServiceType> the services the products were asked for */
     private array $ensured = [];
 
+    /** @var array{0?: list<ServiceType>, 1?: list<ServiceType>} the services now and before, as the SEO description was asked */
+    private array $seoFilledWith = [];
+
     /**
      * @param array<array-key, string> $existingRuns the runs the install already has (id => name)
      */
-    private function preset(array $existingRuns, bool $productEnsured = true): WindowCleaningPreset
-    {
+    private function preset(
+        array $existingRuns,
+        bool $productEnsured = true,
+        bool $seoWritten = true,
+        string $previousServices = '',
+    ): WindowCleaningPreset {
+        $this->seoFilledWith = [];
         $this->saved = [];
         $this->placeholdersAskedFor = [];
         $this->order = [];
@@ -53,6 +63,7 @@ final class WindowCleaningPresetTest
             $this->saved[$setting->getSettingKey()] = $setting->getSettingValue();
         });
         $sR->shouldReceive('setSetting');
+        $sR->shouldReceive('getSetting')->with('services_offered')->andReturn($previousServices);
 
         /** @var CategorySecondaryRepository<CategorySecondary>&m\MockInterface $csR */
         $csR = m::mock(CategorySecondaryRepository::class);
@@ -75,7 +86,39 @@ final class WindowCleaningPresetTest
             return $productEnsured;
         });
 
-        return new WindowCleaningPreset($sR, $csR, $placeholderRuns, $serviceProducts);
+        /** @var CompanySeoDescription&m\MockInterface $companySeo */
+        $companySeo = m::mock(CompanySeoDescription::class);
+        $companySeo->shouldReceive('fill')->andReturnUsing(
+            /**
+             * @param list<ServiceType> $services
+             * @param list<ServiceType> $previous
+             */
+            function (array $services, array $previous) use ($seoWritten): bool {
+                $this->seoFilledWith = [$services, $previous];
+                return $seoWritten;
+            },
+        );
+
+        return new WindowCleaningPreset($sR, $csR, $placeholderRuns, $serviceProducts, $companySeo);
+    }
+
+    public function itFillsTheCompanySeoDescriptionWithTheServicesAndTheOnesOfferedBefore(): void
+    {
+        $done = $this->preset([], previousServices: 'window_cleaning')
+            ->apply(1, [ServiceType::WindowCleaning, ServiceType::BinCleaning]);
+
+        Assert::true($done['seo']);
+        Assert::same($this->seoFilledWith, [
+            [ServiceType::WindowCleaning, ServiceType::BinCleaning],
+            [ServiceType::WindowCleaning],
+        ]);
+    }
+
+    public function itSaysWhenTheCompanySeoDescriptionWasLeftAlone(): void
+    {
+        $done = $this->preset([], seoWritten: false)->apply(1);
+
+        Assert::false($done['seo']);
     }
 
     public function itSavesTheServicesOfferedAndAsksForTheirProducts(): void
@@ -131,7 +174,7 @@ final class WindowCleaningPresetTest
     {
         $done = $this->preset([])->apply();
 
-        Assert::same($done, ['settings' => 7, 'areas' => 16, 'runs' => 16, 'streets' => 480, 'product' => true]);
+        Assert::same($done, ['settings' => 7, 'areas' => 16, 'runs' => 16, 'streets' => 480, 'product' => true, 'seo' => true]);
         Assert::same($this->placeholdersAskedFor, [16]);
     }
 
@@ -139,7 +182,7 @@ final class WindowCleaningPresetTest
     {
         $done = $this->preset([7 => 'A real run'])->apply();
 
-        Assert::same($done, ['settings' => 7, 'areas' => 0, 'runs' => 0, 'streets' => 0, 'product' => true]);
+        Assert::same($done, ['settings' => 7, 'areas' => 0, 'runs' => 0, 'streets' => 0, 'product' => true, 'seo' => true]);
         Assert::same($this->placeholdersAskedFor, []);
         // the settings are still applied
         Assert::same($this->saved[BusinessType::SETTING_KEY], 'window_cleaning');
