@@ -25,7 +25,10 @@ return [
     // this emailed link has no app session yet. Secured by the masked,
     // time-limited token in the URL itself, not RBAC — mirrors
     // userinv/signup in config/common/routes/routes-user-inv.php.
+    // Throttled on GET too (the emailed link is a GET): 10 per 60 s per real IP, 120 across everyone.
     Route::methods([$mG, $mP], '/homecare-signup/confirm/{language}/{token}/{tokenType}')
+        ->middleware(RateLimiter::globalAnyMethod(120))
+        ->middleware(RateLimiter::perIpAnyMethod(10, 'homecare_signup_confirm'))
         ->name('homecare/signup-confirm')
         ->action([HomeCareSignupController::class, 'confirm']),
 ];

@@ -18,6 +18,7 @@ use Yiisoft\Validator\Result;
 use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\In;
 use Yiisoft\Validator\Rule\Length;
+use Yiisoft\Validator\Rule\Regex;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\RulesProviderInterface;
 
@@ -53,6 +54,22 @@ final class HomeCareSignupForm extends FormModel implements RulesProviderInterfa
         5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
         20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100,
     ];
+
+    /** Same login, password and email rules as the generic signup. */
+    public const int LOGIN_MIN_LENGTH = SignupForm::LOGIN_MIN_LENGTH;
+    public const int LOGIN_MAX_LENGTH = SignupForm::LOGIN_MAX_LENGTH;
+    public const string LOGIN_PATTERN = SignupForm::LOGIN_PATTERN;
+    public const int PASSWORD_MIN_LENGTH = SignupForm::PASSWORD_MIN_LENGTH;
+    public const int PASSWORD_MAX_LENGTH = SignupForm::PASSWORD_MAX_LENGTH;
+    public const int EMAIL_MAX_LENGTH = SignupForm::EMAIL_MAX_LENGTH;
+
+    /** Bounded by the client table: client_name string(50), client_surname string(151), client_address_1 string(100). */
+    public const int CLIENT_NAME_MAX_LENGTH = 50;
+    public const int CLIENT_SURNAME_MAX_LENGTH = 151;
+    public const int STREET_MAX_LENGTH = 100;
+
+    /** home_care_pending_signup.building_number is string(10); a longer value would fail after the user row is saved. */
+    public const int BUILDING_NUMBER_MAX_LENGTH = 10;
 
     private string $login = '';
     private string $email = '';
@@ -217,7 +234,12 @@ final class HomeCareSignupForm extends FormModel implements RulesProviderInterfa
         return [
             'login' => [
                 new Required(),
-                new Length(min: 1, max: 48, skipOnError: true),
+                new Length(min: self::LOGIN_MIN_LENGTH, max: self::LOGIN_MAX_LENGTH, skipOnError: true),
+                new Regex(
+                    self::LOGIN_PATTERN,
+                    message: $this->translator->translate('validator.login.format'),
+                    skipOnError: true,
+                ),
                 function (mixed $value): Result {
                     $result = new Result();
                     if ($this->userRepository->findByLogin((string) $value) !== null) {
@@ -228,6 +250,7 @@ final class HomeCareSignupForm extends FormModel implements RulesProviderInterfa
             ],
             'email' => [
                 new Required(),
+                new Length(max: self::EMAIL_MAX_LENGTH, skipOnError: true),
                 new Email(),
                 function (mixed $value): Result {
                     $result = new Result();
@@ -239,6 +262,7 @@ final class HomeCareSignupForm extends FormModel implements RulesProviderInterfa
             ],
             'password' => [
                 new Required(),
+                new Length(min: self::PASSWORD_MIN_LENGTH, max: self::PASSWORD_MAX_LENGTH, skipOnError: true),
             ],
             'passwordVerify' => [
                 new Required(),
@@ -252,15 +276,19 @@ final class HomeCareSignupForm extends FormModel implements RulesProviderInterfa
             ],
             'clientName' => [
                 new Required(),
+                new Length(max: self::CLIENT_NAME_MAX_LENGTH, skipOnError: true),
             ],
             'clientSurname' => [
                 new Required(),
+                new Length(max: self::CLIENT_SURNAME_MAX_LENGTH, skipOnError: true),
             ],
             'street' => [
                 new Required(),
+                new Length(max: self::STREET_MAX_LENGTH, skipOnError: true),
             ],
             'buildingNumber' => [
                 new Required(),
+                new Length(max: self::BUILDING_NUMBER_MAX_LENGTH, skipOnError: true),
             ],
             'price' => [
                 new In(self::ALLOWED_PRICES),

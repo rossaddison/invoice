@@ -18,6 +18,7 @@ use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\AppConstants;
 use App\Invoice\UserInv\UserRbacLinkRepository;
 use App\Invoice\UserInv\UserInvRepository as uiR;
+use App\Service\ClientIpResolver;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -68,6 +69,7 @@ final class SignupController
         private readonly LoggerInterface $logger,
         private readonly UserRbacLinkRepository $urlR,
         private readonly uiR $uiR,
+        private readonly ClientIpResolver $clientIp,
     ) {
         $this->flash = new Flash($this->session);
         $this->webViewRenderer = $webViewRenderer->withControllerName('signup');
@@ -131,9 +133,8 @@ final class SignupController
 
         if ($request->getMethod() === 'POST') {
             $body = (array) $request->getParsedBody();
-            $srv = $request->getServerParams();
-            $remoteIp = (string) ($srv['HTTP_CF_CONNECTING_IP'] ?? $srv['REMOTE_ADDR'] ?? '');
-            if (!$this->verifyTurnstile((string) ($body['cf-turnstile-response'] ?? ''), $remoteIp)) {
+            $remoteIp = $this->clientIp->resolve($request) ?? '';
+            if (!$this->verifyTurnstileRequired((string) ($body['cf-turnstile-response'] ?? ''), $remoteIp)) {
                 return $this->webService->getRedirectResponse('site/signupfailed');
             }
         }

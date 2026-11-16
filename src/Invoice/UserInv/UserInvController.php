@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\UserInv;
 
 use App\Auth\Permissions;
+use App\Auth\SignupLanguage;
 use App\Invoice\AppConstants;
 use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\Client\Client;
@@ -42,6 +43,9 @@ final class UserInvController extends BaseController
     protected string $controllerName = 'invoice/userinv';
 
     private const REDIRECT_USERINV_INDEX = 'userinv/index';
+
+    /** How long the emailed signup confirmation link stays valid, counted from when the Token was created. */
+    private const int SIGNUP_TOKEN_LIFETIME_SECONDS = 3600;
 
     private Manager $manager;
     private UrlGenerator $urlGenerator;
@@ -527,7 +531,15 @@ final class UserInvController extends BaseController
         #[RouteArgument('tokenType')]
         string $tokenType,
         UserInvSignupDeps $d,
+        Request $request,
     ): Response {
+        // Opening the emailed link (GET) only shows a button. The one-time token is used up, and the
+        // account activated, by the POST: a mail scanner that fetches the URL cannot do either.
+        if ($request->getMethod() !== Method::POST) {
+            return $this->webViewRenderer->withControllerName('site')->render('signupconfirm', [
+                'actionPath' => $request->getUri()->getPath(),
+            ]);
+        }
         // A token consists of a random 32 length string concatenated with a timestamp and then Masked.
         $unMaskedToken = TokenMask::remove($tokenMasked);
         $positionFromUnderscore = strrpos($unMaskedToken, '_');
@@ -535,11 +547,11 @@ final class UserInvController extends BaseController
             $this->flashMessage('warning', 'No separating underscore in token');
             return $this->webService->getRedirectResponse('site/index');
         }
-        $timestamp = substr($unMaskedToken, $positionFromUnderscore + 1);
-        $tokenWithoutTimestamp = substr($unMaskedToken, 0, -(strlen($timestamp) + 1));
-        if ((int) $timestamp + 3600 >= time()) {
-            $this->processValidToken($tokenWithoutTimestamp, $tokenType, $d, $language, $_language);
-        }
+        // The suffix after the last underscore is only stripped off here. It is not trusted for
+        // expiry, because anyone holding the link can rewrite it: processValidToken() checks when
+        // the server actually issued the token.
+        $tokenWithoutTimestamp = substr($unMaskedToken, 0, $positionFromUnderscore);
+        $this->processValidToken($tokenWithoutTimestamp, $tokenType, $d, $language, $_language);
         return $this->webService->getRedirectResponse('site/index');
     }
 
@@ -628,18 +640,26 @@ final class UserInvController extends BaseController
             $this->flashMessage('warning', null === $userId ? 'No User' : 'No User Inv');
             return;
         }
-        $userInv->setActive(true);
-        $d->uiR->save($userInv);
-        $userId = $userInv->reqUserId();
-        // invalidate the token so it cannot be used again
         $tokenEntity = $d->tR->findTokenByTokenAndType($tokenWithoutTimestamp, $tokenType);
         if (null === $tokenEntity) {
             return;
         }
+        // Expiry is measured from when the server created the token, not from the link's suffix.
+        // An expired token is burned too, so it cannot be tried again.
+        $expired = $tokenEntity->getCreatedAt()->getTimestamp() + self::SIGNUP_TOKEN_LIFETIME_SECONDS < time();
         $tokenEntity->setToken('already_used_token_' . (string) time());
         $d->tR->save($tokenEntity);
+        if ($expired) {
+            $this->flashMessage('warning', 'Token expired');
+            return;
+        }
+        $userInv->setActive(true);
+        $d->uiR->save($userInv);
+        $userId = $userInv->reqUserId();
         $email = $identity->getUser()?->getEmail();
         if (null !== $email) {
+            // The link's language segment is rewritable by whoever holds the link; see SignupLanguage.
+            $language = SignupLanguage::resolve($language, $userInv->getLanguage(), $this->sR->localeLanguageArray());
             $this->handleSignupClientAssignment($email, $language, $_language, $userId, $userInv, $d);
         }
     }

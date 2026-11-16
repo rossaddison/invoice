@@ -214,6 +214,122 @@ final class HomeCareSignupFormTest
         Assert::false($result->isValid());
     }
 
+    /** @param array<string, string|int> $overrides */
+    private function validWith(array $overrides): bool
+    {
+        $form = $this->makeForm();
+        $this->hydrate($form, [...$this->validValues(), ...$overrides]);
+
+        return new Validator()->validate($form)->isValid();
+    }
+
+    public function aOneCharacterPasswordFailsValidation(): void
+    {
+        Assert::false($this->validWith(['password' => 'a', 'passwordVerify' => 'a']));
+    }
+
+    public function passwordLengthBoundariesAreExact(): void
+    {
+        $atMin = str_repeat('a', HomeCareSignupForm::PASSWORD_MIN_LENGTH);
+        $belowMin = str_repeat('a', HomeCareSignupForm::PASSWORD_MIN_LENGTH - 1);
+        $atMax = str_repeat('a', HomeCareSignupForm::PASSWORD_MAX_LENGTH);
+        $aboveMax = str_repeat('a', HomeCareSignupForm::PASSWORD_MAX_LENGTH + 1);
+
+        Assert::true($this->validWith(['password' => $atMin, 'passwordVerify' => $atMin]));
+        Assert::false($this->validWith(['password' => $belowMin, 'passwordVerify' => $belowMin]));
+        Assert::true($this->validWith(['password' => $atMax, 'passwordVerify' => $atMax]));
+        Assert::false($this->validWith(['password' => $aboveMax, 'passwordVerify' => $aboveMax]));
+    }
+
+    public function aMegabytePasswordIsRejectedBeforeItCanBeHashed(): void
+    {
+        $long = str_repeat('x', 1_000_000);
+
+        Assert::false($this->validWith(['password' => $long, 'passwordVerify' => $long]));
+    }
+
+    public function addressAndNameFieldsStopAtTheirColumnLengths(): void
+    {
+        $limits = [
+            'clientName' => HomeCareSignupForm::CLIENT_NAME_MAX_LENGTH,
+            'clientSurname' => HomeCareSignupForm::CLIENT_SURNAME_MAX_LENGTH,
+            'street' => HomeCareSignupForm::STREET_MAX_LENGTH,
+            'buildingNumber' => HomeCareSignupForm::BUILDING_NUMBER_MAX_LENGTH,
+        ];
+        foreach ($limits as $field => $max) {
+            Assert::true($this->validWith([$field => str_repeat('x', $max)]));
+            Assert::false($this->validWith([$field => str_repeat('x', $max + 1)]));
+        }
+    }
+
+    public function aTenThousandCharacterStreetFailsValidation(): void
+    {
+        Assert::false($this->validWith(['street' => str_repeat('x', 10_000)]));
+    }
+
+    public function aTenThousandCharacterClientNameFailsValidation(): void
+    {
+        Assert::false($this->validWith(['clientName' => str_repeat('x', 10_000)]));
+    }
+
+    public function anEmailOverTheColumnLengthFailsValidation(): void
+    {
+        $tooLong = str_repeat('a', 64) . '@' . str_repeat('b', 190) . '.com';
+        Assert::true(strlen($tooLong) > HomeCareSignupForm::EMAIL_MAX_LENGTH);
+
+        Assert::false($this->validWith(['email' => $tooLong]));
+    }
+
+    public function loginsOfLettersDigitsDotsUnderscoresAndHyphensPass(): void
+    {
+        foreach (['jane', 'jane.doe', 'jane_doe', 'jane-doe', 'hc-lead', 'Zoë'] as $login) {
+            Assert::true($this->validWith(['login' => $login]), $login);
+        }
+    }
+
+    public function loginsWithMarkupSpacesOrOtherSymbolsFail(): void
+    {
+        foreach (['<script>alert(1)</script> ', 'jane doe', "jane\n", 'jane@example.com', '-jane', "jane\u{202E}"] as $login) {
+            Assert::false($this->validWith(['login' => $login]), json_encode($login) ?: 'login');
+        }
+    }
+
+    public function loginLengthBoundariesAreExact(): void
+    {
+        Assert::false($this->validWith(['login' => str_repeat('a', HomeCareSignupForm::LOGIN_MIN_LENGTH - 1)]));
+        Assert::true($this->validWith(['login' => str_repeat('a', HomeCareSignupForm::LOGIN_MIN_LENGTH)]));
+        Assert::true($this->validWith(['login' => str_repeat('a', HomeCareSignupForm::LOGIN_MAX_LENGTH)]));
+    }
+
+    public function aLoginOverFortyEightCharactersFailsValidation(): void
+    {
+        $form = $this->makeForm();
+        $this->hydrate($form, [...$this->validValues(), 'login' => str_repeat('a', 49)]);
+
+        Assert::false(new Validator()->validate($form)->isValid());
+    }
+
+    public function aMalformedEmailFailsValidation(): void
+    {
+        $form = $this->makeForm();
+        $this->hydrate($form, [...$this->validValues(), 'email' => 'not-an-email']);
+
+        Assert::false(new Validator()->validate($form)->isValid());
+    }
+
+    public function anEmailAlreadyRegisteredFailsValidation(): void
+    {
+        /** @var UserRepository&m\MockInterface $userR */
+        $userR = m::mock(UserRepository::class);
+        $userR->shouldReceive('findByLogin')->andReturn(null);
+        $userR->shouldReceive('findByEmail')->andReturn($this->makeUserMock());
+
+        $form = $this->makeForm($userR);
+        $this->hydrate($form, $this->validValues());
+
+        Assert::false(new Validator()->validate($form)->isValid());
+    }
+
     public function withNoServicesOfferedThereIsNothingToChooseAndNoServiceIsKept(): void
     {
         $form = $this->makeForm(services: '');

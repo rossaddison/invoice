@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
+use App\Service\ClientIpResolver;
 use Closure;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,31 +44,63 @@ final class RateLimiter
     }
 
     /**
-     * A per-real-IP counter (via CF-Connecting-IP, then X-Forwarded-For, then
-     * REMOTE_ADDR), scoped by $salt so different routes don't share a bucket.
+     * A per-real-IP counter, scoped by $salt so different routes don't share a bucket. The IP comes
+     * from ClientIpResolver: forwarding headers (CF-Connecting-IP, X-Forwarded-For) are only
+     * believed when the connection itself comes from a trusted proxy; otherwise REMOTE_ADDR is
+     * used, so a visitor cannot pick their own bucket by sending a header.
      */
     public static function perIp(int $limit, string $salt, int $window = 60): Closure
     {
-        return static fn (ResponseFactoryInterface $responseFactory, StorageInterface $storage) => new RateLimitRedirectMiddleware(
-            new LimitRequestsMiddleware(
-                new Counter($storage, $limit, $window),
-                $responseFactory,
-                new LimitCallback(static function (ServerRequestInterface $r) use ($salt): string {
-                    $srv = $r->getServerParams();
-                    $cfIp = isset($srv['HTTP_CF_CONNECTING_IP']) ? (string) $srv['HTTP_CF_CONNECTING_IP'] : '';
-                    $xfw = isset($srv['HTTP_X_FORWARDED_FOR']) ? (string) $srv['HTTP_X_FORWARDED_FOR'] : '';
-                    $rem = isset($srv['REMOTE_ADDR']) ? (string) $srv['REMOTE_ADDR'] : '';
-                    $ip = match (true) {
-                        $cfIp !== '' => $cfIp,
-                        $xfw !== '' => $xfw,
-                        $rem !== '' => $rem,
-                        default => 'unknown',
-                    };
-                    return hash('sha256', $salt . $ip);
-                }),
-                new TooManyRequestsMiddleware($responseFactory),
-            ),
+        return static fn (
+            ResponseFactoryInterface $responseFactory,
+            StorageInterface $storage,
+            ClientIpResolver $clientIp,
+        ) => new RateLimitRedirectMiddleware(
+            self::perIpInner($limit, $salt, $window, $responseFactory, $storage, $clientIp),
             $responseFactory,
+        );
+    }
+
+    /**
+     * Like global(), but counts every method, GET included, and answers 429 itself rather than
+     * redirecting. For links opened from an email (GET) that change state: the redirect wrapper
+     * ignores GET, and redirecting a throttled GET back to itself would loop.
+     */
+    public static function globalAnyMethod(int $limit, int $window = 60): Closure
+    {
+        return static fn (ResponseFactoryInterface $responseFactory, StorageInterface $storage) => new LimitRequestsMiddleware(
+            new Counter($storage, $limit, $window),
+            $responseFactory,
+            new LimitAlways(),
+            new TooManyRequestsMiddleware($responseFactory),
+        );
+    }
+
+    /** Like perIp(), but counts every method, GET included, and answers 429 itself. See globalAnyMethod(). */
+    public static function perIpAnyMethod(int $limit, string $salt, int $window = 60): Closure
+    {
+        return static fn (
+            ResponseFactoryInterface $responseFactory,
+            StorageInterface $storage,
+            ClientIpResolver $clientIp,
+        ) => self::perIpInner($limit, $salt, $window, $responseFactory, $storage, $clientIp);
+    }
+
+    private static function perIpInner(
+        int $limit,
+        string $salt,
+        int $window,
+        ResponseFactoryInterface $responseFactory,
+        StorageInterface $storage,
+        ClientIpResolver $clientIp,
+    ): LimitRequestsMiddleware {
+        return new LimitRequestsMiddleware(
+            new Counter($storage, $limit, $window),
+            $responseFactory,
+            new LimitCallback(static function (ServerRequestInterface $r) use ($salt, $clientIp): string {
+                return hash('sha256', $salt . ($clientIp->resolve($r) ?? 'unknown'));
+            }),
+            new TooManyRequestsMiddleware($responseFactory),
         );
     }
 }

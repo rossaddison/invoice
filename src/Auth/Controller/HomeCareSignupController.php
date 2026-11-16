@@ -7,6 +7,7 @@ namespace App\Auth\Controller;
 use App\Auth\AuthService;
 use App\Auth\Form\HomeCareSignupForm;
 use App\Auth\HomeCareSignupEmailService;
+use App\Auth\SignupLanguage;
 use App\Auth\Trait\ClassList;
 use App\Auth\Trait\TurnstileVerification;
 use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
@@ -29,11 +30,13 @@ use App\Invoice\InvItem\IiAddProductDeps;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserClient\UserClientRepository as UCR;
 use App\Invoice\UserInv\UserInvRepository as UIR;
+use App\Service\ClientIpResolver;
 use App\Service\WebControllerService;
 use App\User\UserRepository as UR;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\FormModel\FormHydrator;
+use Yiisoft\Http\Method;
 use Yiisoft\Rbac\Manager;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
@@ -62,6 +65,9 @@ final class HomeCareSignupController
 
     public const string EMAIL_VERIFICATION_TOKEN = 'homecare-email-verification';
 
+    /** How long the emailed confirmation link stays valid, counted from when the Token was created. */
+    private const int TOKEN_LIFETIME_SECONDS = 3600;
+
     public function __construct(
         private readonly Manager $manager,
         private readonly AuthService $authService,
@@ -71,6 +77,7 @@ final class HomeCareSignupController
         private readonly sR $sR,
         private readonly Translator $translator,
         private readonly UrlGenerator $urlGenerator,
+        private readonly ClientIpResolver $clientIp,
     ) {
         $this->webViewRenderer = $webViewRenderer->withControllerName('homecaresignup');
     }
@@ -88,9 +95,8 @@ final class HomeCareSignupController
 
         if ($request->getMethod() === 'POST') {
             $body = (array) $request->getParsedBody();
-            $srv = $request->getServerParams();
-            $remoteIp = (string) ($srv['HTTP_CF_CONNECTING_IP'] ?? $srv['REMOTE_ADDR'] ?? '');
-            if (!$this->verifyTurnstile((string) ($body['cf-turnstile-response'] ?? ''), $remoteIp)) {
+            $remoteIp = $this->clientIp->resolve($request) ?? '';
+            if (!$this->verifyTurnstileRequired((string) ($body['cf-turnstile-response'] ?? ''), $remoteIp)) {
                 return $this->webService->getRedirectResponse('site/signupfailed');
             }
         }
@@ -133,12 +139,23 @@ final class HomeCareSignupController
         string $tokenType,
         FormHydrator $formHydrator,
         HomeCareSignupConfirmDeps $d,
+        Request $request,
     ): Response {
+        // Opening the emailed link (GET) only shows a button. The one-time token is used up, and the
+        // account provisioned, by the POST: a mail scanner that fetches the URL cannot do either.
+        if ($request->getMethod() !== Method::POST) {
+            return $this->webViewRenderer->withControllerName('site')->render('signupconfirm', [
+                'actionPath' => $request->getUri()->getPath(),
+            ]);
+        }
+
         $resolved = $this->resolveAndActivateSignup($tokenMasked, $tokenType, $d);
         if ($resolved instanceof Response) {
             return $resolved;
         }
         ['identity' => $identity, 'userId' => $userId, 'pending' => $pending, 'userInv' => $userInv] = $resolved;
+        // The link's language segment is rewritable by whoever holds the link; see SignupLanguage.
+        $language = SignupLanguage::resolve($language, $userInv->getLanguage(), $this->sR->localeLanguageArray());
 
         $finished = $this->resolveDwellingAndProvisionInvoice(
             $identity,
@@ -222,7 +239,6 @@ final class HomeCareSignupController
         int $userId,
         string $tokenWithoutTimestamp,
         string $tokenType,
-        string $timestamp,
         HomeCareSignupConfirmDeps $d,
     ): Response|array {
         // Read once and delete immediately, mirroring how the token itself
@@ -238,7 +254,11 @@ final class HomeCareSignupController
             $d->tR->save($tokenEntity);
         }
 
-        if ($pending === null || (int) $timestamp + 3600 < time()) {
+        // Expiry comes from when the server issued the token, never from the timestamp suffix in the
+        // link, which anyone holding the link can rewrite. A token that cannot be found again is
+        // treated as expired.
+        if ($pending === null || $tokenEntity === null
+            || $tokenEntity->getCreatedAt()->getTimestamp() + self::TOKEN_LIFETIME_SECONDS < time()) {
             return $this->renderConfirmed('expired');
         }
 
@@ -268,7 +288,6 @@ final class HomeCareSignupController
             $tokenResult['userId'],
             $tokenResult['tokenWithoutTimestamp'],
             $tokenType,
-            $tokenResult['timestamp'],
             $d,
         );
         if ($accountResult instanceof Response) {

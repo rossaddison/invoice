@@ -211,12 +211,15 @@ trait SettingTooltipTrait
                 . ' challenges.cloudflare.com/turnstile/v0/siteverify with the'
                 . ' token and visitor IP before any user account is created.'
                 . ' A failed or missing token redirects to site/signupfailed.'
-                . ' If blank or set to 0, verification is skipped entirely'
-                . ' (dev bypass — never set 0 in production).',
-                'where' => 'src/Auth/Controller/SignupController.php'
-                . ' verifyTurnstile() private method — performs the HTTP POST'
-                . ' to Cloudflare and returns bool.'
-                . ' signup() calls verifyTurnstile before signupForm->signup().'
+                . ' If blank or set to 0, the /signup and /homecare-signup'
+                . ' forms refuse every submission (fail closed); login and'
+                . ' password forms skip the check. For development use'
+                . ' Cloudflare\'s test keys (secret 1x0000000000000000000000000000000AA).',
+                'where' => 'src/Auth/Trait/TurnstileVerification.php'
+                . ' verifyTurnstileRequired() (signup forms, fail closed) and'
+                . ' verifyTurnstile() (other forms) — perform the HTTP POST'
+                . ' to Cloudflare and return bool.'
+                . ' signup() calls verifyTurnstileRequired before signupForm->signup().'
                 . ' Configured in resources/views/invoice/setting/views/'
                 . 'partial_settings_turnstile.php via Settings > Cloudflare'
                 . ' Turnstile tab.',

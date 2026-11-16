@@ -1124,6 +1124,10 @@ trait Callback
                     $userIdString,
                     $this->getTokenType($providerName)
                 );
+                // oauthLogin() has already put this identity into the session; an account that is not
+                // active must not keep it. The page below is public.
+                $this->authService->logout();
+                $this->session->regenerateId();
                 return $this->redirectToAdminMustMakeActive();
             }
         }

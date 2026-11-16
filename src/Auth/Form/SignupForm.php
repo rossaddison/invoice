@@ -15,11 +15,32 @@ use Yiisoft\Validator\Result;
 use Yiisoft\Validator\Rule\Equal;
 use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\Length;
+use Yiisoft\Validator\Rule\Regex;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\RulesProviderInterface;
 
 final class SignupForm extends FormModel implements RulesProviderInterface, PropertyTranslatorProviderInterface
 {
+    /** Shortest accepted password. */
+    public const int PASSWORD_MIN_LENGTH = 8;
+
+    /** Longest accepted password: the value is hashed on every signup and login attempt. */
+    public const int PASSWORD_MAX_LENGTH = 128;
+
+    /** Shortest accepted login; the user.login column is string(48). */
+    public const int LOGIN_MIN_LENGTH = 3;
+    public const int LOGIN_MAX_LENGTH = 48;
+
+    /**
+     * A login starts with a letter or digit and continues with letters, digits, dot, underscore or
+     * hyphen: no spaces, markup or control characters, since the login is echoed into pages and into
+     * the confirmation email's subject line.
+     */
+    public const string LOGIN_PATTERN = '/^[\p{L}\p{N}][\p{L}\p{N}._-]*$/uD'; // D: "$" must not match before a trailing newline
+
+    /** The user.email column is string(254), the longest address RFC 5321 allows. */
+    public const int EMAIL_MAX_LENGTH = 254;
+
     private string $login = '';
     private string $email = '';
     private string $password = '';
@@ -113,9 +134,9 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
      * @return (\Closure|Email|Equal|Length|Required)[][]
      *
      * @psalm-return array{
-     *     login: list{Required, Length, \Closure(mixed):Result},
-     *     email: list{Required, Email, \Closure(mixed):Result},
-     *     password: list{Required},
+     *     login: list{Required, Length, Regex, \Closure(mixed):Result},
+     *     email: list{Required, Length, Email, \Closure(mixed):Result},
+     *     password: list{Required, Length},
      *     passwordVerify: list{Required, \Closure(mixed):Result}
      * }
      */
@@ -125,7 +146,12 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
         return [
             'login' => [
                 new Required(),
-                new Length(min: 1, max: 48, skipOnError: true),
+                new Length(min: self::LOGIN_MIN_LENGTH, max: self::LOGIN_MAX_LENGTH, skipOnError: true),
+                new Regex(
+                    self::LOGIN_PATTERN,
+                    message: $this->translator->translate('validator.login.format'),
+                    skipOnError: true,
+                ),
                 function (mixed $value): Result {
                     $result = new Result();
                     if ($this->userRepository->findByLogin((string) $value) !== null) {
@@ -136,6 +162,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
             ],
             'email' => [
                 new Required(),
+                new Length(max: self::EMAIL_MAX_LENGTH, skipOnError: true),
                 new Email(),
                 function (mixed $value): Result {
                     $result = new Result();
@@ -147,6 +174,7 @@ final class SignupForm extends FormModel implements RulesProviderInterface, Prop
             ],
             'password' => [
                 new Required(),
+                new Length(min: self::PASSWORD_MIN_LENGTH, max: self::PASSWORD_MAX_LENGTH, skipOnError: true),
             ],
             'passwordVerify' => [
                 new Required(),
