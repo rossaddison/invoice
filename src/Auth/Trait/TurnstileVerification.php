@@ -21,6 +21,25 @@ trait TurnstileVerification
         if ($secret === '' || $secret === '0') {
             return true;
         }
+        return $this->siteverify($secret, $token, $remoteIp);
+    }
+
+    /**
+     * Fail-closed variant for the public signup forms: with no secret configured the check fails,
+     * so a blanked or never-set secret cannot silently remove the bot check. Local development uses
+     * Cloudflare's published test keys (secret 1x0000000000000000000000000000000AA always passes).
+     */
+    private function verifyTurnstileRequired(string $token, string $remoteIp): bool
+    {
+        $secret = $this->sR->getSetting('turnstile_secret_key');
+        if ($secret === '' || $secret === '0') {
+            return false;
+        }
+        return $this->siteverify($secret, $token, $remoteIp);
+    }
+
+    private function siteverify(string $secret, string $token, string $remoteIp): bool
+    {
         if ($token === '') {
             return false;
         }

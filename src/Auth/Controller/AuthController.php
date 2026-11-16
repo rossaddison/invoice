@@ -19,6 +19,7 @@ use RossAddison\OpenBankingClient\OpenBankingProviderRegistryInterface;
 use App\Invoice\AppConstants;
 use App\Invoice\UserInv\UserInvRepository;
 use App\Invoice\UserInv\UserRbacLinkRepository;
+use App\Service\ClientIpResolver;
 use App\Service\WebControllerService;
 use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository;
@@ -102,6 +103,7 @@ final class AuthController
         private readonly AssetManager $assetManager,
         private readonly StateStorageInterface $stateStorage,
         private readonly Factory $yiisoftFactory,
+        private readonly ClientIpResolver $clientIpResolver,
     ) {
         $this->webViewRenderer = $webViewRenderer->withControllerName('auth');
         // use the Oauth2 trait function
@@ -113,7 +115,8 @@ final class AuthController
             $this->rateLimiter,
             $this->rateLimiterStorage,
             $this->logger,
-            $this->session
+            $this->session,
+            $this->clientIpResolver,
         );
     }
 
@@ -561,6 +564,13 @@ final class AuthController
             return null;
         }
         $userIdString = (string) $userId;
+        // An account that has not been activated (email never confirmed, or awaiting the admin) must
+        // not be able to enrol its own authenticator and log in through the 2FA flow below: that
+        // would make the email confirmation optional whenever 2FA is on. Admins are exempt, as in
+        // handleNonTfaPath(), because they are never locked out by activation.
+        if (!$userInv->getActive() && !$this->isAdminUser($userIdString)) {
+            return $this->handleNonTfaPath($userIdString, $userInv, $cookieLogin, $loginForm, $tR);
+        }
         // 2FA is mandatory for admins regardless of the global enable_tfa
         // setting — an admin without TOTP set up is routed into setup by
         // handleTfaPath() below, same as any other 2FA-required user.
@@ -602,9 +612,10 @@ final class AuthController
         LoginForm $loginForm,
         TokenRepository $tR,
     ): ResponseInterface {
-        $this->session->set('tfa_verified', true);
         $status = $userInv->getActive();
         $isAdminUser = $this->isAdminUser($userId);
+        // tfa_verified is only set inside the active branch below: an inactive account must not be
+        // marked verified on its way to the "email not verified" page.
         if ($status || $isAdminUser) {
             if ($isAdminUser) {
                 $this->disableToken($tR, $userId, 'email-verification');
@@ -627,6 +638,11 @@ final class AuthController
          */
         $awaitingEmailVerification = $this->hasUnusedEmailVerificationToken($tR, $userId);
         $this->disableToken($tR, $userId, $this->getTokenType('email-verification'));
+        // The correct password has already put this identity into the session (LoginForm logs in while
+        // validating). An account that is not active must not keep that session: the two pages below
+        // are public, so nothing is lost by signing the visitor straight out again.
+        $this->authService->logout();
+        $this->session->regenerateId();
         return $awaitingEmailVerification
             ? $this->redirectToEmailNotVerified()
             : $this->redirectToAdminMustMakeActive();

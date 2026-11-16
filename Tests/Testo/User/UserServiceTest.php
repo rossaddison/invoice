@@ -6,6 +6,7 @@ namespace Tests\Testo\User;
 
 use App\Infrastructure\Persistence\Identity\Identity;
 use App\Infrastructure\Persistence\User\User;
+use App\Invoice\UserInv\UserInvRepository;
 use App\User\UserRepository;
 use App\User\UserService;
 use Mockery as m;
@@ -13,6 +14,7 @@ use Testo\Assert;
 use Testo\Test;
 use Yiisoft\Access\AccessCheckerInterface;
 use Yiisoft\Auth\IdentityInterface;
+use Yiisoft\Session\SessionInterface;
 use Yiisoft\User\CurrentUser;
 
 /**
@@ -45,7 +47,16 @@ final class UserServiceTest
         $repository = $repository ?? m::mock(UserRepository::class);
         /** @var AccessCheckerInterface&m\MockInterface $accessChecker */
         $accessChecker = $accessChecker ?? m::mock(AccessCheckerInterface::class);
-        return new UserService($currentUser, $repository, $accessChecker);
+        // No second factor pending and no userinv row: neither of the two extra gates applies here,
+        // so these tests keep exercising the lookup and the access checker only (the gates are
+        // covered by UserServiceGateTest).
+        /** @var SessionInterface&m\MockInterface $session */
+        $session = m::mock(SessionInterface::class);
+        $session->shouldReceive('get')->andReturn(null);
+        /** @var UserInvRepository&m\MockInterface $userInvRepository */
+        $userInvRepository = m::mock(UserInvRepository::class);
+        $userInvRepository->shouldReceive('repoUserInvUserIdquery')->andReturn(null);
+        return new UserService($currentUser, $repository, $accessChecker, $session, $userInvRepository);
     }
 
     private function mockIdentityWithUserId(int $userId): m\MockInterface

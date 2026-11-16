@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Auth\Permissions;
 use App\Invoice\UserInv\UserInvController;
+use App\Middleware\RateLimiter;
 use App\Middleware\RoutePermission;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\Route;
@@ -90,6 +91,9 @@ return [
         [Method::GET, Method::POST],
         '/userinv/signup/{language}/{token}/{tokenType}'
     )
+        // Throttled on GET too (the emailed link is a GET): 10 per 60 s per real IP, 120 across everyone.
+        ->middleware(RateLimiter::globalAnyMethod(120))
+        ->middleware(RateLimiter::perIpAnyMethod(10, 'userinv_signup_confirm'))
         ->name('userinv/signup')
         ->action([UserInvController::class, 'signup']),
 ];

@@ -18,6 +18,7 @@ use App\Command\Invoice\SettingTruncateCommand;
 use App\Command\Invoice\SalesOrderTruncate3Command;
 use App\Command\Invoice\UserRelatedTruncate5Command;
 use App\Command\Router\ListCommand;
+use App\Command\Signup\CleanupUnconfirmedCommand;
 use App\Command\Translation\TranslateCommand;
 use App\Api\Console\GenerateApiKeyCommand;
 use App\Invoice\As4\Console\As4MonitorCommand;
@@ -66,6 +67,7 @@ return [
             'gateway-status/check-sandboxes' => CheckGatewaySandboxesCommand::class,
             'user/create' => CreateCommand::class,
             'user/assignRole' => AssignRoleCommand::class,
+            'signup/cleanup-unconfirmed' => CleanupUnconfirmedCommand::class,
             'router/list' => ListCommand::class,
             'api-client/generate' => GenerateApiKeyCommand::class,
             'translator/translate' => TranslateCommand::class,

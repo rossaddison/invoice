@@ -47,11 +47,15 @@ echo H::openTag('div', $row); //1
         echo H::openTag('b');
          echo '2. ';
         echo H::closeTag('b');
-        echo 'Leave both fields blank (or set the secret to ';
+        echo 'The public signup forms (/signup and /homecare-signup) refuse every submission while the Secret Key is blank or ';
         echo H::openTag('code');
          echo '0';
         echo H::closeTag('code');
-        echo ') to disable verification on localhost / development.';
+        echo '. Login and password forms skip the check in that case. For localhost / development use Cloudflare\'s test keys, e.g. the secret ';
+        echo H::openTag('code');
+         echo '1x0000000000000000000000000000000AA';
+        echo H::closeTag('code');
+        echo ' always passes.';
        echo H::closeTag('p');
        echo H::openTag('p');
         echo H::openTag('b');
