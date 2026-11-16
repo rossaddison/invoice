@@ -9,6 +9,7 @@ use App\Infrastructure\Persistence\User\User;
 use App\Invoice\AppConstants;
 use App\Invoice\UserInv\UserInvRepository;
 use Yiisoft\Access\AccessCheckerInterface;
+use Yiisoft\Rbac\Manager;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\User\CurrentUser;
 
@@ -29,6 +30,7 @@ final class UserService
         private readonly AccessCheckerInterface $accessChecker,
         private readonly SessionInterface $session,
         private readonly UserInvRepository $userInvRepository,
+        private readonly Manager $manager,
     ) {
     }
 
@@ -80,9 +82,24 @@ final class UserService
             $userInv = $this->userInvRepository->repoUserInvUserIdquery($userId);
             $this->blockedAsInactive[$userId] = null !== $userInv
                 && !$userInv->getActive()
-                && !$this->accessChecker->userHasPermission($userId, AppConstants::ROLE_ADMIN);
+                && !$this->isAdmin($userId);
         }
         return $this->blockedAsInactive[$userId];
+    }
+
+    /**
+     * Looked up by role assignment, not through AccessCheckerInterface::userHasPermission(): the RBAC
+     * manager here is built with includeRolesInAccessChecks = false, so asking it about a role name
+     * always answers false.
+     */
+    private function isAdmin(int $userId): bool
+    {
+        foreach ($this->manager->getRolesByUserId($userId) as $role) {
+            if ($role->getName() === AppConstants::ROLE_ADMIN) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

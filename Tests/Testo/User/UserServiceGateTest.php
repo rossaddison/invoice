@@ -22,6 +22,8 @@ use Testo\Assert;
 use Testo\Test;
 use Yiisoft\Access\AccessCheckerInterface;
 use Yiisoft\Http\Status;
+use Yiisoft\Rbac\Manager;
+use Yiisoft\Rbac\Role;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\User\CurrentUser;
 
@@ -59,8 +61,14 @@ final class UserServiceGateTest
         $currentUser->shouldReceive('getIdentity')->andReturn($identity);
 
         $accessChecker = m::mock(AccessCheckerInterface::class);
+        // Like the real Manager (includeRolesInAccessChecks = false), asking it about a role name is
+        // always false: the admin exemption must not depend on this call.
         $accessChecker->shouldReceive('userHasPermission')->andReturnUsing(
-            static fn (mixed $userId, string $permission): bool => $permission === AppConstants::ROLE_ADMIN ? $admin : $rbacGrants,
+            static fn (mixed $userId, string $permission): bool => $permission === AppConstants::ROLE_ADMIN ? false : $rbacGrants,
+        );
+        $manager = m::mock(Manager::class);
+        $manager->shouldReceive('getRolesByUserId')->andReturn(
+            $admin ? [new Role(AppConstants::ROLE_OBSERVER), new Role(AppConstants::ROLE_ADMIN)] : [new Role(AppConstants::ROLE_OBSERVER)],
         );
 
         $userInv = null;
@@ -85,7 +93,7 @@ final class UserServiceGateTest
         $repository = m::mock(UserRepository::class);
         $repository->shouldReceive('findById')->andReturn($user);
 
-        return new UserService($currentUser, $repository, $accessChecker, $session, $userInvRepository);
+        return new UserService($currentUser, $repository, $accessChecker, $session, $userInvRepository, $manager);
     }
 
     public function anAccountDeactivatedWhileLoggedInLosesItsPermissionsAtOnce(): void

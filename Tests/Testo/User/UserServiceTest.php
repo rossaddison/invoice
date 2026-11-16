@@ -14,6 +14,7 @@ use Testo\Assert;
 use Testo\Test;
 use Yiisoft\Access\AccessCheckerInterface;
 use Yiisoft\Auth\IdentityInterface;
+use Yiisoft\Rbac\Manager;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\User\CurrentUser;
 
@@ -56,7 +57,10 @@ final class UserServiceTest
         /** @var UserInvRepository&m\MockInterface $userInvRepository */
         $userInvRepository = m::mock(UserInvRepository::class);
         $userInvRepository->shouldReceive('repoUserInvUserIdquery')->andReturn(null);
-        return new UserService($currentUser, $repository, $accessChecker, $session, $userInvRepository);
+        /** @var Manager&m\MockInterface $manager */
+        $manager = m::mock(Manager::class);
+        $manager->shouldReceive('getRolesByUserId')->andReturn([]);
+        return new UserService($currentUser, $repository, $accessChecker, $session, $userInvRepository, $manager);
     }
 
     private function mockIdentityWithUserId(int $userId): m\MockInterface
