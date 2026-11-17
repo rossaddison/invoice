@@ -246,7 +246,7 @@ final class AuthController
         }
 
         $response = null;
-        if ($formHydrator->populateFromPostAndValidate($loginForm, $request)) {
+        if ($formHydrator->populateFromPostAndValidate($loginForm, $request, LoginForm::HYDRATED_PROPERTIES)) {
             $response = $this->resolveLoginResponse($loginForm, $cookieLogin, $uiR, $tR);
             if ($response === null) {
                 $this->logout($uR, $uiR);
