@@ -20,6 +20,7 @@ use Mockery as m;
 use Psr\Http\Message\ResponseInterface;
 use Testo\Assert;
 use Testo\Test;
+use Tests\Testo\Support\TypedMock;
 use Yiisoft\Http\Header;
 use Yiisoft\Rbac\Manager;
 use Yiisoft\Rbac\Role;
@@ -45,32 +46,32 @@ final class AuthControllerInactiveUserTfaTest
         $this->tfaVerifiedWrites = [];
         $this->logouts = 0;
 
-        $sR = m::mock(SettingRepository::class);
+        $sR = TypedMock::of(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('enable_tfa')->andReturn($enableTfa);
         $sR->shouldReceive('getSetting')->andReturn('');
 
-        $webService = m::mock(WebControllerService::class);
+        $webService = TypedMock::of(WebControllerService::class);
         $webService->shouldReceive('getRedirectResponse')->andReturnUsing(
             static fn (string $url): ResponseInterface => new HttpFactory()
                 ->createResponse(302)
                 ->withHeader(Header::LOCATION, $url),
         );
 
-        $identity = m::mock(Identity::class);
+        $identity = TypedMock::of(Identity::class);
         $identity->shouldReceive('getUserId')->andReturn(7);
-        $authService = m::mock(AuthService::class);
+        $authService = TypedMock::of(AuthService::class);
         $authService->shouldReceive('getIdentity')->andReturn($identity);
         $authService->shouldReceive('logout')->andReturnUsing(function (): bool {
             ++$this->logouts;
             return true;
         });
 
-        $manager = m::mock(Manager::class);
+        $manager = TypedMock::of(Manager::class);
         $manager->shouldReceive('getRolesByUserId')->andReturn(
             $admin ? [new Role(AppConstants::ROLE_ADMIN)] : [new Role(AppConstants::ROLE_OBSERVER)],
         );
 
-        $session = m::mock(SessionInterface::class);
+        $session = TypedMock::of(SessionInterface::class);
         $session->shouldReceive('set')->andReturnUsing(function (string $key, mixed $value): void {
             if ($key === 'tfa_verified' && $value === true) {
                 $this->tfaVerifiedWrites[] = $key;
@@ -96,21 +97,21 @@ final class AuthControllerInactiveUserTfaTest
 
     private function userInv(bool $active): UserInvRepository
     {
-        $user = m::mock(User::class);
+        $user = TypedMock::of(User::class);
         $user->shouldReceive('is2FAEnabled')->andReturn(false);
-        $userInv = m::mock(UserInv::class);
+        $userInv = TypedMock::of(UserInv::class);
         $userInv->shouldReceive('getUser')->andReturn($user);
         $userInv->shouldReceive('getActive')->andReturn($active);
-        $uiR = m::mock(UserInvRepository::class);
+        $uiR = TypedMock::of(UserInvRepository::class);
         $uiR->shouldReceive('repoUserInvUserIdquery')->andReturn($userInv);
         return $uiR;
     }
 
     private function resolve(AuthController $controller, bool $active): string
     {
-        $tR = m::mock(TokenRepository::class)->shouldIgnoreMissing();
-        $cookieLogin = m::mock(CookieLogin::class);
-        $loginForm = m::mock(LoginForm::class);
+        $tR = TypedMock::of(TokenRepository::class)->shouldIgnoreMissing();
+        $cookieLogin = TypedMock::of(CookieLogin::class);
+        $loginForm = TypedMock::of(LoginForm::class);
         $loginForm->shouldReceive('getPropertyValue')->andReturn(false);
 
         /** @var ?ResponseInterface $response */

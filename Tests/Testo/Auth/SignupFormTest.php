@@ -197,7 +197,7 @@ final class SignupFormTest
             "jane\u{202E}",
         ];
         foreach ($bad as $login) {
-            Assert::false($this->validWith(['login' => $login]), json_encode($login) ?: 'login');
+            Assert::false($this->validWith(['login' => $login]), (string) json_encode($login));
         }
     }
 

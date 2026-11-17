@@ -27,9 +27,11 @@ final class UnconfirmedSignupCleanerTest
     private const string RECENT = '2026-11-14 23:30:00';
     private const string CUTOFF = '2026-11-14 12:00:00';
 
+    private ?DatabaseManager $manager = null;
+
     private function database(): DatabaseInterface
     {
-        $databases = new DatabaseManager(new DatabaseConfig([
+        $this->manager = $databases = new DatabaseManager(new DatabaseConfig([
             'default' => 'default',
             'databases' => ['default' => ['connection' => 'sqlite']],
             'connections' => ['sqlite' => new SQLiteDriverConfig(connection: new MemoryConnectionConfig())],
@@ -49,20 +51,10 @@ final class UnconfirmedSignupCleanerTest
         return $db;
     }
 
-    private function cleaner(DatabaseInterface $db): UnconfirmedSignupCleaner
+    /** The cleaner over the manager that database() built: the same in-memory database. */
+    private function cleaner(): UnconfirmedSignupCleaner
     {
-        $manager = new class ($db) extends DatabaseManager {
-            public function __construct(private readonly DatabaseInterface $db)
-            {
-            }
-
-            #[\Override]
-            public function database(?string $database = null): DatabaseInterface
-            {
-                return $this->db;
-            }
-        };
-        return new UnconfirmedSignupCleaner($manager);
+        return new UnconfirmedSignupCleaner($this->manager ?? throw new \LogicException("database() first"));
     }
 
     /**
@@ -98,11 +90,11 @@ final class UnconfirmedSignupCleanerTest
     }
 
     /** @return list<int> */
-    private function candidateIds(DatabaseInterface $db): array
+    private function candidateIds(): array
     {
         $ids = array_map(
             static fn (array $c): int => $c['userId'],
-            $this->cleaner($db)->findCandidates(new DateTimeImmutable(self::CUTOFF)),
+            $this->cleaner()->findCandidates(new DateTimeImmutable(self::CUTOFF)),
         );
         sort($ids);
         return $ids;
@@ -118,7 +110,7 @@ final class UnconfirmedSignupCleanerTest
         $db = $this->database();
         $this->signup($db, 5);
 
-        Assert::same($this->candidateIds($db), [5]);
+        Assert::same($this->candidateIds(), [5]);
     }
 
     public function anUnclickedHomeCareSignupIsACandidateToo(): void
@@ -126,7 +118,7 @@ final class UnconfirmedSignupCleanerTest
         $db = $this->database();
         $this->signup($db, 6, type: 'homecare-email-verification', homecare: true);
 
-        Assert::same($this->candidateIds($db), [6]);
+        Assert::same($this->candidateIds(), [6]);
     }
 
     public function aSignupYoungerThanTheCutoffIsLeftAlone(): void
@@ -134,7 +126,7 @@ final class UnconfirmedSignupCleanerTest
         $db = $this->database();
         $this->signup($db, 5, tokenCreatedAt: self::RECENT);
 
-        Assert::same($this->candidateIds($db), []);
+        Assert::same($this->candidateIds(), []);
     }
 
     public function aClickedLinkMeansNotACandidate(): void
@@ -142,7 +134,7 @@ final class UnconfirmedSignupCleanerTest
         $db = $this->database();
         $this->signup($db, 5, token: 'already_used_token_1793000000');
 
-        Assert::same($this->candidateIds($db), []);
+        Assert::same($this->candidateIds(), []);
     }
 
     public function anActiveAccountIsNeverACandidate(): void
@@ -150,7 +142,7 @@ final class UnconfirmedSignupCleanerTest
         $db = $this->database();
         $this->signup($db, 5, active: true);
 
-        Assert::same($this->candidateIds($db), []);
+        Assert::same($this->candidateIds(), []);
     }
 
     public function anAdminIsNeverACandidate(): void
@@ -158,7 +150,7 @@ final class UnconfirmedSignupCleanerTest
         $db = $this->database();
         $this->signup($db, 5, role: 'admin');
 
-        Assert::same($this->candidateIds($db), []);
+        Assert::same($this->candidateIds(), []);
     }
 
     public function theFirstUserIsNeverACandidate(): void
@@ -166,7 +158,7 @@ final class UnconfirmedSignupCleanerTest
         $db = $this->database();
         $this->signup($db, 1);
 
-        Assert::same($this->candidateIds($db), []);
+        Assert::same($this->candidateIds(), []);
     }
 
     public function anAccountWithoutAVerificationTokenIsNeverACandidate(): void
@@ -175,7 +167,7 @@ final class UnconfirmedSignupCleanerTest
         $db = $this->database();
         $this->signup($db, 5, type: 'password-reset');
 
-        Assert::same($this->candidateIds($db), []);
+        Assert::same($this->candidateIds(), []);
     }
 
     public function onlyTheEligibleAccountsAmongSeveralAreReturned(): void
@@ -186,7 +178,7 @@ final class UnconfirmedSignupCleanerTest
         $this->signup($db, 7, active: true);
         $this->signup($db, 8, type: 'homecare-email-verification', homecare: true);
 
-        Assert::same($this->candidateIds($db), [5, 8]);
+        Assert::same($this->candidateIds(), [5, 8]);
     }
 
     public function removeDeletesEverythingTheSignupCreatedAndNothingElse(): void
@@ -194,7 +186,7 @@ final class UnconfirmedSignupCleanerTest
         $db = $this->database();
         $this->signup($db, 5, homecare: true);
         $this->signup($db, 6, homecare: true);
-        $cleaner = $this->cleaner($db);
+        $cleaner = $this->cleaner();
 
         $removed = $cleaner->remove(5);
 
@@ -210,7 +202,9 @@ final class UnconfirmedSignupCleanerTest
         foreach (['user', 'identity', 'token', 'user_inv', 'user_rbac_link', 'yii_rbac_assignment', 'home_care_pending_signup'] as $table) {
             Assert::same($this->count($db, $table), 1);
         }
-        Assert::same((int) $db->select('id')->from('user')->fetchAll()[0]['id'], 6);
+        /** @var list<array{id: int|string}> $users */
+        $users = $db->select('id')->from('user')->fetchAll();
+        Assert::same((int) $users[0]['id'], 6);
     }
 
     public function aFailureHalfWayLeavesTheAccountExactlyAsItWas(): void
@@ -222,7 +216,7 @@ final class UnconfirmedSignupCleanerTest
         $threw = false;
 
         try {
-            $this->cleaner($db)->remove(5);
+            $this->cleaner()->remove(5);
         } catch (\Throwable) {
             $threw = true;
         }
@@ -240,7 +234,7 @@ final class UnconfirmedSignupCleanerTest
         $threw = false;
 
         try {
-            $this->cleaner($db)->remove(1);
+            $this->cleaner()->remove(1);
         } catch (\LogicException) {
             $threw = true;
         }

@@ -9,6 +9,7 @@ use App\Invoice\Setting\SettingRepository;
 use Mockery as m;
 use Testo\Assert;
 use Testo\Test;
+use Tests\Testo\Support\TypedMock;
 
 /**
  * Covers the branches of TurnstileVerification that decide, without a network call,
@@ -18,10 +19,10 @@ use Testo\Test;
 #[Test]
 final class TurnstileVerificationTest
 {
-    /** @return \Closure(string, string): bool */
+    /** @return \Closure(string, string, bool=): bool */
     private function makeVerifier(string $secret): \Closure
     {
-        $sR = m::mock(SettingRepository::class);
+        $sR = TypedMock::of(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('turnstile_secret_key')->andReturn($secret);
 
         $verifier = new class ($sR) {
