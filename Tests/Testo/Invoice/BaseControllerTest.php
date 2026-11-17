@@ -149,6 +149,35 @@ final class BaseControllerTest
         $this->makeHarness($webViewRenderer, viewInv: true, editInv: true, tfaVerified: true);
     }
 
+    // A remember-me (auto-login cookie) session never passes the code step, so the session has no
+    // tfa_verified value at all. It must still get the controller name, or render('index') looks for
+    // resources/views/index.php and the page is a 500.
+    public function editPermissionWithNoTfaValueUsesTheInvoiceLayout(): void
+    {
+        /** @var WebViewRenderer&m\MockInterface $webViewRenderer */
+        $webViewRenderer = m::mock(WebViewRenderer::class);
+        $webViewRenderer->shouldReceive('withControllerName')->once()->with('base')->andReturnSelf();
+        $webViewRenderer->shouldReceive('withLayout')->once()
+            ->with('@views/invoice/layout/fullpage-loader.php')->andReturnSelf();
+        $webViewRenderer->shouldReceive('withLayout')->once()
+            ->with('@views/layout/invoice.php')->andReturnSelf();
+
+        $this->makeHarness($webViewRenderer, viewInv: true, editInv: true, tfaVerified: null);
+    }
+
+    public function viewOnlyWithNoTfaValueUsesTheGuestLayout(): void
+    {
+        /** @var WebViewRenderer&m\MockInterface $webViewRenderer */
+        $webViewRenderer = m::mock(WebViewRenderer::class);
+        $webViewRenderer->shouldReceive('withControllerName')->once()->with('base')->andReturnSelf();
+        $webViewRenderer->shouldReceive('withLayout')->once()
+            ->with('@views/invoice/layout/fullpage-loader.php')->andReturnSelf();
+        $webViewRenderer->shouldReceive('withLayout')->once()
+            ->with('@views/layout/guest.php')->andReturnSelf();
+
+        $this->makeHarness($webViewRenderer, viewInv: true, editInv: false, tfaVerified: null);
+    }
+
     public function editPermissionWithoutTfaVerifiedLeavesTheLayoutUnset(): void
     {
         // A real gap in the elseif chain: EDIT_INV alone, without
