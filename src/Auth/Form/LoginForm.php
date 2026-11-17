@@ -17,6 +17,15 @@ use Yiisoft\Validator\RulesProviderInterface;
 
 final class LoginForm extends FormModel implements RulesProviderInterface, PropertyTranslatorProviderInterface
 {
+    /**
+     * Posted properties to fill, by name. FormHydrator fills only the properties that have validation
+     * rules unless told otherwise; this form validates login and password only, so without
+     * rememberMe listed here the "Remember me" tick is never read and the auto-login cookie is never set.
+     *
+     * @var array<string, string>
+     */
+    public const array HYDRATED_PROPERTIES = ['rememberMe' => 'rememberMe'];
+
     private string $login = '';
     private string $password = '';
     private bool $rememberMe = false;
