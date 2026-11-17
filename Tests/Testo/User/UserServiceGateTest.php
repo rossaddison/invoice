@@ -20,6 +20,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\NullLogger;
 use Testo\Assert;
 use Testo\Test;
+use Tests\Testo\Support\TypedMock;
 use Yiisoft\Access\AccessCheckerInterface;
 use Yiisoft\Http\Status;
 use Yiisoft\Rbac\Manager;
@@ -55,28 +56,28 @@ final class UserServiceGateTest
         bool $admin = false,
     ): UserService {
         $this->userInvReads = 0;
-        $identity = m::mock(Identity::class);
+        $identity = TypedMock::of(Identity::class);
         $identity->shouldReceive('getUserId')->andReturn(self::USER_ID);
-        $currentUser = m::mock(CurrentUser::class);
+        $currentUser = TypedMock::of(CurrentUser::class);
         $currentUser->shouldReceive('getIdentity')->andReturn($identity);
 
-        $accessChecker = m::mock(AccessCheckerInterface::class);
+        $accessChecker = TypedMock::of(AccessCheckerInterface::class);
         // Like the real Manager (includeRolesInAccessChecks = false), asking it about a role name is
         // always false: the admin exemption must not depend on this call.
         $accessChecker->shouldReceive('userHasPermission')->andReturnUsing(
             static fn (mixed $userId, string $permission): bool => $permission === AppConstants::ROLE_ADMIN ? false : $rbacGrants,
         );
-        $manager = m::mock(Manager::class);
+        $manager = TypedMock::of(Manager::class);
         $manager->shouldReceive('getRolesByUserId')->andReturn(
             $admin ? [new Role(AppConstants::ROLE_OBSERVER), new Role(AppConstants::ROLE_ADMIN)] : [new Role(AppConstants::ROLE_OBSERVER)],
         );
 
         $userInv = null;
         if (null !== $userInvActive) {
-            $userInv = m::mock(UserInv::class);
+            $userInv = TypedMock::of(UserInv::class);
             $userInv->shouldReceive('getActive')->andReturn($userInvActive);
         }
-        $userInvRepository = m::mock(UserInvRepository::class);
+        $userInvRepository = TypedMock::of(UserInvRepository::class);
         $userInvRepository->shouldReceive('repoUserInvUserIdquery')->with(self::USER_ID)->andReturnUsing(
             function () use ($userInv): ?UserInv {
                 ++$this->userInvReads;
@@ -84,13 +85,13 @@ final class UserServiceGateTest
             },
         );
 
-        $session = m::mock(SessionInterface::class);
+        $session = TypedMock::of(SessionInterface::class);
         $session->shouldReceive('get')->with(UserService::SESSION_TFA_VERIFIED)->andReturn($tfaVerified);
 
         // only read when the route gate logs a denial
-        $user = m::mock(User::class);
+        $user = TypedMock::of(User::class);
         $user->shouldReceive('reqId')->andReturn(self::USER_ID);
-        $repository = m::mock(UserRepository::class);
+        $repository = TypedMock::of(UserRepository::class);
         $repository->shouldReceive('findById')->andReturn($user);
 
         return new UserService($currentUser, $repository, $accessChecker, $session, $userInvRepository, $manager);

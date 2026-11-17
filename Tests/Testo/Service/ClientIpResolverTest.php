@@ -11,6 +11,7 @@ use Mockery as m;
 use Psr\Log\LoggerInterface;
 use Testo\Assert;
 use Testo\Test;
+use Tests\Testo\Support\TypedMock;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Yii\RateLimiter\CounterInterface;
 use Yiisoft\Yii\RateLimiter\Storage\StorageInterface;
@@ -29,10 +30,10 @@ final class ClientIpResolverTest
     /** @return list<string> */
     private function trusted(): array
     {
-        /** @var list<string> $ranges */
-        $ranges = require dirname(__DIR__, 3) . '/config/common/params.php';
+        /** @var array<string, list<string>> $params */
+        $params = require dirname(__DIR__, 3) . '/config/common/params.php';
 
-        return $ranges['app.trustedProxies'];
+        return $params['app.trustedProxies'];
     }
 
     private function resolver(): ClientIpResolver
@@ -223,10 +224,10 @@ final class ClientIpResolverTest
     public function theAuthSecurityHelperUsesTheResolverForTheTwoFactorAndResetLimiters(): void
     {
         $helper = new AuthSecurityHelper(
-            m::mock(CounterInterface::class),
-            m::mock(StorageInterface::class),
-            m::mock(LoggerInterface::class),
-            m::mock(SessionInterface::class),
+            TypedMock::of(CounterInterface::class),
+            TypedMock::of(StorageInterface::class),
+            TypedMock::of(LoggerInterface::class),
+            TypedMock::of(SessionInterface::class),
             $this->resolver(),
         );
         $spoofed = new HttpFactory()->createServerRequest('POST', 'https://example.test/en/verifyLogin', [

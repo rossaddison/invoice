@@ -91,16 +91,15 @@ final class RateLimiterTest
 
     private function perIp(int $limit): MiddlewareInterface
     {
-        $factory = new HttpFactory();
-        /** @var MiddlewareInterface $middleware */
         /** @var array{'app.trustedProxies': list<string>} $params */
         $params = require dirname(__DIR__, 3) . '/config/common/params.php';
-        $middleware = (RateLimiter::perIp($limit, 'homecare_signup'))(
-            $factory,
+
+        /** @var MiddlewareInterface */
+        return (RateLimiter::perIp($limit, 'homecare_signup'))(
+            new HttpFactory(),
             $this->makeStorage(),
             new ClientIpResolver($params['app.trustedProxies']),
         );
-        return $middleware;
     }
 
     public function oneIpIsStoppedAfterItsLimit(): void
@@ -167,7 +166,10 @@ final class RateLimiterTest
         Assert::same($this->countAllowed($this->perIp(5), $servers), 4);
     }
 
-    /** @param list<array<string, string>> $servers one GET per entry; returns the status codes in order */
+    /**
+     * @param list<array<string, string>> $servers one GET per entry
+     * @return list<int> the status codes in order
+     */
     private function statusesForGets(MiddlewareInterface $middleware, array $servers): array
     {
         $statuses = [];

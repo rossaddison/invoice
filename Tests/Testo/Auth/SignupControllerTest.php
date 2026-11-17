@@ -20,6 +20,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Testo\Assert;
 use Testo\Test;
+use Tests\Testo\Support\TypedMock;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Header;
 use Yiisoft\Rbac\Manager;
@@ -33,15 +34,15 @@ use Yiisoft\Router\CurrentRoute;
 #[Test]
 final class SignupControllerTest
 {
-    /** @param array<string, mixed> $extra properties to set besides the setting repository and web service */
+    /** @param array<string, object> $extra properties to set besides the setting repository and web service */
     private function makeController(string $stopSigningUp = '', string $turnstileSecret = '', array $extra = []): SignupController
     {
-        $sR = m::mock(SettingRepository::class);
+        $sR = TypedMock::of(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('stop_signing_up')->andReturn($stopSigningUp);
         $sR->shouldReceive('getSetting')->with('turnstile_secret_key')->andReturn($turnstileSecret);
         $sR->shouldReceive('getSetting')->andReturn('');
 
-        $webService = m::mock(WebControllerService::class);
+        $webService = TypedMock::of(WebControllerService::class);
         $webService->shouldReceive('getRedirectResponse')->andReturnUsing(
             static fn (string $url): ResponseInterface => new HttpFactory()
                 ->createResponse(302)
@@ -50,8 +51,8 @@ final class SignupControllerTest
 
         $reflection = new \ReflectionClass(SignupController::class);
         $controller = $reflection->newInstanceWithoutConstructor();
-        $clientIp = new \App\Service\ClientIpResolver([]);
-        foreach (['sR' => $sR, 'webService' => $webService, 'clientIp' => $clientIp, ...$extra] as $property => $value) {
+        $properties = ['sR' => $sR, 'webService' => $webService, 'clientIp' => new \App\Service\ClientIpResolver([]), ...$extra];
+        foreach ($properties as $property => $value) {
             $reflection->getProperty($property)->setValue($controller, $value);
         }
         return $controller;
@@ -59,7 +60,7 @@ final class SignupControllerTest
 
     private function authService(bool $guest): AuthService
     {
-        $authService = m::mock(AuthService::class);
+        $authService = TypedMock::of(AuthService::class);
         $authService->shouldReceive('isGuest')->andReturn($guest);
         return $authService;
     }
@@ -73,15 +74,17 @@ final class SignupControllerTest
 
     private function signup(SignupController $controller, bool $guest = true, ?FormHydrator $hydrator = null): ResponseInterface
     {
-        $deps = m::mock(SignupDeps::class);
-        $deps->uR = m::mock(\App\User\UserRepository::class);
+        if (null === $hydrator) {
+            $hydrator = TypedMock::of(FormHydrator::class);
+            $hydrator->shouldReceive('populateFromPostAndValidate')->never();
+        }
         return $controller->signup(
             $this->authService($guest),
-            m::mock(CurrentRoute::class),
-            $hydrator ?? m::mock(FormHydrator::class)->shouldReceive('populateFromPostAndValidate')->never()->getMock(),
+            TypedMock::of(CurrentRoute::class),
+            $hydrator,
             $this->post(),
-            m::mock(SignupForm::class),
-            $deps,
+            TypedMock::of(SignupForm::class),
+            TypedMock::build(SignupDeps::class),
         );
     }
 
@@ -122,18 +125,18 @@ final class SignupControllerTest
         // Characterisation: signup() assigns the RBAC role straight away; only userinv.active is
         // held back until the link is clicked. Anything that checks the role (not userinv.active)
         // already treats the unconfirmed account as an Observer.
-        $manager = m::mock(Manager::class);
+        $manager = TypedMock::of(Manager::class);
         $manager->shouldReceive('revokeAll')->once()->with('42');
         $manager->shouldReceive('assign')->once()->with(AppConstants::ROLE_OBSERVER, '42');
         $manager->shouldReceive('getRolesByUserId')->with('42')->andReturn(['observer' => new \stdClass()]);
-        $uiR = m::mock(UserInvRepository::class);
+        $uiR = TypedMock::of(UserInvRepository::class);
         $uiR->shouldReceive('repoUserInvUserIdquery')->with(42)->andReturn(null);
 
         $controller = $this->makeController(extra: [
             'manager' => $manager,
             'uiR' => $uiR,
-            'urlR' => m::mock(UserRbacLinkRepository::class),
-            'logger' => m::mock(LoggerInterface::class)->shouldIgnoreMissing(),
+            'urlR' => TypedMock::of(UserRbacLinkRepository::class),
+            'logger' => TypedMock::of(LoggerInterface::class)->shouldIgnoreMissing(),
         ]);
 
         Assert::true($this->assignRoleAndVerify($controller, 42, AppConstants::ROLE_OBSERVER));

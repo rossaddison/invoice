@@ -290,7 +290,7 @@ final class HomeCareSignupFormTest
     public function loginsWithMarkupSpacesOrOtherSymbolsFail(): void
     {
         foreach (['<script>alert(1)</script> ', 'jane doe', "jane\n", 'jane@example.com', '-jane', "jane\u{202E}"] as $login) {
-            Assert::false($this->validWith(['login' => $login]), json_encode($login) ?: 'login');
+            Assert::false($this->validWith(['login' => $login]), (string) json_encode($login));
         }
     }
 

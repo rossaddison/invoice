@@ -24,6 +24,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Testo\Assert;
 use Testo\Test;
+use Tests\Testo\Support\TypedMock;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Header;
 use Yiisoft\Rbac\Manager;
@@ -47,22 +48,22 @@ final class HomeCareSignupControllerTest
         string $turnstileSecret = '',
         ?HomeCareSignupEmailService $emailService = null,
     ): HomeCareSignupController {
-        $authService = m::mock(AuthService::class);
+        $authService = TypedMock::of(AuthService::class);
         $authService->shouldReceive('isGuest')->andReturn($guest);
 
-        $sR = m::mock(SettingRepository::class);
+        $sR = TypedMock::of(SettingRepository::class);
         $sR->shouldReceive('getSetting')->with('stop_homecare_signing_up')->andReturn($stopSetting);
         $sR->shouldReceive('getSetting')->with('turnstile_secret_key')->andReturn($turnstileSecret);
         $sR->shouldReceive('getSetting')->with('turnstile_site_key')->andReturn('site-key');
 
-        $webService = m::mock(WebControllerService::class);
+        $webService = TypedMock::of(WebControllerService::class);
         $webService->shouldReceive('getRedirectResponse')->andReturnUsing(
             static fn (string $url): ResponseInterface => new HttpFactory()
                 ->createResponse(302)
                 ->withHeader(Header::LOCATION, $url),
         );
 
-        $renderer = m::mock(WebViewRenderer::class);
+        $renderer = TypedMock::of(WebViewRenderer::class);
         $renderer->shouldReceive('withControllerName')->andReturnSelf();
         $renderer->shouldReceive('render')->andReturnUsing(
             static fn (string $view, array $params = []): ResponseInterface => new HttpFactory()
@@ -70,18 +71,18 @@ final class HomeCareSignupControllerTest
                 ->withHeader('X-View', $view . ':' . (string) ($params['outcome'] ?? '')),
         );
 
-        $translator = m::mock(TranslatorInterface::class);
+        $translator = TypedMock::of(TranslatorInterface::class);
         $translator->shouldReceive('translate')->andReturnUsing(static fn (string $key): string => $key);
 
         return new HomeCareSignupController(
-            m::mock(Manager::class),
+            TypedMock::of(Manager::class),
             $authService,
             $webService,
             $renderer,
-            $emailService ?? m::mock(HomeCareSignupEmailService::class),
+            $emailService ?? TypedMock::of(HomeCareSignupEmailService::class),
             $sR,
             $translator,
-            m::mock(UrlGenerator::class),
+            TypedMock::of(UrlGenerator::class),
             new \App\Service\ClientIpResolver([]),
         );
     }
@@ -99,16 +100,16 @@ final class HomeCareSignupControllerTest
 
     public function aLoggedInUserIsSentAwayWithoutTheFormBeingTouched(): void
     {
-        $hydrator = m::mock(FormHydrator::class);
+        $hydrator = TypedMock::of(FormHydrator::class);
         $hydrator->shouldNotReceive('populateFromPostAndValidate');
         $controller = $this->makeController(guest: false);
 
         $response = $controller->signup(
             $this->request('POST'),
-            m::mock(CurrentRoute::class),
+            TypedMock::of(CurrentRoute::class),
             $hydrator,
-            m::mock(HomeCareSignupForm::class),
-            m::mock(HomeCareSignupDeps::class),
+            TypedMock::of(HomeCareSignupForm::class),
+            TypedMock::of(HomeCareSignupDeps::class),
         );
 
         Assert::same($this->location($response), 'site/index');
@@ -116,16 +117,16 @@ final class HomeCareSignupControllerTest
 
     public function theKillSwitchSendsEveryVisitorAwayEvenOnPost(): void
     {
-        $hydrator = m::mock(FormHydrator::class);
+        $hydrator = TypedMock::of(FormHydrator::class);
         $hydrator->shouldNotReceive('populateFromPostAndValidate');
         $controller = $this->makeController(stopSetting: '1');
 
         $response = $controller->signup(
             $this->request('POST'),
-            m::mock(CurrentRoute::class),
+            TypedMock::of(CurrentRoute::class),
             $hydrator,
-            m::mock(HomeCareSignupForm::class),
-            m::mock(HomeCareSignupDeps::class),
+            TypedMock::of(HomeCareSignupForm::class),
+            TypedMock::of(HomeCareSignupDeps::class),
         );
 
         Assert::same($this->location($response), 'site/index');
@@ -133,18 +134,18 @@ final class HomeCareSignupControllerTest
 
     public function aPostWithoutATurnstileTokenFailsBeforeAnyAccountIsCreated(): void
     {
-        $hydrator = m::mock(FormHydrator::class);
+        $hydrator = TypedMock::of(FormHydrator::class);
         $hydrator->shouldNotReceive('populateFromPostAndValidate');
-        $form = m::mock(HomeCareSignupForm::class);
+        $form = TypedMock::of(HomeCareSignupForm::class);
         $form->shouldNotReceive('signup');
         $controller = $this->makeController(turnstileSecret: 'real-secret');
 
         $response = $controller->signup(
             $this->request('POST'),
-            m::mock(CurrentRoute::class),
+            TypedMock::of(CurrentRoute::class),
             $hydrator,
             $form,
-            m::mock(HomeCareSignupDeps::class),
+            TypedMock::of(HomeCareSignupDeps::class),
         );
 
         Assert::same($this->location($response), 'site/signupfailed');
@@ -155,16 +156,16 @@ final class HomeCareSignupControllerTest
         // Characterisation: signup() saves the User and the pending row first, then tries to
         // email. When the email fails the visitor sees "signup failed" but the rows stay, and the
         // login/email are now taken, so the real owner of that address cannot sign up with it.
-        $user = m::mock(User::class);
+        $user = TypedMock::of(User::class);
         $user->shouldReceive('reqId')->andReturn(41);
-        $form = m::mock(HomeCareSignupForm::class);
+        $form = TypedMock::of(HomeCareSignupForm::class);
         $form->shouldReceive('signup')->once()->andReturn($user);
         $form->shouldReceive('isValidated')->andReturn(true);
 
-        $hydrator = m::mock(FormHydrator::class);
+        $hydrator = TypedMock::of(FormHydrator::class);
         $hydrator->shouldReceive('populateFromPostAndValidate')->andReturn(true);
 
-        $emailService = m::mock(HomeCareSignupEmailService::class);
+        $emailService = TypedMock::of(HomeCareSignupEmailService::class);
         $controller = $this->makeController(emailService: $emailService);
         $emailService->shouldReceive('savePendingSignup')->once();
         $emailService->shouldReceive('processSendSignupEmail')->andReturn(
@@ -172,17 +173,16 @@ final class HomeCareSignupControllerTest
         );
         $form->shouldReceive('getValidationResult')->andReturn(new \Yiisoft\Validator\Result());
 
-        $csR = m::mock(\App\Invoice\CategorySecondary\CategorySecondaryRepository::class);
+        $csR = TypedMock::of(\App\Invoice\CategorySecondary\CategorySecondaryRepository::class);
         $csR->shouldReceive('optionsDataCategorySecondaries')->andReturn([]);
-        $deps = m::mock(HomeCareSignupDeps::class);
-        $deps->csR = $csR;
+        $deps = TypedMock::build(HomeCareSignupDeps::class, ['csR' => $csR]);
         $form->shouldReceive('serviceOptions')->andReturn([]);
 
         // GET: the Turnstile gate only guards POST, and a POST with no secret is now refused
         // before this point (see aPostIsRefusedWhenNoTurnstileSecretIsConfigured). The mocked
         // hydrator stands in for the validated form either way; the once() expectations prove the
         // rows are written before the email is attempted.
-        $response = $controller->signup($this->request('GET'), m::mock(CurrentRoute::class), $hydrator, $form, $deps);
+        $response = $controller->signup($this->request('GET'), TypedMock::of(CurrentRoute::class), $hydrator, $form, $deps);
 
         Assert::same($this->location($response), 'site/signupfailed');
     }
@@ -203,7 +203,7 @@ final class HomeCareSignupControllerTest
                 'en',
                 $this->maskedToken('real-token', time()),
                 HomeCareSignupController::EMAIL_VERIFICATION_TOKEN,
-                m::mock(FormHydrator::class),
+                TypedMock::of(FormHydrator::class),
                 $deps,
                 $this->request($method),
             );
@@ -214,31 +214,33 @@ final class HomeCareSignupControllerTest
 
     public function aPostIsRefusedWhenNoTurnstileSecretIsConfigured(): void
     {
-        $hydrator = m::mock(FormHydrator::class);
+        $hydrator = TypedMock::of(FormHydrator::class);
         $hydrator->shouldNotReceive('populateFromPostAndValidate');
-        $form = m::mock(HomeCareSignupForm::class);
+        $form = TypedMock::of(HomeCareSignupForm::class);
         $form->shouldNotReceive('signup');
         $controller = $this->makeController(turnstileSecret: '');
 
         $response = $controller->signup(
             $this->request('POST'),
-            m::mock(CurrentRoute::class),
+            TypedMock::of(CurrentRoute::class),
             $hydrator,
             $form,
-            m::mock(HomeCareSignupDeps::class),
+            TypedMock::of(HomeCareSignupDeps::class),
         );
 
         Assert::same($this->location($response), 'site/signupfailed');
     }
 
     /** @return array{0: HomeCareSignupConfirmDeps, 1: TokenRepository&m\MockInterface, 2: HomeCarePendingSignupRepository&m\MockInterface} */
-    private function makeConfirmDeps(): array
+    private function makeConfirmDeps(?\App\Invoice\UserInv\UserInvRepository $uiR = null): array
     {
-        $tR = m::mock(TokenRepository::class);
-        $pendingR = m::mock(HomeCarePendingSignupRepository::class);
-        $deps = m::mock(HomeCareSignupConfirmDeps::class);
-        $deps->tR = $tR;
-        $deps->pendingR = $pendingR;
+        $tR = TypedMock::of(TokenRepository::class);
+        $pendingR = TypedMock::of(HomeCarePendingSignupRepository::class);
+        $given = ['tR' => $tR, 'pendingR' => $pendingR];
+        if (null !== $uiR) {
+            $given['uiR'] = $uiR;
+        }
+        $deps = TypedMock::build(HomeCareSignupConfirmDeps::class, $given);
         return [$deps, $tR, $pendingR];
     }
 
@@ -249,9 +251,9 @@ final class HomeCareSignupControllerTest
 
     private function identityForUser(int $userId): Identity
     {
-        $user = m::mock(User::class);
+        $user = TypedMock::of(User::class);
         $user->shouldReceive('reqId')->andReturn($userId);
-        $identity = m::mock(Identity::class);
+        $identity = TypedMock::of(Identity::class);
         $identity->shouldReceive('getUser')->andReturn($user);
         return $identity;
     }
@@ -267,7 +269,7 @@ final class HomeCareSignupControllerTest
             'en',
             $this->maskedToken('forged-token', time()),
             HomeCareSignupController::EMAIL_VERIFICATION_TOKEN,
-            m::mock(FormHydrator::class),
+            TypedMock::of(FormHydrator::class),
             $deps,
             $this->request('POST'),
         );
@@ -285,7 +287,7 @@ final class HomeCareSignupControllerTest
             'en',
             TokenMask::apply('nounderscore'),
             HomeCareSignupController::EMAIL_VERIFICATION_TOKEN,
-            m::mock(FormHydrator::class),
+            TypedMock::of(FormHydrator::class),
             $deps,
             $this->request('POST'),
         );
@@ -297,10 +299,10 @@ final class HomeCareSignupControllerTest
     {
         [$deps, $tR, $pendingR] = $this->makeConfirmDeps();
         $tR->shouldReceive('findIdentityByToken')->andReturn($this->identityForUser(7));
-        $pending = m::mock(HomeCarePendingSignup::class);
+        $pending = TypedMock::of(HomeCarePendingSignup::class);
         $pendingR->shouldReceive('repoByUserIdquery')->with(7)->andReturn($pending);
         $pendingR->shouldReceive('delete')->once()->with($pending);
-        $token = m::mock(Token::class);
+        $token = TypedMock::of(Token::class);
         $token->shouldReceive('setToken')->once()->withArgs(
             static fn (string $value): bool => str_starts_with($value, 'already_used_token_'),
         );
@@ -313,7 +315,7 @@ final class HomeCareSignupControllerTest
             'en',
             $this->maskedToken('real-token', time() - 3601),
             HomeCareSignupController::EMAIL_VERIFICATION_TOKEN,
-            m::mock(FormHydrator::class),
+            TypedMock::of(FormHydrator::class),
             $deps,
             $this->request('POST'),
         );
@@ -326,10 +328,10 @@ final class HomeCareSignupControllerTest
         // The Token was really created two days ago; the link's suffix has been rewritten to "now".
         [$deps, $tR, $pendingR] = $this->makeConfirmDeps();
         $tR->shouldReceive('findIdentityByToken')->andReturn($this->identityForUser(7));
-        $pending = m::mock(HomeCarePendingSignup::class);
+        $pending = TypedMock::of(HomeCarePendingSignup::class);
         $pendingR->shouldReceive('repoByUserIdquery')->with(7)->andReturn($pending);
         $pendingR->shouldReceive('delete')->once();
-        $token = m::mock(Token::class);
+        $token = TypedMock::of(Token::class);
         $token->shouldReceive('setToken')->once();
         $token->shouldReceive('getCreatedAt')->andReturn(new \DateTimeImmutable('-2 days'));
         $tR->shouldReceive('findTokenByTokenAndType')->andReturn($token);
@@ -340,7 +342,7 @@ final class HomeCareSignupControllerTest
             'en',
             $this->maskedToken('real-token', time()),
             HomeCareSignupController::EMAIL_VERIFICATION_TOKEN,
-            m::mock(FormHydrator::class),
+            TypedMock::of(FormHydrator::class),
             $deps,
             $this->request('POST'),
         );
@@ -351,25 +353,24 @@ final class HomeCareSignupControllerTest
     public function aStaleSuffixDoesNotExpireATokenTheServerIssuedJustNow(): void
     {
         // The suffix is ignored in both directions: the stored creation time alone decides.
-        [$deps, $tR, $pendingR] = $this->makeConfirmDeps();
+        $uiR = TypedMock::of(\App\Invoice\UserInv\UserInvRepository::class);
+        $uiR->shouldReceive('repoUserInvUserIdquery')->with(7)->andReturn(null);
+        [$deps, $tR, $pendingR] = $this->makeConfirmDeps($uiR);
         $tR->shouldReceive('findIdentityByToken')->andReturn($this->identityForUser(7));
-        $pendingR->shouldReceive('repoByUserIdquery')->with(7)->andReturn(m::mock(HomeCarePendingSignup::class));
+        $pendingR->shouldReceive('repoByUserIdquery')->with(7)->andReturn(TypedMock::of(HomeCarePendingSignup::class));
         $pendingR->shouldReceive('delete')->once();
-        $token = m::mock(Token::class);
+        $token = TypedMock::of(Token::class);
         $token->shouldReceive('setToken')->once();
         $token->shouldReceive('getCreatedAt')->andReturn(new \DateTimeImmutable('-60 seconds'));
         $tR->shouldReceive('findTokenByTokenAndType')->andReturn($token);
         $tR->shouldReceive('save')->once();
-        $uiR = m::mock(\App\Invoice\UserInv\UserInvRepository::class);
-        $uiR->shouldReceive('repoUserInvUserIdquery')->with(7)->andReturn(null);
-        $deps->uiR = $uiR;
         $controller = $this->makeController();
 
         $response = $controller->confirm(
             'en',
             $this->maskedToken('real-token', time() - 86400),
             HomeCareSignupController::EMAIL_VERIFICATION_TOKEN,
-            m::mock(FormHydrator::class),
+            TypedMock::of(FormHydrator::class),
             $deps,
             $this->request('POST'),
         );
@@ -382,7 +383,7 @@ final class HomeCareSignupControllerTest
     {
         [$deps, $tR, $pendingR] = $this->makeConfirmDeps();
         $tR->shouldReceive('findIdentityByToken')->andReturn($this->identityForUser(7));
-        $pendingR->shouldReceive('repoByUserIdquery')->with(7)->andReturn(m::mock(HomeCarePendingSignup::class));
+        $pendingR->shouldReceive('repoByUserIdquery')->with(7)->andReturn(TypedMock::of(HomeCarePendingSignup::class));
         $pendingR->shouldReceive('delete')->once();
         $tR->shouldReceive('findTokenByTokenAndType')->andReturn(null);
         $controller = $this->makeController();
@@ -391,7 +392,7 @@ final class HomeCareSignupControllerTest
             'en',
             $this->maskedToken('real-token', time()),
             HomeCareSignupController::EMAIL_VERIFICATION_TOKEN,
-            m::mock(FormHydrator::class),
+            TypedMock::of(FormHydrator::class),
             $deps,
             $this->request('POST'),
         );
@@ -412,7 +413,7 @@ final class HomeCareSignupControllerTest
             'en',
             $this->maskedToken('real-token', time()),
             HomeCareSignupController::EMAIL_VERIFICATION_TOKEN,
-            m::mock(FormHydrator::class),
+            TypedMock::of(FormHydrator::class),
             $deps,
             $this->request('POST'),
         );
@@ -432,7 +433,7 @@ final class HomeCareSignupControllerTest
             'en',
             $this->maskedToken('abc', time()),
             'some-other-token-type',
-            m::mock(FormHydrator::class),
+            TypedMock::of(FormHydrator::class),
             $deps,
             $this->request('POST'),
         );

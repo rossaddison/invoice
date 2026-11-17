@@ -7,9 +7,9 @@ namespace Tests\Testo\Auth;
 use App\Auth\AuthService;
 use App\Auth\Form\LoginForm;
 use GuzzleHttp\Psr7\ServerRequest;
-use Mockery as m;
 use Testo\Assert;
 use Testo\Test;
+use Tests\Testo\Support\TypedMock;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Hydrator\Hydrator;
 use Yiisoft\Translator\TranslatorInterface;
@@ -25,7 +25,10 @@ final class LoginFormRememberMeTest
 {
     private function form(): LoginForm
     {
-        return new LoginForm(m::mock(AuthService::class), m::mock(TranslatorInterface::class)->shouldIgnoreMissing(""));
+        $translator = TypedMock::of(TranslatorInterface::class);
+        $translator->shouldIgnoreMissing("");
+
+        return new LoginForm(TypedMock::of(AuthService::class), $translator);
     }
 
     private function post(string $remember): ServerRequest
