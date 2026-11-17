@@ -16,7 +16,15 @@ use Yiisoft\Mailer\MailerInterface;
  *
  * Strictly opt-in to YII_ENV=dev so production (and test) keep the real
  * yiisoft/mailer-symfony ESMTP transport untouched.
+ *
+ * MAIL_TO_FILE=0 (also false, no, off) in .env keeps the real transport even
+ * under YII_ENV=dev: FileMailer saves only the headers and the plain-text
+ * part, and this app's emails are HTML only, so a saved .eml never holds the
+ * confirm link and a deployment that is still YII_ENV=dev cannot otherwise
+ * test the confirmation email through a real inbox. Unset or any other value
+ * leaves the behaviour above exactly as it was.
  */
-return ($_ENV['YII_ENV'] ?? '') === 'dev'
-    ? [MailerInterface::class => FileMailer::class]
-    : [];
+$mailToFile = ($_ENV['YII_ENV'] ?? '') === 'dev'
+    && !in_array(strtolower(trim($_ENV['MAIL_TO_FILE'] ?? '')), ['0', 'false', 'no', 'off'], true);
+
+return $mailToFile ? [MailerInterface::class => FileMailer::class] : [];
