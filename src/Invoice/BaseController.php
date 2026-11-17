@@ -89,6 +89,11 @@ abstract class BaseController
 
     /**
      * Initialize the view renderer based on user permissions.
+     *
+     * Only an explicit tfa_verified = false (password accepted, one-time code still to be entered)
+     * keeps the layout unset. A session that never went through the code step, such as one restored
+     * from the remember-me cookie, has no such value and must still get its controller name: without
+     * it the bare view name resolves to resources/views/index.php, which does not exist.
      */
     protected function initializeViewRenderer(): void
     {
@@ -104,13 +109,13 @@ abstract class BaseController
                      ->withLayout('@views/layout/templates/public.php');
         } elseif ($this->userService->hasPermission(Permissions::VIEW_INV)
             && !$this->userService->hasPermission(Permissions::EDIT_INV)
-            && $this->session->get('tfa_verified') === true) {
+            && $this->session->get('tfa_verified') !== false) {
             $this->webViewRenderer =
             $this->webViewRenderer->withControllerName($this->controllerName)
                      ->withLayout($this->spinner)
                      ->withLayout('@views/layout/guest.php');
         } elseif ($this->userService->hasPermission(Permissions::EDIT_INV)
-            && $this->session->get('tfa_verified') === true) {
+            && $this->session->get('tfa_verified') !== false) {
             $this->webViewRenderer =
             $this->webViewRenderer->withControllerName($this->controllerName)
                      ->withLayout($this->spinner)
