@@ -535,21 +535,8 @@ final class TelegramController extends BaseController
             return;
         }
         $text = $this->translator->translate('telegram.bot.api.hello.world.test.message');
-        $sendMessageResult = $this->telegramBotApi->sendMessage(
-            $chatId,
-            $text,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
+        // Named: phptg/bot-api 0.23 moved chatId after the text, so a positional call swaps them.
+        $sendMessageResult = $this->telegramBotApi->sendMessage(text: $text, chatId: $chatId);
         if (!$sendMessageResult instanceof FailResult) {
             $this->flashMessage(
                 'success',

@@ -180,10 +180,11 @@ final class InvRecurringCronService
             $chatId = $userInv->getTelegramChatId();
             if (null !== $chatId && $chatId !== '') {
                 $telegramHelper = new TelegramHelper($token, $this->_logger);
+                // Named: phptg/bot-api 0.23 moved chatId after the text.
                 $telegramHelper->getBotApi()->sendMessage(
-                    $chatId,
-                    'Invoice #' . $prevInvId . ' has an outstanding balance of '
+                    text: 'Invoice #' . $prevInvId . ' has an outstanding balance of '
                         . number_format($balance, 2) . '. Please log in to make a payment.',
+                    chatId: $chatId,
                 );
                 return 1;
             }

@@ -10,6 +10,7 @@ use JsonException;
 use Psr\Log\LoggerInterface as Logger;
 use Phptg\BotApi\FailResult;
 use Phptg\BotApi\Transport\CurlTransport;
+use Phptg\BotApi\Transport\TransportInterface;
 use Phptg\BotApi\LogType;
 use Phptg\BotApi\TelegramBotApi;
 use Phptg\BotApi\Type\InputFile;
@@ -53,15 +54,20 @@ final class TelegramHelper
 {
     private readonly TelegramBotApi $botApi;
 
+    /**
+     * @param TransportInterface|null $transport how requests reach Telegram; only a test passes one,
+     *                                           to read what would have been sent
+     */
     public function __construct(
         private readonly string $settingRepositoryTelegramToken,
         private Logger $logger,
+        ?TransportInterface $transport = null,
     ) {
         $this->logger = $logger;
         $this->botApi = new TelegramBotApi(
             $this->settingRepositoryTelegramToken,
             'https://api.telegram.org',
-            new CurlTransport(),
+            $transport ?? new CurlTransport(),
             $this->logger,
         );
     }
@@ -195,7 +201,9 @@ final class TelegramHelper
         string $chatId,
         string $text,
     ): FailResult|Message {
-        return $this->botApi->sendMessage($chatId, $text);
+        // Named, because phptg/bot-api 0.23 moved chatId after the required parameters: passed by
+        // position, the chat id was sent as the text and the text as the chat id ("chat not found").
+        return $this->botApi->sendMessage(text: $text, chatId: $chatId);
     }
 
     /**
