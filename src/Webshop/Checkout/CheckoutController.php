@@ -26,10 +26,9 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
  * beyond session state: `submit()` calls `App\Api\OrderService::
  * createOrder()` directly (in-process now, not the standalone webshop
  * app's `POST /api/orders` HTTP call), which creates a real Client + Inv
- * + InvItems and logs this request's own session in as the resolved
- * customer account — see that class's own docblock for why a one-time
- * login-link handoff is no longer needed. `submit()` therefore redirects
- * straight to `inv/view/{id}` on success, already authenticated.
+ * + InvItems. It does not sign anyone in (see that class's own docblock for
+ * why), so `submit()` redirects back to the catalogue with a "sign in to
+ * see your invoice" message.
  */
 final class CheckoutController extends StorefrontController
 {
@@ -108,11 +107,10 @@ final class CheckoutController extends StorefrontController
 
         $this->cartService->clear();
 
-        // The submitting session is already authenticated as the
-        // resolved customer account by the time createOrder() returns
-        // (see OrderService's own docblock) — a plain named-route
-        // redirect is enough, no external/cross-app URL involved.
-        return $this->webService->getRedirectResponse('inv/view', ['_language' => 'en', 'id' => (string) $invId]);
+        // Checkout does not sign anyone in (see OrderService's own docblock): the customer is told so and
+        // signs in as usual to see the invoice.
+        $this->flashMessage('success', $this->translator->translate('checkout.placed'), FlashScope::Shop);
+        return $this->webService->getRedirectResponse('shop/catalog/index');
     }
 
     /**
