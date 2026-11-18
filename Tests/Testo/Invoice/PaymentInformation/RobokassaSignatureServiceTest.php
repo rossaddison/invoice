@@ -93,6 +93,18 @@ final class RobokassaSignatureServiceTest
         Assert::true($this->service()->verifyResultUrlSignature('100.00', '456', 'password2', strtoupper($expected)));
     }
 
+    public function verifyResultUrlSignatureRejectsAForgedSignatureWhenNoPasswordIsConfigured(): void
+    {
+        // With a blank password the signed text is just "OutSum:InvId:", which anyone can hash.
+        $forged = md5('1:1:');
+        Assert::false($this->service()->verifyResultUrlSignature('1', '1', '', $forged));
+    }
+
+    public function verifyResultUrlSignatureRejectsABlankSignature(): void
+    {
+        Assert::false($this->service()->verifyResultUrlSignature('100.00', '456', 'password2', ''));
+    }
+
     public function verifyResultUrlSignatureRejectsATamperedOutSum(): void
     {
         $expected = hash('md5', '100.00:456:password2');

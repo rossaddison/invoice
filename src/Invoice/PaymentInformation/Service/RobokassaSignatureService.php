@@ -77,6 +77,11 @@ final class RobokassaSignatureService
         string $signatureValue,
         array $shpParams = [],
     ): bool {
+        // With no password configured the "secret" is an empty string and anyone can compute the signature,
+        // so a blank password (or a blank signature) never verifies.
+        if ($password2 === '' || $signatureValue === '') {
+            return false;
+        }
         $parts = [$outSum, $invId, $password2];
         $pairs = [];
         foreach ($shpParams as $key => $value) {

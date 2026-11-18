@@ -70,6 +70,17 @@ final class RobokassaWebhookHandler
             return $this->factory->createResponse('bad sign')->withStatus(400);
         }
 
+        // Like every other gateway here, the signature alone is not trusted: the payment is re-checked with
+        // Robokassa (OpStateExt) before anything is recorded. Not confirmed: refuse, so Robokassa retries.
+        $verification = $this->robokassaPaymentService->verifyPayment($invId);
+        if (!$verification->paid) {
+            $this->logger->warning('Robokassa webhook: payment not confirmed on re-check.', [
+                'inv_id' => $invId,
+                'status' => $verification->message,
+            ]);
+            return $this->factory->createResponse('not confirmed')->withStatus(400);
+        }
+
         $this->markInvoicePaidIfFound($invId, $invoiceUrlKey);
 
         return $this->factory->createResponse('OK' . $invId);
