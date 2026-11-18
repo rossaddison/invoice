@@ -6,452 +6,137 @@ use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\Option;
 
 /**
-* Related logic: see src\Invoice\Helpers\Telegram\TelegramHelper;
-* @var App\Invoice\Setting\SettingRepository $s
-* @var Yiisoft\Translator\TranslatorInterface $translator
-* @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
-* @var array $body
-* @var App\Infrastructure\Persistence\PaymentMethod\PaymentMethod[] $payment_methods
-*/
+ * The Telegram tab of Settings: how to set the bot up, in the order that works.
+ *
+ * Four sections, eleven steps, all of the wording in the 'telegram.tab.*' translation keys:
+ *   A. the bot and the webhook (steps 1 to 5)       needed for everything
+ *   B. your own alerts (steps 6 and 7)              optional: low-stock and gateway alerts, the test message
+ *   C. customers (steps 8 and 9)                    how they link themselves, and where "send invoice/PDF" looks
+ *   D. Telegram Payments (steps 10 and 11)          optional
+ *
+ * Related logic: see src\Invoice\Helpers\Telegram\TelegramHelper, src\Invoice\Telegram\TelegramController,
+ * src\Invoice\Telegram\TelegramWebhookGuard (the webhook secret token is required) and
+ * src\Invoice\Telegram\TelegramLinkService (customers link their own Telegram).
+ *
+ * @var App\Invoice\Setting\SettingRepository $s
+ * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
+ * @var array $body
+ * @var App\Infrastructure\Persistence\PaymentMethod\PaymentMethod[] $payment_methods
+ */
 
-$row = ['class' => 'row'];
-$colMd6 = ['class' => 'col-12 col-md-6'];
-$colMd8 = ['class' => 'col-12 col-md-8 offset-md-2'];
-$panel = ['class' => 'card'];
-$panelHead = ['class' => 'card-header'];
-$panelBody = ['class' => 'card-body'];
-$formGroup = ['class' => 'mb-3'];
-$checkbox = ['class' => 'form-check'];
+// a translated sentence, encoded for HTML
+$t = static fn (string $key): string => H::encode($translator->translate($key));
 
-echo H::openTag('div', $row); //1
- echo H::openTag('div', $colMd8); //2
-  echo H::openTag('div', $panel); //3
-   echo H::openTag('div', $panelHead); //4
-    echo $translator->translate(
-     'telegram.bot.api.general.purpose'
-    );
-   echo H::closeTag('div'); //4
-   echo H::openTag('div', $panelBody); //4
-    echo H::openTag('div', $row); //5
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       $telegram = 'settings[enable_telegram]';
-       echo H::openTag('div', $checkbox); //8
-        $body[$telegram] =
-        $s->getSetting('enable_telegram');
-        echo H::openTag('input', [
-          'type' => 'hidden',
-          'name' => $telegram,
-          'value' => '0'
-         ]);
-         echo H::openTag('input', [
-          'type' => 'checkbox',
-          'class' => 'form-check-input',
-          'id' => 'enable_telegram',
-          'name' => $telegram,
-          'value' => '1',
-          'checked' => (
-          $body[$telegram]
-          == '1') ? 'checked' : null
-         ]);
-         echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'enable_telegram']);
-          echo H::a(
-           $translator->translate(
-           'telegram.bot.api.enable'
-          ),
-          'https://core.telegram.org/bots/api',
-          [
-           'class' => 'text-decoration-none'
-          ]
-          );
-         echo H::closeTag('label');
-       echo H::closeTag('div'); //8
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-    echo H::openTag('div', $row); //5
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('p');
-        echo H::openTag('b');
-         echo 'Further reading: ';
-        echo H::closeTag('b');
-        echo H::openTag('a', [
-         'href' =>
-         'https://core.telegram.org/bots/api'
-        ]);
-         echo 'Telegram Bot Api';
-        echo H::closeTag('a');
-       echo H::closeTag('p');
-       echo H::openTag('p');
-        echo H::openTag('b');
-         echo 'Further reading: ';
-        echo H::closeTag('b');
-        echo H::openTag('a', [
-         'href' =>
-         'https://github.com/phptg/bot-api'
-        ]);
-         echo 'phptg/bot-api by Sergei Predvoditelev (vjik)';
-        echo H::closeTag('a');
-       echo H::closeTag('p');
-       echo H::openTag('p');
-        echo H::openTag('b');
-         echo '1. Inside the Telegram App ';
-         echo '(mobile/desktop) search with .... ';
-        echo H::closeTag('b');
-        echo H::openTag('pre');
-         echo 'botfather';
-        echo H::closeTag('pre');
-       echo H::closeTag('p');
-       echo H::openTag('p');
-        echo H::openTag('b');
-         echo '2. Click on the .... ';
-        echo H::closeTag('b');
-        echo H::openTag('pre');
-         echo '/newbot - create a new bot';
-        echo H::closeTag('pre');
-        echo '  link';
-       echo H::closeTag('p');
-       echo H::openTag('p');
-        echo H::openTag('b');
-         echo '3. Record the token here ...';
-        echo H::closeTag('b');
-        echo H::openTag('label', ['for' => 'settings[telegram_token]']);
-         echo $translator->translate(
-          'telegram.bot.api.token'
-         );
-        $token = 'settings[telegram_token]';
-        echo H::closeTag('label');
-        $body[$token] =
-        $s->getSetting('telegram_token');
-        echo H::openTag('input', [
-         'type' => 'password',
-         'name' => $token,
-         'id' => $token,
-         'class' => 'form-select',
-         'value' => H::encode(
-         $body[$token]
-        )
-        ]);
-       echo H::closeTag('p');
-       echo H::openTag('p');
-        echo H::openTag('b');
-         echo '4. ';
-        echo H::closeTag('b');
-        echo 'Your bot cannot send a message to ';
-        echo 'itself (error 409) so inside the ';
-        echo 'Telegram App, search for your bot ';
-        echo 'using its username, and send it a ';
-        echo 'message from your personal non-bot ';
-        echo 'account.';
-       echo H::closeTag('p');
-       echo H::openTag('p');
-        echo H::openTag('b');
-         echo '5. ';
-        echo H::closeTag('b');
-        echo 'Ensure the listening webhook is off ';
-        echo 'before using the manual \'getUpdates\' ';
-        echo 'which uses \'long polling\' by ';
-        echo H::openTag('a', [
-         'href' => $urlGenerator->generate(
-         'telegram/deleteWebhook'
-        )
-         ]);
-         echo 'clicking here ...';
-        echo H::closeTag('a');
-       echo H::closeTag('p');
-       echo H::openTag('p');
-        echo H::openTag('b');
-         echo '6. ';
-        echo H::closeTag('b');
-        echo 'Use \'getUpdates\' now by ';
-        echo H::openTag('a', [
-         'href' => $urlGenerator->generate(
-         'telegram/getUpdates'
-        ),
-         'target' => '_blank'
-         ]);
-         echo 'clicking here ...';
-        echo H::closeTag('a');
-        echo ' and you will see the message Chat ';
-        echo 'Id and message that you sent to your ';
-        echo 'Bot in ';
-        echo H::openTag('b');
-         echo 'Step 4.';
-        echo H::closeTag('b');
-        echo ' Record your personal account ';
-        echo H::openTag('b');
-         echo 'Chat Id';
-        echo H::closeTag('b');
-        echo ' below';
-       echo H::closeTag('p');
-       echo H::openTag('p');
-        echo H::openTag('b');
-         echo '7. ';
-        echo H::closeTag('b');
-        $chat = 'settings[telegram_chat_id]';
-        echo H::openTag('label', [
-         'for' => $chat
-        ]);
-         echo $translator->translate(
-          'telegram.bot.api.chat.id'
-         );
-        echo H::closeTag('label');
-        $body[$chat] =
-        $s->getSetting('telegram_chat_id');
-        echo H::openTag('input', [
-         'type' => 'password',
-         'name' => $chat,
-         'id' => $chat,
-         'class' => 'form-select',
-         'value' => H::encode($body[$chat])
-        ]);
-       echo H::closeTag('p');
-       $testMsg = 'settings[telegram_test_message_use]';
-       echo H::openTag('label', [
-        'for' => $testMsg
-       ]);
-        echo H::openTag('b');
-         echo '8. ';
-        echo H::closeTag('b');
-        echo $translator->translate(
-         'telegram.bot.api.hello.world.test.message.use'
-        );
-       echo H::closeTag('label');
-       $body[$testMsg] =
-       $s->getSetting('telegram_test_message_use');
-       echo H::openTag('select', [
-        'name' => $testMsg,
-        'id' => $testMsg,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->selected($body[$testMsg] == '0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected($body[$testMsg] == '1')
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-       echo H::openTag('br');
-       echo H::openTag('p');
-        echo H::openTag('b');
-         echo '9. ';
-        echo H::closeTag('b');
-        echo 'To receive your first \'Hello\' ';
-        echo '\'World\' test message ';
-        echo H::openTag('a', [
-         'href' => $urlGenerator->generate(
-         'telegram/index'
-        )
-         ]);
-         echo 'click here...';
-        echo H::closeTag('a');
-       echo H::closeTag('p');
-       // Administrators only: this tab is behind the edit-invoice permission and so is the page it opens.
-       echo H::openTag('p');
-        echo H::a(
-         'Webhook info',
-         $urlGenerator->generate('telegram/getWebhookinfo'),
-         ['class' => 'btn btn-outline-secondary btn-sm', 'target' => '_blank', 'rel' => 'noopener'],
-        );
-        echo ' What Telegram reports about the webhook: its address, how many updates are waiting and the last error.';
-       echo H::closeTag('p');
-       $telegramPayment = 'settings[telegram_payment_notifications]';
-       echo H::openTag('label', ['for' => $telegramPayment]);
-        echo H::openTag('b');
-         echo '10. ';
-        echo H::closeTag('b');
-        echo $translator->translate(
-         'telegram.bot.api.payment.notifications'
-        );
-       echo H::closeTag('label');
-       $body[$telegramPayment] =
-       $s->getSetting(
-        'telegram_payment_notifications'
-       );
-       echo H::openTag('select', [
-        'name' => $telegramPayment,
-        'id' => $telegramPayment,
-        'class' => 'form-select',
-       ]);
-        echo  new Option()
-         ->value('0')
-         ->selected($body[$telegramPayment] == '0')
-         ->content($translator->translate('no'));
-        echo  new Option()
-         ->value('1')
-         ->selected($body[$telegramPayment] == '1')
-         ->content($translator->translate('yes'));
-       echo H::closeTag('select');
-       echo H::openTag('br');
-       echo H::openTag('p');
-        echo H::openTag('b');
-         echo '11. ';
-        echo H::closeTag('b');
-        echo 'In @BotFather go to ';
-        echo H::openTag('b');
-         echo 'Payments';
-        echo H::closeTag('b');
-        echo ', connect your Stripe account, and paste the provider token here. ';
-        echo H::openTag('a', [
-         'href' => 'https://core.telegram.org/bots/payments',
-         'target' => '_blank'
-        ]);
-         echo 'Read more...';
-        echo H::closeTag('a');
-       echo H::closeTag('p');
-       $providerToken = 'settings[telegram_provider_token]';
-       echo H::openTag('label', ['for' => $providerToken]);
-        echo $translator->translate(
-         'telegram.bot.api.provider.token'
-        );
-       echo H::closeTag('label');
-       $body[$providerToken] = $s->getSetting('telegram_provider_token');
-       echo H::openTag('div');
-        echo H::openTag('input', [
-         'type'  => 'password',
-         'name'  => $providerToken,
-         'id'    => $providerToken,
-         'class' => 'form-select',
-         'value' => H::encode($body[$providerToken])
-        ]);
-        echo H::openTag('a', [
-         'href'           => '#telegram-providers',
-         'class'          => 'btn btn-outline-secondary',
-         'data-bs-toggle' => 'modal',
-        ]);
-         echo '&#9432; Providers';
-        echo H::closeTag('a');
-       echo H::closeTag('div');
-       echo H::openTag('br');
-       echo H::openTag('p');
-        echo H::openTag('b');
-         echo '12. ';
-        echo H::closeTag('b');
-        echo 'Choose which Payment Method Id (from ';
-        echo H::openTag('a', [
-         'href' => $urlGenerator->generate('paymentmethod/index')
-        ]);
-         echo 'Payment Methods';
-        echo H::closeTag('a');
-        echo ') will be used when a Telegram payment is recorded automatically.';
-       echo H::closeTag('p');
-       $pmId = 'settings[telegram_payment_method_id]';
-       echo H::openTag('label', ['for' => $pmId]);
-        echo $translator->translate(
-         'telegram.bot.api.payment.method.id'
-        );
-       echo H::closeTag('label');
-       $body[$pmId] = $s->getSetting('telegram_payment_method_id');
-       $savedPmId = (int) ($body[$pmId] ?: 0);
-       echo H::openTag('select', [
-        'name'  => $pmId,
-        'id'    => $pmId,
-        'class' => 'form-select',
-       ]);
-        foreach ($payment_methods as $paymentMethod) {
-            $isDefault = $savedPmId === 0
-                && str_contains($paymentMethod->getName() ?? '', 'Card / Direct Debit');
-            echo new Option()
-             ->value((string) $paymentMethod->reqId())
-             ->selected($savedPmId === $paymentMethod->reqId() || $isDefault)
-             ->content(H::encode($paymentMethod->getName()));
-        }
-       echo H::closeTag('select');
-       echo H::openTag('br');
-       echo H::openTag('p');
-        echo H::openTag('b');
-         echo '13. ';
-        echo H::closeTag('b');
-        echo 'Save these settings, then open any invoice and use ';
-        echo H::openTag('b');
-         echo 'Send Telegram Invoice';
-        echo H::closeTag('b');
-        echo ' to deliver a native Telegram payment request to the chat (set in step 7.) . ';
-        echo 'When the customer pays, the webhook auto-records the payment against the invoice.';
-       echo H::closeTag('p');
-       echo H::openTag('br');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-    echo H::openTag('div', $row); //5
-     echo H::openTag('div', $colMd6); //6
-      $telegramNotification =
-       'settings[telegram_payment_notifications]';
-      echo H::openTag('label', [
-       'for' => $telegramNotification
-      ]);
-       echo H::openTag('b');
-        echo H::openTag('h4');
-         echo 'Webhooks';
-        echo H::closeTag('h4');
-       echo H::closeTag('b');
-      echo H::closeTag('label');
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('p');
-        echo $translator->translate(
-         'telegram.bot.api.current.status'
-        );
-       echo H::closeTag('p');
-       echo H::openTag('p');
-        echo $translator->translate(
-         'telegram.bot.api.future.use'
-        );
-       echo H::closeTag('p');
-       echo H::openTag('p');
-        echo H::openTag('b');
-         echo 'Further reading: ';
-        echo H::closeTag('b');
-        echo H::openTag('a', [
-         'href' =>
-         'https://core.telegram.org/bots/api#setwebhook'
-        ]);
-         echo 'Webhook Secret Token';
-        echo H::closeTag('a');
-       echo H::closeTag('p');
-       $telegramToken = 'settings[telegram_webhook_secret_token]';
-       echo H::openTag('label', ['for' => $telegramToken]);
-        echo $translator->translate(
-         'telegram.bot.api.webhook.secret.token'
-        );
-       echo H::closeTag('label');
-       $body[$telegramToken] = $s->getSetting('telegram_webhook_secret_token');
-       echo H::openTag('input', [
-        'type' => 'password',
-        'name' => $telegramToken,
-        'id' => $telegramToken,
-        'class' => 'form-select',
-        'value' => H::encode($body[$telegramToken])
-       ]);
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-    echo H::openTag('div', $row); //5
-     echo H::openTag('div', $colMd6); //6
-      echo H::openTag('div', $formGroup); //7
-       echo H::openTag('label');
-        echo H::openTag('b');
-         echo $translator->translate(
-          'telegram.bot.api.webhook.url.this.site'
-         );
-        echo H::closeTag('b');
-       echo H::closeTag('label');
-       echo H::openTag('p');
-        echo H::openTag('pre');
-         echo $urlGenerator->generateAbsolute(
-          'telegram/webhook'
-         );
-        echo H::closeTag('pre');
-       echo H::closeTag('p');
-      echo H::closeTag('div'); //7
-     echo H::closeTag('div'); //6
-    echo H::closeTag('div'); //5
-   echo H::closeTag('div'); //4
-  echo H::closeTag('div'); //3
- echo H::closeTag('div'); //2
-echo H::closeTag('div'); //1
+// "3. text" as a paragraph, the text from a 'telegram.tab.*' key
+$step = static fn (string $number, string $key): string
+    => '<p><b>' . $number . '.</b> ' . $t($key) . '</p>';
+
+// a small outline button that opens one of the Telegram pages
+$button = static fn (string $key, string $route, bool $newTab = false): string
+    => H::a(
+        $translator->translate($key),
+        $urlGenerator->generate($route),
+        ['class' => 'btn btn-outline-secondary btn-sm me-1'] + ($newTab ? ['target' => '_blank', 'rel' => 'noopener'] : []),
+    )->render();
+
+// a secret setting: shown as a password field
+$secret = static fn (string $setting, string $labelKey): string
+    => '<div class="mb-3"><label class="form-label" for="settings[' . $setting . ']">' . $t($labelKey) . '</label>'
+    . H::input(
+        'password',
+        'settings[' . $setting . ']',
+        $s->getSetting($setting),
+        ['id' => 'settings[' . $setting . ']', 'class' => 'form-select', 'autocomplete' => 'off'],
+    )->render() . '</div>';
+
+// a Yes / No setting
+$yesNo = static function (string $setting, string $labelKey) use ($s, $translator, $t): string {
+    $name = 'settings[' . $setting . ']';
+    $value = $s->getSetting($setting);
+    return '<div class="mb-3"><label class="form-label" for="' . $name . '">' . $t($labelKey) . '</label>'
+        . H::openTag('select', ['name' => $name, 'id' => $name, 'class' => 'form-select'])
+        . new Option()->value('0')->selected($value == '0')->content($translator->translate('no'))->render()
+        . new Option()->value('1')->selected($value == '1')->content($translator->translate('yes'))->render()
+        . H::closeTag('select') . '</div>';
+};
+
+$section = static fn (string $key): string => '<h5 class="mt-4 pt-3 border-top">' . $t($key) . '</h5>';
+
+echo H::openTag('div', ['class' => 'row']);
+echo H::openTag('div', ['class' => 'col-12 col-md-8 offset-md-2']);
+echo H::openTag('div', ['class' => 'card']);
+echo '<div class="card-header">' . $t('telegram.bot.api.general.purpose') . '</div>';
+echo H::openTag('div', ['class' => 'card-body']);
+
+// Enable Telegram
+echo '<div class="form-check mb-3">'
+    . H::hiddenInput('settings[enable_telegram]', '0')->render()
+    . H::checkbox('settings[enable_telegram]', '1')
+        ->id('enable_telegram')
+        ->addClass('form-check-input')
+        ->checked($s->getSetting('enable_telegram') == '1')
+        ->render()
+    . '<label class="form-check-label" for="enable_telegram">'
+    . H::a($translator->translate('telegram.bot.api.enable'), 'https://core.telegram.org/bots/api', ['class' => 'text-decoration-none'])->render()
+    . '</label></div>';
+echo '<p class="small"><b>' . $t('telegram.tab.further.reading') . '</b> '
+    . H::a('Telegram Bot Api', 'https://core.telegram.org/bots/api')->render() . ' · '
+    . H::a('phptg/bot-api by Sergei Predvoditelev (vjik)', 'https://github.com/phptg/bot-api')->render() . '</p>';
+
+// A. the bot and the webhook
+echo $section('telegram.tab.section.bot');
+echo $step('1', 'telegram.tab.step.create.bot');
+echo $step('2', 'telegram.tab.step.token');
+echo $secret('telegram_token', 'telegram.bot.api.token');
+echo $step('3', 'telegram.tab.step.secret');
+echo $secret('telegram_webhook_secret_token', 'telegram.bot.api.webhook.secret.token');
+echo $step('4', 'telegram.tab.step.app.url');
+echo $step('5', 'telegram.tab.step.register');
+echo '<p>' . $button('telegram.tab.button.register', 'telegram/index') . $button('telegram.tab.button.webhook.info', 'telegram/getWebhookinfo', true) . '</p>';
+echo '<p class="small text-muted">' . $t('telegram.tab.webhook.address') . ' <code>'
+    . H::encode($urlGenerator->generateAbsolute('telegram/webhook')) . '</code></p>';
+
+// B. your own alerts
+echo $section('telegram.tab.section.owner');
+echo $step('6', 'telegram.tab.step.chat.id');
+echo '<p>' . $button('telegram.tab.button.webhook.off', 'telegram/deleteWebhook')
+    . $button('telegram.tab.button.get.updates', 'telegram/getUpdates', true) . '</p>';
+echo $secret('telegram_chat_id', 'telegram.bot.api.chat.id');
+echo $step('7', 'telegram.tab.step.test.message');
+echo $yesNo('telegram_test_message_use', 'telegram.bot.api.hello.world.test.message.use');
+
+// C. customers
+echo $section('telegram.tab.section.customers');
+echo $step('8', 'telegram.tab.step.customers.link');
+echo $step('9', 'telegram.tab.step.client.chat.id');
+
+// D. Telegram Payments
+echo $section('telegram.tab.section.payments');
+echo $step('10', 'telegram.tab.step.provider');
+echo '<p class="small">' . H::a($translator->translate('telegram.tab.payments.docs'), 'https://core.telegram.org/bots/payments', ['target' => '_blank', 'rel' => 'noopener'])->render()
+    . ' · ' . H::a('&#9432; ' . $translator->translate('telegram.tab.providers'), '#telegram-providers', ['data-bs-toggle' => 'modal'])->encode(false)->render() . '</p>';
+echo $secret('telegram_provider_token', 'telegram.bot.api.provider.token');
+echo '<div class="mb-3"><label class="form-label" for="settings[telegram_payment_method_id]">'
+    . $t('telegram.bot.api.payment.method.id') . ' ('
+    . H::a($translator->translate('telegram.tab.payment.methods'), $urlGenerator->generate('paymentmethod/index'))->render() . ')</label>';
+$savedPmId = (int) ($s->getSetting('telegram_payment_method_id') ?: 0);
+echo H::openTag('select', ['name' => 'settings[telegram_payment_method_id]', 'id' => 'settings[telegram_payment_method_id]', 'class' => 'form-select']);
+foreach ($payment_methods as $paymentMethod) {
+    $isDefault = $savedPmId === 0 && str_contains($paymentMethod->getName() ?? '', 'Card / Direct Debit');
+    echo new Option()
+        ->value((string) $paymentMethod->reqId())
+        ->selected($savedPmId === $paymentMethod->reqId() || $isDefault)
+        ->content($paymentMethod->getName() ?? '')
+        ->render();
+}
+echo H::closeTag('select') . '</div>';
+echo $step('11', 'telegram.tab.step.send.invoice');
+
+echo H::closeTag('div'); // card-body
+echo H::closeTag('div'); // card
+echo H::closeTag('div'); // col
+echo H::closeTag('div'); // row
 
 ?>
 <div id="telegram-providers" class="modal" tabindex="-1">
