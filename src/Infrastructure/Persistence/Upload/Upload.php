@@ -20,7 +20,7 @@ class Upload
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 
-    #[Column(type: 'datetime)', nullable: false)]
+    #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $uploaded_date;
 
     public function __construct(
@@ -30,11 +30,11 @@ class Upload
         private ?int $client_id = null,
         #[Column(type: 'string(32)', nullable: false)]
         private string $url_key = '',
-        #[Column(type: 'longText)', nullable: false)]
+        #[Column(type: 'longText', nullable: false)]
         private string $file_name_original = '',
-        #[Column(type: 'longText)', nullable: false)]
+        #[Column(type: 'longText', nullable: false)]
         private string $file_name_new = '',
-        #[Column(type: 'longText)', nullable: false)]
+        #[Column(type: 'longText', nullable: false)]
         private string $description = '',
     ) {
         $this->uploaded_date = new DateTimeImmutable();

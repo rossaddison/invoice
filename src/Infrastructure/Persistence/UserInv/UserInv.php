@@ -86,7 +86,7 @@ class UserInv
         private ?bool $all_clients = false,
         #[Column(type: 'string(40)', nullable: true)]
         private ?string $subscribernumber = '',
-        #[Column(type: 'string(34))', nullable: true)]
+        #[Column(type: 'string(34)', nullable: true)]
         private ?string $iban = '',
         #[Column(type: 'bigInteger(20)', nullable: true)]
         private ?int $gln = null,

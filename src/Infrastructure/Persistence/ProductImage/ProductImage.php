@@ -21,7 +21,7 @@ class ProductImage
     #[BelongsTo(target: Product::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Product $product = null;
 
-    #[Column(type: 'datetime)', nullable: false)]
+    #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $uploaded_date;
 
     public function __construct(
@@ -29,11 +29,11 @@ class ProductImage
         private ?int $id = null,
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $product_id = null,
-        #[Column(type: 'longText)', nullable: false)]
+        #[Column(type: 'longText', nullable: false)]
         private string $file_name_original = '',
-        #[Column(type: 'longText)', nullable: false)]
+        #[Column(type: 'longText', nullable: false)]
         private string $file_name_new = '',
-        #[Column(type: 'longText)', nullable: false)]
+        #[Column(type: 'longText', nullable: false)]
         private string $description = '',
     ) {
         $this->uploaded_date = new DateTimeImmutable();
