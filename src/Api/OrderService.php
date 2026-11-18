@@ -39,20 +39,11 @@ use Yiisoft\Security\Random;
  * those all happen at *view* time via `rbacObserver()` — so passing the
  * customer's own (observer-role) account here is safe.
  *
- * `/invoice/inv/view/{id}` still requires an authenticated, RBAC-permitted
- * session, so `createOrder()` logs the resolved customer account in
- * directly (`AuthService::oauthLogin()` — the same call the app's other
- * non-password logins already use) before returning, rather than handing
- * back a one-time login link the way this class did when the storefront
- * was still a separate HTTP-API-calling app: checkout now runs in the
- * same request/session as browsing, so there's no cross-app handoff left
- * to bridge with a masked token at all. (That handoff previously lived in
- * `WebshopOrderLoginController`, since decommissioned — see the merge
- * doc.) `$this->d->session->set('tfa_verified', true)` is set for the
- * same reason that controller's own docblock used to document:
- * `BaseController::initializeViewRenderer()` requires it before it will
- * ever configure the view renderer for a VIEW_INV-only (observer)
- * account — without it, `inv/view` 500s with `ViewNotFoundException`.
+ * Checkout does NOT sign the caller in. It used to (`AuthService::oauthLogin()` plus `tfa_verified`), and
+ * because a repeat order from an existing customer's email resolves that customer's existing account, anyone
+ * who typed a customer's email address at the public checkout was signed in as that customer, past their
+ * password, two-factor check and email verification. The customer signs in the usual way (a new account's
+ * password is random, so "Forgot password" with the checkout email) to see the invoice.
  *
  * Item prices are always the product's own current `webshopPrice()`
  * (retail_price when set, else product_price — see that method's own
@@ -72,10 +63,8 @@ final class OrderService
      * @param array{name: string, surname: string, email: string, address1?: string,
      *     address2?: string, city?: string, zip?: string, country?: string, phone?: string} $customer
      * @param list<array{product_id: int, quantity: float}> $items
-     * @return int|null The new invoice's id, or null on failure. The
-     *     caller's session is already authenticated as the resolved
-     *     customer account by the time this returns — see the class
-     *     docblock.
+     * @return int|null The new invoice's id, or null on failure. The caller's session is not changed — see
+     *     the class docblock.
      */
     public function createOrder(array $customer, array $items): ?int
     {
@@ -90,28 +79,7 @@ final class OrderService
             return null;
         }
 
-        return $this->createInvoiceAndLogIn($orderUser, $groupId, $client, $items);
-    }
-
-    /**
-     * Split out of createOrder() purely to keep its own return count
-     * within SonarQube's limit (php:S1142) — the group/client/order-user
-     * resolution guard clauses above all happen before any
-     * invoice-creation side effect, so this only needs to cover invoice
-     * creation's own two outcomes.
-     *
-     * @param list<array{product_id: int, quantity: float}> $items
-     */
-    private function createInvoiceAndLogIn(User $orderUser, int $groupId, Client $client, array $items): ?int
-    {
-        $invId = $this->createInvoiceAndItems($orderUser, $groupId, $client, $items);
-        if ($invId === null) {
-            return null;
-        }
-
-        $this->logInOrderUser($orderUser);
-
-        return $invId;
+        return $this->createInvoiceAndItems($orderUser, $groupId, $client, $items);
     }
 
     /** @param list<array{product_id: int, quantity: float}> $items */
@@ -210,22 +178,6 @@ final class OrderService
     }
 
     /**
-     * Logs the caller's session in as `$orderUser` — the same account
-     * `resolveOrCreateOrderUser()` resolved earlier in `createOrder()`
-     * (before invoice creation, so it could also be used as the invoice's
-     * own `user_id`; see the class docblock). Reuses `AuthService::
-     * oauthLogin()` rather than calling `CurrentUser::login()` directly —
-     * it already does exactly the `findByLoginWithAuthIdentity()` +
-     * `$currentUser->login($identity)` sequence needed here, and it's the
-     * same method the app's other non-password logins already call.
-     */
-    private function logInOrderUser(User $orderUser): void
-    {
-        $this->d->authService->oauthLogin($orderUser->getLogin());
-        $this->d->session->set('tfa_verified', true);
-    }
-
-    /**
      * Reuses the existing linked account on a repeat order from the same
      * email (same `UserClientRepository::repoUserquery()` lookup
      * `InvController::activeUser()` already relies on elsewhere), rather
@@ -246,11 +198,11 @@ final class OrderService
      * `assignSignupRole()`'s User+UserInv+UserClient+RBAC sequence for the
      * existing self-service signup flow — same account shape (RBAC role
      * `observer`), just system-created rather than filled in by hand. The
-     * password is a random value never surfaced to the customer: they're
-     * logged in directly by `logInOrderUser()` once checkout succeeds,
-     * never via a password form. `UserInv::active` is set true immediately, unlike that existing
-     * flow's email-verification-gated `false` — this is a same-transaction,
-     * server-verified context already, not an untrusted public form.
+     * password is a random value never surfaced to the customer, who sets
+     * their own with "Forgot password". `UserInv::active` is set true
+     * immediately, unlike that existing flow's email-verification-gated
+     * `false`; checkout no longer signs anyone in, so the account is usable
+     * only by whoever can read the checkout email's mail.
      */
     private function createOrderUser(Client $client): ?User
     {

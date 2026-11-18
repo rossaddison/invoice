@@ -273,6 +273,9 @@ return [
   // call with no matching resources/messages entry anywhere.
   'checkout.failed' => 'Sorry, we could not place your order.'
     . ' Please try again.',
+  // The order is placed but the customer is not signed in (see App\Api\OrderService).
+  'checkout.placed' => 'Thank you, your order has been placed. To view your invoice, sign in with the email'
+    . ' address you gave; if you have not signed in before, use Forgot password to choose a password.',
   'city' => 'City',
   'claim' => 'Started a Legal Claim',
   'cldr' => 'en',

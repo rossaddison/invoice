@@ -141,7 +141,7 @@ final class OrderServiceTest
         return $inv;
     }
 
-    public function createsANewCustomerAccountAndLogsThemIn(): void
+    public function createsANewCustomerAccountWithoutLoggingThemIn(): void
     {
         $client = $this->existingClient(50, 'ada@example.test');
         $savedInv = $this->savedInv(900);
@@ -196,8 +196,10 @@ final class OrderServiceTest
         $urlR->shouldReceive('upsert')->once()->with(300, 200);
         // The new customer account is logged into the caller's own
         // session directly — no one-time token issued at all.
-        $authService->shouldReceive('oauthLogin')->once()->with('ada@example.test')->andReturn(true);
-        $session->shouldReceive('set')->once()->with('tfa_verified', true);
+        // Checkout must not sign anyone in: a repeat order from a customer's email would otherwise sign the
+        // caller in as that customer, past their password and two-factor check.
+        $authService->shouldNotReceive('oauthLogin');
+        $session->shouldNotReceive('set');
 
         $service = $this->makeService(
             $iR,
@@ -220,7 +222,7 @@ final class OrderServiceTest
         Assert::same(900, $invId);
     }
 
-    public function reusesTheExistingAccountForARepeatCustomer(): void
+    public function reusesTheExistingAccountForARepeatCustomerWithoutLoggingTheCallerInAsThem(): void
     {
         $client = $this->existingClient(51, 'bob@example.test');
         $savedInv = $this->savedInv(901);
@@ -275,8 +277,10 @@ final class OrderServiceTest
         $manager->shouldNotReceive('revokeAll');
         $manager->shouldNotReceive('assign');
         $urlR->shouldNotReceive('upsert');
-        $authService->shouldReceive('oauthLogin')->once()->with('bob@example.test')->andReturn(true);
-        $session->shouldReceive('set')->once()->with('tfa_verified', true);
+        // Checkout must not sign anyone in: a repeat order from a customer's email would otherwise sign the
+        // caller in as that customer, past their password and two-factor check.
+        $authService->shouldNotReceive('oauthLogin');
+        $session->shouldNotReceive('set');
 
         $service = $this->makeService(
             $iR,
@@ -359,8 +363,10 @@ final class OrderServiceTest
         $manager->shouldNotReceive('revokeAll');
         $manager->shouldNotReceive('assign');
         $urlR->shouldNotReceive('upsert');
-        $authService->shouldReceive('oauthLogin')->once()->with('carol@example.test')->andReturn(true);
-        $session->shouldReceive('set')->once()->with('tfa_verified', true);
+        // Checkout must not sign anyone in: a repeat order from a customer's email would otherwise sign the
+        // caller in as that customer, past their password and two-factor check.
+        $authService->shouldNotReceive('oauthLogin');
+        $session->shouldNotReceive('set');
 
         $service = $this->makeService(
             $iR,
