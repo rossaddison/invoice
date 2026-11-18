@@ -10,9 +10,7 @@ use App\Auth\Form\HomeCareSignupForm;
 use App\Infrastructure\Persistence\HomeCarePendingSignup\HomeCarePendingSignup;
 use App\Infrastructure\Persistence\Token\Token;
 use App\Infrastructure\Persistence\User\User;
-use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository as sR;
-use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
@@ -72,10 +70,10 @@ final readonly class HomeCareSignupEmailService
          * @var string $language
          */
         $language = $languageArray[$_language];
+        // Inactive until the confirmation link is clicked, same as the generic signup flow.
+        $d->uiR->createInactiveFor($user, $language);
         $randomAndTimeToken = $this->getEmailVerificationToken($user, $d);
         $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink(
-            $user,
-            $d->uiR,
             $language,
             $_language,
             $randomAndTimeToken
@@ -107,24 +105,17 @@ final readonly class HomeCareSignupEmailService
         return null;
     }
 
+    /**
+     * Only builds the body: the user's extension row (inactive until the link is clicked) is created
+     * by processSendSignupEmail() before this runs.
+     */
     private function htmlBodyWithMaskedRandomAndTimeTokenLink(
-        User $user,
-        UIR $uiR,
         string $language,
         string $_language,
         string $randomAndTimeToken,
     ): string {
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
-        $userInv = new UserInv();
-        $userId = $user->reqId();
         $elcc = $this->translator->translate('email.link.click.confirm');
-        $userInv->setUserId($userId);
-        $userInv->setType($userId == 1 ? 0 : 1);
-        // Kept inactive until the confirmation link is clicked, same as the
-        // generic signup flow.
-        $userInv->setActive(false);
-        $userInv->setLanguage($language);
-        $uiR->save($userInv);
         $content = new A()
             ->href($this->urlGenerator->generateAbsolute(
                 'homecare/signup-confirm',

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\UserInv;
 
 use Cycle\ORM\Select;
+use App\Infrastructure\Persistence\User\User;
 use App\Infrastructure\Persistence\UserInv\UserInv;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -101,6 +102,39 @@ final class UserInvRepository extends Select\Repository
         $query = $this->select()
                       ->where(['user_id' => $user_id]);
         return  $query->fetchOne() ?: null;
+    }
+
+    /** userinv.type: the first user (id 1) is the administrator. */
+    public const int TYPE_ADMIN = 0;
+    public const int TYPE_NOT_ADMIN = 1;
+
+    /**
+     * The extension row of a user who has just signed up. It is created inactive: the emailed link (or
+     * an administrator) activates it later. One row per user (unique index on user_id), so a user who
+     * already has a row gets that row back, untouched, instead of a failed insert.
+     *
+     * @throws Throwable
+     */
+    public function createInactiveFor(
+        User $user,
+        string $language,
+        bool $consentPeriodicInvoice = false,
+        bool $consentTelegramOutstanding = false,
+    ): UserInv {
+        $userId = $user->reqId();
+        $existing = $this->repoUserInvUserIdquery($userId);
+        if (null !== $existing) {
+            return $existing;
+        }
+        $userInv = new UserInv();
+        $userInv->setUserId($userId);
+        $userInv->setType($userId === 1 ? self::TYPE_ADMIN : self::TYPE_NOT_ADMIN);
+        $userInv->setActive(false);
+        $userInv->setLanguage($language);
+        $userInv->setConsentPeriodicInvoice($consentPeriodicInvoice);
+        $userInv->setConsentTelegramOutstanding($consentTelegramOutstanding);
+        $this->save($userInv);
+        return $userInv;
     }
 
     public function repoUserInvUserIdcount(int $user_id): int

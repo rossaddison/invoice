@@ -386,18 +386,10 @@ final class AuthController
     ): string {
         $tokenType = $this->getTokenType($provider);
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
-        $userInv = new UserInv();
         $ipas = 'identity.provider.authentication.successful';
-        $userId = $user->reqId();
-        $userInv->setUserId($userId);
-        // if the user is administrator assign 0 => 'Administrator',
-        // 1 => Not Administrator
-        $userInv->setType($userId == 1 ? 0 : 1);
         // when the user clicks on the button, make the user active in the
         // userinv extension table. Initially keep the user inactive.
-        $userInv->setActive(false);
-        $userInv->setLanguage($language);
-        $uiR->save($userInv);
+        $uiR->createInactiveFor($user, $language);
         return new A()
         // When the url is clicked by the user, return to userinv/$provider
         // to activate the user and assign a client to the user
