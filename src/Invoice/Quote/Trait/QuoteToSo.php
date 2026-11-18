@@ -68,7 +68,9 @@ trait QuoteToSo
         $quote = !empty($url_key) && $core->qR->repoUrlKeyGuestCount($url_key) > 0
             ? $core->qR->repoUrlKeyGuestLoaded($url_key)
             : null;
-        if ($quote === null) {
+        // The key alone is not enough: as in reject(), the signed-in user must be the observer this quote was
+        // sent to (assigned to its client, active, quote not a draft). Staff and workers who hold the key are refused.
+        if ($quote === null || !$this->rbacObserver($quote, $userDeps->ucR, $userDeps->uiR)) {
             return $this->webService->getNotFoundResponse();
         }
         // default_invoice_group 1, default_quote_group 2, default_sales_order_group 3
