@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Testo\Invoice\UserInv;
 
-use App\Invoice\UserInv\UserInvController;
+use App\Invoice\UserInv\UserInvTelegramController;
 use Testo\Assert;
 use Testo\Test;
 use Yiisoft\Router\Group;
@@ -61,7 +61,7 @@ final class TelegramGuestRoutesTest
 
         Assert::true($route instanceof Route);
         Assert::same($route->getData('pattern'), '/userinv/guest/telegram-link');
-        Assert::same($this->actionOf($route), [UserInvController::class, 'guestTelegramLink']);
+        Assert::same($this->actionOf($route), [UserInvTelegramController::class, 'link']);
     }
 
     public function theUnlinkRouteReachesTheUnlinkAction(): void
@@ -70,7 +70,7 @@ final class TelegramGuestRoutesTest
 
         Assert::true($route instanceof Route);
         Assert::same($route->getData('pattern'), '/userinv/guest/telegram-unlink');
-        Assert::same($this->actionOf($route), [UserInvController::class, 'guestTelegramUnlink']);
+        Assert::same($this->actionOf($route), [UserInvTelegramController::class, 'unlink']);
     }
 
     public function bothRoutesCarryAPermissionCheck(): void
@@ -85,8 +85,8 @@ final class TelegramGuestRoutesTest
 
     public function theActionsExistWithTheArgumentsTheContainerWillInject(): void
     {
-        $link = new \ReflectionMethod(UserInvController::class, 'guestTelegramLink');
-        $unlink = new \ReflectionMethod(UserInvController::class, 'guestTelegramUnlink');
+        $link = new \ReflectionMethod(UserInvTelegramController::class, 'link');
+        $unlink = new \ReflectionMethod(UserInvTelegramController::class, 'unlink');
 
         Assert::same(array_map(static fn (\ReflectionParameter $p): string => $p->getName(), $link->getParameters()), [
             'request', 'uiR', 'links', 'logger',

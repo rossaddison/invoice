@@ -40,29 +40,34 @@ final readonly class ClientIpResolver
             return $remote;
         }
 
-        // Cloudflare sets this header itself, replacing whatever the client sent.
-        $cloudflare = $this->validIp($server['HTTP_CF_CONNECTING_IP'] ?? null);
-        if ($cloudflare !== null) {
-            return $cloudflare;
-        }
+        // Cloudflare sets its header itself, replacing whatever the client sent; failing that, the
+        // client is the first address in X-Forwarded-For that is not one of our own proxies; failing
+        // that, the proxy itself is all we know.
+        return $this->validIp($server['HTTP_CF_CONNECTING_IP'] ?? null)
+            ?? $this->firstUntrustedFromTheRight($server['HTTP_X_FORWARDED_FOR'] ?? null)
+            ?? $remote;
+    }
 
-        // Otherwise walk X-Forwarded-For from the right, the end our own proxies append to,
-        // and take the first address that is not itself a trusted proxy. Entries further left are
-        // client-supplied and are not believed. A malformed entry stops the walk.
-        /** @var mixed $forwarded */
-        $forwarded = $server['HTTP_X_FORWARDED_FOR'] ?? null;
-        if (is_string($forwarded) && $forwarded !== '') {
-            foreach (array_reverse(explode(',', $forwarded)) as $entry) {
-                $ip = $this->validIp($entry);
-                if ($ip === null) {
-                    break;
-                }
-                if (!$this->isTrusted($ip)) {
-                    return $ip;
-                }
+    /**
+     * Walks X-Forwarded-For from the right, the end our own proxies append to, and takes the first address
+     * that is not itself a trusted proxy. Entries further left are client-supplied and are not believed. A
+     * malformed entry stops the walk.
+     */
+    private function firstUntrustedFromTheRight(mixed $forwarded): ?string
+    {
+        if (!is_string($forwarded) || $forwarded === '') {
+            return null;
+        }
+        foreach (array_reverse(explode(',', $forwarded)) as $entry) {
+            $ip = $this->validIp($entry);
+            if ($ip === null) {
+                break;
+            }
+            if (!$this->isTrusted($ip)) {
+                return $ip;
             }
         }
-        return $remote;
+        return null;
     }
 
     private function validIp(mixed $value): ?string
@@ -89,14 +94,30 @@ final readonly class ClientIpResolver
         $parts = explode('/', $range, 2);
         $address = $this->toBinary($ip);
         $subnet = $this->toBinary($parts[0]);
-        if ($address === null || $subnet === null || strlen($address) !== strlen($subnet)) {
+        $bits = $this->prefixLength($parts[1] ?? null, strlen((string) $address) * 8);
+        if ($address === null || $subnet === null || strlen($address) !== strlen($subnet) || $bits === null) {
             return false;
         }
-        $maxBits = strlen($address) * 8;
-        $bits = isset($parts[1]) ? (int) $parts[1] : $maxBits;
-        if ($bits < 0 || $bits > $maxBits || (isset($parts[1]) && !ctype_digit($parts[1]))) {
-            return false;
+        return $this->samePrefix($address, $subnet, $bits);
+    }
+
+    /**
+     * @param string|null $given the part after the slash, null when the range has none (a single address)
+     * @param int $maxBits the length of the address in bits: 32 or 128
+     *
+     * @return int|null the prefix length, or null when it is not a whole number or is longer than the address
+     */
+    private function prefixLength(?string $given, int $maxBits): ?int
+    {
+        if ($given === null) {
+            return $maxBits;
         }
+        return ctype_digit($given) && (int) $given <= $maxBits ? (int) $given : null;
+    }
+
+    /** Whether the first $bits bits of the two packed addresses are the same. */
+    private function samePrefix(string $address, string $subnet, int $bits): bool
+    {
         $wholeBytes = intdiv($bits, 8);
         if (substr($address, 0, $wholeBytes) !== substr($subnet, 0, $wholeBytes)) {
             return false;

@@ -389,7 +389,7 @@ final class TelegramController extends BaseController
                     $this->translator->translate($configError)
                 );
             } elseif ($secretToken === '') {
-                $this->flashWebhookSecretNotSet();
+                $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.webhook.secret.token.not.set'));
             } else {
                 $failResultWebhookInfo = $this->performSetWebhook($token, $urlGenerator, $secretToken);
             }
@@ -491,11 +491,6 @@ final class TelegramController extends BaseController
         ]);
     }
 
-    private function flashWebhookSecretNotSet(): void
-    {
-        $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.webhook.secret.token.not.set'));
-    }
-
     private function telegramConfigError(string $token): ?string
     {
         if ($this->sR->getSetting('enable_telegram') !== '1') {
@@ -523,7 +518,7 @@ final class TelegramController extends BaseController
         $secretToken = $this->sR->getSetting('telegram_webhook_secret_token');
         if ($secretToken === '') {
             // a webhook registered without one would have every delivery refused: see TelegramWebhookGuard
-            $this->flashWebhookSecretNotSet();
+            $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.webhook.secret.token.not.set'));
             return;
         }
         $telegramHelper = new TelegramHelper($token, $this->logger);

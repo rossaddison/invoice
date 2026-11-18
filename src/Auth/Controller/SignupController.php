@@ -220,9 +220,8 @@ final class SignupController
         $languageArray = $this->sR->localeLanguageArray();
         /** @var string $_language */
         $_language = $currentRoute->getArgument('_language');
-        /** @var string $language */
-        $language = $languageArray[$_language];
-        return $language;
+        /** @var string */
+        return $languageArray[$_language];
     }
 
     private function processSendSignupEmail(

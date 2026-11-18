@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Auth\Permissions;
 use App\Invoice\UserInv\UserInvController;
+use App\Invoice\UserInv\UserInvTelegramController;
 use App\Middleware\RateLimiter;
 use App\Middleware\RoutePermission;
 use Yiisoft\Http\Method;
@@ -30,6 +31,13 @@ $guestUserInvRoute = static fn(string $path, string $name, string $action): Rout
         ->middleware(RoutePermission::check(Permissions::EDIT_USER_INV))
         ->action([UserInvController::class, $action]);
 
+// The profile page's Telegram link and unlink: same permission, their own controller.
+$guestTelegramRoute = static fn(string $path, string $name, string $action): Route =>
+    Route::methods([Method::GET, Method::POST], $path)
+        ->name($name)
+        ->middleware(RoutePermission::check(Permissions::EDIT_USER_INV))
+        ->action([UserInvTelegramController::class, $action]);
+
 return [
     RoutePermission::invoiceGroup(
 
@@ -55,8 +63,8 @@ return [
         // guest()/guestlimit()/guestStickyNavbar()/guestStickyGridHeader().
         $guestUserInvRoute('/userinv/guest', 'userinv/guest', 'guest'),
         // Telegram: link by a one-time t.me token (the webhook stores the chat id), and unlink.
-        $guestUserInvRoute('/userinv/guest/telegram-link', 'userinv/guestTelegramLink', 'guestTelegramLink'),
-        $guestUserInvRoute('/userinv/guest/telegram-unlink', 'userinv/guestTelegramUnlink', 'guestTelegramUnlink'),
+        $guestTelegramRoute('/userinv/guest/telegram-link', 'userinv/guestTelegramLink', 'link'),
+        $guestTelegramRoute('/userinv/guest/telegram-unlink', 'userinv/guestTelegramUnlink', 'unlink'),
         $guestUserInvRoute(
             '/userinv/guestlimit/{userinv_id}/{limit}/{origin}',
             'userinv/guestlimit',

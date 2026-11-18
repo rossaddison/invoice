@@ -69,27 +69,40 @@ final readonly class TelegramLinkService
      */
     public function link(string $tokenText, string $chatId): LinkOutcome
     {
-        if (preg_match(self::TOKEN_SHAPE, $tokenText) !== 1) {
-            return LinkOutcome::InvalidToken;
+        $token = $this->takeToken($tokenText);
+        if ($token instanceof LinkOutcome) {
+            return $token;
         }
-        $token = $this->tR->findTokenByTokenAndType($tokenText, self::TOKEN_TYPE);
-        if (null === $token) {
-            return LinkOutcome::InvalidToken;
-        }
-        // Spent before anything else is decided, so a token can never be tried twice, expired or not.
-        $createdAt = $token->getCreatedAt()->getTimestamp();
-        $this->spend($token);
-        if ($createdAt + self::TOKEN_LIFETIME_SECONDS < time()) {
-            return LinkOutcome::Expired;
-        }
-        $userId = $token->getIdentity()?->getUser()?->reqId();
-        $userInv = null !== $userId ? $this->uiR->repoUserInvUserIdquery($userId) : null;
+        $userInv = $this->profileOf($token);
         if (null === $userInv) {
             return LinkOutcome::InvalidToken;
         }
         $userInv->setTelegramChatId($chatId);
         $this->uiR->save($userInv);
         return LinkOutcome::Linked;
+    }
+
+    /**
+     * The token of this text if it is a live one, spent on the way; otherwise why not.
+     */
+    private function takeToken(string $tokenText): Token|LinkOutcome
+    {
+        $token = preg_match(self::TOKEN_SHAPE, $tokenText) === 1
+            ? $this->tR->findTokenByTokenAndType($tokenText, self::TOKEN_TYPE)
+            : null;
+        if (null === $token) {
+            return LinkOutcome::InvalidToken;
+        }
+        // Spent before anything else is decided, so a token can never be tried twice, expired or not.
+        $createdAt = $token->getCreatedAt()->getTimestamp();
+        $this->spend($token);
+        return $createdAt + self::TOKEN_LIFETIME_SECONDS < time() ? LinkOutcome::Expired : $token;
+    }
+
+    private function profileOf(Token $token): ?UserInv
+    {
+        $userId = $token->getIdentity()?->getUser()?->reqId();
+        return null !== $userId ? $this->uiR->repoUserInvUserIdquery($userId) : null;
     }
 
     /**
