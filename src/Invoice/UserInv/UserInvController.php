@@ -217,7 +217,9 @@ final class UserInvController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                $this->userinvService->saveUserInv($userinv, $body);
+                // type, active, all_clients, user_id and the verified telegram chat id come from the
+                // stored row, never from the posted body: see GuestProfileInput.
+                $this->userinvService->saveUserInv($userinv, GuestProfileInput::forSave($body, $userinv));
                 $redirect = $this->webService->getRedirectResponse('invoice/index');
             } else {
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
