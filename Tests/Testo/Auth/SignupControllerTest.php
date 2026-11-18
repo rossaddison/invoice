@@ -8,16 +8,19 @@ use App\Auth\AuthService;
 use App\Auth\Controller\SignupController;
 use App\Auth\Controller\SignupDeps;
 use App\Auth\Form\SignupForm;
+use App\Infrastructure\Persistence\User\User;
 use App\Invoice\AppConstants;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\UserInv\UserRbacLinkRepository;
 use App\Invoice\UserInv\UserInvRepository;
 use App\Service\WebControllerService;
+use App\User\UserRepository;
 use GuzzleHttp\Psr7\HttpFactory;
 use Mockery as m;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Testo\Assert;
 use Testo\Test;
 use Tests\Testo\Support\TypedMock;
@@ -25,6 +28,7 @@ use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Header;
 use Yiisoft\Rbac\Manager;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Session\SessionInterface;
 
 /**
  * The generic /signup action: who is turned away, what happens before the email is confirmed.
@@ -118,6 +122,61 @@ final class SignupControllerTest
     private function assignRoleAndVerify(SignupController $controller, int $userId, string $role): bool
     {
         return (bool) new \ReflectionMethod($controller, 'assignRoleAndVerify')->invoke($controller, $userId, $role);
+    }
+
+    public function theExtensionRowIsCreatedInactiveBeforeTheRoleIsAssigned(): void
+    {
+        // assignRoleAndVerify() links the user's extension row to RBAC, so the row has to exist by
+        // then: it is created by signup() itself, not as a side effect of building the email.
+        $user = TypedMock::of(User::class);
+        $user->shouldReceive('reqId')->andReturn(42);
+        $form = TypedMock::of(SignupForm::class);
+        $form->shouldReceive('signup')->andReturn($user);
+        $form->shouldReceive('getConsentPeriodicInvoice')->andReturn(true);
+        $form->shouldReceive('getConsentTelegramOutstanding')->andReturn(false);
+        $form->shouldReceive('isValidated')->andReturn(false);
+
+        $uiR = TypedMock::of(UserInvRepository::class);
+        $uiR->shouldReceive('createInactiveFor')->once()->globally()->ordered()->with($user, 'English', true, false);
+        $manager = TypedMock::of(Manager::class);
+        $manager->shouldReceive('revokeAll')->once()->globally()->ordered()->with('42');
+        $manager->shouldReceive('assign')->once()->globally()->ordered();
+        // no role persisted: assignRoleAndVerify() fails, so the flow stops before any email
+        $manager->shouldReceive('getRolesByUserId')->andReturn([]);
+        $uR = TypedMock::of(UserRepository::class);
+        $uR->shouldReceive('repoCount')->andReturn(5);
+
+        $sR = TypedMock::of(SettingRepository::class);
+        $sR->shouldReceive('getSetting')->andReturn('');
+        $sR->shouldReceive('localeLanguageArray')->andReturn(['en' => 'English']);
+        $route = TypedMock::of(CurrentRoute::class);
+        $route->shouldReceive('getArgument')->with('_language')->andReturn('en');
+        $session = TypedMock::of(SessionInterface::class);
+        $session->shouldReceive('set');
+        $hydrator = TypedMock::of(FormHydrator::class);
+        $hydrator->shouldReceive('populateFromPostAndValidate')->andReturn(true);
+
+        $controller = $this->makeController(extra: [
+            'sR' => $sR,
+            'manager' => $manager,
+            'uiR' => $uiR,
+            'urlR' => TypedMock::of(UserRbacLinkRepository::class),
+            'logger' => new NullLogger(),
+            'session' => $session,
+        ]);
+        // GET: the Turnstile gate only guards POST, and the hydrator is mocked
+        $request = new HttpFactory()->createServerRequest('GET', 'https://example.test/en/signup');
+
+        $response = $controller->signup(
+            $this->authService(true),
+            $route,
+            $hydrator,
+            $request,
+            $form,
+            TypedMock::build(SignupDeps::class, ['uiR' => $uiR, 'uR' => $uR]),
+        );
+
+        Assert::same($response->getHeaderLine(Header::LOCATION), 'site/signupfailed');
     }
 
     public function theRoleIsAssignedAtSignupBeforeTheEmailIsConfirmed(): void

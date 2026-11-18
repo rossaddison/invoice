@@ -13,7 +13,6 @@ use App\Auth\Form\SignupForm;
 use App\Auth\Trait\ClassList;
 use App\Auth\Trait\Oauth2;
 use App\Auth\Trait\TurnstileVerification;
-use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\AppConstants;
 use App\Invoice\UserInv\UserRbacLinkRepository;
@@ -144,16 +143,19 @@ final class SignupController
             $user = $signupForm->signup();
             $userId = $user->reqId();
             if ($userId > 0) {
+                // The extension row exists, inactive, before the role is assigned so that
+                // assignRoleAndVerify() can link it to RBAC; the emailed link activates it.
+                $deps->uiR->createInactiveFor(
+                    $user,
+                    $this->signupLanguage($currentRoute),
+                    $signupForm->getConsentPeriodicInvoice(),
+                    $signupForm->getConsentTelegramOutstanding(),
+                );
                 $role = $uR->repoCount() == 1 ? AppConstants::ROLE_ADMIN : AppConstants::ROLE_OBSERVER;
                 if (!$this->assignRoleAndVerify($userId, $role)) {
                     $redirect = $this->webService->getRedirectResponse('site/signupfailed');
                 } else {
-                    $redirect = $this->processSendSignupEmail(
-                        $user,
-                        $currentRoute,
-                        $deps,
-                        $signupForm
-                    );
+                    $redirect = $this->processSendSignupEmail($user, $currentRoute, $deps);
                 }
             }
             $redirect = $redirect ?? $this->webService->getRedirectResponse('site/signupsuccess');
@@ -211,30 +213,33 @@ final class SignupController
         return '';
     }
 
+    /**
+     * The language name (e.g. 'English') of the locale in the signup URL, e.g. 'en'.
+     */
+    private function signupLanguage(CurrentRoute $currentRoute): string
+    {
+        $languageArray = $this->sR->localeLanguageArray();
+        /** @var string $_language */
+        $_language = $currentRoute->getArgument('_language');
+        /** @var string $language */
+        $language = $languageArray[$_language];
+        return $language;
+    }
+
     private function processSendSignupEmail(
         User $user,
         CurrentRoute $currentRoute,
         SignupDeps $deps,
-        SignupForm $signupForm,
     ): ?ResponseInterface {
         $to = $user->getEmail();
         $login = $user->getLogin();
-        $languageArray = $this->sR->localeLanguageArray();
+        /** @var string $_language */
         $_language = $currentRoute->getArgument('_language');
-        /**
-         * @var string $_language
-         * @var string $language
-         */
-        $language = $languageArray[$_language];
         $randomAndTimeToken = $this->getEmailVerificationToken($user, $deps->tR);
         $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink(
-            $user,
-            $deps->uiR,
-            $language,
+            $this->signupLanguage($currentRoute),
             $_language,
             $randomAndTimeToken,
-            $signupForm->getConsentPeriodicInvoice(),
-            $signupForm->getConsentTelegramOutstanding()
         );
         if (($this->sR->getSetting('email_send_method') == 'symfony')
                 || ($this->sR->mailerEnabled())) {
@@ -297,38 +302,22 @@ final class SignupController
     }
 
     /**
-     * @param User $user
-     * @param uiR $uiR
+     * Only builds the body: the user's extension row is created by signup() before this runs.
+     *
      * @param string $language
      * @param string $_language
      * @param string $randomAndTimeToken
      * @return string
      */
     private function htmlBodyWithMaskedRandomAndTimeTokenLink(
-        User $user,
-        uiR $uiR,
         string $language,
         string $_language,
         string $randomAndTimeToken,
-        bool $consentPeriodicInvoice = false,
-        bool $consentTelegramOutstanding = false
     ): string {
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
-        $userInv = new UserInv();
-        $userId = $user->reqId();
         $elcc = $this->translator->translate('email.link.click.confirm');
-        $userInv->setUserId($userId);
-        // if the user is administrator assign 0 => 'Administrator',
-        // 1 => Not Administrator
-        $userInv->setType($userId == 1 ? 0 : 1);
-        // when the user clicks on the link click confirm url, make the
-        // user active in the userinv extension table. Initially keep the
-        // user inactive.
-        $userInv->setActive(false);
-        $userInv->setLanguage($language);
-        $userInv->setConsentPeriodicInvoice($consentPeriodicInvoice);
-        $userInv->setConsentTelegramOutstanding($consentTelegramOutstanding);
-        $uiR->save($userInv);
+        // When the user clicks the link, userinv/signup makes the user active in the userinv
+        // extension table; it was created inactive.
         $content = new A()
         // When the url is clicked by the user, return to userinv/signup
         // to activate the user and assign a client to the user
