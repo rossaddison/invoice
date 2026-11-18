@@ -137,6 +137,22 @@ final class UserInvRepository extends Select\Repository
         return $userInv;
     }
 
+    /**
+     * Every extension row linked to this Telegram chat. One chat can be linked to more than one account
+     * (a household sharing a phone), and leaving the bot has to unlink all of them.
+     *
+     * @return list<UserInv>
+     */
+    public function findByTelegramChatId(string $chatId): array
+    {
+        if ($chatId === '') {
+            return [];
+        }
+        /** @var list<UserInv> $rows */
+        $rows = $this->select()->where(['telegram_chat_id' => $chatId])->fetchAll();
+        return $rows;
+    }
+
     public function repoUserInvUserIdcount(int $user_id): int
     {
         return $this->select()

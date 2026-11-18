@@ -121,6 +121,21 @@ final class ClientRepository extends Select\Repository implements ClientReposito
     }
 
     /**
+     * Every client record carrying this Telegram chat id, typed in by an administrator.
+     *
+     * @return list<Client>
+     */
+    public function findByTelegramChatId(string $chatId): array
+    {
+        if ($chatId === '') {
+            return [];
+        }
+        /** @var list<Client> $rows */
+        $rows = $this->select()->where(['client_telegram_chat_id' => $chatId])->fetchAll();
+        return $rows;
+    }
+
+    /**
      * @return Client|null
      *
      * @psalm-return TEntity|null

@@ -54,6 +54,9 @@ return [
         // Guest self-service -- see App\Invoice\UserInv\UserInvController::
         // guest()/guestlimit()/guestStickyNavbar()/guestStickyGridHeader().
         $guestUserInvRoute('/userinv/guest', 'userinv/guest', 'guest'),
+        // Telegram: link by a one-time t.me token (the webhook stores the chat id), and unlink.
+        $guestUserInvRoute('/userinv/guest/telegram-link', 'userinv/guestTelegramLink', 'guestTelegramLink'),
+        $guestUserInvRoute('/userinv/guest/telegram-unlink', 'userinv/guestTelegramUnlink', 'guestTelegramUnlink'),
         $guestUserInvRoute(
             '/userinv/guestlimit/{userinv_id}/{limit}/{origin}',
             'userinv/guestlimit',
