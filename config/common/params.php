@@ -148,6 +148,14 @@ return [
         '2c0f:f248::/32',
     ],
 
+    /**
+     * The public address of the site (APP_URL in .env), without a trailing slash, e.g.
+     * `https://invoice.example.test`. Only code that runs without a request needs it, because it has no
+     * host to take one from: the recurring-invoice job builds the "View invoice" button of a Telegram
+     * reminder with it. Empty when APP_URL is not set; the reminder then goes out without the button.
+     */
+    'app.baseUrl' => rtrim(trim($_ENV['APP_URL'] ?? ''), '/'),
+
     // DeveloperSandboxHmrc
     'env' => $_ENV['YII_ENV'] ?? 'dev',
 

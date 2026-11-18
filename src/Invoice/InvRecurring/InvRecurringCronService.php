@@ -18,7 +18,9 @@ use App\Invoice\InvItem\IiAddProductDeps;
 use App\Invoice\InvItem\InvItemService;
 use App\Invoice\ProductClient\ProductClientRepository as PCR;
 use App\Invoice\Setting\SettingRepository as SR;
+use App\Invoice\Telegram\OutstandingInvoiceReminder;
 use Yiisoft\Log\Logger;
+use Yiisoft\Router\UrlGeneratorInterface;
 
 /**
  * Generates recurring invoices and sends Telegram balance reminders.
@@ -38,6 +40,7 @@ final class InvRecurringCronService
         private readonly InvItemService $invItemService,
         private readonly SR $sR,
         private readonly Logger $_logger,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -180,11 +183,18 @@ final class InvRecurringCronService
             $chatId = $userInv->getTelegramChatId();
             if (null !== $chatId && $chatId !== '') {
                 $telegramHelper = new TelegramHelper($token, $this->_logger);
+                // Nothing about the invoice goes into the message (Telegram stores bot messages in the
+                // clear): a button leads to the invoice page, which asks for a login.
+                $reminder = OutstandingInvoiceReminder::message(
+                    $this->sR->getConfigAppBaseUrl(),
+                    $this->urlGenerator->generate('inv/view', ['id' => $prevInvId]),
+                );
                 // Named: phptg/bot-api 0.23 moved chatId after the text.
                 $telegramHelper->getBotApi()->sendMessage(
-                    text: 'Invoice #' . $prevInvId . ' has an outstanding balance of '
-                        . number_format($balance, 2) . '. Please log in to make a payment.',
+                    text: $reminder['text'],
                     chatId: $chatId,
+                    protectContent: $reminder['protectContent'],
+                    replyMarkup: $reminder['replyMarkup'],
                 );
                 return 1;
             }
