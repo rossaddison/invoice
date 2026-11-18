@@ -8,6 +8,8 @@ use App\Auth\AuthService;
 use App\Auth\Controller\SignupController;
 use App\Auth\Controller\SignupDeps;
 use App\Auth\Form\SignupForm;
+use App\Auth\TokenRepository;
+use App\Infrastructure\Persistence\Identity\Identity;
 use App\Infrastructure\Persistence\User\User;
 use App\Invoice\AppConstants;
 use App\Invoice\Setting\SettingRepository;
@@ -26,9 +28,13 @@ use Testo\Test;
 use Tests\Testo\Support\TypedMock;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Header;
+use Yiisoft\Mailer\MailerInterface;
+use Yiisoft\Mailer\MessageInterface;
 use Yiisoft\Rbac\Manager;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Session\SessionInterface;
+use Yiisoft\Translator\TranslatorInterface as Translator;
 
 /**
  * The generic /signup action: who is turned away, what happens before the email is confirmed.
@@ -177,6 +183,57 @@ final class SignupControllerTest
         );
 
         Assert::same($response->getHeaderLine(Header::LOCATION), 'site/signupfailed');
+    }
+
+    public function theConfirmationEmailCarriesTheLinkInBothTheHtmlAndThePlainTextPart(): void
+    {
+        $confirmUrl = 'https://example.test/en/userinv/signup/English/MASKED-TOKEN/email-verification';
+        $identity = TypedMock::of(Identity::class);
+        $identity->shouldReceive('getId')->andReturn('5');
+        $user = TypedMock::of(User::class);
+        $user->shouldReceive('getEmail')->andReturn('new.user@example.test');
+        $user->shouldReceive('getLogin')->andReturn('virtualtest');
+        $user->shouldReceive('getIdentity')->andReturn($identity);
+        $tR = TypedMock::of(TokenRepository::class);
+        $tR->shouldReceive('save');
+
+        $sR = TypedMock::of(SettingRepository::class);
+        $sR->shouldReceive('getSetting')->andReturnUsing(
+            static fn (string $key): string => $key === 'email_send_method' ? 'symfony' : '',
+        );
+        $sR->shouldReceive('getConfigAdminEmail')->andReturn('admin@example.test');
+        $sR->shouldReceive('localeLanguageArray')->andReturn(['en' => 'English']);
+        $translator = TypedMock::of(Translator::class);
+        $translator->shouldReceive('translate')->andReturnUsing(
+            static fn (string $key): string => $key === 'email.link.click.confirm' ? 'Please confirm' : $key,
+        );
+        $urlGenerator = TypedMock::of(UrlGenerator::class);
+        $urlGenerator->shouldReceive('generateAbsolute')
+            ->with('userinv/signup', m::on(static fn (array $arguments): bool => $arguments['tokenType'] === 'email-verification'
+                && $arguments['language'] === 'English' && $arguments['_language'] === 'en'))
+            ->andReturn($confirmUrl);
+        $sent = [];
+        $mailer = TypedMock::of(MailerInterface::class);
+        $mailer->shouldReceive('send')->once()->andReturnUsing(function (MessageInterface $message) use (&$sent): void {
+            $sent[] = $message;
+        });
+        $route = TypedMock::of(CurrentRoute::class);
+        $route->shouldReceive('getArgument')->with('_language')->andReturn('en');
+
+        $controller = $this->makeController(extra: [
+            'sR' => $sR,
+            'translator' => $translator,
+            'urlGenerator' => $urlGenerator,
+            'mailer' => $mailer,
+        ]);
+        $result = new \ReflectionMethod($controller, 'processSendSignupEmail')
+            ->invoke($controller, $user, $route, TypedMock::build(SignupDeps::class, ['tR' => $tR]));
+
+        Assert::null($result);
+        Assert::same(count($sent), 1);
+        Assert::true(str_contains((string) $sent[0]->getHtmlBody(), '<a href="' . $confirmUrl . '">Please confirm</a>'));
+        Assert::true(str_contains((string) $sent[0]->getHtmlBody(), '<p>' . $confirmUrl . '</p>'));
+        Assert::true(str_contains((string) $sent[0]->getTextBody(), $confirmUrl));
     }
 
     public function theRoleIsAssignedAtSignupBeforeTheEmailIsConfirmed(): void
