@@ -263,7 +263,8 @@ final class UserInvController extends BaseController
         if ($userInvId > 0 && strlen($origin) > 0) {
             $limitInt = (int) $limit;
             $userInv = $uiR->repoUserInvquery($userInvId);
-            if (null !== $userInv) {
+            // The id is in the URL: only the signed-in user's own row may be changed, never another user's
+            if (null !== $userInv && $userInv->reqUserId() === $this->userService->getUser()?->reqId()) {
                 $userInv->setListLimit($limitInt);
                 $uiR->save($userInv);
             }
@@ -392,7 +393,8 @@ final class UserInvController extends BaseController
     {
         if ($userInvId > 0) {
             $userInv = $uiR->repoUserInvquery($userInvId);
-            if (null !== $userInv) {
+            // The id is in the URL: only the signed-in user's own row may be changed, never another user's
+            if (null !== $userInv && $userInv->reqUserId() === $this->userService->getUser()?->reqId()) {
                 $set($userInv, $value === '1');
                 $uiR->save($userInv);
             }
