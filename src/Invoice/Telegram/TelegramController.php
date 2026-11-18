@@ -22,6 +22,7 @@ use Phptg\BotApi\FailResult;
 use Phptg\BotApi\ParseResult\TelegramParseResultException;
 use Phptg\BotApi\TelegramBotApi;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
+use Yiisoft\Http\Status;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
@@ -309,33 +310,31 @@ final class TelegramController extends BaseController
      * the X-Telegram-Bot-Api-Secret-Token header, then:
      *   - pre_checkout_query  → answerPreCheckoutQuery (must respond within 10 s)
      *   - message.successfulPayment → decodes invoicePayload, records payment
+     *   - /start <token>, /stop and blocking the bot → link or unlink a chat (TelegramUpdateHandler)
      *
      * IMPORTANT: the route for this action must NOT have auth middleware so
      * Telegram's servers can reach it. Secure it with telegram_webhook_secret_token only.
+     *
+     * Fails closed (see TelegramWebhookGuard): with no secret token set, or one that does not match, the
+     * request is refused with 403 and nothing is acted on. A 403, not a 200, so that Telegram keeps a real
+     * update queued and shows the error in getWebhookInfo, and delivers it once the secret is set and the
+     * webhook registered again.
      */
     public function webhook(Request $request, TelegramUpdateHandler $updateHandler): Response
     {
-        $token          = $this->sR->getSetting('telegram_token');
-        $secretToken    = $this->sR->getSetting('telegram_webhook_secret_token');
-        $incoming       = $request->getHeaderLine('X-Telegram-Bot-Api-Secret-Token');
-        $tokenInvalid   = strlen($token) < 2;
-        $secretMismatch = $secretToken !== '' && $incoming !== $secretToken;
-        if ($tokenInvalid || $secretMismatch) {
-            $this->logger->warning($tokenInvalid
-                ? $this->translator->translate('telegram.bot.api.token.not.set')
-                : 'Telegram webhook: secret token mismatch.');
-            $failKey = $tokenInvalid ? 'token not set' : 'unauthorized';
-            return $this->factory->createResponse(Json::encode(['fail' => $failKey]));
+        $token   = $this->sR->getSetting('telegram_token');
+        $refusal = TelegramWebhookGuard::refusal(
+            $token,
+            $this->sR->getSetting('telegram_webhook_secret_token'),
+            $request->getHeaderLine('X-Telegram-Bot-Api-Secret-Token'),
+        );
+        if (null !== $refusal) {
+            $this->logger->warning('Telegram webhook refused: ' . $refusal . '.');
+            // the same answer for every reason: a caller learns nothing about how this site is set up
+            return $this->factory->createResponse(Json::encode(['fail' => 'unauthorized']), Status::FORBIDDEN);
         }
         try {
-            // The account-linking commands are acted on only when a secret token is set and matched
-            // (a blank secret lets every request through above).
-            $this->handleWebhookUpdate(
-                $token,
-                $request->getBody()->getContents(),
-                $updateHandler,
-                $secretToken !== '',
-            );
+            $this->handleWebhookUpdate($token, $request->getBody()->getContents(), $updateHandler);
         } catch (TelegramParseResultException $e) {
             $this->logger->warning($e->getMessage());
             return $this->factory->createResponse(Json::encode(['fail' => $e->getMessage()]));
@@ -380,6 +379,7 @@ final class TelegramController extends BaseController
     public function setWebhook(UrlGenerator $urlGenerator): Response
     {
         $token = $this->sR->getSetting('telegram_token');
+        $secretToken = $this->sR->getSetting('telegram_webhook_secret_token');
         $failResultWebhookInfo = '';
         try {
             $configError = $this->telegramConfigError($token);
@@ -388,8 +388,10 @@ final class TelegramController extends BaseController
                     'danger',
                     $this->translator->translate($configError)
                 );
+            } elseif ($secretToken === '') {
+                $this->flashWebhookSecretNotSet();
             } else {
-                $failResultWebhookInfo = $this->performSetWebhook($token, $urlGenerator);
+                $failResultWebhookInfo = $this->performSetWebhook($token, $urlGenerator, $secretToken);
             }
         } catch (TelegramParseResultException $e) {
             $this->logger->warning($e->getMessage());
@@ -489,6 +491,11 @@ final class TelegramController extends BaseController
         ]);
     }
 
+    private function flashWebhookSecretNotSet(): void
+    {
+        $this->flashMessage('danger', $this->translator->translate('telegram.bot.api.webhook.secret.token.not.set'));
+    }
+
     private function telegramConfigError(string $token): ?string
     {
         if ($this->sR->getSetting('enable_telegram') !== '1') {
@@ -513,7 +520,12 @@ final class TelegramController extends BaseController
     private function processIndexAction(string $token, UrlGenerator $urlGenerator): void
     {
         $chatId      = $this->sR->getSetting('telegram_chat_id');
-        $secretToken = $this->sR->getSetting('telegram_webhook_secret_token') ?: null;
+        $secretToken = $this->sR->getSetting('telegram_webhook_secret_token');
+        if ($secretToken === '') {
+            // a webhook registered without one would have every delivery refused: see TelegramWebhookGuard
+            $this->flashWebhookSecretNotSet();
+            return;
+        }
         $telegramHelper = new TelegramHelper($token, $this->logger);
         $this->telegramBotApi = $telegramHelper->getBotApi();
         $failResult = $telegramHelper->setWebhook($urlGenerator, null, null, null, null, $secretToken);
@@ -662,6 +674,7 @@ final class TelegramController extends BaseController
     private function performSetWebhook(
         string $token,
         UrlGenerator $urlGenerator,
+        string $secretToken,
     ): FailResult|\Phptg\BotApi\Type\Update\WebhookInfo {
         $telegramHelper = new TelegramHelper($token, $this->logger);
         $failResultSetWebhook = $telegramHelper->setWebhook(
@@ -670,7 +683,7 @@ final class TelegramController extends BaseController
             null,
             null,
             false,
-            null
+            $secretToken
         );
         $failResultWebhookInfo = $telegramHelper->getWebhookInfo();
         if (!$failResultSetWebhook instanceof FailResult) {

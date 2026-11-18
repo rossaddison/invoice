@@ -27,6 +27,8 @@ final class LinkTranslationKeysTest
         'telegram.link.back',
         'telegram.link.unavailable',
         'telegram.unlinked',
+        'telegram.bot.api.webhook.secret.token',
+        'telegram.bot.api.webhook.secret.token.not.set',
     ];
 
     /**
