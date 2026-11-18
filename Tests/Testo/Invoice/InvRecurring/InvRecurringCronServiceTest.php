@@ -35,8 +35,10 @@ use App\User\UserRepository;
 use Mockery as m;
 use Testo\Assert;
 use Testo\Test;
+use Tests\Testo\Support\TypedMock;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Log\Logger;
+use Yiisoft\Router\UrlGeneratorInterface;
 
 /**
  * Covers InvRecurringCronService — extracted from
@@ -75,7 +77,17 @@ final class InvRecurringCronServiceTest
         InvItemService $invItemService,
         SR $sR,
     ): InvRecurringCronService {
-        return new InvRecurringCronService($irR, $iR, $gR, $pcR, $iS, $invItemService, $sR, new Logger());
+        return new InvRecurringCronService(
+            $irR,
+            $iR,
+            $gR,
+            $pcR,
+            $iS,
+            $invItemService,
+            $sR,
+            new Logger(),
+            TypedMock::of(UrlGeneratorInterface::class),
+        );
     }
 
     private function makeCronUserDeps(

@@ -179,6 +179,21 @@ trait SettingConfigTrait
     }
 
     /**
+     * The public address of the site from APP_URL in .env (config/common/params.php 'app.baseUrl'), or ''
+     * when it is not set. For code that runs without a request, which has no host to take one from.
+     *
+     * @return string
+     */
+    public function getConfigAppBaseUrl(): string
+    {
+        /** @var array<string, mixed> $params */
+        $params = $this->getConfigParams()->get('params');
+        /** @var string $baseUrl */
+        $baseUrl = $params['app.baseUrl'] ?? '';
+        return $baseUrl;
+    }
+
+    /**
      * @return string
      */
     public function getConfigAdminEmail(): string
