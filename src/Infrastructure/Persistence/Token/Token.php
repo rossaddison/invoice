@@ -27,7 +27,7 @@ class Token
     #[Column(type: 'string(32)', nullable: false)]
     private ?string $token = null;
 
-    #[Column(type: 'datetime)', nullable: false)]
+    #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $created_at;
 
     public function __construct(
