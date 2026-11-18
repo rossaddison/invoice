@@ -533,7 +533,12 @@ final class SalesOrderController extends BaseController
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();
                 if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                    $this->salesorderService->saveSo($so, $body);
+                    // A customer (observer) may not change the client, status, discount, links or guest credentials
+                    $isStaff = $this->rbac->isAdmin() || $this->rbac->isAccountant();
+                    $this->salesorderService->saveSo(
+                        $so,
+                        $isStaff ? $body : SalesOrderEditInput::forObserver($body, $so)
+                    );
                     $this->flashMessage(
                         'success',
                         $this->translator->translate(
