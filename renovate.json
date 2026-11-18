@@ -6,5 +6,13 @@
     "platformAutomerge": true,
     "major": {
         "dependencyDashboardApproval": true
-    }
+    },
+    "packageRules": [
+        {
+            "description": "phptg/bot-api is 0.x, where a minor release can change method signatures (0.23 moved chatId after the text and swapped three calls silently), so a new minor is reviewed and merged by hand. Patches still auto-merge.",
+            "matchPackageNames": ["phptg/bot-api"],
+            "matchUpdateTypes": ["minor", "major"],
+            "automerge": false
+        }
+    ]
 }
