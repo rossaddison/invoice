@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Telegram\WebhookInfoReport;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Label;
-use Yiisoft\Html\Tag\Br;
 use Yiisoft\Html\Tag\I;
 
 /**
@@ -17,12 +16,12 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 echo  new I()->content('')->addClass('bi bi-info-circle')->addAttributes(['data-bs-toggle' => 'tooltip','title' => '.../resources/views/telegram/getwebhookinfo.php'])->render();
 if (!$webhookinfo instanceof \Phptg\BotApi\FailResult) {
-    echo Html::opentag('pre');
-    echo  new Label()->content(empty($webhookinfo->url)
-           ? 'Your url is an empty string which shows that you are using getUpdates which mutually excludes webhook use.'
-           : 'Here is your currently setup webhook url: ' . $webhookinfo->url)->render();
-    echo  new Br()->render();
-    echo  new Label()->content('Pending Update Count: ' . (string) $webhookinfo->pendingUpdateCount)->render();
-    echo  new Br()->render();
+    // What Telegram reports (address, pending updates, last error) and, first, a warning when no Webhook
+    // Secret Token is set. The wording lives in App\Invoice\Telegram\WebhookInfoReport, where it is tested.
+    echo Html::openTag('pre');
+    foreach (WebhookInfoReport::lines($webhookinfo, $s->getSetting('telegram_webhook_secret_token') !== '') as $line) {
+        echo Html::span($line['text'], $line['warning'] ? ['class' => 'text-danger fw-bold'] : [])->render();
+        echo "\n";
+    }
     echo Html::closeTag('pre');
 }

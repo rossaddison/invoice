@@ -249,6 +249,15 @@ echo H::openTag('div', $row); //1
          echo 'click here...';
         echo H::closeTag('a');
        echo H::closeTag('p');
+       // Administrators only: this tab is behind the edit-invoice permission and so is the page it opens.
+       echo H::openTag('p');
+        echo H::a(
+         'Webhook info',
+         $urlGenerator->generate('telegram/getWebhookinfo'),
+         ['class' => 'btn btn-outline-secondary btn-sm', 'target' => '_blank', 'rel' => 'noopener'],
+        );
+        echo ' What Telegram reports about the webhook: its address, how many updates are waiting and the last error.';
+       echo H::closeTag('p');
        $telegramPayment = 'settings[telegram_payment_notifications]';
        echo H::openTag('label', ['for' => $telegramPayment]);
         echo H::openTag('b');
