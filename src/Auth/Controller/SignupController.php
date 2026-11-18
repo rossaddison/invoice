@@ -10,6 +10,7 @@ use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository as uR;
 use App\Auth\AuthService;
 use App\Auth\Form\SignupForm;
+use App\Auth\SignupConfirmationEmail;
 use App\Auth\Trait\ClassList;
 use App\Auth\Trait\Oauth2;
 use App\Auth\Trait\TurnstileVerification;
@@ -25,8 +26,6 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Html\Tag\A;
-use Yiisoft\Html\Tag\Body;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Rbac\Manager as Manager;
 use Yiisoft\Router\CurrentRoute;
@@ -236,11 +235,8 @@ final class SignupController
         /** @var string $_language */
         $_language = $currentRoute->getArgument('_language');
         $randomAndTimeToken = $this->getEmailVerificationToken($user, $deps->tR);
-        $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink(
-            $this->signupLanguage($currentRoute),
-            $_language,
-            $randomAndTimeToken,
-        );
+        $confirmUrl = $this->confirmUrl($this->signupLanguage($currentRoute), $_language, $randomAndTimeToken);
+        $linkText = $this->translator->translate('email.link.click.confirm');
         if (($this->sR->getSetting('email_send_method') == 'symfony')
                 || ($this->sR->mailerEnabled())) {
             $configEmail = $this->sR->getConfigAdminEmail();
@@ -255,7 +251,8 @@ final class SignupController
                 date: new \DateTimeImmutable('now'),
                 from: [$configEmail => $tta],
                 to: $to,
-                htmlBody: $htmlBody,
+                textBody: SignupConfirmationEmail::text($confirmUrl, $linkText),
+                htmlBody: SignupConfirmationEmail::html($confirmUrl, $linkText),
             );
             $email->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
             try {
@@ -302,42 +299,21 @@ final class SignupController
     }
 
     /**
-     * Only builds the body: the user's extension row is created by signup() before this runs.
-     *
-     * @param string $language
-     * @param string $_language
-     * @param string $randomAndTimeToken
-     * @return string
+     * The address the emailed link points to. When it is clicked, userinv/signup shows the confirm
+     * button; pressing it makes the user active in the userinv extension table (created inactive by
+     * signup()) and assigns a client when 'Assign a client to user on signup' is on in Settings.
      */
-    private function htmlBodyWithMaskedRandomAndTimeTokenLink(
-        string $language,
-        string $_language,
-        string $randomAndTimeToken,
-    ): string {
-        $tokenWithMask = TokenMask::apply($randomAndTimeToken);
-        $elcc = $this->translator->translate('email.link.click.confirm');
-        // When the user clicks the link, userinv/signup makes the user active in the userinv
-        // extension table; it was created inactive.
-        $content = new A()
-        // When the url is clicked by the user, return to userinv/signup
-        // to activate the user and assign a client to the user
-        // depending on whether 'Assign a client to user on signup' has
-        // been chosen under View ... Settings...General. The user will
-        // be able to edit their userinv details on the client side as
-        // well as the client record.
-            ->href($this->urlGenerator->generateAbsolute(
-                'userinv/signup',
-                [
-                    '_language' => $_language,
-                    'language' => $language,
-                    'token' => $tokenWithMask,
-                    'tokenType' => 'email-verification',
-                ],
-            ))
-            ->content($elcc);
-        return new Body()
-            ->content($content)
-            ->render();
+    private function confirmUrl(string $language, string $_language, string $randomAndTimeToken): string
+    {
+        return $this->urlGenerator->generateAbsolute(
+            'userinv/signup',
+            [
+                '_language' => $_language,
+                'language' => $language,
+                'token' => TokenMask::apply($randomAndTimeToken),
+                'tokenType' => 'email-verification',
+            ],
+        );
     }
 
     /**

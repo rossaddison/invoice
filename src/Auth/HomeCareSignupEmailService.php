@@ -14,8 +14,6 @@ use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
-use Yiisoft\Html\Tag\A;
-use Yiisoft\Html\Tag\Body;
 use Yiisoft\Mailer\Message;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Router\CurrentRoute;
@@ -73,11 +71,8 @@ final readonly class HomeCareSignupEmailService
         // Inactive until the confirmation link is clicked, same as the generic signup flow.
         $d->uiR->createInactiveFor($user, $language);
         $randomAndTimeToken = $this->getEmailVerificationToken($user, $d);
-        $htmlBody = $this->htmlBodyWithMaskedRandomAndTimeTokenLink(
-            $language,
-            $_language,
-            $randomAndTimeToken
-        );
+        $confirmUrl = $this->confirmUrl($language, $_language, $randomAndTimeToken);
+        $linkText = $this->translator->translate('email.link.click.confirm');
         if (($this->sR->getSetting('email_send_method') == 'symfony')
                 || ($this->sR->mailerEnabled())) {
             $configEmail = $this->sR->getConfigAdminEmail();
@@ -92,7 +87,8 @@ final readonly class HomeCareSignupEmailService
                 date: new \DateTimeImmutable('now'),
                 from: [$configEmail => $tta],
                 to: $to,
-                htmlBody: $htmlBody,
+                textBody: SignupConfirmationEmail::text($confirmUrl, $linkText),
+                htmlBody: SignupConfirmationEmail::html($confirmUrl, $linkText),
             );
             $email->withAddedHeader('Message-ID', $this->sR->getConfigAdminEmail());
             try {
@@ -106,30 +102,20 @@ final readonly class HomeCareSignupEmailService
     }
 
     /**
-     * Only builds the body: the user's extension row (inactive until the link is clicked) is created
-     * by processSendSignupEmail() before this runs.
+     * The address the emailed link points to. The user's extension row (inactive until the link is
+     * confirmed) is created by processSendSignupEmail() before this runs.
      */
-    private function htmlBodyWithMaskedRandomAndTimeTokenLink(
-        string $language,
-        string $_language,
-        string $randomAndTimeToken,
-    ): string {
-        $tokenWithMask = TokenMask::apply($randomAndTimeToken);
-        $elcc = $this->translator->translate('email.link.click.confirm');
-        $content = new A()
-            ->href($this->urlGenerator->generateAbsolute(
-                'homecare/signup-confirm',
-                [
-                    '_language' => $_language,
-                    'language' => $language,
-                    'token' => $tokenWithMask,
-                    'tokenType' => 'homecare-email-verification',
-                ],
-            ))
-            ->content($elcc);
-        return new Body()
-            ->content($content)
-            ->render();
+    private function confirmUrl(string $language, string $_language, string $randomAndTimeToken): string
+    {
+        return $this->urlGenerator->generateAbsolute(
+            'homecare/signup-confirm',
+            [
+                '_language' => $_language,
+                'language' => $language,
+                'token' => TokenMask::apply($randomAndTimeToken),
+                'tokenType' => 'homecare-email-verification',
+            ],
+        );
     }
 
     private function getEmailVerificationToken(User $user, HomeCareSignupDeps $d): string
