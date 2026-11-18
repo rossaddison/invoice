@@ -7,6 +7,7 @@ namespace App\Invoice\ClientPeppol;
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Client\ClientRepository;
+use App\Invoice\UserClient\UserClientRepository;
 use App\Infrastructure\Persistence\ClientPeppol\ClientPeppol;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
@@ -67,8 +68,12 @@ final class ClientPeppolController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
         ClientRepository $clientRepository,
+        UserClientRepository $ucR,
     ): Response {
         $client_id = $currentRoute->getArgument('client_id');
+        if (!$this->mayAccessClient((int) $client_id, $ucR)) {
+            return $this->webService->getNotFoundResponse();
+        }
         $client_peppol = new ClientPeppol();
         $form = new ClientPeppolForm();
         $electronic_address_scheme = PeppolArrays::electronicAddressScheme();
@@ -96,6 +101,8 @@ final class ClientPeppolController extends BaseController
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $body['client_id'] = $client_id;
+                        // the row is created for the client in the address, never for a posted id
+                        unset($body['id']);
                         $client = $clientRepository->repoClientquery((int)$client_id);
                         $client_peppol->setClient($client);
                         $this->clientPeppolService->saveClientPeppol(
@@ -210,10 +217,14 @@ final class ClientPeppolController extends BaseController
     public function delete(
         CurrentRoute $currentRoute,
         ClientPeppolRepository $clientpeppolRepository,
+        UserClientRepository $ucR,
     ): Response {
         try {
             $clientpeppol =
                 $this->clientpeppol($currentRoute, $clientpeppolRepository);
+            if ($clientpeppol && !$this->mayAccessClient($clientpeppol->reqClientId(), $ucR)) {
+                return $this->webService->getNotFoundResponse();
+            }
             if ($clientpeppol) {
                 $this->clientPeppolService->deleteClientPeppol($clientpeppol);
                 $this->flashMessage('info', $this->translator->translate(
@@ -242,14 +253,20 @@ final class ClientPeppolController extends BaseController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         ClientPeppolRepository $clientpeppolRepository,
+        UserClientRepository $ucR,
     ): Response {
         $clientpeppol = $this->clientpeppol(
             $currentRoute,
             $clientpeppolRepository
         );
         $body = $request->getParsedBody() ?? [];
-        if (!$clientpeppol) {
+        if (!$clientpeppol || !$this->mayAccessClient($clientpeppol->reqClientId(), $ucR)) {
             return $this->webService->getNotFoundResponse();
+        }
+        if (is_array($body)) {
+            // the row stays on its own client and keeps its own id, whatever is posted
+            $body['client_id'] = (string) $clientpeppol->reqClientId();
+            unset($body['id']);
         }
         $peppolarrays = new PeppolArrays();
         $form = ClientPeppolForm::show($clientpeppol);
@@ -334,6 +351,19 @@ final class ClientPeppolController extends BaseController
      * @param ClientPeppolRepository $clientpeppolRepository
      * @return ClientPeppol|null
      */
+    /**
+     * The client id is in the address. Staff (edit.inv) may use any client; anyone else, such as an observer
+     * who holds edit.client.peppol, only the clients assigned to them.
+     */
+    private function mayAccessClient(int $clientId, UserClientRepository $ucR): bool
+    {
+        if ($this->userService->hasPermission(Permissions::EDIT_INV)) {
+            return true;
+        }
+        $userId = $this->userService->getUser()?->reqId();
+        return null !== $userId && $ucR->repoUserClientqueryCount($userId, $clientId) > 0;
+    }
+
     private function clientpeppol(
         CurrentRoute $currentRoute,
         ClientPeppolRepository $clientpeppolRepository
