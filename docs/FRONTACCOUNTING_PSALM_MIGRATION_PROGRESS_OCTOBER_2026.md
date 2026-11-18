@@ -13,14 +13,44 @@ minimum PHP version to 8.5, run at Psalm's strictest `errorLevel=1`. Every
 first-party source file also now declares `strict_types=1`.
 
 **Progress:** 13,353 → 10,158 → 7,220 → 6,968 → 6,652 → 6,102 → 5,211 →
-4,834 → 3,523 → **2,180** Psalm errors so far, tracked via a static `Psalm Level 1`
-badge at the top of that branch's own README (same hand-updated-badge
-convention this repo's README already uses). Also underway: renaming the
+4,834 → 3,523 → 2,180 (18 October) → about 1,500 (24 October) → 1,116 → 317
+(31 October) → **325** Psalm errors (18 November 2026), tracked via a static
+`Psalm Level 1` badge at the top of that branch's own README (same
+hand-updated-badge convention this repo's README already uses; the badge can
+lag behind the figure given here). Also underway: renaming the
 dozen-odd function names (`trans_view`, `edit_link`, `can_delete`, ...)
 independently declared the same way across ~50 files, each own-page
 pager-callback colliding under Psalm's cross-file name resolution and
 producing noise no local fix could resolve — first file converted and
 verified clean.
+
+### Where the 325 stands (18 November 2026)
+
+Measured with `vendor/bin/psalm --no-cache` (`errorLevel=1`, `phpVersion=8.5`) on the branch's head at
+the time, commit `00f1dfff` of 1 November 2026, identical to the branch on GitHub: **325 errors**, 99.8154%
+of types inferred, no other issues, in about 45 seconds.
+
+| Area | Errors |
+|---|---|
+| `includes/` | 185 |
+| `admin/` | 45 |
+| `reporting/` | 17 |
+| `purchasing/` | 14 |
+| `access/` | 12 |
+| `sales/` | 10 |
+| `inventory/`, `src/` | 9 each |
+| `install/` | 8 |
+| `manufacturing/`, root files | 7 each |
+| `dimensions/`, `gl/` | 1 each |
+
+By kind, `MixedAssignment` is 135 of the 325, then `MixedArrayAccess` (19), `UnresolvableInclude` (16),
+`TaintedHtml` (12), `PossiblyUndefinedArrayOffset` (11), `TaintedTextWithQuotes` (11) and
+`MixedMethodCall` (10).
+
+The last figure recorded in the branch's commit messages was 317 on 31 October. The **eight** added since
+are the first four classes of the new Cycle ORM layer under `src/` (`Taxes\TaxType`, `Purchasing\Supplier`,
+`Purchasing\GrnBatch` and `Currency\Currencie`): each reports a `ClassMustBeFinal` and a
+`MissingImmutableAnnotation` finding. The rest of the code is where it was.
 
 ## Why it's worth noting here
 
