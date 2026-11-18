@@ -55,22 +55,13 @@ trait TelegramInvoiceTrait
     }
 
     /**
-     * @param bool $commandsTrusted whether the webhook secret token is configured and matched. The
-     *                              account-linking commands change who receives messages, so they are
-     *                              only acted on when it is: with no secret set, anyone who knows the
-     *                              webhook address could post an update.
+     * Only called for a request that passed TelegramWebhookGuard: it carried the secret token.
      */
-    private function handleWebhookUpdate(
-        string $token,
-        string $body,
-        TelegramUpdateHandler $updateHandler,
-        bool $commandsTrusted,
-    ): void {
+    private function handleWebhookUpdate(string $token, string $body, TelegramUpdateHandler $updateHandler): void
+    {
         $telegramHelper = new TelegramHelper($token, $this->logger);
         $update = TelegramHelper::pushToWebhook($body, $this->logger);
-        if ($commandsTrusted) {
-            $updateHandler->handle($update, $telegramHelper);
-        }
+        $updateHandler->handle($update, $telegramHelper);
         if ($update->preCheckoutQuery !== null) {
             $telegramHelper->answerPreCheckoutQuery($update->preCheckoutQuery->id, true);
             return;

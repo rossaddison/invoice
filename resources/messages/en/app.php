@@ -3068,11 +3068,8 @@ prior to importing and no existing documents e.g. Invoices.',
     'Webhook has just been disabled'
     . ' so that manual api get method getUpdates'
     . ' can be used.',
-  'telegram.bot.api.webhook.secret.token' =>
-    'Webhook Secret Token'
-    . ' for additional security'
-    . ' (Used as a parameter in the'
-    . ' setWebhook function and not as a queryParameter)',
+  'telegram.bot.api.webhook.secret.token' => 'Webhook Secret Token (required). Telegram sends it with every update, and the webhook refuses any update that does not carry it, so nobody else can post fake payments or link requests to this address. Use 32 or more random letters, digits, hyphens or underscores (Telegram allows 1 to 256). Save the settings, then press the link in step 9 to register the webhook with it.',
+  'telegram.bot.api.webhook.secret.token.not.set' => 'Set the Webhook Secret Token first and save the settings: the webhook refuses every update that does not carry it, so it cannot be registered without one.',
   'telegram.bot.api.webhook.setup' =>
     'The webhook is setup.',
   'telegram.bot.api.webhook.setup.already' =>
