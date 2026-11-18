@@ -358,17 +358,13 @@ echo Field::select($form, 'language')
     ->addInputAttributes(['id' => 'consent_telegram_outstanding']);
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-            <?= Field::text($form, 'telegram_chat_id')
-    ->label($translator->translate('consent.telegram.chat.id'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('consent.telegram.chat.id'),
-        'class' => 'form-control form-control-lg',
-        'id' => 'telegram_chat_id',
-    ])
-    ->value(Html::encode($form->telegram_chat_id ?? ''))
-    ->hint($translator->translate('hint.this.field.is.not.required'));
-?>
+        <?php
+        // The chat id is no longer typed here (anyone could enter anyone's): it is set only by the verified
+        // link below the form, see App\Invoice\Telegram\TelegramLinkService.
+        $telegramLinked = ($form->telegram_chat_id ?? '') !== '';
+        ?>
+        <?= Html::openTag('div', ['class' => 'mb-3 text-muted']); ?>
+            <?= Html::encode($translator->translate($telegramLinked ? 'telegram.linked' : 'telegram.not.linked')) ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
@@ -376,3 +372,27 @@ echo Field::select($form, 'language')
     <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?=  new Form()->close() ?>
+
+<?= Html::openTag('div', ['class' => 'container pb-5']); ?>
+<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark']); ?>
+<?= Html::openTag('div', ['class' => 'card-header']); ?>
+    <?= Html::encode($translator->translate('telegram.link.heading')) ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
+    <p><?= Html::encode($translator->translate($telegramLinked ? 'telegram.linked' : 'telegram.not.linked')) ?></p>
+    <?= new Form()
+        ->post($urlGenerator->generate($telegramLinked ? 'userinv/guestTelegramUnlink' : 'userinv/guestTelegramLink'))
+        ->csrf($csrf)
+        ->open() ?>
+        <?= Html::submitButton(
+            $translator->translate($telegramLinked ? 'telegram.unlink.button' : 'telegram.link.button'),
+            ['class' => $telegramLinked ? 'btn btn-outline-danger' : 'btn btn-primary'],
+        ) ?>
+    <?= new Form()->close() ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>

@@ -15,12 +15,16 @@ use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserClient\UserClientRepository as ucR;
 use App\Invoice\UserInv\UserInvRepository as uiR;
+use App\Invoice\Helpers\Telegram\TelegramHelper;
+use App\Invoice\Telegram\TelegramLinkService;
 use App\Invoice\UserInv\UserRbacLinkRepository;
 use App\User\UserService;
 use App\User\UserRepository as uR;
 use App\Widget\Button;
+use Phptg\BotApi\FailResult;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LoggerInterface;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\FormModel\FormHydrator;
@@ -217,7 +221,9 @@ final class UserInvController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                $this->userinvService->saveUserInv($userinv, $body);
+                // type, active, all_clients, user_id and the verified telegram chat id come from the
+                // stored row, never from the posted body: see GuestProfileInput.
+                $this->userinvService->saveUserInv($userinv, GuestProfileInput::forSave($body, $userinv));
                 $redirect = $this->webService->getRedirectResponse('invoice/index');
             } else {
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -225,6 +231,63 @@ final class UserInvController extends BaseController
             }
         }
         return $redirect ?? $this->webViewRenderer->render('_form_guest', $parameters);
+    }
+
+    /**
+     * Starts linking the signed-in user's Telegram to their account: makes a one-time token and shows the
+     * t.me link that carries it. The chat id is stored by the webhook when the user presses Start in the
+     * bot, never typed in here. See App\Invoice\Telegram\TelegramLinkService.
+     */
+    public function guestTelegramLink(
+        Request $request,
+        uiR $uiR,
+        TelegramLinkService $links,
+        LoggerInterface $logger,
+    ): Response {
+        $user = $this->userService->getUser();
+        $userinv = null !== $user ? $uiR->repoUserInvUserIdquery($user->reqId()) : null;
+        if (null === $user || null === $userinv) {
+            return $this->webService->getNotFoundResponse();
+        }
+        if ($request->getMethod() !== Method::POST) {
+            return $this->webService->getRedirectResponse('userinv/guest');
+        }
+        $token = $this->sR->getSetting('telegram_token');
+        if ($this->sR->getSetting('enable_telegram') !== '1' || strlen($token) < 2) {
+            return $this->telegramUnavailable();
+        }
+        $bot = new TelegramHelper($token, $logger)->getBotApi()->getMe();
+        if ($bot instanceof FailResult || null === $bot->username) {
+            return $this->telegramUnavailable();
+        }
+        $linkToken = $links->createToken((int) $user->getIdentity()->getId());
+        return $this->webViewRenderer->render('_telegram_link', [
+            'deepLink' => 'https://t.me/' . $bot->username . '?start=' . $linkToken,
+            'minutes' => intdiv(TelegramLinkService::TOKEN_LIFETIME_SECONDS, 60),
+        ]);
+    }
+
+    /**
+     * Unlinks the signed-in user's Telegram and switches their Telegram reminders off.
+     */
+    public function guestTelegramUnlink(Request $request, uiR $uiR, TelegramLinkService $links): Response
+    {
+        $user = $this->userService->getUser();
+        $userinv = null !== $user ? $uiR->repoUserInvUserIdquery($user->reqId()) : null;
+        if (null === $user || null === $userinv) {
+            return $this->webService->getNotFoundResponse();
+        }
+        if ($request->getMethod() === Method::POST) {
+            $links->unlinkUserInv($userinv);
+            $this->flashMessage('info', $this->translator->translate('telegram.unlinked'));
+        }
+        return $this->webService->getRedirectResponse('userinv/guest');
+    }
+
+    private function telegramUnavailable(): Response
+    {
+        $this->flashMessage('warning', $this->translator->translate('telegram.link.unavailable'));
+        return $this->webService->getRedirectResponse('userinv/guest');
     }
 
     /**

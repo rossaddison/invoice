@@ -313,7 +313,7 @@ final class TelegramController extends BaseController
      * IMPORTANT: the route for this action must NOT have auth middleware so
      * Telegram's servers can reach it. Secure it with telegram_webhook_secret_token only.
      */
-    public function webhook(Request $request): Response
+    public function webhook(Request $request, TelegramUpdateHandler $updateHandler): Response
     {
         $token          = $this->sR->getSetting('telegram_token');
         $secretToken    = $this->sR->getSetting('telegram_webhook_secret_token');
@@ -328,7 +328,14 @@ final class TelegramController extends BaseController
             return $this->factory->createResponse(Json::encode(['fail' => $failKey]));
         }
         try {
-            $this->handleWebhookUpdate($token, $request->getBody()->getContents());
+            // The account-linking commands are acted on only when a secret token is set and matched
+            // (a blank secret lets every request through above).
+            $this->handleWebhookUpdate(
+                $token,
+                $request->getBody()->getContents(),
+                $updateHandler,
+                $secretToken !== '',
+            );
         } catch (TelegramParseResultException $e) {
             $this->logger->warning($e->getMessage());
             return $this->factory->createResponse(Json::encode(['fail' => $e->getMessage()]));

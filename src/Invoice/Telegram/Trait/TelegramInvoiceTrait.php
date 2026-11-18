@@ -6,6 +6,7 @@ namespace App\Invoice\Telegram\Trait;
 
 use App\Infrastructure\Persistence\Payment\Payment;
 use App\Invoice\Helpers\Telegram\TelegramHelper;
+use App\Invoice\Telegram\TelegramUpdateHandler;
 use JsonException;
 use Phptg\BotApi\FailResult;
 use Yiisoft\Json\Json;
@@ -53,10 +54,23 @@ trait TelegramInvoiceTrait
         return ['inv/view', ['id' => $inv_id]];
     }
 
-    private function handleWebhookUpdate(string $token, string $body): void
-    {
+    /**
+     * @param bool $commandsTrusted whether the webhook secret token is configured and matched. The
+     *                              account-linking commands change who receives messages, so they are
+     *                              only acted on when it is: with no secret set, anyone who knows the
+     *                              webhook address could post an update.
+     */
+    private function handleWebhookUpdate(
+        string $token,
+        string $body,
+        TelegramUpdateHandler $updateHandler,
+        bool $commandsTrusted,
+    ): void {
         $telegramHelper = new TelegramHelper($token, $this->logger);
         $update = TelegramHelper::pushToWebhook($body, $this->logger);
+        if ($commandsTrusted) {
+            $updateHandler->handle($update, $telegramHelper);
+        }
         if ($update->preCheckoutQuery !== null) {
             $telegramHelper->answerPreCheckoutQuery($update->preCheckoutQuery->id, true);
             return;
