@@ -344,6 +344,36 @@ final class ApproveTest
         Assert::same($result, $notFound);
     }
 
+    public function approveReturnsNotFoundWhenTheSignedInUserIsNotTheObserverTheQuoteWasSentTo(): void
+    {
+        $quote = $this->stubQuoteForSuccessfulGuards();
+        $quote->shouldReceive('getSoId')->andReturn(0);
+
+        /** @var QR&m\MockInterface $qR */
+        $qR = m::mock(QR::class);
+        $qR->shouldReceive('repoUrlKeyGuestCount')->once()->with('the-key')->andReturn(1);
+        $qR->shouldReceive('repoUrlKeyGuestLoaded')->once()->with('the-key')->andReturn($quote);
+        $qR->shouldNotReceive('save');
+
+        /** @var Response&m\MockInterface $notFound */
+        $notFound = m::mock(Response::class);
+        $harness = $this->makeHarness(['default_sales_order_group' => '3'], null, $this->makeUnusedFactory(), null, $notFound);
+        $harness->rbacObserverResult = false;
+
+        $result = $harness->approve(
+            $this->defaultRequest(),
+            $this->makeFormHydrator(true),
+            $this->makeCoreDeps($qR, $this->makeUnusedGr()),
+            $this->makeItemDeps(),
+            $this->makeUserDeps(),
+            $this->makeTransferDeps(),
+        );
+
+        Assert::same($result, $notFound);
+        Assert::same(count($harness->rbacObserverCalls), 1);
+        Assert::same(count($harness->activeUserCalls), 0);
+    }
+
     public function approveReturnsNotFoundWhenNoQuoteMatchesTheUrlKey(): void
     {
         /** @var QR&m\MockInterface $qR */
@@ -654,6 +684,9 @@ final class QuoteApproveHarness extends BaseController
     /** @var list<array{Quote, UCR, UIR}> */
     public array $rbacObserverCalls = [];
 
+    /** What the observer check answers: true is the guest this quote was sent to. */
+    public bool $rbacObserverResult = true;
+
     // Stub -- never exercised by any test here (this file covers approve()
     // only; reject(), the one real caller of rbacObserver(), is already
     // covered via PR #1197). Declared solely because Psalm type-checks
@@ -663,6 +696,6 @@ final class QuoteApproveHarness extends BaseController
     protected function rbacObserver(Quote $quote, UCR $ucR, UIR $uiR): bool
     {
         $this->rbacObserverCalls[] = [$quote, $ucR, $uiR];
-        return false;
+        return $this->rbacObserverResult;
     }
 }
