@@ -7,7 +7,10 @@ The Telegram settings tab (`Settings → Telegram`) includes a native Telegram p
 developed and maintained by **[Sergei Predvoditelev (vjik)](https://github.com/vjik)**.
 If you find the library useful, consider supporting Sergei via [Boosty](https://boosty.to/vjik).
 
-Step 11 accepts a **provider token** obtained from `@BotFather → Payments`. An inline **ⓘ Providers** button opens a reference modal listing every payment provider currently supported by the Telegram Bot API.
+> The steps of the tab were renumbered in November 2026, and the webhook now needs a secret token: see
+> [the settings tab](TELEGRAM_SETTINGS_TAB_NOVEMBER_2026.md) and [Telegram, November 2026](TELEGRAM_NOVEMBER_2026.md).
+
+Step 10 accepts a **provider token** obtained from `@BotFather → Payments`. An inline **ⓘ Providers** button opens a reference modal listing every payment provider currently supported by the Telegram Bot API.
 
 ---
 
@@ -39,7 +42,7 @@ Step 11 accepts a **provider token** obtained from `@BotFather → Payments`. An
 2. Send `/mybots` and select your bot.
 3. Choose **Payments**.
 4. Select a provider from the list and follow the connection flow (e.g. connecting your Stripe account).
-5. BotFather returns a provider token — paste it into **Settings → Telegram → Step 11**.
+5. BotFather returns a provider token — paste it into **Settings → Telegram → Step 10**.
 
 Further reading: [Telegram Payments documentation](https://core.telegram.org/bots/payments)
 
@@ -98,9 +101,9 @@ export function initTelegramProviderPopup(): void {
 
 ---
 
-## Payment Method Dropdown (Step 12)
+## Payment Method Dropdown (Step 10)
 
-Step 12 renders a `<select>` populated from `PaymentMethodRepository::findAllPreloaded()`. The option whose name contains **Card / Direct Debit** is pre-selected when no value has been saved yet. This determines which payment method is recorded automatically when a `successful_payment` webhook fires.
+Step 10 renders, under the provider token, a `<select>` populated from `PaymentMethodRepository::findAllPreloaded()`. The option whose name contains **Card / Direct Debit** is pre-selected when no value has been saved yet. This determines which payment method is recorded automatically when a `successful_payment` webhook fires.
 
 The `SettingController::tabIndex()` passes the list to the partial:
 
@@ -116,7 +119,7 @@ The `SettingController::tabIndex()` passes the list to the partial:
 
 | File | Change |
 |---|---|
-| `resources/views/invoice/setting/views/partial_settings_telegram.php` | Provider token wrapped in `input-group`; `&#9432; Providers` anchor trigger; modal HTML appended at bottom |
+| `resources/views/invoice/setting/views/partial_settings_telegram.php` | `&#9432; Providers` link opens the modal, whose HTML is at the bottom of the file. The rest of the tab was rewritten in November 2026: see [the settings tab](TELEGRAM_SETTINGS_TAB_NOVEMBER_2026.md) |
 | `src/Invoice/Setting/SettingController.php` | `payment_methods` passed to Telegram partial |
 | `src/typescript/telegram-providers.ts` | `initTelegramProviderPopup()` — moves modal to `document.body` on DOMContentLoaded |
 | `src/typescript/index.ts` | Imports and calls `initTelegramProviderPopup()` |
