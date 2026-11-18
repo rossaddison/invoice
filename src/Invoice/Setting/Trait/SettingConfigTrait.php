@@ -188,9 +188,8 @@ trait SettingConfigTrait
     {
         /** @var array<string, mixed> $params */
         $params = $this->getConfigParams()->get('params');
-        /** @var string $baseUrl */
-        $baseUrl = $params['app.baseUrl'] ?? '';
-        return $baseUrl;
+        /** @var string */
+        return $params['app.baseUrl'] ?? '';
     }
 
     /**

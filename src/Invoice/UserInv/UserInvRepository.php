@@ -148,9 +148,8 @@ final class UserInvRepository extends Select\Repository
         if ($chatId === '') {
             return [];
         }
-        /** @var list<UserInv> $rows */
-        $rows = $this->select()->where(['telegram_chat_id' => $chatId])->fetchAll();
-        return $rows;
+        /** @var list<UserInv> */
+        return $this->select()->where(['telegram_chat_id' => $chatId])->fetchAll();
     }
 
     public function repoUserInvUserIdcount(int $user_id): int

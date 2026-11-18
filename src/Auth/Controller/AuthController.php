@@ -556,20 +556,18 @@ final class AuthController
             return null;
         }
         $userIdString = (string) $userId;
+        $isAdmin = $this->isAdminUser($userIdString);
         // An account that has not been activated (email never confirmed, or awaiting the admin) must
-        // not be able to enrol its own authenticator and log in through the 2FA flow below: that
-        // would make the email confirmation optional whenever 2FA is on. Admins are exempt, as in
+        // not be able to enrol its own authenticator and log in through the 2FA flow: that would make
+        // the email confirmation optional whenever 2FA is on. Admins are exempt, as in
         // handleNonTfaPath(), because they are never locked out by activation.
-        if (!$userInv->getActive() && !$this->isAdminUser($userIdString)) {
-            return $this->handleNonTfaPath($userIdString, $userInv, $cookieLogin, $loginForm, $tR);
-        }
-        // 2FA is mandatory for admins regardless of the global enable_tfa
-        // setting — an admin without TOTP set up is routed into setup by
-        // handleTfaPath() below, same as any other 2FA-required user.
-        if ($this->sR->getSetting('enable_tfa') == '1' || $this->isAdminUser($userIdString)) {
-            return $this->handleTfaPath($userIdString, $user, $loginForm);
-        }
-        return $this->handleNonTfaPath($userIdString, $userInv, $cookieLogin, $loginForm, $tR);
+        // 2FA is mandatory for admins regardless of the global enable_tfa setting: an admin without
+        // TOTP set up is routed into setup by handleTfaPath(), same as any other 2FA-required user.
+        $goesThroughTfa = ($userInv->getActive() || $isAdmin)
+            && ($this->sR->getSetting('enable_tfa') == '1' || $isAdmin);
+        return $goesThroughTfa
+            ? $this->handleTfaPath($userIdString, $user, $loginForm)
+            : $this->handleNonTfaPath($userIdString, $userInv, $cookieLogin, $loginForm, $tR);
     }
 
     private function handleTfaPath(

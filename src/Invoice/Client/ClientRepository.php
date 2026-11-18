@@ -130,9 +130,8 @@ final class ClientRepository extends Select\Repository implements ClientReposito
         if ($chatId === '') {
             return [];
         }
-        /** @var list<Client> $rows */
-        $rows = $this->select()->where(['client_telegram_chat_id' => $chatId])->fetchAll();
-        return $rows;
+        /** @var list<Client> */
+        return $this->select()->where(['client_telegram_chat_id' => $chatId])->fetchAll();
     }
 
     /**

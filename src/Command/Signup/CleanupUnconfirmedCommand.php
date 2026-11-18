@@ -61,7 +61,21 @@ final class CleanupUnconfirmedCommand extends Command
             return ExitCode::USAGE;
         }
 
-        $candidates = $this->cleaner->findCandidates(new DateTimeImmutable('-' . $hours . ' hours'));
+        return $this->process(
+            $io,
+            $this->cleaner->findCandidates(new DateTimeImmutable('-' . $hours . ' hours')),
+            $hours,
+            (bool) $input->getOption(self::OPTION_FORCE),
+        );
+    }
+
+    /**
+     * Shows the candidates and, with --force, removes them.
+     *
+     * @param list<array{userId: int, login: string, createdAt: string}> $candidates
+     */
+    private function process(SymfonyStyle $io, array $candidates, int $hours, bool $force): int
+    {
         if ([] === $candidates) {
             $io->success('No unconfirmed signups older than ' . $hours . ' hours.');
             return ExitCode::OK;
@@ -72,12 +86,11 @@ final class CleanupUnconfirmedCommand extends Command
             $candidates,
         ));
 
-        if (!$input->getOption(self::OPTION_FORCE)) {
-            $io->note(count($candidates) . ' unconfirmed signup(s) would be removed. Run again with --force to delete them.');
-            return ExitCode::OK;
+        if ($force) {
+            return $this->removeAll($io, $candidates);
         }
-
-        return $this->removeAll($io, $candidates);
+        $io->note(count($candidates) . ' unconfirmed signup(s) would be removed. Run again with --force to delete them.');
+        return ExitCode::OK;
     }
 
     private function hours(InputInterface $input): ?int

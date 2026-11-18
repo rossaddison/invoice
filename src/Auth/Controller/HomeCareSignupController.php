@@ -149,6 +149,20 @@ final class HomeCareSignupController
             ]);
         }
 
+        return $this->provisionConfirmedSignup($language, $tokenMasked, $tokenType, $formHydrator, $d);
+    }
+
+    /**
+     * The POST of the confirm button: spends the token, activates the account, and provisions the client,
+     * the first invoice and the QR code.
+     */
+    private function provisionConfirmedSignup(
+        string $language,
+        string $tokenMasked,
+        string $tokenType,
+        FormHydrator $formHydrator,
+        HomeCareSignupConfirmDeps $d,
+    ): Response {
         $resolved = $this->resolveAndActivateSignup($tokenMasked, $tokenType, $d);
         if ($resolved instanceof Response) {
             return $resolved;
