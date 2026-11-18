@@ -18,8 +18,11 @@ return [
                 ->middleware(RoutePermission::check(Permissions::VIEW_INV))
                 ->action([QuoteController::class, 'pdf'])
                 ->name('quote/pdf'),
+        // Staff only: it takes the quote id, client and group from the request with no ownership check, and
+        // the button that calls it (QuoteToolbar) is shown only to edit.inv. VIEW_INV let any observer
+        // create sales orders from any quote.
         Route::methods([Method::GET, Method::POST], '/quote/quoteToSoConfirm')
-                ->middleware(RoutePermission::check(Permissions::VIEW_INV))
+                ->middleware(RoutePermission::check(Permissions::EDIT_INV))
                 ->action([QuoteController::class, 'quoteToSoConfirm'])
                 ->name('quote/quoteToSoConfirm'),
         Route::methods([Method::GET, Method::POST], '/quote/view/{id}')
