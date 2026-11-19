@@ -95,7 +95,7 @@ POST /as4/receive
 As4Receiver::parse($rawBody, $contentType)
     → As4InboundMessage {envelope: DOMDocument, parts: As4MimePart[]}
     ↓
-As4SignatureVerifier::verify($envelope)                 → throws if invalid
+As4SignatureVerifier::verify($envelope)                 → NOT WIRED IN (see the note below)
     ↓
 As4DuplicateDetector::isDuplicate($messageId)           → if true: return cached Receipt
     ↓
@@ -107,6 +107,17 @@ As4ReceiptGenerator::generate($inboundMessageId)
     ↓
 HTTP 200  Content-Type: application/soap+xml
 ```
+
+> **Correction (2026-11-19).** The `As4SignatureVerifier` step above is not called anywhere on the
+> inbound path, and the verifier takes the public key from the message's own embedded certificate, so
+> even wired in it would prove the message was not altered, not who sent it. The sender is the unsigned
+> `senderPartyId`, which the order and invoice importers match against registered clients' (public)
+> Peppol endpoint ids. Until each message's signing certificate is verified against the registered
+> partner, `POST /as4/receive` is closed behind a shared secret (`As4ReceiveGuard`, PR #60): the caller
+> must send `AS4_RECEIVE_SECRET` as the `X-As4-Receive-Secret` header or `?secret=` on the endpoint URL,
+> and with none configured every call is refused (403). A standard Peppol access point cannot add a
+> secret to an endpoint it finds through the SMP, so genuine Peppol network traffic is refused too; this
+> is an interim for bilateral partners only.
 
 ### Bilateral setup — localhost ↔ yii3i.online
 

@@ -178,6 +178,8 @@ already uses for the observer's own list-size choice
   `userinv/guestStickyNavbar` / `userinv/guestStickyGridHeader`
   (`routes-user-inv.php`), same `RoutePermission::check(Permissions::
   EDIT_USER_INV)` gate as `userinv/guestlimit`.
+  *(2026-11-19, PR #53: `guestlimit`, `guestStickyNavbar` and `guestStickyGridHeader` take `userinv_id` from the
+  URL and used to change whichever row it named. They now change only the signed-in user's own row.)*
 - **Resolved in `LayoutViewInjection::resolveUserState()`**, not
   `GuestLayoutViewParameters` — that class has no `UrlGenerator`/
   `CurrentRoute` to build a toggle link from, and `resolveUserState()`

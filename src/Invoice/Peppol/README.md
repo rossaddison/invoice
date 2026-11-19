@@ -115,6 +115,7 @@ Oxalis calls back your application when delivery is confirmed:
 
 ```
 POST /peppol/inbound/delivery
+X-Peppol-Callback-Secret: <PEPPOL_INBOUND_SECRET>
 Body: { "messageId": "<uuid>" }
 ```
 
@@ -125,6 +126,12 @@ as **DELIVERED**.
 Make sure Oxalis can reach your application's public URL on this path.  
 In development, use a tunnel such as `ngrok http 80` and configure the callback
 URL in Oxalis's `oxalis.conf`.
+
+**The callback must carry a shared secret.** Set `PEPPOL_INBOUND_SECRET` in `.env`
+(32 or more random characters) and send it as the `X-Peppol-Callback-Secret`
+header or, if Oxalis can only be given a URL, as `?secret=<value>` on the callback
+URL. With no secret set every call is refused (403) and nothing is marked
+`DELIVERED`. See `PeppolInboundGuard`.
 
 ---
 

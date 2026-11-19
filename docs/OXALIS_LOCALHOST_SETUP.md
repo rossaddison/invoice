@@ -74,8 +74,11 @@ oxalis.keystore {
 }
 
 # Inbound callback — Oxalis calls this after successful delivery
-oxalis.as4.inbound.callback.url = "http://host.docker.internal/peppol/inbound/delivery"
+oxalis.as4.inbound.callback.url = "http://host.docker.internal/peppol/inbound/delivery?secret=<PEPPOL_INBOUND_SECRET>"
 ```
+
+The callback must carry the shared secret from `PEPPOL_INBOUND_SECRET` in `.env`; with none set the
+application refuses every call (403) and no message is marked `DELIVERED`.
 
 `host.docker.internal` resolves to the host machine from inside Docker (Windows/Mac).
 On Linux use the host's Docker bridge IP (typically `172.17.0.1`).
