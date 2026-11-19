@@ -161,7 +161,7 @@ final class RobokassaPaymentService implements PaymentGatewayInterface
         try {
             $xml = $this->fetchOperationStateXml($providerReference);
             if ($xml === null) {
-                return new PaymentVerificationResult(false, $providerReference, 'Unable to parse Robokassa response.');
+                return new PaymentVerificationResult(false, $providerReference, 'Unable to parse Robokassa response.', false);
             }
             $stateCode = $xml->State !== null ? (string) $xml->State->Code : '';
 
@@ -172,7 +172,7 @@ final class RobokassaPaymentService implements PaymentGatewayInterface
             return new PaymentVerificationResult($paid, $providerReference, 'State code: ' . $stateCode);
         } catch (GuzzleException $e) {
             $this->logger->warning('Robokassa verifyPayment failed.', ['error' => $e->getMessage()]);
-            return new PaymentVerificationResult(false, $providerReference, $e->getMessage());
+            return new PaymentVerificationResult(false, $providerReference, $e->getMessage(), false);
         }
     }
 

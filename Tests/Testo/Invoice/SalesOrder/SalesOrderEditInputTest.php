@@ -71,7 +71,7 @@ final class SalesOrderEditInputTest
         Assert::same('1', $out['client_id']);
         Assert::same('2', $out['group_id']);
         Assert::same('4', $out['user_id']);
-        Assert::same('0', $out['quote_id']);
+        Assert::false(isset($out['quote_id']));
         Assert::same('12', $out['inv_id']);
         Assert::same('2', $out['status_id']);
         Assert::same('5', $out['discount_amount']);
@@ -97,6 +97,47 @@ final class SalesOrderEditInputTest
         Assert::same('1', $out['client_id']);
         Assert::same('2', $out['status_id']);
         Assert::same('stored-key', $out['url_key']);
+    }
+
+    public function anOrderWithNoInvoiceOrQuoteKeepsThoseLinksNullWhenACustomerSavesIt(): void
+    {
+        // a rejected order: no invoice and no quote, both NULL in the table
+        $so = new SalesOrder();
+        $so->setId(31);
+        $so->setClientId(1);
+        $so->setGroupId(2);
+        $so->setUserId(4);
+        $so->setStatusId(5);
+
+        $out = SalesOrderEditInput::forObserver($this->hostileBody(), $so);
+        Assert::false(array_key_exists('inv_id', $out), 'a posted inv_id must not survive');
+        Assert::false(array_key_exists('quote_id', $out), 'a posted quote_id must not survive');
+
+        $client = new Client();
+        $client->setId(1);
+        $group = new Group();
+        $group->setId(2);
+        $user = TypedMock::of(User::class);
+        $user->shouldReceive('reqId')->andReturn(4);
+        $clients = TypedMock::of(ClientRepository::class);
+        $clients->shouldReceive('repoClientquery')->with(1)->andReturn($client);
+        $groups = TypedMock::of(GroupRepository::class);
+        $groups->shouldReceive('repoGroupquery')->with(2)->andReturn($group);
+        $users = TypedMock::of(UserRepository::class);
+        $users->shouldReceive('findById')->with(4)->andReturn($user);
+        $quotes = TypedMock::of(QuoteRepository::class);
+        $quotes->shouldReceive('repoQuoteUnLoadedquery')->never();
+        $orders = TypedMock::of(SalesOrderRepository::class);
+        $orders->shouldReceive('save')->once();
+
+        (new SalesOrderService($orders, $clients, $groups, $users, $quotes))->saveSo($so, $out);
+
+        // reqInvId() reads NULL as 0, so look at the column itself
+        foreach (['inv_id', 'quote_id'] as $column) {
+            $property = new \ReflectionProperty(SalesOrder::class, $column);
+            Assert::null($property->getValue($so), $column . ' must stay NULL');
+        }
+        Assert::same('my notes', $so->getNotes());
     }
 
     public function savedThroughTheRealServiceTheOrderKeepsItsClientStatusDiscountAndLinks(): void

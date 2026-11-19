@@ -30,8 +30,15 @@ final class SalesOrderEditInput
         $posted['client_id'] = (string) $stored->reqClientId();
         $posted['group_id'] = (string) $stored->reqGroupId();
         $posted['user_id'] = (string) $stored->reqUserId();
-        $posted['quote_id'] = (string) $stored->reqQuoteId();
-        $posted['inv_id'] = (string) $stored->reqInvId();
+        // reqQuoteId()/reqInvId() read a missing link as 0. Writing that 0 back would turn a NULL link (a rejected
+        // order has no invoice) into 0, so when there is no link the keys are left out and the row is untouched.
+        unset($posted['quote_id'], $posted['inv_id']);
+        if ($stored->reqQuoteId() > 0) {
+            $posted['quote_id'] = (string) $stored->reqQuoteId();
+        }
+        if ($stored->reqInvId() > 0) {
+            $posted['inv_id'] = (string) $stored->reqInvId();
+        }
         $posted['status_id'] = (string) ($stored->getStatusId() ?? 1);
         $posted['discount_amount'] = (string) ($stored->getDiscountAmount() ?? 0.0);
         $posted['url_key'] = $stored->getUrlKey();
