@@ -135,7 +135,10 @@ final readonly class SalesOrderService
         array $array
     ): SalesOrder {
         $this->persist($model, $array);
-        $model->setInvId((int) $array['inv_id']);
+        // A body without inv_id (a customer's save of an order with no invoice) leaves the link as it is
+        if (isset($array['inv_id'])) {
+            $model->setInvId((int) $array['inv_id']);
+        }
         isset($array['client_po_number'])
             ? $model->setClientPoNumber(
                 (string) $array['client_po_number']

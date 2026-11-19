@@ -272,6 +272,7 @@ final class RobokassaPaymentServiceTest
         $result = $service->verifyPayment('789');
 
         Assert::false($result->paid);
+        Assert::false($result->conclusive);
     }
 
     public function verifyPaymentReportsNotPaidWhenTheHttpCallFails(): void
@@ -284,6 +285,19 @@ final class RobokassaPaymentServiceTest
         $result = $service->verifyPayment('789');
 
         Assert::false($result->paid);
+        Assert::false($result->conclusive);
+    }
+
+    public function aClearNotPaidStateIsConclusive(): void
+    {
+        $mock = new MockHandler([
+            new Response(200, [], '<OperationStateResponse><Result><Code>0</Code></Result><State><Code>20</Code></State></OperationStateResponse>'),
+        ]);
+
+        $result = $this->makeService($mock)->verifyPayment('789');
+
+        Assert::false($result->paid);
+        Assert::true($result->conclusive);
     }
 
     public function verifyResultUrlCallbackDelegatesToTheSignatureService(): void

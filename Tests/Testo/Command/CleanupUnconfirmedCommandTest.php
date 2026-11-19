@@ -31,8 +31,21 @@ final class CleanupUnconfirmedCommandTest
     /**
      * @param list<array{userId: int, login: string, createdAt: string}> $candidates
      */
+    /**
+     * The command's output with line breaks collapsed. Symfony wraps output to the terminal width, which is
+     * narrower on CI than on a developer machine, so a sentence can be split across two lines.
+     */
+    private function display(CommandTester $tester): string
+    {
+        return (string) preg_replace('/\s+/', ' ', $tester->getDisplay());
+    }
+
     private function tester(array $candidates, ?UnconfirmedSignupCleaner $cleaner = null): CommandTester
     {
+        // SymfonyStyle wraps its blocks to the terminal width (and prefixes every wrapped line), which is much
+        // narrower on CI than on a developer machine and split the sentences these tests look for. A fixed wide
+        // terminal makes the output the same everywhere.
+        putenv('COLUMNS=200');
         if (null === $cleaner) {
             $cleaner = TypedMock::of(UnconfirmedSignupCleaner::class);
             $cleaner->shouldReceive('findCandidates')->andReturn($candidates);
@@ -45,7 +58,7 @@ final class CleanupUnconfirmedCommandTest
         $tester = $this->tester([]);
 
         Assert::same($tester->execute([]), ExitCode::OK);
-        Assert::true(str_contains($tester->getDisplay(), 'No unconfirmed signups older than 24 hours.'));
+        Assert::true(str_contains($this->display($tester), 'No unconfirmed signups older than 24 hours.'));
     }
 
     public function withoutForceItOnlyListsAndRemovesNothing(): void
@@ -56,7 +69,7 @@ final class CleanupUnconfirmedCommandTest
         $tester = $this->tester([], $cleaner);
 
         Assert::same($tester->execute([]), ExitCode::OK);
-        $display = $tester->getDisplay();
+        $display = $this->display($tester);
         Assert::true(str_contains($display, 'virtualbot01'));
         Assert::true(str_contains($display, 'virtualbot02'));
         Assert::true(str_contains($display, '2 unconfirmed signup(s) would be removed. Run again with --force'));
@@ -71,7 +84,7 @@ final class CleanupUnconfirmedCommandTest
         $tester = $this->tester([], $cleaner);
 
         Assert::same($tester->execute(['--force' => true]), ExitCode::OK);
-        Assert::true(str_contains($tester->getDisplay(), '2 unconfirmed signup(s) removed.'));
+        Assert::true(str_contains($this->display($tester), '2 unconfirmed signup(s) removed.'));
     }
 
     public function aRemovalThatFailsLeavesThatAccountAndCarriesOnWithTheError(): void
@@ -83,7 +96,7 @@ final class CleanupUnconfirmedCommandTest
         $tester = $this->tester([], $cleaner);
 
         Assert::same($tester->execute(['--force' => true]), ExitCode::UNSPECIFIED_ERROR);
-        $display = $tester->getDisplay();
+        $display = $this->display($tester);
         Assert::true(str_contains($display, 'User 5 was not removed: constraint'));
         Assert::true(str_contains($display, '1 unconfirmed signup(s) removed.'));
         Assert::true(str_contains($display, '1 could not be removed'));
@@ -96,7 +109,7 @@ final class CleanupUnconfirmedCommandTest
         $tester = $this->tester([], $cleaner);
 
         Assert::same($tester->execute(['--older-than-hours' => '0']), ExitCode::USAGE);
-        Assert::true(str_contains($tester->getDisplay(), 'a younger signup may still be about to confirm'));
+        Assert::true(str_contains($this->display($tester), 'a younger signup may still be about to confirm'));
     }
 
     public function anHoursValueThatIsNotAWholeNumberIsRefused(): void

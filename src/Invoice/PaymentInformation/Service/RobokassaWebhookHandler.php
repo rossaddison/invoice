@@ -74,11 +74,18 @@ final class RobokassaWebhookHandler
         // Robokassa (OpStateExt) before anything is recorded. Not confirmed: refuse, so Robokassa retries.
         $verification = $this->robokassaPaymentService->verifyPayment($invId);
         if (!$verification->paid) {
-            $this->logger->warning('Robokassa webhook: payment not confirmed on re-check.', [
-                'inv_id' => $invId,
-                'status' => $verification->message,
-            ]);
-            return $this->factory->createResponse('not confirmed')->withStatus(400);
+            // Could not ask Robokassa, or could not read its answer (a timeout, a bad response): a genuine
+            // payment must not be lost to that, so answer "try again" (503) and let Robokassa redeliver.
+            // A clear "not paid" is refused (400). Either way nothing is recorded.
+            $this->logger->warning(
+                $verification->conclusive
+                    ? 'Robokassa webhook: payment not confirmed on re-check.'
+                    : 'Robokassa webhook: payment could not be verified, asking Robokassa to retry.',
+                ['inv_id' => $invId, 'status' => $verification->message],
+            );
+            return $this->factory
+                ->createResponse($verification->conclusive ? 'not confirmed' : 'try again')
+                ->withStatus($verification->conclusive ? 400 : 503);
         }
 
         $this->markInvoicePaidIfFound($invId, $invoiceUrlKey);

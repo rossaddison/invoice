@@ -102,6 +102,30 @@ final class RobokassaWebhookHandlerTest
         Assert::same(400, $response->getStatusCode());
     }
 
+    public function aSignedCallbackWhenRobokassaCannotBeAskedIsToldToRetryAndRecordsNothing(): void
+    {
+        $service = TypedMock::of(RobokassaPaymentService::class);
+        $service->shouldReceive('verifyResultUrlCallback')->andReturn(true);
+        $service->shouldReceive('verifyPayment')->once()->with('1')->andReturn(
+            new PaymentVerificationResult(false, '1', 'Connection refused', false),
+        );
+        $recorder = TypedMock::of(OnlinePaymentRecorderService::class);
+        $recorder->shouldReceive('record')->never();
+        $settlement = TypedMock::of(InvPaymentSettlementService::class);
+        $settlement->shouldReceive('markInvoicePaidAndAdjustStock')->never();
+
+        $response = $this->handler(
+            $service,
+            $recorder,
+            $settlement,
+            TypedMock::of(InvRepository::class),
+            TypedMock::of(InvAmountRepository::class),
+        )->handle($this->request());
+
+        // 503, not 400: a genuine payment must not be lost to a timeout, Robokassa redelivers
+        Assert::same(503, $response->getStatusCode());
+    }
+
     public function aSignedCallbackConfirmedPaidIsRecorded(): void
     {
         $service = TypedMock::of(RobokassaPaymentService::class);
