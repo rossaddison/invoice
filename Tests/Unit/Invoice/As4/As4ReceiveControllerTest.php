@@ -40,10 +40,11 @@ class As4ReceiveControllerTest extends TestCase
     private const string RECEIPT_XML  = '<receipt/>';
     private const string MSG_ID       = 'msg-001@test.local';
     private const string REF_ID       = 'orig-001@test.local';
+    private const string SECRET       = 'an-as4-receive-secret-of-32-chars!';
 
     // ── Fixture factory ───────────────────────────────────────────────────────
 
-    private function createFixture(): As4ReceiveControllerTestFixture
+    private function createFixture(string $receiveSecret = self::SECRET): As4ReceiveControllerTestFixture
     {
         $receiver           = $this->createMock(As4Receiver::class);
         $userMessageHandler = $this->createMock(As4UserMessageHandlerInterface::class);
@@ -57,6 +58,7 @@ class As4ReceiveControllerTest extends TestCase
                 responseFactory:    new ResponseFactory(),
                 streamFactory:      new StreamFactory(),
                 logger:             $this->createStub(LoggerInterface::class),
+                receiveSecret:      $receiveSecret,
             ),
             receiver:           $receiver,
             userMessageHandler: $userMessageHandler,
@@ -64,10 +66,13 @@ class As4ReceiveControllerTest extends TestCase
         );
     }
 
-    private function makeRequest(): Request
+    private function makeRequest(string $secretHeader = self::SECRET, array $query = []): Request
     {
         $request = $this->createStub(Request::class);
-        $request->method('getHeaderLine')->willReturn(self::MULTIPART_CT);
+        $request->method('getHeaderLine')->willReturnCallback(
+            static fn (string $name): string => $name === 'X-As4-Receive-Secret' ? $secretHeader : self::MULTIPART_CT,
+        );
+        $request->method('getQueryParams')->willReturn($query);
         $request->method('getBody')->willReturn((new StreamFactory())->createStream(''));
         return $request;
     }
@@ -236,6 +241,52 @@ class As4ReceiveControllerTest extends TestCase
         $f->repository->expects($this->never())->method('save');
 
         $response = $f->controller->receive($this->makeRequest());
+
+        $this->assertSame(200, $response->getStatusCode());
+    }
+    // ── Interim secret gate ────────────────────────────────────────────────────
+
+    public function testAWrongSecretIsRefusedWithoutParsingOrStoringAnything(): void
+    {
+        $f = $this->createFixture();
+        $f->receiver->expects($this->never())->method('receive');
+        $f->userMessageHandler->expects($this->never())->method('handle');
+        $f->repository->expects($this->never())->method('save');
+
+        $response = $f->controller->receive($this->makeRequest('not-the-secret'));
+
+        $this->assertSame(403, $response->getStatusCode());
+    }
+
+    public function testNoSecretAtAllIsRefused(): void
+    {
+        $f = $this->createFixture();
+        $f->receiver->expects($this->never())->method('receive');
+
+        $response = $f->controller->receive($this->makeRequest(''));
+
+        $this->assertSame(403, $response->getStatusCode());
+    }
+
+    public function testEveryCallIsRefusedWhenNoSecretIsConfigured(): void
+    {
+        $f = $this->createFixture('');
+        $f->receiver->expects($this->never())->method('receive');
+        $f->userMessageHandler->expects($this->never())->method('handle');
+
+        // an attacker presenting a blank secret must not match a blank configuration
+        $response = $f->controller->receive($this->makeRequest(''));
+
+        $this->assertSame(403, $response->getStatusCode());
+    }
+
+    public function testTheSecretInTheQueryStringIsAccepted(): void
+    {
+        $f = $this->createFixture();
+        $f->receiver->method('receive')->willReturn($this->userMessage());
+        $f->userMessageHandler->method('handle')->willReturn(self::RECEIPT_XML);
+
+        $response = $f->controller->receive($this->makeRequest('', ['secret' => self::SECRET]));
 
         $this->assertSame(200, $response->getStatusCode());
     }
