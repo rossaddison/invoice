@@ -11,6 +11,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface as Logger;
 use Throwable;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
+use Yiisoft\Http\Status;
 use Yiisoft\Json\Json;
 
 /**
@@ -30,40 +31,58 @@ final class PeppolInboundController
         private readonly DataResponseFactoryInterface $factory,
         private readonly Logger $logger,
         private readonly PeppolMessageRepositoryInterface $peppolMessageRepository,
+        // PEPPOL_INBOUND_SECRET, bound in config/common/di/peppol.php
+        private readonly string $callbackSecret = '',
     ) {
     }
 
     public function delivery(Request $request): Response
     {
-        $messageId = $this->extractMessageId($request->getBody()->getContents());
+        $presented = $request->getHeaderLine('X-Peppol-Callback-Secret');
+        if ($presented === '') {
+            $presented = (string) ($request->getQueryParams()['secret'] ?? '');
+        }
+        $refusal = PeppolInboundGuard::refusal($this->callbackSecret, $presented);
+        if (null !== $refusal) {
+            $this->logger->warning('PeppolInbound: refused — ' . $refusal);
+            return $this->factory->createResponse(['status' => 'forbidden'], Status::FORBIDDEN);
+        }
+
+        return $this->factory->createResponse(['status' => $this->deliveryStatus($request->getBody()->getContents())]);
+    }
+
+    /** Split out of delivery() to keep each method within SonarQube's three-return limit (php:S1142). */
+    private function deliveryStatus(string $body): string
+    {
+        $messageId = $this->extractMessageId($body);
         if ($messageId === '') {
-            return $this->factory->createResponse(['status' => 'bad_request']);
+            return 'bad_request';
         }
 
         $message = $this->peppolMessageRepository->repoByMessageId($messageId);
         if ($message === null) {
             $this->logger->warning('PeppolInbound: messageId not found — ' . $messageId);
-            return $this->factory->createResponse(['status' => 'not_found']);
+            return 'not_found';
         }
 
-        return $this->factory->createResponse(['status' => $this->markDelivered($message, $messageId)]);
+        return $this->markDelivered($message, $messageId);
     }
 
     private function extractMessageId(string $body): string
     {
         try {
-            /** @var array{messageId?: string} $payload */
+            /** @var array<array-key, mixed> $payload */
             $payload = Json::decode($body);
         } catch (Throwable $e) {
             $this->logger->warning('PeppolInbound: invalid JSON body — ' . $e->getMessage());
             return '';
         }
 
-        $messageId = $payload['messageId'] ?? '';
-        if ($messageId === '') {
-            $this->logger->warning('PeppolInbound: missing messageId in delivery callback.');
+        if (isset($payload['messageId']) && is_string($payload['messageId']) && $payload['messageId'] !== '') {
+            return $payload['messageId'];
         }
-        return $messageId;
+        $this->logger->warning('PeppolInbound: missing or invalid messageId in delivery callback.');
+        return '';
     }
 
     private function markDelivered(PeppolMessage $message, string $messageId): string
