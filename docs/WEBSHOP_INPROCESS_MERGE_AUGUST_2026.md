@@ -112,6 +112,17 @@ Tests/Testo/Webshop/                    Mirrors the src/Webshop/ tree
   link switching from a `auth/login` link to the real `inv/guest` order
   history link in the very next page load — same session throughout.
 
+  > **Superseded (2026-11-19, PR #57).** This was a security hole and has been
+  > removed. A repeat order from an existing customer's email resolved that
+  > customer's existing account and signed the caller in as them, past their
+  > password, two-factor check and email verification, so anyone who typed a
+  > customer's email at the public checkout was signed in as that customer.
+  > Checkout no longer signs anyone in: `OrderService::createOrder()` creates the
+  > order and `CheckoutController::submit()` redirects to the catalogue with a
+  > message asking the customer to sign in (a first-time customer uses "Forgot
+  > password"). The "Returns & Orders" link switching on that very next page
+  > load no longer happens.
+
 - **Product images are genuinely same-origin now.** `CatalogQueryService::
   firstImagePath()` returns a bare `/products/{file}` path (the exact
   static-file convention `App\Api\ProductsController::firstImagePath()`

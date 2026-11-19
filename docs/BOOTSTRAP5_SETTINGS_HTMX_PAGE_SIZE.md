@@ -62,6 +62,10 @@ div.input-group
 
 The page-size button group in the Settings navbar dropdown called the `setting/listlimit` route, which saves the setting then redirects to `inv/index`. This caused a full-page navigation away from the current page every time the user changed their preferred list size.
 
+> **Security note (2026-11-19, PR #51).** `setting/listlimit` is open to every role with `VIEW_INV` and takes the
+> setting id from the URL, so it used to write the value into any setting row (the Telegram token, SMTP
+> credentials and so on). It now writes only the `default_list_limit` setting, and only a whole number from 1 to 1000.
+
 ### Solution
 
 The `<a>` buttons use HTMX to save the setting silently. After the save, a small JS function re-fetches the current URL, parses the response, and swaps only `#main-area` — no redirect, no full reload.

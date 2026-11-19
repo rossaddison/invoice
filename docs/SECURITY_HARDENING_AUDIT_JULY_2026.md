@@ -385,8 +385,9 @@ with its own internal secret/token check:
 `invrecurring/cron` (cron_key query param), `telegram/webhook`
 (`X-Telegram-Bot-Api-Secret-Token` header), `userinv/signup` (masked
 time-limited token — a brand-new invitee has no account yet), `as4/receive`
-(AS4/ebMS3 message signing), `peppol/inbound/delivery` (Oxalis access
-point). `Yiisoft\Auth\Middleware\Authentication` hard-rejects any request
+(AS4/ebMS3 message signing — **not true, see the correction below**),
+`peppol/inbound/delivery` (Oxalis access point — **no check either, see the
+correction below**). `Yiisoft\Auth\Middleware\Authentication` hard-rejects any request
 with no identity unless the path is marked optional, which none of these
 were — so all 5 were very likely non-functional in practice, rejected before
 ever reaching their own check. Two of the five even had comments in the
@@ -400,6 +401,29 @@ Verified live: `invrecurring/cron` now returns its own `{"success":false,
 `peppol/inbound/delivery` returns 200; `userinv/signup` with a bogus token
 now redirects to `site/index` (its own invalid-token path) instead of
 `/login`.
+
+**Correction (2026-11-19, self-service forms audit)**: two of those five routes
+did not have the check described above. Opening them up had made them reachable by
+anyone:
+
+- `as4/receive` was described as secured by AS4/ebMS3 message signing, but nothing
+  on the inbound path verifies a signature (`As4SignatureVerifier` is not called
+  anywhere, and it takes the key from the message itself, so it would prove
+  integrity, not who sent it). The sender is the unsigned `senderPartyId` inside
+  the message, so anyone who knew a registered client's public Peppol endpoint id
+  could post a forged Order or Invoice. **Interim fix (PR #60)**: the caller must
+  present `AS4_RECEIVE_SECRET` (`X-As4-Receive-Secret` header or `?secret=`); with
+  none set every call is refused. Still to do: verify each message's signing
+  certificate against the registered partner.
+- `peppol/inbound/delivery` checked nothing (the comment said "secured by network
+  perimeter"), so anyone who knew a `messageId` could mark an outbound e-invoice
+  `DELIVERED`. **Fixed (PR #59)**: the caller must present `PEPPOL_INBOUND_SECRET`
+  (`X-Peppol-Callback-Secret` header or `?secret=`); with none set every call is
+  refused. See `docs/PEPPOL_OXALIS_CONNECT.md`.
+
+The lesson is the one this section already draws: a route moved out of
+`invoiceGroup()` must have its own check *in the code*, and a comment saying it
+does is not evidence.
 
 **Also fixed (2026-07-15, follow-up)**: `routes-quote-allowance-charge.php`'s
 `add` action was missing the `RoutePermission::check(EDIT_INV)` its
