@@ -25,6 +25,9 @@ final class SpyDataResponseFactory implements DataResponseFactoryInterface
     /** @var list<mixed> */
     public array $capturedData = [];
 
+    /** @var list<int> */
+    public array $capturedCodes = [];
+
     #[\Override]
     public function createResponse(
         mixed $data = null,
@@ -32,7 +35,8 @@ final class SpyDataResponseFactory implements DataResponseFactoryInterface
         string $reasonPhrase = '',
     ): ResponseInterface {
         $this->capturedData[] = $data;
-        return new Response(200);
+        $this->capturedCodes[] = $code;
+        return new Response($code);
     }
 }
 
@@ -107,18 +111,84 @@ class PeppolInboundControllerTest extends TestCase
             factory:                 $this->factory,
             logger:                  $this->logger,
             peppolMessageRepository: $this->repo,
+            callbackSecret:          self::SECRET,
         );
     }
 
+    private const string SECRET = 'a-shared-secret-of-32-characters!!';
+
     /** @return ServerRequestInterface&\PHPUnit\Framework\MockObject\Stub */
-    private function buildRequest(string $body): ServerRequestInterface
-    {
+    private function buildRequest(
+        string $body,
+        string $headerSecret = self::SECRET,
+        array $query = [],
+    ): ServerRequestInterface {
         $stream = $this->createStub(StreamInterface::class);
         $stream->method('getContents')->willReturn($body);
 
         $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getBody')->willReturn($stream);
+        $request->method('getHeaderLine')->willReturn($headerSecret);
+        $request->method('getQueryParams')->willReturn($query);
         return $request;
+    }
+
+    public function testDeliveryWithAWrongSecretIsRefusedAndChangesNothing(): void
+    {
+        $message = new PeppolMessage(inv_id: 7, recipient_id: '0088:1234567890123', status: 'SENT');
+        $message->setMessageId('msg-guarded');
+        $this->repo->withMessage($message);
+
+        $this->controller->delivery($this->buildRequest('{"messageId":"msg-guarded"}', 'not-the-secret'));
+
+        $this->assertSame([['status' => 'forbidden']], $this->factory->capturedData);
+        $this->assertSame([403], $this->factory->capturedCodes);
+        $this->assertSame('SENT', $message->getStatus());
+        $this->assertSame([], $this->repo->savedStatuses);
+    }
+
+    public function testDeliveryWithNoSecretIsRefused(): void
+    {
+        $this->controller->delivery($this->buildRequest('{"messageId":"x"}', ''));
+
+        $this->assertSame([['status' => 'forbidden']], $this->factory->capturedData);
+    }
+
+    public function testDeliveryRefusesEveryCallWhenNoSecretIsConfigured(): void
+    {
+        $controller = new PeppolInboundController(
+            factory:                 $this->factory,
+            logger:                  $this->logger,
+            peppolMessageRepository: $this->repo,
+        );
+        $message = new PeppolMessage(inv_id: 7, recipient_id: '0088:1234567890123', status: 'SENT');
+        $message->setMessageId('msg-open');
+        $this->repo->withMessage($message);
+
+        // even a request that presents a blank secret, as an attacker would
+        $controller->delivery($this->buildRequest('{"messageId":"msg-open"}', ''));
+
+        $this->assertSame([['status' => 'forbidden']], $this->factory->capturedData);
+        $this->assertSame('SENT', $message->getStatus());
+    }
+
+    public function testDeliveryAcceptsTheSecretAsAQueryParameter(): void
+    {
+        $message = new PeppolMessage(inv_id: 7, recipient_id: '0088:1234567890123', status: 'SENT');
+        $message->setMessageId('msg-query');
+        $this->repo->withMessage($message);
+
+        $this->controller->delivery($this->buildRequest('{"messageId":"msg-query"}', '', ['secret' => self::SECRET]));
+
+        $this->assertSame([['status' => 'ok']], $this->factory->capturedData);
+        $this->assertSame('DELIVERED', $message->getStatus());
+    }
+
+    public function testDeliveryReturnsBadRequestWhenMessageIdIsNotAString(): void
+    {
+        $this->controller->delivery($this->buildRequest('{"messageId":["a"]}'));
+
+        $this->assertSame([['status' => 'bad_request']], $this->factory->capturedData);
     }
 
     public function testDeliveryReturnsBadRequestOnEmptyBody(): void

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Invoice\Peppol\OxalisPeppolSendService;
+use App\Invoice\Peppol\PeppolInboundController;
 use App\Invoice\Peppol\PeppolMessageRepository;
 use App\Invoice\Peppol\PeppolMessageRepositoryInterface;
 use App\Invoice\Peppol\PeppolSendServiceInterface;
@@ -25,6 +26,9 @@ $oxalisBaseUrl = rtrim(
 
 $senderParticipantId = $_ENV['PEPPOL_SENDER_ID'] ?? '';
 
+// Shared secret the access point must present on /peppol/inbound/delivery; blank refuses every call.
+$inboundSecret = $_ENV['PEPPOL_INBOUND_SECRET'] ?? '';
+
 /**
  * PEPPOL_SML_ZONE — DNS zone for the SML.
  * Production : edelivery.tech.ec.europa.eu
@@ -38,6 +42,13 @@ $smpBaseUrl = $_ENV['PEPPOL_SMP_BASE_URL'] ?? null;
 
 return [
     PeppolMessageRepositoryInterface::class => PeppolMessageRepository::class,
+
+    PeppolInboundController::class => [
+        'class' => PeppolInboundController::class,
+        '__construct()' => [
+            'callbackSecret' => $inboundSecret,
+        ],
+    ],
 
     SmpResolverInterface::class => SmpResolver::class,
 

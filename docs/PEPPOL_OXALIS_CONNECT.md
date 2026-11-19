@@ -96,6 +96,7 @@ When the recipient's access point acknowledges receipt, Oxalis calls:
 ```
 POST /peppol/inbound/delivery
 Content-Type: application/json
+X-Peppol-Callback-Secret: <PEPPOL_INBOUND_SECRET>
 
 { "messageId": "<the-id-returned-by-/outbound/send>" }
 ```
@@ -103,10 +104,14 @@ Content-Type: application/json
 `PeppolInboundController::delivery()` handles this: looks up the `PeppolMessage` by `messageId`, sets `status = DELIVERED` and `delivered_at = now()`, and saves. Configure the callback URL in your `oxalis.conf`:
 
 ```
-oxalis.as4.receipt.callback.url = https://yourdomain.com/peppol/inbound/delivery
+oxalis.as4.receipt.callback.url = https://yourdomain.com/peppol/inbound/delivery?secret=<PEPPOL_INBOUND_SECRET>
 ```
 
-The route has **no auth middleware** — it is secured by network perimeter (Oxalis is the only caller).
+The route has no login (Oxalis calls it with no session), so it is secured by a **shared secret** (`PeppolInboundGuard`):
+
+- Set `PEPPOL_INBOUND_SECRET` in `.env` (32 or more random characters).
+- The caller sends it as the `X-Peppol-Callback-Secret` header or, if Oxalis can only be given a URL, as `?secret=`. A header is preferred: a URL ends up in access logs.
+- **With no secret set every call is refused (403)**, so deliveries are not marked `DELIVERED` until it is set. Before this, anyone who knew a `messageId` could mark a message delivered.
 
 ---
 
@@ -116,7 +121,8 @@ The route has **no auth middleware** — it is secured by network perimeter (Oxa
 - [ ] Peppol certificate installed in Oxalis keystore (`oxalis-conf/` — never commit)
 - [ ] `OXALIS_BASE_URL` set to real Oxalis base URL in `.env`
 - [ ] `PEPPOL_SENDER_ID` set to your Peppol participant ID in `.env`
-- [ ] `oxalis.as4.receipt.callback.url` pointing to `/peppol/inbound/delivery`
+- [ ] `PEPPOL_INBOUND_SECRET` set in `.env`
+- [ ] `oxalis.as4.receipt.callback.url` pointing to `/peppol/inbound/delivery` with the same secret
 - [ ] SMP registration complete (your AP endpoint published in Peppol directory)
 - [ ] First send attempted — inspect `peppol_message` row for `SENT` status and non-empty `message_id`
 - [ ] Delivery confirmation received — `peppol_message.status` transitions to `DELIVERED`
