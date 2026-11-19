@@ -136,9 +136,9 @@ final readonly class SalesOrderService
     ): SalesOrder {
         $this->persist($model, $array);
         // A body without inv_id (a customer's save of an order with no invoice) leaves the link as it is
-        isset($array['inv_id'])
-            ? $model->setInvId((int) $array['inv_id'])
-            : '';
+        if (isset($array['inv_id'])) {
+            $model->setInvId((int) $array['inv_id']);
+        }
         isset($array['client_po_number'])
             ? $model->setClientPoNumber(
                 (string) $array['client_po_number']
