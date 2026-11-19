@@ -32,11 +32,23 @@ final class As4ReceiveController
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly StreamFactoryInterface $streamFactory,
         private readonly LoggerInterface $logger,
+        // AS4_RECEIVE_SECRET, bound in config/common/di/as4.php; blank refuses every call
+        private readonly string $receiveSecret = '',
     ) {
     }
 
     public function receive(Request $request): Response
     {
+        $presented = $request->getHeaderLine('X-As4-Receive-Secret');
+        if ($presented === '') {
+            $presented = (string) ($request->getQueryParams()['secret'] ?? '');
+        }
+        $refusal = As4ReceiveGuard::refusal($this->receiveSecret, $presented);
+        if (null !== $refusal) {
+            $this->logger->warning('AS4 receive: refused — ' . $refusal);
+            return $this->responseFactory->createResponse(403);
+        }
+
         $contentType = $request->getHeaderLine('Content-Type');
         $body        = $request->getBody()->getContents();
 

@@ -17,6 +17,7 @@ use App\Invoice\As4\As4MessageRepositoryInterface;
 use App\Invoice\As4\As4PayloadHandlerInterface;
 use App\Invoice\As4\As4PayloadRouter;
 use App\Invoice\As4\As4ReceiptGenerator;
+use App\Invoice\As4\As4ReceiveController;
 use App\Invoice\As4\As4ReceiptGeneratorInterface;
 use App\Invoice\As4\As4ReceiptParser;
 use App\Invoice\As4\As4ReceiptParserInterface;
@@ -116,6 +117,14 @@ return [
         ],
     ],
     As4SmpResolverInterface::class => StaticAs4SmpResolver::class,
+
+    // INTERIM gate on the public /as4/receive route (see As4ReceiveGuard): blank refuses every call.
+    As4ReceiveController::class => [
+        'class' => As4ReceiveController::class,
+        '__construct()' => [
+            'receiveSecret' => $_ENV['AS4_RECEIVE_SECRET'] ?? '',
+        ],
+    ],
 
     // As4MessageDispatcher — needs the scalar senderPartyId wired explicitly
     \App\Invoice\As4\As4MessageDispatcher::class => [
