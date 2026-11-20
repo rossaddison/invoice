@@ -3457,7 +3457,8 @@
                 "issues": "https://github.com/gocardless/gocardless-pro-php/issues",
                 "source": "https://github.com/gocardless/gocardless-pro-php/tree/v8.23.0"
             },
-            "time": "2026-11-17T10:33:10+00:00"
+            "time": "2026-11-17T10:33:10+00:00",
+            "published-time": "2026-11-17T10:33:28+00:00"
         },
         {
             "name": "google/auth",
@@ -28746,5 +28747,5 @@
         "ext-zlib": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }
