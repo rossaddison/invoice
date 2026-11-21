@@ -630,7 +630,7 @@ export class QuoteHandler {
                 });
 
                 if (data.validation_errors) {
-                    Object.entries(data.validation_errors).forEach(([key, errors]) => {
+                    Object.entries(data.validation_errors).forEach(([key]) => {
                         const elm = document.getElementById(key);
                         if (elm?.parentElement) {
                             elm.parentElement.classList.add('has-error');

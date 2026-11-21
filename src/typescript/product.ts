@@ -40,18 +40,6 @@ interface ProductSelectionResponse {
     [key: string]: Product;
 }
 
-interface Task {
-    id: string;
-    name: string;
-    description: string;
-    price: string;
-    tax_rate_id: string;
-}
-
-interface TaskSelectionResponse {
-    [key: string]: Task;
-}
-
 // Button state helper — avoids innerHTML for SonarQube S5728 compliance
 function setButtonState(buttons: NodeListOf<HTMLElement>, state: ButtonState): void {
     buttons.forEach(button => {
