@@ -274,8 +274,11 @@ class CustomValuesHelper
         // The mySql serialized $fieldValue eg. a:2:{i:0;s:2:"41";i:1;s:2:"43";}
         // must now be unserialized to an array and placed in '->values($selChoices)'
         // Search 'serialize' in e.g. src/Invoice/Client/ClientController
-        $selChoices = $this->isSerialized($fieldValue, true) ?
-            (array) unserialize((string) $fieldValue) : [];
+        // Only scalar entries can be selected values; anything else in the stored array is ignored.
+        /** @var list<scalar> $selChoices */
+        $selChoices = $this->isSerialized($fieldValue, true)
+            ? array_values(array_filter((array) unserialize((string) $fieldValue), 'is_scalar'))
+            : [];
         $optionsData = [];
         /** @var CustomValue $choice */
         foreach ($choices as $choice) {
