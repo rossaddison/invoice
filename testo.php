@@ -14,7 +14,7 @@ use Testo\Bridge\Mockery\MockeryPlugin;
 DG\BypassFinals::enable();
 
 return new ApplicationConfig(
-    src: ['src'],
+    src: ['src', 'config'],
     plugins: [new MockeryPlugin()],
     suites: [
         new SuiteConfig(
