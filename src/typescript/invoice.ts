@@ -358,6 +358,8 @@ export class InvoiceHandler {
         const noteInput = document.getElementById('bulk-quick-pay-note') as HTMLInputElement | null;
         const date = dateInput?.value ?? '';
         const note = noteInput?.value ?? '';
+        const appendDateInput = document.getElementById('bulk-quick-pay-append-date') as HTMLInputElement | null;
+        const appendDate = appendDateInput?.checked ? '1' : '0';
         if (date === '') {
             alert('Please enter a payment date.');
             return;
@@ -367,7 +369,7 @@ export class InvoiceHandler {
         if (btn) { setButtonLoadingOn(btn); }
         try {
             const url = `${location.origin}/invoice/inv/bulkquickpay`;
-            const response = await getJson<ApiResponse>(url, { keylist: selected, date, note });
+            const response = await getJson<ApiResponse>(url, { keylist: selected, date, note, append_date: appendDate });
             const data = parsedata(response);
             if (data.success === 1) {
                 if (btn) btn.innerHTML = '<h2 class="text-center"><i class="bi bi-check-lg"></i></h2>';
