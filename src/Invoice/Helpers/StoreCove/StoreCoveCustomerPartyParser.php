@@ -49,105 +49,112 @@ final readonly class StoreCoveCustomerPartyParser
         cpR $cpR
     ): array {
         $client = $invoice->getClient();
-        if ($client) {
-            $postaladdress_id = $client->getPostaladdressId();
-            $client_peppol = $cpR->repoClientPeppolLoadedquery($client->reqId());
-            if (null == $postaladdress_id) {
-                throw new PeppolBuyerPostalAddressNotFoundException($client->reqId());
-            }
-            if ($postaladdress_id) {
-                $postaladdress = $paR->repoClient($postaladdress_id);
-                $accounting_customer_party = [];
-                $country_helper = new CountryHelper();
-                if ($postaladdress && $client_peppol) {
-                    $accounting_customer_party = [
-                        self::KEY_PARTY => [
-                            'EndPointID' => [
-                                'value' => $client_peppol->getEndpointid(),
-                                'schemeID' =>
-                                        $client_peppol->getEndpointidSchemeid(),
-                            ],
-                            'PartyIdentification' => [
-                                'ID' => [
-                                    'value' =>
-                                           $client_peppol->getIdentificationid(),
-                                    'schemeID' =>
-                                  $client_peppol->getIdentificationidSchemeid(),
-                                ],
-                            ],
-                            'PostalAddress' => [
-                                self::KEY_STREET_NAME => $postaladdress->getStreetName(),
-                                self::KEY_ADDITIONAL_STREET_NAME =>
-                                     $postaladdress->getAdditionalStreetName(),
-                                self::KEY_ADDRESS_LINE => [
-                                    'Line' =>
-                                            $postaladdress->getBuildingNumber(),
-                                ],
-                                self::KEY_CITY_NAME => $postaladdress->getCityName(),
-                                self::KEY_POSTAL_ZONE => $postaladdress->getPostalZone(),
-                                self::KEY_COUNTRY_SUBENTITY =>
-                                           $postaladdress->getCountrysubentity(),
-                                'Country' => [
-                                    self::KEY_IDENTIFICATION_CODE =>
-                                                    $postaladdress->getCountry(),
-                                    self::KEY_LIST_ID => self::ISO3166_1_ALPHA2,
-                                ],
-                            ],
-                            'PhysicalLocation' => [
-                                self::KEY_STREET_NAME => (string)
-                                                 $client->getClientAddress1(),
-                                self::KEY_ADDITIONAL_STREET_NAME =>
-                                        (string) $client->getClientAddress2(),
-                                self::KEY_ADDRESS_LINE => [
-                                    'Line' => (string)
-                                            $client->getClientBuildingNumber(),
-                                ],
-                                self::KEY_CITY_NAME => (string)
-                                                       $client->getClientCity(),
-                                self::KEY_POSTAL_ZONE => (string)
-                                                        $client->getClientZip(),
-                                self::KEY_COUNTRY_SUBENTITY => (string)
-                                                      $client->getClientState(),
-                                'Country' => [
-                                    self::KEY_IDENTIFICATION_CODE =>
-    $country_helper->getCountryIdentificationCodeWithLeague((string)
-                                                   $client->getClientCountry()),
-                                    self::KEY_LIST_ID => self::ISO3166_1_ALPHA2,
-                                ],
-                            ],
-                            'Contact' => [
-                                'Name' => $client->getClientName(),
-                                'Telephone' =>
-                                            (string) $client->getClientPhone(),
-                                'ElectronicMail' => $client->getClientEmail(),
-                            ],
-                            'PartyTaxScheme' => [
-                                self::KEY_COMPANY_ID =>
-                                        $client_peppol->getTaxschemecompanyid(),
-                                'TaxScheme' => [
-                                    'ID' => $client_peppol->getTaxSchemeid(),
-                                ],
-                            ],
-                            'PartyLegalEntity' => [
-                                'RegistrationName' =>
-                             $client_peppol->getLegalEntityRegistrationName(),
-                                'CompanyIdAttributes' => [
-                                    'value' =>
-                                     $client_peppol->getLegalEntityCompanyid(),
-                                    'schemeID' =>
-                            $client_peppol->getLegalEntityCompanyidSchemeid(),
-                                ],
-                                'CompanyLegalform' =>
-                            $client_peppol->getLegalEntityCompanyLegalForm(),
-                            ],
-                        ],
-                    ];
-                }
-                return $accounting_customer_party;
-            }
-            return [];
+        if (!$client) {
+            throw new PeppolClientNotFoundException($this->t);
         }
-        throw new PeppolClientNotFoundException($this->t);
+        $postaladdress_id = $client->getPostaladdressId();
+        if (null == $postaladdress_id) {
+            throw new PeppolBuyerPostalAddressNotFoundException($client->reqId());
+        }
+        // The postal address is loaded by its own id. repoClient() filters by PostalAddress.client_id, so
+        // passing the client's postaladdress_id to it looked up the wrong row (or none).
+        $postaladdress = $paR->repoPostalAddressLoadedquery($postaladdress_id);
+        // A missing address or Peppol record used to give an empty array here, which crashed later in
+        // buildCustomerPartyTaxScheme(). Fail with a clear, actionable exception instead, as the Peppol
+        // customer builder does.
+        if (null === $postaladdress) {
+            throw new PeppolBuyerPostalAddressNotFoundException($client->reqId());
+        }
+        $client_peppol = $cpR->repoClientPeppolLoadedquery($client->reqId());
+        if (null === $client_peppol) {
+            throw new PeppolClientNotFoundException($this->t);
+        }
+        $country_helper = new CountryHelper();
+        return [
+            self::KEY_PARTY => [
+                'EndPointID' => [
+                    'value' => $client_peppol->getEndpointid(),
+                    'schemeID' =>
+                            $client_peppol->getEndpointidSchemeid(),
+                ],
+                'PartyIdentification' => [
+                    'ID' => [
+                        'value' =>
+                               $client_peppol->getIdentificationid(),
+                        'schemeID' =>
+                      $client_peppol->getIdentificationidSchemeid(),
+                    ],
+                ],
+                'PostalAddress' => [
+                    self::KEY_STREET_NAME => $postaladdress->getStreetName(),
+                    self::KEY_ADDITIONAL_STREET_NAME =>
+                         $postaladdress->getAdditionalStreetName(),
+                    self::KEY_ADDRESS_LINE => [
+                        'Line' =>
+                                $postaladdress->getBuildingNumber(),
+                    ],
+                    self::KEY_CITY_NAME => $postaladdress->getCityName(),
+                    self::KEY_POSTAL_ZONE => $postaladdress->getPostalZone(),
+                    self::KEY_COUNTRY_SUBENTITY =>
+                               $postaladdress->getCountrysubentity(),
+                    'Country' => [
+                        self::KEY_IDENTIFICATION_CODE =>
+                                        $postaladdress->getCountry(),
+                        self::KEY_LIST_ID => self::ISO3166_1_ALPHA2,
+                    ],
+                ],
+                'PhysicalLocation' => [
+                    self::KEY_STREET_NAME => (string)
+                                     $client->getClientAddress1(),
+                    self::KEY_ADDITIONAL_STREET_NAME =>
+                            (string) $client->getClientAddress2(),
+                    self::KEY_ADDRESS_LINE => [
+                        'Line' => (string)
+                                $client->getClientBuildingNumber(),
+                    ],
+                    self::KEY_CITY_NAME => (string)
+                                           $client->getClientCity(),
+                    self::KEY_POSTAL_ZONE => (string)
+                                            $client->getClientZip(),
+                    self::KEY_COUNTRY_SUBENTITY => (string)
+                                          $client->getClientState(),
+                    'Country' => [
+                        self::KEY_IDENTIFICATION_CODE =>
+    $country_helper->getCountryIdentificationCodeWithLeague((string)
+                                       $client->getClientCountry()),
+                        self::KEY_LIST_ID => self::ISO3166_1_ALPHA2,
+                    ],
+                ],
+                'Contact' => [
+                    'Name' => $client->getClientName(),
+                    'Telephone' =>
+                                (string) $client->getClientPhone(),
+                    'ElectronicMail' => $client->getClientEmail(),
+                ],
+                'PartyTaxScheme' => [
+                    self::KEY_COMPANY_ID =>
+                            $client_peppol->getTaxschemecompanyid(),
+                    'TaxScheme' => [
+                        'ID' => $client_peppol->getTaxSchemeid(),
+                    ],
+                ],
+                'PartyLegalEntity' => [
+                    'RegistrationName' =>
+                 $client_peppol->getLegalEntityRegistrationName(),
+                    // The keys buildCustomerLegalEntity() reads: it looked for CompanyID, Attributes and
+                    // CompanyLegalForm while this used to write CompanyIdAttributes and CompanyLegalform, so
+                    // the buyer's company id, scheme and legal form always came out empty.
+                    self::KEY_COMPANY_ID =>
+                         $client_peppol->getLegalEntityCompanyid(),
+                    'Attributes' => [
+                        'schemeID' =>
+                $client_peppol->getLegalEntityCompanyidSchemeid(),
+                    ],
+                    'CompanyLegalForm' =>
+                $client_peppol->getLegalEntityCompanyLegalForm(),
+                ],
+            ],
+        ];
     }
 
     /**

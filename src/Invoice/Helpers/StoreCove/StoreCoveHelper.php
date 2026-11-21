@@ -473,19 +473,7 @@ final readonly class StoreCoveHelper
             $inv->iiaR,
             $charge->trR
         );
-        /**
-         * @var float $taxSubtotal['TaxableAmounts']
-         */
-        $taxable_amount = $taxSubtotal['TaxableAmounts'] ?? 0.00;
-        /**
-         * @var float $taxSubtotal['TaxAmount']
-         */
-        $tax_amount = $taxSubtotal['TaxAmount'] ?? 0.00;
-        /**
-         * @var float $taxSubtotal['TaxCategoryPercent']
-         */
-        $percentage = $taxSubtotal['TaxCategoryPercent'] ?? 0.00;
-        $amount_including_vat = $taxable_amount + $tax_amount;
+        $tax_subtotals = $this->storeCoveTaxSubtotals($taxSubtotal);
         return [
             'legalEntityId' =>
                           $this->s->getSetting('storecove_legal_entity_id'),
@@ -547,20 +535,50 @@ final readonly class StoreCoveHelper
                     ],
                     'invoiceLines' => $invoice_lines,
                     'allowanceCharges' => $allowance_charges,
-                    'taxSubtotals' => [
-                        0 => [
-                            'taxableAmount' => $taxable_amount,
-                            'taxAmount' => $tax_amount,
-                            'percentage' => $percentage,
-                            'country' =>
-                                $this->s->getSetting(self::SETTING_CURRENCY_CODE_FROM),
-                        ],
-                    ],
-                    'amountIncludingVat' => $amount_including_vat,
+                    'taxSubtotals' => $tax_subtotals['subtotals'],
+                    'amountIncludingVat' => $tax_subtotals['amountIncludingVat'],
                     'prepaidAmount' => 1,
                 ],
             ],
         ];
+    }
+
+    /**
+     * One Storecove tax subtotal per tax rate that was actually used, and the invoice total including VAT.
+     *
+     * buildTaxSubtotalArray() returns one row per tax rate in the system, keyed by tax rate id, including
+     * rates no item uses. The amounts used to be read from the top of that array instead of from a row, so
+     * every payload carried a tax subtotal and an amountIncludingVat of 0. Rows with no taxable amount and
+     * no tax are left out.
+     *
+     * @param array<array-key, mixed> $rows
+     * @return array{
+     *     subtotals: list<array{taxableAmount: float, taxAmount: float, percentage: float, country: string}>,
+     *     amountIncludingVat: float
+     * }
+     */
+    private function storeCoveTaxSubtotals(array $rows): array
+    {
+        $country = $this->s->getSetting(self::SETTING_CURRENCY_CODE_FROM);
+        $subtotals = [];
+        $total = 0.0;
+        /** @var mixed $row */
+        foreach ($rows as $row) {
+            $row = (array) $row;
+            $taxable = (float) ($row['TaxableAmounts'] ?? 0.0);
+            $tax = (float) ($row['TaxAmount'] ?? 0.0);
+            if ($taxable === 0.0 && $tax === 0.0) {
+                continue;
+            }
+            $subtotals[] = [
+                'taxableAmount' => $taxable,
+                'taxAmount' => $tax,
+                'percentage' => (float) ($row['TaxCategoryPercent'] ?? 0.0),
+                'country' => $country,
+            ];
+            $total += $taxable + $tax;
+        }
+        return ['subtotals' => $subtotals, 'amountIncludingVat' => $total];
     }
 
     /**
@@ -655,7 +673,8 @@ final readonly class StoreCoveHelper
         );
         $customer_partyTaxScheme = $this->customerParser->buildCustomerPartyTaxScheme($acp);
         $customer_partyLegalEntity = $this->customerParser->buildCustomerLegalEntity($acp);
-        $customer_tax_scheme = $customer_partyTaxScheme->getTaxScheme();
+        // The scheme's id string. getTaxScheme() is a TaxScheme object, which JSON-encodes as {}.
+        $customer_tax_scheme = $customer_partyTaxScheme->getTaxScheme()->reqId();
         $customer_tax_id = $customer_partyTaxScheme->getCompanyId();
         $customer_legal_scheme =
                 $customer_partyLegalEntity->getCompanyIdAttributeSchemeId();
