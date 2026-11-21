@@ -408,6 +408,67 @@ final class InvPdfIntegrationTest
         }
     }
 
+    /**
+     * A paid invoice carries a transparent watermark image, and the pdf_watermark setting turns the watermark on.
+     * PDF/A forbids transparency and mPDF throws when it draws a watermark in PDF/A mode, so such a PDF must still
+     * render (mpdf_show_image_errors is on by default), keeping the attached ZUGFeRD XML but not claiming PDF/A.
+     */
+    public function aPaidInvoiceWithTheWatermarkOnStillRendersAndKeepsTheZugferdFileButIsNotDeclaredPdfA(): void
+    {
+        $name = $this->uniqueNumber();
+        $helper = new ZugFerdHelper($this->settings(), TypedMock::of(InvItemAmountRepository::class), $this->invAmount(), $this->translator());
+        $aliases = (new \ReflectionClass(SettingRepository::class))->newInstanceWithoutConstructor()->getImg();
+        try {
+            $xmlPath = $this->remember($helper->generateInvoiceZugferdXmlTempFile($this->invoice($name)));
+            $html = '<h1>Invoice ' . $name . '</h1>'
+                . \Yiisoft\Html\Html::tag('watermarkimage', '', [
+                    'src' => \App\Invoice\Helpers\PdfWatermarkImage::dataUri('paid', $aliases),
+                    'alpha' => '0.1',
+                ]);
+
+            $path = $this->pdf(
+                $html,
+                $name,
+                ['pdf_archive_inv' => '1', 'pdf_watermark' => 'PAID', 'mpdf_show_image_errors' => '1'],
+                zugferd: true,
+                zugferdFile: $xmlPath,
+            );
+            $bytes = (string) file_get_contents($path);
+
+            Assert::same(substr($bytes, 0, 5), '%PDF-');
+            Assert::true(preg_match('~/Subtype\s*/Image~', $bytes) === 1);
+            Assert::true(str_contains($bytes, 'ZUGFeRD-invoice.xml'));
+            Assert::true($this->xmp($bytes) === null);
+            Assert::false(str_contains($bytes, '/Encrypt'));
+        } finally {
+            $this->cleanUp();
+        }
+    }
+
+    /** The paid template always emits the watermark tag; with the watermark setting off nothing is drawn. */
+    public function aPaidInvoiceWithTheWatermarkSettingOffStillRendersAsAZugferdPdfA3(): void
+    {
+        $name = $this->uniqueNumber();
+        $helper = new ZugFerdHelper($this->settings(), TypedMock::of(InvItemAmountRepository::class), $this->invAmount(), $this->translator());
+        $aliases = (new \ReflectionClass(SettingRepository::class))->newInstanceWithoutConstructor()->getImg();
+        try {
+            $xmlPath = $this->remember($helper->generateInvoiceZugferdXmlTempFile($this->invoice($name)));
+            $html = '<h1>Invoice ' . $name . '</h1>'
+                . \Yiisoft\Html\Html::tag('watermarkimage', '', [
+                    'src' => \App\Invoice\Helpers\PdfWatermarkImage::dataUri('paid', $aliases),
+                    'alpha' => '0.1',
+                ]);
+
+            $path = $this->pdf($html, $name, ['pdf_archive_inv' => '1', 'mpdf_show_image_errors' => '1'], zugferd: true, zugferdFile: $xmlPath);
+            $bytes = (string) file_get_contents($path);
+
+            Assert::same(substr($bytes, 0, 5), '%PDF-');
+            Assert::true($this->xmp($bytes) !== null);
+        } finally {
+            $this->cleanUp();
+        }
+    }
+
     public function theArchivedPdfIsInTheArchiveFolderAndNotInUploads(): void
     {
         try {

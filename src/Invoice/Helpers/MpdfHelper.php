@@ -278,9 +278,10 @@ class MpdfHelper
             // ZUGFeRD is PDF/A-3: mPDF writes the XMP packet that carries the ZUGFeRD declaration only in PDF/A
             // or PDF/X mode, so with PDFA false (as it was) zugferdRdf() never reached the file.
             // https://mpdf.github.io/what-else-can-i-do/pdf-a1-b-compliance.html
-            // PDF/A forbids encryption, so an invoice that really has a password keeps its protection and the
-            // attached XML but is not declared PDF/A.
-            $mpdf->PDFA = null === $this->password($ctx);
+            // PDF/A forbids encryption and transparency (mPDF throws when it draws a watermark in PDF/A mode), so an
+            // invoice that really has a password, or is watermarked (pdf_watermark), keeps that and the attached XML
+            // but is not declared PDF/A.
+            $mpdf->PDFA = null === $this->password($ctx) && empty($sR->getSetting('pdf_watermark'));
             $mpdf->PDFAversion = '3-B';
             $mpdf->PDFAauto = true;
             $mpdf->SetAdditionalXmpRdf($z->zugferdRdf());
