@@ -37,7 +37,20 @@ use App\Invoice\Helpers\StoreCove\StoreCoveHelperNetDeps;
 use App\Invoice\SalesOrder\SalesOrderRepository;
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository;
 use App\Invoice\Setting\SettingRepository;
+use App\Infrastructure\Persistence\InvItemAmount\InvItemAmount;
+use App\Infrastructure\Persistence\PostalAddress\PostalAddress;
+use App\Infrastructure\Persistence\Product\Product;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
+use App\Infrastructure\Persistence\Unit\Unit;
+use App\Invoice\DeliveryParty\DeliveryPartyRepository;
 use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
+use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository;
+use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository;
+use App\Invoice\InvItemAmount\InvItemAmountRepository;
+use App\Invoice\PostalAddress\PostalAddressRepository;
+use App\Invoice\ProductProperty\ProductPropertyRepository;
+use App\Invoice\TaxRate\TaxRateRepository;
+use App\Invoice\UnitPeppol\UnitPeppolRepository;
 use App\Invoice\Ubl\Contact;
 use App\Invoice\Ubl\InvoicePeriod;
 use DateTimeImmutable;
@@ -77,6 +90,7 @@ final class StoreCoveHelperTest
         $s = TypedMock::of(SettingRepository::class);
         $s->shouldReceive('getSetting')->andReturnUsing(static fn (string $key): string => $settings[$key] ?? '');
         $s->shouldReceive('getConfigPeppol')->andReturn($peppol);
+        $s->shouldReceive('currencyConverter')->andReturnUsing(static fn (mixed $v): string => (string) $v);
         return $s;
     }
 
@@ -746,6 +760,269 @@ final class StoreCoveHelperTest
         $section = $this->deliverySection($this->deliveryLocation(), $delRepo, $partyRepo);
 
         Assert::same($section['deliveryPartyName'], 'storecove.not.available');
+    }
+
+    // ── maximumPreJsonPhpObjectForAnInvoice ──────────────────────────────────
+
+    /** @param list<object> $items */
+    private function entityReader(array $items): EntityReader
+    {
+        $reader = TypedMock::of(EntityReader::class);
+        $reader->shouldReceive('getIterator')->andReturnUsing(static function () use ($items): \Generator {
+            yield from $items;
+        });
+        return $reader;
+    }
+
+    /** A client with every getter the Storecove builder and the customer parser read. */
+    private function fullClient(): Client
+    {
+        $client = TypedMock::of(Client::class);
+        $client->shouldReceive('reqId')->andReturn(7);
+        $client->shouldReceive('getClientVatId')->andReturn('GB123');
+        $client->shouldReceive('getClientEmail')->andReturn('buyer@example.test');
+        $client->shouldReceive('getPostaladdressId')->andReturn(5);
+        $client->shouldReceive('getClientAddress1')->andReturn('2 Virtual Road');
+        $client->shouldReceive('getClientAddress2')->andReturn('Unit 3');
+        $client->shouldReceive('getClientBuildingNumber')->andReturn('2');
+        $client->shouldReceive('getClientCity')->andReturn('Testville');
+        $client->shouldReceive('getClientZip')->andReturn('ZZ2 2BB');
+        $client->shouldReceive('getClientState')->andReturn('Exampleshire');
+        $client->shouldReceive('getClientCountry')->andReturn('GB');
+        $client->shouldReceive('getClientName')->andReturn('Virtual Buyer Ltd');
+        $client->shouldReceive('getClientPhone')->andReturn('01632 960010');
+        return $client;
+    }
+
+    private function fullClientPeppol(): ClientPeppol
+    {
+        $cp = TypedMock::of(ClientPeppol::class);
+        $cp->shouldReceive('getAccountingCost')->andReturn('CC-42');
+        $cp->shouldReceive('getEndpointid')->andReturn('buyer@example.test');
+        $cp->shouldReceive('getEndpointidSchemeid')->andReturn('EM');
+        $cp->shouldReceive('getIdentificationid')->andReturn('IDENT-1');
+        $cp->shouldReceive('getIdentificationidSchemeid')->andReturn('0088');
+        $cp->shouldReceive('getTaxschemecompanyid')->andReturn('GB123456789');
+        $cp->shouldReceive('getTaxSchemeid')->andReturn('VAT');
+        $cp->shouldReceive('getLegalEntityRegistrationName')->andReturn('Virtual Buyer Limited');
+        $cp->shouldReceive('getLegalEntityCompanyid')->andReturn('12345678');
+        $cp->shouldReceive('getLegalEntityCompanyidSchemeid')->andReturn('GB:COH');
+        $cp->shouldReceive('getLegalEntityCompanyLegalForm')->andReturn('Private limited');
+        return $cp;
+    }
+
+    private function postalAddress(): PostalAddress
+    {
+        $pa = TypedMock::of(PostalAddress::class);
+        $pa->shouldReceive('getStreetName')->andReturn('9 Postal Street');
+        $pa->shouldReceive('getAdditionalStreetName')->andReturn('Block B');
+        $pa->shouldReceive('getBuildingNumber')->andReturn('9');
+        $pa->shouldReceive('getCityName')->andReturn('Postville');
+        $pa->shouldReceive('getPostalZone')->andReturn('ZZ3 3CC');
+        $pa->shouldReceive('getCountrysubentity')->andReturn('Postshire');
+        $pa->shouldReceive('getCountry')->andReturn('GB');
+        return $pa;
+    }
+
+    private function billedItem(): InvItem
+    {
+        $unit = TypedMock::of(Unit::class);
+        $unit->shouldReceive('reqId')->andReturn(3);
+        $taxRate = TypedMock::of(TaxRate::class);
+        $taxRate->shouldReceive('reqId')->andReturn(1);
+        $taxRate->shouldReceive('getTaxRatePercent')->andReturn(20.0);
+        $taxRate->shouldReceive('getStoreCoveTaxType')->andReturn('standard');
+        $product = TypedMock::of(Product::class);
+        $product->shouldReceive('getProductPriceBaseQuantity')->andReturn(1.0);
+        $product->shouldReceive('getUnit')->andReturn($unit);
+        $product->shouldReceive('getTaxRate')->andReturn($taxRate);
+        $product->shouldReceive('getProductCountryOfOriginCode')->andReturn('GB');
+        $product->shouldReceive('getProductSku')->andReturn('SKU-1');
+        $product->shouldReceive('getProductSiiId')->andReturn('SII-1');
+        $product->shouldReceive('getProductSiiSchemeid')->andReturn('0160');
+        $product->shouldReceive('getProductAdditionalItemPropertyName')->andReturn('Colour');
+        $product->shouldReceive('getProductAdditionalItemPropertyValue')->andReturn('Blue');
+        $item = TypedMock::of(InvItem::class);
+        $item->shouldReceive('reqId')->andReturn(21);
+        $item->shouldReceive('getPrice')->andReturn(100.0);
+        $item->shouldReceive('getQuantity')->andReturn(1.0);
+        $item->shouldReceive('getName')->andReturn('Window clean');
+        $item->shouldReceive('getDescription')->andReturn('Front and back');
+        $item->shouldReceive('getNote')->andReturn('Weekly');
+        $item->shouldReceive('getProduct')->andReturn($product);
+        $item->shouldReceive('getSoItemId')->andReturn(0);
+        $item->shouldReceive('getTaxRate')->andReturn($taxRate);
+        return $item;
+    }
+
+    /**
+     * @return array<string, mixed>
+     * @psalm-suppress MixedReturnTypeCoercion
+     */
+    private function builtInvoice(string $basis = 'Legal'): array
+    {
+        $settings = [
+            'storecove_legal_entity_id' => 'LE-1', 'currency_code_to' => 'GBP', 'currency_code_from' => 'GB',
+            'storecove_sender_identifier' => '1', 'storecove_sender_identifier_basis' => $basis,
+        ];
+        $peppol = [
+            'PartyLegalEntity' => ['CompanyID' => 'LEGAL-1'], 'PartyTaxScheme' => ['CompanyID' => 'TAX-1'],
+            'Contact' => [
+                'Name' => 'Supplier Ltd', 'FirstName' => 'Sam', 'LastName' => 'Supplier',
+                'Telephone' => '01632 960002', 'Telefax' => '', 'ElectronicMail' => 'sam@example.test',
+            ],
+            'PaymentMeans' => ['PayeeFinancialAccount' => [
+                'ID' => 'GB00BANK', 'Name' => 'Supplier Ltd', 'FinancialInstitutionBranch' => ['ID' => '12-34-56'],
+            ]],
+        ];
+        $s = $this->settings($settings, $peppol);
+        $s->shouldReceive('getCustomerFilesFolderAliases')->andReturn(new Aliases(['@customer_files' => sys_get_temp_dir()]));
+
+        $inv = $this->invoice($this->fullClient());
+        $inv->setId(15);
+        $inv->setClientId(7);
+        $inv->setNumber('INV-100');
+        $inv->setTerms('30 days');
+        $inv->getItems()->add($this->billedItem());
+
+        $cpR = TypedMock::of(ClientPeppolRepository::class);
+        $cpR->shouldReceive('repoClientPeppolLoadedquery')->andReturn($this->fullClientPeppol());
+        $paR = TypedMock::of(PostalAddressRepository::class);
+        $paR->shouldReceive('repoClient')->andReturn($this->postalAddress());
+        $amount = TypedMock::of(InvItemAmount::class);
+        $amount->shouldReceive('getSubtotal')->andReturn(100.0);
+        $amount->shouldReceive('getTaxTotal')->andReturn(20.0);
+        $iiaR = TypedMock::of(InvItemAmountRepository::class);
+        $iiaR->shouldReceive('repoInvItemAmountquery')->andReturn($amount);
+
+        $delRepo = TypedMock::of(DeliveryRepository::class);
+        $delRepo->shouldReceive('repoPartyquery')->andReturn(null);
+        $delRepo->shouldReceive('repoInvoicequery')->andReturn(null);
+        $upR = TypedMock::of(UploadRepository::class);
+        $upR->shouldReceive('repoUploadUrlClientquery')->andReturn($this->entityReader([]));
+        $ppR = TypedMock::of(ProductPropertyRepository::class);
+        $ppR->shouldReceive('findAllProduct')->andReturn($this->entityReader([]));
+        $unpR = TypedMock::of(UnitPeppolRepository::class);
+        $unpR->shouldReceive('repoUnitCount')->andReturn(0);
+        $aciR = TypedMock::of(InvAllowanceChargeRepository::class);
+        $aciR->shouldReceive('repoACIquery')->andReturn($this->entityReader([]));
+        $aciR->shouldReceive('repoACICount')->andReturn(0);
+        $aciiR = TypedMock::of(InvItemAllowanceChargeRepository::class);
+        $aciiR->shouldReceive('repoInvItemquery')->andReturn($this->entityReader([]));
+        $taxRate = TypedMock::of(TaxRate::class);
+        $taxRate->shouldReceive('reqId')->andReturn(1);
+        $taxRate->shouldReceive('getPeppolTaxRateCode')->andReturn('S');
+        $taxRate->shouldReceive('getTaxRatePercent')->andReturn(20.0);
+        $trR = TypedMock::of(TaxRateRepository::class);
+        $trR->shouldReceive('findAllPreloaded')->andReturn($this->entityReader([$taxRate]));
+
+        $invDeps = new StoreCoveHelperInvDeps(TypedMock::of(SalesOrderRepository::class), $iiaR, $paR, $cpR);
+        $netDeps = new StoreCoveHelperNetDeps(
+            TypedMock::of(ContractRepository::class),
+            $delRepo,
+            TypedMock::of(DeliveryPartyRepository::class),
+            $unpR,
+            $upR,
+            $ppR,
+        );
+        $chargeDeps = new StoreCoveHelperChargeDeps($aciR, $aciiR, TypedMock::of(SalesOrderItemRepository::class), $trR);
+
+        $helper = new StoreCoveHelper($s, $delRepo, $this->deliveryLocation(), $this->translator());
+        return $helper->maximumPreJsonPhpObjectForAnInvoice($inv, $invDeps, $netDeps, $chargeDeps);
+    }
+
+    /** @psalm-suppress MixedArrayAccess, MixedAssignment, MixedArgument */
+    public function theStorecoveDocumentCarriesTheInvoiceHeaderFields(): void
+    {
+        $built = $this->builtInvoice();
+        /** @var array<string, mixed> $invoice */
+        $invoice = $built['document']['invoice'];
+
+        Assert::same($built['legalEntityId'], 'LE-1');
+        Assert::same($built['document']['documentType'], 'invoice');
+        Assert::same($invoice['taxSystem'], 'tax_line_percentages');
+        Assert::same($invoice['documentCurrency'], 'GBP');
+        Assert::same($invoice['invoiceNumber'], 'INV-100');
+        Assert::same($invoice['accountingCost'], 'CC-42');
+        Assert::same($invoice['paymentTerms'], ['note' => '30 days']);
+        Assert::same($invoice['references'], []);
+        Assert::same($invoice['prepaidAmount'], 1);
+    }
+
+    /** @psalm-suppress MixedArrayAccess, MixedAssignment, MixedArgument */
+    public function theStorecoveDocumentCarriesTheSupplierContactAndPaymentMeans(): void
+    {
+        $built = $this->builtInvoice();
+        /** @var array<string, mixed> $invoice */
+        $invoice = $built['document']['invoice'];
+
+        Assert::same($invoice['accountingSupplierParty']['party']['contact'], [
+            'email' => 'sam@example.test', 'firstName' => 'Sam', 'lastName' => 'Supplier', 'phone' => '01632 960002',
+        ]);
+        Assert::same($invoice['paymentMeansArray'][0]['code'], 'credit_transfer');
+        Assert::same($invoice['paymentMeansArray'][0]['account'], 'GB00BANK');
+        Assert::true(is_int($invoice['paymentMeansArray'][0]['paymentId']));
+    }
+
+    /**
+     * Deliberately checks only the shape of the tax section, not its amounts. The helper reads
+     * TaxableAmounts / TaxAmount / TaxCategoryPercent from the id-keyed array that buildTaxSubtotalArray()
+     * returns, instead of from a row of it, so today these always come out as 0.0 whatever the invoice
+     * total. Asserting the real amounts here would fail, and asserting zeros would lock the bug in.
+     * @psalm-suppress MixedArrayAccess, MixedAssignment, MixedArgument
+     */
+    public function theStorecoveDocumentHasATaxSubtotalSectionAndATotal(): void
+    {
+        $built = $this->builtInvoice();
+        /** @var array<string, mixed> $invoice */
+        $invoice = $built['document']['invoice'];
+
+        Assert::same(count($invoice['taxSubtotals']), 1);
+        Assert::same(array_keys($invoice['taxSubtotals'][0]), ['taxableAmount', 'taxAmount', 'percentage', 'country']);
+        Assert::same($invoice['taxSubtotals'][0]['country'], 'GB');
+        Assert::true(is_float($invoice['taxSubtotals'][0]['taxableAmount']));
+        Assert::true(is_float($invoice['amountIncludingVat']));
+    }
+
+    /** @psalm-suppress MixedArrayAccess, MixedAssignment, MixedArgument */
+    public function theStorecoveDocumentHasOneLinePerBilledItem(): void
+    {
+        $built = $this->builtInvoice();
+        /** @var array<string, mixed> $invoice */
+        $invoice = $built['document']['invoice'];
+
+        Assert::same(array_keys($invoice['invoiceLines']), [21]);
+        Assert::same($invoice['invoiceLines'][21]['name'], 'Window clean');
+        Assert::same($invoice['allowanceCharges'], []);
+        Assert::same($built['attachments'], []);
+    }
+
+    /** @psalm-suppress MixedArrayAccess, MixedAssignment, MixedArgument */
+    public function theStorecoveDocumentRoutesToTheBuyerEmailAndHasABuyerParty(): void
+    {
+        $built = $this->builtInvoice();
+        /** @var array<string, mixed> $invoice */
+        $invoice = $built['document']['invoice'];
+        $customer = $invoice['accountingCustomerParty'];
+
+        Assert::same($built['routing']['emails'], ['buyer@example.test']);
+        Assert::same($built['routing']['workflow'], 'full');
+        Assert::same(count($customer['publicIdentifiers']), 2);
+        Assert::same($customer['party']['companyName'], 'Receiver Company');
+        Assert::same($customer['party']['address']['street1'], '2 Virtual Road');
+        Assert::same($customer['party']['address']['city'], 'Testville');
+        Assert::same($customer['party']['address']['country'], 'GB');
+        Assert::same($customer['party']['contact']['email'], 'buyer@example.test');
+        Assert::same($invoice['delivery']['deliveryPartyName'], 'storecove.not.available');
+    }
+
+    /** @psalm-suppress MixedArrayAccess, MixedAssignment, MixedArgument */
+    public function theRoutingIdentifierIsBuiltFromTheSenderIdentifierBasis(): void
+    {
+        $built = $this->builtInvoice();
+        $row = StoreCoveArrays::storeCoveSenderIdentifierArray()[1];
+
+        Assert::same($built['routing']['eIdentifiers'][0]['scheme'], $row['Legal']);
     }
 
     // ── sender identifiers ───────────────────────────────────────────────────
