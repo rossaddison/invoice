@@ -13,6 +13,7 @@ use Yiisoft\Validator\PropertyTranslatorProviderInterface;
 use Yiisoft\Validator\Result;
 use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\RuleInterface;
 use Yiisoft\Validator\RulesProviderInterface;
 
 final class LoginForm extends FormModel implements RulesProviderInterface, PropertyTranslatorProviderInterface
@@ -69,8 +70,7 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
     }
 
     /**
-     * @return array
-     * @psalm-suppress ImplementedReturnTypeMismatch
+     * @return array{login: list<RuleInterface>, password: list<RuleInterface>}
      */
     #[\Override]
     public function getRules(): array
@@ -89,7 +89,7 @@ final class LoginForm extends FormModel implements RulesProviderInterface, Prope
      * Related logic: see config/common/params.php 'yiisoft/aliases' =>
      *  ['aliases' => ['@validatorMessages' => '@vendor/yiisoft/validator/messages']]
      *
-     * @return array
+     * @return list<RuleInterface>
      */
     private function loginRules(): array
     {
