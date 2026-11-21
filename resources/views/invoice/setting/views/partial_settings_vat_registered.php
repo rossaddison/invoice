@@ -72,6 +72,7 @@ echo H::openTag('div', $row); //1
          ]);
          echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'show_tax_point_note']);
           echo $translator->translate('show.tax.point.note');
+          echo $s->infoIcon('show_tax_point_note');
          echo H::closeTag('label');
        echo H::closeTag('div'); //8
        echo H::openTag('div', $checkbox); //8

@@ -137,6 +137,9 @@ trait InvoiceInstallTrait
             'enable_client_peppol_defaults' => 1,
             'enable_telegram' => 0,
             'enable_vat_registration' => 0,
+            // Tax Point explanation on the invoice edit form (UK locale and
+            // VAT registration only); off unless ticked on Settings...VAT.
+            'show_tax_point_note' => 0,
             // Compulsory — Settings tab "tfa" locks this to always-on (a
             // decorative, disabled checkbox, no way to submit 0 through the
             // form). Default here matches, for a fresh install.

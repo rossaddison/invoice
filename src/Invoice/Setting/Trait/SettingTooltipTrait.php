@@ -342,6 +342,15 @@ trait SettingTooltipTrait
                 'where' => 'This setting is used in resources/views/invoice/'
                 . 'inv/view.php',
             ],
+            'show_tax_point_note' => [
+                'why' => 'Shows the Tax Point explanation on the invoice edit'
+                . ' form (inv/edit). Only for the UK locale (en with the gb'
+                . ' flag) and only while VAT registration is enabled. Off by'
+                . ' default, so an install that never saved it shows nothing.',
+                'where' => 'src/Invoice/Inv/TaxPointNoteVisibility.php, used in'
+                . ' src/Invoice/Inv/Trait/Edit.php and resources/views/'
+                . 'invoice/inv/_form_edit.php',
+            ],
             'front_page_file_locations_tooltip' => [
                 'why' => 'Check to remove page from menu. These checkbox\'s'
                 . ' affect the src\ViewInjection\LayoutViewInjection.php file,',
