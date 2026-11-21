@@ -53,6 +53,28 @@ echo H::openTag('div', $row); //1
          echo H::closeTag('label');
        echo H::closeTag('div'); //8
        echo H::openTag('div', $checkbox); //8
+        $showTaxPoint = 'settings[show_tax_point_note]';
+        $body[$showTaxPoint] =
+        $s->getSetting('show_tax_point_note');
+        echo H::openTag('input', [
+          'type' => 'hidden',
+          'name' => $showTaxPoint,
+          'value' => '0'
+         ]);
+         echo H::openTag('input', [
+          'type' => 'checkbox',
+          'class' => 'form-check-input',
+          'id' => 'show_tax_point_note',
+          'name' => $showTaxPoint,
+          'value' => '1',
+          'checked' => ($body[$showTaxPoint] == 1)
+          ? 'checked' : null
+         ]);
+         echo H::openTag('label', ['class' => 'form-check-label', 'for' => 'show_tax_point_note']);
+          echo $translator->translate('show.tax.point.note');
+         echo H::closeTag('label');
+       echo H::closeTag('div'); //8
+       echo H::openTag('div', $checkbox); //8
         $displayMsg = 'settings[display_vat_enabled_message]';
         $body[$displayMsg] =
         $s->getSetting('display_vat_enabled_message');
