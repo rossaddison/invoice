@@ -134,21 +134,31 @@ final readonly class InvPdfService
         $filename = $this->translator->translate('invoice')
             . '_'
             . str_replace(['\\', '/'], '_', $inv->getNumber() ?? (string) random_int(0, 10));
-        return $mpdf->pdfCreate(
-            $html,
-            $filename,
-            $stream,
-            $this->s,
-            new PdfCreateContext(
-                $inv->getPassword(),
-                $this->itemDeps->iiaR,
-                $invAmount,
-                true,
-                $includeZugferd,
-                $associatedFiles,
-                $inv,
-            ),
-        );
+        try {
+            return $mpdf->pdfCreate(
+                $html,
+                $filename,
+                $stream,
+                $this->s,
+                new PdfCreateContext(
+                    $inv->getPassword(),
+                    $this->itemDeps->iiaR,
+                    $invAmount,
+                    true,
+                    $includeZugferd,
+                    $associatedFiles,
+                    $inv,
+                ),
+            );
+        } finally {
+            // The XML is copied into the PDF while it is written, so the temp file is not needed afterwards. They
+            // used to pile up in Uploads/Temp/Zugferd, one per PDF, with nothing ever removing them.
+            foreach ($associatedFiles as $associatedFile) {
+                if (is_file($associatedFile['path'])) {
+                    unlink($associatedFile['path']);
+                }
+            }
+        }
     }
 
     private function renderHtml(

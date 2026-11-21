@@ -174,14 +174,13 @@ class MpdfHelper
     ): string {
         $sR->loadSettings();
         $aliases = $this->ensureUploadsFolderExists($sR);
-        $archived_file = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf';
-        $title = $sR->getSetting('pdf_archive_inv') == '1' ? $archived_file : $filename . '.pdf';
+        // The title is also printed in the header of every page, so it is only the file name: it used to be the
+        // archive file's absolute path whenever archiving was on, which put the server's folder layout on every
+        // customer PDF.
+        $title = $filename . '.pdf';
         $start_mpdf = $this->initializePdf($sR, $title, $ctx);
         $css = $this->getCssFile($aliases);
         $mpdf = $this->writeHtmlToPdf($css, $html, $start_mpdf);
-        if ($ctx->isInvoice) {
-            $this->isInvoice($filename, $mpdf, $aliases, $sR);
-        }
         $output = '';
         if ($stream) {
             // send the file inline to the browser. The plug-in is used if available.
@@ -189,7 +188,8 @@ class MpdfHelper
             $output = 'streamed_not_saved';
         }
         if ($sR->getSetting('pdf_archive_inv') === '1') {
-            $archivePath = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf';
+            // Written once. An isInvoice() step used to write the same file a second time first.
+            $archivePath = $this->archivePath($aliases, $sR, $filename);
             $mpdf->Output($archivePath, self::DEST_FILE);
             $output = $archivePath;
         }
@@ -197,26 +197,16 @@ class MpdfHelper
     }
 
     /**
-     * @param string $filename
-     * @param \Mpdf\Mpdf $mpdf
-     * @param Aliases $aliases
-     * @param SR $sR
-     * @return string
-     * @psalm-suppress UnusedReturnValue
+     * Inside the archive folder, as the download, Telegram and archived-files lookups all expect. The folder
+     * constant has no trailing separator, so the file name used to be glued onto it
+     * (Uploads/Archive2026-11-21_x.pdf) and landed in Uploads/ instead.
      */
-    private function isInvoice(string $filename, \Mpdf\Mpdf $mpdf, Aliases $aliases, SR $sR): string
+    private function archivePath(Aliases $aliases, SR $sR, string $filename): string
     {
-        // Archive the file if it is an invoice
-        if ($sR->getSetting('pdf_archive_inv') === '1') {
-            $archive_folder = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '/Invoice';
-            $archived_file = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf';
-            if (!is_dir($archive_folder)) {
-                FileHelper::ensureDirectory($archive_folder, 0o775);
-            }
-            $mpdf->Output($archived_file, self::DEST_FILE);
-            return $archived_file;
-        }
-        return '';
+        return rtrim($aliases->get('@uploads'), '\\/')
+            . $sR::getUploadsArchiveholderRelativeUrl()
+            . DIRECTORY_SEPARATOR
+            . date('Y-m-d') . '_' . $filename . '.pdf';
     }
 
     private function ensureTmpFolderExists(): Aliases
@@ -285,9 +275,14 @@ class MpdfHelper
 
             $mpdf->PDFX = false;
 
-            //https://mpdf.github.io/what-else-can-i-do/pdf-a1-b-compliance.html
-            $mpdf->PDFA = false;
-
+            // ZUGFeRD is PDF/A-3: mPDF writes the XMP packet that carries the ZUGFeRD declaration only in PDF/A
+            // or PDF/X mode, so with PDFA false (as it was) zugferdRdf() never reached the file.
+            // https://mpdf.github.io/what-else-can-i-do/pdf-a1-b-compliance.html
+            // PDF/A forbids encryption and transparency (mPDF throws when it draws a watermark in PDF/A mode), so an
+            // invoice that really has a password, or is watermarked (pdf_watermark), keeps that and the attached XML
+            // but is not declared PDF/A.
+            $mpdf->PDFA = null === $this->password($ctx) && empty($sR->getSetting('pdf_watermark'));
+            $mpdf->PDFAversion = '3-B';
             $mpdf->PDFAauto = true;
             $mpdf->SetAdditionalXmpRdf($z->zugferdRdf());
             $mpdf->SetAssociatedFiles($ctx->associated_files);
@@ -314,10 +309,21 @@ class MpdfHelper
             $mpdf->SetDirectionality('rtl');
         }
         // Set a password if set for the voucher
-        if (null !== $ctx->password) {
-            $mpdf->SetProtection(['copy', 'print'], $ctx->password, $ctx->password);
+        $password = $this->password($ctx);
+        if (null !== $password) {
+            $mpdf->SetProtection(['copy', 'print'], $password, $password);
         }
         return $mpdf;
+    }
+
+    /**
+     * The password to protect the PDF with, or null for none. An empty string means "no password" throughout the
+     * code (a new invoice's password is '', and reports and run sheets pass ''), but only null was treated that
+     * way, so every such PDF was encrypted with an empty password.
+     */
+    private function password(PdfCreateContext $ctx): ?string
+    {
+        return $ctx->password === null || $ctx->password === '' ? null : $ctx->password;
     }
 
     /**
