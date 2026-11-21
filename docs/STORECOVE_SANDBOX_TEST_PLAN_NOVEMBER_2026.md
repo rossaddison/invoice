@@ -35,7 +35,7 @@ recipient from the client's Peppol record (`endpoint scheme : endpoint id`). The
 | `new StorecoveClient(apiKey: …)` is built without a base URI, so it uses `https://api.storecove.com/api/v2/`. | If the sandbox turns out to use a different host, the app needs a small change first (see Open questions, Q1). |
 | `storeCoveCallApi()` and `storeCoveCallApiGetLegalEntityId()` (debug helpers) send **hard-coded** data ("Test Party", an `nl:kvk` lookup) with whatever key is configured. | Never run them with a production key. They would create or query real records. |
 | `inv/peppolSend/{id}` now runs the same validator as the preview (`PeppolValidator`) before sending and **does not send** an invoice with errors, unless the `peppol_validate_before_send` setting is exactly `0` (`PeppolPreSendValidation`). Warnings never block. | A bad invoice is stopped before the network call. Still read the preview before sending ([PEPPOL_VALIDATOR.md](PEPPOL_VALIDATOR.md), [PEPPOL_SCHEMATRON_VALIDATOR_ROUTE1.md](PEPPOL_SCHEMATRON_VALIDATOR_ROUTE1.md)). |
-| The validator is only as strong as its rules. The bundled Schematron holds the Peppol-specific rules (`PEPPOL-EN16931-R*`), **not** the core EN 16931 `BR-*` mandatory-element rules. | It catches arithmetic, currency and Peppol rule errors, but a missing buyer, invoice number, seller name or issue date is **not** caught. Storecove or the network may still reject those, so test them (T19). |
+| Rule coverage is split. The bundled Schematron holds the Peppol-specific rules (`PEPPOL-EN16931-R*`). The validator adds 15 core EN 16931 rules in code (`BR-CO-04/05/10/13/14/15/16`, `BR-CL-04/05/14/20/21/23/24`, `BR-S-08`, `BR-E-08`, `BR-Z-08`). The UBL generator enforces completeness while it builds the document (for example a missing buyer postal address throws the `BR-10` exception). | The rule families checked on a finished document are arithmetic, code lists and Peppol rules. The mandatory-element presence rules (`BR-01` to `BR-09` and similar) are not re-checked on the finished XML: they rely on the generator never omitting them. Test that the generator refuses incomplete data (T19).
 | `php yii peppol/seed-happy-path-fixture` seeds a clearly labelled virtual invoice, and `--generate-only` / `--generate-existing=<id>` produce the UBL with **no HTTP**. `--cleanup=<id>` removes it. | The no-network dry run. |
 
 ## Open questions for Storecove (their API documentation sits behind a login, so none of this is verified)
@@ -117,7 +117,7 @@ Priority: **P1** must pass before the 2029 route is called ready; **P2** should 
 | T16 | P3 | Attachment | Embedded document present, size within the limit (Q7) |
 | T17 | P3 | Large invoice (about 50 lines) | Accepted, timing recorded |
 | T18 | P3 | Same invoice sent twice | Behaviour of a repeated submission (every send, including a retry, uses a new `idempotencyGuid`, so Storecove cannot deduplicate it; Q7) |
-| T19 | P2 | Mandatory-element gaps the validator cannot see: no buyer name, no invoice number, no issue date | Record whether Storecove or the network rejects it (validator gap 4) |
+| T19 | P2 | Incomplete data the generator must refuse: client without a name, postal address or Peppol record, a tax rate without a Peppol code, no delivery location | A friendly, deep-linked message, no UBL sent and no `PeppolMessage` created |
 
 ### Negative tests (the app must fail clearly, never silently)
 
@@ -127,7 +127,7 @@ Priority: **P1** must pass before the 2029 route is called ready; **P2** should 
 | N02 | Wrong `storecove_legal_entity_id` | `FAILED` with Storecove's message |
 | N03 | Recipient not on the network | `FAILED` or a portal-side failure, and the app says which |
 | N04 | An invoice the validator rejects (for example a total that does not add up, or a document currency that differs from a line's `currencyID`) | The send is **blocked**: a warning lists the rule ids and no `PeppolMessage` is created. Then switch `peppol_validate_before_send` to No, send the same invoice once to record what Storecove does with it, and switch it back |
-| N09 | An invoice with a mandatory element missing that the validator cannot detect (no buyer, no invoice number) | The send is **not** blocked (gap 4 below). Record what Storecove says |
+| N09 | A hand-edited UBL file with a mandatory element deleted (for example the buyer, invoice number or issue date), submitted outside the app | Not reachable through the app. Record what Storecove says, to learn whether the receiving side is the only check on those elements (gap 4 below) |
 | N05 | Client without a Peppol record | Friendly, deep-linked flash, no exception page |
 | N06 | Client Peppol endpoint with an `@` | Rejected by the form validation (August bug #9) |
 | N07 | Network down or timeout | `FAILED` with the error saved in the message |
@@ -157,9 +157,10 @@ Copy this table into the evidence folder and fill it in. Do not commit it if it 
    setting passed to `new StorecoveClient(baseUri: …)`.
 3. **Debug helpers send hard-coded data.** `storeCoveCallApi()` and `storeCoveCallApiGetLegalEntityId()` should be
    restricted or parameterised before anyone runs them against anything but a sandbox.
-4. **The validator lacks the core EN 16931 `BR-*` rules.** The send gate is in place, but it can only block what
-   the validator can see. Adding the CEN EN 16931 UBL Schematron beside `PEPPOL-EN16931-UBL.sch` would close this;
-   until then T19 and N09 record what the receiving side does.
+4. **Mandatory-element presence rules are not re-checked on the finished XML.** The send gate is in place and the
+   generator refuses incomplete data, but a deleted element (`BR-01` to `BR-09` and similar) would not be caught by
+   the validator. Adding the CEN EN 16931 UBL Schematron beside `PEPPOL-EN16931-UBL.sch` would close this. The risk
+   is small while the generator is the only source of documents; T19 and N09 record what actually happens.
 
 ## Answers to the open questions
 

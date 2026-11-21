@@ -15,10 +15,11 @@ use Yiisoft\Translator\TranslatorInterface;
  * seeded happy-path fixture) and sanitised to virtual data, so "a valid invoice is not blocked" is tested against
  * the real generator's output and not a hand-built imitation.
  *
- * The gate is exactly as strong as PeppolValidator: it blocks arithmetic, currency and Peppol-specific rule
- * errors, but the bundled Schematron holds only the Peppol rules (PEPPOL-EN16931-R*), not the core EN 16931
- * BR-* mandatory-element rules, so a document with a missing buyer or invoice number is not caught. These tests
- * deliberately do not assert that gap either way.
+ * The gate is exactly as strong as PeppolValidator. It blocks arithmetic (BR-CO-*), code-list (BR-CL-*), tax
+ * category (BR-S/E/Z-08) and Peppol-specific (PEPPOL-EN16931-R*) rule errors. It does not re-check the
+ * mandatory-element presence rules (BR-01 to BR-09 and similar) on the finished XML: the UBL generator enforces
+ * those while it builds the document and refuses incomplete data. These tests deliberately do not assert that
+ * gap either way.
  */
 #[Test]
 final class PeppolPreSendValidationTest
