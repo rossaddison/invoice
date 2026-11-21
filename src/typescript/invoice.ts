@@ -226,13 +226,6 @@ export class InvoiceHandler {
 
         if (this.handleExportClick(target)) { return; }
 
-        // Payment modal submit
-        const paymentSubmit = closestSafe<HTMLElement>(target, '#btn_modal_payment_submit');
-        if (paymentSubmit) {
-            void this.handlePaymentSubmit();
-            return;
-        }
-
         // Add row modal
         const addRowModal = closestSafe<HTMLElement>(target, '.btn_add_row_modal');
         if (addRowModal) {
@@ -942,54 +935,6 @@ export class InvoiceHandler {
         const endpoint = withCustomFields ? '1' : '0';
         const url = `${location.origin}/invoice/inv/html/${endpoint}`;
         globalThis.open(url, '_blank');
-    }
-
-    private async handlePaymentSubmit(): Promise<void> {
-        const url = `${location.origin}/invoice/payment/add_with_ajax`;
-        const btn = document.getElementById('btn_modal_payment_submit') as HTMLButtonElement;
-        const originalHtml = btn?.innerHTML;
-
-        if (btn) {
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
-            btn.disabled = true;
-        }
-
-        try {
-            // Get payment form data - adjust field names as needed
-            const payload = {
-                // Add payment form fields here based on the actual form structure
-                // This is a placeholder - you'll need to adjust based on the actual payment form
-                amount: getFieldValue('payment_amount'),
-                payment_method: getFieldValue('payment_method'),
-                payment_date: getFieldValue('payment_date'),
-                // Add other payment fields as needed
-            };
-
-            const response = await getJson<ApiResponse>(url, payload);
-            const data = parsedata(response);
-
-            if (data.success === 1) {
-                if (btn) btn.innerHTML = '<i class="bi bi-check-lg"></i>';
-                // Close payment modal and reload
-                this.closeModal('payment-modal'); // Adjust modal ID as needed
-                setTimeout(() => {
-                    globalThis.location.reload();
-                }, 500);
-            } else {
-                if (btn && originalHtml) {
-                    btn.innerHTML = originalHtml;
-                    btn.disabled = false;
-                }
-                alert('Failed to process payment. Please try again.');
-            }
-        } catch (error) {
-            console.error('Payment submission error:', error);
-            if (btn && originalHtml) {
-                btn.innerHTML = originalHtml;
-                btn.disabled = false;
-            }
-            alert('An error occurred while processing payment. See console for details.');
-        }
     }
 
     private handleAddRowModal(): void {
