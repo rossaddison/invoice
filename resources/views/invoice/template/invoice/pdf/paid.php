@@ -373,8 +373,11 @@ $translator->setLocale($cldr);
     echo $delivery_location;
    echo H::closeTag('div'); //3
   echo H::closeTag('main'); //2
-  echo H::tag('watermarkimage', '', ['src' => basename(__FILE__, '.php') .
-   '.png', 'alpha' => '0.1']);
+  // The image as a data URI: a relative 'paid.png' is resolved against the request's base URL, not public/img/.
+  $watermark = \App\Invoice\Helpers\PdfWatermarkImage::dataUri(basename(__FILE__, '.php'));
+  if ($watermark !== '') {
+      echo H::tag('watermarkimage', '', ['src' => $watermark, 'alpha' => '0.1']);
+  }
   echo H::openTag('footer', $notesClass); //2
    echo H::tag('br', '');
    if ($inv->getTerms()) :
