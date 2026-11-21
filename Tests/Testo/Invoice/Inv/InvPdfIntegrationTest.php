@@ -151,10 +151,34 @@ final class InvPdfIntegrationTest
         if (preg_match_all('/stream\r?\n(.*?)\r?\nendstream/s', $pdf, $matches) > 0) {
             foreach ($matches[1] as $raw) {
                 $decoded = @gzuncompress($raw);
+                if ($decoded === false) {
+                    // The pattern drops a trailing CR before "endstream", but the last byte of a compressed stream
+                    // (its checksum) is a CR about one time in 256: put it back and try again.
+                    $decoded = @gzuncompress($raw . "\r");
+                }
                 $all .= $decoded === false ? '' : $decoded . "\n";
             }
         }
         return $all;
+    }
+
+    /** The XMP packet of the PDF, parsed, or null when the PDF has none. */
+    private function xmp(string $pdf): ?DOMXPath
+    {
+        if (preg_match('~<x:xmpmeta.*?</x:xmpmeta>~s', $pdf, $match) !== 1) {
+            return null;
+        }
+        $doc = new DOMDocument();
+        if (!$doc->loadXML('<root xmlns:x="adobe:ns:meta/">' . $match[0] . '</root>')) {
+            return null;
+        }
+        $xpath = new DOMXPath($doc);
+        $xpath->registerNamespace('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+        $xpath->registerNamespace('pdfaid', 'http://www.aiim.org/pdfa/ns/id/');
+        $xpath->registerNamespace('zf', 'urn:ferd:pdfa:CrossIndustryDocument:invoice:1p0#');
+        $xpath->registerNamespace('pdfaSchema', 'http://www.aiim.org/pdfa/ns/schema#');
+        $xpath->registerNamespace('pdfaProperty', 'http://www.aiim.org/pdfa/ns/property#');
+        return $xpath;
     }
 
     private function zugferdXml(string $number, ?Client $client = null): string
@@ -299,6 +323,122 @@ final class InvPdfIntegrationTest
         }
     }
 
+    /** A ZUGFeRD PDF written by MpdfHelper, returned as its bytes. */
+    private function zugferdPdfBytes(string $name, ?string $password): string
+    {
+        $helper = new ZugFerdHelper($this->settings(), TypedMock::of(InvItemAmountRepository::class), $this->invAmount(), $this->translator());
+        $xmlPath = $this->remember($helper->generateInvoiceZugferdXmlTempFile($this->invoice($name)));
+        $path = $this->pdf('<h1>Invoice ' . $name . '</h1>', $name, password: $password, zugferd: true, zugferdFile: $xmlPath);
+
+        return (string) file_get_contents($path);
+    }
+
+    public function theZugferdDeclarationIsWrittenIntoThePdfAsPdfA3XmpMetadata(): void
+    {
+        try {
+            $xmp = $this->xmp($this->zugferdPdfBytes($this->uniqueNumber(), null));
+
+            Assert::true($xmp !== null);
+            Assert::same($xmp->evaluate('string(//pdfaid:part)'), '3');
+            Assert::same($xmp->evaluate('string(//pdfaid:conformance)'), 'B');
+            Assert::same($xmp->evaluate('string(//zf:DocumentType)'), 'INVOICE');
+            Assert::same($xmp->evaluate('string(//zf:DocumentFileName)'), 'ZUGFeRD-invoice.xml');
+            Assert::same($xmp->evaluate('string(//zf:Version)'), '1.0');
+            Assert::same($xmp->evaluate('string(//zf:ConformanceLevel)'), 'COMFORT');
+        } finally {
+            $this->cleanUp();
+        }
+    }
+
+    public function theXmpDeclaresTheZugferdPropertiesInAPdfAExtensionSchema(): void
+    {
+        try {
+            $xmp = $this->xmp($this->zugferdPdfBytes($this->uniqueNumber(), null));
+
+            Assert::true($xmp !== null);
+            Assert::same($xmp->evaluate('string(//pdfaSchema:prefix)'), 'zf');
+            Assert::same(
+                $xmp->evaluate('string(//pdfaSchema:namespaceURI)'),
+                'urn:ferd:pdfa:CrossIndustryDocument:invoice:1p0#',
+            );
+            $declared = [];
+            $names = $xmp->query('//pdfaProperty:name');
+            foreach ($names === false ? [] : $names as $node) {
+                if ($node instanceof \DOMElement) {
+                    $declared[] = $node->textContent;
+                }
+            }
+            Assert::same($declared, ['DocumentFileName', 'DocumentType', 'Version', 'ConformanceLevel']);
+        } finally {
+            $this->cleanUp();
+        }
+    }
+
+    public function aZugferdPdfIsNotEncryptedWhenTheInvoicePasswordIsEmptyOrNull(): void
+    {
+        try {
+            foreach ([null, ''] as $password) {
+                Assert::false(str_contains($this->zugferdPdfBytes($this->uniqueNumber(), $password), '/Encrypt'));
+            }
+        } finally {
+            $this->cleanUp();
+        }
+    }
+
+    public function anInvoiceWithARealPasswordStaysEncryptedAndIsNotDeclaredPdfA(): void
+    {
+        try {
+            $bytes = $this->zugferdPdfBytes($this->uniqueNumber(), 'S3cret-pw');
+
+            Assert::true(str_contains($bytes, '/Encrypt'));
+            Assert::true($this->xmp($bytes) === null);
+        } finally {
+            $this->cleanUp();
+        }
+    }
+
+    public function aPdfWithoutZugferdAndWithAnEmptyPasswordIsNotEncrypted(): void
+    {
+        try {
+            $path = $this->pdf('<p>Report</p>', $this->uniqueNumber(), password: '');
+
+            Assert::false(str_contains((string) file_get_contents($path), '/Encrypt'));
+        } finally {
+            $this->cleanUp();
+        }
+    }
+
+    public function theArchivedPdfIsInTheArchiveFolderAndNotInUploads(): void
+    {
+        try {
+            $path = $this->pdf('<p>x</p>', $this->uniqueNumber());
+
+            Assert::true(is_file($path));
+            Assert::same(basename(dirname($path)), 'Archive');
+            Assert::same(basename(dirname($path, 2)), 'Uploads');
+            Assert::true(str_starts_with(basename($path), date('Y-m-d') . '_'));
+        } finally {
+            $this->cleanUp();
+        }
+    }
+
+    public function thePdfNeverPrintsTheServersFolderLayoutInItsTitleOrHeader(): void
+    {
+        $name = $this->uniqueNumber();
+        try {
+            $path = $this->pdf('<p>x</p>', $name);
+            // mPDF writes page text as UTF-16, with a NUL byte between characters, so compare with those taken out.
+            $text = str_replace([' ', "\0"], '', $this->decodedStreams((string) file_get_contents($path)));
+
+            Assert::true(str_contains($text, $name . '.pdf'));
+            Assert::false(str_contains($text, 'Uploads'));
+            Assert::false(str_contains($text, 'wamp'));
+            Assert::false(str_contains($text, dirname(__DIR__, 4)));
+        } finally {
+            $this->cleanUp();
+        }
+    }
+
     // ── the whole service ────────────────────────────────────────────────────
 
     /** @param list<object> $items */
@@ -373,6 +513,8 @@ final class InvPdfIntegrationTest
             Assert::true(str_contains($streams, '<ram:ID>' . $number . '</ram:ID>'));
             Assert::true(str_contains($streams, 'Smith &amp; Sons &lt;Ltd&gt;'));
             Assert::true(str_contains($path, str_replace('/', '_', $number)));
+            // The temp XML is removed once the PDF is written, instead of piling up in Uploads/Temp/Zugferd.
+            Assert::same(glob($tempFolder . '/*' . $number . '_zugferd.xml'), []);
         } finally {
             $leftovers = glob($tempFolder . '/*' . $number . '_zugferd.xml');
             foreach ($leftovers === false ? [] : $leftovers as $file) {
