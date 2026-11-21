@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv;
 
+use App\Infrastructure\Persistence\Inv\Inv;
+
 /**
  * Appends a payment date to an invoice note, for the "Append date to Note" option of Quick Pay.
  *
@@ -27,5 +29,12 @@ final class InvNoteDateAppender
             return $existing;
         }
         return $existing . ' ' . $date;
+    }
+
+    /** Appends the date to the invoice's note and saves the invoice. */
+    public static function applyTo(Inv $inv, string $date, InvRepository $repository): void
+    {
+        $inv->setNote(self::append($inv->getNote(), $date));
+        $repository->save($inv);
     }
 }

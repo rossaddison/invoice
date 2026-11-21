@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Testo\Invoice\Inv;
 
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Inv\InvNoteDateAppender;
+use App\Invoice\Inv\InvRepository;
 use Testo\Assert;
 use Testo\Test;
+use Tests\Testo\Support\TypedMock;
 
 /**
  * Quick Pay's "Append date to Note" option: the inv/index tooltip shows the invoice note, so the payment
@@ -59,5 +62,28 @@ final class InvNoteDateAppenderTest
     public function anEmptyDateLeavesTheNoteUnchanged(): void
     {
         Assert::same(InvNoteDateAppender::append('WK 2ND NOV', ''), 'WK 2ND NOV');
+    }
+
+    public function applyToSetsTheNoteOnTheInvoiceAndSavesIt(): void
+    {
+        $inv = new Inv();
+        $inv->setNote('WK 2ND NOV');
+        $repository = TypedMock::of(InvRepository::class);
+        $repository->shouldReceive('save')->once()->with($inv);
+
+        InvNoteDateAppender::applyTo($inv, '2026-11-21', $repository);
+
+        Assert::same($inv->getNote(), 'WK 2ND NOV 2026-11-21');
+    }
+
+    public function applyToOnAnInvoiceWithNoNoteSetsJustTheDate(): void
+    {
+        $inv = new Inv();
+        $repository = TypedMock::of(InvRepository::class);
+        $repository->shouldReceive('save')->once()->with($inv);
+
+        InvNoteDateAppender::applyTo($inv, '2026-11-21', $repository);
+
+        Assert::same($inv->getNote(), '2026-11-21');
     }
 }

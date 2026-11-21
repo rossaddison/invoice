@@ -474,8 +474,7 @@ trait MultipleCopy
             if ($appendDate) {
                 // Saved before the payment and recalculation, so the recalculation cannot be overwritten
                 // by a stale copy of the invoice. The inv/index tooltip shows this note.
-                $inv->setNote(InvNoteDateAppender::append($inv->getNote(), $date));
-                $d->iR->save($inv);
+                InvNoteDateAppender::applyTo($inv, $date, $d->iR);
             }
             $pmId = $inv->getPaymentMethod() ?? 0;
             $paymentService->savePayment(new Payment(), array_filter([
