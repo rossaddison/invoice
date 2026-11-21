@@ -48,6 +48,9 @@
                  for a module Testo alone already covers completely,
                  confirmed live against the SonarCloud API on PR #1338. -->
             <directory>./src/Bookkeeping</directory>
+            <!-- Same reason as src/Bookkeeping above: covered only by the Testo test
+                 Tests/Testo/Config/PurchaseEntryDiConfigTest.php, never by PHPUnit. -->
+            <file>./src/Invoice/PurchaseEntry/PurchaseEntryRepositoryFactory.php</file>
         </exclude>
     </source>
 </phpunit>
