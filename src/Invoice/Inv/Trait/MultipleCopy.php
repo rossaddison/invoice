@@ -19,6 +19,7 @@ use App\Invoice\{
     Inv\InvCopyDeps,
     Inv\InvForm,
     Inv\InvIndexFilter,
+    Inv\InvNoteDateAppender,
     Helpers\InvRecalculator,
     Payment\PaymentService,
 };
@@ -456,6 +457,7 @@ trait MultipleCopy
         $keyList = (array) ($params['keylist'] ?? []);
         $date    = CsvDateNormaliser::normalise(trim((string) ($params['date'] ?? '')));
         $note    = trim((string) ($params['note'] ?? ''));
+        $appendDate = ($params['append_date'] ?? '') === '1';
 
         if ($keyList === [] || $date === '') {
             return $this->factory->createResponse(Json::encode(['success' => 0]));
@@ -468,6 +470,12 @@ trait MultipleCopy
             $invAmount = $d->iaR->repoInvquery($invId);
             if (null === $inv || null === $invAmount) {
                 continue;
+            }
+            if ($appendDate) {
+                // Saved before the payment and recalculation, so the recalculation cannot be overwritten
+                // by a stale copy of the invoice. The inv/index tooltip shows this note.
+                $inv->setNote(InvNoteDateAppender::append($inv->getNote(), $date));
+                $d->iR->save($inv);
             }
             $pmId = $inv->getPaymentMethod() ?? 0;
             $paymentService->savePayment(new Payment(), array_filter([

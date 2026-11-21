@@ -220,6 +220,15 @@ final class InvsToolbar
             . Html::tag('input', '', ['type' => 'text', 'id' => 'bulk-quick-pay-note',
                 'class' => 'form-control', 'placeholder' => Html::encode($t->translate('bank.ref'))])
             . Html::closeTag('div')
+            . Html::openTag('div', ['class' => 'form-check mb-3'])
+            . Html::tag('input', '', ['type' => 'checkbox', 'id' => 'bulk-quick-pay-append-date',
+                'class' => 'form-check-input', 'value' => '1'])
+            . Html::tag(
+                'label',
+                Html::encode($t->translate('append.date.to.note')),
+                ['class' => 'form-check-label', 'for' => 'bulk-quick-pay-append-date']
+            )
+            . Html::closeTag('div')
             . Html::closeTag('div')
             . Html::openTag('div', ['class' => 'modal-footer'])
             . Html::tag(
