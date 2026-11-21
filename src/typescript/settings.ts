@@ -24,11 +24,6 @@ interface FphGenerateResponse extends ApiResponse {
     userUuid?: string;
 }
 
-interface CronKeyResponse extends ApiResponse {
-    success: 0 | 1;
-    cronkey?: string;
-}
-
 // Settings handler class
 export class SettingsHandler {
     private originalDisplayStyles: Record<string, string> = {};

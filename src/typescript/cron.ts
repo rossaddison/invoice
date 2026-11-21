@@ -26,19 +26,6 @@ function generateSecureHex(bytes = 24): string {
         .join('');
 }
 
-function escapeIdForQuerySelector(id: string): string {
-    // For querySelector, characters like [ and ] must be escaped.
-    // We can use CSS.escape if available.
-    // Fallback to escaping brackets.
-    // Note: we only need this if using querySelector with the id that contains brackets.
-    // We'll use getElementById where possible (no escaping required).
-    if ((globalThis as any).CSS && typeof (globalThis as any).CSS.escape === 'function') {
-        return (globalThis as any).CSS.escape(id);
-    }
-    // First escape backslash, then escape brackets and other CSS selector special chars
-    return id.replaceAll('\\', '\\\\').replace(/([\]#;.])/g, String.raw`\$1`);
-}
-
 function setButtonWorkingOn(button: HTMLElement): void {
     (button as any).__originalHTML = button.innerHTML;
     button.setAttribute('aria-busy', 'true');

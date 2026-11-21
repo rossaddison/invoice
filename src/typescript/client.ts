@@ -238,7 +238,7 @@ export class ClientHandler {
     }
 
     private showValidationErrors(validationErrors: Record<string, string[]>): void {
-        Object.entries(validationErrors).forEach(([key, errors]) => {
+        Object.entries(validationErrors).forEach(([key]) => {
             const element = document.getElementById(key);
             if (element?.parentElement) {
                 element.parentElement.classList.add('has-error');

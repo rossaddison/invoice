@@ -46,10 +46,6 @@ interface AddInvoiceTaxData extends RequestParams {
     include_inv_item_tax: string;
 }
 
-interface DeleteItemData extends RequestParams {
-    id: string;
-}
-
 function setButtonLoadingOn(button: HTMLElement): void {
     button.innerHTML = '<h2 class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span></h2>';
     (button as HTMLButtonElement).disabled = true;
@@ -214,7 +210,7 @@ export class InvoiceHandler {
         const invTaxSubmit = closestSafe<HTMLElement>(target, '#inv_tax_submit');
         if (invTaxSubmit) {
             event.preventDefault();
-            void this.handleAddInvoiceTax(invTaxSubmit);
+            void this.handleAddInvoiceTax();
             return;
         }
 
@@ -705,7 +701,7 @@ export class InvoiceHandler {
         }
     }
 
-    private async handleAddInvoiceTax(invTaxSubmit: HTMLElement): Promise<void> {
+    private async handleAddInvoiceTax(): Promise<void> {
         const btn = document.getElementById('inv_tax_submit') as HTMLButtonElement;
         const originalHtml = btn?.innerHTML;
 

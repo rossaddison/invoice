@@ -19,13 +19,6 @@ interface FamilyNamesResponse extends ApiResponse {
     family_names?: Record<string, string>;
 }
 
-interface FamilyGenerateRequest extends RequestParams {
-    family_ids: string[];
-    tax_rate_id: string;
-    unit_id: string;
-    _csrf: string;
-}
-
 interface FamilyGenerateResponse extends ApiResponse {
     success: 0 | 1;
     count?: number;

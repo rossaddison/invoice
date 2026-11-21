@@ -22,10 +22,6 @@ interface SalesOrderConversionResponse {
 }
 
 // SalesOrder-specific interfaces
-interface SalesOrderFormData {
-    [key: string]: string | number | boolean;
-}
-
 interface SalesOrderSaveResponse extends ApiResponse {
     success: 0 | 1;
     message?: string;

@@ -316,7 +316,7 @@ export class TaskHandler {
         console.log('Tasks grouped by tax rate:', Object.keys(tasksByTaxRate));
 
         // ES2024: Process tasks in reverse order for better form population strategy
-        Object.entries(tasks).toReversed().forEach(([key, task]) => {
+        Object.entries(tasks).toReversed().forEach(([, task]) => {
             const currentTaxRateId = task.tax_rate_id;
 
             if (currentTaxRateId) {
