@@ -4,16 +4,27 @@ declare(strict_types=1);
 
 namespace Tests\Testo\Config;
 
+use App\Infrastructure\Persistence\PurchaseEntry\PurchaseEntry;
 use App\Invoice\PurchaseEntry\PurchaseEntryRepository;
 use App\Invoice\PurchaseEntry\PurchaseEntryRepositoryInterface;
 use Closure;
+use Cycle\Database\Config\DatabaseConfig;
+use Cycle\Database\Config\SQLite\MemoryConnectionConfig;
+use Cycle\Database\Config\SQLiteDriverConfig;
+use Cycle\Database\DatabaseManager;
+use Cycle\ORM\Factory;
+use Cycle\ORM\Mapper\Mapper;
+use Cycle\ORM\ORM;
 use Cycle\ORM\ORMInterface;
+use Cycle\ORM\Schema;
+use Cycle\ORM\SchemaInterface;
 use Cycle\ORM\Select;
 use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionNamedType;
 use Testo\Assert;
 use Testo\Test;
+use Tests\Testo\Support\TypedMock;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
 
 /**
@@ -78,5 +89,35 @@ final class PurchaseEntryDiConfigTest
         );
 
         Assert::same($types, [Select::class, EntityWriter::class]);
+    }
+
+    public function theFactoryReallyBuildsTheRepositoryFromAnOrm(): void
+    {
+        // A real Cycle ORM on in-memory SQLite with a one-entity schema: Select cannot be faked with mocks.
+        $database = new DatabaseManager(new DatabaseConfig([
+            'default' => 'default',
+            'databases' => ['default' => ['connection' => 'sqlite']],
+            'connections' => ['sqlite' => new SQLiteDriverConfig(connection: new MemoryConnectionConfig())],
+        ]));
+        $orm = new ORM(new Factory($database), new Schema([
+            PurchaseEntry::class => [
+                SchemaInterface::ENTITY => PurchaseEntry::class,
+                SchemaInterface::MAPPER => Mapper::class,
+                SchemaInterface::DATABASE => 'default',
+                SchemaInterface::TABLE => 'purchase_entry',
+                SchemaInterface::PRIMARY_KEY => 'id',
+                SchemaInterface::COLUMNS => ['id' => 'id'],
+                SchemaInterface::TYPECAST => [],
+                SchemaInterface::SCHEMA => [],
+                SchemaInterface::RELATIONS => [],
+            ],
+        ]));
+
+        $factory = $this->definitions()[PurchaseEntryRepository::class] ?? null;
+        Assert::true($factory instanceof Closure);
+
+        $repository = $factory($orm, TypedMock::of(EntityWriter::class));
+
+        Assert::true($repository instanceof PurchaseEntryRepository);
     }
 }
