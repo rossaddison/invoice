@@ -46,12 +46,6 @@ interface AddInvoiceTaxData extends RequestParams {
     include_inv_item_tax: string;
 }
 
-interface PaymentData extends RequestParams {
-    amount: string;
-    payment_method: string;
-    payment_date: string;
-}
-
 interface DeleteItemData extends RequestParams {
     id: string;
 }
