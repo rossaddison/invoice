@@ -479,12 +479,6 @@ $this->setTitle('JavaScript Analysis - FAQ');
                                                 <td>HTML export functionality</td>
                                             </tr>
                                             <tr>
-                                                <td><code>#payment_submit</code></td>
-                                                <td>invoice.js payment handlers</td>
-                                                <td>invoice.ts handlePaymentSubmit()</td>
-                                                <td>Payment form submission</td>
-                                            </tr>
-                                            <tr>
                                                 <td><code>.delete-item-btn</code></td>
                                                 <td>invoice.js item management</td>
                                                 <td>invoice.ts handleDeleteSingleItem()</td>
