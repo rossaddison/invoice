@@ -11,6 +11,7 @@ use App\Invoice\{
     Inv\InvEditLocationDeps,
     Inv\InvEditPaymentDeps,
     Inv\InvForm,
+    Inv\TaxPointNoteVisibility,
     InvAmount\InvAmountRepository as IAR,
     InvCustom\InvCustomForm,
     Payment\PaymentService,
@@ -50,15 +51,15 @@ trait Edit
         $peppol_array = new PeppolArrays();
         $note_on_tax_point = '';
         $defaultGroupId = (int) $this->sR->getSetting('default_invoice_group');
-        // Tax point is a UK VAT concept (references informi.co.uk, UK VAT
-        // reporting rules) — only relevant, so only shown, for the GBP/UK
-        // locale. Both must hold: the session locale is 'en', and that
-        // locale's own flag (SettingLocaleTrait::getLocaleFlags()) is
-        // 'gb' — belt-and-braces against the flag mapping drifting
-        // independently of the locale code later.
+        // Tax point is a UK VAT concept, shown only for the GBP/UK locale and
+        // only when ticked on the Settings > VAT tab (see
+        // TaxPointNoteVisibility).
         $locale = (string) $this->session->get('_language');
-        if ($locale === 'en'
-                && ($this->sR->getLocaleFlags()[$locale] ?? null) === 'gb') {
+        if (TaxPointNoteVisibility::isVisible(
+            $locale,
+            $this->sR->getLocaleFlags()[$locale] ?? null,
+            $this->sR->getSetting(TaxPointNoteVisibility::SETTING_KEY),
+        )) {
             $note_on_tax_point = $this->webViewRenderer->renderPartialAsString(
                 '//invoice/info/taxpoint'
             );
