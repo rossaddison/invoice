@@ -31,9 +31,9 @@ recipient from the client's Peppol record (`endpoint scheme : endpoint id`). The
 
 | Fact | Consequence for testing |
 |---|---|
-| The client library only has `createDocumentSubmission()`. | The app stores `SENT` plus Storecove's `guid` and **cannot ask Storecove what happened next**. `SENT` means "accepted by the API", not "delivered". Delivery and validation outcome must be read in the Storecove portal. |
+| The client library only has `createDocumentSubmission()` (verified in `vendor/rossaddison/storecove-client`). No Storecove webhook receiver was found in the code (a search, not proof). | The app stores `SENT` plus Storecove's `guid` and **cannot ask Storecove what happened next**. `SENT` is set when `createDocumentSubmission()` returns without an exception. **Inferred, not confirmed:** that this means "accepted by the API" and not "delivered" (Q3). Read the outcome in the Storecove portal. |
 | `new StorecoveClient(apiKey: …)` is built without a base URI, so it uses `https://api.storecove.com/api/v2/`. | If the sandbox turns out to use a different host, the app needs a small change first (see Open questions, Q1). |
-| `storeCoveCallApi()` and `storeCoveCallApiGetLegalEntityId()` (debug helpers) send **hard-coded** data ("Test Party", an `nl:kvk` lookup) with whatever key is configured. | Never run them with a production key. They would create or query real records. |
+| Four onboarding routes mirror Storecove's "getting started" steps (`config/common/routes/routes-invoice.php`: `/store_cove_call_api`, `/store_cove_call_api_get_legal_entity_id`, `/store_cove_call_api_legal_entity_identifier`, `/store_cove_send_test_json_invoice`). All are **GET**, need `EDIT_INV`, and send **hard-coded** data with whatever key is configured: an `nl:kvk` lookup, a legal entity named "Test Party", a legal entity identifier, and `storeCoveSendTestJsonInvoice`, which **submits a hard-coded test invoice** (EUR, to `DE:LWID`) to `/document_submissions`. | Never run them with a production key: they would create real records or submit a real document. They change state through GET requests. |
 | `inv/peppolSend/{id}` now runs the same validator as the preview (`PeppolValidator`) before sending and **does not send** an invoice with errors, unless the `peppol_validate_before_send` setting is exactly `0` (`PeppolPreSendValidation`). Warnings never block. | A bad invoice is stopped before the network call. Still read the preview before sending ([PEPPOL_VALIDATOR.md](PEPPOL_VALIDATOR.md), [PEPPOL_SCHEMATRON_VALIDATOR_ROUTE1.md](PEPPOL_SCHEMATRON_VALIDATOR_ROUTE1.md)). |
 | Rule coverage is split. The bundled Schematron holds the Peppol-specific rules (`PEPPOL-EN16931-R*`). The validator adds 15 core EN 16931 rules in code (`BR-CO-04/05/10/13/14/15/16`, `BR-CL-04/05/14/20/21/23/24`, `BR-S-08`, `BR-E-08`, `BR-Z-08`). The UBL generator enforces completeness while it builds the document (for example a missing buyer postal address throws the `BR-10` exception). | The rule families checked on a finished document are arithmetic, code lists and Peppol rules. The mandatory-element presence rules (`BR-01` to `BR-09` and similar) are not re-checked on the finished XML: they rely on the generator never omitting them. Test that the generator refuses incomplete data (T19).
 | `php yii peppol/seed-happy-path-fixture` seeds a clearly labelled virtual invoice, and `--generate-only` / `--generate-existing=<id>` produce the UBL with **no HTTP**. `--cleanup=<id>` removes it. | The no-network dry run. |
@@ -95,6 +95,10 @@ document.
 
 ## Test matrix
 
+The expected values in this matrix come from EN 16931 as the author understands it (for example that a reduced rate
+is tax category `S`). They have **not** been checked against the Peppol BIS rule text: confirm each expectation before
+treating a mismatch as a bug in the app.
+
 Priority: **P1** must pass before the 2029 route is called ready; **P2** should pass; **P3** nice to have.
 
 | ID | Pri | Scenario | What to check |
@@ -155,8 +159,8 @@ Copy this table into the evidence folder and fill it in. Do not commit it if it 
    opening the portal.
 2. **Sandbox base URI not configurable.** If Q1 shows a different host, `StorecovePeppolSendService` needs a
    setting passed to `new StorecoveClient(baseUri: …)`.
-3. **Debug helpers send hard-coded data.** `storeCoveCallApi()` and `storeCoveCallApiGetLegalEntityId()` should be
-   restricted or parameterised before anyone runs them against anything but a sandbox.
+3. **Four onboarding routes send hard-coded data through GET requests**, including a test invoice submission (see the
+   facts table). They should be restricted to a sandbox key, moved to POST, or removed once onboarding is done.
 4. **Mandatory-element presence rules are not re-checked on the finished XML.** The send gate is in place and the
    generator refuses incomplete data, but a deleted element (`BR-01` to `BR-09` and similar) would not be caught by
    the validator. Adding the CEN EN 16931 UBL Schematron beside `PEPPOL-EN16931-UBL.sch` would close this. The risk
