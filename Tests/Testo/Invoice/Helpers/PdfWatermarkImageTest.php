@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Tests\Testo\Invoice\Helpers;
 
 use App\Invoice\Helpers\PdfWatermarkImage;
+use App\Invoice\Setting\SettingRepository;
 use Mpdf\Mpdf;
+use ReflectionClass;
 use Testo\Assert;
 use Testo\Test;
+use Yiisoft\Aliases\Aliases;
 use Yiisoft\Html\Html;
 
 /**
@@ -36,6 +39,12 @@ final class PdfWatermarkImageTest
         rmdir($directory);
     }
 
+    /** The '@img' alias the application itself uses for public/img: SettingRepository::getImg(). */
+    private function imgAliases(): Aliases
+    {
+        return (new ReflectionClass(SettingRepository::class))->newInstanceWithoutConstructor()->getImg();
+    }
+
     private function decoded(string $dataUri): string
     {
         return (string) base64_decode(substr($dataUri, strlen('data:image/png;base64,')), true);
@@ -44,7 +53,7 @@ final class PdfWatermarkImageTest
     public function theDefaultDirectoryHoldsThePaidAndOverdueImagesAsRealPngs(): void
     {
         foreach (['paid', 'overdue'] as $name) {
-            $uri = PdfWatermarkImage::dataUri($name);
+            $uri = PdfWatermarkImage::dataUri($name, $this->imgAliases());
 
             Assert::true(str_starts_with($uri, 'data:image/png;base64,'));
             Assert::same(substr($this->decoded($uri), 0, 8), self::PNG_SIGNATURE);
@@ -57,7 +66,7 @@ final class PdfWatermarkImageTest
         $bytes = self::PNG_SIGNATURE . random_bytes(64);
         file_put_contents($directory . DIRECTORY_SEPARATOR . 'stamp.png', $bytes);
         try {
-            Assert::same($this->decoded(PdfWatermarkImage::dataUri('stamp', $directory)), $bytes);
+            Assert::same($this->decoded(PdfWatermarkImage::dataUri('stamp', new Aliases(['@img' => $directory]))), $bytes);
         } finally {
             $this->removeDirectory($directory);
         }
@@ -67,7 +76,7 @@ final class PdfWatermarkImageTest
     {
         $directory = $this->temporaryDirectory();
         try {
-            Assert::same(PdfWatermarkImage::dataUri('paid', $directory), '');
+            Assert::same(PdfWatermarkImage::dataUri('paid', new Aliases(['@img' => $directory])), '');
         } finally {
             $this->removeDirectory($directory);
         }
@@ -76,7 +85,7 @@ final class PdfWatermarkImageTest
     public function aNameThatIsNotAPlainImageNameIsRefused(): void
     {
         foreach (['../.env', '..\\.env', 'paid.png', 'a/b', '', 'paid%00', "paid\n"] as $name) {
-            Assert::same(PdfWatermarkImage::dataUri($name), '');
+            Assert::same(PdfWatermarkImage::dataUri($name, $this->imgAliases()), '');
         }
     }
 
@@ -88,7 +97,7 @@ final class PdfWatermarkImageTest
             $mpdf->showWatermarkImage = true;
             // Built the way the paid.php and overdue.php templates build it.
             $mpdf->WriteHTML(
-                '<p>Invoice</p>' . Html::tag('watermarkimage', '', ['src' => PdfWatermarkImage::dataUri($name), 'alpha' => '0.1']),
+                '<p>Invoice</p>' . Html::tag('watermarkimage', '', ['src' => PdfWatermarkImage::dataUri($name, $this->imgAliases()), 'alpha' => '0.1']),
                 2,
             );
             $pdf = (string) $mpdf->Output('', 'S');

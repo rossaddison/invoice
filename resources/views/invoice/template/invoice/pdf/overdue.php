@@ -370,7 +370,7 @@ $translator->setLocale($cldr);
    echo H::closeTag('div'); //3
   echo H::closeTag('main'); //2
   // The image as a data URI: a relative 'overdue.png' is resolved against the request's base URL, not public/img/.
-  $watermark = \App\Invoice\Helpers\PdfWatermarkImage::dataUri(basename(__FILE__, '.php'));
+  $watermark = \App\Invoice\Helpers\PdfWatermarkImage::dataUri(basename(__FILE__, '.php'), $s->getImg());
   if ($watermark !== '') {
       echo H::tag('watermarkimage', '', ['src' => $watermark, 'alpha' => '0.1']);
   }
