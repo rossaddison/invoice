@@ -768,6 +768,16 @@ trait SettingTooltipTrait
                 . ' left-right arrow in the e-invoice as well.',
                 'where' => 'settingRepository function currencyConverter'
             ],
+            'peppol_validate_before_send' => [
+                'why' => 'Runs the Peppol validator on an invoice before it is'
+                . ' sent to the access point, and does not send it if the'
+                . ' validator rejects it, so the send fails here with the'
+                . ' reasons instead of at the access point. On unless saved'
+                . ' as No.',
+                'where' => 'src/Invoice/Peppol/PeppolPreSendValidation.php,'
+                . ' used in src/Invoice/Inv/Trait/Peppol.php'
+                . ' (blockedByValidation)',
+            ],
             'peppol_xml_stream' => [
                 'why' => 'To show on screen or to save under Uploads/Temp/Peppol'
                 . ' folder.',

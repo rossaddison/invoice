@@ -160,6 +160,7 @@ echo H::openTag('div', $row); //1
        'for' => $kPeppolValidateBeforeSend
       ]);
        echo $translator->translate('peppol.validate.before.send');
+       echo $s->infoIcon('peppol_validate_before_send');
       echo H::closeTag('label');
       $body[$kPeppolValidateBeforeSend] =
        $s->getSetting('peppol_validate_before_send');
