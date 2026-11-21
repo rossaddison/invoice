@@ -91,7 +91,7 @@ final class StoreCoveCustomerPartyParserTest
     private function paRepo(?PostalAddress $address): PostalAddressRepository
     {
         $paR = TypedMock::of(PostalAddressRepository::class);
-        $paR->shouldReceive('repoClient')->andReturn($address);
+        $paR->shouldReceive('repoPostalAddressLoadedquery')->with(5)->andReturn($address);
         return $paR;
     }
 
@@ -150,22 +150,73 @@ final class StoreCoveCustomerPartyParserTest
         Assert::same($error->clientId, 7);
     }
 
-    public function aMissingPostalAddressOrPeppolRecordGivesAnEmptyParty(): void
+    public function aPostalAddressThatCannotBeLoadedIsReportedInsteadOfGivingAnEmptyParty(): void
     {
-        $parser = $this->parser();
-        $noAddress = $parser->buildPeppolAccountingCustomerPartyArray(
+        $error = $this->thrown(fn () => $this->parser()->buildPeppolAccountingCustomerPartyArray(
             $this->invoice($this->client()),
             $this->paRepo(null),
             $this->cpRepo($this->clientPeppol()),
-        );
-        $noPeppol = $parser->buildPeppolAccountingCustomerPartyArray(
+        ));
+
+        Assert::instanceOf($error, PeppolBuyerPostalAddressNotFoundException::class);
+        Assert::same($error->clientId, 7);
+    }
+
+    public function aMissingPeppolRecordIsReportedInsteadOfGivingAnEmptyParty(): void
+    {
+        $error = $this->thrown(fn () => $this->parser()->buildPeppolAccountingCustomerPartyArray(
             $this->invoice($this->client()),
             $this->paRepo($this->postalAddress()),
             $this->cpRepo(null),
+        ));
+
+        Assert::instanceOf($error, PeppolClientNotFoundException::class);
+    }
+
+    public function thePostalAddressIsLoadedByItsOwnIdNotByTheClientId(): void
+    {
+        $paR = TypedMock::of(PostalAddressRepository::class);
+        $paR->shouldReceive('repoPostalAddressLoadedquery')->once()->with(5)->andReturn($this->postalAddress());
+        $paR->shouldNotReceive('repoClient');
+
+        $party = $this->parser()->buildPeppolAccountingCustomerPartyArray(
+            $this->invoice($this->client()),
+            $paR,
+            $this->cpRepo($this->clientPeppol()),
         );
 
-        Assert::same($noAddress, []);
-        Assert::same($noPeppol, []);
+        Assert::true($party !== []);
+    }
+
+    public function theLegalEntityTheBuilderWritesIsTheOneTheReaderCanRead(): void
+    {
+        $parser = $this->parser();
+        $party = $parser->buildPeppolAccountingCustomerPartyArray(
+            $this->invoice($this->client()),
+            $this->paRepo($this->postalAddress()),
+            $this->cpRepo($this->clientPeppol()),
+        );
+
+        $legal = $parser->buildCustomerLegalEntity($party);
+
+        Assert::same($legal->getRegistrationName(), 'Virtual Buyer Limited');
+        Assert::same($legal->getCompanyId(), '12345678');
+        Assert::same($legal->getCompanyIdAttributeSchemeId(), 'GB:COH');
+    }
+
+    public function theTaxSchemeTheBuilderWritesIsTheOneTheReaderCanRead(): void
+    {
+        $parser = $this->parser();
+        $party = $parser->buildPeppolAccountingCustomerPartyArray(
+            $this->invoice($this->client()),
+            $this->paRepo($this->postalAddress()),
+            $this->cpRepo($this->clientPeppol()),
+        );
+
+        $tax = $parser->buildCustomerPartyTaxScheme($party);
+
+        Assert::same($tax->getCompanyId(), 'GB123456789');
+        Assert::same($tax->getTaxScheme()->reqId(), 'VAT');
     }
 
     public function theCustomerPartyCarriesTheEndpointAndIdentification(): void

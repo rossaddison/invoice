@@ -888,7 +888,7 @@ final class StoreCoveHelperTest
         $cpR = TypedMock::of(ClientPeppolRepository::class);
         $cpR->shouldReceive('repoClientPeppolLoadedquery')->andReturn($this->fullClientPeppol());
         $paR = TypedMock::of(PostalAddressRepository::class);
-        $paR->shouldReceive('repoClient')->andReturn($this->postalAddress());
+        $paR->shouldReceive('repoPostalAddressLoadedquery')->with(5)->andReturn($this->postalAddress());
         $amount = TypedMock::of(InvItemAmount::class);
         $amount->shouldReceive('getSubtotal')->andReturn(100.0);
         $amount->shouldReceive('getTaxTotal')->andReturn(20.0);
@@ -965,23 +965,61 @@ final class StoreCoveHelperTest
     }
 
     /**
-     * Deliberately checks only the shape of the tax section, not its amounts. The helper reads
-     * TaxableAmounts / TaxAmount / TaxCategoryPercent from the id-keyed array that buildTaxSubtotalArray()
-     * returns, instead of from a row of it, so today these always come out as 0.0 whatever the invoice
-     * total. Asserting the real amounts here would fail, and asserting zeros would lock the bug in.
+     * Regression test: the tax amounts were read from the wrong level of buildTaxSubtotalArray()'s result,
+     * so every payload carried a tax subtotal and an amountIncludingVat of 0.
+     *
      * @psalm-suppress MixedArrayAccess, MixedAssignment, MixedArgument
      */
-    public function theStorecoveDocumentHasATaxSubtotalSectionAndATotal(): void
+    public function theStorecoveDocumentCarriesTheRealTaxSubtotalAndTotalIncludingVat(): void
     {
         $built = $this->builtInvoice();
         /** @var array<string, mixed> $invoice */
         $invoice = $built['document']['invoice'];
 
-        Assert::same(count($invoice['taxSubtotals']), 1);
-        Assert::same(array_keys($invoice['taxSubtotals'][0]), ['taxableAmount', 'taxAmount', 'percentage', 'country']);
-        Assert::same($invoice['taxSubtotals'][0]['country'], 'GB');
-        Assert::true(is_float($invoice['taxSubtotals'][0]['taxableAmount']));
-        Assert::true(is_float($invoice['amountIncludingVat']));
+        Assert::same($invoice['taxSubtotals'], [[
+            'taxableAmount' => 100.0, 'taxAmount' => 20.0, 'percentage' => 20.0, 'country' => 'GB',
+        ]]);
+        Assert::same($invoice['amountIncludingVat'], 120.0);
+    }
+
+    /** @return array{subtotals: list<array<string, float|string>>, amountIncludingVat: float} */
+    private function taxSubtotals(array $rows): array
+    {
+        /** @var array{subtotals: list<array<string, float|string>>, amountIncludingVat: float} $result */
+        $result = $this->privately($this->helper($this->settings(['currency_code_from' => 'GB'])), 'storeCoveTaxSubtotals', [$rows]);
+        return $result;
+    }
+
+    public function eachUsedTaxRateGetsItsOwnSubtotalAndTheTotalAddsThemAll(): void
+    {
+        $result = $this->taxSubtotals([
+            1 => ['TaxableAmounts' => 150.0, 'TaxAmount' => 30.0, 'TaxCategory' => 'S', 'TaxCategoryPercent' => 20.0],
+            2 => ['TaxableAmounts' => 30.0, 'TaxAmount' => 1.5, 'TaxCategory' => 'AA', 'TaxCategoryPercent' => 5.0],
+        ]);
+
+        Assert::same($result['subtotals'], [
+            ['taxableAmount' => 150.0, 'taxAmount' => 30.0, 'percentage' => 20.0, 'country' => 'GB'],
+            ['taxableAmount' => 30.0, 'taxAmount' => 1.5, 'percentage' => 5.0, 'country' => 'GB'],
+        ]);
+        Assert::same($result['amountIncludingVat'], 211.5);
+    }
+
+    public function aZeroRatedRateWithTaxableAmountIsKeptButAnUnusedRateIsLeftOut(): void
+    {
+        $result = $this->taxSubtotals([
+            1 => ['TaxableAmounts' => 0.0, 'TaxAmount' => 0.0, 'TaxCategory' => 'S', 'TaxCategoryPercent' => 20.0],
+            2 => ['TaxableAmounts' => 30.0, 'TaxAmount' => 0.0, 'TaxCategory' => 'Z', 'TaxCategoryPercent' => 0.0],
+        ]);
+
+        Assert::same($result['subtotals'], [
+            ['taxableAmount' => 30.0, 'taxAmount' => 0.0, 'percentage' => 0.0, 'country' => 'GB'],
+        ]);
+        Assert::same($result['amountIncludingVat'], 30.0);
+    }
+
+    public function noTaxRatesGiveNoSubtotalsAndAZeroTotal(): void
+    {
+        Assert::same($this->taxSubtotals([]), ['subtotals' => [], 'amountIncludingVat' => 0.0]);
     }
 
     /** @psalm-suppress MixedArrayAccess, MixedAssignment, MixedArgument */
@@ -1007,7 +1045,12 @@ final class StoreCoveHelperTest
 
         Assert::same($built['routing']['emails'], ['buyer@example.test']);
         Assert::same($built['routing']['workflow'], 'full');
-        Assert::same(count($customer['publicIdentifiers']), 2);
+        Assert::same($customer['publicIdentifiers'], [
+            ['scheme' => 'GB:COH', 'id' => '12345678'],
+            ['scheme' => 'VAT', 'id' => 'GB123456789'],
+        ]);
+        // The tax scheme used to be a TaxScheme object, which JSON-encodes as {}.
+        Assert::false(str_contains((string) json_encode($customer['publicIdentifiers']), '{}'));
         Assert::same($customer['party']['companyName'], 'Receiver Company');
         Assert::same($customer['party']['address']['street1'], '2 Virtual Road');
         Assert::same($customer['party']['address']['city'], 'Testville');
