@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+ <cbc:UBLVersionID>2.4</cbc:UBLVersionID>
+ <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
+ <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+ <cbc:ID>586</cbc:ID>
+ <cbc:IssueDate>2026-11-21</cbc:IssueDate>
+ <cbc:DueDate>2024-01-01</cbc:DueDate>
+ <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+ <cbc:Note>__TEST_PEPPOL_FIXTURE__ Please use our latest telephone number</cbc:Note>
+ <cbc:TaxPointDate>2024-01-01</cbc:TaxPointDate>
+ <cbc:DocumentCurrencyCode>USD</cbc:DocumentCurrencyCode>
+ <cbc:BuyerReference>__TEST_PEPPOL_FIXTURE__ PO Person</cbc:BuyerReference>
+ <cac:InvoicePeriod>
+  <cbc:StartDate>2024-01-01</cbc:StartDate>
+  <cbc:EndDate>2024-01-31</cbc:EndDate>
+ </cac:InvoicePeriod>
+ <cac:OrderReference>
+  <cbc:ID>__TEST_PEPPOL_FIXTURE__-PO-1</cbc:ID>
+  <cbc:SalesOrderID>NA</cbc:SalesOrderID>
+ </cac:OrderReference>
+ <cac:AdditionalDocumentReference>
+  <cbc:ID>inv-number-null-inv-id586</cbc:ID>
+ </cac:AdditionalDocumentReference>
+ <cac:AccountingSupplierParty>
+  <cac:Party>
+   <cbc:EndpointID schemeID="0088">7300010000001</cbc:EndpointID>
+   <cac:PartyIdentification>
+    <cbc:ID schemeID="0088">5060012349998</cbc:ID>
+   </cac:PartyIdentification>
+   <cac:PartyName>
+    <cbc:Name>MyCompanyName</cbc:Name>
+   </cac:PartyName>
+   <cac:PostalAddress>
+    <cbc:StreetName>Main Street 1</cbc:StreetName>
+    <cbc:AdditionalStreetName>Po Box 351</cbc:AdditionalStreetName>
+    <cbc:CityName>London</cbc:CityName>
+    <cbc:PostalZone>ZZ2 1AA</cbc:PostalZone>
+    <cbc:CountrySubentity>Region A</cbc:CountrySubentity>
+    <cac:Country>
+     <cbc:IdentificationCode>GB</cbc:IdentificationCode>
+    </cac:Country>
+   </cac:PostalAddress>
+   <cac:PartyTaxScheme>
+    <cbc:CompanyID>GB999888777</cbc:CompanyID>
+    <cac:TaxScheme>
+     <cbc:ID>VAT</cbc:ID>
+    </cac:TaxScheme>
+   </cac:PartyTaxScheme>
+   <cac:PartyLegalEntity>
+    <cbc:RegistrationName>Full Formal Seller Name LTD.</cbc:RegistrationName>
+    <cbc:CompanyID schemeID="0002">987654321</cbc:CompanyID>
+   </cac:PartyLegalEntity>
+   <cac:Contact>
+    <cbc:Name>Virtual Contact</cbc:Name>
+    <cbc:Telephone>01632 960001</cbc:Telephone>
+    <cbc:ElectronicMail>virtual1@example.test</cbc:ElectronicMail>
+   </cac:Contact>
+  </cac:Party>
+ </cac:AccountingSupplierParty>
+ <cac:AccountingCustomerParty>
+  <cac:Party>
+   <cbc:EndpointID schemeID="9999">9999999999999</cbc:EndpointID>
+   <cac:PartyIdentification>
+    <cbc:ID schemeID="9999">ID1</cbc:ID>
+   </cac:PartyIdentification>
+   <cac:PartyName>
+    <cbc:Name>__TEST_PEPPOL_FIXTURE__ Client</cbc:Name>
+   </cac:PartyName>
+   <cac:PostalAddress>
+    <cbc:StreetName>Test Street</cbc:StreetName>
+    <cbc:CityName>Test City</cbc:CityName>
+    <cbc:PostalZone>ZZ3 1AA</cbc:PostalZone>
+    <cbc:CountrySubentity>Test County</cbc:CountrySubentity>
+    <cac:Country>
+     <cbc:IdentificationCode>GB</cbc:IdentificationCode>
+    </cac:Country>
+   </cac:PostalAddress>
+   <cac:PartyTaxScheme>
+    <cbc:CompanyID>GB123456789</cbc:CompanyID>
+    <cac:TaxScheme>
+     <cbc:ID>VAT</cbc:ID>
+    </cac:TaxScheme>
+   </cac:PartyTaxScheme>
+   <cac:PartyLegalEntity>
+    <cbc:RegistrationName>__TEST_PEPPOL_FIXTURE__ Client</cbc:RegistrationName>
+    <cbc:CompanyID schemeID="9999">CO1</cbc:CompanyID>
+   </cac:PartyLegalEntity>
+   <cac:Contact>
+    <cbc:Name>__TEST_PEPPOL_FIXTURE__ Client</cbc:Name>
+   </cac:Contact>
+  </cac:Party>
+ </cac:AccountingCustomerParty>
+ <cac:Delivery>
+  <cbc:ActualDeliveryDate>2024-01-01</cbc:ActualDeliveryDate>
+  <cac:DeliveryLocation>
+   <cbc:ID schemeID="0088">9999999999999</cbc:ID>
+   <cac:Address>
+    <cbc:StreetName>Test Street</cbc:StreetName>
+    <cbc:CityName>Test City</cbc:CityName>
+    <cbc:PostalZone>ZZ3 1AA</cbc:PostalZone>
+    <cbc:CountrySubentity>Test County</cbc:CountrySubentity>
+    <cac:Country>
+     <cbc:IdentificationCode>GB</cbc:IdentificationCode>
+    </cac:Country>
+   </cac:Address>
+  </cac:DeliveryLocation>
+ </cac:Delivery>
+ <cac:PaymentMeans>
+  <cbc:PaymentMeansCode name="Credit Transfer">30</cbc:PaymentMeansCode>
+  <cbc:PaymentID>peppol2026-11-21</cbc:PaymentID>
+  <cac:PayeeFinancialAccount>
+   <cbc:ID>IBAN number</cbc:ID>
+   <cbc:Name>FF</cbc:Name>
+   <cac:FinancialInstitutionBranch>
+    <cbc:ID>9999</cbc:ID>
+   </cac:FinancialInstitutionBranch>
+  </cac:PayeeFinancialAccount>
+ </cac:PaymentMeans>
+ <cac:TaxTotal>
+  <cbc:TaxAmount currencyID="GBP">0.00</cbc:TaxAmount>
+ </cac:TaxTotal>
+ <cac:TaxTotal>
+  <cbc:TaxAmount currencyID="USD">0.00</cbc:TaxAmount>
+  <cac:TaxSubtotal>
+   <cbc:TaxableAmount currencyID="USD">116.89</cbc:TaxableAmount>
+   <cbc:TaxAmount currencyID="USD">0.00</cbc:TaxAmount>
+   <cac:TaxCategory>
+    <cbc:ID>Z</cbc:ID>
+    <cbc:Percent>0</cbc:Percent>
+    <cac:TaxScheme>
+     <cbc:ID>VAT</cbc:ID>
+    </cac:TaxScheme>
+   </cac:TaxCategory>
+  </cac:TaxSubtotal>
+ </cac:TaxTotal>
+ <cac:LegalMonetaryTotal>
+  <cbc:LineExtensionAmount currencyID="USD">116.89</cbc:LineExtensionAmount>
+  <cbc:TaxExclusiveAmount currencyID="USD">116.89</cbc:TaxExclusiveAmount>
+  <cbc:TaxInclusiveAmount currencyID="USD">116.89</cbc:TaxInclusiveAmount>
+  <cbc:AllowanceTotalAmount currencyID="USD">0.00</cbc:AllowanceTotalAmount>
+  <cbc:PayableAmount currencyID="USD">116.89</cbc:PayableAmount>
+ </cac:LegalMonetaryTotal>
+ <cac:InvoiceLine>
+  <cbc:ID>1031</cbc:ID>
+  <cbc:Note>__TEST_PEPPOL_FIXTURE__ Item</cbc:Note>
+  <cbc:InvoicedQuantity unitCode="10">1</cbc:InvoicedQuantity>
+  <cbc:LineExtensionAmount currencyID="USD">116.89</cbc:LineExtensionAmount>
+  <cbc:AccountingCost>AC1</cbc:AccountingCost>
+  <cac:InvoicePeriod>
+   <cbc:StartDate>2024-01-01</cbc:StartDate>
+   <cbc:EndDate>2024-01-31</cbc:EndDate>
+  </cac:InvoicePeriod>
+  <cac:DocumentReference>
+   <cbc:ID>inv-number-null-inv-id586</cbc:ID>
+   <cbc:DocumentTypeCode>130</cbc:DocumentTypeCode>
+  </cac:DocumentReference>
+  <cac:Item>
+   <cbc:Description>__TEST_PEPPOL_FIXTURE__ Item</cbc:Description>
+   <cbc:Name>__TEST_PEPPOL_FIXTURE__ Item</cbc:Name>
+   <cac:CommodityClassification>
+    <cbc:ItemClassificationCode listID="SRV" listVersionID="">9999999</cbc:ItemClassificationCode>
+   </cac:CommodityClassification>
+   <cac:ClassifiedTaxCategory>
+    <cbc:ID>Z</cbc:ID>
+    <cbc:Percent>0</cbc:Percent>
+    <cac:TaxScheme>
+     <cbc:ID>VAT</cbc:ID>
+    </cac:TaxScheme>
+   </cac:ClassifiedTaxCategory>
+  </cac:Item>
+  <cac:Price>
+   <cbc:PriceAmount currencyID="USD">116.89</cbc:PriceAmount>
+   <cbc:BaseQuantity unitCode="10">1</cbc:BaseQuantity>
+   <cac:AllowanceCharge>
+    <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+    <cbc:Amount currencyID="USD">0.00</cbc:Amount>
+    <cbc:BaseAmount currencyID="USD">116.89</cbc:BaseAmount>
+   </cac:AllowanceCharge>
+  </cac:Price>
+ </cac:InvoiceLine>
+</Invoice>

@@ -18,6 +18,7 @@ use Yiisoft\Html\Tag\I;
 $kEnablePeppol = 'settings[enable_peppol]';
 $kPeppolDebugEmojis = 'settings[peppol_debug_with_emojis]';
 $kPeppolDebugValidator = 'settings[peppol_debug_with_internal_validator]';
+$kPeppolValidateBeforeSend = 'settings[peppol_validate_before_send]';
 $kPeppolXmlStream = 'settings[peppol_xml_stream]';
 $kPeppolDocCurrency = 'settings[peppol_document_currency]';
 $kCurrencyCodeFrom = 'settings[currency_code_from]';
@@ -148,6 +149,33 @@ echo H::openTag('div', $row); //1
          $kPeppolDebugValidator
         ] == '1'
        )
+        ->content($translator->translate('yes'));
+      echo H::closeTag('select');
+     echo H::closeTag('div'); //6
+     /* Do not send an invoice that the same validator rejects. On unless
+     the saved value is exactly '0', so an install that never saved it (an
+     empty value) is shown as Yes and stays protected after a save. */
+     echo H::openTag('div', $formGroup); //6
+      echo H::openTag('label', [
+       'for' => $kPeppolValidateBeforeSend
+      ]);
+       echo $translator->translate('peppol.validate.before.send');
+       echo $s->infoIcon('peppol_validate_before_send');
+      echo H::closeTag('label');
+      $body[$kPeppolValidateBeforeSend] =
+       $s->getSetting('peppol_validate_before_send');
+      echo H::openTag('select', [
+       'name' => $kPeppolValidateBeforeSend,
+       'id' => $kPeppolValidateBeforeSend,
+       'class' => 'form-select',
+      ]);
+       echo  new Option()
+        ->value('0')
+        ->selected($body[$kPeppolValidateBeforeSend] === '0')
+        ->content($translator->translate('no'));
+       echo  new Option()
+        ->value('1')
+        ->selected($body[$kPeppolValidateBeforeSend] !== '0')
         ->content($translator->translate('yes'));
       echo H::closeTag('select');
      echo H::closeTag('div'); //6

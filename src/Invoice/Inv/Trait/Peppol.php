@@ -26,6 +26,7 @@ use App\Invoice\Helpers\Peppol\{
 use App\Invoice\Helpers\Peppol\Exception\PeppolBuyerPostalAddressNotFoundException;
 use App\Invoice\Helpers\Peppol\Exception\PeppolTaxCategoryCodeNotFoundException;
 use App\Invoice\Helpers\Peppol\Validator\ChecksumValidator;
+use App\Invoice\Peppol\PeppolPreSendValidation;
 use App\Invoice\Peppol\PeppolSendServiceInterface;
 use Yiisoft\{Html\Html, Router\HydratorAttribute\RouteArgument, User\CurrentUser
 };
@@ -594,7 +595,7 @@ trait Peppol
                     'warning',
                     $this->translator->translate('peppol.xml.generation.failed')
                 );
-            } else {
+            } elseif (!$this->blockedByValidation($ublXml, $invoice->reqId())) {
                 $client_id = $invoice->getClient()?->reqId() ?? 0;
                 $cp = $core->cpR->repoClientPeppolLoadedquery($client_id);
                 if (null === $cp) {
@@ -627,6 +628,33 @@ trait Peppol
             // server log either way, so real bugs stay diagnosable.
             $this->flashMessage('warning', $this->friendlyPeppolExceptionMessage($e));
         }
+    }
+
+    /**
+     * The gate in front of a send: runs the generated UBL through the same validator the XML preview uses and, when
+     * it has errors, flashes them and says the document must not be sent. Switched off only by an explicit '0' in
+     * Settings (peppol_validate_before_send); see PeppolPreSendValidation.
+     */
+    private function blockedByValidation(string $ublXml, int $invId): bool
+    {
+        if (!PeppolPreSendValidation::isEnabled($this->sR->getSetting(PeppolPreSendValidation::SETTING_KEY))) {
+            return false;
+        }
+        $gate = new PeppolPreSendValidation($this->translator);
+        $errors = $gate->errors($ublXml);
+        if ($errors === []) {
+            return false;
+        }
+        $this->flashMessage(
+            'warning',
+            '⚠️ ' . $this->translator->translate('peppol.send.blocked.by.validation', ['count' => count($errors)])
+            . $gate->listHtml($errors)
+            . Html::a(
+                $this->translator->translate('peppol.send.blocked.preview'),
+                $this->webService->generateUrl('inv/peppol', ['id' => $invId]),
+            )->render()
+        );
+        return true;
     }
 
     /**
