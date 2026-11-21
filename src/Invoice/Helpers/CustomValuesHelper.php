@@ -171,7 +171,7 @@ class CustomValuesHelper
                 ->hint($custom_field->getRequired() == 1
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
-                ->value($this->htmlEncodeOrEmpty($fieldValue)) . $upArrowCfEditableAt;
+                ->value($this->stringOrEmpty($fieldValue)) . $upArrowCfEditableAt;
                 break;
 
             case 'NUMBER':
@@ -198,7 +198,7 @@ class CustomValuesHelper
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
                 ->disabled(false)
-                ->value($this->htmlEncodeOrEmpty($fieldValue)) . $upArrowCfEditableAt;
+                ->value($this->stringOrEmpty($fieldValue)) . $upArrowCfEditableAt;
                 break;
 
             default:
@@ -217,7 +217,7 @@ class CustomValuesHelper
                    ? $translator->translate('hint.this.field.is.required')
                    : $translator->translate('hint.this.field.is.not.required'))
                 ->disabled(false)
-                ->value($this->htmlEncodeOrEmpty($fieldValue)) . $upArrowCfEditableAt;
+                ->value($this->stringOrEmpty($fieldValue)) . $upArrowCfEditableAt;
         }
     }
 
@@ -241,7 +241,7 @@ class CustomValuesHelper
 
         echo  new Label()
         ->forId((string) $customFieldId)
-        ->content(Html::encode($label)) . $leftArrowCfEditableAt;
+        ->content($label) . $leftArrowCfEditableAt;
 
         echo  new Select()
         ->addAttributes(
@@ -287,7 +287,7 @@ class CustomValuesHelper
 
         echo  new Label()
         ->forId((string) $customFieldId)
-        ->content(Html::encode($label)) . $leftArrowCfEditableAt;
+        ->content($label) . $leftArrowCfEditableAt;
 
         /**
          * @psalm-suppress PossiblyInvalidArgument $selChoices
@@ -397,7 +397,7 @@ class CustomValuesHelper
         ->hint($custom_field->getRequired() == 1
            ? $translator->translate('hint.this.field.is.required')
            : $translator->translate('hint.this.field.is.not.required'))
-        ->value($this->htmlEncodeOrEmpty($fieldValue)) . $upArrowCfEditableAt;
+        ->value($this->stringOrEmpty($fieldValue)) . $upArrowCfEditableAt;
     }
 
     /**
@@ -436,7 +436,7 @@ class CustomValuesHelper
                     ])
                     ->disabled(true)
                     ->label($custom_field->getLabel())
-                    ->value(Html::encode($customValue->getValue()));
+                    ->value($customValue->getValue());
                 }
 
                 break;
@@ -491,7 +491,7 @@ class CustomValuesHelper
                     'id' => $customFieldId,
                 ])
                 ->disabled(true)
-                ->value($this->htmlEncodeOrEmpty($fieldValue));
+                ->value($this->stringOrEmpty($fieldValue));
 
                 break;
             case 'NUMBER':
@@ -502,7 +502,7 @@ class CustomValuesHelper
                 ])
                 ->disabled(true)
                 ->label($custom_field->getLabel())
-                ->value(Html::encode((int) $fieldValue ?: 0));
+                ->value((int) $fieldValue ?: 0);
 
                 break;
             case 'TEXTAREA':
@@ -513,7 +513,7 @@ class CustomValuesHelper
                 ])
                 ->disabled(true)
                 ->label($custom_field->getLabel())
-                ->value($this->htmlEncodeOrEmpty($fieldValue));
+                ->value($this->stringOrEmpty($fieldValue));
 
                 break;
             case 'URL':
@@ -524,7 +524,7 @@ class CustomValuesHelper
                     'id' => $customFieldId,
                 ])
                 ->disabled(true)
-                ->value($this->htmlEncodeOrEmpty($fieldValue));
+                ->value($this->stringOrEmpty($fieldValue));
 
                 break;
             default:
@@ -535,7 +535,7 @@ class CustomValuesHelper
                 ])
                 ->disabled(true)
                 ->label($custom_field->getLabel())
-                ->value($this->htmlEncodeOrEmpty($fieldValue));
+                ->value($this->stringOrEmpty($fieldValue));
         }
     }
 
@@ -548,7 +548,7 @@ class CustomValuesHelper
     {
         $customFieldId = $custom_field->reqId();
         echo  new Br();
-        $content =  new Label()->content(Html::encode($custom_field->getLabel()));
+        $content =  new Label()->content($custom_field->getLabel() ?? '');
         echo  new B()
              ->content($content)
              ->render();
@@ -598,7 +598,7 @@ class CustomValuesHelper
             case 'NUMBER':
             default:
                 echo  new Div()
-                ->content(Html::encode($fieldValue));
+                ->content((string) $fieldValue);
                 echo  new Br();
         }
         echo Html::closeTag('div');
@@ -690,9 +690,14 @@ class CustomValuesHelper
         return '';
     }
 
-    private function htmlEncodeOrEmpty(int|string $v): string
+    /**
+     * Deliberately does not HTML-encode. The Field widgets and Tag::content() encode what they are given, so
+     * encoding here as well showed `A & B` as `A &amp; B` in form inputs and PDFs, and a saved form then
+     * stored that text.
+     */
+    private function stringOrEmpty(int|string $v): string
     {
-        return Html::encode((string) $v ?: '');
+        return (string) $v;
     }
 
     private function printMultipleChoiceViewField(
@@ -715,6 +720,6 @@ class CustomValuesHelper
         ->addInputAttributes(['name' => $customBracketCustomField, 'id' => $customFieldId])
         ->disabled(true)
         ->label($custom_field->getLabel())
-        ->value(Html::encode($fieldValues ?: ''));
+        ->value($fieldValues);
     }
 }

@@ -424,6 +424,92 @@ final class CustomValuesHelperTest
         Assert::true($this->has($html, 'disabled'));
     }
 
+    // ── text is HTML-encoded exactly once ────────────────────────────────────
+
+    private const string TRICKY = 'A & B <x>';
+    private const string TRICKY_ENCODED = 'A &amp; B &lt;x&gt;';
+
+    /** True when the text appears once-encoded and nothing has been encoded a second time. */
+    private function encodedOnce(string $html, string $expected = self::TRICKY_ENCODED): bool
+    {
+        return $this->has($html, $expected)
+            && !$this->has($html, '&amp;amp;')
+            && !$this->has($html, '&amp;lt;')
+            && !$this->has($html, '&amp;gt;');
+    }
+
+    public function theFormEncodesTextStyleValuesOnceNotTwice(): void
+    {
+        foreach (['TEXT', 'TEXTAREA', 'EMAIL', 'URL'] as $type) {
+            Assert::true($this->encodedOnce($this->form($this->field($type), [$this->value(1, self::TRICKY)])));
+        }
+    }
+
+    public function aFormValueRoundTripsToTheOriginalTextWhenTheBrowserPostsItBack(): void
+    {
+        $html = $this->form($this->field('TEXT'), [$this->value(1, self::TRICKY)]);
+
+        Assert::same(preg_match('/ value="([^"]*)"/', $html, $matches), 1);
+        Assert::same(html_entity_decode($matches[1]), self::TRICKY);
+    }
+
+    public function theViewEncodesTextStyleValuesOnceNotTwice(): void
+    {
+        foreach (['TEXT', 'TEXTAREA', 'EMAIL', 'URL'] as $type) {
+            Assert::true($this->encodedOnce($this->view($this->field($type), [$this->value(1, self::TRICKY)])));
+        }
+    }
+
+    public function theFormEncodesTheLabelOfAChoiceFieldOnce(): void
+    {
+        $choices = [self::FIELD_ID => [$this->value(41, 'Red')]];
+
+        foreach (['SINGLE-CHOICE', 'MULTIPLE-CHOICE'] as $type) {
+            $html = $this->form($this->field($type, label: 'Tom & Jerry'), [], $choices);
+
+            Assert::true($this->encodedOnce($html, 'Tom &amp; Jerry'));
+        }
+    }
+
+    public function theFormEncodesChoiceTextOnce(): void
+    {
+        $choices = [self::FIELD_ID => [$this->value(41, self::TRICKY)]];
+        $html = $this->form($this->field('SINGLE-CHOICE'), [], $choices);
+
+        Assert::true($this->encodedOnce($html));
+    }
+
+    public function theViewEncodesAStoredChoiceOnce(): void
+    {
+        $cvR = TypedMock::of(CustomValueRepository::class);
+        $cvR->shouldReceive('repoCustomValueDropDown')->andReturn($this->value(7, self::TRICKY));
+
+        Assert::true($this->encodedOnce($this->view($this->field('SINGLE-CHOICE'), [$this->value(1, '7')], $cvR)));
+        Assert::true($this->encodedOnce($this->view(
+            $this->field('MULTIPLE-CHOICE'),
+            [$this->value(1, serialize(['7']))],
+            $cvR,
+        )));
+    }
+
+    public function thePdfEncodesTheLabelAndEveryKindOfValueOnce(): void
+    {
+        $cvR = TypedMock::of(CustomValueRepository::class);
+        $cvR->shouldReceive('repoCustomValuequery')->andReturn($this->value(7, self::TRICKY));
+
+        $label = $this->pdf($this->field('TEXT', label: 'Tom & Jerry'), [$this->value(1, 'x')]);
+        $text = $this->pdf($this->field('TEXT'), [$this->value(1, self::TRICKY)]);
+        $number = $this->pdf($this->field('NUMBER'), [$this->value(1, self::TRICKY)]);
+        $single = $this->pdf($this->field('SINGLE-CHOICE'), [$this->value(1, '7')], $cvR);
+        $multiple = $this->pdf($this->field('MULTIPLE-CHOICE'), [$this->value(1, serialize(['7']))], $cvR);
+
+        Assert::true($this->encodedOnce($label, 'Tom &amp; Jerry'));
+        Assert::true($this->encodedOnce($text));
+        Assert::true($this->encodedOnce($number));
+        Assert::true($this->encodedOnce($single));
+        Assert::true($this->encodedOnce($multiple));
+    }
+
     // ── printFieldForPdf ─────────────────────────────────────────────────────
 
     public function thePdfShowsTheFieldLabelAndAPlainValue(): void
