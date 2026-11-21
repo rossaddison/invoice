@@ -286,6 +286,11 @@ trait InvoiceInstallTrait
             'peppol_debug_with_emojis' => 1,
             // The internal PeppolValidator is used to validate the xml
             'peppol_debug_with_internal_validator' => 1,
+            // Do not send an invoice to the access point when the same
+            // validator finds errors in it (see PeppolPreSendValidation).
+            // On unless exactly '0', so an install that never saved it is
+            // protected too.
+            'peppol_validate_before_send' => 1,
             // Templates used for processing online payments via
             // customers/clients login portal
             'public_invoice_template' => 'Invoice_Web',

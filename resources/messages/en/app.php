@@ -2082,6 +2082,12 @@ prior to importing and no existing documents e.g. Invoices.',
   'peppol.debug.with.emojis' => 'Debug e-invoices with emojis',
   'peppol.debug.with.internal.validator' => 'Debug e-invoices with'
     . ' Internal Validator',
+  'peppol.validate.before.send' => 'Do not send an invoice that fails Peppol'
+    . ' validation',
+  'peppol.send.blocked.by.validation' => 'Not sent: the invoice has {count}'
+    . ' Peppol validation error(s). Fix them and send again.',
+  'peppol.send.blocked.more' => '…and {count} more',
+  'peppol.send.blocked.preview' => 'Open the Peppol XML preview',
   'peppol.doc.currency.toggle' => 'Peppol Toggle Doc Currency',
   'peppol.document.reference.null' => 'inv-number-null-inv-id',
   'peppol.document.currency' => 'Peppol Document Currency - toggle on View',
