@@ -235,7 +235,7 @@ final class SettingToggleController extends BaseController
         // Any role with VIEW_INV reaches this route, and the setting id comes from the URL: only the page
         // size setting may be written here, and only with a whole number from 1 to 1000, never a secret.
         if ($setting && $setting->getSettingKey() === self::LIST_LIMIT_KEY
-            && preg_match('/^(?:[1-9][0-9]{0,2}|1000)$/', $limit) === 1) {
+            && preg_match('/^(?:[1-9]\d{0,2}|1000)$/', $limit) === 1) {
             $setting->setSettingValue($limit);
             $this->sR->save($setting);
         }

@@ -477,85 +477,96 @@ final class SalesOrderController extends BaseController
         SalesOrderEditDependencies $d,
     ): Response {
         $so = $this->salesorder($currentRoute, $d->soR);
-        if ($so && ($this->rbac->isObserver($so, $d->ucR, $d->uiR) || $this->rbac->isAdmin()
-                                                || $this->rbac->isAccountant())) {
-            $form = SalesOrderForm::show($so);
-            $dels = $d->delRepo->repoClientquery($so->reqClientId());
-            $so_id = $so->reqId();
-            $inv_id = $so->reqInvId();
-            $inv = $inv_id > 0 ? $d->invRepo->repoInvUnloadedquery($inv_id) : null;
-            $inv_number = null !== $inv ? (string) $inv->getNumber() : '';
-            $parameters = [
-                'title' => $this->translator->translate('edit'),
-                'actionName' => 'salesorder/edit',
-                'actionArguments' => ['id' => $so->reqId()],
-                'actionArgumentsDelAdd' => [
-                    'client_id' => (string) $so->reqClientId(),
-                    'origin' => 'salesorder',
-                    'origin_id' => (string) $so->reqClientId(),
-                    'action' => 'edit',
-                ],
-                'optionsData' => $this->optionsData(
-                    $so->reqClientId(),
-                    $d->clientRepo,
-                    $d->delRepo,
-                    $d->gR,
-                    $d->soR,
-                    $d->ucR,
-                ),
-                'errors' => [],
-                'form' => $form,
-                'invNumber' => $inv_number,
-                'delCount' => $d->delRepo->repoClientCount($so->reqClientId()),
-                'dels' => $dels,
-                'terms_and_conditions_file' =>
-                    $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/salesorder/terms_and_conditions_file'
-                    ),
-                'terms_and_conditions' =>
-                    $d->settingRepository->getTermsAndConditions(),
-                'no_delivery_locations' => $d->delRepo->repoClientCount(
-                    $so->reqClientId()
-                ) > 0 ? '' :
-                        $this->flashMessage(
-                            'warning',
-                            $this->translator->translate(
-                                'quote.delivery.location.none'
-                            )
-                        ),
-                'alert' => $this->alert(),
-                'so' => $so,
-                'cfR' => $d->cfR,
-                'cvR' => $d->cvR,
-                'so_custom_values' => $this->salesorderCustomValues($so_id, $d->socR),
-                'so_statuses' => $d->soR->getStatuses($this->translator),
-            ];
-            if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody();
-                if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
-                    // A customer (observer) may not change the client, status, discount, links or guest credentials
-                    $isStaff = $this->rbac->isAdmin() || $this->rbac->isAccountant();
-                    $this->salesorderService->saveSo(
-                        $so,
-                        $isStaff ? $body : SalesOrderEditInput::forObserver($body, $so)
-                    );
-                    $this->flashMessage(
-                        'success',
-                        $this->translator->translate(
-                            'record.successfully.updated'
-                        )
-                    );
-                    return $this->webService->getRedirectResponse(
-                        'salesorder/index'
-                    );
-                }
-                $parameters['errors'] =
-                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                $parameters['form'] = $form;
-            }
-            return $this->webViewRenderer->render('_form_edit', $parameters);
+        if (!$so || !($this->rbac->isObserver($so, $d->ucR, $d->uiR) || $this->rbac->isAdmin()
+                || $this->rbac->isAccountant())) {
+            return $this->webService->getRedirectResponse('salesorder/index');
         }
-        return $this->webService->getRedirectResponse('salesorder/index');
+        $form = SalesOrderForm::show($so);
+        $parameters = $this->editParameters($so, $form, $d);
+        if ($request->getMethod() === Method::POST) {
+            $body = $request->getParsedBody();
+            if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
+                // A customer (observer) may not change the client, status, discount, links or guest credentials
+                $isStaff = $this->rbac->isAdmin() || $this->rbac->isAccountant();
+                $this->salesorderService->saveSo(
+                    $so,
+                    $isStaff ? $body : SalesOrderEditInput::forObserver($body, $so)
+                );
+                $this->flashMessage(
+                    'success',
+                    $this->translator->translate(
+                        'record.successfully.updated'
+                    )
+                );
+                return $this->webService->getRedirectResponse(
+                    'salesorder/index'
+                );
+            }
+            $parameters['errors'] =
+            $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $parameters['form'] = $form;
+        }
+        return $this->webViewRenderer->render('_form_edit', $parameters);
+    }
+
+    /**
+     * The view parameters of the edit form.
+     *
+     * @return array<string, mixed>
+     */
+    private function editParameters(SalesOrder $so, SalesOrderForm $form, SalesOrderEditDependencies $d): array
+    {
+        $dels = $d->delRepo->repoClientquery($so->reqClientId());
+        $so_id = $so->reqId();
+        $inv_id = $so->reqInvId();
+        $inv = $inv_id > 0 ? $d->invRepo->repoInvUnloadedquery($inv_id) : null;
+        $inv_number = null !== $inv ? (string) $inv->getNumber() : '';
+        $parameters = [
+            'title' => $this->translator->translate('edit'),
+            'actionName' => 'salesorder/edit',
+            'actionArguments' => ['id' => $so->reqId()],
+            'actionArgumentsDelAdd' => [
+                'client_id' => (string) $so->reqClientId(),
+                'origin' => 'salesorder',
+                'origin_id' => (string) $so->reqClientId(),
+                'action' => 'edit',
+            ],
+            'optionsData' => $this->optionsData(
+                $so->reqClientId(),
+                $d->clientRepo,
+                $d->delRepo,
+                $d->gR,
+                $d->soR,
+                $d->ucR,
+            ),
+            'errors' => [],
+            'form' => $form,
+            'invNumber' => $inv_number,
+            'delCount' => $d->delRepo->repoClientCount($so->reqClientId()),
+            'dels' => $dels,
+            'terms_and_conditions_file' =>
+                $this->webViewRenderer->renderPartialAsString(
+                    '//invoice/salesorder/terms_and_conditions_file'
+                ),
+            'terms_and_conditions' =>
+                $d->settingRepository->getTermsAndConditions(),
+            'no_delivery_locations' => $d->delRepo->repoClientCount(
+                $so->reqClientId()
+            ) > 0 ? '' :
+                    $this->flashMessage(
+                        'warning',
+                        $this->translator->translate(
+                            'quote.delivery.location.none'
+                        )
+                    ),
+            'alert' => $this->alert(),
+            'so' => $so,
+            'cfR' => $d->cfR,
+            'cvR' => $d->cvR,
+            'so_custom_values' => $this->salesorderCustomValues($so_id, $d->socR),
+            'so_statuses' => $d->soR->getStatuses($this->translator),
+        ];
+        return $parameters;
     }
 
     public function delete(

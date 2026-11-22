@@ -19,16 +19,11 @@ final class InvNoteDateAppender
     {
         $existing = trim($note ?? '');
         $date     = trim($date);
-        if ($date === '') {
+        // Nothing to add, or the note already ends with the date (so a repeated click does not stack it).
+        if ($date === '' || str_ends_with($existing, $date)) {
             return $existing;
         }
-        if ($existing === '') {
-            return $date;
-        }
-        if (str_ends_with($existing, $date)) {
-            return $existing;
-        }
-        return $existing . ' ' . $date;
+        return $existing === '' ? $date : $existing . ' ' . $date;
     }
 
     /** Appends the date to the invoice's note and saves the invoice. */
