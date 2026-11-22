@@ -50,9 +50,13 @@ final class SettingRegistrationRatchetTest
     private function defaults(): array
     {
         $source = (string) file_get_contents($this->root() . '/src/Invoice/Trait/InvoiceInstallTrait.php');
-        // The defaults are split over several methods (SonarCloud's 150-line limit), each a `$default_settings = [`
-        // ... `];` block.
-        Assert::true(preg_match_all('/\$default_settings = \[(.*?)\n        \];/s', $source, $blocks) > 0);
+        // The defaults are split over several methods (SonarCloud's 150-line limit), each `firstRunDefaults...()`
+        // returning one array literal.
+        Assert::true(preg_match_all(
+            '/private function firstRunDefaults\w+\(\): array\n    \{\n        return \[(.*?)\n        \];/s',
+            $source,
+            $blocks,
+        ) > 0);
         $keys = [];
         foreach ($blocks[1] as $block) {
             preg_match_all("/^\\s*'([a-z0-9_]+)'\\s*=>/m", $block, $matches);

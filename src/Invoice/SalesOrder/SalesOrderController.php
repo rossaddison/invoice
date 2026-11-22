@@ -521,7 +521,7 @@ final class SalesOrderController extends BaseController
         $inv_id = $so->reqInvId();
         $inv = $inv_id > 0 ? $d->invRepo->repoInvUnloadedquery($inv_id) : null;
         $inv_number = null !== $inv ? (string) $inv->getNumber() : '';
-        $parameters = [
+        return [
             'title' => $this->translator->translate('edit'),
             'actionName' => 'salesorder/edit',
             'actionArguments' => ['id' => $so->reqId()],
@@ -566,7 +566,6 @@ final class SalesOrderController extends BaseController
             'so_custom_values' => $this->salesorderCustomValues($so_id, $d->socR),
             'so_statuses' => $d->soR->getStatuses($this->translator),
         ];
-        return $parameters;
     }
 
     public function delete(

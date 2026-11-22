@@ -55,7 +55,7 @@ trait InvoiceInstallTrait
      */
     private function firstRunDefaultsPartOne(): array
     {
-        $default_settings = [
+        return [
 /**
  * Remove the 'default_settings_exist' setting from the settings table by
  * manually going into the mysql database table 'settings' and deleting it.
@@ -204,7 +204,6 @@ trait InvoiceInstallTrait
             // ('1') or whole houses ('0'). See Inv\HomeCareCrew.
             'homecare_crew_worker_ids' => '',
         ];
-        return $default_settings;
     }
 
     /**
@@ -214,7 +213,7 @@ trait InvoiceInstallTrait
      */
     private function firstRunDefaultsPartTwo(): array
     {
-        $default_settings = [
+        return [
             'homecare_crew_front_back' => '0',
             'homecare_crew_saved_on' => '',
             // Comma-separated list of inv/index column keys to hide, only
@@ -354,7 +353,6 @@ trait InvoiceInstallTrait
             'thousands_separator' => ',',
             'time_zone' => 'Europe/London',
         ];
-        return $default_settings;
     }
 
     /**
