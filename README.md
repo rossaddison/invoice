@@ -13,6 +13,11 @@
 ![Stats](https://github-readme-stats.vercel.app/api?username=rossaddison)
 ![Hosted by Vultr](https://img.shields.io/badge/hosting-vultr%20(yii3i.online)-blue?logo=vultr&style=flat-square)
 
+**Critical PHP security updates (released 19 November 2026): update to at least the version for your branch.**
+[![PHP 8.4.28 critical security release](https://img.shields.io/static/v1?label=PHP%20critical%20update&message=8.4.28&color=red&logo=php)](https://www.php.net/archive/2026.php#2026-11-19-3)
+[![PHP 8.5.13 critical security release](https://img.shields.io/static/v1?label=PHP%20critical%20update&message=8.5.13&color=red&logo=php)](https://www.php.net/archive/2026.php#2026-11-19-4)
+[![PHP 8.6.0 includes the fixes](https://img.shields.io/static/v1?label=PHP%20critical%20update&message=8.6.0&color=red&logo=php)](https://www.php.net/archive/2026.php#2026-11-19-5)
+
 (Place the contents of this download into the yii3-i invoice folder or run as a
  separate repository.)
 
