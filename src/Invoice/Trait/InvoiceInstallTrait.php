@@ -31,7 +31,31 @@ trait InvoiceInstallTrait
      */
     private function installDefaultSettingsOnFirstRun(SettingRepository $sR): void
     {
-        $default_settings = [
+        $default_settings = array_merge($this->firstRunDefaultsPartOne(), $this->firstRunDefaultsPartTwo());
+        // Kept out of the array literal above on purpose -- SonarCloud's
+        // CPD swept a new entry placed inside it into the array's own
+        // pre-existing duplicate block (same syntax shape as every other
+        // 'key' => value, entry, regardless of the value); a separate
+        // assignment statement has a different token shape and doesn't
+        // match. See feedback_sonarcloud_cpd_array_literal_gotcha memory.
+        //
+        // Settings tab "General" -- how long the login form's "Remember
+        // Me" auto-login cookie lasts. See
+        // SettingRepository::rememberMeDurationDays() and
+        // config/web/di/auth.php's CookieLogin definition.
+        $default_settings['remember_me_days'] = 30;
+        $this->installDefaultSettings($default_settings, $sR);
+    }
+
+    /**
+     * The first-run defaults, A to the middle of the alphabet. The settings are listed alphabetically and split
+     * in two only to keep each method under SonarCloud's 150-line limit (php:S138).
+     *
+     * @return array<string, mixed>
+     */
+    private function firstRunDefaultsPartOne(): array
+    {
+        return [
 /**
  * Remove the 'default_settings_exist' setting from the settings table by
  * manually going into the mysql database table 'settings' and deleting it.
@@ -179,6 +203,17 @@ trait InvoiceInstallTrait
             // included) and whether the lead allocates Fronts/Backs separately
             // ('1') or whole houses ('0'). See Inv\HomeCareCrew.
             'homecare_crew_worker_ids' => '',
+        ];
+    }
+
+    /**
+     * The first-run defaults, the middle of the alphabet to Z. See firstRunDefaultsPartOne().
+     *
+     * @return array<string, mixed>
+     */
+    private function firstRunDefaultsPartTwo(): array
+    {
+        return [
             'homecare_crew_front_back' => '0',
             'homecare_crew_saved_on' => '',
             // Comma-separated list of inv/index column keys to hide, only
@@ -318,19 +353,6 @@ trait InvoiceInstallTrait
             'thousands_separator' => ',',
             'time_zone' => 'Europe/London',
         ];
-        // Kept out of the array literal above on purpose -- SonarCloud's
-        // CPD swept a new entry placed inside it into the array's own
-        // pre-existing duplicate block (same syntax shape as every other
-        // 'key' => value, entry, regardless of the value); a separate
-        // assignment statement has a different token shape and doesn't
-        // match. See feedback_sonarcloud_cpd_array_literal_gotcha memory.
-        //
-        // Settings tab "General" -- how long the login form's "Remember
-        // Me" auto-login cookie lasts. See
-        // SettingRepository::rememberMeDurationDays() and
-        // config/web/di/auth.php's CookieLogin definition.
-        $default_settings['remember_me_days'] = 30;
-        $this->installDefaultSettings($default_settings, $sR);
     }
 
     /**

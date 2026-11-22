@@ -71,55 +71,53 @@ final class ClientPeppolController extends BaseController
         UserClientRepository $ucR,
     ): Response {
         $client_id = $currentRoute->getArgument('client_id');
-        if (!$this->mayAccessClient((int) $client_id, $ucR)) {
+        // No client in the address, or a client this user may not use: the same 404.
+        if (null === $client_id || !$this->mayAccessClient((int) $client_id, $ucR)) {
             return $this->webService->getNotFoundResponse();
         }
         $client_peppol = new ClientPeppol();
         $form = new ClientPeppolForm();
         $electronic_address_scheme = PeppolArrays::electronicAddressScheme();
         $peppolArrays = new PeppolArrays();
-        if (null !== $client_id) {
-            $parameters = [
-                'title' => $this->translator->translate('add'),
-                'actionName' => 'clientpeppol/add',
-                'actionArguments' => ['client_id' => $client_id],
-                'errors' => [],
-                'form' => $form,
-                'pep' => $this->pep(),
-                'setting' => $this->sR->getSetting('enable_client_peppol_defaults'),
-                'defaults' =>
-                    $this->sR->getSetting('enable_client_peppol_defaults')
-                        == '1' ? true : false,
-                'client_id' => $client_id,
-                'receiver_identifier_array' =>
-                    StoreCoveArrays::storeCoveReceiverIdentifierArray(),
-                'electronic_address_scheme' => $electronic_address_scheme,
-                'iso_6523_array' => $peppolArrays->getIso6523Icd(),
-            ];
-            if ($request->getMethod() === Method::POST) {
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    $body = $request->getParsedBody() ?? [];
-                    if (is_array($body)) {
-                        $body['client_id'] = $client_id;
-                        // the row is created for the client in the address, never for a posted id
-                        unset($body['id']);
-                        $client = $clientRepository->repoClientquery((int)$client_id);
-                        $client_peppol->setClient($client);
-                        $this->clientPeppolService->saveClientPeppol(
-                            $client_peppol,
-                            $body
-                        );
-                        $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
-                        return $this->webService->getRedirectResponse('client/index');
-                    }
-                } else {
-                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+        $parameters = [
+            'title' => $this->translator->translate('add'),
+            'actionName' => 'clientpeppol/add',
+            'actionArguments' => ['client_id' => $client_id],
+            'errors' => [],
+            'form' => $form,
+            'pep' => $this->pep(),
+            'setting' => $this->sR->getSetting('enable_client_peppol_defaults'),
+            'defaults' =>
+                $this->sR->getSetting('enable_client_peppol_defaults')
+                    == '1' ? true : false,
+            'client_id' => $client_id,
+            'receiver_identifier_array' =>
+                StoreCoveArrays::storeCoveReceiverIdentifierArray(),
+            'electronic_address_scheme' => $electronic_address_scheme,
+            'iso_6523_array' => $peppolArrays->getIso6523Icd(),
+        ];
+        if ($request->getMethod() === Method::POST) {
+            if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                $body = $request->getParsedBody() ?? [];
+                if (is_array($body)) {
+                    $body['client_id'] = $client_id;
+                    // the row is created for the client in the address, never for a posted id
+                    unset($body['id']);
+                    $client = $clientRepository->repoClientquery((int)$client_id);
+                    $client_peppol->setClient($client);
+                    $this->clientPeppolService->saveClientPeppol(
+                        $client_peppol,
+                        $body
+                    );
+                    $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
+                    return $this->webService->getRedirectResponse('client/index');
                 }
+            } else {
+                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
-            $parameters['form'] = $form;
-            return $this->webViewRenderer->render('_form', $parameters);
-        } // null !== $client
-        return $this->webService->getNotFoundResponse();
+        }
+        $parameters['form'] = $form;
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -230,9 +228,6 @@ final class ClientPeppolController extends BaseController
                 $this->flashMessage('info', $this->translator->translate(
                     'record.successfully.deleted'
                 ));
-                return $this->webService->getRedirectResponse(
-                    'clientpeppol/index'
-                );
             }
             return $this->webService->getRedirectResponse('clientpeppol/index');
         } catch (Exception $e) {
@@ -300,42 +295,7 @@ final class ClientPeppolController extends BaseController
                     $clientpeppol,
                     $body
                 );
-                // Guest user's return url to see user's clients
-                if ($this->userService->hasPermission(
-                    Permissions::EDIT_CLIENT_PEPPOL
-                )
-                        && $this->userService->hasPermission(
-                            Permissions::VIEW_INV
-                        )
-                                && !$this->userService->hasPermission(
-                                    Permissions::EDIT_INV
-                                )) {
-                    $redirect = $this->factory->createResponse(
-                        $this->webViewRenderer->renderPartialAsString(
-                            '//invoice/setting/clientpeppol_successful_guest',
-                            ['url' => 'client/guest',
-                            'heading' => $this->translator->translate(
-                                'client.peppol'
-                            ), 'message' =>
-                                    $this->translator->translate(
-                                        'record.successfully.updated'
-                                    )],
-                        )
-                    );
-                    // Administrator's return url to see all clients
-                } elseif ($this->userService->hasPermission(
-                    Permissions::EDIT_CLIENT_PEPPOL
-                )
-                            && $this->userService->hasPermission(
-                                Permissions::VIEW_INV
-                            )
-                                    && $this->userService->hasPermission(
-                                        Permissions::EDIT_INV
-                                    )) {
-                    $redirect = $this->webService->getRedirectResponse(
-                        'client/index'
-                    );
-                }
+                $redirect = $this->afterEditRedirect();
             }
             if ($redirect === null) {
                 $parameters['errors'] =
@@ -344,6 +304,35 @@ final class ClientPeppolController extends BaseController
             }
         }
         return $redirect ?? $this->webViewRenderer->render('_form', $parameters);
+    }
+
+    /**
+     * Where to go after a successful edit, or null to stay on the form: a user who may edit client Peppol data and
+     * view invoices is sent on by role, and anyone else stays where they are.
+     */
+    private function afterEditRedirect(): ?Response
+    {
+        if (
+            !$this->userService->hasPermission(Permissions::EDIT_CLIENT_PEPPOL)
+            || !$this->userService->hasPermission(Permissions::VIEW_INV)
+        ) {
+            return null;
+        }
+        if ($this->userService->hasPermission(Permissions::EDIT_INV)) {
+            // Administrator's return url to see all clients
+            return $this->webService->getRedirectResponse('client/index');
+        }
+        // Guest user's return url to see user's clients
+        return $this->factory->createResponse(
+            $this->webViewRenderer->renderPartialAsString(
+                '//invoice/setting/clientpeppol_successful_guest',
+                [
+                    'url' => 'client/guest',
+                    'heading' => $this->translator->translate('client.peppol'),
+                    'message' => $this->translator->translate('record.successfully.updated'),
+                ],
+            ),
+        );
     }
 
     /**

@@ -257,35 +257,18 @@ class MpdfHelper
         $mpdf = new \Mpdf\Mpdf($optionsArray);
         // mPDF configuration
         $mpdf->SetDirectionality('ltr');
-        $mpdf->useAdobeCJK = ($sR->getSetting('mpdf_cjk') === '1' ? true : false);
-        $mpdf->autoScriptToLang = ($sR->getSetting('mpdf_auto_script_to_lang') === '1' ? true : false);
-        $mpdf->autoVietnamese = ($sR->getSetting('mpdf_auto_vietnamese') === '1' ? true : false);
-        $mpdf->allow_charset_conversion = ($sR->getSetting('mpdf_allow_charset_conversion') === '0' ? false : true);
-        $mpdf->autoArabic = ($sR->getSetting('mpdf_auto_arabic') === '1' ? true : false);
-        $mpdf->autoLangToFont = ($sR->getSetting('mpdf_auto_language_to_font') === '1' ? true : false);
+        $mpdf->useAdobeCJK = $sR->getSetting('mpdf_cjk') === '1';
+        $mpdf->autoScriptToLang = $sR->getSetting('mpdf_auto_script_to_lang') === '1';
+        $mpdf->autoVietnamese = $sR->getSetting('mpdf_auto_vietnamese') === '1';
+        $mpdf->allow_charset_conversion = $sR->getSetting('mpdf_allow_charset_conversion') !== '0';
+        $mpdf->autoArabic = $sR->getSetting('mpdf_auto_arabic') === '1';
+        $mpdf->autoLangToFont = $sR->getSetting('mpdf_auto_language_to_font') === '1';
         $mpdf->SetTitle($title);
-        $mpdf->showImageErrors = ($sR->getSetting('mpdf_show_image_errors') === '1' ? true : false);
+        $mpdf->showImageErrors = $sR->getSetting('mpdf_show_image_errors') === '1';
 
         // Include zugferd if enabled
         if ($ctx->zugferd_invoice === true && null !== $ctx->inv_amount && null !== $ctx->iiaR) {
-            $z = new ZugFerdHelper($sR, $ctx->iiaR, $ctx->inv_amount, $this->translator);
-            //https://mpdf.github.io/reference/mpdf-variables/useadobecjk.html
-            // A zugferd invoice must have fully embedded fonts => $mpdf->useAdobeCJK = false
-            $mpdf->useAdobeCJK = false;
-
-            $mpdf->PDFX = false;
-
-            // ZUGFeRD is PDF/A-3: mPDF writes the XMP packet that carries the ZUGFeRD declaration only in PDF/A
-            // or PDF/X mode, so with PDFA false (as it was) zugferdRdf() never reached the file.
-            // https://mpdf.github.io/what-else-can-i-do/pdf-a1-b-compliance.html
-            // PDF/A forbids encryption and transparency (mPDF throws when it draws a watermark in PDF/A mode), so an
-            // invoice that really has a password, or is watermarked (pdf_watermark), keeps that and the attached XML
-            // but is not declared PDF/A.
-            $mpdf->PDFA = null === $this->password($ctx) && empty($sR->getSetting('pdf_watermark'));
-            $mpdf->PDFAversion = '3-B';
-            $mpdf->PDFAauto = true;
-            $mpdf->SetAdditionalXmpRdf($z->zugferdRdf());
-            $mpdf->SetAssociatedFiles($ctx->associated_files);
+            $this->declareZugferd($mpdf, $sR, $ctx, new ZugFerdHelper($sR, $ctx->iiaR, $ctx->inv_amount, $this->translator));
         }
 
         $content = $title . ': ' . date($this->translator->translate('date_format'));
@@ -314,6 +297,30 @@ class MpdfHelper
             $mpdf->SetProtection(['copy', 'print'], $password, $password);
         }
         return $mpdf;
+    }
+
+    /**
+     * ZUGFeRD: PDF/A-3 where allowed, with the XML attached.
+     */
+    private function declareZugferd(\Mpdf\Mpdf $mpdf, SR $sR, PdfCreateContext $ctx, ZugFerdHelper $z): void
+    {
+        //https://mpdf.github.io/reference/mpdf-variables/useadobecjk.html
+        // A zugferd invoice must have fully embedded fonts => $mpdf->useAdobeCJK = false
+        $mpdf->useAdobeCJK = false;
+
+        $mpdf->PDFX = false;
+
+        // ZUGFeRD is PDF/A-3: mPDF writes the XMP packet that carries the ZUGFeRD declaration only in PDF/A
+        // or PDF/X mode, so with PDFA false (as it was) zugferdRdf() never reached the file.
+        // https://mpdf.github.io/what-else-can-i-do/pdf-a1-b-compliance.html
+        // PDF/A forbids encryption and transparency (mPDF throws when it draws a watermark in PDF/A mode), so an
+        // invoice that really has a password, or is watermarked (pdf_watermark), keeps that and the attached XML
+        // but is not declared PDF/A.
+        $mpdf->PDFA = null === $this->password($ctx) && empty($sR->getSetting('pdf_watermark'));
+        $mpdf->PDFAversion = '3-B';
+        $mpdf->PDFAauto = true;
+        $mpdf->SetAdditionalXmpRdf($z->zugferdRdf());
+        $mpdf->SetAssociatedFiles($ctx->associated_files);
     }
 
     /**
