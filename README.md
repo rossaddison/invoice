@@ -18,6 +18,9 @@
 [![PHP 8.5.13 critical security release](https://img.shields.io/static/v1?label=PHP%20critical%20update&message=8.5.13&color=red&logo=php)](https://www.php.net/archive/2026.php#2026-11-19-4)
 [![PHP 8.6.0 includes the fixes](https://img.shields.io/static/v1?label=PHP%20critical%20update&message=8.6.0&color=red&logo=php)](https://www.php.net/archive/2026.php#2026-11-19-5)
 
+[![PHP in CI vs latest release](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Frossaddison%2Finvoice%2Fci-status%2Fphp-version-status.json&cacheSeconds=3600)](https://github.com/rossaddison/invoice/actions/workflows/php-version-check.yml)
+**The badge above is refreshed daily (06:30 UTC): red names what is behind, yellow means a check could not run, green means every environment runs the latest release.** It compares PHP on Ubuntu, Windows and Alpine 3.24 with the latest release listed on php.net, and the run page has the full table.
+
 > **Shortfall: the workflows do not guarantee the latest PHP patch release.**
 > They select PHP by minor version only (`8.4`, `8.5`, `8.6`), so each job runs on whatever patch the runner
 > provides at that moment. A green build does not prove the tests ran on the patched release.

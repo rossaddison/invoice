@@ -1,0 +1,150 @@
+name: PHP Version Check
+
+# Daily: which PHP patch release does CI actually get, compared with the latest release on php.net?
+# The result is written to php-version-status.json on the `ci-status` branch, which the README badge reads, so
+# the README shows at a glance whether CI is behind. A "behind" result changes the badge; it does not fail the
+# run. The other workflows select PHP by minor version only (8.4, 8.5), so each runs on whatever patch its runner
+# provides. See App\Invoice\Testing\PhpVersionStatusReport and PhpVersionStatus.
+
+on:
+  schedule:
+    # 06:30 UTC daily
+    - cron: '30 6 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: php-version-check
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    name: ${{ matrix.os }} PHP ${{ matrix.php }}
+    runs-on: ${{ matrix.os }}-latest
+    # A leg that cannot install a version is reported as "unverified", never as current.
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu, windows]
+        php: ['8.4', '8.5', '8.6']
+    steps:
+      - name: Set up PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        with:
+          php-version: ${{ matrix.php }}
+
+      - name: Record the version PHP reports
+        shell: bash
+        run: |
+          mkdir -p probe
+          printf '{"where":"%s","branch":"%s","version":"%s"}\n' \
+            "${{ matrix.os }}" "${{ matrix.php }}" "$(php -r 'echo PHP_VERSION;')" \
+            > "probe/${{ matrix.os }}-${{ matrix.php }}.json"
+
+      - name: Upload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: php-probe-${{ matrix.os }}-${{ matrix.php }}
+          path: probe/
+
+  # yii3i.online runs Apache + mod_php on Alpine, so Alpine's own packages are probed too. Two jobs rather than a
+  # matrix: a matrix job exposes only one leg's outputs. Container jobs avoid Node-based actions (musl), so the
+  # version travels as a job output instead of an artifact.
+  alpine84:
+    name: alpine 3.24 php84
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    container:
+      image: alpine:3.24
+    outputs:
+      version: ${{ steps.probe.outputs.version }}
+    steps:
+      - id: probe
+        run: |
+          apk add --no-cache php84
+          echo "version=$(php84 -r 'echo PHP_VERSION;')" >> "$GITHUB_OUTPUT"
+
+  alpine85:
+    name: alpine 3.24 php85
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    container:
+      image: alpine:3.24
+    outputs:
+      version: ${{ steps.probe.outputs.version }}
+    steps:
+      - id: probe
+        run: |
+          apk add --no-cache php85
+          echo "version=$(php85 -r 'echo PHP_VERSION;')" >> "$GITHUB_OUTPUT"
+
+  report:
+    name: Compare and publish the badge
+    needs: [probe, alpine84, alpine85]
+    if: ${{ always() && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    # contents: write only to push php-version-status.json to the ci-status branch.
+    permissions:
+      contents: write
+    env:
+      ALPINE84: ${{ needs.alpine84.outputs.version }}
+      ALPINE85: ${{ needs.alpine85.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        with:
+          php-version: '8.4'
+
+      - name: Download the probes
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          pattern: php-probe-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/runs
+
+      - name: Add the Alpine probes
+        run: |
+          mkdir -p "$RUNNER_TEMP/runs"
+          write() { printf '{"where":"alpine","branch":"%s","version":"%s"}\n' "$1" "$2" > "$RUNNER_TEMP/runs/alpine-$1.json"; }
+          write 8.4 "$ALPINE84"
+          write 8.5 "$ALPINE85"
+
+      # The only network access in the comparison. A branch whose request fails has no file, which the report
+      # shows as "unknown", never as current.
+      - name: Fetch the latest releases from php.net
+        run: |
+          mkdir -p "$RUNNER_TEMP/latest"
+          for branch in 8.4 8.5 8.6; do
+            curl -fsS --max-time 30 "https://www.php.net/releases/index.php?json&max=1&version=$branch" \
+              -o "$RUNNER_TEMP/latest/$branch.json" || rm -f "$RUNNER_TEMP/latest/$branch.json"
+          done
+
+      - name: Compare
+        env:
+          RUNS: ${{ runner.temp }}/runs
+          LATEST: ${{ runner.temp }}/latest
+          BADGE: ${{ runner.temp }}/php-version-status.json
+          EXPECT: ubuntu:8.4,ubuntu:8.5,ubuntu:8.6,windows:8.4,windows:8.5,windows:8.6,alpine:8.4,alpine:8.5
+        run: |
+          php -r 'require "src/Invoice/Testing/PhpVersionStatus.php"; require "src/Invoice/Testing/PhpVersionStatusReport.php"; echo \App\Invoice\Testing\PhpVersionStatusReport::run((string) getenv("RUNS"), (string) getenv("LATEST"), (string) getenv("EXPECT"), (string) getenv("BADGE"), (string) getenv("GITHUB_STEP_SUMMARY"));'
+          cat "$BADGE"
+
+      - name: Publish to the ci-status branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git fetch --depth=1 origin ci-status; then
+            git switch --force -C ci-status FETCH_HEAD
+          else
+            git switch --orphan ci-status
+          fi
+          cp "$RUNNER_TEMP/php-version-status.json" php-version-status.json
+          git add php-version-status.json
+          git commit -m "PHP version status $(date -u +%Y-%m-%d)" || exit 0
+          git push origin ci-status
