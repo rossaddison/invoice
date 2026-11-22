@@ -72,8 +72,12 @@ jobs:
       - name: Update composer
         run: composer self-update
 
+      # `install`, not `update`: composer.lock is committed, and `update` picked up whatever Yiisoft released that
+      # morning (yiisoft/di 1.5.0, yiisoft/html 4.3.0 tightened their array<string, mixed> parameter types), turning
+      # an unrelated pull request red on code nobody had touched. Upgrades are deliberate: run `composer update`
+      # locally, fix what Psalm then reports, and commit the new lock.
       - name: Install dependencies with composer
-        run: composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Static analysis
         run: vendor/bin/psalm --shepherd --stats --output-format=checkstyle | cs2pr --graceful-warnings --colorize
@@ -178,8 +182,9 @@ jobs:
           restore-keys: |
             php${{ matrix.php }}-alpine${{ matrix.alpine }}-composer-
 
+      # `install` from composer.lock, as in the psalm job above.
       - name: Install dependencies with composer
-        run: composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
       # cs2pr (checkstyle-to-PR-annotation) is installed via setup-php's
       # `tools:` input on the Ubuntu job; no Alpine equivalent is wired up
