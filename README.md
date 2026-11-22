@@ -18,6 +18,14 @@
 [![PHP 8.5.13 critical security release](https://img.shields.io/static/v1?label=PHP%20critical%20update&message=8.5.13&color=red&logo=php)](https://www.php.net/archive/2026.php#2026-11-19-4)
 [![PHP 8.6.0 includes the fixes](https://img.shields.io/static/v1?label=PHP%20critical%20update&message=8.6.0&color=red&logo=php)](https://www.php.net/archive/2026.php#2026-11-19-5)
 
+> **Shortfall: the workflows do not guarantee the latest PHP patch release.**
+> They select PHP by minor version only (`8.4`, `8.5`, `8.6`), so each job runs on whatever patch the runner
+> provides at that moment. A green build does not prove the tests ran on the patched release.
+> On the `main` run of 22 November 2026 (`b7fa5323`): Ubuntu legs ran 8.4.28, 8.5.13 and 8.6.0; the Windows 8.4 leg ran
+> 8.4.28, but **the Windows 8.5 leg ran 8.5.12, one release behind the critical fix**; the Alpine 3.24 job ran
+> `php84` 8.4.28; and there is **no PHP 8.5 Alpine job** (it is disabled, see `invoice_static.yml`), although
+> `yii3i.online` runs 8.5 on Alpine. Check the "Setup PHP" step of a run for the exact version it used.
+
 (Place the contents of this download into the yii3-i invoice folder or run as a
  separate repository.)
 
