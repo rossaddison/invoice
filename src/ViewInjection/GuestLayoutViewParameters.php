@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\ViewInjection;
 
+use App\Invoice\Enum\BusinessType;
 use App\Invoice\Quote\QuoteRepository;
 use App\Invoice\SalesOrder\SalesOrderRepository;
+use App\Invoice\Setting\SettingRepository;
 use App\Invoice\UserClient\UserClientRepository;
 use App\Invoice\UserInv\UserInvRepository;
 use App\User\UserService;
@@ -31,6 +33,10 @@ use Yiisoft\Yii\View\Renderer\LayoutParametersInjectionInterface;
  * history still sees them. Confirmed live: a webshop-checkout customer's
  * `inv/view` was showing empty, confusing "Quote"/"Sales Order" nav
  * buttons that led nowhere useful.
+ *
+ * A window-cleaning (home services) install, business_type = window_cleaning, has neither quotes nor sales
+ * orders: the staff layout hides those menus and so does this one, whatever the observer's clients hold. See
+ * BusinessType.
  */
 final readonly class GuestLayoutViewParameters implements LayoutParametersInjectionInterface
 {
@@ -40,6 +46,7 @@ final readonly class GuestLayoutViewParameters implements LayoutParametersInject
         private UserClientRepository $userClientRepository,
         private QuoteRepository $quoteRepository,
         private SalesOrderRepository $salesOrderRepository,
+        private SettingRepository $settingRepository,
     ) {
     }
 
@@ -48,8 +55,13 @@ final readonly class GuestLayoutViewParameters implements LayoutParametersInject
     public function getLayoutParameters(): array
     {
         return [
-            'hasQuotesOrSalesOrders' => $this->resolveHasQuotesOrSalesOrders(),
+            'hasQuotesOrSalesOrders' => !$this->isWindowCleaning() && $this->resolveHasQuotesOrSalesOrders(),
         ];
+    }
+
+    private function isWindowCleaning(): bool
+    {
+        return BusinessType::WindowCleaning->value === $this->settingRepository->getSetting(BusinessType::SETTING_KEY);
     }
 
     private function resolveHasQuotesOrSalesOrders(): bool

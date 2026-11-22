@@ -534,6 +534,15 @@ trait SettingTooltipTrait
                 . ' effect while homecare_auto_invoice_enabled is on.',
                 'where' => 'resources/views/invoice/inv/guest.php.',
             ],
+            'business_type' => [
+                'why' => 'What kind of business this install is. Standard (blank) shows every menu.'
+                . ' Window cleaning (home services) shows the window-cleaning front page and hides the'
+                . ' Quote, Sales Order, Tasks, Projects and Peppol menus for staff. Choose Standard to'
+                . ' undo it. The Front Page button that sets the install up as a home-services business'
+                . ' sets this too, along with the services, products and runs.',
+                'where' => 'src/Invoice/Enum/BusinessType.php, src/ViewInjection/LayoutViewInjection.php,'
+                . ' src/Invoice/WindowCleaning/WindowCleaningPreset.php and resources/views/layout/invoice.php.',
+            ],
             'services_offered' => [
                 'why' => 'The services the business offers (window cleaning, bin'
                 . ' cleaning, hedge cutting ...), as a comma-separated list of'

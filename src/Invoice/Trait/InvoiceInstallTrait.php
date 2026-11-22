@@ -44,6 +44,12 @@ trait InvoiceInstallTrait
         // SettingRepository::rememberMeDurationDays() and
         // config/web/di/auth.php's CookieLogin definition.
         $default_settings['remember_me_days'] = 30;
+        // Settings tab "General" -- what kind of business this install is; blank is a standard install, and
+        // 'window_cleaning' hides the Quote, Sales Order, Tasks, Projects and Peppol menus. See BusinessType.
+        $default_settings['business_type'] = '';
+        // Settings tab "Front Page" -- the services offered, a comma-separated list of ServiceType values;
+        // blank until some are ticked. See ServiceType.
+        $default_settings['services_offered'] = '';
         $this->installDefaultSettings($default_settings, $sR);
     }
 

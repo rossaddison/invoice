@@ -38,15 +38,39 @@ final class SettingRegistrationRatchetTest
         $keys = [];
         $files = glob($this->root() . '/resources/views/invoice/setting/views/*.php');
         foreach ($files === false ? [] : $files as $file) {
-            preg_match_all('/settings\[([a-z0-9_]+)\]/', (string) file_get_contents($file), $matches);
+            $source = (string) file_get_contents($file);
+            preg_match_all('/settings\[([a-z0-9_]+)\]/', $source, $matches);
             foreach ($matches[1] as $key) {
                 $keys[$key] = true;
+            }
+            // a field named with a class constant: 'settings[' . ServiceType::SETTING_KEY . '][]'
+            preg_match_all('/settings\[\' \. ([A-Za-z]+)::([A-Z0-9_]+)/', $source, $named, PREG_SET_ORDER);
+            foreach ($named as $match) {
+                $key = $this->constantValue($match[1], $match[2]);
+                if ($key !== null) {
+                    $keys[$key] = true;
+                }
             }
         }
         return array_map('strval', array_keys($keys));
     }
 
-    /** @return array<string, true> the keys in the first-run defaults array */
+    /** The value of a string class constant that a settings view names by its short class name, or null. */
+    private function constantValue(string $shortClass, string $constant): ?string
+    {
+        foreach (['App\\Invoice\\', 'App\\Invoice\\Enum\\'] as $namespace) {
+            $name = $namespace . $shortClass . '::' . $constant;
+            if (defined($name)) {
+                // the constants a settings view names are all strings (SETTING_KEY and friends)
+                /** @var string|null $value */
+                $value = constant($name);
+                return is_string($value) ? $value : null;
+            }
+        }
+        return null;
+    }
+
+    /** @return array<string, true> the keys in the first-run defaults */
     private function defaults(): array
     {
         $source = (string) file_get_contents($this->root() . '/src/Invoice/Trait/InvoiceInstallTrait.php');
@@ -63,6 +87,11 @@ final class SettingRegistrationRatchetTest
             foreach ($matches[1] as $key) {
                 $keys[$key] = true;
             }
+        }
+        // Kept out of the array literals on purpose (SonarCloud's duplicate-code check), assigned one by one.
+        preg_match_all('/\$default_settings\[\'([a-z0-9_]+)\'\]\s*=/', $source, $assigned);
+        foreach ($assigned[1] as $key) {
+            $keys[$key] = true;
         }
         return $keys;
     }
