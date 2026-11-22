@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
+use App\Auth\SessionExpiredNotice;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -35,7 +36,8 @@ use Psr\Http\Server\RequestHandlerInterface;
  * itself already only invokes it there (and never at all for GET/HEAD/
  * OPTIONS, which skip CSRF validation entirely).
  *
- * Redirects to site/index rather than back to the same URI (the more
+ * Redirects to the login page, with "Your session has expired" (see
+ * SessionExpiredNotice), rather than back to the same URI (the more
  * "resume where you were" approach RateLimitRedirectMiddleware takes for
  * 429s -- see that class's own docblock): unlike the rate-limited routes
  * (login, signup, ... -- each a GET+POST pair on one URI, so replaying
@@ -43,8 +45,11 @@ use Psr\Http\Server\RequestHandlerInterface;
  * token), a CSRF failure can happen on ANY unsafe-method route in the
  * app -- including auth/logout, which is POST-only with no matching GET,
  * where replaying the same URI would 404 instead of recovering.
- * site/index works uniformly for every route without needing to know
- * which ones have a GET counterpart.
+ * auth/login is a GET route, so it works uniformly for every route without
+ * needing to know which ones have a GET counterpart. It used to be
+ * site/index, which never said why the visitor had landed there. A visitor
+ * whose remember-me cookie is still valid is signed straight back in and
+ * sent on from the login page, so they do not see the notice.
  */
 final class CsrfFailureHandler implements RequestHandlerInterface
 {
@@ -56,6 +61,6 @@ final class CsrfFailureHandler implements RequestHandlerInterface
     #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->webService->getRedirectResponse('site/index');
+        return $this->webService->getRedirectResponse('auth/login', [], SessionExpiredNotice::queryParameters());
     }
 }

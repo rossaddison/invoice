@@ -25,7 +25,7 @@ use Testo\Test;
 #[Test]
 final class CsrfFailureHandlerTest
 {
-    public function handleRedirectsToSiteIndex(): void
+    public function handleRedirectsToTheLoginPageSayingTheSessionHasExpired(): void
     {
         /** @var Request&m\MockInterface $request */
         $request = m::mock(Request::class);
@@ -34,7 +34,9 @@ final class CsrfFailureHandlerTest
         $redirect = m::mock(Response::class);
         /** @var WebControllerService&m\MockInterface $webService */
         $webService = m::mock(WebControllerService::class);
-        $webService->shouldReceive('getRedirectResponse')->once()->with('site/index')->andReturn($redirect);
+        $webService->shouldReceive('getRedirectResponse')->once()
+            ->with('auth/login', [], ['reason' => 'session-expired'])
+            ->andReturn($redirect);
 
         $handler = new CsrfFailureHandler($webService);
 

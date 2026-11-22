@@ -24,6 +24,7 @@ use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
  * @var string                                      $csrf
  * @var string                                      $styleTagFadeOut
  * @var array<string, list<string>>                 $errors
+ * @var bool                                        $sessionExpired
  */
 
 $styleTagFadeOut;
@@ -35,6 +36,14 @@ if ($turnstileSiteKey !== '') {
         WebView::POSITION_END,
         ['async' => true, 'defer' => true],
     );
+}
+
+// Set by CsrfFailureHandler (auth/login?reason=session-expired) when a stale token shows the session has expired.
+if ($sessionExpired) {
+    echo H::openTag('div', ['class' => 'alert alert-warning shadow text-center', 'role' => 'alert']);
+    echo H::tag('h2', $translator->translate('session.expired'), ['class' => 'h5 alert-heading']);
+    echo H::tag('p', $translator->translate('session.expired.log.in.again'), ['class' => 'mb-0']);
+    echo H::closeTag('div');
 }
 
 echo H::openTag('div', ['class' => (string) $class[1]]);
