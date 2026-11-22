@@ -116,8 +116,8 @@ final class GuestLayoutViewParametersTest
 
     public function backToStandardBringsTheMenusBack(): void
     {
-        // the General tab's Standard choice stores an empty value
-        $parameters = $this->parameters('', quotes: 1, salesOrders: 1);
+        // the General tab's Standard choice stores the word 'standard'
+        $parameters = $this->parameters(BusinessType::Standard->value, quotes: 1, salesOrders: 1);
 
         Assert::same($parameters->getLayoutParameters(), ['hasQuotesOrSalesOrders' => true]);
     }

@@ -20,7 +20,7 @@ final class SidebarWindowCleaningTest
      */
     private function sidebar(bool $windowCleaning, array $settings = []): string
     {
-        $settings['business_type'] = $windowCleaning ? 'window_cleaning' : '';
+        $settings['business_type'] = $windowCleaning ? 'window_cleaning' : 'standard';
         $s = new class ($settings) {
             /** @param array<string, string> $settings */
             public function __construct(private readonly array $settings)

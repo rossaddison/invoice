@@ -139,8 +139,9 @@ echo H::openTag('div', $row); //1
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     // What kind of business this install is. Blank is a standard install; choosing Standard again undoes the
-     // window-cleaning mode (the preset on the Front Page tab sets it too, with more).
+     // What kind of business this install is. Choosing Standard saves the word 'standard' and undoes the
+     // window-cleaning mode (the preset on the Front Page tab sets it too, with more). A missing, blank or
+     // unknown value also behaves as Standard, and shows as Standard here.
      echo H::openTag('div', $colMd6); //6
       echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
@@ -157,7 +158,7 @@ echo H::openTag('div', $row); //1
         'class' => 'form-select',
        ]);
         echo  new Option()
-         ->value('')
+         ->value(\App\Invoice\Enum\BusinessType::Standard->value)
          ->selected($body[$kBusinessType] !== \App\Invoice\Enum\BusinessType::WindowCleaning->value)
          ->content($translator->translate('business.type.standard'));
         echo  new Option()

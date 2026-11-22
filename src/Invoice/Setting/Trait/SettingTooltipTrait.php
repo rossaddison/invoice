@@ -535,7 +535,7 @@ trait SettingTooltipTrait
                 'where' => 'resources/views/invoice/inv/guest.php.',
             ],
             'business_type' => [
-                'why' => 'What kind of business this install is. Standard (blank) shows every menu.'
+                'why' => 'What kind of business this install is. Standard shows every menu.'
                 . ' Window cleaning (home services) shows the window-cleaning front page and hides the'
                 . ' Quote, Sales Order, Tasks, Projects and Peppol menus for staff. Choose Standard to'
                 . ' undo it. The Front Page button that sets the install up as a home-services business'

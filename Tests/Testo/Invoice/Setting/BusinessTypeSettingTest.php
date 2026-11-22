@@ -100,7 +100,7 @@ final class BusinessTypeSettingTest
     {
         $source = (string) file_get_contents($this->root() . '/src/Invoice/Trait/InvoiceInstallTrait.php');
 
-        Assert::same(preg_match("/\\\$default_settings\\['business_type'\\]\\s*=\\s*'';/", $source), 1);
+        Assert::same(preg_match("/\\\$default_settings\\['business_type'\\]\\s*=\\s*'standard';/", $source), 1);
         Assert::same(preg_match("/\\\$default_settings\\['services_offered'\\]\\s*=\\s*'';/", $source), 1);
         Assert::same(BusinessType::SETTING_KEY, 'business_type');
         Assert::same(ServiceType::SETTING_KEY, 'services_offered');
@@ -129,6 +129,24 @@ final class BusinessTypeSettingTest
         }
     }
 
+    public function standardIsSavedAsTheWordStandardNotAsAnEmptyValue(): void
+    {
+        $html = $this->generalTab(['business_type' => 'window_cleaning']);
+        // only the Business type select: other drop-downs on the General tab have empty options of their own
+        $start = strpos($html, 'name="settings[business_type]"');
+        $end = $start === false ? false : strpos($html, '</select>', $start);
+        if ($start === false || $end === false) {
+            throw new \LogicException('the Business type select is missing from the General tab');
+        }
+        $select = substr($html, $start, $end - $start);
+
+        Assert::same(BusinessType::Standard->value, 'standard');
+        Assert::true(str_contains($select, '<option value="standard">[business.type.standard]</option>'));
+        Assert::false(str_contains($select, '<option value>'));
+        Assert::false(str_contains($select, '<option value selected>'));
+        Assert::same(substr_count($select, '<option'), 2);
+    }
+
     public function theGeneralTabOffersStandardAndWindowCleaningWithAnInfoIcon(): void
     {
         $html = $this->generalTab([]);
@@ -143,7 +161,7 @@ final class BusinessTypeSettingTest
     {
         $html = $this->generalTab([]);
 
-        Assert::true(str_contains($html, '<option value selected>[business.type.standard]</option>'));
+        Assert::true(str_contains($html, '<option value="standard" selected>[business.type.standard]</option>'));
         Assert::false(str_contains($html, '<option value="window_cleaning" selected>'));
     }
 
@@ -153,9 +171,10 @@ final class BusinessTypeSettingTest
         $off = $this->generalTab(['business_type' => '']);
 
         Assert::true(str_contains($on, '<option value="window_cleaning" selected>'));
-        Assert::false(str_contains($on, '<option value selected>'));
-        // choosing Standard posts an empty value, which clears the setting and so the mode
-        Assert::true(str_contains($off, '<option value selected>[business.type.standard]</option>'));
+        Assert::false(str_contains($on, '<option value="standard" selected>'));
+        // choosing Standard posts the word 'standard', so the settings list shows a readable value, not the grid's
+        // 'not set' hourglass that an empty value gets
+        Assert::true(str_contains($off, '<option value="standard" selected>[business.type.standard]</option>'));
         Assert::false(str_contains($off, '<option value="window_cleaning" selected>'));
     }
 
@@ -163,7 +182,7 @@ final class BusinessTypeSettingTest
     {
         $html = $this->generalTab(['business_type' => 'something_else']);
 
-        Assert::true(str_contains($html, '<option value selected>[business.type.standard]</option>'));
+        Assert::true(str_contains($html, '<option value="standard" selected>[business.type.standard]</option>'));
         Assert::false(str_contains($html, '<option value="window_cleaning" selected>'));
     }
 
