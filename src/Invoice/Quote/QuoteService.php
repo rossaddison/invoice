@@ -71,6 +71,7 @@ final readonly class QuoteService
         SR $s,
         GR $gR
     ): Quote {
+        $previousClientId = $model->hasIdentity() ? $model->getClientId() : null;
         $this->persist($array, $model);
 
         /**
@@ -128,9 +129,30 @@ final readonly class QuoteService
             $model->setNotes((string) $array['notes']) : '';
         if (!$model->hasIdentity()) {
             $this->initNewQuote($model, $array, $s, $gR, $user);
+        } elseif ($this->clientChanged($previousClientId, $array) && !isset($array['user_id'])) {
+            $this->giveToUser($model, $user);
         }
         $this->repository->save($model);
         return $model;
+    }
+
+    /**
+     * Whether the array moves an existing quote to a different client (or gives one that had none its client). A
+     * quote belongs to the user assigned to its client (the guest menu, the emailed link and the guest checks go by
+     * that owner), so a quote moved to another client has to move to that client's user, and one left on its client
+     * keeps its owner.
+     *
+     * @param array $array
+     */
+    private function clientChanged(?int $previousClientId, array $array): bool
+    {
+        return isset($array['client_id']) && (int) $array['client_id'] !== $previousClientId;
+    }
+
+    private function giveToUser(Quote $model, User $user): void
+    {
+        $model->setUser($user);
+        $model->setUserId($user->reqId());
     }
 
     private function initNewQuote(

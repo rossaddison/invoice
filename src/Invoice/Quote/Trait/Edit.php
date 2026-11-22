@@ -14,6 +14,7 @@ use App\Invoice\{
     Quote\QuoteEditLocationDeps,
     QuoteTaxRate\QuoteTaxRateForm,
 };
+use App\Invoice\Quote\QuoteEditClient;
 use App\Invoice\Quote\QuoteForm;
 use App\Invoice\QuoteCustom\QuoteCustomForm;
 use App\Invoice\Helpers\{CustomValuesHelper as CVH, NumberHelper};
@@ -98,8 +99,10 @@ trait Edit
             $quote = $this->quote($id, $core->quoteRepo, false);
             if ($quote) {
                 $quoteForm = QuoteForm::show($quote);
-                $client_id = $quote->reqClientId();
-                $user = $this->activeUser($client_id, $form->uR, $core->ucR, $core->uiR);
+                $client_id = QuoteEditClient::beingSaved($body, $quote->reqClientId());
+                $user = $this->activeUserOrWarn($client_id, $form->uR, $core->ucR, $core->uiR);
+                // the page was built before the POST, so show a warning raised just now on this render
+                $parameters['alert'] = $this->alert();
                 if (null !== $user) {
                     if ($formHydrator->populateAndValidate($quoteForm, $body)) {
                         $this->quote_service->saveQuote(

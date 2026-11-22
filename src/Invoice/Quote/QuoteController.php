@@ -167,6 +167,24 @@ final class QuoteController extends BaseController
         return null;
     }
 
+    /**
+     * activeUser(), plus a warning when the client has no single active user to own the quote. The edit form used to
+     * do nothing at all in that case, and now that it looks the owner up for the client being posted, a refused move
+     * has to say so.
+     */
+    protected function activeUserOrWarn(
+        int $client_id,
+        UR $uR,
+        UCR $ucR,
+        UIR $uiR
+    ): ?User {
+        $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
+        if (null === $user) {
+            $this->flashMessage('warning', $this->translator->translate('quote.client.no.single.active.user'));
+        }
+        return $user;
+    }
+
     public function defaultTaxes(
         Quote $quote,
         TRR $trR,

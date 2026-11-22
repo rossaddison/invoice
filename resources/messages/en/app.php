@@ -2480,6 +2480,8 @@ prior to importing and no existing documents e.g. Invoices.',
   'quote.approve' => 'Approve',
   'quote.approved' => 'This quote has been approved',
   'quote.copied.to.invoice' => 'Quote copied to NEW Invoice',
+  'quote.client.no.single.active.user' => 'The quote was not saved: its client has no single active user assigned to'
+    . ' it, so there is nobody to own the quote and show it to.',
   'quote.copied.to.quote' => 'Quote copied to NEW Quote!',
   'quote.copied.to.so' => 'Quote Copied to Sales Order',
   'quote.custom' => 'Quote Custom',

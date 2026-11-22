@@ -24,6 +24,11 @@ trait QuoteTrait2
         return $this->requireId($this->client_id, 'Client');
     }
 
+    public function getClientId(): ?int
+    {
+        return $this->client_id;
+    }
+
     public function setClientId(int $client_id): void
     {
         $this->client_id = $client_id;
