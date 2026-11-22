@@ -556,9 +556,12 @@ final readonly class ButtonsToolbarFull
                 $link = $link->href((string) $button['href']);
                 break;
             case 'window':
-                $link = $link->href('#')
-                           ->attribute('onclick', "window.open('"
-                               . Html::encode((string) $button['href']) . "')");
+                // A real link that opens in a new tab. It used to be href="#" with an inline
+                // onclick="window.open(...)", which the Content-Security-Policy refuses (script-src has no
+                // 'unsafe-inline'), so the Peppol, Storecove JSON, Ecosio validator and Chromium PDF buttons did nothing.
+                $link = $link->href((string) $button['href'])
+                           ->attribute('target', '_blank')
+                           ->attribute('rel', 'noopener noreferrer');
                 break;
             case 'link':
             default:
