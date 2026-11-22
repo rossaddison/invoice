@@ -74,6 +74,8 @@ final class SalesOrdersColumnBuilder
                 $class   = $soR->getSpecificStatusArrayClass($statusId);
                 $spanTag = Html::tag('span', $label, ['class' => 'badge text-bg-' . $class])->render();
                 if (7 === $statusId) {
+                    // $spanTag is already rendered markup: without encode(false) Html::tag() escapes it, and the cell
+                    // shows the text <span class="badge ..."> instead of a badge
                     return Html::tag('a', $spanTag, [
                         'href'     => $ug->generate(
                             'salesorder/soToInvoice',
@@ -81,7 +83,7 @@ final class SalesOrdersColumnBuilder
                         ),
                         'class'    => 'text-decoration-none',
                         'hx-boost' => 'false',
-                    ])->render();
+                    ])->encode(false)->render();
                 }
                 return $spanTag;
             },
