@@ -65,6 +65,9 @@ $toolbarFilter =  new A()
     ->id('setting_filters_submit')
     ->render();
 
+// The Content-Security-Policy has no 'unsafe-inline' for scripts, so the inline onChange the dropdown filters render and
+// an inline onclick="return confirm(...)" are both blocked. 'native-reset' (submitted by a delegated listener) and
+// 'data-confirm' (confirmed by one) are this app's CSP-safe equivalents; see src/typescript/data-actions.ts.
 $columns = [
     new DataColumn(
         property: 'id',
@@ -77,14 +80,18 @@ $columns = [
         header: $translator->translate('setting.key'),
         content: static fn (Setting $model) => Html::encode($model->getSettingKey()),
         withSorting: true,
-        filter:  new DropdownFilter()->optionsData($optionsDataSettingsKeyDropDownFilter),
+        filter:  DropdownFilter::widget()
+            ->addAttributes(['class' => 'native-reset'])
+            ->optionsData($optionsDataSettingsKeyDropDownFilter),
     ),
     new DataColumn(
         property: 'setting_value',
         header: $translator->translate('setting.value'),
         content: static fn (Setting $model) => Html::encode($model->getSettingValue()),
         withSorting: true,
-        filter:  new DropdownFilter()->optionsData($optionsDataSettingsValueDropDownFilter),
+        filter:  DropdownFilter::widget()
+            ->addAttributes(['class' => 'native-reset'])
+            ->optionsData($optionsDataSettingsValueDropDownFilter),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -114,7 +121,7 @@ $columns = [
             },
             attributes: [
                 'title' => $translator->translate('delete'),
-                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                'data-confirm' => $translator->translate('delete.record.warning'),
             ],
         ),
     ]),
