@@ -11,9 +11,10 @@ use Yiisoft\Html\Html as H;
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  */
 
-// $windowCleaning comes from the layout that includes this file (layout/invoice.php): business_type is
-// window_cleaning, so this is a home-services install with no Quotes or Tasks. The top menu already hides them, so
-// the sidebar must too.
+// business_type is window_cleaning: a home-services install with no Quotes or Tasks. The top menu already hides them
+// (layout/invoice.php), so the sidebar must too.
+$windowCleaning = \App\Invoice\Enum\BusinessType::WindowCleaning->value
+    === $s->getSetting(\App\Invoice\Enum\BusinessType::SETTING_KEY);
 
 // route  — route name passed to $urlGenerator->generate()
 // title  — translation key

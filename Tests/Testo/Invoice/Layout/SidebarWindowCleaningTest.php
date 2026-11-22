@@ -20,6 +20,7 @@ final class SidebarWindowCleaningTest
      */
     private function sidebar(bool $windowCleaning, array $settings = []): string
     {
+        $settings['business_type'] = $windowCleaning ? 'window_cleaning' : '';
         $s = new class ($settings) {
             /** @param array<string, string> $settings */
             public function __construct(private readonly array $settings)
@@ -55,7 +56,6 @@ final class SidebarWindowCleaningTest
             'currentRoute' => $currentRoute,
             'translator' => $translator,
             'urlGenerator' => $urlGenerator,
-            'windowCleaning' => $windowCleaning,
         ]);
     }
 
