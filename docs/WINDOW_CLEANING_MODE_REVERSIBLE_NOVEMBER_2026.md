@@ -16,13 +16,15 @@ again. No data is deleted either way.
 
 | Choice | Stored value | Effect |
 |---|---|---|
-| **Standard (all menus)** | blank | Every menu is shown. This is the default for a new install. |
+| **Standard (all menus)** | `standard` | Every menu is shown. This is the default for a new install. |
 | **Window cleaning / home services** | `window_cleaning` | The menus listed below are left out. |
 
 4. Press **Save**. The info icon next to the field explains the same thing.
 
-An install that has never saved the General tab has no `business_type` row at all. A missing row is read as blank, so
-it behaves as **Standard**. The row appears the first time the General tab is saved.
+An install that has never saved the General tab has no `business_type` row at all. A missing, blank or unrecognised
+value behaves as **Standard** and is shown as Standard in the drop-down. The row appears the first time the General tab
+is saved. Standard is saved as the word `standard`, not as an empty value: `setting/debug_index` draws an empty value
+as a red ⌛ ("not set"), which made a correctly saved setting look corrupted.
 
 ## What window-cleaning mode hides
 
@@ -62,9 +64,9 @@ Pressing the preset again is safe. It sets the settings again and adds nothing o
 
 - **Setting key:** `business_type` (`App\Invoice\Enum\BusinessType::SETTING_KEY`). Any value other than
   `window_cleaning`, including a missing row, means the general setup.
-- **First-run default:** a blank `business_type` (and a blank `services_offered`) is seeded under `InvoiceController`
-  by `InvoiceInstallTrait`, with a tooltip entry in `SettingTooltipTrait`. Existing installs get the row on first save
-  of the General tab.
+- **First-run default:** `business_type` = `standard` (and a blank `services_offered`) is seeded under
+  `InvoiceController` by `InvoiceInstallTrait`, with a tooltip entry in `SettingTooltipTrait`. Existing installs get the
+  row on first save of the General tab.
 - **Where the flag is read:** `LayoutViewInjection` and `BaseController::windowCleaning()` for the staff layout and
   dashboard, `GuestLayoutViewParameters` for the guest menu, `layout/sidebar.php` for the sidebar, and
   `SiteController` for the front page.
