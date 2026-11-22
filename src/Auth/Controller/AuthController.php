@@ -9,7 +9,7 @@ use chillerlan\QRCode\QROptions;
 use App\Auth\{AuthService, CallbackDeps, Form\LoginForm,
     Form\TwoFactorAuthenticationSetupForm,
     Form\TwoFactorAuthenticationVerifyLoginForm, Trait\Callback, Trait\ClassList,
-    Trait\Oauth2, Trait\Redirects, Trait\TurnstileVerification, Permissions, TokenRepository};
+    Trait\Oauth2, Trait\Redirects, Trait\TurnstileVerification, Permissions, SessionExpiredNotice, TokenRepository};
 use App\Infrastructure\Persistence\Identity\Identity;
 use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository;
@@ -269,6 +269,7 @@ final class AuthController
                 'class' => $this->classList(),
                 'formModel' => $loginForm,
                 'errors' => $errors,
+                'sessionExpired' => SessionExpiredNotice::isRequested($request->getQueryParams()),
                 'openBankChoice' => $openBankChoice,
                 'noOpenBankingContinueButton' =>
                 $this->sR->getSetting('no_openbanking_continue_button') == '1',
