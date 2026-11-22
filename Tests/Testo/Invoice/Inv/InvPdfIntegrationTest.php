@@ -123,9 +123,14 @@ final class InvPdfIntegrationTest
         return $amount;
     }
 
+    /**
+     * Digits only. A hexadecimal suffix made one run in about twelve fail: mPDF's font draws an adjacent "ff" as a
+     * single ligature glyph, so the invoice name no longer appeared as text in the PDF
+     * (thePdfNeverPrintsTheServersFolderLayoutInItsTitleOrHeader). Digits cannot form a ligature.
+     */
     private function uniqueNumber(): string
     {
-        return 'ITEST-' . bin2hex(random_bytes(5));
+        return 'ITEST-' . random_int(1000000000, 9999999999);
     }
 
     private function remember(string $path): string

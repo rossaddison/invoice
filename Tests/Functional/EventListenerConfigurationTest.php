@@ -34,17 +34,21 @@ class EventListenerConfigurationTest extends TestCase
             'params-console',
         );
 
+        // Container definitions are keyed by id. yiisoft/di 1.5 declares withDefinitions(array<string, mixed>), and
+        // Config::get() only promises array, so say what the 'di-console' group is.
+        /** @var array<string, mixed> $definitions */
+        $definitions = $config->get('di-console');
+
         $container = new Container(
             ContainerConfig::create()
-                ->withDefinitions($config->get('di-console'))
+                ->withDefinitions($definitions)
                 ->withProviders($config->get('di-providers-console')),
         );
 
         $checker = $container->get(ListenerConfigurationChecker::class);
+        self::assertInstanceOf(ListenerConfigurationChecker::class, $checker);
 
         $checker->check($config->get('events-console'));
         $checker->check($config->get('events-web'));
-
-        self::assertInstanceOf(ListenerConfigurationChecker::class, $checker);
     }
 }
