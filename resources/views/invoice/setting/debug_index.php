@@ -79,6 +79,8 @@ $columns = [
         property: 'setting_key',
         header: $translator->translate('setting.key'),
         content: static fn (Setting $model) => Html::encode($model->getSettingKey()),
+        // a long value wraps instead of stretching the table past the window, where the page clips it
+        bodyClass: 'text-break',
         withSorting: true,
         filter:  DropdownFilter::widget()
             ->addAttributes(['class' => 'native-reset'])
@@ -88,6 +90,8 @@ $columns = [
         property: 'setting_value',
         header: $translator->translate('setting.value'),
         content: static fn (Setting $model) => Html::encode($model->getSettingValue()),
+        // a long value wraps instead of stretching the table past the window, where the page clips it
+        bodyClass: 'text-break',
         withSorting: true,
         filter:  DropdownFilter::widget()
             ->addAttributes(['class' => 'native-reset'])
@@ -158,9 +162,12 @@ $toolbarString =  new Form()->post($urlGenerator->generate('setting/debugIndex')
 
 echo GridView::widget()
 ->accessibility(true)
-->bodyRowAttributes(['class' => 'align-middle'])
+// base.css sets overflow-x: hidden on html, so a table wider than the window loses its right side, and with it the
+// action buttons; inside this container it scrolls instead
+->containerAttributes(['class' => 'table-responsive'])
+// align-top, not align-middle: a long value makes its row tall, and the buttons stay beside the setting's name
+->bodyRowAttributes(['class' => 'align-top'])
 ->tableAttributes(['class' => 'table table-striped text-start h-75','id' => 'table-setting'])
-/** @psalm-suppress InvalidArgument */
 ->columns(...$columns)
 ->dataReader($sortedAndPagedPaginator)
 ->urlCreator($urlCreator)
