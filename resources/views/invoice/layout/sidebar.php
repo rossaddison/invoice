@@ -11,6 +11,10 @@ use Yiisoft\Html\Html as H;
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  */
 
+// $windowCleaning comes from the layout that includes this file (layout/invoice.php): business_type is
+// window_cleaning, so this is a home-services install with no Quotes or Tasks. The top menu already hides them, so
+// the sidebar must too.
+
 // route  — route name passed to $urlGenerator->generate()
 // title  — translation key
 // icon   — Bootstrap Icon class
@@ -18,12 +22,12 @@ use Yiisoft\Html\Html as H;
 // show   — whether to render this item
 $items = [
  ['route' => 'client/index',     'title' => 'clients',         'icon' => 'bi bi-people',          'color' => '#0d6efd', 'show' => true],
- ['route' => 'quote/index',      'title' => 'quotes',          'icon' => 'bi bi-chat-square-text', 'color' => '#198754', 'show' => true],
+ ['route' => 'quote/index',      'title' => 'quotes',          'icon' => 'bi bi-chat-square-text', 'color' => '#198754', 'show' => !$windowCleaning],
  ['route' => 'inv/index',        'title' => 'invoices',        'icon' => 'bi bi-file-text',        'color' => '#198754', 'show' => true],
  ['route' => 'inv/trash',        'title' => 'invoice.trash',   'icon' => 'bi bi-trash',            'color' => '#6c757d', 'show' => true],
  ['route' => 'payment/index',    'title' => 'payments',        'icon' => 'bi bi-coin',             'color' => '#fd7e14', 'show' => true],
  ['route' => 'product/index',    'title' => 'products',        'icon' => 'bi bi-box-seam',         'color' => '#6f42c1', 'show' => true],
- ['route' => 'task/index',       'title' => 'tasks',           'icon' => 'bi bi-check2-square',    'color' => '#0dcaf0', 'show' => $s->getSetting('projects_enabled') == 1],
+ ['route' => 'task/index',       'title' => 'tasks',           'icon' => 'bi bi-check2-square',    'color' => '#0dcaf0', 'show' => !$windowCleaning && $s->getSetting('projects_enabled') == 1],
  ['route' => 'setting/tabIndex', 'title' => 'system.settings', 'icon' => 'bi bi-gear',             'color' => '#6c757d', 'show' => true],
 ];
 
