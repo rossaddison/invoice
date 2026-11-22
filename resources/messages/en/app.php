@@ -3848,6 +3848,10 @@ prior to importing and no existing documents e.g. Invoices.',
     'The service products could not be added to Product: add a tax rate and a unit first, then apply the setup again.',
   'window.cleaning.preset.seo' =>
     'The company SEO description now names the services you offer. Edit it under Company if you prefer your own wording.',
+  'business.type' => 'Business type',
+  'business.type.standard' => 'Standard (all menus)',
+  'business.type.window.cleaning' => 'Window cleaning / home services (hides Quote, Sales Order, Tasks,'
+    . ' Projects and Peppol)',
   'services.offered' => 'Services offered',
   'homecare.signup.service' => 'Service',
   'homecare.signup.service.prompt' => 'Choose a service',

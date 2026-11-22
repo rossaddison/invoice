@@ -45,6 +45,8 @@ mark_quotes_sent_pdf
 monospace_amounts
 nino
 no_front_contact_us_page
+no_front_gateway_status_page
+no_front_hmrc_api_status_page
 no_openbanking_continue_button
 no_openidconnect_continue_button
 open_banking_provider
@@ -58,7 +60,6 @@ qr_ecc_level
 qr_version
 quote_overview_period
 quote_pre_password
-remember_me_days
 stand_in_code
 storecove_api_key_field_is_password
 storecove_country

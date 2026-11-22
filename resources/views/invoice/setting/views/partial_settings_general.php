@@ -41,6 +41,7 @@ $kDisableFlash = 'settings[disable_flash_messages]';
 $kSignupAssignClient = 'settings[signup_automatically_assign_client]';
 $kSignupAgeMin = 'settings[signup_default_age_minimum_eighteen]';
 $kStopHomecareSigningUp = 'settings[stop_homecare_signing_up]';
+$kBusinessType = 'settings[business_type]';
 $kCurrencySymbol = 'settings[currency_symbol]';
 $kCurrencySymbolPlacement = 'settings[currency_symbol_placement]';
 $kCurrencyCode = 'settings[currency_code]';
@@ -135,6 +136,34 @@ echo H::openTag('div', $row); //1
          ->value('1')
          ->selected($body[$kStopHomecareSigningUp] == '1')
          ->content($translator->translate('yes'));
+       echo H::closeTag('select');
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+     // What kind of business this install is. Blank is a standard install; choosing Standard again undoes the
+     // window-cleaning mode (the preset on the Front Page tab sets it too, with more).
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
+       echo H::openTag('label', [
+        'for' => $kBusinessType
+       ]);
+        echo $translator->translate('business.type');
+        echo $s->infoIcon('business_type');
+       echo H::closeTag('label');
+       $body[$kBusinessType] =
+       $s->getSetting('business_type');
+       echo H::openTag('select', [
+        'name' => $kBusinessType,
+        'id' => $kBusinessType,
+        'class' => 'form-select',
+       ]);
+        echo  new Option()
+         ->value('')
+         ->selected($body[$kBusinessType] !== \App\Invoice\Enum\BusinessType::WindowCleaning->value)
+         ->content($translator->translate('business.type.standard'));
+        echo  new Option()
+         ->value(\App\Invoice\Enum\BusinessType::WindowCleaning->value)
+         ->selected($body[$kBusinessType] === \App\Invoice\Enum\BusinessType::WindowCleaning->value)
+         ->content($translator->translate('business.type.window.cleaning'));
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
