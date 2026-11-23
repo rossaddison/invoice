@@ -10,6 +10,7 @@ use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\AppConstants;
 use App\Invoice\UserInv\UserInvRepository;
 use App\Middleware\AccessChecker;
+use App\Service\WebControllerService;
 use App\User\UserRepository;
 use App\User\UserService;
 use GuzzleHttp\Psr7\HttpFactory;
@@ -25,6 +26,8 @@ use Yiisoft\Access\AccessCheckerInterface;
 use Yiisoft\Http\Status;
 use Yiisoft\Rbac\Manager;
 use Yiisoft\Rbac\Role;
+use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\User\Guest\GuestIdentity;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\User\CurrentUser;
 
@@ -95,6 +98,93 @@ final class UserServiceGateTest
         $repository->shouldReceive('findById')->andReturn($user);
 
         return new UserService($currentUser, $repository, $accessChecker, $session, $userInvRepository, $manager);
+    }
+
+    private function gate(UserService $service): AccessChecker
+    {
+        $urlGenerator = TypedMock::of(UrlGeneratorInterface::class);
+        $urlGenerator->shouldReceive('generate')->andReturnUsing(
+            static fn (string $name, array $arguments = [], array $query = []): string
+                => '/' . $name . '?' . http_build_query($query),
+        );
+
+        return new AccessChecker(
+            new HttpFactory(),
+            $service,
+            new NullLogger(),
+            new WebControllerService(new HttpFactory(), new HttpFactory(), $urlGenerator),
+        );
+    }
+
+    /** nobody is signed in: the session expired, or never existed */
+    private function signedOutService(): UserService
+    {
+        $currentUser = TypedMock::of(CurrentUser::class);
+        $currentUser->shouldReceive('getIdentity')->andReturn(new GuestIdentity());
+        $session = TypedMock::of(SessionInterface::class);
+        $session->shouldReceive('get')->with(UserService::SESSION_TFA_VERIFIED)->andReturn(null);
+
+        return new UserService(
+            $currentUser,
+            TypedMock::of(UserRepository::class),
+            TypedMock::of(AccessCheckerInterface::class),
+            $session,
+            TypedMock::of(UserInvRepository::class),
+            TypedMock::of(Manager::class),
+        );
+    }
+
+    /** @param array<string, string> $headers */
+    private function signedOutAnswer(string $method, array $headers = []): ResponseInterface
+    {
+        $request = new HttpFactory()->createServerRequest($method, 'https://example.test/invoice/inv');
+        foreach ($headers as $name => $value) {
+            $request = $request->withHeader($name, $value);
+        }
+        $handler = new class () implements RequestHandlerInterface {
+            #[\Override]
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                return new HttpFactory()->createResponse(Status::OK);
+            }
+        };
+
+        return $this->gate($this->signedOutService())->withPermission('editInv')->process($request, $handler);
+    }
+
+    public function aSignedOutPageRequestGoesToTheLoginPageWithTheSessionExpiredNotice(): void
+    {
+        $response = $this->signedOutAnswer('GET');
+
+        Assert::same($response->getStatusCode(), Status::FOUND);
+        Assert::same($response->getHeaderLine('Location'), '/auth/login?reason=session-expired');
+    }
+
+    public function aSignedOutFormPostStillGets403(): void
+    {
+        Assert::same($this->signedOutAnswer('POST')->getStatusCode(), Status::FORBIDDEN);
+    }
+
+    public function aSignedOutBackgroundRequestStillGets403(): void
+    {
+        Assert::same($this->signedOutAnswer('GET', ['HX-Request' => 'true'])->getStatusCode(), Status::FORBIDDEN);
+        Assert::same($this->signedOutAnswer('GET', ['X-Requested-With' => 'XMLHttpRequest'])->getStatusCode(), Status::FORBIDDEN);
+    }
+
+    public function aSignedInUserWithoutPermissionStillGets403NotTheLoginPage(): void
+    {
+        $handler = new class () implements RequestHandlerInterface {
+            #[\Override]
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                return new HttpFactory()->createResponse(Status::OK);
+            }
+        };
+        $gate = $this->gate($this->service(true, rbacGrants: false))->withPermission('editInv');
+
+        $response = $gate->process(new HttpFactory()->createServerRequest('GET', 'https://example.test/invoice/inv'), $handler);
+
+        Assert::same($response->getStatusCode(), Status::FORBIDDEN);
     }
 
     public function anAccountDeactivatedWhileLoggedInLosesItsPermissionsAtOnce(): void
@@ -177,7 +267,7 @@ final class UserServiceGateTest
                 return new HttpFactory()->createResponse(Status::OK);
             }
         };
-        $gate = new AccessChecker(new HttpFactory(), $this->service(false), new NullLogger())->withPermission('editInv');
+        $gate = $this->gate($this->service(false))->withPermission('editInv');
 
         $response = $gate->process(new HttpFactory()->createServerRequest('GET', 'https://example.test/en/invoice/inv'), $handler);
 
@@ -197,7 +287,7 @@ final class UserServiceGateTest
                 return new HttpFactory()->createResponse(Status::OK);
             }
         };
-        $gate = new AccessChecker(new HttpFactory(), $this->service(true), new NullLogger())->withPermission('editInv');
+        $gate = $this->gate($this->service(true))->withPermission('editInv');
 
         $response = $gate->process(new HttpFactory()->createServerRequest('GET', 'https://example.test/en/invoice/inv'), $handler);
 
