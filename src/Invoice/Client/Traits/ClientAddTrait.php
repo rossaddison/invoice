@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Client\ClientDwellingPicker;
 use App\Infrastructure\Persistence\ClientCustom\ClientCustom;
 use App\Invoice\Client\ClientForm;
+use App\Invoice\Client\ClientNameGuard;
 use App\Invoice\ClientCustom\ClientCustomForm;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -37,9 +38,14 @@ trait ClientAddTrait
         FormHydrator $formHydrator,
         Request $request,
         ClientDwellingPicker $dwellingPicker,
+        ClientNameGuard $nameGuard,
     ): array {
         if (!$formHydrator->populateFromPostAndValidate($form, $request)) {
             return $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+        }
+        $nameErrors = $nameGuard->errorsFor((string) $form->client_name, (string) $form->client_surname);
+        if ($nameErrors !== []) {
+            return $nameErrors;
         }
         return $this->dwellingClaimed($form->dwelling_id, null, $dwellingPicker)
             ? $this->dwellingClaimedErrors()

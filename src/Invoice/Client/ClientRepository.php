@@ -207,6 +207,23 @@ final class ClientRepository extends Select\Repository implements ClientReposito
     }
 
     /**
+     * The client who already has this first name and surname, if any. Names are compared after trimming; upper or
+     * lower case is ignored only if the column collation is case-insensitive (the MySQL default is).
+     *
+     * @param int|null $exceptId a client to leave out, so a client is not a duplicate of itself
+     */
+    public function findByFullName(string $name, string $surname, ?int $exceptId = null): ?Client
+    {
+        $query = $this
+            ->select()
+            ->where(['client_name' => trim($name), 'client_surname' => trim($surname)]);
+        if (null !== $exceptId) {
+            $query = $query->where('id', '!=', $exceptId);
+        }
+        return $query->fetchOne() ?: null;
+    }
+
+    /**
      * Lookup for the public home-care scan endpoint: resolves a client
      * from their printed QR token. Only active clients are eligible.
      *

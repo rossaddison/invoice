@@ -29,6 +29,7 @@ use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserInv\UserInvRepository as uiR;
 // Deps
 use App\Invoice\Client\ClientEditDeps;
+use App\Invoice\Client\ClientNameGuard;
 use App\Invoice\Client\ClientIndexDeps;
 use App\Invoice\Client\ClientViewDeps;
 // Helpers
@@ -164,6 +165,7 @@ final class ClientController extends BaseController
         cfR $cfR,
         cvR $cvR,
         ClientDwellingPicker $dwellingPicker,
+        ClientNameGuard $nameGuard,
     ): Response {
         $origin     = $currentRoute->getArgument('origin');
         $new_client = new Client();
@@ -179,7 +181,7 @@ final class ClientController extends BaseController
         $parameters = array_merge($parameters, $this->dwellingParameters($dwellingPicker, null));
 
         if ($request->getMethod() === Method::POST) {
-            $errors = $this->addPostErrors($form, $formHydrator, $request, $dwellingPicker);
+            $errors = $this->addPostErrors($form, $formHydrator, $request, $dwellingPicker, $nameGuard);
             $parameters['errors'] = $errors;
             if ($errors === []) {
                 $redirect = $this->saveNewClient($form, $new_client, $request, $formHydrator, $origin);
