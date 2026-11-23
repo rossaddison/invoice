@@ -258,6 +258,25 @@ final class SettingRepository extends Select\Repository implements SettingReposi
     }
 
     /**
+     * Settings tab "General" -> Session Idle Timeout (Minutes): how long a signed-in session may sit unused before
+     * the visitor has to log in again. Falls back to 30 for a value that is unset (an install from before the setting
+     * existed), non-numeric, zero or negative. See App\Middleware\SessionIdleTimeout.
+     *
+     * @psalm-return positive-int
+     */
+    public function sessionIdleMinutes(): int
+    {
+        $minutes = (int) $this->getSetting('session_idle_minutes');
+        if ($minutes > 0) {
+            /**
+             * @psalm-var positive-int $positiveInt
+             */
+            return $minutes;
+        }
+        return 30;
+    }
+
+    /**
      * Settings tab "General" -> Remember Me Duration (Days). Used to
      * build CookieLogin's auto-login cookie lifetime (config/web/di/
      * auth.php) -- falls back to 30 days for a value that's unset (fresh

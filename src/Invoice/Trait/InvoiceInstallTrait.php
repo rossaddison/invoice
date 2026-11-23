@@ -44,6 +44,9 @@ trait InvoiceInstallTrait
         // SettingRepository::rememberMeDurationDays() and
         // config/web/di/auth.php's CookieLogin definition.
         $default_settings['remember_me_days'] = 30;
+        // Settings tab "General" -- minutes a signed-in session may sit unused before the visitor must log in again.
+        // See SettingRepository::sessionIdleMinutes() and App\Middleware\SessionIdleTimeout.
+        $default_settings['session_idle_minutes'] = 30;
         // Settings tab "General" -- what kind of business this install is: 'standard' (every menu), or
         // 'window_cleaning', which hides the Quote, Sales Order, Tasks, Projects and Peppol menus. See BusinessType.
         $default_settings['business_type'] = 'standard';

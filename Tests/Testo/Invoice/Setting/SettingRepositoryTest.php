@@ -141,4 +141,24 @@ final class SettingRepositoryTest
 
         Assert::null($repository->getActiveCompany());
     }
+
+    public function sessionIdleMinutesReturnsTheConfiguredValueWhenPositive(): void
+    {
+        $repository = $this->makeRepository();
+        $repository->settingsArray = ['session_idle_minutes' => '90'];
+
+        Assert::same(90, $repository->sessionIdleMinutes());
+    }
+
+    public function sessionIdleMinutesFallsBackToThirtyWhenUnsetZeroNegativeOrNonNumeric(): void
+    {
+        foreach ([null, '0', '-5', 'soon'] as $stored) {
+            $repository = $this->makeRepository();
+            $repository->settingsArray = null === $stored
+                ? ['default_list_limit' => '120']
+                : ['session_idle_minutes' => $stored];
+
+            Assert::same(30, $repository->sessionIdleMinutes());
+        }
+    }
 }

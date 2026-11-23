@@ -15,6 +15,7 @@ use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfExemptMiddleware;
 use App\Middleware\PageOutOfRangeMiddleware;
 use App\Middleware\SecurityHeadersMiddleware;
+use App\Middleware\SessionIdleTimeout;
 use Yiisoft\Yii\Middleware\Locale;
 
 // yii3-i
@@ -90,6 +91,7 @@ return [
         SecurityHeadersMiddleware::class,
         PrometheusMiddleware::class,
         SessionMiddleware::class,
+        SessionIdleTimeout::class,
         CsrfExemptMiddleware::class,
         CookieMiddleware::class,
         CookieLoginMiddleware::class,

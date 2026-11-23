@@ -57,6 +57,7 @@ $kOpenReports = 'settings[open_reports_in_new_tab]';
 $kBccMails = 'settings[bcc_mails_to_admin]';
 $kCronKey = 'settings[cron_key]';
 $kRememberMeDays = 'settings[remember_me_days]';
+$kSessionIdleMinutes = 'settings[session_idle_minutes]';
 
 echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
@@ -978,6 +979,27 @@ echo H::openTag('div', $row); //1
         'min' => '1',
         'required' => true,
         'value' => $body[$kRememberMeDays]
+       ]);
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
+       echo H::openTag('label', [
+        'for' => $kSessionIdleMinutes
+       ]);
+        echo $translator->translate('session.idle.minutes');
+        echo $s->infoIcon('session_idle_minutes');
+       echo H::closeTag('label');
+       $body[$kSessionIdleMinutes] =
+       $s->getSetting('session_idle_minutes');
+       echo H::openTag('input', [
+        'type' => 'number',
+        'name' => $kSessionIdleMinutes,
+        'id' => $kSessionIdleMinutes,
+        'class' => 'form-control',
+        'min' => '1',
+        'required' => true,
+        'value' => $body[$kSessionIdleMinutes]
        ]);
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6

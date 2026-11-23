@@ -242,6 +242,11 @@ trait SettingTooltipTrait
                 . ' required to log in.',
                 'where' => 'AuthController/login, config/web/di/auth.php',
             ],
+            'session_idle_minutes' => [
+                'why' => 'How many minutes a signed-in session may sit unused before the user has to log in again.'
+                . ' Any page request counts as use. A user who ticked "Remember Me" is signed straight back in.',
+                'where' => 'App\Middleware\SessionIdleTimeout',
+            ],
             'default_invoice_group' => [
                 'why' => 'When a new invoice or quote is created, the package'
                 . ' uses invoice groups to determine the next invoice or quote'
