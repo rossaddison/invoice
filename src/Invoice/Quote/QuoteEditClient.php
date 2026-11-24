@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote;
 
+use App\Invoice\Client\PostedClientId;
+
 /**
  * Which client the quote edit form is saving the quote for.
  *
@@ -21,8 +23,6 @@ final class QuoteEditClient
      */
     public static function beingSaved(array $body, int $currentClientId): int
     {
-        return isset($body['client_id']) && is_numeric($body['client_id']) && (int) $body['client_id'] > 0
-            ? (int) $body['client_id']
-            : $currentClientId;
+        return PostedClientId::from($body, $currentClientId);
     }
 }

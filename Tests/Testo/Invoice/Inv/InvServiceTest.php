@@ -1214,4 +1214,82 @@ final class InvServiceTest
         $service = $this->makeService($repo, null, null, null, null, null, $auditLogRepository);
         $service->saveInvFromRecurring($user, $model, $details, $s);
     }
-}
+
+    // ── owner follows the client ─────────────────────────────────────────
+
+    /** An existing invoice of client 1, owned by user 7, with its dates frozen so only the client can change. */
+    private function ownedInvoice(): Inv
+    {
+        $model = new Inv(client_id: 1, group_id: 1, terms: 'Net 30');
+        $model->setId(42);
+        $model->setUserId(7);
+        $model->setNumber('INV-0042');
+        $model->setDirectDebitDate(new DateTimeImmutable('2026-07-01'));
+        $model->setDateCreated('2026-06-15');
+        $model->setDateSupplied(new DateTimeImmutable('2026-06-15'));
+        $model->setDateTaxPoint(new DateTimeImmutable('2026-06-15'));
+
+        return $model;
+    }
+
+    /** @return array<string, string> the dates are pinned to what the invoice already has */
+    private function pinnedDates(string $clientId): array
+    {
+        return [
+            'client_id' => $clientId,
+            'terms' => 'Net 30',
+            'date_created' => '2026-06-15',
+            'date_supplied' => '2026-06-15',
+            'date_tax_point' => '2026-06-15',
+        ];
+    }
+
+    public function saveInvMovesTheOwnerColumnToTheNewClientsUserWhenTheClientChanges(): void
+    {
+        $model = $this->ownedInvoice();
+
+        /** @var User&m\MockInterface $newClientsUser */
+        $newClientsUser = m::mock(User::class);
+        $newClientsUser->shouldReceive('reqId')->andReturn(8);
+
+        /** @var ClientRepository&m\MockInterface $cR */
+        $cR = m::mock(ClientRepository::class);
+        $cR->shouldReceive('repoClientquery')->with(2)->andReturn(new Client());
+        /** @var GroupRepository&m\MockInterface $gR */
+        $gR = m::mock(GroupRepository::class);
+        $gR->shouldNotReceive('generateNumber');
+        /** @var InvRepository&m\MockInterface $repo */
+        $repo = m::mock(InvRepository::class);
+        $repo->shouldReceive('save')->once()->with($model);
+
+        $service = $this->makeService($repo, null, $cR, $gR);
+        $service->saveInv($newClientsUser, $model, $this->pinnedDates('2'), $this->makeSettingRepo(), $gR);
+
+        Assert::same($model->reqClientId(), 2);
+        Assert::same($model->reqUserId(), 8);
+    }
+
+    public function saveInvLeavesTheOwnerAloneWhenTheClientIsUnchanged(): void
+    {
+        $model = $this->ownedInvoice();
+
+        /** @var User&m\MockInterface $user */
+        $user = m::mock(User::class);
+        $user->shouldNotReceive('reqId');
+
+        /** @var ClientRepository&m\MockInterface $cR */
+        $cR = m::mock(ClientRepository::class);
+        $cR->shouldReceive('repoClientquery')->with(1)->andReturn(new Client());
+        /** @var GroupRepository&m\MockInterface $gR */
+        $gR = m::mock(GroupRepository::class);
+        $gR->shouldNotReceive('generateNumber');
+        /** @var InvRepository&m\MockInterface $repo */
+        $repo = m::mock(InvRepository::class);
+        $repo->shouldReceive('save')->once()->with($model);
+
+        $service = $this->makeService($repo, null, $cR, $gR);
+        $service->saveInv($user, $model, $this->pinnedDates('1'), $this->makeSettingRepo(), $gR);
+
+        Assert::same($model->reqClientId(), 1);
+        Assert::same($model->reqUserId(), 7);
+    }}

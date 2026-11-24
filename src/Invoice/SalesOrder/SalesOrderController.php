@@ -488,10 +488,17 @@ final class SalesOrderController extends BaseController
             if ($formHydrator->populateFromPostAndValidate($form, $request) && is_array($body)) {
                 // A customer (observer) may not change the client, status, discount, links or guest credentials
                 $isStaff = $this->rbac->isAdmin() || $this->rbac->isAccountant();
-                $this->salesorderService->saveSo(
-                    $so,
-                    $isStaff ? $body : SalesOrderEditInput::forObserver($body, $so)
-                );
+                // staff may move the order to another client; it then belongs to that client's user
+                $toSave = $isStaff
+                    ? $d->ownerFollowsClient->forStaffSave($so, $body)
+                    : SalesOrderEditInput::forObserver($body, $so);
+                if (null === $toSave) {
+                    $this->flashMessage('warning', $this->translator->translate('record.client.no.single.active.user'));
+                    $parameters['alert'] = $this->alert();
+                    $parameters['form'] = $form;
+                    return $this->webViewRenderer->render('_form_edit', $parameters);
+                }
+                $this->salesorderService->saveSo($so, $toSave);
                 $this->flashMessage(
                     'success',
                     $this->translator->translate(

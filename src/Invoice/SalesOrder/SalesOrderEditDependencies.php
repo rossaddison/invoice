@@ -29,6 +29,7 @@ final class SalesOrderEditDependencies
         public readonly SalesOrderRepository $soR,
         public readonly UCR $ucR,
         public readonly UIR $uiR,
+        public readonly SalesOrderOwnerFollowsClient $ownerFollowsClient,
     ) {
     }
 }

@@ -59,8 +59,16 @@ final readonly class InvService
         $isUpdate = $model->hasIdentity();
         $before = $isUpdate ? $this->snapshotAuditFields($model) : null;
         $beforePassword = $isUpdate ? $model->getPassword() : null;
+        $movesToAnotherClient = $isUpdate
+            && isset($array['client_id'])
+            && (int) $array['client_id'] !== $model->reqClientId();
 
         $this->persist($model, $array, $user);
+        if ($movesToAnotherClient) {
+            // $user is the owner of the client it is moving to; an invoice belongs to that user (the guest's own
+            // access check compares it), so the stored user_id moves with the client
+            $model->setUserId($user->reqId());
+        }
         $this->assignInvoiceNumberIfNeeded($model, $array, $gR);
 
         /**

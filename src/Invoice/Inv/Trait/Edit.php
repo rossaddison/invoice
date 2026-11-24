@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Infrastructure\Persistence\Payment\Payment;
+use App\Invoice\Client\PostedClientId;
 use App\Invoice\{
     Inv\InvEditCoreDeps,
     Inv\InvEditFormDeps,
@@ -235,8 +236,12 @@ trait Edit
     ): ?InvForm {
         $inv = $this->inv($id, $core->invRepo, true);
         if ($inv) {
-            $client_id = $inv->reqClientId();
+            // the owner is the user of the client being SAVED, which is the posted one when staff change the client
+            $client_id = PostedClientId::from(is_array($body) ? $body : [], $inv->reqClientId());
             $user = $this->activeUser($client_id, $core->userRepo, $core->ucR, $core->uiR);
+            if (null === $user) {
+                $this->flashMessage('warning', $this->translator->translate('record.client.no.single.active.user'));
+            }
             if (null !== $user) {
                 $form = InvForm::show($inv);
                 if (null !== $body && is_array($body) && $formHydrator->populateAndValidate($form, $body)) {
