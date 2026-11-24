@@ -7,7 +7,8 @@ same name cannot be told apart** there; a live site had accumulated several. Add
 same first name and surname as another client is now refused, with a message in the form's error summary naming the
 name: "A client named … already exists. Choose a different name, or open that client instead." The **product-client
 form** (the staff form that links a client to a product) refuses a new client with a taken name too, with a message of its
-own, because there the answer is to link the existing client.
+own, because there the answer is to link the existing client. Where a name cannot be refused (see "What it does not do"),
+the client select **tells the clients apart instead**: it shows their email, postcode or number in brackets.
 
 ## How it behaves
 
@@ -45,6 +46,27 @@ and the name field shows only the form's own validation result, so a `client_nam
 form just re-rendered. The error is now a common (form-level) one, key `''`. A test renders the real summary exactly as
 `_form.php` configures it, and fails with the old key.
 
+## Clients that share a name: told apart in the select
+
+Some paths cannot refuse a duplicate name, and a database that already has duplicates keeps them. So the Client field of
+the invoice, quote and sales-order forms, the credit-note form and both modals no longer shows two identical labels.
+`ClientOptionLabels` (called from `ClientRepository::optionsData()`, the one method all of those use) adds what tells
+them apart, **only to clients whose name is shared**, ignoring case:
+
+| Clients | Label |
+|---|---|
+| A name nobody else has | Exactly as before: first name, three spaces, surname |
+| A shared name, with an email | `First   Last (email)` |
+| A shared name, no email | `First   Last (postcode)`, else `First   Last (#client number)` |
+| A shared name and the same email or postcode | `#client number` is added as well, so no two labels are identical |
+
+The email is shown to staff on staff forms, who already see it. This was chosen over a "possible duplicate" warning
+because it is right where the choice is made, and it also covers duplicates already in the database.
+
+**Not covered:** only `optionsData()` changed. Several filter drop-downs build their own labels and were not touched, and
+the sales-order list's client filter keys its options by the full name, so same-named clients collapse into **one**
+entry there. That is a separate bug, not fixed. The guest-facing drop-downs were not changed.
+
 ## What it does not do
 
 - **Existing duplicates are not touched.** Merge or rename them from the client list.
@@ -55,8 +77,8 @@ form just re-rendered. The error is now a common (form-level) one, key `''`. A t
     row, so skipping a row would orphan them.
   - **User sign-up auto-assign** makes a client from an email alone (no name to compare); **seeds and commands** use fixed
     marker names.
-  A duplicate name can therefore still arrive that way. A "possible duplicate name" warning for staff on those paths
-  (or showing the email or postcode in the client select when two names collide) has been suggested and not built.
+  A duplicate name can therefore still arrive that way; the client select then tells the clients apart (see above). A
+  "possible duplicate name" warning for staff on those paths was considered and not built.
 - A client saved with a NULL surname (rather than an empty string) may not match a new one with no surname. Double spaces
   inside a name, and accents, count as different names. Not checked.
 - There is no database unique index: two real people can share a name, so this is a rule for the forms, not the table.
@@ -69,3 +91,8 @@ case or spaces only, is never looked up; the name is read from under the form na
 allowed; a nameless client is never looked up or refused (and a surname alone still is); `isTaken()` answers yes or no; and
 the product-client message names the client and the "Select the existing client" option. Removing the "unchanged"
 shortcut makes two of them fail, and removing the empty-name rule makes one fail.
+
+`ClientOptionLabelsTest` (6), with virtual data only: a unique name keeps its exact old label; clients sharing a name are
+told apart by email, then postcode, then number; case does not hide a shared name; the same name and email still get
+different labels; no clients give no labels. With the disambiguation switched off, four of the six fail. The repository
+method itself, which needs a database, and the select in a browser were not tested.
