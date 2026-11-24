@@ -7,6 +7,7 @@ namespace App\Invoice\Inv\Widget;
 use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvSentLog\InvSentLog;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
+use App\Invoice\Enum\BusinessType;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\InvRecurring\InvRecurringRepository as IRR;
 use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
@@ -102,7 +103,7 @@ final class InvsColumnBuilder
 
         $columns = [
             $this->buildCheckboxColumn(),
-            $this->buildWorkflowTypeColumn(!$isHidden('workflow_type')),
+            $this->buildWorkflowTypeColumn(!$isHidden('workflow_type') && !$this->isWindowCleaning($p)),
             $this->buildEditColumn($sR),
             $this->buildWorkerColumn($p, $homeCareEnabled),
             $this->buildDoNotSendColumn($homeCareEnabled),
@@ -525,18 +526,30 @@ final class InvsColumnBuilder
     }
 
     /**
+     * A window-cleaning business (the business_type setting) has no quotes or sales orders: its menus, sidebar and
+     * guest menu already leave them out, so the quote link, sales-order link and workflow columns would only ever be
+     * empty. See WindowCleaningPreset.
+     */
+    private function isWindowCleaning(InvsColumnParams $p): bool
+    {
+        return BusinessType::WindowCleaning->value === $p->sR->getSetting(BusinessType::SETTING_KEY);
+    }
+
+    /**
      * Quote-link, sales-order-link, and delivery-location columns — only added
-     * when the matching repository is present in InvsColumnParams.
+     * when the matching repository is present in InvsColumnParams, and (quote and sales order) when the install
+     * is not a window-cleaning business.
      *
      * @return DataColumn[]
      */
     private function buildOptionalLinkColumns(InvsColumnParams $p): array
     {
         $cols = [];
-        if ($p->qR !== null) {
+        $showQuoteAndSalesOrder = !$this->isWindowCleaning($p);
+        if ($p->qR !== null && $showQuoteAndSalesOrder) {
             $cols[] = $this->buildQuoteLinkColumn($p->qR);
         }
-        if ($p->soR !== null) {
+        if ($p->soR !== null && $showQuoteAndSalesOrder) {
             $cols[] = $this->buildSoLinkColumn($p->soR);
         }
         if ($p->dlR !== null) {
