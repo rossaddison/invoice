@@ -242,18 +242,14 @@ final class ClientRepository extends Select\Repository implements ClientReposito
 
     public function optionsData(UserClientRepository $ucR): array
     {
-        $optionsData = [];
-        if (!$ucR->getClientsWithUserAccounts() == []) {
-            /**
-             * @var Client $client
-             */
-            foreach ($this->repoUserClient($ucR->getClientsWithUserAccounts()) as $client) {
-                $optionsData[$client->reqId()] = ($client->getClientName()
-                    ?: '??')
-                        . str_repeat(' ', 3)
-                        . ($client->getClientSurname() ?? '??');
-            }
+        $clientIds = $ucR->getClientsWithUserAccounts();
+        if ($clientIds === []) {
+            return [];
         }
-        return $optionsData;
+        /** @var iterable<Client> $clients */
+        $clients = $this->repoUserClient($clientIds);
+
+        // clients that share a name are told apart in the label (see ClientOptionLabels)
+        return ClientOptionLabels::for($clients);
     }
 }
