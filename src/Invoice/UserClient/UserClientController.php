@@ -192,11 +192,12 @@ final class UserClientController extends BaseController
                     continue;
                 }
                 $form_array    = ['user_id' => $user_id, 'client_id' => $value];
-                $existingCount = $ucR->repoUserClientqueryCount($user_id, (int) $value);
-                if ($existingCount > 0) {
+                // a client has exactly one user: refuse one that is already assigned, to this user or to another
+                $refusal = new UserClientAssignmentRule($ucR)->refusalFor($user_id, (int) $value);
+                if (null !== $refusal) {
                     $this->flashMessage(
                         'info',
-                        $this->translator->translate('client.already.exists')
+                        $this->translator->translate($refusal)
                     );
                 } elseif ($formHydrator->populateAndValidate($form, $form_array)) {
                     $this->userclientService->saveUserClient($user_client, $form_array);

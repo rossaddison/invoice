@@ -10,8 +10,15 @@ use App\Infrastructure\Persistence\{
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
+use Cycle\Annotated\Annotation\Table\Index;
 
+/**
+ * Links a client to the one user who owns its quotes, sales orders and invoices. A client has exactly one user, so
+ * client_id is unique: a second row for the same client would leave the owner of its records undecided. (A user may
+ * have many clients.)
+ */
 #[Entity(repository: \App\Invoice\UserClient\UserClientRepository::class)]
+#[Index(columns: ['client_id'], name: 'user_client_client_id_unique', unique: true)]
 class UserClient
 {
     use RequireId;
