@@ -31,8 +31,7 @@ final readonly class ClientNameGuard
      */
     public function errorsFor(string $name, string $surname, ?int $exceptId = null): array
     {
-        $existing = $this->clients->findByFullName($name, $surname, $exceptId);
-        if (null === $existing) {
+        if (!$this->isTaken($name, $surname, $exceptId)) {
             return [];
         }
         return [
@@ -43,6 +42,22 @@ final readonly class ClientNameGuard
                 ),
             ],
         ];
+    }
+
+    /**
+     * Whether another client already has this first name and surname. A client with no name at all (one made from an
+     * email alone at sign-up) has nothing to compare: every such client would otherwise look like a duplicate of
+     * every other, so an empty name is never taken.
+     *
+     * @param int|null $exceptId the client being edited, which is not a duplicate of itself
+     */
+    public function isTaken(string $name, string $surname, ?int $exceptId = null): bool
+    {
+        if ('' === trim($name) && '' === trim($surname)) {
+            return false;
+        }
+
+        return null !== $this->clients->findByFullName($name, $surname, $exceptId);
     }
 
     /**

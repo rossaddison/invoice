@@ -11,6 +11,7 @@ use App\Invoice\ProductClient\ProductClientForm;
 use App\Invoice\ProductClient\ProductClientService;
 use App\Invoice\ProductClient\ProductClientRepository;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\Client\ClientNameGuard;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Client\ClientService;
 use App\Invoice\Product\ProductRepository;
@@ -35,6 +36,7 @@ final class ProductClientController extends BaseController
     public function __construct(
         private ProductClientService $productclientService,
         private ClientService $clientService,
+        private ClientNameGuard $nameGuard,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -233,6 +235,21 @@ final class ProductClientController extends BaseController
                 'client_group' => (string)($body['new_client_group'] ?? $suggestedClientGroup ?? ''),
                 'client_active' => '1', // String format expected by service
             ];
+
+            // Two clients with the same first name and surname cannot be told apart in a client select. A client
+            // can be linked to many products, so a taken name means "link the existing client", not "make another".
+            if ($this->nameGuard->isTaken($clientData['client_name'], $clientData['client_surname'])) {
+                $this->flash->add(
+                    'danger',
+                    sprintf(
+                        $this->translator->translate('client.name.already.exists.link.existing'),
+                        trim(trim($clientData['client_name']) . ' ' . trim($clientData['client_surname'])),
+                        $this->translator->translate('select.existing.client'),
+                    ),
+                    true,
+                );
+                return null;
+            }
 
             // Use the client service to save with SettingRepository
             $clientId = $this->clientService->saveClient($client, $clientData);

@@ -424,6 +424,8 @@ return [
   'client.contact.more' => 'More contact fields',
   'client.details' => 'Contact & details',
   'client.dwelling' => 'Dwelling',
+  'client.name.already.exists.link.existing' => 'A client named %1$s already exists. A client can be linked to many products:'
+    . ' choose "%2$s" and link that client to this product instead of creating a second one.',
   'client.name.already.exists' => 'A client named %s already exists. Choose a different name, or open that client instead.',
   'client.dwelling.already.claimed' => 'That Dwelling is already linked to another client.',
   'client.dwelling.none' => 'None',

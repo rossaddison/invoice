@@ -41,6 +41,46 @@ final class ClientNameGuardTest
         return new ClientNameGuard($clients, $translator);
     }
 
+    public function aClientWithNoNameAtAllIsNeverLookedUpOrRefused(): void
+    {
+        // the lookup would find "another client" (every nameless client would): it must not even be asked
+        $guard = $this->guard(new Client());
+
+        Assert::same([], $guard->errorsFor('', ''));
+        Assert::same([], $guard->errorsFor('  ', ' '));
+        Assert::same(0, $this->lookups);
+    }
+
+    public function isTakenSaysWhetherAnotherClientHasTheName(): void
+    {
+        Assert::true($this->guard(new Client())->isTaken('Virtual', 'Tester'));
+        Assert::false($this->guard(null)->isTaken('Virtual', 'Tester'));
+        Assert::false($this->guard(new Client())->isTaken('', ''));
+    }
+
+    public function theProductClientMessageNamesTheClientAndTheExistingClientOption(): void
+    {
+        /** @var array<string, string> $messages */
+        $messages = require dirname(__DIR__, 4) . '/resources/messages/en/app.php';
+
+        $text = sprintf(
+            $messages['client.name.already.exists.link.existing'],
+            'Virtual Tester',
+            $messages['select.existing.client'],
+        );
+
+        Assert::true(str_contains($text, 'Virtual Tester'));
+        Assert::true(str_contains($text, 'Select the existing client'));
+        Assert::false(str_contains($text, '%'));
+    }
+
+    public function aSurnameAloneIsStillCheckedSoAMissingFirstNameDoesNotSkipTheGuard(): void
+    {
+        $errors = $this->guard(new Client())->errorsFor('', 'Tester');
+
+        Assert::same(['' => ['A client named Tester already exists.']], $errors);
+    }
+
     public function aFreeNameGivesNoErrors(): void
     {
         Assert::same([], $this->guard(null)->errorsFor('Virtual', 'Tester'));
