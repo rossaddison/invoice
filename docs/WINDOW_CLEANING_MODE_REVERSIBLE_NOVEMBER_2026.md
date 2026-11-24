@@ -34,6 +34,7 @@ as a red ⌛ ("not set"), which made a correctly saved setting look corrupted.
 | Staff sidebar | Quotes and Tasks |
 | Guest (customer) menu | Quote and Sales Order |
 | Staff dashboard | Only the Invoice Overview is shown (no quotes, projects or tasks) |
+| Staff invoice list (`inv/index`) | The quote link, sales-order link and workflow columns (see [Smaller fixes](LIST_AND_BUTTON_FIXES_NOVEMBER_2026.md)) |
 | Public front page | The window-cleaning front page replaces the standard one |
 
 Switching back to **Standard** reverses every row in this table, because each one reads the same setting.
