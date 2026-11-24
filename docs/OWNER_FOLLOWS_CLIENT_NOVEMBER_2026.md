@@ -62,16 +62,37 @@ It must return no rows. Confirm afterwards with
 were run on the live site on 24 November: no duplicates, index present. On a development machine the project's
 `.claude/sync-schema.ps1` hook does the rebuild when an entity under `src/Infrastructure/Persistence/` is edited.
 
-## What it does not do
+## Repairing records moved before the fix
 
-- **It does not repair records that were already moved.** They keep the wrong owner. To list them (read-only; not run
-  as part of this change; the same shape works for `quote` and `sales_order`):
+The fix only stops new moves going wrong. A record moved earlier keeps the old client's user until it is repaired. The
+command `invoice/repair-record-owners` lists them and, on request, gives each one to its client's user:
 
-```sql
-SELECT i.id, i.number, i.client_id, i.user_id, uc.user_id AS clients_user
-FROM inv i JOIN user_client uc ON uc.client_id = i.client_id
-WHERE i.user_id <> uc.user_id AND i.deleted_at IS NULL;
 ```
+php yii invoice/repair-record-owners           # lists what it would change; changes nothing
+php yii setting/backup-database                # back up first
+php yii invoice/repair-record-owners --force   # gives each repairable record to its client's user
+```
+
+The list shows the record's type (`quote`, `sales_order` or `inv`), id and number, its client, its current user, the
+client's user, and the action. Run the dry run first and read it before using `--force`.
+
+| A record is... | What the command does |
+|---|---|
+| Owned by a user other than its client's user, and that user's account is active | Listed as **repair**; given to the client's user with `--force` |
+| The same, but the client's user has an **inactive** account | Listed as **skip**; left as it is. Activate that user, or move the record, and run it again |
+| A **deleted** invoice (quotes and sales orders have no deleted flag) | Not listed |
+| On a client that has **no user** | Not listed: there is nobody to give it to |
+
+The repair runs in **one transaction** (all or nothing). A record whose owner changed after the list was made is skipped,
+and running it twice changes nothing the second time. It does **not** write the invoice audit log, so keep the command's
+output as the record of what changed. `RecordOwnerRepair` holds the queries; `RepairRecordOwnersCommand` is the command.
+
+**Tested** on in-memory SQLite with virtual data (`RecordOwnerRepairTest`, 7 tests): what is found and what is not, the
+repair, a second run, a record changed since it was listed, and the command with and without `--force`. Breaking any of
+three guards (the listed-owner check, the inactive-owner rule, the deleted-invoice filter) makes tests fail. **Not run
+against MySQL or a live database:** do the dry run first.
+
+## What it does not do
 
 - **The two controller edits have no automated test** (the invoice edit and the sales-order edit). The rule classes and
   the invoice service are tested; the wiring was checked by reading it.
