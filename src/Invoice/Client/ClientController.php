@@ -275,6 +275,14 @@ final class ClientController extends BaseController
             $body = $request->getParsedBody() ?? [];
             if (is_array($body) && $this->dwellingClaimed(self::postedDwellingId($body), $client->reqId(), $d->dwellingPicker)) {
                 $parameters['errors'] = $this->dwellingClaimedErrors();
+            } elseif (is_array($body) && ($nameErrors = $d->nameGuard->errorsForEdit($client, $body, $form->getFormName())) !== []) {
+                // keep what was typed on the form, and show its own field errors next to the refusal
+                $formHydrator->populateAndValidate($form, $body);
+                $parameters['form']   = $form;
+                $parameters['errors'] = array_merge(
+                    $form->getValidationResult()->getErrorMessagesIndexedByProperty(),
+                    $nameErrors,
+                );
             } elseif (is_array($body)) {
                 $returned_form = $this->saveFormFields($body, $form, $client, $formHydrator);
                 $parameters['body'] = $body;
