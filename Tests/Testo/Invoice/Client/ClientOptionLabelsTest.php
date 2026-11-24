@@ -103,4 +103,47 @@ final class ClientOptionLabelsTest
     {
         Assert::same(ClientOptionLabels::for([]), []);
     }
-}
+
+    // ── the filter drop-downs ────────────────────────────────────────────
+
+    public function aFilterListsEachClientOnceEvenWhenTheyComeUpInManyRecords(): void
+    {
+        $first = $this->client(1, 'Virtual', 'Tester', 'a@example.test');
+        $second = $this->client(2, 'Test', 'Other', 'b@example.test');
+
+        // an invoice list holds the same client once per invoice
+        $labels = ClientOptionLabels::forFilter([$first, $first, $second, $first]);
+
+        Assert::same($labels, [1 => 'Virtual Tester', 2 => 'Test Other']);
+    }
+
+    public function aFilterLeavesOutRecordsWithNoClientAndClientsWithNoName(): void
+    {
+        $nameless = new Client();
+        $nameless->setId(9);
+
+        Assert::same(ClientOptionLabels::forFilter([null, $nameless]), []);
+    }
+
+    public function aFilterTellsClientsThatShareANameApartToo(): void
+    {
+        $labels = ClientOptionLabels::forFilter([
+            $this->client(1, 'Virtual', 'Tester', 'first@example.test'),
+            $this->client(2, 'Virtual', 'Tester', 'second@example.test'),
+            $this->client(1, 'Virtual', 'Tester', 'first@example.test'),
+        ]);
+
+        // two entries, not one: the email-log filter used to drop the second client of a name altogether
+        Assert::same($labels, [
+            1 => 'Virtual Tester (first@example.test)',
+            2 => 'Virtual Tester (second@example.test)',
+        ]);
+    }
+
+    public function theFullNameLabelKeepsASingleSpaceForAClientWithAnUniqueName(): void
+    {
+        Assert::same(
+            ClientOptionLabels::for([$this->client(1, 'Virtual', 'Tester')], true),
+            [1 => 'Virtual Tester'],
+        );
+    }}

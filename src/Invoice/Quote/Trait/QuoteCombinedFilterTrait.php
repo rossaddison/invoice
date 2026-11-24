@@ -74,6 +74,11 @@ trait QuoteCombinedFilterTrait
         if (!isset($filter->filterClient) || empty($filter->filterClient)) {
             return $query;
         }
+        // The drop-down posts the client's id. Two clients can share a name, and only the id tells them apart.
+        if (ctype_digit($filter->filterClient)) {
+            return $query->andWhere(['client_id' => (int) $filter->filterClient]);
+        }
+        // an address saved before that holds a name
         $nameParts = explode(' ', $filter->filterClient);
         $firstName = $nameParts[0];
         $secondName = $nameParts[1] ?? '';

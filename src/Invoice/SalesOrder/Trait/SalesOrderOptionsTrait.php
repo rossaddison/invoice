@@ -6,6 +6,7 @@ namespace App\Invoice\SalesOrder\Trait;
 
 use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
+use App\Invoice\Client\ClientOptionLabels;
 use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DR;
 use App\Invoice\Group\GroupRepository as GR;
@@ -59,23 +60,23 @@ trait SalesOrderOptionsTrait
         ];
     }
 
-    /** @return array<string, string> */
+    /**
+     * Keyed by client id, so two clients with the same name are two entries and the filter can tell them apart
+     * (SalesOrderRepository::filterClient() matches on the id). It used to be keyed by the full name.
+     *
+     * @return array<int, string>
+     */
     public function optionsDataClientsFilter(SoR $soR): array
     {
-        $optionsDataClients = [];
         // Get all the sales orders that have been made for clients
         $salesorders = $soR->findAllPreloaded();
+        $clients = [];
         /**
          * @var SalesOrder $salesorder
          */
         foreach ($salesorders as $salesorder) {
-            $client = $salesorder->getClient();
-            if (null !== $client && strlen($client->getClientFullName()) > 0) {
-                $fullName = $client->getClientFullName();
-                $optionsDataClients[$client->getClientFullName()] =
-                    !empty($fullName) ? $fullName : '';
-            }
+            $clients[] = $salesorder->getClient();
         }
-        return $optionsDataClients;
+        return ClientOptionLabels::forFilter($clients);
     }
 }

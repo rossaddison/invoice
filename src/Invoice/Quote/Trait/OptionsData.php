@@ -5,29 +5,29 @@ declare(strict_types=1);
 namespace App\Invoice\Quote\Trait;
 
 use App\Infrastructure\Persistence\Quote\Quote;
+use App\Invoice\Client\ClientOptionLabels;
 use App\Invoice\Quote\QuoteRepository as QR;
 
 trait OptionsData
 {
-    /** @return array<string, string> */
+    /**
+     * Keyed by client id, so two clients with the same name are two entries and the quote filter can tell them apart
+     * (QuoteCombinedFilterTrait::applyClientCondition() matches on the id). It used to be keyed by the full name.
+     *
+     * @return array<int, string>
+     */
     public function optionsDataClients(QR $qR): array
     {
-        $optionsDataClients = [];
-        // Get all the invoices that have been made out to clients with
-        // user accounts
+        // Get all the quotes that have been made out to clients
         $quotes = $qR->findAllPreloaded();
+        $clients = [];
         /**
          * @var \App\Infrastructure\Persistence\Quote\Quote $quote
          */
         foreach ($quotes as $quote) {
-            $client = $quote->getClient();
-            if (null !== $client && strlen($client->getClientFullName()) > 0) {
-                $fullName = $client->getClientFullName();
-                $optionsDataClients[$fullName] =
-                    !empty($fullName) ? $fullName : '';
-            }
+            $clients[] = $quote->getClient();
         }
-        return $optionsDataClients;
+        return ClientOptionLabels::forFilter($clients);
     }
 
     public function optionsDataClientGroup(QR $qR): array

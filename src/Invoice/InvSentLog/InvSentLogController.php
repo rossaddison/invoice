@@ -10,6 +10,7 @@ use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvSentLog\InvSentLog;
 use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\Client\ClientOptionLabels;
 use App\Invoice\UserClient\UserClientRepository as UCR;
 use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\User\UserService;
@@ -303,21 +304,16 @@ final class InvSentLogController extends BaseController
      */
     public function optionsDataClientsFilter(ISLR $islR): array
     {
-        $optionsDataClients = [];
         $invsentlogs = $islR->findAllPreloaded();
+        $clients = [];
         /**
          * @var InvSentLog $invsentlog
          */
         foreach ($invsentlogs as $invsentlog) {
-            $clientFullName =
-                    $invsentlog->getInv()?->getClient()?->getClientFullName();
-            $clientId = $invsentlog->getInv()?->getClient()?->reqId();
-            if (null !== $clientFullName && null !== $clientId
-                && !in_array($clientFullName, $optionsDataClients)) {
-                $optionsDataClients[$clientId] = $clientFullName;
-            }
+            $clients[] = $invsentlog->getInv()?->getClient();
         }
-        return $optionsDataClients;
+        // one entry per client; two clients that share a name used to show as one, so the second could not be chosen
+        return ClientOptionLabels::forFilter($clients);
     }
 
     /**

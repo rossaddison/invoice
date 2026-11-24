@@ -80,6 +80,15 @@ final class SalesOrderRepository extends Select\Repository
 
     public function filterClient(string $fullName): EntityReader
     {
+        // The drop-down posts the client's id. Two clients can share a name, and only the id tells them apart.
+        if (ctype_digit($fullName)) {
+            return $this->prepareDataReader(
+                $this->select()
+                    ->load(['client','group','user','quote'])
+                    ->where(['client_id' => (int) $fullName]),
+            );
+        }
+        // an address saved before that holds a name
         $nameParts = explode(' ', $fullName);
         $firstName = $nameParts[0];
         $secondName = $nameParts[1] ?? '';

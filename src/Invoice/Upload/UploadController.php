@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Upload;
 
 use App\Invoice\BaseController;
+use App\Invoice\Client\ClientOptionLabels;
 use App\Invoice\Client\ClientRepository;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Upload\Upload;
@@ -259,14 +260,8 @@ final class UploadController extends BaseController
      */
     private function optionsDataClients(EntityReader $clients): array
     {
-        $optionsDataClients = [];
-        /**
-         * @var Client $client
-         */
-        foreach ($clients as $client) {
-            $optionsDataClients[$client->reqId()]
-                = $client->getClientFullName();
-        }
-        return $optionsDataClients;
+        /** @var iterable<Client> $clients */
+        // clients that share a name are told apart (see ClientOptionLabels)
+        return ClientOptionLabels::for($clients, true);
     }
 }

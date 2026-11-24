@@ -19,6 +19,7 @@ use App\Invoice\{
     PaymentMethod\PaymentMethodRepository as PMR,
     UserClient\UserClientRepository as UCR,
 };
+use App\Invoice\Client\ClientOptionLabels;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use Yiisoft\{
     Data\Reader\DataReaderInterface as DRI,
@@ -150,20 +151,18 @@ trait OptionsData
     /** @psalm-return array<array-key, string> */
     public function optionsDataClientsFilter(IR $iR): array
     {
-        $optionsDataClients = [];
         // Get all the invoices that have been made out to clients with user
         // accounts
         $invs = $iR->findAllPreloaded();
+        $clients = [];
         /**
          * @var Inv $inv
          */
         foreach ($invs as $inv) {
-            $client = $inv->getClient();
-            if (null !== $client && strlen($client->getClientFullName()) > 0) {
-                $optionsDataClients[(string) $client->reqId()] = $client->getClientFullName();
-            }
+            $clients[] = $inv->getClient();
         }
-        return $optionsDataClients;
+        // one entry per client, and clients that share a name are told apart (see ClientOptionLabels)
+        return ClientOptionLabels::forFilter($clients);
     }
 
     /**
