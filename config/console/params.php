@@ -34,6 +34,7 @@ use App\Invoice\Peppol\Console\SeedPeppolHappyPathFixtureCommand;
 use App\Invoice\Setting\Console\BackupDatabaseCommand;
 use App\Invoice\Setting\Console\CheckGatewaySecretsCommand;
 use App\Invoice\Setting\Console\EnsurePeppolAccessPointProviderSettingCommand;
+use App\Command\Invoice\RepairRecordOwnersCommand;
 use App\Invoice\Setting\Console\MigrateStorecoveApiKeySettingCommand;
 use App\Invoice\System\Console\CheckPhpVersionCommand;
 use App\User\Console\CreateCommand;
@@ -81,6 +82,7 @@ return [
             'homecare/backfill-allocations' => InvWorkerAllocationBackfillCommand::class,
             'homecare/seed-demo' => HomeCareSeedDemoCommand::class,
             'invoice/render-pdf' => RenderInvoicePdfCommand::class,
+            'invoice/repair-record-owners' => RepairRecordOwnersCommand::class,
             'invoice/setting/truncate' => SettingTruncateCommand::class,
             'invoice/generator/truncate' => GeneratorTruncateCommand::class,
             'invoice/inv/truncate1' => InvTruncate1Command::class,
