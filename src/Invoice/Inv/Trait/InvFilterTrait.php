@@ -19,9 +19,14 @@ trait InvFilterTrait
         return $this->prepareDataReader($query);
     }
 
-    public function filterCreditInvNumber(string $creditInvNumber): EntityReader
+    /**
+     * The ids of the invoices whose number starts with $creditInvNumber: the parents a credit note is looked up by.
+     * Only names candidate ids; a caller must still limit the credit notes it returns to what its user may see.
+     *
+     * @return list<string>
+     */
+    private function creditParentIds(string $creditInvNumber): array
     {
-        $select = $this->select();
         $trimmed = ltrim(rtrim($creditInvNumber));
         $parentInvs = $this->select()
                            ->where('number', 'like', $trimmed . '%')
@@ -31,6 +36,13 @@ trait InvFilterTrait
         foreach ($parentInvs as $parentInv) {
             $parentIds[] = (string) $parentInv->reqId();
         }
+        return $parentIds;
+    }
+
+    public function filterCreditInvNumber(string $creditInvNumber): EntityReader
+    {
+        $select = $this->select();
+        $parentIds = $this->creditParentIds($creditInvNumber);
         $query = $parentIds === []
             ? $select->where(['id' => '0'])->where('deleted_at', null)
             : $select->where(['creditinvoice_parent_id' =>
@@ -94,17 +106,6 @@ trait InvFilterTrait
                  ->where(['number' => $invNumber])
                  ->andWhere(['invAmount.total' => $invAmountTotal])
                  ->where('deleted_at', null);
-        return $this->prepareDataReader($query);
-    }
-
-    public function filterGuestClient(string $clientId): EntityReader
-    {
-        $query = $this->select()
-                       ->load(['client'])
-                       ->where(['client.id' => (int) $clientId])
-                       ->andWhere(['status_id' => ['in' =>
-                            new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
-                       ->where('deleted_at', null);
         return $this->prepareDataReader($query);
     }
 

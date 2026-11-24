@@ -120,10 +120,7 @@ trait Guest
             && !empty($filter->filterStatus)
             ? (int) $filter->filterStatus
             : 0;
-        $invs = null !== $access->worker
-            ? $d->iR->repoWorkerVisible($effectiveStatus, $access->worker->reqId(), $access->isLead)
-            : $this->invsStatusGuest($d->iR, $effectiveStatus, $access->clients);
-        $invs = $this->applyGuestFilters($filter, $d->iR, $invs, $access);
+        $invs = $this->applyGuestFilters($filter, $d->iR, $access, $effectiveStatus);
 
         // applyGuestFilters() is typed to return SDI (SortableDataInterface)
         // only -- unlike the staff-side runSheetPdf()'s EntityReader, plain
@@ -397,11 +394,9 @@ trait Guest
         $worker = $access->worker;
         $effectiveStatus = (isset($filter->filterStatus) && !empty($filter->filterStatus))
             ? (int) $filter->filterStatus : (int) $status;
-        $invs = null !== $worker
-            ? $d->iR->repoWorkerVisible($effectiveStatus, $worker->reqId(), $access->isLead)
-            : $this->invsStatusGuest($d->iR, $effectiveStatus, $user_clients);
-        $preFilterInvs = $invs;
-        $invs = $this->applyGuestFilters($filter, $d->iR, $invs, $access);
+        // the filter dropdowns list what this guest may see, so they come from the unfiltered scoped list
+        $preFilterInvs = $this->guestScopedInvs($d->iR, $access, $effectiveStatus);
+        $invs = $this->applyGuestFilters($filter, $d->iR, $access, $effectiveStatus);
         // a HomeCare worker who has not picked a column sort sees the houses under their pull points
         $groupByPullPoint = null !== $worker && '' === ($filter->sort ?? '');
         /** @var iterable<Inv> $visible */
@@ -472,65 +467,19 @@ trait Guest
     }
 
     /**
-     * Split out of one large applyGuestFilters() (SonarQube php:S3776,
-     * cognitive complexity 16 > 15 allowed, tipped over by adding the
-     * filterDateCreatedExact branch for inv/guest/calendar -- see that
-     * branch's own comment) into two sequential steps, mirroring
-     * InvCombinedFilterTrait's own applyXConditions() split for the
-     * staff-side equivalent. Each filter call still replaces $invs
-     * entirely rather than narrowing it (the pre-existing shape here,
-     * unchanged) -- order is preserved exactly.
+     * The invoices this guest may see, narrowed by the list filters in the address.
+     *
+     * The filters used to replace the guest's list with unscoped queries of their own (filterInvNumber(),
+     * filterGuestClient(), ...), so adding ?filterClient=<any client id> or ?filterInvNumber=... listed any
+     * client's invoices. They are now conditions on the guest's scoped query, so they can only narrow it.
      */
-    private function applyGuestFilters(InvGuestFilter $filter, IR $iR, SDI $invs, InvGuestAccess $access): SDI
+    private function applyGuestFilters(InvGuestFilter $filter, IR $iR, InvGuestAccess $access, int $status): SDI
     {
-        $invs = $this->applyGuestIdentifierAndAmountFilters($filter, $iR, $invs);
-        return $this->applyGuestClientAndDateFilters($filter, $iR, $invs, $access);
-    }
-
-    private function applyGuestIdentifierAndAmountFilters(InvGuestFilter $filter, IR $iR, SDI $invs): SDI
-    {
-        $hasInvNumber = isset($filter->filterInvNumber)
-            && !empty($filter->filterInvNumber);
-        $hasInvAmountTotal = isset($filter->filterInvAmountTotal)
-            && !empty($filter->filterInvAmountTotal);
-
-        if ($hasInvNumber) {
-            $invs = $iR->filterInvNumber($filter->filterInvNumber);
-        }
-        if (isset($filter->filterCreditInvNumber) && !empty($filter->filterCreditInvNumber)) {
-            $invs = $iR->filterCreditInvNumber($filter->filterCreditInvNumber);
-        }
-        if ($hasInvAmountTotal) {
-            $invs = $iR->filterInvAmountTotal((float) $filter->filterInvAmountTotal);
-        }
-        if (isset($filter->filterInvAmountPaid) && !empty($filter->filterInvAmountPaid)) {
-            $invs = $iR->filterInvAmountPaid((float) $filter->filterInvAmountPaid);
-        }
-        if (isset($filter->filterInvAmountBalance) && !empty($filter->filterInvAmountBalance)) {
-            $invs = $iR->filterInvAmountBalance((float) $filter->filterInvAmountBalance);
-        }
-        if ($hasInvNumber && $hasInvAmountTotal) {
-            $invs = $iR->filterInvNumberAndInvAmountTotal(
-                $filter->filterInvNumber,
-                (float) $filter->filterInvAmountTotal
-            );
-        }
-        return $invs;
-    }
-
-    private function applyGuestClientAndDateFilters(
-        InvGuestFilter $filter,
-        IR $iR,
-        SDI $invs,
-        InvGuestAccess $access,
-    ): SDI {
-        if (isset($filter->filterClient) && !empty($filter->filterClient)) {
-            $invs = $iR->filterGuestClient($filter->filterClient);
-        }
-        // inv/guest/calendar's day-block badges (Trait\GuestCalendar) --
-        // see InvGuestTrait::filterGuestDateCreatedExact()'s own docblock
-        // for why this one is scoped in the query itself rather than
-        // matching filterGuestClient()'s unscoped-rebuild shape above.
+        // every filter is added to the guest's own scoped query (see InvGuestTrait::narrowGuestQuery()), so none
+        // of them can list an invoice the guest was not already allowed to see
+        $invs = $this->guestScopedInvs($iR, $access, $status, $filter);
+        // inv/guest/calendar's day-block badges (Trait\GuestCalendar) -- see
+        // InvGuestTrait::filterGuestDateCreatedExact()'s own docblock: it too is scoped in the query itself
         if (isset($filter->filterDateCreatedExact) && !empty($filter->filterDateCreatedExact)) {
             $invs = $iR->filterGuestDateCreatedExact(
                 $filter->filterDateCreatedExact,
@@ -540,6 +489,21 @@ trait Guest
             );
         }
         return $invs;
+    }
+
+    /**
+     * What this guest may see, optionally narrowed by the list filters: the invoices allocated to their worker, or
+     * those of their assigned clients.
+     *
+     * @return DRI&SDI
+     *
+     * @psalm-return SDI&DRI<int, \App\Infrastructure\Persistence\Inv\Inv>
+     */
+    private function guestScopedInvs(IR $iR, InvGuestAccess $access, int $status, ?InvGuestFilter $filter = null): SDI
+    {
+        return null !== $access->worker
+            ? $iR->repoWorkerVisible($status, $access->worker->reqId(), $access->isLead, $filter)
+            : $this->invsStatusGuest($iR, $status, $access->clients, $filter);
     }
 
     /**
@@ -553,9 +517,10 @@ trait Guest
     private function invsStatusGuest(
         IR $iR,
         mixed $status,
-        array $user_clients
+        array $user_clients,
+        ?InvGuestFilter $filter = null,
     ): SDI {
-        return $iR->repoGuestClientsPostDraft((int) $status, $user_clients);
+        return $iR->repoGuestClientsPostDraft((int) $status, $user_clients, $filter);
     }
 
     /**

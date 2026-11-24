@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Infrastructure\Persistence\Inv\Inv;
+use App\Invoice\Inv\InvGuestFilter;
 use Cycle\Database\Injection\Fragment;
 use Cycle\Database\Injection\Parameter;
 use Cycle\ORM\Select;
@@ -95,21 +96,82 @@ trait InvGuestTrait
      * @param array $user_client
      * @return EntityReader
      */
-    public function repoGuestClientsPostDraft(int $status_id, array $user_client = []): EntityReader
-    {
+    public function repoGuestClientsPostDraft(
+        int $status_id,
+        array $user_client = [],
+        ?InvGuestFilter $filter = null,
+    ): EntityReader {
         if ($status_id > 0) {
             $query = $this->select()
                     ->where(['status_id' => $status_id])
                     ->where(['client_id' => ['in' => new Parameter($user_client)]])
                     ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
                     ->where('deleted_at', null);
-            return $this->prepareDataReader($query);
+        } else {
+            $query = $this->select()
+                         ->where(['client_id' => ['in' => new Parameter($user_client)]])
+                         ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
+                         ->where('deleted_at', null);
         }
-        $query = $this->select()
-                     ->where(['client_id' => ['in' => new Parameter($user_client)]])
-                     ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6,7,8,9,10,11,12,13])]])
-                     ->where('deleted_at', null);
-        return $this->prepareDataReader($query);
+        return $this->prepareDataReader($this->narrowGuestQuery($query, $filter));
+    }
+
+    /**
+     * Adds inv/guest's list filters to a query that is ALREADY limited to what this guest may see (their clients'
+     * invoices, or the invoices allocated to their worker).
+     *
+     * The filters used to be separate queries (filterInvNumber(), filterGuestClient(), ...), each started from an
+     * unscoped $this->select() and then used INSTEAD of the guest's list, so adding ?filterInvNumber=... or
+     * ?filterClient=<any client id> to the address listed any client's invoices. A filter can only narrow here:
+     * every condition is added with AND to the scoped query, so it can never widen it.
+     *
+     * Same "empty means no filter" rule as before (so '0' is not a filter), and the amount filters keep matching
+     * from the start of the number.
+     *
+     * @param Select<Inv> $query
+     * @return Select<Inv>
+     */
+    private function narrowGuestQuery(Select $query, ?InvGuestFilter $filter): Select
+    {
+        if (null === $filter) {
+            return $query;
+        }
+        $number = (string) $filter->filterInvNumber;
+        $total = (string) $filter->filterInvAmountTotal;
+        if (self::guestFilterGiven($number)) {
+            $query = $query->andWhere(['number' => trim($number)]);
+        }
+        if (self::guestFilterGiven($filter->filterCreditInvNumber)) {
+            $parentIds = $this->creditParentIds((string) $filter->filterCreditInvNumber);
+            $query = $parentIds === []
+                ? $query->andWhere(['id' => '0'])
+                : $query->andWhere(['creditinvoice_parent_id' => ['in' => new Parameter($parentIds)]]);
+        }
+        if (self::guestFilterGiven($total)) {
+            // with an invoice number as well, the total has always had to match exactly rather than from the start
+            $query = self::guestFilterGiven($number)
+                ? $query->load('invAmount')->andWhere(['invAmount.total' => (float) $total])
+                : $query->load('invAmount')->andWhere('invAmount.total', 'like', (float) $total . '%');
+        }
+        if (self::guestFilterGiven($filter->filterInvAmountPaid)) {
+            $query = $query->load('invAmount')
+                ->andWhere('invAmount.paid', 'like', (float) $filter->filterInvAmountPaid . '%');
+        }
+        if (self::guestFilterGiven($filter->filterInvAmountBalance)) {
+            $query = $query->load('invAmount')
+                ->andWhere('invAmount.balance', 'like', (float) $filter->filterInvAmountBalance . '%');
+        }
+        if (self::guestFilterGiven($filter->filterClient)) {
+            // one of this guest's own clients, or nothing: the scope is already in the query
+            $query = $query->andWhere(['client_id' => (int) $filter->filterClient]);
+        }
+        return $query;
+    }
+
+    /** What empty() has always meant for these filters: not given when null, '' or '0'. */
+    private static function guestFilterGiven(?string $value): bool
+    {
+        return null !== $value && '' !== $value && '0' !== $value;
     }
 
     /**
@@ -160,19 +222,23 @@ trait InvGuestTrait
      * @param bool $lead true for the one lead worker, who sees every HomeCare house
      * @return EntityReader
      */
-    public function repoWorkerVisible(int $status_id, int $worker_id, bool $lead = false): EntityReader
-    {
+    public function repoWorkerVisible(
+        int $status_id,
+        int $worker_id,
+        bool $lead = false,
+        ?InvGuestFilter $filter = null,
+    ): EntityReader {
         if ($status_id > 0) {
             $query = $this->whereAllocatedToWorker($this->select(), $worker_id, $lead)
                     ->andWhere(['status_id' => $status_id])
                     ->andWhere(['status_id' => ['in' => new Parameter(self::WORKER_VISIBLE_STATUSES)]])
                     ->where('deleted_at', null);
-            return $this->workerVisibleDataReader($query);
+        } else {
+            $query = $this->whereAllocatedToWorker($this->select(), $worker_id, $lead)
+                         ->andWhere(['status_id' => ['in' => new Parameter(self::WORKER_VISIBLE_STATUSES)]])
+                         ->where('deleted_at', null);
         }
-        $query = $this->whereAllocatedToWorker($this->select(), $worker_id, $lead)
-                     ->andWhere(['status_id' => ['in' => new Parameter(self::WORKER_VISIBLE_STATUSES)]])
-                     ->where('deleted_at', null);
-        return $this->workerVisibleDataReader($query);
+        return $this->workerVisibleDataReader($this->narrowGuestQuery($query, $filter));
     }
 
     /**
