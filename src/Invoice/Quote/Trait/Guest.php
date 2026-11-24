@@ -72,8 +72,14 @@ trait Guest
             return $this->webService->getNotFoundResponse();
         }
         /** @var DRI<array-key, array<array-key, mixed>|object> $quotes */
-        $quotes = $this->quotesStatusWithSortGuest($qR, $status, $user_clients, $sort);
-        $quotes = $this->guestApplyFilters($query_params, $qR, $quotes);
+        $quotes = $this->quotesStatusWithSortGuest(
+            $qR,
+            $status,
+            $user_clients,
+            $sort,
+            self::filterText($query_params['filterQuoteNumber'] ?? null),
+            self::filterText($query_params['filterQuoteAmountTotal'] ?? null),
+        );
         $userInvLimit = $userinv->getListLimit();
         $paginator = (new DataOffsetPaginator($quotes))
             ->withPageSize($userInvLimit !== null && $userInvLimit > 0
@@ -122,31 +128,22 @@ trait Guest
         QR $qR,
         int $status,
         array $user_clients,
-        Sort $sort
+        Sort $sort,
+        string $quoteNumber = '',
+        string $quoteAmountTotal = '',
     ): \Yiisoft\Data\Reader\SortableDataInterface {
         return $qR->repoGuestClientsSentViewedApprovedRejectedCancelled(
             $status,
-            $user_clients
+            $user_clients,
+            $quoteNumber,
+            $quoteAmountTotal,
         )
                      ->withSort($sort);
     }
 
-    /** @param array<array-key, mixed> $query_params */
-    private function guestApplyFilters(array $query_params, QR $qR, DRI $quotes): DRI
+    /** A filter value from the query string, as text; anything that is not a plain string is no filter. */
+    private static function filterText(mixed $value): string
     {
-        if (isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) {
-            $quotes = $qR->filterQuoteNumber((string) $query_params['filterQuoteNumber']);
-        }
-        if (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal'])) {
-            $quotes = $qR->filterQuoteAmountTotal((string) $query_params['filterQuoteAmountTotal']);
-        }
-        if ((isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber']))
-            && (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal']))) {
-            $quotes = $qR->filterQuoteNumberAndQuoteAmountTotal(
-                (string) $query_params['filterQuoteNumber'],
-                (float) $query_params['filterQuoteAmountTotal']
-            );
-        }
-        return $quotes;
+        return is_string($value) ? trim($value) : '';
     }
 }

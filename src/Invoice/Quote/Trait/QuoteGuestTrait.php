@@ -52,18 +52,30 @@ trait QuoteGuestTrait
      * @param array $user_client
      * @return EntityReader
      */
-    public function repoGuestClientsSentViewedApprovedRejectedCancelled(int $status_id, array $user_client = []): EntityReader
-    {
+    public function repoGuestClientsSentViewedApprovedRejectedCancelled(
+        int $status_id,
+        array $user_client = [],
+        string $quoteNumber = '',
+        string $quoteAmountTotal = '',
+    ): EntityReader {
         if ($status_id > 0) {
             $query = $this->select()
                     ->where(['status_id' => $status_id])
                     ->andWhere(['client_id' => ['in' => new Parameter($user_client)]]);
-            return $this->prepareDataReader($query);
-        }
-        $query = $this->select()
+        } else {
+            $query = $this->select()
                      // sent = 2, viewed = 3, approved = 4, rejected = 5, cancelled = 6
                      ->where(['client_id' => ['in' => new Parameter($user_client)]])
                      ->andWhere(['status_id' => ['in' => new Parameter([2,3,4,5,6])]]);
+        }
+        // The list filters narrow the guest's own quotes. They are added to this same query, never run as a query of
+        // their own: a filter that replaced the list would match every client's quotes, drafts included.
+        if ('' !== trim($quoteNumber)) {
+            $query = $query->andWhere(['number' => trim($quoteNumber)]);
+        }
+        if ('' !== trim($quoteAmountTotal)) {
+            $query = $query->load('quoteAmount')->andWhere(['quoteAmount.total' => trim($quoteAmountTotal)]);
+        }
         return $this->prepareDataReader($query);
     }
 
