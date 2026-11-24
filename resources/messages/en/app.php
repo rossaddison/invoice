@@ -424,7 +424,7 @@ return [
   'client.contact.more' => 'More contact fields',
   'client.details' => 'Contact & details',
   'client.dwelling' => 'Dwelling',
-  'client.name.already.exists' => 'A client named %s already exists. Open that client instead of adding a second one.',
+  'client.name.already.exists' => 'A client named %s already exists. Choose a different name, or open that client instead.',
   'client.dwelling.already.claimed' => 'That Dwelling is already linked to another client.',
   'client.dwelling.none' => 'None',
   'client.dwelling.search' => 'Search by street, number or postcode',
