@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Tests\Testo\Invoice\Client;
 
 use App\Infrastructure\Persistence\Client\Client;
+use App\Invoice\Client\ClientForm;
 use App\Invoice\Client\ClientNameGuard;
 use App\Invoice\Client\ClientRepository;
 use Testo\Assert;
 use Testo\Test;
 use Tests\Testo\Support\TypedMock;
+use Yiisoft\FormModel\Field;
 use Yiisoft\Translator\TranslatorInterface;
 
 /**
@@ -44,7 +46,21 @@ final class ClientNameGuardTest
     {
         $errors = $this->guard(new Client())->errorsFor(' Virtual ', 'Tester');
 
-        Assert::same(['client_name' => ['A client named Virtual Tester already exists.']], $errors);
+        Assert::same(['' => ['A client named Virtual Tester already exists.']], $errors);
+    }
+
+    public function theRefusalIsActuallyShownByTheFormsErrorSummary(): void
+    {
+        $errors = $this->guard(new Client())->errorsFor('Virtual', 'Tester');
+
+        // configured exactly as resources/views/invoice/client/_form.php does
+        $html = Field::errorSummary(new ClientForm())
+            ->errors($errors)
+            ->header('There were problems')
+            ->onlyCommonErrors()
+            ->render();
+
+        Assert::true(str_contains($html, 'A client named Virtual Tester already exists.'));
     }
 
     public function theClientBeingEditedIsPassedOnSoItIsNotItsOwnDuplicate(): void

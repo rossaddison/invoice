@@ -22,6 +22,10 @@ final readonly class ClientNameGuard
      * @param int|null $exceptId the client being edited, which is not a duplicate of itself
      *
      * @return array<string, list<string>> form errors indexed by property; empty when the name is free
+     *
+     * The error is a common (form-level) one, key '', not one for client_name. The client form shows only common
+     * errors in its summary (->onlyCommonErrors() in _form.php), and the name field shows only the form's own
+     * validation result, so a client_name key was never displayed at all.
      */
     public function errorsFor(string $name, string $surname, ?int $exceptId = null): array
     {
@@ -30,7 +34,7 @@ final readonly class ClientNameGuard
             return [];
         }
         return [
-            'client_name' => [
+            '' => [
                 sprintf(
                     $this->translator->translate('client.name.already.exists'),
                     trim(trim($name) . ' ' . trim($surname)),
