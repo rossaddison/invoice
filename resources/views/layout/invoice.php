@@ -826,12 +826,13 @@ if ((null !== $currentPath) && !$isGuest) {
                     . ' and restart all services.']),
                 DropdownItem::text(
                     'php.ini (line 1800): opcache.interned_strings_buffer'
-                    . ' (pref 8; it must stay well below'
-                    . ' opcache.memory_consumption or Apache will not start) = '
+                    . ' (pref 16, as in docker/dev and docker/prod; it must stay'
+                    . ' well below opcache.memory_consumption or Apache will'
+                    . ' not start) = '
                     . ((string) ini_get('opcache.interned_strings_buffer')
                             ?: 'unknown')
                     . (((string) ini_get('opcache.interned_strings_buffer')
-                            == 8 ? '✅' : '❌')),
+                            == 16 ? '✅' : '❌')),
                     itemAttributes: $itemFontArray),
                 DropdownItem::text(
                     'php.ini (line 1804): opcache.max_accelerated_files'
