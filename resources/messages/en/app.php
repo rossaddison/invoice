@@ -3714,13 +3714,6 @@ prior to importing and no existing documents e.g. Invoices.',
   'bacs.not.yet.configured.hint' => 'Please contact us directly for payment details.',
   'bacs.mobile.tip' => 'On mobile, tap the copy icons next to each field to paste the details directly into your banking app.',
 
-  // === PROMETHEUS MONITORING ===
-  'monitoring.health.database' => 'Database Connection',
-  'monitoring.health.cache' => 'Cache System',
-  'monitoring.health.storage' => 'File Storage',
-  'monitoring.metrics.requests' => 'Total Requests',
-  'monitoring.metrics.errors' => 'Error Rate',
-  'monitoring.metrics.response_time' => 'Average Response Time',
 
   // === HOME-CARE QR AUTO-INVOICE ===
   'homecare.auto.invoice.enabled' => 'Enable Home Care QR Auto-Invoice',

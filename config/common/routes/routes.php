@@ -8,10 +8,7 @@ use App\Auth\Controller\{
 use App\Auth\Permissions;
 use App\Contact\ContactController;
 use App\Controller\{Actions\ApiInfo, SiteAuthController, SiteController};
-use App\Invoice\{
-    Inv\InvController,
-    Prometheus\PrometheusController,
-};
+use App\Invoice\Inv\InvController;
 use App\Middleware\{ApiDataWrapper, RateLimiter, RoutePermission};
 use App\Redirect\RedirectController;
 use App\User\Controller\{ApiUserController, UserController};
@@ -44,16 +41,6 @@ $getPostRoute = static fn (string $path, array $action, string $name): Route =>
  */
 
 return [
-    // Prometheus monitoring endpoints
-    // This endpoint needs to be publicly accessible for Prometheus server
-    // to scrape it. No authentication middleware needed.
-    Route::get('/metrics')
-        ->action([PrometheusController::class, 'metrics'])
-        ->name('prometheus/metrics'),
-    // Health check endpoint should be accessible for monitoring systems.
-    Route::get('/prometheus/health')
-        ->action([PrometheusController::class, 'health'])
-        ->name('prometheus/health'),
     // Public homecare-cleaning QR scan endpoint. Deliberate bearer-token
     // exception to this app's usual guest-access model, where a url_key
     // alone never grants access without an authenticated session — here,
@@ -74,12 +61,6 @@ return [
         ->middleware(RateLimiter::perIp(10, 'homecare_scan_confirm_route'))
         ->action([InvController::class, 'homeCareScanConfirm'])
         ->name('public/homecare-scan-confirm'),
-    // Admin dashboard that can use the existing authentication middleware
-    // if needed.
-    Route::get('/prometheus/dashboard')
-        ->middleware(RoutePermission::check(Permissions::EDIT_INV))
-        ->action([PrometheusController::class, 'dashboard'])
-        ->name('prometheus/dashboard'),
     // Small, reusable tracked-redirect endpoint — currently only the
     // homepage's "View the source on GitHub" button
     // (RedirectController::DESTINATIONS). Public by design (anyone

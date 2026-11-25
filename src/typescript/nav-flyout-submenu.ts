@@ -1,7 +1,6 @@
 /**
  * Click-to-open behaviour for .dropdown-submenu flyouts (Settings menu's
- * Company/Email/Access/Preferences/More groups, and the Performance menu's
- * Prometheus Monitoring entry -- see App\Widget\SubMenu and
+ * Company/Email/Access/Preferences/More groups -- see App\Widget\SubMenu and
  * .dropdown-submenu/.dropdown-menu-submenu in components.css).
  *
  * components.css already opens a flyout on plain CSS :hover/:focus-within,

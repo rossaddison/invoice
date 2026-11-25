@@ -19,12 +19,6 @@ hero:
       text: Family Commalist Picker
       link: /FAMILY_COMMALIST_PICKER
     - theme: brand
-      text: Prometheus Integration
-      link: /PROMETHEUS_INTEGRATION
-    - theme: brand
-      text: Prometheus Menu Integration
-      link: /PROMETHEUS_MENU_INTEGRATION
-    - theme: brand
       text: SonarCloud Setup
       link: /SONARCLOUD_SETUP
     - theme: brand

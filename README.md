@@ -571,10 +571,6 @@ Automated generation and transmission of compliant UBL 2.4 documents via the
 
 [VitePress Integration.](https://vitepress.dev/guide/getting-started) (Dec 2025)
 
-[Prometheus Integration.](docs/PROMETHEUS_INTEGRATION.md) (Dec 2025)
-
-[Prometheus Menu Integration.](docs/PROMETHEUS_MENU_INTEGRATION.md) (Dec 2025)
-
 [Sonar Cloud Setup.](docs/SONARCLOUD_SETUP.md) (Nov 2025)
 
 [SonarQube for IDE Setup](docs/SONARQUBE_IDE_SETUP.md) — VS Code Connected Mode setup; Windows startup timeout fix; JVM heap tuning; token generation explained in plain English; connectionId mismatch pitfall; Windows Defender exclusions (May 2026)

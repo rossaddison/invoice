@@ -265,7 +265,7 @@ $CMDS = [
     // Testing
     'test_entity'       => ['cmd' => 'php vendor/bin/phpunit Tests/Unit/Invoice/Entity/ --no-coverage --testdox --colors=always'],
     'test_unit'         => ['cmd' => 'php vendor/bin/phpunit Tests/Unit/ --no-coverage --testdox --colors=always'],
-    'test_func'         => ['cmd' => 'php vendor/bin/phpunit Tests/Functional/ Tests/Integration/ Tests/PHPUnit/ --no-coverage --testdox --colors=always'],
+    'test_func'         => ['cmd' => 'php vendor/bin/phpunit Tests/Functional/ Tests/PHPUnit/ --no-coverage --testdox --colors=always'],
     'test_cc_func'      => ['cmd' => 'php vendor/bin/codecept run Functional'],
     'test_cc_acc'       => ['cmd' => 'php vendor/bin/codecept run Acceptance'],
     'test_cc_all'       => ['cmd' => 'php vendor/bin/codecept run'],

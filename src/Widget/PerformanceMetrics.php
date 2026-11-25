@@ -22,20 +22,6 @@ final class PerformanceMetrics extends Widget
         return 'Time: ' . $time . ' s. Memory: ' . $memory . ' mb.';
     }
 
-    public static function prometheusStatus(): string
-    {
-        $parts = [];
-
-        $apcuOk = extension_loaded('apcu') && function_exists('apcu_enabled') && apcu_enabled();
-        $parts[] = 'Prometheus APCu: ' . ($apcuOk ? '✅' : '❌');
-
-        $memMb = round(memory_get_usage(true) / (1_048_576), 2);
-        $peakMb = round(memory_get_peak_usage(true) / (1_048_576), 2);
-        $parts[] = "Mem: {$memMb} MB / Peak: {$peakMb} MB";
-
-        return implode(' | ', $parts);
-    }
-
     public static function opCacheHealthCheck(): string
     {
         if (!function_exists('opcache_get_status') || !function_exists('opcache_get_configuration')) {

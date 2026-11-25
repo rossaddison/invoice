@@ -11,10 +11,9 @@ use Testo\Test;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 /**
- * SubMenu::generate() renders the flyout markup shared by the Settings
- * menu's Company/Email/Access/Preferences/More groups and the Performance
- * menu's Prometheus Monitoring entry (see resources/views/layout/
- * invoice.php and .dropdown-submenu in components.css) -- a toggle
+ * SubMenu::generate() renders the flyout markup used by the Settings
+ * menu's Company/Email/Access/Preferences/More groups (see
+ * resources/views/layout/invoice.php and .dropdown-submenu in components.css) -- a toggle
  * <span class="dropdown-submenu-toggle"> plus a nested
  * <ul class="dropdown-menu dropdown-menu-submenu"> of links, one per
  * $items entry, each resolved via UrlGeneratorInterface::generate().
@@ -79,13 +78,13 @@ final class SubMenuTest
         /** @var UrlGeneratorInterface&m\MockInterface $urlGenerator */
         $urlGenerator = m::mock(UrlGeneratorInterface::class);
         $e = $urlGenerator->shouldReceive('generate');
-        $e->with('prometheus/metrics', ['foo' => 'bar'])->andReturn('/prometheus/metrics?foo=bar');
+        $e->with('site/index', ['foo' => 'bar'])->andReturn('/site/index?foo=bar');
 
         $html = SubMenu::generate('Performance', $urlGenerator, 'Arial', '14', [
-            0 => ['items' => ['Raw Metrics' => ['prometheus/metrics', ['foo' => 'bar']]]],
+            0 => ['items' => ['Home' => ['site/index', ['foo' => 'bar']]]],
         ]);
 
-        Assert::true(str_contains($html, 'href="/prometheus/metrics?foo=bar"'));
+        Assert::true(str_contains($html, 'href="/site/index?foo=bar"'));
     }
 
     public function encodesLabelsAndTitlesToPreventBrokenMarkup(): void

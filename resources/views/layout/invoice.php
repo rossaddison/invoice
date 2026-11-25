@@ -263,15 +263,6 @@ $ifaq = 'invoice/faq';
 $sel = 'selection';
 $tpc = 'topic';
 
-$subMenuPrometheus = [
-    0 => [
-        'items' => [
-            'Raw Metrics' => ['prometheus/metrics', []],
-            'Health Check' => ['prometheus/health', []],
-        ],
-    ],
-];
-
 // Settings menu flyout groups -- see App\Widget\SubMenu and the "Settings"
 // Dropdown further below. Grouping these (previously ~29 flat links) into
 // 5 flyouts keeps the toggler itself short.
@@ -899,18 +890,6 @@ if ((null !== $currentPath) && !$isGuest) {
                     'config.params: yiisoft/yii-debug-api: enabled,'
                     . ' disable for improved performance',
                     itemAttributes: $itemFontArray),
-                DropdownItem::divider(),
-                // Prometheus Monitoring Section
-                DropdownItem::text(PerformanceMetrics::prometheusStatus(),
-                    itemAttributes: $itemFontArray),
-                DropdownItem::listContent(
-                    $subMenu->generate('Prometheus Monitoring',
-                        $urlGenerator,
-                        $bootstrap5LayoutInvoiceNavbarFont,
-                        $bootstrap5LayoutInvoiceNavbarFontSize,
-                        $subMenuPrometheus),
-                    ['class' => $flyoutLiClass],
-                ),
             ),
             // Platform
             Dropdown::widget()

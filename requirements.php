@@ -128,7 +128,7 @@ $config = [
         'mandatory' => false,
         'condition' => extension_loaded('apcu'),
         'by' => 'In-memory caching',
-        'memo' => 'Recommended for performance optimization and Prometheus metrics storage.',
+        'memo' => 'Recommended for performance optimization.',
     ],
     [
         'name' => 'Sodium extension',

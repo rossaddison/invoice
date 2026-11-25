@@ -291,7 +291,6 @@ change to `config/web/params.php`.
     RequestCatcherMiddleware::class,
     ErrorCatcher::class,
     ContentSecurityPolicyMiddleware::class,   // ← here, before session/CSRF
-    PrometheusMiddleware::class,
     SessionMiddleware::class,
     ...
 ]

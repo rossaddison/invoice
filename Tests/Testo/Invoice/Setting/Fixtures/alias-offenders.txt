@@ -16,7 +16,6 @@ src/Invoice/Helpers/Peppol/PeppolHelper.php	2
 src/Invoice/Helpers/Peppol/PeppolValidator.php	1
 src/Invoice/Helpers/ZugFerdHelper.php	2
 src/Invoice/Libraries/Lang.php	2
-src/Invoice/Prometheus/PrometheusController.php	3
 src/Invoice/Setting/SettingController.php	1
 src/Invoice/Setting/Trait/SettingConfigTrait.php	1
 src/Invoice/Setting/Trait/SettingFileFolderTrait.php	9

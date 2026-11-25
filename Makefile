@@ -395,8 +395,8 @@ cta: ## PHPUnit Tests (All: Tests/Unit/)
 endif
 
 ifeq ($(PRIMARY_GOAL),ctp)
-ctp: ## PHPUnit Tests (Functional/Integration/PHPUnit/)
-	php vendor/bin/phpunit Tests/Functional/ Tests/Integration/ Tests/PHPUnit/ --no-coverage --testdox
+ctp: ## PHPUnit Tests (Functional/PHPUnit/)
+	php vendor/bin/phpunit Tests/Functional/ Tests/PHPUnit/ --no-coverage --testdox
 endif
 
 ifeq ($(PRIMARY_GOAL),ccf)

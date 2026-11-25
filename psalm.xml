@@ -136,7 +136,6 @@
                      analysis. Same well-documented false positive Psalm's
                      own docs call out for this exact pattern. -->
                 <directory name="Tests/Functional" />
-                <directory name="Tests/Integration" />
                 <directory name="Tests/PHPUnit" />
             </errorLevel>
         </PropertyNotSetInConstructor>

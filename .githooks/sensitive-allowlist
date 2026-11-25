@@ -4,9 +4,6 @@
 # Template for local settings, no values.
 .env.example
 
-# Prometheus settings, no secrets (checked when the guard was introduced).
-config/.env.prometheus
-
 # Gateway status data: SDK versions, sandbox status and fees. No credentials, no personal data.
 resources/gateway-status/gateway-status.sqlite
 
