@@ -205,4 +205,24 @@ final class RecordOwnerRepairTest
 
         Assert::true(str_contains($display, 'Nothing to repair'));
     }
-}
+
+    public function itCanRepairTheRecordsOfOneClientOnly(): void
+    {
+        $this->setUpDatabase();
+
+        // client 1 has quote 2 and inv 7 out of step; client 2 has so 5; client 3's owner is inactive
+        $changed = $this->repair()->giveClientRecordsToOwner(1);
+
+        Assert::same($changed, ['quote' => 1, 'inv' => 1]);
+        Assert::same($this->userOf('quote', 2), 10);
+        Assert::same($this->userOf('inv', 7), 10);
+        // another client's record is not touched
+        Assert::same($this->userOf('sales_order', 5), 10);
+    }
+
+    public function repairingOneClientWithNothingOutOfStepChangesNothing(): void
+    {
+        $this->setUpDatabase();
+
+        Assert::same($this->repair()->giveClientRecordsToOwner(4), []);
+    }}

@@ -106,4 +106,20 @@ final class ClientDwellingRepositoryTest
         Assert::true(str_contains((string) $query, 'IS NOT NULL'));
         Assert::same(array_map('intval', array_column($query->fetchAll(), 'id')), [1, 3]);
     }
-}
+
+    public function everyClientHoldingADwellingIsListed(): void
+    {
+        $repository = $this->repository(
+            ['dwelling_id' => 10],
+            [$this->client(1, 10), $this->client(2, 10)],
+        );
+
+        $ids = array_map(static fn (Client $client): int => $client->reqId(), $repository->repoClientsByDwelling(10));
+
+        Assert::same($ids, [1, 2]);
+    }
+
+    public function aDwellingNobodyHoldsHasNoClients(): void
+    {
+        Assert::same($this->repository(['dwelling_id' => 10], [])->repoClientsByDwelling(10), []);
+    }}

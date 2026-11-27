@@ -6,6 +6,7 @@ namespace App\Auth\Controller;
 
 use App\Auth\AuthService;
 use App\Auth\Form\HomeCareSignupForm;
+use App\Auth\HomeCareHouseDecision;
 use App\Auth\HomeCareSignupEmailService;
 use App\Auth\SignupLanguage;
 use App\Auth\Trait\ClassList;
@@ -376,16 +377,51 @@ final class HomeCareSignupController
         ['dwelling' => $dwelling, 'taxRate' => $taxRate, 'unit' => $unit] = $dwellingResult;
 
         $email = $identity->getUser()?->getEmail() ?? '';
-        $client = $this->createClient($email, $language, $pending, $dwelling, $d);
+        // a house the run-sheet import already made a client for is joined, not given a second client
+        $decision = $d->houseClient->decide($dwelling->reqId(), $email);
+        $taken = $this->stopIfHouseTaken($decision, $userInv, $d);
+        if ($taken !== null) {
+            return $taken;
+        }
+        $existing = $decision->client;
+        $client = null !== $existing
+            ? $d->houseClient->adopt(
+                $existing,
+                $email,
+                $language,
+                $pending->getClientName(),
+                $pending->getClientSurname(),
+                $pending->getStreet(),
+                $pending->getBuildingNumber(),
+            )
+            : $this->createClient($email, $language, $pending, $dwelling, $d);
         $clientId = $client->reqId();
         $this->linkUserClient($userId, $clientId, $d);
         $this->assignSignupRole($userId, $userInv->reqId(), $d);
-
-        $provisioned = $this->provisionInvoice($clientId, $dwelling, $taxRate, $unit, $pending, $formHydrator, $d);
-        if ($provisioned instanceof Response) {
-            return $provisioned;
+        if (null !== $existing) {
+            // its invoices were made for the importing user; a guest can only open an invoice that is theirs
+            $d->ownerRepair->giveClientRecordsToOwner($clientId);
         }
-        return ['client' => $client, 'invId' => $provisioned];
+
+        // The sign-up's own first invoice is made as ever, whether the client is new or joined: it is for the next clean,
+        // and an "I have already paid cash" choice is recorded against it as a new cash payment.
+        $provisioned = $this->provisionInvoice($clientId, $dwelling, $taxRate, $unit, $pending, $formHydrator, $d);
+        return $provisioned instanceof Response ? $provisioned : ['client' => $client, 'invId' => $provisioned];
+    }
+
+    /**
+     * A house that cannot be given to this account (it has several clients, or its client already has a user or a
+     * different email) needs staff. The account was activated a moment ago; it is switched off again so it is not a
+     * working login with no client, and the resident is told to get in touch.
+     */
+    private function stopIfHouseTaken(HomeCareHouseDecision $decision, UserInv $userInv, HomeCareSignupConfirmDeps $d): ?Response
+    {
+        if (!$decision->isTaken()) {
+            return null;
+        }
+        $userInv->setActive(false);
+        $d->uiR->save($userInv);
+        return $this->renderConfirmed('house_taken');
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Auth\Controller;
 
+use App\Auth\HomeCareHouseClient;
 use App\Auth\TokenRepository as tR;
 use App\Invoice\CategoryPrimary\CategoryPrimaryRepository as cpR;
 use App\Invoice\CategorySecondary\CategorySecondaryService;
@@ -22,6 +23,7 @@ use App\Invoice\InvItemAmount\InvItemAmountService as iias;
 use App\Invoice\Group\GroupRepository as gR;
 use App\Invoice\Helpers\InvRecalculator;
 use App\Invoice\Payment\PaymentService;
+use App\Invoice\RecordOwnerRepair;
 use App\Invoice\PaymentMethod\PaymentMethodRepository as pmR;
 use App\Invoice\Product\ProductRepository as pR;
 use App\Invoice\Product\ProductService;
@@ -66,6 +68,8 @@ final class HomeCareSignupConfirmDeps
         public readonly ProductClientService $productClientService,
         public readonly sR $sR,
         public readonly pendingR $pendingR,
+        public readonly HomeCareHouseClient $houseClient,
+        public readonly RecordOwnerRepair $ownerRepair,
     ) {
     }
 }

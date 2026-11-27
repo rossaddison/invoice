@@ -3837,6 +3837,7 @@ prior to importing and no existing documents e.g. Invoices.',
     'Thanks — your account is set up and your first invoice is marked paid. Your QR code is ready below: stick it somewhere visible and scan it after every future visit to request your next invoice automatically.',
   'homecare.signup.confirmed.unpaid' =>
     'Thanks — your account is set up and your first invoice has been sent. Your QR code is ready below to print now, but automatic scan-to-invoice will only start working once that invoice is marked paid.',
+  'homecare.signup.confirmed.house.taken' => 'This house is already registered to another account, so your account has not been activated. Please contact us and we will sort it out.',
   'homecare.signup.confirmed.expired' =>
     'This confirmation link has expired or already been used. Please sign up again.',
   'homecare.signup.confirmed.setup.incomplete' =>

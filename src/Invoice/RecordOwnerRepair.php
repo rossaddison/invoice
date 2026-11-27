@@ -65,6 +65,21 @@ final readonly class RecordOwnerRepair
     }
 
     /**
+     * Gives the records of ONE client to that client's user. Used when a user is linked to a client that already has
+     * records (a HomeCare sign-up joining the client the run-sheet import made): the imported invoices belong to the
+     * importing user, and a guest can only open an invoice whose user is themselves.
+     *
+     * @return array<string, int> records changed per table
+     */
+    public function giveClientRecordsToOwner(int $clientId): array
+    {
+        return $this->repair(array_values(array_filter(
+            $this->findMismatches(),
+            static fn (array $mismatch): bool => $mismatch['clientId'] === $clientId,
+        )));
+    }
+
+    /**
      * Gives each repairable record to its client's user, in one transaction: all of them or none. A record whose
      * owner changed since it was listed is left alone (the update only matches the owner it was listed with).
      *

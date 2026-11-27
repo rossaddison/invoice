@@ -13,7 +13,7 @@ use Yiisoft\Translator\TranslatorInterface;
  * site's main layout, same as the generic signup success/failed pages
  * (resources/views/site/signupsuccess.php).
  *
- * @var string $outcome One of: 'paid', 'unpaid', 'expired', 'setup_incomplete'
+ * @var string $outcome One of: 'paid', 'unpaid', 'expired', 'house_taken', 'setup_incomplete'
  * @var string|null $qrDataUri Present for 'paid'/'unpaid' — the client's QR code image
  * @var TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
@@ -25,12 +25,13 @@ $messageKey = match ($outcome) {
     'paid' => 'homecare.signup.confirmed.paid',
     'unpaid' => 'homecare.signup.confirmed.unpaid',
     'expired' => 'homecare.signup.confirmed.expired',
+    'house_taken' => 'homecare.signup.confirmed.house.taken',
     default => 'homecare.signup.confirmed.setup.incomplete',
 };
 
 $variant = match ($outcome) {
     'paid', 'unpaid' => AlertVariant::SUCCESS,
-    'expired' => AlertVariant::WARNING,
+    'expired', 'house_taken' => AlertVariant::WARNING,
     default => AlertVariant::DANGER,
 };
 

@@ -43,6 +43,21 @@ final class ClientDwellingRepository extends Select\Repository
     }
 
     /**
+     * Every Client that holds the Dwelling. One is the rule; more than one is data that needs staff.
+     *
+     * @return list<Client>
+     */
+    public function repoClientsByDwelling(int $dwellingId): array
+    {
+        $clients = [];
+        /** @var Client $client */
+        foreach ($this->select()->where(['dwelling_id' => $dwellingId])->fetchAll() as $client) {
+            $clients[] = $client;
+        }
+        return $clients;
+    }
+
+    /**
      * Whether a Client other than $clientId (null = a brand-new Client) already occupies the Dwelling.
      */
     public function isClaimedByAnother(int $dwellingId, ?int $clientId): bool
