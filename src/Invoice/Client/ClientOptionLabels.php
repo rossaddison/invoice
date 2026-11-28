@@ -21,7 +21,7 @@ final class ClientOptionLabels
      * @param bool $useFullName label a client with getClientFullName() (the filter drop-downs) instead of the
      *     "first name, three spaces, surname" the client selects have always used
      *
-     * @return array<int, string> client id => label
+     * @return array<int, string> client id => label, sorted alphabetically by label
      */
     public static function for(iterable $clients, bool $useFullName = false): array
     {
@@ -40,6 +40,9 @@ final class ClientOptionLabels
             }
             $labels = self::tellApart($sharing, $labels);
         }
+
+        // alphabetical (ignoring case), so a client can be found in a long list; the keys (client ids) are kept
+        uasort($labels, static fn (string $a, string $b): int => strnatcasecmp($a, $b));
 
         return $labels;
     }

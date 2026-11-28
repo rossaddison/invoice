@@ -11,9 +11,8 @@ use App\Invoice\ProductClient\ProductClientForm;
 use App\Invoice\ProductClient\ProductClientService;
 use App\Invoice\ProductClient\ProductClientRepository;
 use App\Invoice\Setting\SettingRepository as sR;
-use App\Invoice\Client\ClientNameGuard;
+use App\Invoice\Client\ClientOptionLabels;
 use App\Invoice\Client\ClientRepository;
-use App\Invoice\Client\ClientService;
 use App\Invoice\Product\ProductRepository;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -35,8 +34,6 @@ final class ProductClientController extends BaseController
 
     public function __construct(
         private ProductClientService $productclientService,
-        private ClientService $clientService,
-        private ClientNameGuard $nameGuard,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -55,7 +52,6 @@ final class ProductClientController extends BaseController
             $flash
         );
         $this->productclientService = $productclientService;
-        $this->clientService = $clientService;
     }
 
     /**
@@ -117,7 +113,7 @@ final class ProductClientController extends BaseController
         $redirect = null;
         if ($request->getMethod() === Method::POST && is_array($body)) {
             /** @var array<string, mixed> $body */
-            $redirect = $this->handlePostSubmission($body, $productIds, $currentIndex, $currentProductId, $clientRepository);
+            $redirect = $this->handleExistingClientAssociation($body, $productIds, $currentIndex, $currentProductId, $clientRepository);
         }
         $parameters = [
             'title' => $this->translator->translate('associate.product.with.client'),
@@ -129,44 +125,11 @@ final class ProductClientController extends BaseController
             'product' => $product,
             'productRepository' => $productRepository,
             'productId' => $currentProductId,
-            'showClientCreation' => true,
-            'suggestedClientGroup' => $this->getClientGroupFromSession(),
             'currentIndex' => $currentIndex + 1,
             'totalProducts' => count($productIds),
             'remainingProducts' => count($productIds) - $currentIndex,
         ];
         return $redirect ?? $this->webViewRenderer->render('_form', $parameters);
-    }
-
-    /**
-     * @param array<string, mixed> $body
-     * @param array<int> $productIds
-     */
-    private function handlePostSubmission(
-        array $body,
-        array $productIds,
-        int $currentIndex,
-        int $currentProductId,
-        ClientRepository $clientRepository,
-    ): ?Response {
-        $associationType = (string)($body['association_type'] ?? 'existing');
-        $suggestedClientGroup = $this->getClientGroupFromSession();
-
-        if ($associationType === 'existing') {
-            return $this->handleExistingClientAssociation($body, $productIds, $currentIndex, $currentProductId, $clientRepository);
-        }
-
-        $newClient = $this->createNewClient($body, $suggestedClientGroup);
-        if ($newClient) {
-            $clientGroup = $newClient->getClientGroup() ?? '';
-            if (strlen($clientGroup) > 0) {
-                $this->saveClientGroupToSession($clientGroup);
-            }
-            $this->createProductClientAssociation($currentProductId, $newClient->reqId());
-            return $this->redirectToNextProduct($productIds, $currentIndex + 1);
-        }
-        $this->flash->add('danger', $this->translator->translate('failed.to.create.client'), true);
-        return null;
     }
 
     /**
@@ -182,94 +145,10 @@ final class ProductClientController extends BaseController
     ): ?Response {
         $clientId = (int)($body['client_id'] ?? 0);
         if ($clientRepository->repoClientCount($clientId) > 0) {
-            $client = $clientRepository->repoClientQuery($clientId);
-            $clientGroup = $client->getClientGroup() ?? '';
-            if (strlen($clientGroup) > 0) {
-                $this->saveClientGroupToSession($clientGroup);
-            }
             $this->createProductClientAssociation($currentProductId, $clientId);
             return $this->redirectToNextProduct($productIds, $currentIndex + 1);
         }
         return null;
-    }
-
-    /**
-     * Get client group suggestion from session
-     */
-    private function getClientGroupFromSession(): string
-    {
-        return (string) $this->session->get('suggested_client_group');
-    }
-
-    /**
-     * Save client group to session for future suggestions
-     */
-    private function saveClientGroupToSession(string $clientGroup): void
-    {
-        $this->session->set('suggested_client_group', $clientGroup) ;
-    }
-
-    /**
-     * Clear client group suggestion from session
-     */
-    private function clearClientGroupFromSession(): void
-    {
-        $this->session->remove('suggested_client_group');
-    }
-
-    /**
-     * Create new client from form data
-     * @param array<string, mixed> $body
-     */
-    private function createNewClient(array $body, ?string $suggestedClientGroup): ?Client
-    {
-        try {
-            $client = new Client();
-
-            // Build client data array for service
-            $clientData = [
-                'client_name' => (string)($body['new_client_name'] ?? ''),
-                'client_surname' => (string)($body['new_client_surname'] ?? ''),
-                'client_email' => (string)($body['new_client_email'] ?? ''),
-                'client_mobile' => (string)($body['new_client_mobile'] ?? ''),
-                'client_group' => (string)($body['new_client_group'] ?? $suggestedClientGroup ?? ''),
-                'client_active' => '1', // String format expected by service
-            ];
-
-            // Two clients with the same first name and surname cannot be told apart in a client select. A client
-            // can be linked to many products, so a taken name means "link the existing client", not "make another".
-            if ($this->nameGuard->isTaken($clientData['client_name'], $clientData['client_surname'])) {
-                $this->flash->add(
-                    'danger',
-                    sprintf(
-                        $this->translator->translate('client.name.already.exists.link.existing'),
-                        trim(trim($clientData['client_name']) . ' ' . trim($clientData['client_surname'])),
-                        $this->translator->translate('select.existing.client'),
-                    ),
-                    true,
-                );
-                return null;
-            }
-
-            // Use the client service to save with SettingRepository
-            $clientId = $this->clientService->saveClient($client, $clientData);
-
-            if ($clientId !== null) {
-                // The service returns the ID, and the client object should now have it
-                return $client;
-            }
-
-            return null;
-
-        } catch (Exception $e) {
-            $this->flash->add(
-                'danger',
-                $this->translator->translate('error.creating.client') . ': '
-                    . $e->getMessage(),
-                true
-            );
-            return null;
-        }
     }
 
     /**
@@ -305,8 +184,7 @@ final class ProductClientController extends BaseController
     private function redirectToNextProduct(array $productIds, int $nextIndex): Response
     {
         if ($nextIndex >= count($productIds)) {
-            // All products processed, clear session and redirect
-            $this->clearClientGroupFromSession();
+            // All products processed
             $this->flash->add(
                 'success',
                 $this->translator->translate('product.client.associations.completed'),
@@ -496,21 +374,25 @@ final class ProductClientController extends BaseController
     private function buildClientOptionsArray(
         \Yiisoft\Data\Cycle\Reader\EntityReader $clients
     ): array {
-        $options = [];
+        /** @var list<Client> $all */
+        $all = [];
         /**
          * @var Client $client
          */
         foreach ($clients as $client) {
+            $all[] = $client;
+        }
+        // clients that share a name are told apart (email, else postcode, else number), see ClientOptionLabels
+        $labels = ClientOptionLabels::for($all, true);
+        $options = [];
+        foreach ($all as $client) {
             $status = $client->getClientActive() ?
                 $this->translator->translate('active') :
                 $this->translator->translate('inactive');
-            $options[(string) $client->reqId()] =
-                $client->getClientName()
-                    . ' '
-                    . ($client->getClientSurname()
-                        ?? $this->translator->translate('not.set.yet'))
-                    . ' ' . ($status ?: $this->translator->translate('inactive'));
+            $options[(string) $client->reqId()] = $labels[$client->reqId()] . ' ' . $status;
         }
+        // alphabetical, so a client can be found in a long list; the keys (client ids) are kept
+        uasort($options, static fn (string $a, string $b): int => strnatcasecmp($a, $b));
         return $options;
     }
 }

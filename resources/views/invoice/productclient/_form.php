@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Widget\Button as Btn;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Form;
 
 /**
@@ -23,8 +22,6 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<string,list<string>> $errors
  * @psalm-var array<string, string> $clients
  * @psalm-var array<array-key, array<array-key, string>|string> $products
- * @var bool $showClientCreation
- * @var string $suggestedClientGroup
  * @var int $productId
  * @var int $currentIndex
  * @var int $totalProducts
@@ -91,25 +88,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('h4'); ?>
         <?= $translator->translate('product.client.association.options'); ?>
     <?= Html::closeTag('h4'); ?>
-    <!-- Option 1: Select Existing Client -->
-    <?= Html::openTag('div', ['class' => 'form-check mb-3']); ?>
-    <?=  new Input()
-         ->attributes([
-            'class' => 'form-check-input',
-            'type' => 'radio',
-            'name' => 'association_type',
-            'id' => 'existing_client',
-            'value' => 'existing',
-            'checked' => true]); ?>
-        <?= Html::openTag('label', [
-                    'class' => 'form-check-label',
-                    'for' => 'existing_client']); ?>
-            <?= $translator->translate('select.existing.client'); ?>
-        <?= Html::closeTag('label'); ?>
-    <?= Html::closeTag('div'); ?>
-
-    <?= Html::openTag('div',
-            ['id' => 'existing-client-section', 'class' => 'mb-3']); ?>
+    <?= Html::openTag('div', ['id' => 'existing-client-section', 'class' => 'mb-3']); ?>
         <?= Field::select($form, 'client_id')
             ->label($translator->translate('client'))
             ->addInputAttributes(['class' => 'form-control form-control-lg',])
@@ -119,75 +98,6 @@ use Yiisoft\Html\Tag\Form;
         ?>
     <?= Html::closeTag('div'); ?>
 
-    <!-- Option 2: Create New Client -->
-    <?= Html::openTag('div', ['class' => 'form-check mb-3']); ?>
-        <?= Html::openTag('input', [
-            'class' => 'form-check-input',
-            'type' => 'radio',
-            'name' => 'association_type',
-            'id' => 'new_client',
-            'value' => 'new']); ?>
-        <?= Html::openTag('label', [
-                    'class' => 'form-check-label',
-                    'for' => 'new_client']); ?>
-            <?= $translator->translate('create.new.client'); ?>
-        <?= Html::closeTag('label'); ?>
-    <?= Html::closeTag('div'); ?>
-
-    <?= Html::openTag('div', [
-        'id' => 'new-client-section',
-        'class' => 'mb-3',
-        'style' => 'display: none;']); ?>
-        <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'col-md-6']); ?>
-                <?= Field::text($form, 'new_client_name')
-                    ->label($translator->translate('name'))
-                    ->addInputAttributes(['class' => 'form-control form-control-lg',])
-                    ->render()
-                ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col-md-6']); ?>
-                <?= Field::text($form, 'new_client_surname')
-                    ->label($translator->translate('surname'))
-                    ->addInputAttributes(['class' => 'form-control form-control-lg',])
-                    ->render()
-                ?>
-            <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>
-
-        <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div', ['class' => 'col-md-6']); ?>
-                <?= Field::email($form, 'new_client_email')
-                    ->label($translator->translate('email'))
-                    ->addInputAttributes(['class' => 'form-control form-control-lg',])
-                    ->render()
-                ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'col-md-6']); ?>
-                <?= Field::text($form, 'new_client_mobile')
-                    ->label($translator->translate('mobile'))
-                    ->addInputAttributes(['class' => 'form-control form-control-lg',])
-                    ->render()
-                ?>
-            <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>
-
-        <?= Html::openTag('div', ['class' => 'mb-3']); ?>
-            <?= Field::text($form, 'new_client_group')
-                ->label($translator->translate('client_group'))
-                ->addInputAttributes(['class' => 'form-control form-control-lg',
-                    'value' => $suggestedClientGroup])
-                ->render()
-            ?>
-            <?php if ($suggestedClientGroup): ?>
-                <?= Html::openTag('small',
-                        ['class' => 'form-text text-muted']); ?>
-                    <?php echo $translator->translate(
-                        'suggested.from.previous.selection'); ?>
-                <?= Html::closeTag('small'); ?>
-            <?php endif; ?>
-        <?= Html::closeTag('div'); ?>
-    <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 
 <!-- Hidden Fields -->
@@ -204,50 +114,3 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 
-<?= Html::openTag('script'); ?>
-document.addEventListener('DOMContentLoaded', function() {
-    const existingClientRadio = document.getElementById('existing_client');
-    const newClientRadio = document.getElementById('new_client');
-    const existingClientSection = document.getElementById('existing-client-section');
-    const newClientSection = document.getElementById('new-client-section');
-
-    function toggleSections() {
-        if (existingClientRadio.checked) {
-            existingClientSection.style.display = 'block';
-            newClientSection.style.display = 'none';
-        } else {
-            existingClientSection.style.display = 'none';
-            newClientSection.style.display = 'block';
-        }
-    }
-
-    existingClientRadio.addEventListener('change', toggleSections);
-    newClientRadio.addEventListener('change', toggleSections);
-
-    // Initialize
-    toggleSections();
-
-    // Keyboard shortcuts for efficiency
-    document.addEventListener('keydown', function(event) {
-        // Alt + 1: Select existing client
-        if (event.altKey && event.key === '1') {
-            existingClientRadio.checked = true;
-            toggleSections();
-            event.preventDefault();
-        }
-
-        // Alt + 2: Create new client
-        if (event.altKey && event.key === '2') {
-            newClientRadio.checked = true;
-            toggleSections();
-            event.preventDefault();
-        }
-
-        // Ctrl + Enter: Submit form
-        if (event.ctrlKey && event.key === 'Enter') {
-            document.getElementById('ProductClientForm').submit();
-            event.preventDefault();
-        }
-    });
-});
-<?= Html::closeTag('script'); ?>

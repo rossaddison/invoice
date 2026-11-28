@@ -52,11 +52,25 @@ final class ClientOptionLabelsTest
             $this->client(3, 'Test', 'Other', 'other@example.test'),
         ]);
 
+        // alphabetical: Test before Virtual
         Assert::same($labels, [
+            3 => 'Test   Other',
             1 => 'Virtual   Tester (first@example.test)',
             2 => 'Virtual   Tester (second@example.test)',
-            3 => 'Test   Other',
         ]);
+    }
+
+    public function theLabelsAreSortedAlphabeticallyIgnoringCaseAndKeepTheirClientIds(): void
+    {
+        $labels = ClientOptionLabels::for([
+            $this->client(7, 'virtual', 'zed'),
+            $this->client(3, 'Test', 'Beta'),
+            $this->client(9, 'Virtual', 'Alpha'),
+            $this->client(5, 'Test', 'alpha'),
+        ]);
+
+        Assert::same(array_keys($labels), [5, 3, 9, 7]);
+        Assert::same($labels[9], 'Virtual   Alpha');
     }
 
     public function withNoEmailThePostcodeIsUsedThenTheClientNumber(): void
@@ -66,9 +80,10 @@ final class ClientOptionLabelsTest
             $this->client(2, 'Virtual', 'Tester', '', null),
         ]);
 
+        // "(#2)" sorts before "(ZZ1 1AA)"
         Assert::same($labels, [
-            1 => 'Virtual   Tester (ZZ1 1AA)',
             2 => 'Virtual   Tester (#2)',
+            1 => 'Virtual   Tester (ZZ1 1AA)',
         ]);
     }
 
@@ -114,7 +129,7 @@ final class ClientOptionLabelsTest
         // an invoice list holds the same client once per invoice
         $labels = ClientOptionLabels::forFilter([$first, $first, $second, $first]);
 
-        Assert::same($labels, [1 => 'Virtual Tester', 2 => 'Test Other']);
+        Assert::same($labels, [2 => 'Test Other', 1 => 'Virtual Tester']);
     }
 
     public function aFilterLeavesOutRecordsWithNoClientAndClientsWithNoName(): void

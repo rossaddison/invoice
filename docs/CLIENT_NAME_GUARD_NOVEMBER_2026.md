@@ -17,11 +17,10 @@ the client select **tells the clients apart instead**: it shows their email, pos
   as a change. A client whose name is unchanged is never checked, so the clients that **already share a name** can still
   be edited for anything else (phone, address) without being forced to rename. The client's own id is left out of the
   lookup.
-- **Product-client form** (`ProductClientController`, the "Create a new Client" choice): a client can be linked to many
-  products, so a taken name means "link the existing client", not "make another". The refusal is a red flash that names the
-  client and the **Select the existing client** option: "A client named … already exists. A client can be linked to many
-  products: choose "Select the existing client" and link that client to this product instead of creating a second one."
-  (`client.name.already.exists.link.existing`). It is checked before the client is saved, so nothing is created.
+- **Product-client form** (`productclient/associate-multiple`): it no longer creates clients. The "Create a new Client"
+  choice was removed (28 November): it saved a client with no name when the name fields stayed hidden, and a client can be
+  linked to many products, so the form only links an existing one. Clients are made on the Add client page, where the
+  guard applies.
 - The form keeps what was typed and shows the form's own field errors next to the refusal.
 - **A client with no name at all is never refused.** A client made from an email alone at sign-up has no name, so
   `ClientNameGuard::isTaken()` ignores an empty first name and surname; otherwise every such client would look like a
@@ -35,9 +34,8 @@ the client select **tells the clients apart instead**: it shows their email, pos
 ## Where it lives
 
 `ClientNameGuard` (`errorsFor()` for Add, `errorsForEdit()` for rename, `isTaken()` for a plain yes or no),
-`ClientRepository::findByFullName()`, and the `client.name.already.exists` and `client.name.already.exists.link.existing`
-messages (English only). It is called from `ClientAddTrait::addPostErrors()`, `ClientController::edit()` (through
-`ClientEditDeps`) and `ProductClientController::createNewClient()`.
+`ClientRepository::findByFullName()` and the `client.name.already.exists` message (English only). It is called from
+`ClientAddTrait::addPostErrors()` and `ClientController::edit()` (through `ClientEditDeps`).
 
 ### Why the first version showed nothing
 
@@ -63,9 +61,13 @@ them apart, **only to clients whose name is shared**, ignoring case:
 The email is shown to staff on staff forms, who already see it. This was chosen over a "possible duplicate" warning
 because it is right where the choice is made, and it also covers duplicates already in the database.
 
-**Not covered:** only `optionsData()` changed. Several filter drop-downs build their own labels and were not touched, and
-the sales-order list's client filter keys its options by the full name, so same-named clients collapse into **one**
-entry there. That is a separate bug, not fixed. The guest-facing drop-downs were not changed.
+**Sorted:** the labels come out in alphabetical order, ignoring case, with each client id kept (28 November). A list of
+clients is hard to use otherwise, because clients come out in the order they were created or invoiced.
+
+**Where else it applies:** the Client filters of the invoice, quote, sales-order and sent-email lists, and the Upload client
+select, use the same labels, and the quote and sales-order filters match on the client **id**, so same-named clients are two
+separate entries. The product-client form (`productclient/associate-multiple`) builds its list from the same labels and
+keeps its Active/Inactive suffix. **Not covered:** the guest-facing drop-downs were not changed.
 
 ## What it does not do
 
